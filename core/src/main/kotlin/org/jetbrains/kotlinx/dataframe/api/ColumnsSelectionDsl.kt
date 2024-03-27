@@ -381,9 +381,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
      * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColGroup.`[select][SingleColumn.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][DataFrame.select]` { myColGroup.`[`select`][SingleColumn.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { myColGroup `[{][SingleColumn.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[}][SingleColumn.select]` }`
+     * `df.`[select][DataFrame.select]`  { myColGroup  `[`{`][SingleColumn.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][SingleColumn.select]` }`
      */
     public operator fun <C, R> SingleColumn<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         select(selector)
@@ -392,9 +392,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
      * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[`select`][KProperty.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
+     * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      *
      * ## NOTE: {@comment TODO fix warning}
      * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
@@ -410,9 +410,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
      * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[`select`][KProperty.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup `[`{`][KProperty.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[`}`][KProperty.select]` }`
+     * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      */
     @OptIn(ExperimentalTypeInference::class)
     @OverloadResolutionByLambdaReturnType
@@ -423,9 +423,9 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
      * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[select][String.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][DataFrame.select]` { "myColGroup".`[`select`][String.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup" `[{][String.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[}][String.select]` }`
+     * `df.`[select][DataFrame.select]`  { "myColGroup"  `[`{`][String.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][String.select]` }`
      */
     public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         select(selector)
@@ -434,13 +434,13 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
      * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[select][ColumnPath.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[`select`][ColumnPath.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"] `[{][ColumnPath.select]` colA `[and][ColumnsSelectionDsl.and]` colB `[}][ColumnPath.select]` }`
+     * `df.`[select][DataFrame.select]`  { "pathTo"["myColGroup"]  `[`{`][ColumnPath.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][ColumnPath.select]` }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[pathOf][pathOf]`("pathTo", "myColGroup").`[select][ColumnPath.select]` { someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
+     * `df.`[select][DataFrame.select]`  {  `[`pathOf`][pathOf]`("pathTo", "myColGroup").`[`select`][ColumnPath.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[pathOf][pathOf]`("pathTo", "myColGroup")`[() {][ColumnPath.select]` someCol `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[}][ColumnPath.select]` }`
+     * `df.`[select][DataFrame.select]`  {  `[`pathOf`][pathOf]`("pathTo", "myColGroup")`[`() {`][ColumnPath.select]`  someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() `[`}`][ColumnPath.select]` }`
      */
     public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
         select(selector)

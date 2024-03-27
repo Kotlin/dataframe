@@ -42,26 +42,26 @@ public interface ValueColsColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
     public interface Grammar {
 
-        /** [**valueCols**][ColumnsSelectionDsl.valueCols] */
+        /** [**`valueCols`**][ColumnsSelectionDsl.valueCols] */
         public interface PlainDslName
 
-        /** \**`.`**[**valueCols**][ColumnsSelectionDsl.valueCols] */
+        /** __`.`__[**`valueCols`**][ColumnsSelectionDsl.valueCols] */
         public interface ColumnSetName
 
-        /** \**`.`**[**valueCols**][ColumnsSelectionDsl.valueCols] */
+        /** __`.`__[**`valueCols`**][ColumnsSelectionDsl.valueCols] */
         public interface ColumnGroupName
     }
 
@@ -78,9 +78,9 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[valueCols][ColumnsSelectionDsl.valueCols]`() }`
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]`() }`
      *
@@ -105,11 +105,11 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
      *
      * `// NOTE: This can be shortened to just:`
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         valueColumnsInternal(filter)
@@ -118,9 +118,9 @@ public interface ValueColsColumnsSelectionDsl {
      * @include [CommonValueColsDocs]
      * @set [CommonValueColsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         asSingleColumn().valueColumnsInternal(filter)

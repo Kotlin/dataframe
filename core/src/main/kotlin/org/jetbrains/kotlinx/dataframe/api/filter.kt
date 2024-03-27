@@ -73,7 +73,7 @@ public interface FilterColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}**` {`** {@include [DslGrammarTemplate.ConditionRef]} **`\}`**
+     *  {@include [Indent]}{@include [ColumnSetName]}**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslPart]}
@@ -81,7 +81,7 @@ public interface FilterColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** \**`.`**[**filter**][ColumnsSelectionDsl.filter] */
+        /** __`.`__[**`filter`**][ColumnsSelectionDsl.filter] */
         public interface ColumnSetName
     }
 
@@ -98,13 +98,13 @@ public interface FilterColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[remove][DataFrame.remove]` { `[all][ColumnsSelectionDsl.all]`().`[filter][ColumnSet.filter]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
+     * `df.`[`remove`][DataFrame.remove]`  {  `[`all`][ColumnsSelectionDsl.all]`().`[`filter`][ColumnSet.filter]` { it.`[`hasNulls`][DataColumn.hasNulls]`() } }`
      *
-     * `// and although this can be shortened to just the `[colsOf][colsOf]` call:`
+     * `// and although this can be shortened to just the `[`colsOf`][colsOf]` call:`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][colsOf]`<`[String][String]`>().`[filter][ColumnSet.filter]` { "e" `[in][String.contains]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][colsOf]`<`[`String`][String]`>().`[`filter`][ColumnSet.filter]`  { "e"  `[`in`][String.contains]` it.`[`name`][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>()`[`[`][ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>()`[`[`][ColumnsSelectionDsl.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
      *
      * @param [predicate] A [ColumnFilter function][ColumnFilter] that takes a [ColumnReference] and returns a [Boolean].
      * @return A [ColumnSet] containing the columns that match the given [predicate].

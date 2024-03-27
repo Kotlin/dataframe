@@ -61,36 +61,36 @@ public data class Update<T, C>(
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * {@get [UpdateOperationArg]}**`  {  `**[columns][SelectingColumns]**` }`**
+     * {@get [UpdateOperationArg]}**`  {  `**[`columns`][SelectingColumns]**` }`**
      *
      * {@include [Indent]}
-     * `[ .`[**where**][Update.where]**`  {  `**[rowValueCondition][SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
+     * `[ `__`.`__[**`where`**][Update.where]**`  {  `**[`rowValueCondition`][SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `[ .`[**at**][Update.at]**`(`**[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     * `[ `__`.`__[**`at`**][Update.at]**`(`**[`rowIndices`][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * {@include [Indent]}
-     * `.`[**with**][Update.with]**`  {  `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * __`.`__[**`with`**][Update.with]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**notNull**][Update.notNull]**`  {  `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * `| `__`.`__[**`notNull`**][Update.notNull]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**perCol**][Update.perCol]**`  {  `**[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[**`perCol`**][Update.perCol]**`  {  `**[`colExpression`][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**perRowCol**][Update.perRowCol]**`  {  `**[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[**`perRowCol`**][Update.perRowCol]**`  {  `**[`rowColExpression`][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**withNull**][Update.withNull]**`()`**
+     * `| `__`.`__[**`withNull`**][Update.withNull]**`()`**
      *
      * {@include [Indent]}
-     * `| .`[**withZero**][Update.withZero]**`()`**
+     * `| `__`.`__[**`withZero`**][Update.withZero]**`()`**
      *
      * {@include [Indent]}
-     * `| .`[**asFrame**][Update.asFrame]**`  {  `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     * `| `__`.`__[**`asFrame`**][Update.asFrame]**`  {  `**[`dataFrameExpression`][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
-     * {@set [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
+     * {@set [UpdateOperationArg] [**`update`**][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Grammar
 

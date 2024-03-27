@@ -31,10 +31,10 @@ public interface ColumnRangeColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[String][String]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -43,7 +43,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**..**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
+     *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**`..`**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
      *
      *
@@ -62,7 +62,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**..**][ColumnsSelectionDsl.rangeTo] */
+        /** [**`..`**][ColumnsSelectionDsl.rangeTo] */
         public interface PlainDslName
     }
 
@@ -79,7 +79,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `"fromColumn"`[`..`][String.rangeTo]`"toColumn"` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -106,7 +106,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `"fromColumn"`[`..`][String.rangeTo]`Type::toColumn` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -133,7 +133,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `"fromColumn"`[`..`][String.rangeTo]`toColumn` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -160,7 +160,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -187,7 +187,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -214,7 +214,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -241,7 +241,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -268,7 +268,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -295,7 +295,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { ` `fromColumn`[`..`][ColumnReference.rangeTo]`toColumn` ` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.

@@ -49,13 +49,13 @@ public interface WithoutNullsColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        /** [**`withoutNulls`**][ColumnsSelectionDsl.withoutNulls] */
         public interface PlainDslName
 
-        /** \**`.`**[**withoutNulls**][ColumnsSelectionDsl.withoutNulls] */
+        /** __`.`__[**`withoutNulls`**][ColumnsSelectionDsl.withoutNulls] */
         public interface ColumnSetName
 
-        /** \**`.`**[**colsWithoutNulls**][ColumnsSelectionDsl.colsWithoutNulls] */
+        /** __`.`__[**`colsWithoutNulls`**][ColumnsSelectionDsl.colsWithoutNulls] */
         public interface ColumnGroupName
     }
 
@@ -71,9 +71,9 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.colsNameContains]`("middleName").`[withoutNulls][ColumnSet.withoutNulls]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[all][ColumnsSelectionDsl.all]`().`[nameContains][ColumnsSelectionDsl.colsNameContains]`("middleName").`[withoutNulls][ColumnSet.withoutNulls]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.withoutNulls]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[withoutNulls][ColumnsSelectionDsl.withoutNulls]`() }`
      *
      * `df.`[select][DataFrame.select]` { Type::userData.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
      *
@@ -92,7 +92,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C & Any> =
@@ -102,7 +102,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @include [CommonWithoutNullsDocs]
      * @set [CommonWithoutNullsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
      */
     public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> =
         asSingleColumn().colsWithoutNulls()

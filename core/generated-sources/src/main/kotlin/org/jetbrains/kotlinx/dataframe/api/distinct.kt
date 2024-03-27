@@ -66,7 +66,7 @@ public interface DistinctColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
      *
      *
@@ -77,9 +77,9 @@ public interface DistinctColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**distinct**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`distinct`**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
      *
      *
      *
@@ -97,7 +97,7 @@ public interface DistinctColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** **`.`**[**distinct**][ColumnsSelectionDsl.distinct] */
+        /** __`.`__[**`distinct`**][ColumnsSelectionDsl.distinct] */
         public interface ColumnSetName
     }
 
@@ -114,7 +114,7 @@ public interface DistinctColumnsSelectionDsl {
      * #### For Example:
      * `df.`[select][DataFrame.select]` { (`[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>() `[and][ColumnsSelectionDsl.and]` age).`[distinct][ColumnSet.distinct]`() }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[distinct][ColumnSet.distinct]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[distinct][ColumnSet.distinct]`() }`
      *
      * @return A new [ColumnSet] containing only distinct columns (by path).
      * @see ColumnsSelectionDsl.named

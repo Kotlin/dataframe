@@ -51,7 +51,7 @@ public data class Update<T, C>(
     
 
     /**
-     * ## [**update**][update] Operation Grammar
+     * ## [**`update`**][update] Operation Grammar
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -60,34 +60,34 @@ public data class Update<T, C>(
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * [**update**][update]**`  {  `**[columns][SelectingColumns]**` }`**
+     * [**`update`**][update]**`  {  `**[`columns`][SelectingColumns]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ .`[**where**][Update.where]**`  {  `**[rowValueCondition][SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
+     * `[ `__`.`__[**`where`**][Update.where]**`  {  `**[`rowValueCondition`][SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `[ .`[**at**][Update.at]**`(`**[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     * `[ `__`.`__[**`at`**][Update.at]**`(`**[`rowIndices`][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `.`[**with**][Update.with]**`  {  `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * __`.`__[**`with`**][Update.with]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**notNull**][Update.notNull]**`  {  `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * `| `__`.`__[**`notNull`**][Update.notNull]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**perCol**][Update.perCol]**`  {  `**[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[**`perCol`**][Update.perCol]**`  {  `**[`colExpression`][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**perRowCol**][Update.perRowCol]**`  {  `**[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[**`perRowCol`**][Update.perRowCol]**`  {  `**[`rowColExpression`][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**withNull**][Update.withNull]**`()`**
+     * `| `__`.`__[**`withNull`**][Update.withNull]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**withZero**][Update.withZero]**`()`**
+     * `| `__`.`__[**`withZero`**][Update.withZero]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| .`[**asFrame**][Update.asFrame]**`  {  `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     * `| `__`.`__[**`asFrame`**][Update.asFrame]**`  {  `**[`dataFrameExpression`][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
      *
      */

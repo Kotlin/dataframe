@@ -57,10 +57,10 @@ public interface AndColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**and**][ColumnsSelectionDsl.and] */
+        /** [**`and`**][ColumnsSelectionDsl.and] */
         public interface InfixName
 
-        /** \**`.`**[**and**][ColumnsSelectionDsl.and] */
+        /** __`.`__[**`and`**][ColumnsSelectionDsl.and] */
         public interface Name
     }
 
@@ -74,19 +74,19 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][DataFrame.groupBy]`  { "colA"  `[and][String.and]` colB }`
+     * `df.`[`groupBy`][DataFrame.groupBy]`  { "colA"  `[`and`][String.and]` colB }`
      *
-     * `df.`[select][DataFrame.select]` {`
+     * `df.`[`select`][DataFrame.select]` {`
      *
-     * {@include [Indent]}[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * {@include [Indent]}[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][ColumnSet.and]` {`
      *
-     * {@include [DoubleIndent]}[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][DataColumn.name]` }`
+     * {@include [DoubleIndent]}[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }`
      *
      * {@include [Indent]}`}`
      *
      * `}`
      *
-     * `df.`[select][DataFrame.select]`  { "colC"  `[and][String.and]`  Type::colB  `[and][KProperty.and]`  "pathTo"["colC"]  `[and][ColumnPath.and]` colD }`
+     * `df.`[`select`][DataFrame.select]`  { "colC"  `[`and`][String.and]`  Type::colB  `[`and`][KProperty.and]`  "pathTo"["colC"]  `[`and`][ColumnPath.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -106,17 +106,17 @@ public interface AndColumnsSelectionDsl {
      * @include [CommonAndDocs]
      * @set [CommonAndDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`  { ... }  `[and][ColumnsResolver.and]` `<code>{@get [ColumnsResolverAndDocs.Argument]}</code>` }`
+     * `df.`[select][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code>{@get [ColumnsResolverAndDocs.Argument]}</code>` }`
      */
     private interface ColumnsResolverAndDocs {
 
         interface Argument
     }
 
-    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
 
-    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" \}`} */
+    /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> ColumnsResolver<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this and other()
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `"colB"`} */
@@ -133,17 +133,17 @@ public interface AndColumnsSelectionDsl {
      * @include [CommonAndDocs]
      * @set [CommonAndDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]`  { "colA"  `[and][String.and]` `<code>{@get [StringAndDocs.Argument]}</code>` }`
+     * `df.`[select][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code>{@get [StringAndDocs.Argument]}</code>` }`
      */
     private interface StringAndDocs {
 
         interface Argument
     }
 
-    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
     public infix fun <C> String.and(other: ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other
 
-    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" \}`} */
+    /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> String.and(other: () -> ColumnsResolver<C>): ColumnSet<*> = toColumnAccessor() and other()
 
     /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `"colB"`} */
@@ -160,17 +160,17 @@ public interface AndColumnsSelectionDsl {
      * @include [CommonAndDocs]
      * @set [CommonAndDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::colA `[and][KProperty.and]` `<code>{@get [KPropertyAndDocs.Argument]}</code>` }`
+     * `df.`[select][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code>{@get [KPropertyAndDocs.Argument]}</code>` }`
      */
     private interface KPropertyAndDocs {
 
         interface Argument
     }
 
-    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
-    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" \}`} */
+    /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> KProperty<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> =
         toColumnAccessor() and other()
 

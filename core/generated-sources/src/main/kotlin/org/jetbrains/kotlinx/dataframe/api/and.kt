@@ -37,25 +37,25 @@ public interface AndColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[String][String]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnOrSet: `[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  `columnOrSet: `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -64,9 +64,9 @@ public interface AndColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` `[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`  [  `**`{`**`  ]  `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]`  [  `**`}`**` ]`
+     *  [`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` `[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`  [  `**`{`**`  ]  `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]`  [  `**`}`**` ]`
      *
-     *  `| `[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**`.`**[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  `| `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -75,9 +75,9 @@ public interface AndColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -86,9 +86,9 @@ public interface AndColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**and**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[columnOrSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
      *
      *
@@ -105,10 +105,10 @@ public interface AndColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**and**][ColumnsSelectionDsl.and] */
+        /** [**`and`**][ColumnsSelectionDsl.and] */
         public interface InfixName
 
-        /** **`.`**[**and**][ColumnsSelectionDsl.and] */
+        /** __`.`__[**`and`**][ColumnsSelectionDsl.and] */
         public interface Name
     }
 
@@ -122,19 +122,19 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][DataFrame.groupBy]`  { "colA"  `[and][String.and]` colB }`
+     * `df.`[`groupBy`][DataFrame.groupBy]`  { "colA"  `[`and`][String.and]` colB }`
      *
-     * `df.`[select][DataFrame.select]` {`
+     * `df.`[`select`][DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[and][ColumnSet.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][ColumnSet.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][DataFrame.select]`  { "colC"  `[and][String.and]`  Type::colB  `[and][KProperty.and]`  "pathTo"["colC"]  `[and][ColumnPath.and]` colD }`
+     * `df.`[`select`][DataFrame.select]`  { "colC"  `[`and`][String.and]`  Type::colB  `[`and`][KProperty.and]`  "pathTo"["colC"]  `[`and`][ColumnPath.and]` colD }`
      *
      * #### Example for this overload:
      *
@@ -160,23 +160,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`  { ... }  `[and][ColumnsResolver.and]` `<code></code>` }`
+     * `df.`[select][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code></code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -195,23 +195,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -227,23 +227,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" }`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -259,23 +259,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`"colB"`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`"colB"`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -291,23 +291,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`Type::colB`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`Type::colB`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -328,23 +328,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]`  { "colA"  `[and][String.and]` `<code></code>` }`
+     * `df.`[select][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code></code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -363,23 +363,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[and][kotlin.String.and]` `<code>[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -395,23 +395,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[and][kotlin.String.and]` `<code>`{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" }`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -427,23 +427,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[and][kotlin.String.and]` `<code>`"colB"`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`"colB"`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -459,23 +459,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[and][kotlin.String.and]` `<code>`Type::colB`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`Type::colB`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -496,23 +496,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]` { Type::colA `[and][KProperty.and]` `<code></code>` }`
+     * `df.`[select][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code></code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -531,23 +531,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::colA `[and][kotlin.reflect.KProperty.and]` `<code>[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>()`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -563,23 +563,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::colA `[and][kotlin.reflect.KProperty.and]` `<code>`{ colA `[/][DataColumn.div]`  2.0  `[named][ColumnReference.named]` "half colA" }`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -596,23 +596,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::colA `[and][kotlin.reflect.KProperty.and]` `<code>`"colB"`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`"colB"`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -628,23 +628,23 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[groupBy][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[and][kotlin.String.and]` colB }`
+     * `df.`[`groupBy`][org.jetbrains.kotlinx.dataframe.DataFrame.groupBy]`  { "colA"  `[`and`][kotlin.String.and]` colB }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;[colsOf][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[String][String]`>() `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
+     * &nbsp;&nbsp;&nbsp;&nbsp;[`colsOf`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.colsOf]`<`[`String`][String]`>() `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` {`
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[`colsAtAnyDepth`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "price"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`}`
      *
      * `}`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[and][kotlin.String.and]`  Type::colB  `[and][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[and][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colC"  `[`and`][kotlin.String.and]`  Type::colB  `[`and`][kotlin.reflect.KProperty.and]`  "pathTo"["colC"]  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` colD }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::colA `[and][kotlin.reflect.KProperty.and]` `<code>`Type::colB`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`Type::colB`</code>` }` 
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.

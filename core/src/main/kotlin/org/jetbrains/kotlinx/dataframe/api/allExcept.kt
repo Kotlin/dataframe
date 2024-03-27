@@ -64,7 +64,7 @@ public interface AllExceptColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
+     *  {@include [PlainDslName]}**`   {   `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
      *
      *  `| `{@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
@@ -87,16 +87,16 @@ public interface AllExceptColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**allExcept**][ColumnsSelectionDsl.allExcept] */
+        /** [**`allExcept`**][ColumnsSelectionDsl.allExcept] */
         public interface PlainDslName
 
-        /** [**except**][ColumnsSelectionDsl.except] */
+        /** [**`except`**][ColumnsSelectionDsl.except] */
         public interface ColumnSetName
 
-        /** \**`.`**[**allColsExcept**][ColumnsSelectionDsl.allColsExcept] */
+        /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
         public interface ColumnGroupName
 
-        /** [**exceptNew**][ColumnsSelectionDsl.exceptNew] */
+        /** [**`exceptNew`**][ColumnsSelectionDsl.exceptNew] */
         public interface ColumnGroupExperimentalName
     }
 
@@ -110,11 +110,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][colsOf]`<`[Int][Int]`>() `[except][ColumnSet.except]` (age `[and][ColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][colsOf]`<`[Int][Int]`>() `[except][ColumnSet.except]`  (age  `[and][ColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet] created by `age `[and][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [colsOf][colsOf]`<`[Int][Int]`>()`.
      *
@@ -714,13 +714,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][DataFrame.select]` { colGroup `[exceptNew][SingleColumn.except]` { col } }`
+     * `df.`[select][DataFrame.select]`  { colGroup  `[exceptNew][SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except] functions

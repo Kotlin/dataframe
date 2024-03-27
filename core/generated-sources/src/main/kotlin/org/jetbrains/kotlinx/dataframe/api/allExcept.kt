@@ -55,33 +55,33 @@ public interface AllExceptColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `colsSelector: `[ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector]
+     *  `colsSelector: `[`ColumnsSelector`][org.jetbrains.kotlinx.dataframe.ColumnsSelector]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[String][String]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnNoAccessor: `[String][String]`  |  `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `columnNoAccessor: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnsResolver: `[ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]
+     *  `columnsResolver: `[`ColumnsResolver`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -90,9 +90,9 @@ public interface AllExceptColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**allExcept**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`  {  `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
+     *  [**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`   {   `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
      *
-     *  `| `[**allExcept**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
+     *  `| `[**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -101,13 +101,13 @@ public interface AllExceptColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` [`**`  {  `**`] `[columnsResolver][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsResolverDef]` [`**`  }  `**`]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` [`**`  {  `**`] `[`columnsResolver`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsResolverDef]` [`**`  }  `**`]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` `[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.`**[**except**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.`**[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -116,15 +116,15 @@ public interface AllExceptColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;**`.`**[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`  {  `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**`  }  `**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`allColsExcept`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**`  }  `**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.`**[**allColsExcept**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`allColsExcept`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`  {  `**[colsSelector][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**exceptNew**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[columnNoAccessor][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`) EXPERIMENTAL!`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`) EXPERIMENTAL!`**
      *
      *
      *
@@ -139,16 +139,16 @@ public interface AllExceptColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**allExcept**][ColumnsSelectionDsl.allExcept] */
+        /** [**`allExcept`**][ColumnsSelectionDsl.allExcept] */
         public interface PlainDslName
 
-        /** [**except**][ColumnsSelectionDsl.except] */
+        /** [**`except`**][ColumnsSelectionDsl.except] */
         public interface ColumnSetName
 
-        /** **`.`**[**allColsExcept**][ColumnsSelectionDsl.allColsExcept] */
+        /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
         public interface ColumnGroupName
 
-        /** [**exceptNew**][ColumnsSelectionDsl.exceptNew] */
+        /** [**`exceptNew`**][ColumnsSelectionDsl.exceptNew] */
         public interface ColumnGroupExperimentalName
     }
 
@@ -162,11 +162,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][colsOf]`<`[Int][Int]`>() `[except][ColumnSet.except]` (age `[and][ColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][colsOf]`<`[Int][Int]`>() `[except][ColumnSet.except]`  (age  `[and][ColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet] created by `age `[and][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [colsOf][colsOf]`<`[Int][Int]`>()`.
      *
@@ -259,11 +259,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -357,11 +357,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -455,11 +455,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -548,11 +548,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -641,11 +641,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -734,11 +734,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -827,11 +827,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -920,11 +920,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1013,11 +1013,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1106,11 +1106,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1199,11 +1199,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1296,11 +1296,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1393,11 +1393,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1486,11 +1486,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1578,11 +1578,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1670,11 +1670,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1762,11 +1762,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1858,11 +1858,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -1997,11 +1997,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2107,11 +2107,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2201,11 +2201,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2295,11 +2295,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2393,11 +2393,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2503,11 +2503,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2597,11 +2597,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2691,11 +2691,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2789,11 +2789,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -2890,11 +2890,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3006,11 +3006,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3100,11 +3100,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3194,11 +3194,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3292,11 +3292,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3402,11 +3402,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3496,11 +3496,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3590,11 +3590,11 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
      * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age` and `height`.
+     * [Int] columns apart from `age`  and  `height`.
      *
      * We can do:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` (age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
      *
      * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
      *
@@ -3688,13 +3688,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][DataFrame.select]` { colGroup `[exceptNew][SingleColumn.except]` { col } }`
+     * `df.`[select][DataFrame.select]`  { colGroup  `[exceptNew][SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except] functions
@@ -3712,13 +3712,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3756,13 +3756,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3782,13 +3782,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3808,13 +3808,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3834,13 +3834,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3860,13 +3860,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3886,13 +3886,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3912,13 +3912,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3956,13 +3956,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -3982,13 +3982,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4008,13 +4008,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4034,13 +4034,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4060,13 +4060,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4086,13 +4086,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4112,13 +4112,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4141,13 +4141,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4187,13 +4187,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4213,13 +4213,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4239,13 +4239,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4267,13 +4267,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4295,13 +4295,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4321,13 +4321,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4347,13 +4347,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4375,13 +4375,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4403,13 +4403,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4429,13 +4429,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4455,13 +4455,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4483,13 +4483,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4511,13 +4511,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4555,13 +4555,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4581,13 +4581,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4607,13 +4607,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4637,13 +4637,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
@@ -4663,13 +4663,13 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * These produce the same result:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { colGroup `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
      *
      * These functions are experimental and may be removed or changed in the future.
      *
-     * Trying these functions requires you to `@`[OptIn][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]::class`)` first.
+     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
      *
      * ## NOTE:
      * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions

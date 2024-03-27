@@ -41,39 +41,39 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  `|` {@include [PlainDslNameStartsEndsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  `| `{@include [PlainDslNameStartsEndsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnSetNameStartsEndsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`| `{@include [ColumnSetNameStartsEndsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupNameContains]}**`(`**{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`] | `{@include [DslGrammarTemplate.RegexRef]}**`)`**
      *
-     *  {@include [Indent]}`|` {@include [ColumnGroupNameStartsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
+     *  {@include [Indent]}`| `{@include [ColumnGroupNameStartsWith]}__`(`__{@include [DslGrammarTemplate.TextRef]}`[`**`, `**{@include [DslGrammarTemplate.IgnoreCaseRef]}`]`**`)`**
      * }
      */
     public interface Grammar {
 
-        /** [**nameContains**][ColumnsSelectionDsl.nameContains] */
+        /** [**`nameContains`**][ColumnsSelectionDsl.nameContains] */
         public interface PlainDslNameContains
 
-        /** \**`name`**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        /** __`name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
         public interface PlainDslNameStartsEndsWith
 
-        /** \**`.`**[**nameContains**][ColumnsSelectionDsl.nameContains] */
+        /** __`.`__[**`nameContains`**][ColumnsSelectionDsl.nameContains] */
         public interface ColumnSetNameContains
 
-        /** \**`.name`**`(`[**Starts**][ColumnsSelectionDsl.nameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
+        /** __`.name`__`(`[**`Starts`**][ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.nameEndsWith]`)`**`With`** */
         public interface ColumnSetNameStartsEndsWith
 
-        /** \**`.`**[**colsNameContains**][ColumnsSelectionDsl.colsNameContains] */
+        /**__`.`__[**`colsNameContains`**][ColumnsSelectionDsl.colsNameContains] */
         public interface ColumnGroupNameContains
 
-        /** \**`.colsName`**`(`[**Starts**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**Ends**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
+        /** __`.colsName`__`(`[**`Starts`**][ColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][ColumnsSelectionDsl.colsNameEndsWith]`)`**`With`** */
         public interface ColumnGroupNameStartsWith
     }
 
@@ -88,13 +88,13 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
      *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { `{@get [ArgumentArg]}{@get [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
+     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]`  {  `{@get [ArgumentArg]}{@get [ArgumentArg]}` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[nameContains][SingleColumn.colsNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]`  {  `[nameContains][SingleColumn.colsNameContains]`("my") }`
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.colsNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
      *
@@ -137,9 +137,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`("my") }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`("my") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my", ignoreCase = true) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my", ignoreCase = true) }`
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(
@@ -152,7 +152,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsTextDocs]
      * @set [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[nameContains][ColumnsSelectionDsl.colsNameContains]`("my") }`
+     * `df.`[select][DataFrame.select]`  {  `[nameContains][ColumnsSelectionDsl.colsNameContains]`("my") }`
      */
     public fun ColumnsSelectionDsl<*>.nameContains(
         text: CharSequence,
@@ -217,9 +217,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameContains(regex: Regex): TransformableColumnSet<C> =
@@ -229,7 +229,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [NameContainsRegexDocs]
      * @set [CommonNameContainsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[nameContains][ColumnsSelectionDsl.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
+     * `df.`[select][DataFrame.select]`  {  `[nameContains][ColumnsSelectionDsl.nameContains]`(`[Regex][Regex]`("order-[0-9]+")) }`
      */
     public fun ColumnsSelectionDsl<*>.nameContains(regex: Regex): TransformableColumnSet<*> =
         asSingleColumn().colsNameContains(regex)
@@ -287,7 +287,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@get [NameOperationNameArg]}][ColumnsSelectionDsl.{@get [NameOperationNameArg]}]`("order") }`
+     * `df.`[select][DataFrame.select]`  {  `[{@get [NameOperationNameArg]}][ColumnsSelectionDsl.{@get [NameOperationNameArg]}]`("order") }`
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[{@get [ColsNameOperationNameArg]}][String.{@get [ColsNameOperationNameArg]}]`("b") }`
      *
@@ -358,7 +358,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameStartsWith(
@@ -371,7 +371,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order-") }`
+     * `df.`[select][DataFrame.select]`  {  `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order-") }`
      */
     public fun ColumnsSelectionDsl<*>.nameStartsWith(
         prefix: CharSequence,
@@ -462,7 +462,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.nameEndsWith(
@@ -475,7 +475,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
+     * `df.`[select][DataFrame.select]`  {  `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
      */
     public fun ColumnsSelectionDsl<*>.nameEndsWith(
         suffix: CharSequence,

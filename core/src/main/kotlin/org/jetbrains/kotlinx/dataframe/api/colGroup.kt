@@ -63,13 +63,13 @@ public interface ColGroupColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** [**`colGroup`**][ColumnsSelectionDsl.colGroup] */
         public interface PlainDslName
 
-        /** \**`.`**[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
         public interface ColumnSetName
 
-        /** \**`.`**[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
         public interface ColumnGroupName
     }
 

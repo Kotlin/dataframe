@@ -74,26 +74,26 @@ public interface SingleColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}` [` **`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`** `]`
+     *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
     public interface Grammar {
 
-        /** [**single**][ColumnsSelectionDsl.single] */
+        /** [**`single`**][ColumnsSelectionDsl.single] */
         public interface PlainDslName
 
-        /** \**`.`**[**single**][ColumnsSelectionDsl.single] */
+        /** __`.`__[**`single`**][ColumnsSelectionDsl.single] */
         public interface ColumnSetName
 
-        /** \**`.`**[**singleCol**][ColumnsSelectionDsl.singleCol] */
+        /** __`.`__[**`singleCol`**][ColumnsSelectionDsl.singleCol] */
         public interface ColumnGroupName
     }
 
@@ -111,7 +111,7 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
      *
@@ -133,9 +133,9 @@ public interface SingleColumnsSelectionDsl {
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[single][ColumnSet.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
      */
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         singleInternal(condition)
@@ -144,7 +144,7 @@ public interface SingleColumnsSelectionDsl {
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
+     * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().singleCol(condition)
