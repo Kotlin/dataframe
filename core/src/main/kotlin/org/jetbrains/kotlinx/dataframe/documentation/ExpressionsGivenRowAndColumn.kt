@@ -18,7 +18,8 @@ internal interface ExpressionsGivenRowAndColumn {
      */
     interface OperationArg
 
-    /** {@set [OperationArg] operation} */
+    // Using <code>` notation to not create double `` when including
+    /** {@set [OperationArg] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 
     /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
@@ -31,7 +32,7 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * `df.`{@get [OperationArg]}` { row, col ->`
          *
-         * `row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
+         * {@include [Indent]}`row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
          *
          * `}`
          *

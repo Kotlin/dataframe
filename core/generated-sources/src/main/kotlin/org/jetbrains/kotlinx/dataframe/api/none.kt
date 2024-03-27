@@ -35,7 +35,7 @@ public interface NoneColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**none**][org.jetbrains.kotlinx.dataframe.api.NoneColumnsSelectionDsl.none]**`()`**
+     *  [**`none`**][org.jetbrains.kotlinx.dataframe.api.NoneColumnsSelectionDsl.none]**`()`**
      *
      *
      *
@@ -54,7 +54,7 @@ public interface NoneColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**none**][ColumnsSelectionDsl.none] */
+        /** [**`none`**][ColumnsSelectionDsl.none] */
         public interface PlainDslName
     }
 
@@ -69,7 +69,7 @@ public interface NoneColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[groupBy][DataFrame.groupBy]` { `[none][none]`() }`
+     * `df.`[groupBy][DataFrame.groupBy]`  {  `[`none`][none]`() }`
      *
      * @return An empty [ColumnsResolver].
      */

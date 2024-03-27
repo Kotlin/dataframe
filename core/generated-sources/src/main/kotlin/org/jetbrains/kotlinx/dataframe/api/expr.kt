@@ -28,11 +28,11 @@ public interface ExprColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `name: `[String][String]
+     *  `name: `[`String`][String]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `infer: `[Infer][org.jetbrains.kotlinx.dataframe.api.Infer]
+     *  `infer: `[`Infer`][org.jetbrains.kotlinx.dataframe.api.Infer]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -45,7 +45,7 @@ public interface ExprColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**expr**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[name][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NameDef]**`,`**`][`[infer][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.InferDef]`]`**`)`** **`{ `**[expression][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnExpressionDef]**` }`**
+     *  [**`expr`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[`name`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NameDef]**`,`**`][`[`infer`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.InferDef]`]`**`) { `**[`expression`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnExpressionDef]**` }`**
      *
      *
      *
@@ -64,7 +64,7 @@ public interface ExprColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**expr**][ColumnsSelectionDsl.expr] */
+        /** [**`expr`**][ColumnsSelectionDsl.expr] */
         public interface PlainDslName
     }
 }
@@ -81,9 +81,9 @@ public interface ExprColumnsSelectionDsl {
  *
  * #### For example:
  *
- * `df.`[groupBy][DataFrame.groupBy]` { `[expr][ColumnsSelectionDsl.expr]` { firstName.`[length][String.length]` + lastName.`[length][String.length]` } `[named][named]` "nameLength" }`
+ * `df.`[groupBy][DataFrame.groupBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { firstName.`[`length`][String.length]` + lastName.`[`length`][String.length]`  }  `[`named`][named]` "nameLength" }`
  *
- * `df.`[sortBy][DataFrame.sortBy]` { `[expr][ColumnsSelectionDsl.expr]` { name.`[length][String.length]` }.`[desc][SortDsl.desc]`() }`
+ * `df.`[sortBy][DataFrame.sortBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { name.`[`length`][String.length]` }.`[`desc`][SortDsl.desc]`() }`
  *
  * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
  * @param [infer] [An enum][org.jetbrains.kotlinx.dataframe.api.Infer.Infer] that indicates how [DataColumn.type][org.jetbrains.kotlinx.dataframe.DataColumn.type] should be calculated.

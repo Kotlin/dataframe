@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -109,63 +110,64 @@ public interface AllColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
      *  {@include [PlainDslName]}**`()`**
      *
-     *  `|` **`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\}`** `)`
+     *  `| `**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      *
-     *  {@include [Indent]}`|` .**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ConditionRef]} **`\}`** `)`
+     *  {@include [Indent]}`| `**`.all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` )`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
      *
-     *  {@include [Indent]}`|` .**`allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`)` `(` **`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`** `|` **`{`** {@include [DslGrammarTemplate.ColumnSelectorRef]} **`\}`** `)`
+     *  {@include [Indent]}`| `**`.allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )`
      * }
      */
     public interface Grammar {
 
-        /** [**all**][ColumnsSelectionDsl.all] */
+        /** [**`all`**][ColumnsSelectionDsl.all] */
         public interface PlainDslName
 
-        /** .[**all**][ColumnsSelectionDsl.all] */
+        /** __`.`__[**`all`**][ColumnsSelectionDsl.all] */
         public interface ColumnSetName
 
-        /** .[**allCols**][ColumnsSelectionDsl.allCols] */
+        /** __`.`__[**`allCols`**][ColumnsSelectionDsl.allCols] */
         public interface ColumnGroupName
 
-        /** [**Before**][ColumnsSelectionDsl.allColsBefore] */
+        /** [**`Before`**][ColumnsSelectionDsl.allColsBefore] */
         public interface Before
 
-        /** [**After**][ColumnsSelectionDsl.allAfter] */
+        /** [**`After`**][ColumnsSelectionDsl.allAfter] */
         public interface After
 
-        /** [**From**][ColumnsSelectionDsl.allColsFrom] */
+        /** [**`From`**][ColumnsSelectionDsl.allColsFrom] */
         public interface From
 
-        /** [**UpTo**][ColumnsSelectionDsl.allColsUpTo] */
+        /** [**`UpTo`**][ColumnsSelectionDsl.allColsUpTo] */
         public interface UpTo
     }
 
     /**
      * #### Flavors of All (Cols):
      *
-     * - [all(Cols)][ColumnsSelectionDsl.allCols]`()`:
+     * - [`all(Cols)`][ColumnsSelectionDsl.allCols]`()`:
      *     All columns
      *
-     * - [all(Cols)Before][ColumnsSelectionDsl.allColsBefore]`(column)`:
+     * - [`all(Cols)Before`][ColumnsSelectionDsl.allColsBefore]`(column)`:
      *     All columns before the specified column, excluding that column
      *
-     * - [all(Cols)After][ColumnsSelectionDsl.allColsAfter]`(column)`:
+     * - [`all(Cols)After`][ColumnsSelectionDsl.allColsAfter]`(column)`:
      *     All columns after the specified column, excluding that column
      *
-     * - [all(Cols)From][ColumnsSelectionDsl.allColsFrom]`(column)`:
+     * - [`all(Cols)From`][ColumnsSelectionDsl.allColsFrom]`(column)`:
      *     All columns from the specified column, including that column
      *
-     * - [all(Cols)UpTo][ColumnsSelectionDsl.allColsUpTo]`(column)`:
+     * - [`all(Cols)UpTo`][ColumnsSelectionDsl.allColsUpTo]`(column)`:
      *     All columns up to the specified column, including that column
      */
+    @ExcludeFromSources
     private interface AllFlavors
 
     /**
@@ -186,11 +188,11 @@ public interface AllColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[{@get [FunctionArg]}][ColumnsSelectionDsl.{@get [FunctionArg]}]`("someColumn") }`
+     * `df.`[select][DataFrame.select]`  {  `[{@get [FunctionArg]}][ColumnsSelectionDsl.{@get [FunctionArg]}]`("someColumn") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@get [FunctionColsArg]}][SingleColumn.{@get [FunctionColsArg]}]`(someColumn) }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@get [FunctionColsArg]}][SingleColumn.{@get [FunctionColsArg]}]`(someColumn) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@get [FunctionArg]}][ColumnSet.{@get [FunctionArg]}]`(Type::someColumn) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@get [FunctionArg]}][ColumnSet.{@get [FunctionArg]}]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
@@ -207,6 +209,7 @@ public interface AllColumnsSelectionDsl {
      * @see [all\]
      * @see [cols\]
      */
+    @ExcludeFromSources
     private interface CommonAllSubsetDocs {
 
         /* The title of the function, a.k.a. "All (Cols) After" */
@@ -250,7 +253,7 @@ public interface AllColumnsSelectionDsl {
      * ### Check out: [Grammar]
      *
      * #### For example:
-     * `df.`[move][DataFrame.move]` { `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
+     * `df.`[move][DataFrame.move]`  {  `[all][ColumnsSelectionDsl.all]`() }.`[under][MoveClause.under]`("info")`
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      *
@@ -268,6 +271,7 @@ public interface AllColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allExcept\]
      * @see [ColumnsSelectionDsl.cols\]
      */
+    @ExcludeFromSources
     private interface CommonAllDocs {
 
         /** Example argument */
@@ -278,7 +282,7 @@ public interface AllColumnsSelectionDsl {
      * @include [CommonAllDocs]
      * @set [CommonAllDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "a" in `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`  { "a" in  `[name][ColumnWithPath.name]` }.`[all][ColumnSet.all]`() }`
      * {@include [LineBreak]}
      * NOTE: This is an identity call and can be omitted in most cases.
      */
@@ -290,7 +294,7 @@ public interface AllColumnsSelectionDsl {
      * @include [CommonAllDocs]
      * @set [CommonAllDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[all][ColumnsSelectionDsl.all]`() }`
      */
     public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> =
         asSingleColumn().allColumnsInternal()
@@ -351,8 +355,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`{@get [ColumnSetAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`{@get [ColumnSetAllAfterDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnSetAllAfterDocs {
 
         /** Example argument to use */
@@ -385,8 +390,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllAfterDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[allAfter][ColumnsSelectionDsl.allAfter]`{@get [ColumnsSelectionDslAllAfterDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[allAfter][ColumnsSelectionDsl.allAfter]`{@get [ColumnsSelectionDslAllAfterDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnsSelectionDslAllAfterDocs {
 
         /** Example argument to use */
@@ -419,6 +425,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]`{@get [SingleColumnAllAfterDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface SingleColumnAllAfterDocs {
 
         /** Example argument to use */
@@ -464,6 +471,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]`{@get [StringAllAfterDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface StringAllAfterDocs {
 
         /** Example argument to use */
@@ -501,6 +509,7 @@ public interface AllColumnsSelectionDsl {
      * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
      * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
+    @ExcludeFromSources
     private interface KPropertyAllAfterDocs {
 
         /** Example argument to use */
@@ -546,6 +555,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]`{@get [ColumnPathAllAfterDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnPathAllAfterDocs {
 
         /** Example argument to use */
@@ -592,8 +602,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`{@get [ColumnSetAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`{@get [ColumnSetAllFromDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnSetAllFromDocs {
 
         /** Example argument to use */
@@ -626,8 +637,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllFromDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[allFrom][ColumnsSelectionDsl.allFrom]`{@get [ColumnsSelectionDslAllFromDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[allFrom][ColumnsSelectionDsl.allFrom]`{@get [ColumnsSelectionDslAllFromDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnsSelectionDslAllFromDocs {
 
         /** Example argument to use */
@@ -660,6 +672,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]`{@get [SingleColumnAllFromDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface SingleColumnAllFromDocs {
 
         /** Example argument to use */
@@ -705,6 +718,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]`{@get [StringAllFromDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface StringAllFromDocs {
 
         /** Example argument to use */
@@ -742,6 +756,7 @@ public interface AllColumnsSelectionDsl {
      * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
      * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
+    @ExcludeFromSources
     private interface KPropertyAllFromDocs {
 
         /** Example argument to use */
@@ -787,6 +802,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]`{@get [ColumnPathAllFromDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnPathAllFromDocs {
 
         /** Example argument to use */
@@ -833,8 +849,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`{@get [ColumnSetAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`{@get [ColumnSetAllBeforeDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnSetAllBeforeDocs {
 
         /** Example argument to use */
@@ -867,8 +884,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllBeforeDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[allBefore][ColumnsSelectionDsl.allBefore]`{@get [ColumnsSelectionDslAllBeforeDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[allBefore][ColumnsSelectionDsl.allBefore]`{@get [ColumnsSelectionDslAllBeforeDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnsSelectionDslAllBeforeDocs {
 
         /** Example argument to use */
@@ -901,6 +919,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]`{@get [SingleColumnAllBeforeDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface SingleColumnAllBeforeDocs {
 
         /** Example argument to use */
@@ -943,6 +962,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsBefore][String.allColsBefore]`{@get [StringAllBeforeDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface StringAllBeforeDocs {
 
         /** Example argument to use */
@@ -980,6 +1000,7 @@ public interface AllColumnsSelectionDsl {
      * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
      * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
+    @ExcludeFromSources
     private interface KPropertyAllBeforeDocs {
 
         /** Example argument to use */
@@ -1025,6 +1046,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]`{@get [ColumnPathAllBeforeDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnPathAllBeforeDocs {
 
         /** Example argument to use */
@@ -1071,8 +1093,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`{@get [ColumnSetAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`{@get [ColumnSetAllUpToDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnSetAllUpToDocs {
 
         /** Example argument to use */
@@ -1105,8 +1128,9 @@ public interface AllColumnsSelectionDsl {
      * @include [AllUpToDocs]
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`{@get [ColumnsSelectionDslAllUpToDocs.Arg]} }`
+     * `df.`[select][DataFrame.select]`  {  `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`{@get [ColumnsSelectionDslAllUpToDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnsSelectionDslAllUpToDocs {
 
         /** Example argument to use */
@@ -1139,6 +1163,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]`{@get [SingleColumnAllUpToDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface SingleColumnAllUpToDocs {
 
         /** Example argument to use */
@@ -1184,6 +1209,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]`{@get [StringAllUpToDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface StringAllUpToDocs {
 
         /** Example argument to use */
@@ -1221,6 +1247,7 @@ public interface AllColumnsSelectionDsl {
      * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
      * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
+    @ExcludeFromSources
     private interface KPropertyAllUpToDocs {
 
         /** Example argument to use */
@@ -1266,6 +1293,7 @@ public interface AllColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]`{@get [ColumnPathAllUpToDocs.Arg]} }`
      */
+    @ExcludeFromSources
     private interface ColumnPathAllUpToDocs {
 
         /** Example argument to use */
