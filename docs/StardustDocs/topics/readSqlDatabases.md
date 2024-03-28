@@ -96,8 +96,7 @@ USE {
     dependencies("org.mariadb.jdbc:mariadb-java-client:$version")
 }
 ```
-
-In the second, enable the `Kotlin DataFrame` library usage in the following cell.
+Next, import `Kotlin DataFrame` library in the cell below.
 
 ```
 %use dataframe
