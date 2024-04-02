@@ -79,8 +79,6 @@ dependencies {
     }
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
-    testImplementation(kotlin("compiler-embeddable"))
-
 }
 
 val samplesImplementation by configurations.getting {
