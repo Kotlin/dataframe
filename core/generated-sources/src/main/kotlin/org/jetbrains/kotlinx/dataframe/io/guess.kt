@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.jupyter.api.Code
@@ -218,7 +220,7 @@ internal fun DataFrame.Companion.read(
             } catch (e: Exception) {
             }
         }
-        throw IllegalArgumentException("Unknown stream format")
+        throw IllegalArgumentException("Unknown stream format; Tried $formats")
     } finally {
         input.doClose()
     }
@@ -239,7 +241,7 @@ internal fun DataFrame.Companion.read(
         } catch (e: Exception) {
         }
     }
-    throw IllegalArgumentException("Unknown file format")
+    throw IllegalArgumentException("Unknown file format; Tried $formats")
 }
 
 internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: AnyFrame)
@@ -284,6 +286,8 @@ public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()
 public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
+@Refine()
+@Interpretable("Read0")
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asURL(path), header)
 

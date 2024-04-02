@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
+import org.jetbrains.kotlinx.dataframe.impl.api.MyColumnGroup
 import kotlin.reflect.KProperty
 
 /**
@@ -23,7 +24,7 @@ import kotlin.reflect.KProperty
  *
  * @param T Schema marker. See [DataFrame] for details.
  */
-public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
+public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T>, MyColumnGroup<BaseColumn<*>> {
 
     /**
      * Gets the rows at given indices.
