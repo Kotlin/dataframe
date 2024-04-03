@@ -100,11 +100,11 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Converting from deprecated syntax:
      *
-     * [dfs][dfs]`  { condition } ->  `[colsAtAnyDepth][colsAtAnyDepth]` { condition }`
+     * `dfs  { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }`
      *
-     * [allDfs][allDfs]`(includeGroups = false) -> `[colsAtAnyDepth][colsAtAnyDepth]` { includeGroups || !it.`[isColumnGroup][DataColumn.isColumnGroup]`() }`
+     * `allDfs(includeGroups = false) -> `[colsAtAnyDepth][colsAtAnyDepth]` { includeGroups || !it.`[isColumnGroup][DataColumn.isColumnGroup]`() }`
      *
-     * [dfsOf][dfsOf]`<Type> { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[colsOf][ColumnsSelectionDsl.colsOf]`<Type> { condition } }`
+     * `dfsOf<Type> { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[colsOf][ColumnsSelectionDsl.colsOf]`<Type> { condition }`
      *
      * [cols][ColumnsSelectionDsl.cols]` { condition }.`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }`
      *
