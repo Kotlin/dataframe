@@ -312,4 +312,64 @@ class CreateDataFrameTests {
     fun `convert private class with public members`() {
         listOf(PrivateClass(1)).toDataFrame() shouldBe dataFrameOf("a")(1)
     }
+
+    class KotlinPojo {
+
+        private var a: Int = 0
+        private var b: String = ""
+
+        constructor()
+
+        constructor(a: Int, b: String) {
+            this.a = a
+            this.b = b
+        }
+
+        fun getA(): Int = a
+        fun setA(a: Int) {
+            this.a = a
+        }
+
+        fun getB(): String = b
+        fun setB(b: String) {
+            this.b = b
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is KotlinPojo) return false
+
+            if (a != other.a) return false
+            if (b != other.b) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = a
+            result = 31 * result + b.hashCode()
+            return result
+        }
+
+        override fun toString(): String {
+            return "FakePojo(a=$a, b='$b')"
+        }
+    }
+
+    @Test
+    fun `convert POJO to DF`() {
+        listOf(KotlinPojo(1, "a")).toDataFrame() shouldBe dataFrameOf("a", "b")(1, "a")
+        listOf(JavaPojo(1, "a")).toDataFrame() shouldBe dataFrameOf("a", "b")(1, "a")
+
+        listOf(KotlinPojo(1, "a")).toDataFrame { properties(KotlinPojo::getA) } shouldBe dataFrameOf("a")(1)
+        listOf(KotlinPojo(1, "a")).toDataFrame { properties(KotlinPojo::getB) } shouldBe dataFrameOf("b")("a")
+
+        listOf(JavaPojo(1, "a")).toDataFrame {
+            properties(JavaPojo::getA)
+        } shouldBe dataFrameOf("a")(1)
+
+        listOf(JavaPojo(1, "a")).toDataFrame {
+            properties(JavaPojo::getB)
+        } shouldBe dataFrameOf("b")("a")
+    }
 }
