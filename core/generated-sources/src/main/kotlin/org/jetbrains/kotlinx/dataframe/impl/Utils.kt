@@ -14,8 +14,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
+import kotlin.reflect.KFunction
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVariance
@@ -338,4 +339,15 @@ internal fun List<String>.joinToCamelCaseString(): String {
 }
 
 @PublishedApi
-internal val <T> KProperty<T>.columnName: String get() = findAnnotation<ColumnName>()?.name ?: name
+internal val <T> KCallable<T>.columnName: String
+    get() = findAnnotation<ColumnName>()?.name
+        ?: when (this) {
+            // for defining the column names based on a getter-function, we use the function name minus the get/is prefix
+            is KFunction<*> ->
+                name
+                    .removePrefix("get")
+                    .removePrefix("is")
+                    .replaceFirstChar { it.lowercase() }
+
+            else -> name
+        }
