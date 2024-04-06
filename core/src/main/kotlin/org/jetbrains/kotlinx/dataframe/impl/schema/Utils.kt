@@ -141,5 +141,18 @@ internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
 internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =
     MarkersExtractor.get(clazz).schema.createEmptyDataFrame()
 
-internal fun getPropertiesOrder(clazz: KClass<*>): Map<String, Int> =
-    clazz.primaryConstructor?.parameters?.mapNotNull { it.name }?.mapIndexed { i, v -> v to i }?.toMap() ?: emptyMap()
+internal fun getPropertyOrderFromPrimaryConstructor(clazz: KClass<*>): Map<String, Int>? =
+    clazz.primaryConstructor
+        ?.parameters
+        ?.mapNotNull { it.name }
+        ?.mapIndexed { i, v -> v to i }
+        ?.toMap()
+
+internal fun getPropertyOrderFromAnyConstructor(clazz: KClass<*>): List<Map<String, Int>> =
+    clazz.constructors
+        .map { constructor ->
+            constructor.parameters
+                .mapNotNull { it.name }
+                .mapIndexed { i, v -> v to i }
+                .toMap()
+        }

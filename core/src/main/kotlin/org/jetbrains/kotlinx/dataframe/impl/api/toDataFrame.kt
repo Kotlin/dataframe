@@ -19,16 +19,20 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
-import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertiesOrder
+import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertyOrderFromAnyConstructor
+import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertyOrderFromPrimaryConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.time.temporal.Temporal
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
@@ -72,13 +76,13 @@ internal class CreateDataFrameDslImpl<T>(
 
     internal class TraverseConfiguration : TraversePropertiesDsl {
 
-        val excludeProperties = mutableSetOf<KProperty<*>>()
+        val excludeProperties = mutableSetOf<KCallable<*>>()
 
         val excludeClasses = mutableSetOf<KClass<*>>()
 
         val preserveClasses = mutableSetOf<KClass<*>>()
 
-        val preserveProperties = mutableSetOf<KProperty<*>>()
+        val preserveProperties = mutableSetOf<KCallable<*>>()
 
         fun clone(): TraverseConfiguration = TraverseConfiguration().also {
             it.excludeClasses.addAll(excludeClasses)
@@ -87,7 +91,7 @@ internal class CreateDataFrameDslImpl<T>(
             it.preserveClasses.addAll(preserveClasses)
         }
 
-        override fun exclude(vararg properties: KProperty<*>) {
+        override fun exclude(vararg properties: KCallable<*>) {
             excludeProperties.addAll(properties)
         }
 
@@ -99,12 +103,12 @@ internal class CreateDataFrameDslImpl<T>(
             preserveClasses.addAll(classes)
         }
 
-        override fun preserve(vararg properties: KProperty<*>) {
+        override fun preserve(vararg properties: KCallable<*>) {
             preserveProperties.addAll(properties)
         }
     }
 
-    override fun properties(vararg roots: KProperty<*>, maxDepth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
+    override fun properties(vararg roots: KCallable<*>, maxDepth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
         val dsl = configuration.clone()
         if (body != null) {
             body(dsl)
@@ -127,18 +131,47 @@ internal fun <T> Iterable<T>.createDataFrameImpl(clazz: KClass<*>, body: CreateD
 internal fun convertToDataFrame(
     data: Iterable<*>,
     clazz: KClass<*>,
-    roots: List<KProperty<*>>,
-    excludes: Set<KProperty<*>>,
+    roots: List<KCallable<*>>,
+    excludes: Set<KCallable<*>>,
     preserveClasses: Set<KClass<*>>,
-    preserveProperties: Set<KProperty<*>>,
-    maxDepth: Int
+    preserveProperties: Set<KCallable<*>>,
+    maxDepth: Int,
 ): AnyFrame {
-    val order = getPropertiesOrder(clazz)
+    val primaryConstructorOrder = getPropertyOrderFromPrimaryConstructor(clazz)
+    val anyConstructorOrder = getPropertyOrderFromAnyConstructor(clazz)
 
-    val properties = roots.ifEmpty {
-        clazz.memberProperties
-            .filter { it.visibility == KVisibility.PUBLIC && it.parameters.toList().size == 1 }
-    }.sortedBy { order[it.name] ?: Int.MAX_VALUE }
+    val properties: List<KCallable<*>> = roots
+        .ifEmpty {
+            clazz.memberProperties
+                .filter { it.visibility == KVisibility.PUBLIC && it.valueParameters.isEmpty() }
+        }
+
+        // fall back to getter functions for pojo-like classes
+        .ifEmpty {
+            clazz.memberFunctions
+                .filter {
+                    it.visibility == KVisibility.PUBLIC &&
+                        it.valueParameters.isEmpty() &&
+                        (it.name.startsWith("get") || it.name.startsWith("is"))
+                }
+        }
+
+        // sort properties by order of primary-ish constructor
+        .let {
+            val names = it.map { it.columnName }.toSet()
+
+            // use the primary constructor order if it's available,
+            // else try to find a constructor that matches all properties
+            val order = primaryConstructorOrder
+                ?: anyConstructorOrder.firstOrNull { map ->
+                    names.all { it in map.keys }
+                }
+            if (order != null) {
+                it.sortedBy { order[it.columnName] ?: Int.MAX_VALUE }
+            } else {
+                it
+            }
+        }
 
     val columns = properties.mapNotNull {
         val property = it
@@ -162,7 +195,7 @@ internal fun convertToDataFrame(
                 valueClassConverter
             }
         }
-        property.javaField?.isAccessible = true
+        (property as? KProperty<*>)?.javaField?.isAccessible = true
         property.isAccessible = true
 
         var nullable = false
