@@ -34,7 +34,10 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                     when {
                         target.plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> false
                         target.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") -> true
-                        else -> throw Exception("Kotlin plugin must be applied first so we know whether to use multiplatform configurations or not")
+                        else -> {
+                            target.logger.warn("Kotlin plugin must be applied first so we know whether to use multiplatform configurations or not")
+                            false
+                        }
                     }
                 val mainKspCfg = if (isMultiplatform) "kspJvm" else "ksp"
                 val testKspCfg = if (isMultiplatform) "kspJvmTest" else "kspTest"
