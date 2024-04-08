@@ -18,9 +18,9 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
+import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
-import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertyOrderFromAnyConstructor
-import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertyOrderFromPrimaryConstructor
+import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructors
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.time.temporal.Temporal
@@ -32,7 +32,6 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
@@ -93,6 +92,11 @@ internal class CreateDataFrameDslImpl<T>(
         }
 
         override fun exclude(vararg properties: KCallable<*>) {
+            for (prop in properties) {
+                require(prop.isGetterLike()) {
+                    "${prop.name} is not a property or getter-like function. Only those are traversed and can be excluded."
+                }
+            }
             excludeProperties.addAll(properties)
         }
 
@@ -105,11 +109,22 @@ internal class CreateDataFrameDslImpl<T>(
         }
 
         override fun preserve(vararg properties: KCallable<*>) {
+            for (prop in properties) {
+                require(prop.isGetterLike()) {
+                    "${prop.name} is not a property or getter-like function. Only those are traversed and can be preserved."
+                }
+            }
             preserveProperties.addAll(properties)
         }
     }
 
     override fun properties(vararg roots: KCallable<*>, maxDepth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
+        for (prop in roots) {
+            require(prop.isGetterLike()) {
+                "${prop.name} is not a property or getter-like function. Only those are traversed and can be added as roots."
+            }
+        }
+
         val dsl = configuration.clone()
         if (body != null) {
             body(dsl)
@@ -149,41 +164,20 @@ internal fun convertToDataFrame(
     preserveProperties: Set<KCallable<*>>,
     maxDepth: Int,
 ): AnyFrame {
-    val primaryConstructorOrder = getPropertyOrderFromPrimaryConstructor(clazz)
-    val anyConstructorOrder = getPropertyOrderFromAnyConstructor(clazz)
-
     val properties: List<KCallable<*>> = roots
         .ifEmpty {
             clazz.memberProperties
-                .filter { it.visibility == KVisibility.PUBLIC && it.valueParameters.isEmpty() }
+                .filter { it.visibility == KVisibility.PUBLIC }
         }
 
-        // fall back to getter functions for pojo-like classes
+        // fall back to getter functions for pojo-like classes if no member properties were found
         .ifEmpty {
             clazz.memberFunctions
-                .filter {
-                    it.visibility == KVisibility.PUBLIC &&
-                        it.valueParameters.isEmpty() &&
-                        (it.name.startsWith("get") || it.name.startsWith("is"))
-                }
+                .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
         }
 
-        // sort properties by order of primary-ish constructor
-        .let {
-            val names = it.map { it.columnName }.toSet()
-
-            // use the primary constructor order if it's available,
-            // else try to find a constructor that matches all properties
-            val order = primaryConstructorOrder
-                ?: anyConstructorOrder.firstOrNull { map ->
-                    names.all { it in map.keys }
-                }
-            if (order != null) {
-                it.sortedBy { order[it.columnName] ?: Int.MAX_VALUE }
-            } else {
-                it
-            }
-        }
+        // sort properties by order in constructors
+        .sortWithConstructors(clazz)
 
     val columns = properties.mapNotNull {
         val property = it

@@ -122,7 +122,7 @@ public interface TraversePropertiesDsl {
 
     /**
      * Skip given [properties] during recursive (dfs) traversal.
-     * These can also be getter-like functions.
+     * These can also be getter-like functions (like `getX()` or `isX()`).
      */
     public fun exclude(vararg properties: KCallable<*>)
 
@@ -133,7 +133,7 @@ public interface TraversePropertiesDsl {
 
     /**
      * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
-     * These can also be getter-like functions.
+     * These can also be getter-like functions (like `getX()` or `isX()`).
      */
     public fun preserve(vararg properties: KCallable<*>)
 }

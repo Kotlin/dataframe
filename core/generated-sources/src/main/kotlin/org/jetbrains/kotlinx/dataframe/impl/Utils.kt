@@ -17,6 +17,7 @@ import java.math.BigInteger
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVariance
@@ -24,6 +25,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
@@ -338,8 +340,22 @@ internal fun List<String>.joinToCamelCaseString(): String {
         .replaceFirstChar { it.lowercaseChar() }
 }
 
+internal fun KFunction<*>.isGetterLike(): Boolean =
+    (name.startsWith("get") || name.startsWith("is")) && valueParameters.isEmpty()
+
+internal fun KCallable<*>.isGetterLike(): Boolean =
+    when (this) {
+        is KProperty<*> -> true
+        is KFunction<*> -> isGetterLike()
+        else -> false
+    }
+
 @PublishedApi
-internal val <T> KCallable<T>.columnName: String
+internal val KProperty<*>.columnName: String
+    get() = findAnnotation<ColumnName>()?.name ?: name
+
+@PublishedApi
+internal val KCallable<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name
         ?: when (this) {
             // for defining the column names based on a getter-function, we use the function name minus the get/is prefix
@@ -348,6 +364,8 @@ internal val <T> KCallable<T>.columnName: String
                     .removePrefix("get")
                     .removePrefix("is")
                     .replaceFirstChar { it.lowercase() }
+
+            is KProperty<*> -> this.columnName
 
             else -> name
         }

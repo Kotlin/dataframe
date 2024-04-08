@@ -13,10 +13,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
@@ -148,7 +151,7 @@ internal fun getPropertyOrderFromPrimaryConstructor(clazz: KClass<*>): Map<Strin
         ?.mapIndexed { i, v -> v to i }
         ?.toMap()
 
-internal fun getPropertyOrderFromAnyConstructor(clazz: KClass<*>): List<Map<String, Int>> =
+internal fun getPropertyOrderFromAllConstructors(clazz: KClass<*>): List<Map<String, Int>> =
     clazz.constructors
         .map { constructor ->
             constructor.parameters
@@ -156,3 +159,38 @@ internal fun getPropertyOrderFromAnyConstructor(clazz: KClass<*>): List<Map<Stri
                 .mapIndexed { i, v -> v to i }
                 .toMap()
         }
+
+/**
+ * Sorts [this] according to the order of them in the constructors of [klass].
+ * It prefers the primary constructor if it exists, else it falls back to the other constructors to do the sorting.
+ * Finally, it falls back to lexicographical sorting if a property does not exist in any constructor.
+ */
+internal fun <T> Iterable<KCallable<T>>.sortWithConstructors(klass: KClass<*>): List<KCallable<T>> {
+    require(all { it.isGetterLike() })
+    val primaryConstructorOrder = getPropertyOrderFromPrimaryConstructor(klass)
+    val allConstructorsOrders = getPropertyOrderFromAllConstructors(klass)
+
+    // starting off lexicographically, sort properties according to the order of all constructors
+    val allConstructorsSortedProperties = allConstructorsOrders
+        .fold(this.sortedBy { it.columnName }) { props, constructorOrder ->
+            props
+                .withIndex()
+                .sortedBy { (i, it) -> constructorOrder[it.columnName] ?: i }
+                .map { it.value }
+        }.toList()
+
+    if (primaryConstructorOrder == null) {
+        return allConstructorsSortedProperties
+    }
+
+    // prefer to sort properties according to the order in the primary constructor if it exists.
+    // if a property does not exist in the primary constructor, fall back to the other order
+
+    val (propsInConstructor, propsNotInConstructor) =
+        this.partition { it.columnName in primaryConstructorOrder.keys }
+
+    val allConstructorsSortedPropertyNames = allConstructorsSortedProperties.map { it.columnName }
+
+    return propsInConstructor.sortedBy { primaryConstructorOrder[it.columnName] } +
+        propsNotInConstructor.sortedBy { allConstructorsSortedPropertyNames.indexOf(it.columnName) }
+}

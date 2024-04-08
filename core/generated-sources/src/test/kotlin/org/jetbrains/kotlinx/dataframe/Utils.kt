@@ -24,3 +24,4 @@ fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20)
     print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
     schema().print()
 }
+
