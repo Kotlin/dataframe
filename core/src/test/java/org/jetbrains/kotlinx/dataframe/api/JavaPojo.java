@@ -9,7 +9,7 @@ public class JavaPojo {
 
     public JavaPojo() {}
 
-    public JavaPojo(int a, String b) {
+    public JavaPojo(String b, int a) {
         this.a = a;
         this.b = b;
     }
@@ -51,8 +51,8 @@ public class JavaPojo {
     @Override
     public String toString() {
         return "TestPojo{" +
-                "a=" + a +
-                ", b='" + b + '\'' +
-                '}';
+            "a=" + a +
+            ", b='" + b + '\'' +
+            '}';
     }
 }

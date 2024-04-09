@@ -193,6 +193,7 @@ class CreateDataFrameTests {
     fun treatErasedGenericAsAny() {
         class IncompatibleVersionErrorData<T>(val expected: T, val actual: T)
         class DeserializedContainerSource(val incompatibility: IncompatibleVersionErrorData<*>)
+
         val functions = listOf(DeserializedContainerSource(IncompatibleVersionErrorData(1, 2)))
 
         val df = functions.toDataFrame(maxDepth = 2)
@@ -320,9 +321,17 @@ class CreateDataFrameTests {
 
         constructor()
 
-        constructor(a: Int, b: String) {
+        constructor(b: String, a: Int) {
             this.a = a
             this.b = b
+        }
+
+        constructor(b: String) {
+            this.b = b
+        }
+
+        constructor(a: Int) {
+            this.a = a
         }
 
         fun getA(): Int = a
@@ -358,18 +367,21 @@ class CreateDataFrameTests {
 
     @Test
     fun `convert POJO to DF`() {
-        listOf(KotlinPojo(1, "a")).toDataFrame() shouldBe dataFrameOf("a", "b")(1, "a")
-        listOf(JavaPojo(1, "a")).toDataFrame() shouldBe dataFrameOf("a", "b")(1, "a")
+        // even though the names b, a, follow the constructor order
+        listOf(KotlinPojo("bb", 1)).toDataFrame() shouldBe dataFrameOf("b", "a")("bb", 1)
 
-        listOf(KotlinPojo(1, "a")).toDataFrame { properties(KotlinPojo::getA) } shouldBe dataFrameOf("a")(1)
-        listOf(KotlinPojo(1, "a")).toDataFrame { properties(KotlinPojo::getB) } shouldBe dataFrameOf("b")("a")
+        // cannot read java constructor parameter names with reflection, so sort lexigographically
+        listOf(JavaPojo("bb", 1)).toDataFrame() shouldBe dataFrameOf("a", "b")(1, "bb")
 
-        listOf(JavaPojo(1, "a")).toDataFrame {
+        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getA) } shouldBe dataFrameOf("a")(1)
+        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getB) } shouldBe dataFrameOf("b")("bb")
+
+        listOf(JavaPojo("bb", 1)).toDataFrame {
             properties(JavaPojo::getA)
         } shouldBe dataFrameOf("a")(1)
 
-        listOf(JavaPojo(1, "a")).toDataFrame {
+        listOf(JavaPojo("bb", 1)).toDataFrame {
             properties(JavaPojo::getB)
-        } shouldBe dataFrameOf("b")("a")
+        } shouldBe dataFrameOf("b")("bb")
     }
 }
