@@ -2,12 +2,13 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Splits every value in the given columns into several values and optionally spreads them horizontally or vertically.
+This operation splits every value in the given columns into several values,
+and optionally spreads them horizontally or vertically.
 
 ```text
 df.split { columns }
     [.cast<Type>()]
-    [.by(delimeters) | .by { splitter } | .match(regex)] // how to split cell value
+    [.by(delimiters|regex [,trim=true][,ignoreCase=true][,limit=0]) | .by { splitter } | .match(regex)] // how to split cell value
     [.default(value)] // how to fill nulls
     .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } | .inplace() | .intoRows() | .intoColumns() ] // where to store results
 
@@ -19,11 +20,11 @@ The following types of columns can be split without any _splitter_ configuration
 * `List`: split into elements
 * [`DataFrame`](DataFrame.md): split into rows
 
-## Split inplace
+## Split in place
 
-Stores split values as lists in original columns.
+Stores split values as lists in their original columns.
 
-Use `.inplace()` terminal operation in `split` configuration to spread split values inplace:
+Use the `.inplace()` terminal operation in your `split` configuration to spread split values in place:
 
 <!---FUN splitInplace-->
 <tabs>
@@ -57,15 +58,18 @@ df.split { "name"["firstName"]<String>() }.by { it.asIterable() }.inplace()
 ## Split horizontally
 
 Stores split values in new columns.
-* `into(col1, col2, ... )` — store split values in new top-level columns
-* `inward(col1, col2, ...)` — store split values in new columns nested inside original column
-* `intoColumns` — split [`FrameColumn`](DataColumn.md#framecolumn) into [`ColumnGroup`](DataColumn.md#columngroup) storing in every cell a `List` of original values per every column
+* `into(col1, col2, ... )` — stores split values in new top-level columns
+* `inward(col1, col2, ...)` — stores split values in new columns nested inside the original column
+* `intoColumns` — splits [`FrameColumns`](DataColumn.md#framecolumn) into [`ColumnGroups`](DataColumn.md#columngroup) storing in every cell in a `List` of the original values per column
 
 **Reverse operation:** [`merge`](merge.md)
 
-`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.
+`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` is not long enough.
+`columnIndex` starts with `1` for the first additional column name.
 
-Default `columnNamesGenerator` generates column names `split1`, `split2`...
+The default `columnNamesGenerator` generates column names like `split1`, `split2`, etc.
+
+Some examples:
 
 <!---FUN split-->
 <tabs>
@@ -131,18 +135,7 @@ df.split { "name"["lastName"]<String>() }
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.split1.html"/>
 <!---END-->
 
-`String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
-
-<!---FUN splitRegex-->
-
-```kotlin
-val merged = df.merge { name.lastName and name.firstName }
-    .by { it[0] + " (" + it[1] + ")" }
-    .into("name")
-```
-
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.splitRegex.html"/>
-<!---END-->
+`String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) patterns:
 
 <!---FUN splitRegex1-->
 
@@ -182,11 +175,11 @@ df.split { group }.intoColumns()
 
 ## Split vertically
 
-Stores split values in new rows duplicating values in other columns.
+Stores split values in new rows, duplicating values in other columns.
 
 **Reverse operation:** [`implode`](implode.md)
 
-Use `.intoRows()` terminal operation in `split` configuration to spread split values vertically:
+Use the `.intoRows()` terminal operation in your `split` configuration to spread split values vertically:
 
 <!---FUN splitIntoRows-->
 <tabs>
