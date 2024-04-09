@@ -248,10 +248,10 @@ internal object Parsers : GlobalParserOptions {
             parser
         },
 
-        // kotlin.time.duration
+        // kotlin.time.Duration
         stringParser { catchSilent { Duration.parse(it) } },
 
-        // java.time.duration
+        // java.time.Duration
         stringParser { catchSilent { java.time.Duration.parse(it) } },
 
         // java.time.LocalTime
