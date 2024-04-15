@@ -55,4 +55,21 @@ class GroupByTests {
             getFrameColumn("d") into "e"
         }["e"].type() shouldBe typeOf<List<AnyFrame>>()
     }
+
+    @Test
+    fun `aggregate based on the key column`() {
+        val df = dataFrameOf(
+            "a", "b", "c"
+        )(
+            1, 2, 3,
+            4, 5, 6,
+        )
+        val grouped = df.groupBy { expr("test") { "a"<Int>() + "b"<Int>() } }
+            .aggregate {
+                count() into "count"
+                keys into "keys"
+            }
+
+        grouped.print()
+    }
 }
