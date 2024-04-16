@@ -18,6 +18,7 @@ internal interface ExpressionsGivenRowAndColumn {
      */
     interface OperationArg
 
+    // Using <code>` notation to not create double `` when including
     interface SetDefaultOperationArg
 
     /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
@@ -28,9 +29,9 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * For example:
          *
-         * `df.`operation` { row, col ->`
+         * `df.`<code>`operation`</code>` { row, col ->`
          *
-         * `row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
+         * &nbsp;&nbsp;&nbsp;&nbsp;`row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
          *
          * `}`
          *

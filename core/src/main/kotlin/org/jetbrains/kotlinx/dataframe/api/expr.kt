@@ -31,14 +31,14 @@ public interface ExprColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnExpressionDef]}
      * }
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`)`** **`{ `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \}`**
+     *  {@include [PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`) { `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \}`**
      * }
      * {@set [DslGrammarTemplate.ColumnSetPart]}
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
 
-        /** [**expr**][ColumnsSelectionDsl.expr] */
+        /** [**`expr`**][ColumnsSelectionDsl.expr] */
         public interface PlainDslName
     }
 }
@@ -52,9 +52,9 @@ public interface ExprColumnsSelectionDsl {
  *
  * #### For example:
  *
- * `df.`[groupBy][DataFrame.groupBy]` { `[expr][ColumnsSelectionDsl.expr]` { firstName.`[length][String.length]` + lastName.`[length][String.length]` } `[named][named]` "nameLength" }`
+ * `df.`[groupBy][DataFrame.groupBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { firstName.`[`length`][String.length]` + lastName.`[`length`][String.length]`  }  `[`named`][named]` "nameLength" }`
  *
- * `df.`[sortBy][DataFrame.sortBy]` { `[expr][ColumnsSelectionDsl.expr]` { name.`[length][String.length]` }.`[desc][SortDsl.desc]`() }`
+ * `df.`[sortBy][DataFrame.sortBy]`  {  `[`expr`][ColumnsSelectionDsl.expr]` { name.`[`length`][String.length]` }.`[`desc`][SortDsl.desc]`() }`
  *
  * @param [name] The name the temporary column. Is empty by default ("untitled" in the DataFrame).
  * @include [Infer.ParamDoc] By default: [Nulls][Infer.Nulls].

@@ -59,11 +59,11 @@ internal interface SelectingColumnsLink
  *
  * #### For example:
  *
- * `df.`operation` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+ * `df.`<code>`operation`</code>` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
- * `df.`operation` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * `df.`<code>`operation`</code>`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`operation` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`<code>`operation`</code>`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
  *
  *
  * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
@@ -73,7 +73,7 @@ internal interface SelectingColumnsLink
  *
  * #### For example:
  *
- * `df.`operation`("length", "age")`
+ * `df.`<code>`operation`</code>`("length", "age")`
  *
  * ### 3. [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample]
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
@@ -85,7 +85,7 @@ internal interface SelectingColumnsLink
  *
  * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
- * `df.`operation`(length, age)`
+ * `df.`<code>`operation`</code>`(length, age)`
  *
  * ### 4. [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample]
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
@@ -95,7 +95,7 @@ internal interface SelectingColumnsLink
  * data class Person(val length: Double, val age: Double)
  * ```
  *
- * `df.`operation`(Person::length, Person::age)`
+ * `df.`<code>`operation`</code>`(Person::length, Person::age)`
  *
  */
 internal interface SelectingColumns {
@@ -106,6 +106,7 @@ internal interface SelectingColumns {
      */
     interface OperationArg
 
+    // Using <code>` notation to not create double `` when including
     interface SetDefaultOperationArg
 
     /**
@@ -156,11 +157,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`operation` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * `df.`<code>`operation`</code>` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`operation` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * `df.`<code>`operation`</code>`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`operation` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * `df.`<code>`operation`</code>`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          *
          */
@@ -216,11 +217,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`operation` { length }`
+         * `df.`<code>`operation`</code>` { length }`
          *
-         * `df.`operation` { `[col][ColumnsSelectionDsl.col]`(1) }`
+         * `df.`<code>`operation`</code>`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
          *
-         * `df.`operation` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * `df.`<code>`operation`</code>`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
          *
          */
         interface WithExample
@@ -241,7 +242,7 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`operation`("length", "age")`
+         * `df.`<code>`operation`</code>`("length", "age")`
          *
          */
         interface WithExample
@@ -266,7 +267,7 @@ internal interface SelectingColumns {
          *
          * `val age by `[column][column]`<`[Double][Double]`>()`
          *
-         * `df.`operation`(length, age)`
+         * `df.`<code>`operation`</code>`(length, age)`
          *
          */
         interface WithExample
@@ -286,7 +287,7 @@ internal interface SelectingColumns {
          * data class Person(val length: Double, val age: Double)
          * ```
          *
-         * `df.`operation`(Person::length, Person::age)`
+         * `df.`<code>`operation`</code>`(Person::length, Person::age)`
          *
          */
         interface WithExample

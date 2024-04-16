@@ -77,22 +77,22 @@ public interface TakeColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**take**][ColumnsSelectionDsl.take]`(`[**Last**][ColumnsSelectionDsl.takeLast]`)` */
+        /** [**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnsSelectionDsl.takeLast]`)` */
         public interface PlainDslName
 
-        /** .[**take**][ColumnsSelectionDsl.take]`(`[**Last**][ColumnSet.takeLast]`)` */
+        /** __`.`__[**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnSet.takeLast]`)` */
         public interface ColumnSetName
 
-        /** .[**take**][ColumnsSelectionDsl.takeCols]`(`[**Last**][ColumnsSelectionDsl.takeLastCols]`)`[**Cols**][ColumnsSelectionDsl.takeCols] */
+        /** __`.`__[**`take`**][ColumnsSelectionDsl.takeCols]`(`[**`Last`**][ColumnsSelectionDsl.takeLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.takeCols] */
         public interface ColumnGroupName
 
-        /** [**take**][ColumnsSelectionDsl.takeWhile]`(`[**Last**][ColumnsSelectionDsl.takeLastWhile]`)`[**While**][ColumnsSelectionDsl.takeWhile] */
+        /** [**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
         public interface PlainDslWhileName
 
-        /** .[**take**][ColumnsSelectionDsl.takeWhile]`(`[**Last**][ColumnsSelectionDsl.takeLastWhile]`)`[**While**][ColumnsSelectionDsl.takeWhile] */
+        /** __`.`__[**`take`**][ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][ColumnsSelectionDsl.takeWhile] */
         public interface ColumnSetWhileName
 
-        /** .[**take**][ColumnsSelectionDsl.takeColsWhile]`(`[**Last**][ColumnsSelectionDsl.takeLastColsWhile]`)`[**ColsWhile**][ColumnsSelectionDsl.takeColsWhile] */
+        /** __`.`__[**`take`**][ColumnsSelectionDsl.takeColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.takeLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.takeColsWhile] */
         public interface ColumnGroupWhileName
     }
 
@@ -111,9 +111,9 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeFirstDocs]
      * @set [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[take][ColumnSet.take]`(2) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[take][ColumnSet.take]`(2) }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[take][ColumnSet.take]`(2) }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[take][ColumnSet.take]`(2) }`
      */
     public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
 
@@ -121,7 +121,7 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeFirstDocs]
      * @set [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[take][ColumnsSelectionDsl.take]`(5) }`
+     * `df.`[select][DataFrame.select]`  {  `[take][ColumnsSelectionDsl.take]`(5) }`
      */
     public fun ColumnsSelectionDsl<*>.take(n: Int): ColumnSet<*> =
         this.asSingleColumn().takeCols(n)
@@ -178,9 +178,9 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeLastDocs]
      * @set [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLast][ColumnSet.takeLast]`(2) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLast][ColumnSet.takeLast]`(2) }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLast][ColumnSet.takeLast]`(2) }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLast][ColumnSet.takeLast]`(2) }`
      */
     public fun <C> ColumnSet<C>.takeLast(n: Int = 1): ColumnSet<C> = transform { it.takeLast(n) }
 
@@ -188,7 +188,7 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeLastDocs]
      * @set [CommonTakeAndDropDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[takeLast][ColumnsSelectionDsl.takeLast]`(5) }`
+     * `df.`[select][DataFrame.select]`  {  `[takeLast][ColumnsSelectionDsl.takeLast]`(5) }`
      */
     public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> =
         asSingleColumn().takeLastCols(n)
@@ -245,9 +245,9 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeFirstWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeWhile][ColumnSet.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeWhile][ColumnSet.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeWhile][ColumnSet.takeWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeWhile][ColumnSet.takeWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun <C> ColumnSet<C>.takeWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeWhile(predicate) }
@@ -256,7 +256,7 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeFirstWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[takeWhile][ColumnsSelectionDsl.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]`  {  `[takeWhile][ColumnsSelectionDsl.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun ColumnsSelectionDsl<*>.takeWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         asSingleColumn().takeColsWhile(predicate)
@@ -316,9 +316,9 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     public fun <C> ColumnSet<C>.takeLastWhile(predicate: ColumnFilter<C>): ColumnSet<C> =
         transform { it.takeLastWhile(predicate) }
@@ -327,7 +327,7 @@ public interface TakeColumnsSelectionDsl {
      * @include [CommonTakeLastWhileDocs]
      * @set [CommonTakeAndDropWhileDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[takeLastWhile][ColumnsSelectionDsl.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     * `df.`[select][DataFrame.select]`  {  `[takeLastWhile][ColumnsSelectionDsl.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
     public fun ColumnsSelectionDsl<*>.takeLastWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         asSingleColumn().takeLastColsWhile(predicate)
