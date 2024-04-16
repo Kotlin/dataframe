@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
+import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
@@ -11,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 
 internal data class PivotInAggregateImpl<T>(
     val aggregator: AggregateGroupedDsl<T>,
-    val columns: ColumnsSelector<T, *>,
+    val columns: PivotColumnsSelector<T, *>,
     val inward: Boolean?,
     val default: Any? = null
 ) : PivotGroupBy<T>, AggregatableInternal<T> {

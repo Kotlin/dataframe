@@ -45,15 +45,8 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
 import org.jetbrains.kotlinx.dataframe.io.supportedFormats
-import org.jetbrains.kotlinx.jupyter.api.HTML
-import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
-import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
-import org.jetbrains.kotlinx.jupyter.api.Notebook
-import org.jetbrains.kotlinx.jupyter.api.VariableName
-import org.jetbrains.kotlinx.jupyter.api.declare
-import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
-import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
-import org.jetbrains.kotlinx.jupyter.api.libraries.resources
+import org.jetbrains.kotlinx.jupyter.api.*
+import org.jetbrains.kotlinx.jupyter.api.libraries.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -281,16 +274,25 @@ internal class Integration(
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
         import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
 
-        updateVariable<Any> { instance, property ->
-            when (instance) {
-                is AnyCol -> updateAnyColVariable(instance, property, codeGen)
-                is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
-                is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
-                is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
-                is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
-                else -> null
+        addTypeConverter(object : FieldHandler {
+            override val execution = FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->
+                when (instance) {
+                    is AnyCol -> updateAnyColVariable(instance, property, codeGen)
+                    is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
+                    is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
+                    is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
+                    is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
+                    else -> error("${instance::class} should not be handled by Dataframe field handler")
+                }
             }
-        }
+            override fun accepts(value: Any?, property: KProperty<*>): Boolean {
+                return value is AnyCol ||
+                    value is ColumnGroup<*> ||
+                    value is AnyRow ||
+                    value is AnyFrame ||
+                    value is ImportDataSchema
+            }
+        })
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
             val code = classes.joinToString("\n") {

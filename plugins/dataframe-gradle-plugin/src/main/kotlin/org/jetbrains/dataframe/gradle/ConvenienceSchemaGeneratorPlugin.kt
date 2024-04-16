@@ -30,19 +30,30 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
         // configure it to depend on symbol-processor-all
         target.plugins.whenPluginAdded {
             if ("com.google.devtools.ksp" in this.javaClass.packageName) {
+                val isMultiplatform =
+                    when {
+                        target.plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> false
+                        target.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") -> true
+                        else -> {
+                            target.logger.warn("Kotlin plugin must be applied first so we know whether to use multiplatform configurations or not")
+                            false
+                        }
+                    }
+                val mainKspCfg = if (isMultiplatform) "kspJvm" else "ksp"
+                val testKspCfg = if (isMultiplatform) "kspJvmTest" else "kspTest"
                 try {
-                    target.configurations.getByName("ksp").dependencies.add(
+                    target.configurations.getByName(mainKspCfg).dependencies.add(
                         target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
                     )
                 } catch (e: UnknownConfigurationException) {
-                    target.logger.warn("Configuration 'ksp' not found. Please make sure the KSP plugin is applied.")
+                    target.logger.warn("Configuration '$mainKspCfg' not found. Please make sure the KSP plugin is applied.")
                 }
                 try {
-                    target.configurations.getByName("kspTest").dependencies.add(
+                    target.configurations.getByName(testKspCfg).dependencies.add(
                         target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
                     )
                 } catch (e: UnknownConfigurationException) {
-                    target.logger.warn("Configuration 'kspTest' not found. Please make sure the KSP plugin is applied.")
+                    target.logger.warn("Configuration '$testKspCfg' not found. Please make sure the KSP plugin is applied.")
                 }
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
                 target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.projectDir.absolutePath)
