@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Join-->
 
-Joins two [`DataFrames`](DataFrame.md) by join columns.
+Joins two [`DataFrame`](DataFrame.md) object by join columns.
 
 ```kotlin
 join(otherDf, type = JoinType.Inner) [ { joinColumns } ]
@@ -79,7 +79,7 @@ df.join(other, "name", "city")
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Join.join.html"/>
 <!---END-->
 
-If `joinColumns` is not specified, columns with the same name from both [`DataFrames`](DataFrame.md) will be used as join columns:
+If `joinColumns` is not specified, columns with the same name from both [`DataFrame`](DataFrame.md) objects will be used as join columns:
 
 <!---FUN joinDefault-->
 
@@ -93,12 +93,12 @@ df.join(other)
 ### Join types
 
 Supported join types:
-* `Inner` (default) — only matched rows from left and right [`DataFrames`](DataFrame.md)
+* `Inner` (default) — only matched rows from left and right [`DataFrame`](DataFrame.md) objects
 * `Filter` — only matched rows from left [`DataFrame`](DataFrame.md)
 * `Left` — all rows from left [`DataFrame`](DataFrame.md), mismatches from right [`DataFrame`](DataFrame.md) filled with `null`
 * `Right` — all rows from right [`DataFrame`](DataFrame.md), mismatches from left [`DataFrame`](DataFrame.md) filled with `null`
-* `Full` — all rows from left and right [`DataFrames`](DataFrame.md), any mismatches filled with `null`
-* `Exclude` — only mismatched rows from left
+* `Full` — all rows from left and right [`DataFrame`](DataFrame.md) objects, any mismatches filled with `null`
+* `Exclude` — only mismatched rows from left [`DataFrame`](DataFrame.md)
 
 For every join type there is a shortcut operation:
 

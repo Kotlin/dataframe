@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.JoinWith-->
 
-Joins two [`DataFrames`](DataFrame.md) by a join expression. 
+Joins two [`DataFrame`](DataFrame.md) objects by a join expression. 
 
 ```kotlin
 joinWith(otherDf, type = JoinType.Inner) { joinExpression }
@@ -29,11 +29,11 @@ For example, you can match rows based on:
 ### Join types with examples
 
 Supported join types:
-* `Inner` (default) — only matched rows from left and right [`DataFrames`](DataFrame.md)
+* `Inner` (default) — only matched rows from left and right [`DataFrame`](DataFrame.md) objects
 * `Filter` — only matched rows from left [`DataFrame`](DataFrame.md)
 * `Left` — all rows from left [`DataFrame`](DataFrame.md), mismatches from right [`DataFrame`](DataFrame.md) filled with `null`
 * `Right` — all rows from right [`DataFrame`](DataFrame.md), mismatches from left [`DataFrame`](DataFrame.md) filled with `null`
-* `Full` — all rows from left and right [`DataFrames`](DataFrame.md), any mismatches filled with `null`
+* `Full` — all rows from left and right [`DataFrame`](DataFrame.md) objects, any mismatches filled with `null`
 * `Exclude` — only mismatched rows from left
 
 For every join type there is a shortcut operation:
@@ -272,7 +272,7 @@ campaigns.excludeJoinWith(visits) {
 
 #### Cross join
 
-Can also be called cross product of two dataframes
+It can also be called cross product of two [`DataFrame`](DataFrame.md) objects.
 
 <!---FUN crossProduct-->
 
@@ -308,8 +308,10 @@ df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["ag
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.JoinWith.compareInnerValues.html"/>
 <!---END-->
 
-Here columns from both dataframes are presented as is. So [join](join.md) is better suited for `equals` relation, and joinWith is for everything else.
-Below are two more examples with join types that allow mismatches. Note the difference in `null` values
+Here columns from both [`DataFrame`](DataFrame.md) objects are presented as is.
+So [join](join.md) is better suited for `equals` relation, and joinWith is for everything else.
+Below are two more examples with join types that allow mismatches.
+Note the difference in `null` values
 
 <!---FUN compareLeft-->
 
