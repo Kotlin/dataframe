@@ -13,8 +13,6 @@ import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrField
 import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.declarations.impl.IrFunctionImpl
-import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
 import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrBody
@@ -41,6 +39,8 @@ import org.jetbrains.kotlin.ir.util.isLocal
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformer
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
+import org.jetbrains.kotlin.name.CallableId
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import java.io.File
@@ -125,6 +125,8 @@ class ExplainerIrTransformer(
         FqName("org.jetbrains.kotlinx.dataframe.DataRow")
     )
 
+    val explainerPackage = FqName("org.jetbrains.kotlinx.dataframe.explainer")
+
     override fun visitGetValue(expression: IrGetValue, data: ContainingDeclarations): IrExpression {
         if (expression.startOffset < 0) return expression
         if (expression.type.classFqName in dataFrameLike) {
@@ -155,21 +157,20 @@ class ExplainerIrTransformer(
         return super.visitExpression(expression, data)
     }
 
-    @OptIn(FirIncompatiblePluginAPI::class)
     private fun transformDataFrameExpression(
         expression: IrDeclarationReference,
         ownerName: Name,
         receiver: IrExpression?,
         data: ContainingDeclarations
     ): IrCall {
-        val alsoReference = pluginContext.referenceFunctions(FqName("kotlin.also")).single()
+        val alsoReference = pluginContext.referenceFunctions(CallableId(FqName("kotlin"), Name.identifier("also"))).single()
 
         val result = IrCallImpl(-1, -1, expression.type, alsoReference, 1, 1).apply {
             this.extensionReceiver = expression
             putTypeArgument(0, expression.type)
 
             val symbol = IrSimpleFunctionSymbolImpl()
-            val alsoLambda = IrFunctionImpl(
+            val alsoLambda = pluginContext.irFactory.createSimpleFunction(
                 startOffset = -1,
                 endOffset = -1,
                 origin = IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA,
@@ -188,7 +189,7 @@ class ExplainerIrTransformer(
             ).apply {
                 valueParameters = buildList {
                     add(
-                        IrValueParameterImpl(
+                        pluginContext.irFactory.createValueParameter(
                             startOffset = -1,
                             endOffset = -1,
                             origin = IrDeclarationOrigin.DEFINED,
@@ -223,8 +224,12 @@ class ExplainerIrTransformer(
                     add(IrConstImpl.int(-1, -1, pluginContext.irBuiltIns.intType, data.statementIndex))
                 }
                 body = pluginContext.irFactory.createBlockBody(-1, -1).apply {
-                    val callback = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy.doAction")
-                    val doAction = pluginContext.referenceFunctions(callback).single()
+                    val callableId = CallableId(
+                        explainerPackage,
+                        FqName("PluginCallbackProxy"),
+                        Name.identifier("doAction")
+                    )
+                    val doAction = pluginContext.referenceFunctions(callableId).single()
                     statements += IrCallImpl(
                         startOffset = -1,
                         endOffset = -1,
@@ -233,7 +238,7 @@ class ExplainerIrTransformer(
                         typeArgumentsCount = 0,
                         valueArgumentsCount = valueArguments.size
                     ).apply {
-                        val clazz = FqName("org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy")
+                        val clazz = ClassId(explainerPackage, Name.identifier("PluginCallbackProxy"))
                         val plugin = pluginContext.referenceClass(clazz)!!
                         dispatchReceiver = IrGetObjectValueImpl(-1, -1, plugin.defaultType, plugin)
                         valueArguments.forEachIndexed { i, argument ->
