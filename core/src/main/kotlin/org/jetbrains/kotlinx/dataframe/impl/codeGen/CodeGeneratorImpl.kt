@@ -107,11 +107,11 @@ internal interface TypeRenderingStrategy {
 
 internal object FullyQualifiedNames : TypeRenderingStrategy {
 
-    private val DataRow = DataRow::class.qualifiedName!!
-    private val ColumnsContainer = ColumnsContainer::class.qualifiedName!!
-    private val DataFrame = DataFrame::class.qualifiedName!!
-    private val DataColumn = DataColumn::class.qualifiedName!!
-    private val ColumnGroup = ColumnGroup::class.qualifiedName!!
+    private val DataRow = org.jetbrains.kotlinx.dataframe.DataRow::class.qualifiedName!!
+    private val ColumnsContainer = org.jetbrains.kotlinx.dataframe.ColumnsContainer::class.qualifiedName!!
+    private val DataFrame = org.jetbrains.kotlinx.dataframe.DataFrame::class.qualifiedName!!
+    private val DataColumn = org.jetbrains.kotlinx.dataframe.DataColumn::class.qualifiedName!!
+    private val ColumnGroup = org.jetbrains.kotlinx.dataframe.columns.ColumnGroup::class.qualifiedName!!
 
     override fun renderRowTypeName(markerName: String) = "$DataRow<$markerName>"
 
