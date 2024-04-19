@@ -48,14 +48,24 @@ internal class GroupByImpl<T, G>(
     override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
         df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>
 
-    override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
+    override fun toDataFrame(groupedColumnName: String?) =
+        if (groupedColumnName == null || groupedColumnName == groups.name()) {
+            df
+        } else {
+            df.rename(groups).into(groupedColumnName)
+        }
 
     override fun toString() = df.toString()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
         keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
 
-    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).cast<G>()
+    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(
+        df = toDataFrame(),
+        selector = { groups },
+        removeColumns = true,
+        body = body,
+    ).cast<G>()
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
         val indices = (0 until df.nrow).filter {
@@ -78,12 +88,13 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val removed = df.removeImpl(columns = selector)
 
-    val hasKeyColumns = removed.df.ncol > 0
+    val keys = removed.df
+    val hasKeyColumns = keys.ncol > 0
 
-    val groupedFrame = column.values.map {
+    val groupedFrame = column.values.mapIndexed { i, it ->
         if (it == null) null
         else {
-            val builder = GroupByReceiverImpl(it, hasKeyColumns)
+            val builder = GroupByReceiverImpl(it, hasKeyColumns) { keys[i] }
             val result = body(builder, builder)
             if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) builder.yield(
                 NamedValue.create(

@@ -18,11 +18,21 @@ import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.KType
 
-internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override val hasGroupingKeys: Boolean) :
+internal class GroupByReceiverImpl<T>(
+    override val df: DataFrame<T>,
+    override val hasGroupingKeys: Boolean,
+    private val retrieveKey: () -> AnyRow = {
+        error("This property can only be used inside 'groupBy { }.aggregate { }' clause")
+    }
+) :
     AggregateGroupedDsl<T>(),
     AggregateInternalDsl<T>,
     AggregatableInternal<T> by df as AggregatableInternal<T>,
     DataFrame<T> by df {
+
+    override val keys by lazy {
+        retrieveKey()
+    }
 
     private val values = mutableListOf<NamedValue>()
 
@@ -41,16 +51,41 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                         allValues.add(it)
                     }
                 }
+
                 is ValueColumn<*> -> {
-                    allValues.add(NamedValue.create(it.path, it.value.toList(), getListType(it.value.type()), emptyList<Unit>()))
+                    allValues.add(
+                        NamedValue.create(
+                            it.path,
+                            it.value.toList(),
+                            getListType(it.value.type()),
+                            emptyList<Unit>()
+                        )
+                    )
                 }
+
                 is ColumnGroup<*> -> {
                     val frameType = it.value.type().arguments.singleOrNull()?.type
-                    allValues.add(NamedValue.create(it.path, it.value.asDataFrame(), DataFrame::class.createTypeWithArgument(frameType), DataFrame.Empty))
+                    allValues.add(
+                        NamedValue.create(
+                            it.path,
+                            it.value.asDataFrame(),
+                            DataFrame::class.createTypeWithArgument(frameType),
+                            DataFrame.Empty
+                        )
+                    )
                 }
+
                 is FrameColumn<*> -> {
-                    allValues.add(NamedValue.create(it.path, it.value.toList(), getListType(it.value.type()), emptyList<Unit>()))
+                    allValues.add(
+                        NamedValue.create(
+                            it.path,
+                            it.value.toList(),
+                            getListType(it.value.type()),
+                            emptyList<Unit>()
+                        )
+                    )
                 }
+
                 else -> {
                     allValues.add(it)
                 }
@@ -70,7 +105,9 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
         when (value.value) {
             is AggregatedPivot<*> -> {
                 val pivot = value.value
-                val dropFirstNameInPath = pivot.inward == true && value.path.isNotEmpty() && pivot.aggregator.values.distinctBy { it.path.firstOrNull() }.count() == 1
+                val dropFirstNameInPath =
+                    pivot.inward == true && value.path.isNotEmpty() && pivot.aggregator.values.distinctBy { it.path.firstOrNull() }
+                        .count() == 1
                 pivot.aggregator.values.forEach {
                     val targetPath =
                         if (dropFirstNameInPath && it.path.size > 0) value.path + it.path.dropFirst()
@@ -80,6 +117,7 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                 }
                 pivot.aggregator.values.clear()
             }
+
             is AggregateInternalDsl<*> -> yield(value.copy(value = value.value.df))
             else -> values.add(value)
         }
