@@ -2,6 +2,9 @@
 
 1. Run code inspections (fix typos, Kotlin issues, fix code formatting, linter). **RC**
 2. Write missed KDocs for new APIs. **RC**
+3. Update documentation on Kotlin site **RC**
+   - The overview [page](https://kotlinlang.org/docs/data-analysis-overview.html)
+   - The Data Analysis subchapter, for example, the [page](https://kotlinlang.org/docs/data-analysis-work-with-data-sources.html)
 3. Update tutorials according to the latest code changes.
 4. Update README.MD according last code changes:
    - update an artifact version.

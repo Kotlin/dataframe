@@ -9,7 +9,7 @@ explode(dropEmpty = true) [ { columns } ]
 ```
 
 **Parameters:**
-* `dropEmpty` — if `true`, removes rows with empty lists or dataframes. Otherwise, they will be exploded into `null`.
+* `dropEmpty` — if `true`, removes rows with empty lists or [`DataFrame`](DataFrame.md) objects. Otherwise, they will be exploded into `null`.
 
 **Available for:**
 * [`DataFrame`](DataFrame.md)

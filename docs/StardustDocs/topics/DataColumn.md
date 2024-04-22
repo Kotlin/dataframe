@@ -1,13 +1,15 @@
 [//]: # (title: DataColumn)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-[`DataColumn`](DataColumn.md) represents a column of values. It can store objects of primitive or reference types, or other [`DataFrames`](DataFrame.md).
+[`DataColumn`](DataColumn.md) represents a column of values.
+It can store objects of primitive or reference types, 
+or other [`DataFrame`](DataFrame.md) objects.
 
 See [how to create columns](createColumn.md)
 
 ### Properties
-* `name: String` — name of the column, should be unique within containing dataframe
-* `path: ColumnPath` — path to the column, depends on the way column was retrieved from dataframe
+* `name: String` — name of the column; should be unique within containing dataframe
+* `path: ColumnPath` — path to the column; depends on the way column was retrieved from dataframe
 * `type: KType` — type of elements in the column
 * `hasNulls: Boolean` — flag indicating whether column contains `null` values
 * `values: Iterable<T>` — column data
@@ -20,7 +22,8 @@ See [how to create columns](createColumn.md)
 
 Represents a sequence of values. 
 
-It can store values of primitive (integers, strings, decimals etc.) or reference types. Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
+It can store values of primitive (integers, strings, decimals, etc.) or reference types.
+Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
 
 #### ColumnGroup
 
@@ -28,9 +31,9 @@ Container for nested columns. Is used to create column hierarchy.
 
 #### FrameColumn
 
-Special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](DataFrame.md) as elements. 
+Special case of [`ValueColumn`](#valuecolumn) that stores another [`DataFrame`](DataFrame.md) objects as elements. 
 
-[`DataFrames`](DataFrame.md) stored in [`FrameColumn`](DataColumn.md#framecolumn) may have different schemas. 
+[`DataFrame`](DataFrame.md) stored in [`FrameColumn`](DataColumn.md#framecolumn) may have different schemas. 
 
 [`FrameColumn`](DataColumn.md#framecolumn) may appear after [reading](read.md) from JSON or other hierarchical data structures, or after grouping operations such as [groupBy](groupBy.md) or [pivot](pivot.md).  
 
