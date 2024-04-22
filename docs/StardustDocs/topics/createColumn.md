@@ -42,7 +42,7 @@ val fullName by columnOf(firstName, lastName)
 
 <!---END-->
 
-When column elements are [`DataFrames`](DataFrame.md) it returns a [`FrameColumn`](DataColumn.md#framecolumn):
+When column elements are [`DataFrame`](DataFrame.md) objects it returns a [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN createFrameColumn-->
 

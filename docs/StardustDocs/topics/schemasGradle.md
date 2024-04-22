@@ -45,7 +45,7 @@ dependencies {
 
 ### Annotation processing
 
-Declare data schemas in your code and use them to access data in [`DataFrames`](DataFrame.md).
+Declare data schemas in your code and use them to access data in [`DataFrame`](DataFrame.md) objects.
 A data schema is a class or interface annotated with [`@DataSchema`](schemas.md):
 
 ```kotlin
