@@ -199,8 +199,10 @@ public fun DataFrame.Companion.readSqlQuery(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Infer = Infer.None,
 ): AnyFrame {
-    require(isValid(sqlQuery)) { "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
-        "Also it should not contain any separators like `;`." }
+    require(isValid(sqlQuery)) {
+        "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
+            "Also it should not contain any separators like `;`."
+    }
 
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
