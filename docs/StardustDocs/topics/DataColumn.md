@@ -8,8 +8,8 @@ or other [`DataFrame`](DataFrame.md) objects.
 See [how to create columns](createColumn.md)
 
 ### Properties
-* `name: String` — name of the column should be unique within containing dataframe
-* `path: ColumnPath` — path to the column, depends on the way column was retrieved from dataframe
+* `name: String` — name of the column; should be unique within containing dataframe
+* `path: ColumnPath` — path to the column; depends on the way column was retrieved from dataframe
 * `type: KType` — type of elements in the column
 * `hasNulls: Boolean` — flag indicating whether column contains `null` values
 * `values: Iterable<T>` — column data
@@ -22,7 +22,8 @@ See [how to create columns](createColumn.md)
 
 Represents a sequence of values. 
 
-It can store values of primitive (integers, strings, decimals etc.) or reference types. Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
+It can store values of primitive (integers, strings, decimals, etc.) or reference types.
+Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
 
 #### ColumnGroup
 
