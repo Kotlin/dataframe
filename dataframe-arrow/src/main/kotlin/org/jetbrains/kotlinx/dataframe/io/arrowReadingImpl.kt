@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.apache.arrow.dataset.file.FileFormat
+import org.apache.arrow.dataset.file.FileSystemDatasetFactory
+import org.apache.arrow.dataset.jni.DirectReservationListener
+import org.apache.arrow.dataset.jni.NativeMemoryPool
+import org.apache.arrow.dataset.scanner.ScanOptions
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
@@ -328,5 +333,29 @@ internal fun DataFrame.Companion.readArrowImpl(
             }
         }
         return flattened.concatKeepingSchema()
+    }
+}
+
+internal fun DataFrame.Companion.readArrowDataset(
+    fileUri: String,
+    fileFormat: FileFormat,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+): AnyFrame {
+    val scanOptions = ScanOptions(32768)
+    RootAllocator().use { allocator ->
+        FileSystemDatasetFactory(
+            allocator,
+            NativeMemoryPool.createListenable(DirectReservationListener.instance()),
+            fileFormat,
+            fileUri
+        ).use { datasetFactory ->
+            datasetFactory.finish().use { dataset ->
+                dataset.newScan(scanOptions).use { scanner ->
+                    scanner.scanBatches().use { reader ->
+                        return readArrow(reader, nullability)
+                    }
+                }
+            }
+        }
     }
 }
