@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
@@ -391,5 +391,20 @@ class CreateDataFrameTests {
         listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
             properties(JavaPojo::getB)
         } shouldBe dataFrameOf("b")("bb")
+    }
+
+    data class Arrays(val a: IntArray, val b: Array<Int>, val c: Array<Int?>)
+
+    @Test
+    fun `arrays in to DF`() {
+        val df = listOf(
+            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null))
+        ).toDataFrame(maxDepth = Int.MAX_VALUE)
+
+        df.schema() shouldBe dataFrameOf(
+            DataColumn.createValueColumn("a", listOf(intArrayOf(1, 2)), typeOf<IntArray>()),
+            DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
+            DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
+        ).schema()
     }
 }

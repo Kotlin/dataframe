@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
+import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
 import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructors
@@ -51,7 +52,8 @@ internal val KClass<*>.isValueType: Boolean
         this in valueTypes ||
             this.isSubclassOf(Number::class) ||
             this.isSubclassOf(Enum::class) ||
-            this.isSubclassOf(Temporal::class)
+            this.isSubclassOf(Temporal::class) ||
+            this.isArray
 
 internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
