@@ -340,32 +340,61 @@ internal fun List<String>.joinToCamelCaseString(): String {
         .replaceFirstChar { it.lowercaseChar() }
 }
 
+/** Returns `true` if this callable is a getter-like function.
+ *
+ * A callable is considered getter-like if it is either a property getter,
+ * or it's a function with no (type) parameters that starts with "get"/"is". */
 internal fun KFunction<*>.isGetterLike(): Boolean =
-    (name.startsWith("get") || name.startsWith("is")) && valueParameters.isEmpty()
+    (name.startsWith("get") || name.startsWith("is")) &&
+        valueParameters.isEmpty() &&
+        typeParameters.isEmpty()
 
+/** Returns `true` if this callable is a getter-like function.
+ *
+ * A callable is considered getter-like if it is either a property getter,
+ * or it's a function with no (type) parameters that starts with "get"/"is". */
+internal fun KProperty<*>.isGetterLike(): Boolean = true
+
+/**
+ * Returns `true` if this callable is a getter-like function.
+ *
+ * A callable is considered getter-like if it is either a property getter,
+ * or it's a function with no (type) parameters that starts with "get"/"is".
+ */
 internal fun KCallable<*>.isGetterLike(): Boolean =
     when (this) {
-        is KProperty<*> -> true
+        is KProperty<*> -> isGetterLike()
         is KFunction<*> -> isGetterLike()
         else -> false
     }
 
+/** Returns the column name for this callable.
+ * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming iff it's a [KFunction]. */
+@PublishedApi
+internal val KFunction<*>.columnName: String
+    get() = findAnnotation<ColumnName>()?.name
+        ?: name
+            .removePrefix("get")
+            .removePrefix("is")
+            .replaceFirstChar { it.lowercase() }
+
+/** Returns the column name for this callable.
+ * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming iff it's a [KFunction]. */
 @PublishedApi
 internal val KProperty<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name ?: name
 
+/**
+ * Returns the column name for this callable.
+ * If the callable contains the [ColumnName] annotation, its [ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming iff it's a [KFunction].
+ */
 @PublishedApi
 internal val KCallable<*>.columnName: String
-    get() = findAnnotation<ColumnName>()?.name
-        ?: when (this) {
-            // for defining the column names based on a getter-function, we use the function name minus the get/is prefix
-            is KFunction<*> ->
-                name
-                    .removePrefix("get")
-                    .removePrefix("is")
-                    .replaceFirstChar { it.lowercase() }
-
-            is KProperty<*> -> this.columnName
-
-            else -> name
-        }
+    get() = when (this) {
+        is KFunction<*> -> columnName
+        is KProperty<*> -> columnName
+        else -> findAnnotation<ColumnName>()?.name ?: name
+    }

@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
@@ -370,18 +370,41 @@ class CreateDataFrameTests {
         // even though the names b, a, follow the constructor order
         listOf(KotlinPojo("bb", 1)).toDataFrame() shouldBe dataFrameOf("b", "a")("bb", 1)
 
-        // cannot read java constructor parameter names with reflection, so sort lexigographically
-        listOf(JavaPojo("bb", 1)).toDataFrame() shouldBe dataFrameOf("a", "b")(1, "bb")
+        // cannot read java constructor parameter names with reflection, so sort lexicographically
+        listOf(JavaPojo(2.0, null, "bb", 1)).toDataFrame() shouldBe
+            dataFrameOf(
+                DataColumn.createValueColumn("a", listOf(1), typeOf<Int>()),
+                DataColumn.createValueColumn("b", listOf("bb"), typeOf<String>()),
+                DataColumn.createValueColumn("c", listOf(null), typeOf<Int?>()),
+                DataColumn.createValueColumn("d", listOf(2.0), typeOf<Number>()),
+            )
 
-        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getA) } shouldBe dataFrameOf("a")(1)
-        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getB) } shouldBe dataFrameOf("b")("bb")
+        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getA) } shouldBe
+            dataFrameOf("a")(1)
+        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getB) } shouldBe
+            dataFrameOf("b")("bb").groupBy("").concat()
 
-        listOf(JavaPojo("bb", 1)).toDataFrame {
+        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
             properties(JavaPojo::getA)
         } shouldBe dataFrameOf("a")(1)
 
-        listOf(JavaPojo("bb", 1)).toDataFrame {
+        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
             properties(JavaPojo::getB)
         } shouldBe dataFrameOf("b")("bb")
+    }
+
+    data class Arrays(val a: IntArray, val b: Array<Int>, val c: Array<Int?>)
+
+    @Test
+    fun `arrays in to DF`() {
+        val df = listOf(
+            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null))
+        ).toDataFrame(maxDepth = Int.MAX_VALUE)
+
+        df.schema() shouldBe dataFrameOf(
+            DataColumn.createValueColumn("a", listOf(intArrayOf(1, 2)), typeOf<IntArray>()),
+            DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
+            DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
+        ).schema()
     }
 }

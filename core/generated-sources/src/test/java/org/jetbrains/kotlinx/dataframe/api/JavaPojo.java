@@ -6,12 +6,16 @@ public class JavaPojo {
 
     private int a;
     private String b;
+    private Integer c;
+    private Number d;
 
     public JavaPojo() {}
 
-    public JavaPojo(String b, int a) {
+    public JavaPojo(Number d, Integer c, String b, int a) {
         this.a = a;
         this.b = b;
+        this.c = c;
+        this.d = d;
     }
 
     public int getA() {
@@ -30,29 +34,46 @@ public class JavaPojo {
         this.b = b;
     }
 
+    public Integer getC() {
+        return c;
+    }
+
+    public void setC(Integer c) {
+        this.c = c;
+    }
+
+    public Number getD() {
+        return d;
+    }
+
+    public void setD(Number d) {
+        this.d = d;
+    }
+
+    public static int getNot() {
+        return 1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        JavaPojo testPojo = (JavaPojo) o;
-
-        if (a != testPojo.a) return false;
-        return Objects.equals(b, testPojo.b);
+        if (!(o instanceof JavaPojo)) return false;
+        JavaPojo javaPojo = (JavaPojo) o;
+        return a == javaPojo.a && Objects.equals(b, javaPojo.b) && Objects.equals(c, javaPojo.c) && Objects.equals(d, javaPojo.d);
     }
 
     @Override
     public int hashCode() {
-        int result = a;
-        result = 31 * result + (b != null ? b.hashCode() : 0);
-        return result;
+        return Objects.hash(a, b, c, d);
     }
 
     @Override
     public String toString() {
-        return "TestPojo{" +
+        return "JavaPojo{" +
             "a=" + a +
             ", b='" + b + '\'' +
+            ", c=" + c +
+            ", d=" + d +
             '}';
     }
 }
