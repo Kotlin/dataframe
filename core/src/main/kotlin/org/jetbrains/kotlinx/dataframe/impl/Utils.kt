@@ -379,7 +379,7 @@ internal val KProperty<*>.columnName: String
 /**
  * Returns the column name for this callable.
  * If the callable contains the [ColumnName] annotation, its [ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming iff it's a [KFunction].
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction].
  */
 @PublishedApi
 internal val KCallable<*>.columnName: String

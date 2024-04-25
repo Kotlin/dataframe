@@ -370,7 +370,7 @@ internal fun KCallable<*>.isGetterLike(): Boolean =
 
 /** Returns the column name for this callable.
  * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming iff it's a [KFunction]. */
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
 @PublishedApi
 internal val KFunction<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name
@@ -381,7 +381,7 @@ internal val KFunction<*>.columnName: String
 
 /** Returns the column name for this callable.
  * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming iff it's a [KFunction]. */
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
 @PublishedApi
 internal val KProperty<*>.columnName: String
     get() = findAnnotation<ColumnName>()?.name ?: name
@@ -389,7 +389,7 @@ internal val KProperty<*>.columnName: String
 /**
  * Returns the column name for this callable.
  * If the callable contains the [ColumnName] annotation, its [ColumnName.name] is returned.
- * Otherwise, the name of the callable is returned with proper getter-trimming iff it's a [KFunction].
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction].
  */
 @PublishedApi
 internal val KCallable<*>.columnName: String
