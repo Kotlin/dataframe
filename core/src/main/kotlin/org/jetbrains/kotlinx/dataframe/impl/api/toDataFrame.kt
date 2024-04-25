@@ -335,7 +335,6 @@ internal fun convertToDataFrame(
                     }
                 }
 
-
             else -> {
                 val df = convertToDataFrame(
                     data = values,

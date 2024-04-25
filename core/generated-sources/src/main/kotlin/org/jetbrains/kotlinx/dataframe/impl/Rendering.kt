@@ -59,7 +59,6 @@ internal fun renderType(type: KType?): String {
         else -> {
             val fullName = type.jvmErasure.qualifiedName ?: return type.toString()
             val name = when {
-
                 // catching cases like `typeOf<Array<Int>>().jvmErasure.qualifiedName == "IntArray"`
                 // https://github.com/Kotlin/dataframe/issues/678
                 type.isSubtypeOf(typeOf<Array<*>>()) ->

@@ -519,7 +519,6 @@ internal val KType.isPrimitiveArray: Boolean
             (classifier as? KClass<*>)?.isPrimitiveArray == true
         }
 
-
 /**
  * Returns `true` if this type is of an array, either a primitive array like `XArray` or `Array<>`.
  *
