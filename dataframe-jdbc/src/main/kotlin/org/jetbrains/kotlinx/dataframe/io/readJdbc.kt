@@ -115,7 +115,6 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
 ): AnyFrame {
-    Infer.Nulls
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlTable(connection, tableName, limit, inferNullability)
     }
