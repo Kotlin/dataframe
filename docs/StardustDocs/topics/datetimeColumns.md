@@ -1,3 +1,0 @@
-[//]: # (title: Datetime Columns)
-
-// TODO

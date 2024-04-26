@@ -528,11 +528,6 @@
   <priority>0.41</priority>
 </url>
 <url>
-  <loc>https://kotlin.github.io/dataframe/datetimecolumns.html</loc>
-  <lastmod>2023-06-26T12:33:14+00:00</lastmod>
-  <priority>0.41</priority>
-</url>
-<url>
   <loc>https://kotlin.github.io/dataframe/moverename.html</loc>
   <lastmod>2023-06-26T12:33:14+00:00</lastmod>
   <priority>0.41</priority>
@@ -693,11 +688,6 @@
   <priority>0.41</priority>
 </url>
 <url>
-  <loc>https://kotlin.github.io/dataframe/stringcolumns.html</loc>
-  <lastmod>2023-06-26T12:33:14+00:00</lastmod>
-  <priority>0.33</priority>
-</url>
-<url>
   <loc>https://kotlin.github.io/dataframe/maxby.html</loc>
   <lastmod>2023-06-26T12:33:14+00:00</lastmod>
   <priority>0.33</priority>
@@ -713,15 +703,8 @@
   <priority>0.33</priority>
 </url>
 <url>
-  <loc>https://kotlin.github.io/dataframe/specialcolumntypes.html</loc>
-  <lastmod>2023-06-26T12:33:14+00:00</lastmod>
-  <priority>0.26</priority>
-</url>
-<url>
   <loc>https://kotlin.github.io/dataframe/columnstatistics.html</loc>
   <lastmod>2023-06-26T12:33:14+00:00</lastmod>
   <priority>0.26</priority>
 </url>
-
-
 </urlset>
