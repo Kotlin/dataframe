@@ -7,8 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.impl.asArrayToList
-import org.jetbrains.kotlinx.dataframe.impl.isArray
+import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
@@ -177,11 +176,9 @@ internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalForm
         is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
         is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
         else ->
-            if (value?.isArray == true) {
-                renderValueToString(value.asArrayToList(), decimalFormat)
-            } else {
-                value.toString()
-            }
+            value
+                ?.asArrayAsListOrNull()?.let { renderValueToString(it, decimalFormat) }
+                ?: value.toString()
     }
 
 internal fun internallyRenderable(value: Any?): Boolean {

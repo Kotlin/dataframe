@@ -544,28 +544,25 @@ internal val Any.isArray: Boolean
     get() = this::class.isArray
 
 /**
- * Returns this array object as a list of values.
- *
- * @throws IllegalArgumentException if this object is not an array
+ * If [this] is an array of any kind, the function returns it as a list of values,
+ * else it returns `null`.
  */
-internal fun Any.asArrayToList(): List<*> {
-    require(this.isArray) { "Not an array" }
-    return when (this) {
-        is BooleanArray -> toList()
-        is ByteArray -> toList()
-        is ShortArray -> toList()
-        is IntArray -> toList()
-        is LongArray -> toList()
-        is FloatArray -> toList()
-        is DoubleArray -> toList()
-        is CharArray -> toList()
+internal fun Any.asArrayAsListOrNull(): List<*>? =
+    when (this) {
+        is BooleanArray -> asList()
+        is ByteArray -> asList()
+        is ShortArray -> asList()
+        is IntArray -> asList()
+        is LongArray -> asList()
+        is FloatArray -> asList()
+        is DoubleArray -> asList()
+        is CharArray -> asList()
 
-        is UByteArray -> toList()
-        is UShortArray -> toList()
-        is UIntArray -> toList()
-        is ULongArray -> toList()
+        is UByteArray -> asList()
+        is UShortArray -> asList()
+        is UIntArray -> asList()
+        is ULongArray -> asList()
 
-        is Array<*> -> toList()
-        else -> error("Not an array")
+        is Array<*> -> asList()
+        else -> null
     }
-}

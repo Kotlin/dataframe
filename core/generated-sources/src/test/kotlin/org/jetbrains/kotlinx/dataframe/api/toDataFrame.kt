@@ -220,16 +220,16 @@ class CreateDataFrameTests {
     @Test
     fun builtInTypes() {
         val string = listOf("aaa", "aa", null)
-        string.toDataFrame().also { it.print() } shouldBe dataFrameOf("value")(*string.toTypedArray())
+        string.toDataFrame() shouldBe dataFrameOf("value")(*string.toTypedArray())
 
         val int = listOf(1, 2, 3)
-        int.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*int.toTypedArray())
+        int.toDataFrame() shouldBe dataFrameOf("value")(*int.toTypedArray())
 
         val doubles = listOf(1.0, 2.0, 3.0)
-        doubles.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*doubles.toTypedArray())
+        doubles.toDataFrame() shouldBe dataFrameOf("value")(*doubles.toTypedArray())
 
         val floats = listOf(1.0f, 2.0f, 3.0f)
-        floats.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*floats.toTypedArray())
+        floats.toDataFrame() shouldBe dataFrameOf("value")(*floats.toTypedArray())
     }
 
     @Ignore

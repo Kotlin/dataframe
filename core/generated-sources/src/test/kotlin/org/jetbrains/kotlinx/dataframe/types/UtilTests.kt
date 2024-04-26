@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.types
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.impl.asArrayToList
+import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
 import org.jetbrains.kotlinx.dataframe.impl.commonParents
 import org.jetbrains.kotlinx.dataframe.impl.commonType
@@ -62,11 +62,12 @@ class UtilTests {
         arrayOfNulls<Any?>(1).isPrimitiveArray shouldBe false
 
         // Any asArrayToList
-        booleanArrayOf(true, false).asArrayToList() shouldBe listOf(true, false)
-        uintArrayOf(1u, 2u).asArrayToList() shouldBe listOf(1u, 2u)
-        arrayOf(1, 2).asArrayToList() shouldBe listOf(1, 2)
-        arrayOf(1, null).asArrayToList() shouldBe listOf(1, null)
-        arrayOfNulls<Any?>(1).asArrayToList() shouldBe listOf(null)
+        booleanArrayOf(true, false).asArrayAsListOrNull() shouldBe listOf(true, false)
+        uintArrayOf(1u, 2u).asArrayAsListOrNull() shouldBe listOf(1u, 2u)
+        arrayOf(1, 2).asArrayAsListOrNull() shouldBe listOf(1, 2)
+        arrayOf(1, null).asArrayAsListOrNull() shouldBe listOf(1, null)
+        arrayOfNulls<Any?>(1).asArrayAsListOrNull() shouldBe listOf(null)
+        1.asArrayAsListOrNull() shouldBe null
     }
 
     @Test
