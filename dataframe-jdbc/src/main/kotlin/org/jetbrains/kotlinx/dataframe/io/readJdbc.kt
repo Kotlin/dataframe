@@ -113,7 +113,7 @@ public fun DataFrame.Companion.readSqlTable(
     dbConfig: DatabaseConfiguration,
     tableName: String,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): AnyFrame {
     Infer.Nulls
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
@@ -136,7 +136,7 @@ public fun DataFrame.Companion.readSqlTable(
     connection: Connection,
     tableName: String,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): AnyFrame {
     var preparedQuery = "SELECT * FROM $tableName"
     if (limit > 0) preparedQuery += " LIMIT $limit"
@@ -172,7 +172,7 @@ public fun DataFrame.Companion.readSqlQuery(
     dbConfig: DatabaseConfiguration,
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readSqlQuery(connection, sqlQuery, limit, inferNullability)
@@ -197,7 +197,7 @@ public fun DataFrame.Companion.readSqlQuery(
     connection: Connection,
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): AnyFrame {
     require(isValid(sqlQuery)) {
         "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
@@ -241,7 +241,7 @@ public fun DataFrame.Companion.readResultSet(
     resultSet: ResultSet,
     dbType: DbType,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): AnyFrame {
     val tableColumns = getTableColumnsMetadata(resultSet)
     return fetchAndConvertDataFromResultSet(tableColumns, resultSet, dbType, limit, inferNullability)
@@ -260,7 +260,7 @@ public fun DataFrame.Companion.readResultSet(
     resultSet: ResultSet,
     connection: Connection,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): AnyFrame {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
@@ -281,7 +281,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     dbConfig: DatabaseConfiguration,
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): List<AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readAllSqlTables(connection, catalogue, limit, inferNullability)
@@ -303,7 +303,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     connection: Connection,
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
-    inferNullability: Infer = Infer.None,
+    inferNullability: Boolean = true,
 ): List<AnyFrame> {
     val metaData = connection.metaData
     val url = connection.metaData.url
@@ -592,7 +592,7 @@ private fun fetchAndConvertDataFromResultSet(
     rs: ResultSet,
     dbType: DbType,
     limit: Int,
-    inferNullability: Infer,
+    inferNullability: Boolean,
 ): AnyFrame {
     val data = List(tableColumns.size) { mutableListOf<Any?>() }
 
@@ -621,7 +621,7 @@ private fun fetchAndConvertDataFromResultSet(
         DataColumn.createValueColumn(
             name = tableColumns[index].name,
             values = values,
-            infer = inferNullability,
+            infer = convertNullabilityInference(inferNullability),
             type = kotlinTypesForSqlColumns[index]!!
         )
     }.toDataFrame()
@@ -630,6 +630,8 @@ private fun fetchAndConvertDataFromResultSet(
 
     return dataFrame
 }
+
+private fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
 
 private fun extractNewRowFromResultSetAndAddToData(
     tableColumns: MutableList<TableColumnMetadata>,

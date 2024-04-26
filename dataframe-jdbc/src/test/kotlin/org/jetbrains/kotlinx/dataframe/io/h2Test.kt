@@ -697,11 +697,11 @@ class JdbcTest {
 
         // start testing `readSqlTable` method
 
-        // with default inferNullability: Infer = Infer.None
+        // with default inferNullability: Boolean = true
         val tableName = "TestTable1"
         val df = DataFrame.readSqlTable(connection, tableName)
         df.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-        df.schema().columns["name"]!!.type shouldBe typeOf<String?>()
+        df.schema().columns["name"]!!.type shouldBe typeOf<String>()
         df.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -712,10 +712,10 @@ class JdbcTest {
         dataSchema.columns["surname"]!!.type shouldBe typeOf<String?>()
         dataSchema.columns["age"]!!.type shouldBe typeOf<Int>()
 
-        // with inferNullability: Infer = Infer.None
-        val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = Infer.Nulls)
+        // with inferNullability: Boolean = false
+        val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
         df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-        df1.schema().columns["name"]!!.type shouldBe typeOf<String>() // <=== this column changed a type because it doesn't contain nulls
+        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
         df1.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -723,14 +723,14 @@ class JdbcTest {
 
         // start testing `readSQLQuery` method
 
-        // with default inferNullability: Infer = Infer.None
+        // ith default inferNullability: Boolean = true
         @Language("SQL")
         val sqlQuery = """
             SELECT name, surname, age FROM TestTable1
         """.trimIndent()
 
         val df2 = DataFrame.readSqlQuery(connection, sqlQuery)
-        df2.schema().columns["name"]!!.type shouldBe typeOf<String?>()
+        df2.schema().columns["name"]!!.type shouldBe typeOf<String>()
         df2.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df2.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -740,9 +740,9 @@ class JdbcTest {
         dataSchema2.columns["surname"]!!.type shouldBe typeOf<String?>()
         dataSchema2.columns["age"]!!.type shouldBe typeOf<Int>()
 
-        // with inferNullability: Infer = Infer.None
-        val df3 = DataFrame.readSqlQuery(connection, sqlQuery, inferNullability = Infer.Nulls)
-        df3.schema().columns["name"]!!.type shouldBe typeOf<String>() // <=== this column changed a type because it doesn't contain nulls
+        // with inferNullability: Boolean = false
+        val df3 = DataFrame.readSqlQuery(connection, sqlQuery, inferNullability = false)
+        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
         df3.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -755,10 +755,10 @@ class JdbcTest {
             val selectStatement = "SELECT * FROM TestTable1"
 
             st.executeQuery(selectStatement).use { rs ->
-                // with default inferNullability: Infer = Infer.None
+                // ith default inferNullability: Boolean = true
                 val df4 = DataFrame.readResultSet(rs, H2)
                 df4.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-                df4.schema().columns["name"]!!.type shouldBe typeOf<String?>()
+                df4.schema().columns["name"]!!.type shouldBe typeOf<String>()
                 df4.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
                 df4.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -771,12 +771,12 @@ class JdbcTest {
                 dataSchema3.columns["surname"]!!.type shouldBe typeOf<String?>()
                 dataSchema3.columns["age"]!!.type shouldBe typeOf<Int>()
 
-                // with inferNullability: Infer = Infer.None
+                // with inferNullability: Boolean = false
                 rs.beforeFirst()
 
-                val df5 = DataFrame.readResultSet(rs, H2, inferNullability = Infer.Nulls)
+                val df5 = DataFrame.readResultSet(rs, H2, inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-                df5.schema().columns["name"]!!.type shouldBe typeOf<String>() // <=== this column changed a type because it doesn't contain nulls
+                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["age"]!!.type shouldBe typeOf<Int>()
             }
