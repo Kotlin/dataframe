@@ -382,7 +382,7 @@ class CreateDataFrameTests {
         listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getA) } shouldBe
             dataFrameOf("a")(1)
         listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getB) } shouldBe
-            dataFrameOf("b")("bb").groupBy("").concat()
+            dataFrameOf("b")("bb")
 
         listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
             properties(JavaPojo::getA)
