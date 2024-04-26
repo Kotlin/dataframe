@@ -26,6 +26,8 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> = toDataFr
     properties()
 }
 
+@Refine
+@Interpretable("toDataFrameDsl")
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
     createDataFrameImpl(T::class, body)
 
@@ -123,21 +125,25 @@ public interface TraversePropertiesDsl {
     /**
      * Skip given [classes] during recursive (dfs) traversal
      */
+    @Interpretable("Exclude0")
     public fun exclude(vararg classes: KClass<*>)
 
     /**
      * Skip given [properties] during recursive (dfs) traversal
      */
+    @Interpretable("Exclude1")
     public fun exclude(vararg properties: KProperty<*>)
 
     /**
      * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns
      */
+    @Interpretable("Preserve0")
     public fun preserve(vararg classes: KClass<*>)
 
     /**
      * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns
      */
+    @Interpretable("Preserve1")
     public fun preserve(vararg properties: KProperty<*>)
 }
 
@@ -153,6 +159,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
 
+    @Interpretable("Properties0")
     public abstract fun properties(
         vararg roots: KProperty<*>,
         maxDepth: Int = 0,
