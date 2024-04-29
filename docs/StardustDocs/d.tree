@@ -173,10 +173,6 @@
         <toc-element topic="columnOperations.md">
             <toc-element topic="columnArithmetics.md" toc-title="Arithmetics"/>
             <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
-            <toc-element topic="specialColumnTypes.md">
-                <toc-element topic="stringColumns.md" toc-title="String"/>
-                <toc-element topic="datetimeColumns.md" toc-title="DateTime"/>
-            </toc-element>
         </toc-element>
         <toc-element topic="ColumnSelectors.md"/>
         <toc-element topic="collectionsInterop.md">
