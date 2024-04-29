@@ -144,53 +144,38 @@ internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
 internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =
     MarkersExtractor.get(clazz).schema.createEmptyDataFrame()
 
+/**
+ * Returns a map of property names to their order in the primary/single constructor, if it exists,
+ * `null` otherwise.
+ */
 internal fun getPropertyOrderFromPrimaryConstructor(clazz: KClass<*>): Map<String, Int>? =
-    clazz.primaryConstructor
+    (clazz.primaryConstructor ?: clazz.constructors.singleOrNull())
         ?.parameters
         ?.mapNotNull { it.name }
         ?.mapIndexed { i, v -> v to i }
         ?.toMap()
 
-internal fun getPropertyOrderFromAllConstructors(clazz: KClass<*>): List<Map<String, Int>> =
-    clazz.constructors
-        .map { constructor ->
-            constructor.parameters
-                .mapNotNull { it.name }
-                .mapIndexed { i, v -> v to i }
-                .toMap()
-        }
-
 /**
- * Sorts [this] according to the order of them in the constructors of [klass].
- * It prefers the primary constructor if it exists, else it falls back to the other constructors to do the sorting.
- * Finally, it falls back to lexicographical sorting if a property does not exist in any constructor.
+ * Sorts [this] according to the order of their [columnName] in the primary/single constructor of [klass]
+ * if it exists, else, it falls back to lexicographical sorting.
  */
-internal fun <T> Iterable<KCallable<T>>.sortWithConstructors(klass: KClass<*>): List<KCallable<T>> {
+internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): List<KCallable<T>> {
     require(all { it.isGetterLike() })
     val primaryConstructorOrder = getPropertyOrderFromPrimaryConstructor(klass)
-    val allConstructorsOrders = getPropertyOrderFromAllConstructors(klass)
 
-    // starting off lexicographically, sort properties according to the order of all constructors
-    val allConstructorsSortedProperties = allConstructorsOrders
-        .fold(this.sortedBy { it.columnName }) { props, constructorOrder ->
-            props
-                .withIndex()
-                .sortedBy { (i, it) -> constructorOrder[it.columnName] ?: i }
-                .map { it.value }
-        }.toList()
+    // starting off lexicographically
+    val lexicographicalColumns = sortedBy { it.columnName }
 
+    // if no primary constructor, return lexicographical order
     if (primaryConstructorOrder == null) {
-        return allConstructorsSortedProperties
+        return lexicographicalColumns
     }
 
-    // prefer to sort properties according to the order in the primary constructor if it exists.
-    // if a property does not exist in the primary constructor, fall back to the other order
-
+    // else sort the ones in the primary constructor first according to the order in there
+    // leave the rest at the end in lexicographical order
     val (propsInConstructor, propsNotInConstructor) =
-        this.partition { it.columnName in primaryConstructorOrder.keys }
+        lexicographicalColumns.partition { it.columnName in primaryConstructorOrder.keys }
 
-    val allConstructorsSortedPropertyNames = allConstructorsSortedProperties.map { it.columnName }
-
-    return propsInConstructor.sortedBy { primaryConstructorOrder[it.columnName] } +
-        propsNotInConstructor.sortedBy { allConstructorsSortedPropertyNames.indexOf(it.columnName) }
+    return propsInConstructor
+        .sortedBy { primaryConstructorOrder[it.columnName] } + propsNotInConstructor
 }

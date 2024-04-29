@@ -21,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
-import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructors
+import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.time.temporal.Temporal
@@ -178,8 +178,8 @@ internal fun convertToDataFrame(
                 .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
         }
 
-        // sort properties by order in constructors
-        .sortWithConstructors(clazz)
+        // sort properties by order in constructor
+        .sortWithConstructor(clazz)
 
     val columns = properties.mapNotNull {
         val property = it

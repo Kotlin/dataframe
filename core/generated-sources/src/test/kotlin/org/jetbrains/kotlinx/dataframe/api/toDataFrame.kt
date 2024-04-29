@@ -319,19 +319,9 @@ class CreateDataFrameTests {
         private var a: Int = 0
         private var b: String = ""
 
-        constructor()
-
         constructor(b: String, a: Int) {
             this.a = a
             this.b = b
-        }
-
-        constructor(b: String) {
-            this.b = b
-        }
-
-        constructor(a: Int) {
-            this.a = a
         }
 
         fun getA(): Int = a
