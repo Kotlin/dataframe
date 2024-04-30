@@ -21,10 +21,12 @@ public object MsSql : DbType("sqlserver") {
         return null
     }
 
+    // TODO: need to find solution to filter system tables
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         return MySql.isSystemTable(tableMetadata)
     }
 
+    // TODO: need to check
     override fun buildTableMetadata(tables: ResultSet): TableMetadata {
         return TableMetadata(
             tables.getString("table_name"),
@@ -37,5 +39,6 @@ public object MsSql : DbType("sqlserver") {
         return null
     }
 
-    public override fun sqlQueryLimitOne(tableName: String): String = "SELECT TOP 1 * FROM $tableName"
+    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String =
+        "SELECT TOP $limit * FROM ($sqlQuery) as LIMIT_TABLE"
 }

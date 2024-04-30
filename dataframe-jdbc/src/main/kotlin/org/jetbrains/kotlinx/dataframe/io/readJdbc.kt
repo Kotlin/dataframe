@@ -137,13 +137,13 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
 ): AnyFrame {
-    var preparedQuery = "SELECT * FROM $tableName"
-    if (limit > 0) preparedQuery += " LIMIT $limit"
-
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    connection.createStatement().use { st ->
+    var preparedQuery = "SELECT * FROM $tableName"
+    if (limit > 0) preparedQuery = dbType.sqlQueryLimit(preparedQuery, limit)
+
+        connection.createStatement().use { st ->
         logger.debug { "Connection with url:$url is established successfully." }
 
         st.executeQuery(
@@ -207,7 +207,7 @@ public fun DataFrame.Companion.readSqlQuery(
     val dbType = extractDBTypeFromUrl(url)
 
     var internalSqlQuery = sqlQuery
-    if (limit > 0) internalSqlQuery += " LIMIT $limit"
+    if (limit > 0) internalSqlQuery = dbType.sqlQueryLimit(internalSqlQuery, limit)
 
     logger.debug { "Executing SQL query: $internalSqlQuery" }
 
@@ -367,7 +367,8 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    val selectFirstRowQuery = dbType.sqlQueryLimitOne(tableName)
+    val sqlQuery = "SELECT * FROM $tableName"
+    val selectFirstRowQuery = dbType.sqlQueryLimit(sqlQuery, limit = 1)
 
     connection.createStatement().use { st ->
         st.executeQuery(

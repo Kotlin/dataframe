@@ -51,5 +51,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 
-    public open fun sqlQueryLimitOne(tableName: String): String = "SELECT * FROM $tableName LIMIT 1"
+    public open fun sqlQueryLimit(sqlQuery: String, limit: Int = 1): String =
+        "SELECT * FROM ($sqlQuery) as LIMIT_TABLE LIMIT $limit"
 }

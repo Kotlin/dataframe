@@ -270,6 +270,7 @@ class MSSQLTest {
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
     }
 
+    // TODO: special behaviour with catalogues in MSSQL?
     @Test
     fun `read from all tables`() {
          val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4)

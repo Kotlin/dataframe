@@ -633,6 +633,7 @@ class JdbcTest {
 
         val saleDataSchema = dataSchemas[1]
         saleDataSchema.columns.size shouldBe 3
+        // TODO: fix nullability
         saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
@@ -707,6 +708,7 @@ class JdbcTest {
 
         val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 4
+        // TODO: fix nullability
         dataSchema.columns["id"]!!.type shouldBe typeOf<Int>()
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
         dataSchema.columns["surname"]!!.type shouldBe typeOf<String?>()
