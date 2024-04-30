@@ -50,4 +50,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @return The corresponding Kotlin data type, or null if no mapping is found.
      */
     public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
+
+    public open fun sqlQueryLimitOne(tableName: String): String = "SELECT * FROM $tableName LIMIT 1"
 }

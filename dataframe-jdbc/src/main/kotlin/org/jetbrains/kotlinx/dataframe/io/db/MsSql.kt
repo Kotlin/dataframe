@@ -36,4 +36,6 @@ public object MsSql : DbType("sqlserver") {
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         return null
     }
+
+    public override fun sqlQueryLimitOne(tableName: String): String = "SELECT TOP 1 * FROM $tableName"
 }

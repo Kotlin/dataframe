@@ -367,11 +367,11 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    val preparedQuery = "SELECT * FROM $tableName LIMIT 1"
+    val selectFirstRowQuery = dbType.sqlQueryLimitOne(tableName)
 
     connection.createStatement().use { st ->
         st.executeQuery(
-            preparedQuery
+            selectFirstRowQuery
         ).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, dbType)
