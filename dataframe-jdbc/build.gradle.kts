@@ -25,6 +25,8 @@ dependencies {
     testImplementation(libs.postgresql)
     testImplementation(libs.mysql)
     testImplementation(libs.h2db)
+    // TODO
+    testImplementation ("com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11")
     testImplementation(libs.junit)
     testImplementation(libs.sl4j)
     testImplementation(libs.kotestAssertions) {
