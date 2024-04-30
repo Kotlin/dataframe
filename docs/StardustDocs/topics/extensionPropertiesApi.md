@@ -4,7 +4,7 @@
 
 When [`DataFrame`](DataFrame.md) is used within Jupyter/Kotlin Notebook or Datalore with the Kotlin Kernel,
 something special happens:
-After every cell execution, all new global variables of type DataFrame are analyzed and replaced 
+After every cell execution, all new global variables of type DataFrame are analyzed and replaced
 with a typed [`DataFrame`](DataFrame.md) wrapper along with auto-generated extension properties for data access.
 For instance, say we run:
 
@@ -16,7 +16,11 @@ val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
 
 <!---END-->
 
-In normal Kotlin code, we would now have a variable of type [`AnyFrame` (=`DataFrame<*>`)](DataFrame.md)  that doesn't have any 
+TODO make df <dataFrame>
+
+
+In normal Kotlin code, we would now have a variable of type [`AnyFrame` (=`DataFrame<*>`)](DataFrame.md)  that doesn't
+have any
 extension properties to access its columns. We would either have to define them manually or use the
 [`@DataSchema`](schemas.md) annotation to [generate them](schemasGradle.md#configuration).
 
@@ -39,7 +43,8 @@ df.add("lastName") { name.split(",").last() }
 
 The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
 
-Extension properties can be generated in IntelliJ IDEA using the [Kotlin Dataframe Gradle plugin](schemasGradle.md#configuration).
+Extension properties can be generated in IntelliJ IDEA using
+the [Kotlin Dataframe Gradle plugin](schemasGradle.md#configuration).
 
 <warning>
 In notebooks generated properties won't appear and be updated until the cell has been executed.
