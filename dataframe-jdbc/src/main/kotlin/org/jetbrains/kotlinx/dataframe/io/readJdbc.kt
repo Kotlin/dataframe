@@ -228,13 +228,24 @@ private fun isValid(sqlQuery: String): Boolean {
 }
 
 /**
- * Reads the data from a [ResultSet] and converts it into a DataFrame.
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
  *
- * @param [resultSet] the [ResultSet] containing the data to read.
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
+ * Therefore, you can iterate through it only once, from the first row to the last row.
+ *
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ *
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ *
+ * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
+ * Its state may be altered after the read operation.
  * @param [dbType] the type of database that the [ResultSet] belongs to.
- * @param [limit] the maximum number of rows to read from the [ResultSet].
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return the DataFrame generated from the [ResultSet] data.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *
+ * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
  */
 public fun DataFrame.Companion.readResultSet(
     resultSet: ResultSet,
@@ -247,13 +258,25 @@ public fun DataFrame.Companion.readResultSet(
 }
 
 /**
- * Reads the data from a [ResultSet] and converts it into a DataFrame.
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
  *
- * @param [resultSet] the [ResultSet] containing the data to read.
- * @param [connection] the connection to the database (it's required to extract the database type).
- * @param [limit] the maximum number of rows to read from the [ResultSet].
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
+ * Therefore, you can iterate through it only once, from the first row to the last row.
+ *
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ *
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ *
+ * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
+ * Its state may be altered after the read operation.
+ * @param [connection] the connection to the database (it's required to extract the database type)
+ * that the [ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return the DataFrame generated from the [ResultSet] data.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *
+ * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
  */
 public fun DataFrame.Companion.readResultSet(
     resultSet: ResultSet,
