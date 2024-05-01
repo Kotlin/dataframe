@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.index
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -115,24 +116,26 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFra
 public interface TraversePropertiesDsl {
 
     /**
-     * Skip given [classes] during recursive (dfs) traversal
+     * Skip given [classes] during recursive (dfs) traversal.
      */
     public fun exclude(vararg classes: KClass<*>)
 
     /**
-     * Skip given [properties] during recursive (dfs) traversal
+     * Skip given [properties] during recursive (dfs) traversal.
+     * These can also be getter-like functions (like `getX()` or `isX()`).
      */
-    public fun exclude(vararg properties: KProperty<*>)
+    public fun exclude(vararg properties: KCallable<*>)
 
     /**
-     * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns
+     * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      */
     public fun preserve(vararg classes: KClass<*>)
 
     /**
-     * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns
+     * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+     * These can also be getter-like functions (like `getX()` or `isX()`).
      */
-    public fun preserve(vararg properties: KProperty<*>)
+    public fun preserve(vararg properties: KCallable<*>)
 }
 
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
@@ -148,7 +151,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
 
     public abstract fun properties(
-        vararg roots: KProperty<*>,
+        vararg roots: KCallable<*>,
         maxDepth: Int = 0,
         body: (TraversePropertiesDsl.() -> Unit)? = null,
     )

@@ -13,10 +13,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
@@ -141,5 +144,38 @@ internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
 internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =
     MarkersExtractor.get(clazz).schema.createEmptyDataFrame()
 
-internal fun getPropertiesOrder(clazz: KClass<*>): Map<String, Int> =
-    clazz.primaryConstructor?.parameters?.mapNotNull { it.name }?.mapIndexed { i, v -> v to i }?.toMap() ?: emptyMap()
+/**
+ * Returns a map of property names to their order in the primary/single constructor, if it exists,
+ * `null` otherwise.
+ */
+internal fun getPropertyOrderFromPrimaryConstructor(clazz: KClass<*>): Map<String, Int>? =
+    (clazz.primaryConstructor ?: clazz.constructors.singleOrNull())
+        ?.parameters
+        ?.mapNotNull { it.name }
+        ?.mapIndexed { i, v -> v to i }
+        ?.toMap()
+
+/**
+ * Sorts [this] according to the order of their [columnName] in the primary/single constructor of [klass]
+ * if it exists, else, it falls back to lexicographical sorting.
+ */
+internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): List<KCallable<T>> {
+    require(all { it.isGetterLike() })
+    val primaryConstructorOrder = getPropertyOrderFromPrimaryConstructor(klass)
+
+    // starting off lexicographically
+    val lexicographicalColumns = sortedBy { it.columnName }
+
+    // if no primary constructor, return lexicographical order
+    if (primaryConstructorOrder == null) {
+        return lexicographicalColumns
+    }
+
+    // else sort the ones in the primary constructor first according to the order in there
+    // leave the rest at the end in lexicographical order
+    val (propsInConstructor, propsNotInConstructor) =
+        lexicographicalColumns.partition { it.columnName in primaryConstructorOrder.keys }
+
+    return propsInConstructor
+        .sortedBy { primaryConstructorOrder[it.columnName] } + propsNotInConstructor
+}

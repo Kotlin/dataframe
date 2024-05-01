@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
@@ -124,15 +125,16 @@ internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
 internal fun AnyRow.renderToString(): String {
     val values = getVisibleValues()
     if (values.isEmpty()) return "{ }"
-    return values
-        .map { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }
-        .joinToString(prefix = "{ ", postfix = " }")
+    return values.joinToString(
+        prefix = "{ ",
+        postfix = " }"
+    ) { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }
 }
 
 internal fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
     if (columnsCount() == 0) return ""
     val pairs = owner.columns().map { it.name() to renderValueForRowTable(it[index], forHtml) }
-    val width = pairs.map { it.first.length + it.second.textLength }.maxOrNull()!! + 4
+    val width = pairs.maxOf { it.first.length + it.second.textLength } + 4
     return pairs.joinToString("\n") {
         it.first + " ".repeat(width - it.first.length - it.second.textLength) + it.second.truncatedContent
     }
@@ -165,14 +167,18 @@ internal fun renderValueForStdout(
     renderValueToString(value, decimalFormat).truncate(limit)
         .let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
 
-internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalFormat) =
+internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalFormat): String =
     when (value) {
         is AnyFrame -> "[${value.size}]".let { if (value.nrow == 1) it + " " + value[0].toString() else it }
         is Double -> value.format(decimalFormat)
         is Float -> value.format(decimalFormat)
         is BigDecimal -> value.format(decimalFormat)
         is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
-        else -> value.toString()
+        is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
+        else ->
+            value
+                ?.asArrayAsListOrNull()?.let { renderValueToString(it, decimalFormat) }
+                ?: value.toString()
     }
 
 internal fun internallyRenderable(value: Any?): Boolean {
