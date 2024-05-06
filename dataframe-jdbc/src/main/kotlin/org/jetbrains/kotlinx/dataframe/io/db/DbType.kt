@@ -51,6 +51,14 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 
+
+    /**
+     * Constructs a SQL query with a limit clause.
+     *
+     * @param sqlQuery The original SQL query.
+     * @param limit The maximum number of rows to retrieve from the query. Default is 1.
+     * @return A new SQL query with the limit clause added.
+     */
     public open fun sqlQueryLimit(sqlQuery: String, limit: Int = 1): String =
-        "SELECT * FROM ($sqlQuery) as LIMIT_TABLE LIMIT $limit"
+        "$sqlQuery LIMIT $limit"
 }

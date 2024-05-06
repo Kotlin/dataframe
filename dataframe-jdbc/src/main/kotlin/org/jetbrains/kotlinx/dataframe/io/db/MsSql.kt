@@ -39,6 +39,8 @@ public object MsSql : DbType("sqlserver") {
         return null
     }
 
-    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String =
-        "SELECT TOP $limit * FROM ($sqlQuery) as LIMIT_TABLE"
+    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String {
+        sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)
+        return sqlQuery
+    }
 }

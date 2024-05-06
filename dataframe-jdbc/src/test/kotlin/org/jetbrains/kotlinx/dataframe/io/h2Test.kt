@@ -676,6 +676,8 @@ class JdbcTest {
         saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
     }
 
+    // TODO: add the same test for each particular database and refactor the scenario to the common test case
+    // https://github.com/Kotlin/dataframe/issues/688
     @Test
     fun `infer nullability`() {
         // prepare tables and data
@@ -708,7 +710,6 @@ class JdbcTest {
 
         val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 4
-        // TODO: fix nullability
         dataSchema.columns["id"]!!.type shouldBe typeOf<Int>()
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
         dataSchema.columns["surname"]!!.type shouldBe typeOf<String?>()
