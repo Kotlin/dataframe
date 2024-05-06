@@ -51,7 +51,6 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      */
     public abstract fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType?
 
-
     /**
      * Constructs a SQL query with a limit clause.
      *

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
+import java.util.*
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
@@ -21,12 +22,27 @@ public object MsSql : DbType("sqlserver") {
         return null
     }
 
-    // TODO: need to find solution to filter system tables
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return MySql.isSystemTable(tableMetadata)
+        val locale = Locale.getDefault()
+
+        fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
+
+        val schemaName = tableMetadata.schemaName
+        val tableName = tableMetadata.name
+        val catalogName = tableMetadata.catalogue
+
+        return schemaName.containsWithLowercase("sys") ||
+            schemaName.containsWithLowercase("information_schema") ||
+            tableName.startsWith("sys") ||
+            tableName.startsWith("dt") ||
+            tableName.containsWithLowercase("sys_config") ||
+            catalogName.containsWithLowercase("system") ||
+            catalogName.containsWithLowercase("master") ||
+            catalogName.containsWithLowercase("model") ||
+            catalogName.containsWithLowercase("msdb") ||
+            catalogName.containsWithLowercase("tempdb")
     }
 
-    // TODO: need to check
     override fun buildTableMetadata(tables: ResultSet): TableMetadata {
         return TableMetadata(
             tables.getString("table_name"),
