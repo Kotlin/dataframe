@@ -144,7 +144,7 @@ class MSSQLTest {
                 uniqueidentifierColumn, varbinaryColumn, varbinaryMaxColumn, varcharColumn, varcharMaxColumn,
                 xmlColumn, sqlvariantColumn, geometryColumn, geographyColumn
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """.trimIndent()
+            """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
                 for (i in 1..5) {
@@ -183,7 +183,8 @@ class MSSQLTest {
                     st.setString(32, "<xml>Sample$i</xml>") // xmlColumn
                     st.setString(33, "SQL_VARIANT") // sqlvariantColumn
                     st.setBytes(
-                        34, byteArrayOf(
+                        34,
+                        byteArrayOf(
                             0xE6.toByte(), 0x10, 0x00, 0x00, 0x01, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
                             0x44, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x05, 0x4C, 0x0
                         )
@@ -259,11 +260,11 @@ class MSSQLTest {
     fun `read from sql query`() {
         @Language("SQL")
         val sqlQuery = """
-               SELECT
-                  Table1.id,
-                  Table1.bigintColumn
-               FROM Table1
-           """.trimIndent()
+            SELECT
+            Table1.id,
+            Table1.bigintColumn
+            FROM Table1
+        """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
         val result = df.filter { it[Table1MSSSQL::id] == 1 }
@@ -274,16 +275,15 @@ class MSSQLTest {
         schema.columns["bigintColumn"]!!.type shouldBe typeOf<Long?>()
     }
 
-    // TODO: special behaviour with catalogues in MSSQL?
     @Test
     fun `read from all tables`() {
-         val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4)
+        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4)
 
-         val table1Df = dataframes[0].cast<Table1MSSSQL>()
+        val table1Df = dataframes[0].cast<Table1MSSSQL>()
 
-         table1Df.rowsCount() shouldBe 4
-         table1Df.filter { it[Table1MSSSQL::id] > 2 }.rowsCount() shouldBe 2
-         table1Df[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
+        table1Df.rowsCount() shouldBe 4
+        table1Df.filter { it[Table1MSSSQL::id] > 2 }.rowsCount() shouldBe 2
+        table1Df[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
     }
 
     // TODO: add the same test for each particular database and refactor the scenario to the common test case

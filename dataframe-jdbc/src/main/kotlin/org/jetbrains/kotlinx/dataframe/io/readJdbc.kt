@@ -143,7 +143,7 @@ public fun DataFrame.Companion.readSqlTable(
     var selectAllQuery = "SELECT * FROM $tableName"
     if (limit > 0) selectAllQuery = dbType.sqlQueryLimit(selectAllQuery, limit)
 
-        connection.createStatement().use { st ->
+    connection.createStatement().use { st ->
         logger.debug { "Connection with url:$url is established successfully." }
 
         st.executeQuery(
@@ -535,7 +535,6 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     val databaseMetaData: DatabaseMetaData = rs.statement.connection.metaData
     val catalog: String? = rs.statement.connection.catalog.takeUnless { it.isNullOrBlank() }
     val schema: String? = rs.statement.connection.schema.takeUnless { it.isNullOrBlank() }
-
 
     for (i in 1 until numberOfColumns + 1) {
         val tableName = metaData.getTableName(i)
