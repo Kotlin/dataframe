@@ -9,9 +9,9 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
 /**
- * Represents the MariaDb database type.
+ * Represents the MSSQL database type.
  *
- * This class provides methods to convert data from a ResultSet to the appropriate type for MariaDb,
+ * This class provides methods to convert data from a ResultSet to the appropriate type for MSSQL,
  * and to generate the corresponding column schema.
  */
 public object MsSql : DbType("sqlserver") {
