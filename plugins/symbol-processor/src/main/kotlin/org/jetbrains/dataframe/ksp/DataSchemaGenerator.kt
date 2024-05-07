@@ -172,10 +172,19 @@ class DataSchemaGenerator(
             // Force classloading
             Class.forName(driverClassNameFromUrl(url))
 
+            var userName = importStatement.jdbcOptions.user
+            var password = importStatement.jdbcOptions.password
+
+            // treat the passed userName and password parameters as env variables
+            if (importStatement.jdbcOptions.extractCredFromEnv) {
+                userName = System.getenv(userName) ?: userName
+                password = System.getenv(password) ?: password
+            }
+
             val connection = DriverManager.getConnection(
                 url,
-                importStatement.jdbcOptions.user,
-                importStatement.jdbcOptions.password
+                userName,
+                password
             )
 
             connection.use {
@@ -269,24 +278,38 @@ class DataSchemaGenerator(
         }
     }
 
-    private fun generateSchemaForImport(
-        importStatement: ImportDataSchemaStatement,
-        connection: Connection,
-    ): DataFrameSchema {
+    private fun generateSchemaForImport(importStatement: ImportDataSchemaStatement, connection: Connection): DataFrameSchema {
         logger.info("Table name: ${importStatement.jdbcOptions.tableName}")
         logger.info("SQL query: ${importStatement.jdbcOptions.sqlQuery}")
 
-        return if (importStatement.jdbcOptions.tableName.isNotBlank()) {
-            DataFrame.getSchemaForSqlTable(connection, importStatement.jdbcOptions.tableName)
-        } else if (importStatement.jdbcOptions.sqlQuery.isNotBlank()) {
-            DataFrame.getSchemaForSqlQuery(connection, importStatement.jdbcOptions.sqlQuery)
-        } else {
-            throw RuntimeException(
-                "Table name: ${importStatement.jdbcOptions.tableName}, " +
-                    "SQL query: ${importStatement.jdbcOptions.sqlQuery} both are empty! " +
-                    "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
-                    "for SQL table or result of SQL query!"
-            )
+        val tableName = importStatement.jdbcOptions.tableName
+        val sqlQuery = importStatement.jdbcOptions.sqlQuery
+
+        return when {
+            isTableNameNotBlankAndQueryBlank(tableName, sqlQuery) -> generateSchemaForTable(connection, tableName)
+            isQueryNotBlankAndTableBlank(tableName, sqlQuery) -> generateSchemaForQuery(connection, sqlQuery)
+            areBothNotBlank(tableName, sqlQuery) -> throwBothFieldsFilledException(tableName, sqlQuery)
+            else -> throwBothFieldsEmptyException(tableName, sqlQuery)
         }
+    }
+
+    private fun isTableNameNotBlankAndQueryBlank(tableName: String, sqlQuery: String) = tableName.isNotBlank() && sqlQuery.isBlank()
+
+    private fun isQueryNotBlankAndTableBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isBlank()
+
+    private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
+
+    private fun generateSchemaForTable(connection: Connection, tableName: String) = DataFrame.getSchemaForSqlTable(connection, tableName)
+
+    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+
+    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing {
+        throw RuntimeException("Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
+            "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!")
+    }
+
+    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing {
+        throw RuntimeException("Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
+            "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!")
     }
 }

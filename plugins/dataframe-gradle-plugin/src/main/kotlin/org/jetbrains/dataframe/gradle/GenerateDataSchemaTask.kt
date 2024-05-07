@@ -174,6 +174,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         }
     }
 
+    // TODO: copy pasted from symbol-processor: DataSchemaGenerator, should be refactored somehow
     private fun generateSchemaByJdbcOptions(
         jdbcOptions: JdbcOptionsDsl,
         connection: Connection,
@@ -181,18 +182,35 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         logger.debug("Table name: ${jdbcOptions.tableName}")
         logger.debug("SQL query: ${jdbcOptions.sqlQuery}")
 
-        return if (jdbcOptions.tableName.isNotBlank()) {
-            DataFrame.getSchemaForSqlTable(connection, jdbcOptions.tableName)
-        } else if (jdbcOptions.sqlQuery.isNotBlank()) {
-            DataFrame.getSchemaForSqlQuery(connection, jdbcOptions.sqlQuery)
-        } else {
-            throw RuntimeException(
-                "Table name: ${jdbcOptions.tableName}, " +
-                    "SQL query: ${jdbcOptions.sqlQuery} both are empty! " +
-                    "Populate 'tableName' or 'sqlQuery' in jdbcOptions with value to generate schema " +
-                    "for SQL table or result of SQL query!"
-            )
+        val tableName = jdbcOptions.tableName
+        val sqlQuery = jdbcOptions.sqlQuery
+
+        return when {
+            isTableNameNotBlankAndQueryBlank(tableName, sqlQuery) -> generateSchemaForTable(connection, tableName)
+            isQueryNotBlankAndTableBlank(tableName, sqlQuery) -> generateSchemaForQuery(connection, sqlQuery)
+            areBothNotBlank(tableName, sqlQuery) -> throwBothFieldsFilledException(tableName, sqlQuery)
+            else -> throwBothFieldsEmptyException(tableName, sqlQuery)
         }
+    }
+
+    private fun isTableNameNotBlankAndQueryBlank(tableName: String, sqlQuery: String) = tableName.isNotBlank() && sqlQuery.isBlank()
+
+    private fun isQueryNotBlankAndTableBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isBlank()
+
+    private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
+
+    private fun generateSchemaForTable(connection: Connection, tableName: String) = DataFrame.getSchemaForSqlTable(connection, tableName)
+
+    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+
+    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing {
+        throw RuntimeException("Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
+            "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!")
+    }
+
+    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing {
+        throw RuntimeException("Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
+            "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!")
     }
 
     private fun stringOf(data: Any): String =
