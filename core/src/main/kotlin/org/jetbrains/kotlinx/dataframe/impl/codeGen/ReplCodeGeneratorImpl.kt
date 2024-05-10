@@ -86,7 +86,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         val result = generator.generate(
             schema = schema,
             name = name,
-            fields = false,
+            fields = true,
             extensionProperties = true,
             isOpen = isOpen,
             visibility = MarkerVisibility.IMPLICIT_PUBLIC,
