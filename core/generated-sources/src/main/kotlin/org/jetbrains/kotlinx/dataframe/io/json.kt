@@ -276,6 +276,7 @@ public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = fa
  * Applied for each frame column recursively
  * @param prettyPrint Specifies whether the output JSON should be formatted with indentation and line breaks.
  * @param canonical Specifies whether the output JSON should be in a canonical form.
+ * @param imageEncodingOptions The options for encoding images in the DataFrame. Defaults to encode images as Base64.
  *
  * @return The DataFrame converted to a JSON string with metadata.
  */
@@ -283,11 +284,38 @@ public fun AnyFrame.toJsonWithMetadata(
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
-    canonical: Boolean = false
+    canonical: Boolean = false,
+    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions(encodeAsBase64 = true)
 ): String {
     return json {
-        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit)
+        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
     }.toJsonString(prettyPrint, canonical)
+}
+
+internal const val DEFAULT_IMG_SIZE = 600
+
+/**
+ * Class representing the options for encoding images.
+ *
+ * @property encodeAsBase64 Specifies whether the images should be encoded as Base64. Defaults to false.
+ * @property imageSizeLimit The maximum size to which images should be resized. Defaults to the value of DEFAULT_IMG_SIZE.
+ * @property options Bitwise-OR of the [GZIP_ON] and [LIMIT_SIZE_ON] constants. Defaults to [GZIP_ON] or [LIMIT_SIZE_ON].
+ */
+public class ImageEncodingOptions(
+    public val encodeAsBase64: Boolean = false,
+    public val imageSizeLimit: Int = DEFAULT_IMG_SIZE,
+    private val options: Int = GZIP_ON or LIMIT_SIZE_ON
+) {
+    public val isGzipOn: Boolean
+        get() = options and GZIP_ON == GZIP_ON
+
+    public val isLimitSizeOn: Boolean
+        get() = options and LIMIT_SIZE_ON == LIMIT_SIZE_ON
+
+    public companion object {
+        public const val GZIP_ON: Int = 1 // 2^0
+        public const val LIMIT_SIZE_ON: Int = 2 // 2^1
+    }
 }
 
 public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {

@@ -23,11 +23,14 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
+import org.jetbrains.kotlinx.dataframe.io.ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
 import org.jetbrains.kotlinx.dataframe.io.valueColumnName
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.typeClass
+import java.awt.image.BufferedImage
+import java.io.IOException
 
 internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject? {
     val values = frame.columns().map { col ->
@@ -57,18 +60,19 @@ internal const val SERIALIZATION_VERSION = "2.0.0"
 internal fun KlaxonJson.encodeRowWithMetadata(
     frame: ColumnsContainer<*>,
     index: Int,
-    rowLimit: Int? = null
+    rowLimit: Int? = null,
+    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
 ): JsonObject? {
     val values = frame.columns().map { col ->
         when (col) {
             is ColumnGroup<*> -> obj(
-                DATA to encodeRowWithMetadata(col, index, rowLimit),
+                DATA to encodeRowWithMetadata(col, index, rowLimit, imageEncodingOptions),
                 METADATA to obj(KIND to ColumnKind.Group.toString())
             )
 
             is FrameColumn<*> -> {
-                val data = if (rowLimit == null) encodeFrameWithMetadata(col[index])
-                else encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit)
+                val data = if (rowLimit == null) encodeFrameWithMetadata(col[index], null, imageEncodingOptions)
+                else encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit, imageEncodingOptions)
                 obj(
                     DATA to data,
                     METADATA to obj(
@@ -79,7 +83,7 @@ internal fun KlaxonJson.encodeRowWithMetadata(
                 )
             }
 
-            else -> encodeValue(col, index)
+            else -> encodeValue(col, index, imageEncodingOptions)
         }.let { col.name to it }
     }
     if (values.isEmpty()) return null
@@ -89,7 +93,11 @@ internal fun KlaxonJson.encodeRowWithMetadata(
 private val valueTypes =
     setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
 
-internal fun KlaxonJson.encodeValue(col: AnyCol, index: Int): Any? = when {
+internal fun KlaxonJson.encodeValue(
+    col: AnyCol,
+    index: Int,
+    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions(encodeAsBase64 = false)
+): Any? = when {
     col.isList() -> col[index]?.let { list ->
         val values = (list as List<*>).map {
             when (it) {
@@ -108,10 +116,45 @@ internal fun KlaxonJson.encodeValue(col: AnyCol, index: Int): Any? = when {
         } else v
     }
 
+    col.typeClass == BufferedImage::class -> col[index]?.let { image ->
+        encodeBufferedImage(image as BufferedImage, imageEncodingOptions)
+    } ?: ""
+
     else -> col[index]?.toString()
 }
 
-internal fun KlaxonJson.encodeFrameWithMetadata(frame: AnyFrame, rowLimit: Int? = null): JsonArray<*> {
+private fun encodeBufferedImage(
+    image: BufferedImage,
+    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
+): String? {
+    if (!imageEncodingOptions.encodeAsBase64) {
+        return image.toString()
+    }
+
+    return try {
+        val preparedImage = if (imageEncodingOptions.isLimitSizeOn) {
+            image.resizeKeepingAspectRatio(imageEncodingOptions.imageSizeLimit)
+        } else {
+            image
+        }
+
+        val bytes = if (imageEncodingOptions.isGzipOn) {
+            preparedImage.toByteArray().encodeGzip()
+        } else {
+            preparedImage.toByteArray()
+        }
+
+        bytes.toBase64()
+    } catch (e: IOException) {
+        null
+    }
+}
+
+internal fun KlaxonJson.encodeFrameWithMetadata(
+    frame: AnyFrame,
+    rowLimit: Int? = null,
+    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
+): JsonArray<*> {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
 
@@ -122,9 +165,13 @@ internal fun KlaxonJson.encodeFrameWithMetadata(frame: AnyFrame, rowLimit: Int? 
             ?.get(rowIndex)
             ?: arrayColumn?.get(rowIndex)
                 ?.let {
-                    if (arraysAreFrames) encodeFrameWithMetadata(it as AnyFrame, rowLimit) else null
+                    if (arraysAreFrames) encodeFrameWithMetadata(
+                        it as AnyFrame,
+                        rowLimit,
+                        imageEncodingOptions
+                    ) else null
                 }
-            ?: encodeRowWithMetadata(frame, rowIndex, rowLimit)
+            ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, imageEncodingOptions)
     }
 
     return array(data)
@@ -206,6 +253,7 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int,
     nestedRowLimit: Int? = null,
+    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
 ): JsonObject {
     return obj(
         VERSION to SERIALIZATION_VERSION,
@@ -216,7 +264,8 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
         ),
         KOTLIN_DATAFRAME to encodeFrameWithMetadata(
             frame.take(rowLimit),
-            rowLimit = nestedRowLimit
+            rowLimit = nestedRowLimit,
+            imageEncodingOptions
         ),
     )
 }
