@@ -137,17 +137,17 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
 ): AnyFrame {
-    var preparedQuery = "SELECT * FROM $tableName"
-    if (limit > 0) preparedQuery += " LIMIT $limit"
-
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
+
+    val selectAllQuery = if (limit > 0) dbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
+    else "SELECT * FROM $tableName"
 
     connection.createStatement().use { st ->
         logger.debug { "Connection with url:$url is established successfully." }
 
         st.executeQuery(
-            preparedQuery
+            selectAllQuery
         ).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit, inferNullability)
@@ -206,8 +206,7 @@ public fun DataFrame.Companion.readSqlQuery(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    var internalSqlQuery = sqlQuery
-    if (limit > 0) internalSqlQuery += " LIMIT $limit"
+    val internalSqlQuery = if (limit > 0) dbType.sqlQueryLimit(sqlQuery, limit) else sqlQuery
 
     logger.debug { "Executing SQL query: $internalSqlQuery" }
 
@@ -340,9 +339,11 @@ public fun DataFrame.Companion.readAllSqlTables(
         val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
             // we filter her second time because of specific logic with SQLite and possible issues with future databases
-            // val tableName = if (table.catalogue != null) table.catalogue + "." + table.name else table.name
-            val tableName = if (catalogue != null) catalogue + "." + table.name else table.name
-
+            val tableName = when {
+                catalogue != null && table.schemaName != null -> "$catalogue.${table.schemaName}.${table.name}"
+                catalogue != null && table.schemaName == null -> "$catalogue.${table.name}"
+                else -> table.name
+            }
             // TODO: both cases is schema specified or not in URL
             // in h2 database name is recognized as a schema name https://www.h2database.com/html/features.html#database_url
             // https://stackoverflow.com/questions/20896935/spring-hibernate-h2-database-schema-not-found
@@ -390,11 +391,12 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    val preparedQuery = "SELECT * FROM $tableName LIMIT 1"
+    val sqlQuery = "SELECT * FROM $tableName"
+    val selectFirstRowQuery = dbType.sqlQueryLimit(sqlQuery, limit = 1)
 
     connection.createStatement().use { st ->
         st.executeQuery(
-            preparedQuery
+            selectFirstRowQuery
         ).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, dbType)
@@ -555,15 +557,19 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     val schema: String? = rs.statement.connection.schema.takeUnless { it.isNullOrBlank() }
 
     for (i in 1 until numberOfColumns + 1) {
+        val tableName = metaData.getTableName(i)
+        val columnName = metaData.getColumnName(i)
+
+        // this algorithm works correctly only for SQL Table and ResultSet opened on one SQL table
         val columnResultSet: ResultSet =
-            databaseMetaData.getColumns(catalog, schema, metaData.getTableName(i), metaData.getColumnName(i))
+            databaseMetaData.getColumns(catalog, schema, tableName, columnName)
         val isNullable = if (columnResultSet.next()) {
             columnResultSet.getString("IS_NULLABLE") == "YES"
         } else {
             true // we assume that it's nullable by default
         }
 
-        val name = manageColumnNameDuplication(columnNameCounter, metaData.getColumnName(i))
+        val name = manageColumnNameDuplication(columnNameCounter, columnName)
         val size = metaData.getColumnDisplaySize(i)
         val type = metaData.getColumnTypeName(i)
         val jdbcType = metaData.getColumnType(i)
