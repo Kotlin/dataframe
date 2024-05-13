@@ -193,24 +193,32 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         }
     }
 
-    private fun isTableNameNotBlankAndQueryBlank(tableName: String, sqlQuery: String) = tableName.isNotBlank() && sqlQuery.isBlank()
+    private fun isTableNameNotBlankAndQueryBlank(tableName: String, sqlQuery: String) =
+        tableName.isNotBlank() && sqlQuery.isBlank()
 
-    private fun isQueryNotBlankAndTableBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isBlank()
+    private fun isQueryNotBlankAndTableBlank(tableName: String, sqlQuery: String) =
+        sqlQuery.isNotBlank() && tableName.isBlank()
 
     private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
 
-    private fun generateSchemaForTable(connection: Connection, tableName: String) = DataFrame.getSchemaForSqlTable(connection, tableName)
+    private fun generateSchemaForTable(connection: Connection, tableName: String) =
+        DataFrame.getSchemaForSqlTable(connection, tableName)
 
-    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
+        DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
 
     private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing {
-        throw RuntimeException("Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
-            "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!")
+        throw RuntimeException(
+            "Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
+                "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
+        )
     }
 
     private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing {
-        throw RuntimeException("Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
-            "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!")
+        throw RuntimeException(
+            "Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
+                "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
+        )
     }
 
     private fun stringOf(data: Any): String =

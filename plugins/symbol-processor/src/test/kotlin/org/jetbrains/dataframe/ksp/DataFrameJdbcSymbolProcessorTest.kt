@@ -268,7 +268,6 @@ class DataFrameJdbcSymbolProcessorTest {
         result.successfulCompilation shouldBe true
     }
 
-
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
         inspectLines(generatedFile, f)
     }
