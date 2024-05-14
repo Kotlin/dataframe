@@ -276,7 +276,7 @@ public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = fa
  * Applied for each frame column recursively
  * @param prettyPrint Specifies whether the output JSON should be formatted with indentation and line breaks.
  * @param canonical Specifies whether the output JSON should be in a canonical form.
- * @param imageEncodingOptions The options for encoding images in the DataFrame. Defaults to encode images as Base64.
+ * @param imageEncodingOptions The options for encoding images. The default is null, which indicates that the image is not encoded as Base64.
  *
  * @return The DataFrame converted to a JSON string with metadata.
  */
@@ -285,7 +285,7 @@ public fun AnyFrame.toJsonWithMetadata(
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
     canonical: Boolean = false,
-    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions(encodeAsBase64 = true)
+    imageEncodingOptions: Base64ImageEncodingOptions? = null
 ): String {
     return json {
         encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
@@ -297,12 +297,10 @@ internal const val DEFAULT_IMG_SIZE = 600
 /**
  * Class representing the options for encoding images.
  *
- * @property encodeAsBase64 Specifies whether the images should be encoded as Base64. Defaults to false.
  * @property imageSizeLimit The maximum size to which images should be resized. Defaults to the value of DEFAULT_IMG_SIZE.
  * @property options Bitwise-OR of the [GZIP_ON] and [LIMIT_SIZE_ON] constants. Defaults to [GZIP_ON] or [LIMIT_SIZE_ON].
  */
-public class ImageEncodingOptions(
-    public val encodeAsBase64: Boolean = false,
+public class Base64ImageEncodingOptions(
     public val imageSizeLimit: Int = DEFAULT_IMG_SIZE,
     private val options: Int = GZIP_ON or LIMIT_SIZE_ON
 ) {
@@ -313,6 +311,7 @@ public class ImageEncodingOptions(
         get() = options and LIMIT_SIZE_ON == LIMIT_SIZE_ON
 
     public companion object {
+        public const val ALL_OFF: Int = 0
         public const val GZIP_ON: Int = 1 // 2^0
         public const val LIMIT_SIZE_ON: Int = 2 // 2^1
     }

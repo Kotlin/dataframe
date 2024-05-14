@@ -23,7 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
-import org.jetbrains.kotlinx.dataframe.io.ImageEncodingOptions
+import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
 import org.jetbrains.kotlinx.dataframe.io.valueColumnName
 import org.jetbrains.kotlinx.dataframe.ncol
@@ -61,7 +61,7 @@ internal fun KlaxonJson.encodeRowWithMetadata(
     frame: ColumnsContainer<*>,
     index: Int,
     rowLimit: Int? = null,
-    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
+    imageEncodingOptions: Base64ImageEncodingOptions? = null
 ): JsonObject? {
     val values = frame.columns().map { col ->
         when (col) {
@@ -96,7 +96,7 @@ private val valueTypes =
 internal fun KlaxonJson.encodeValue(
     col: AnyCol,
     index: Int,
-    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions(encodeAsBase64 = false)
+    imageEncodingOptions: Base64ImageEncodingOptions? = null
 ): Any? = when {
     col.isList() -> col[index]?.let { list ->
         val values = (list as List<*>).map {
@@ -109,6 +109,7 @@ internal fun KlaxonJson.encodeValue(
         }
         array(values)
     } ?: array()
+
     col.typeClass in valueTypes -> {
         val v = col[index]
         if ((v is Double && v.isNaN()) || (v is Float && v.isNaN())) {
@@ -116,21 +117,18 @@ internal fun KlaxonJson.encodeValue(
         } else v
     }
 
-    col.typeClass == BufferedImage::class -> col[index]?.let { image ->
-        encodeBufferedImage(image as BufferedImage, imageEncodingOptions)
-    } ?: ""
+    col.typeClass == BufferedImage::class && imageEncodingOptions != null ->
+        col[index]?.let { image ->
+            encodeBufferedImageAsBase64(image as BufferedImage, imageEncodingOptions)
+        } ?: ""
 
     else -> col[index]?.toString()
 }
 
-private fun encodeBufferedImage(
+private fun encodeBufferedImageAsBase64(
     image: BufferedImage,
-    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
+    imageEncodingOptions: Base64ImageEncodingOptions = Base64ImageEncodingOptions()
 ): String? {
-    if (!imageEncodingOptions.encodeAsBase64) {
-        return image.toString()
-    }
-
     return try {
         val preparedImage = if (imageEncodingOptions.isLimitSizeOn) {
             image.resizeKeepingAspectRatio(imageEncodingOptions.imageSizeLimit)
@@ -153,7 +151,7 @@ private fun encodeBufferedImage(
 internal fun KlaxonJson.encodeFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int? = null,
-    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
+    imageEncodingOptions: Base64ImageEncodingOptions? = null
 ): JsonArray<*> {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
@@ -253,7 +251,7 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int,
     nestedRowLimit: Int? = null,
-    imageEncodingOptions: ImageEncodingOptions = ImageEncodingOptions()
+    imageEncodingOptions: Base64ImageEncodingOptions? = null
 ): JsonObject {
     return obj(
         VERSION to SERIALIZATION_VERSION,
