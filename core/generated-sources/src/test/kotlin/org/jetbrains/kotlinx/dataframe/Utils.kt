@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.renderToString
@@ -23,4 +25,9 @@ fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20)
     println?.let { println(it) }
     print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
     schema().print()
+}
+
+fun parseJsonStr(jsonStr: String): JsonObject {
+    val parser = Parser.default()
+    return parser.parse(StringBuilder(jsonStr)) as JsonObject
 }

@@ -39,22 +39,13 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
-import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import org.jetbrains.kotlinx.dataframe.testJson
-import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
-import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.util.*
-import java.util.zip.GZIPInputStream
-import javax.imageio.ImageIO
 import kotlin.reflect.typeOf
 
 class JsonTests {
@@ -1085,142 +1076,5 @@ class JsonTests {
         val df = dataFrameOf("col")(listOf(1, 2, 3))
         val json = df.toJson()
         DataFrame.readJsonStr(json) shouldBe df
-    }
-
-    @Test
-    fun `serialize images as base64 default`() {
-        testSerializeImagesAsBase64()
-    }
-
-    @Test
-    fun `serialize images as base64 gzip on resize off`() {
-        testSerializeImagesAsBase64(ImageEncodingOptions(encodeAsBase64 = true, options = ImageEncodingOptions.GZIP_ON))
-    }
-
-    @Test
-    fun `serialize images as base64 gzip off resize off`() {
-        testSerializeImagesAsBase64(ImageEncodingOptions(encodeAsBase64 = true, options = 0))
-    }
-
-    @Test
-    fun `serialize images as base64 gzip on resize 700`() {
-        testSerializeImagesAsBase64(
-            ImageEncodingOptions(
-                encodeAsBase64 = true,
-                imageSizeLimit = 700,
-                options = ImageEncodingOptions.GZIP_ON or ImageEncodingOptions.LIMIT_SIZE_ON
-            )
-        )
-    }
-
-    @Test
-    fun `serialize images with toString`() {
-        val images = readImagesFromResources()
-
-        val df = dataFrameOf(listOf("imgs"), images)
-        val jsonStr = df.toJsonWithMetadata(
-            20,
-            nestedRowLimit = 20,
-            imageEncodingOptions = ImageEncodingOptions(encodeAsBase64 = false)
-        )
-
-        val json = parseJsonStr(jsonStr)
-
-        for (i in images.indices) {
-            val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[i] as JsonObject
-            val img = row["imgs"] as String
-
-            img shouldContain "BufferedImage"
-        }
-    }
-
-    private fun testSerializeImagesAsBase64(encodingOptions: ImageEncodingOptions? = null) {
-        val images = readImagesFromResources()
-
-        val df = dataFrameOf(listOf("imgs"), images)
-        val jsonStr = if (encodingOptions == null) {
-            df.toJsonWithMetadata(20, nestedRowLimit = 20)
-        } else {
-            df.toJsonWithMetadata(20, nestedRowLimit = 20, imageEncodingOptions = encodingOptions)
-        }
-
-        val json = parseJsonStr(jsonStr)
-
-        for (i in images.indices) {
-            val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[i] as JsonObject
-            val imgString = row["imgs"] as String
-            val bytes = when {
-                encodingOptions == null -> decompressGzip(Base64.getDecoder().decode(imgString))
-                encodingOptions.isGzipOn -> decompressGzip(Base64.getDecoder().decode(imgString))
-                else -> Base64.getDecoder().decode(imgString)
-            }
-
-            val decodedImage = createImageFromBytes(bytes)!!
-            val expectedImage = when {
-                encodingOptions != null && !encodingOptions.isLimitSizeOn -> images[i]
-                else -> images[i].resizeKeepingAspectRatio(encodingOptions?.imageSizeLimit ?: 600)
-            }
-
-            compareImagesWithDelta(decodedImage, expectedImage, 2) shouldBe true
-        }
-    }
-
-    private fun readImagesFromResources(): List<BufferedImage> {
-        val dir = File(testResource("imgs").path)
-
-        return dir.listFiles()?.map { file ->
-            try {
-                ImageIO.read(file)
-            } catch (ex: Exception) {
-                throw IllegalArgumentException("Error reading ${file.name}: ${ex.message}")
-            }
-        } ?: emptyList()
-    }
-
-    private fun decompressGzip(input: ByteArray): ByteArray {
-        return ByteArrayOutputStream().use { byteArrayOutputStream ->
-            GZIPInputStream(input.inputStream()).use { inputStream ->
-                inputStream.copyTo(byteArrayOutputStream)
-            }
-            byteArrayOutputStream.toByteArray()
-        }
-    }
-
-    private fun createImageFromBytes(bytes: ByteArray): BufferedImage? {
-        val bais = ByteArrayInputStream(bytes)
-        return ImageIO.read(bais)
-    }
-
-    private fun compareImagesWithDelta(img1: BufferedImage, img2: BufferedImage, allowedDelta: Int): Boolean {
-        // First check dimensions
-        if (img1.width != img2.width || img1.height != img2.height) {
-            return false
-        }
-
-        // Then check each pixel
-        for (y in 0 until img1.height) {
-            for (x in 0 until img1.width) {
-                val rgb1 = img1.getRGB(x, y)
-                val rgb2 = img2.getRGB(x, y)
-
-                val r1 = (rgb1 shr 16) and 0xFF
-                val g1 = (rgb1 shr 8) and 0xFF
-                val b1 = rgb1 and 0xFF
-
-                val r2 = (rgb2 shr 16) and 0xFF
-                val g2 = (rgb2 shr 8) and 0xFF
-                val b2 = rgb2 and 0xFF
-
-                val diff = kotlin.math.abs(r1 - r2) + kotlin.math.abs(g1 - g2) + kotlin.math.abs(b1 - b2)
-
-                // If the difference in color components exceed our allowance return false
-                if (diff > allowedDelta) {
-                    return false
-                }
-            }
-        }
-
-        // If no exceeding difference was found, the images are identical within our allowedDelta
-        return true
     }
 }
