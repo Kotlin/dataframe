@@ -41,16 +41,12 @@ import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
-import org.jetbrains.kotlinx.dataframe.impl.io.toBase64
-import org.jetbrains.kotlinx.dataframe.impl.io.toByteArray
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
 import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.libraries.*
-import java.awt.image.BufferedImage
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -58,8 +54,6 @@ import kotlin.reflect.full.isSubtypeOf
 
 /** Users will get an error if their Kotlin Jupyter kernel is older than this version. */
 private const val MIN_KERNEL_VERSION = "0.11.0.198"
-
-private const val DEFAULT_HTML_IMG_SIZE = 100
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
@@ -208,19 +202,6 @@ internal class Integration(
                 css("DataFrameTable") { classPath("table.css") }
             }
         }
-
-        notebook.renderersProcessor.registerWithoutOptimizing(
-            createRenderer<BufferedImage> {
-                val src = buildString {
-                    append("""data:image/$DEFAULT_HTML_IMG_SIZE;base64,""")
-                    append(
-                        it.resizeKeepingAspectRatio(DEFAULT_HTML_IMG_SIZE).toByteArray().toBase64()
-                    )
-                }
-                HTML("""<img src="$src"/>""")
-            },
-            ProcessingPriority.HIGHER
-        )
 
         with(JupyterHtmlRenderer(config.display, this)) {
             render<DisableRowsLimitWrapper>(

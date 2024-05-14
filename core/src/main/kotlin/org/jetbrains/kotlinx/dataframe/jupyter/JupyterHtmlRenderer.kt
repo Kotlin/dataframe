@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import com.beust.klaxon.json
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
+import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHTML
@@ -74,7 +75,11 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
                     )
                 }.toJsonString()
             } else {
-                df.toJsonWithMetadata(limit, reifiedDisplayConfiguration.rowsLimit)
+                df.toJsonWithMetadata(
+                    limit,
+                    reifiedDisplayConfiguration.rowsLimit,
+                    imageEncodingOptions = Base64ImageEncodingOptions()
+                )
             }
         notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf)
     } else {
