@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.impl.truncate
@@ -31,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import java.awt.Desktop
+import java.awt.image.BufferedImage
 import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
@@ -152,7 +154,8 @@ internal fun AnyFrame.toHtmlData(
                     DataFrameReference(id, value.size)
                 }
             } else {
-                val html = formatter.format(value, cellRenderer, renderConfig)
+                val html =
+                    formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
                 val style = renderConfig.cellFormatter?.invoke(FormattingDSL, it, col)?.attributes()?.ifEmpty { null }
                     ?.joinToString(";") { "${it.first}:${it.second}" }
                 HtmlContent(html, style)
@@ -179,6 +182,26 @@ internal fun AnyFrame.toHtmlData(
     val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
     return DataFrameHtmlData(style = "", body = body, script = script)
 }
+
+private const val DEFAULT_HTML_IMG_SIZE = 100
+
+/**
+ * This method resizes a BufferedImage if necessary, according to the provided DisplayConfiguration.
+ * It is essential to prevent potential memory problems when serializing HTML data for display in the Kotlin Notebook plugin.
+ *
+ * @param value The input value to be checked and possibly downsized.
+ * @param renderConfig The DisplayConfiguration to determine if downsizing is needed.
+ * @return The downsized BufferedImage if value is a BufferedImage and downsizing is enabled in the DisplayConfiguration,
+ *         otherwise returns the input value unchanged.
+ */
+private fun downsizeBufferedImageIfNeeded(value: Any?, renderConfig: DisplayConfiguration): Any? =
+    when {
+        value is BufferedImage && renderConfig.downsizeBufferedImage -> {
+            value.resizeKeepingAspectRatio(DEFAULT_HTML_IMG_SIZE)
+        }
+
+        else -> value
+    }
 
 /**
  * Renders [this] [DataFrame] as static HTML (meaning no JS is used).
@@ -568,6 +591,7 @@ public data class DisplayConfiguration(
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
     var useDarkColorScheme: Boolean = false,
     var enableFallbackStaticTables: Boolean = true,
+    var downsizeBufferedImage: Boolean = true
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
