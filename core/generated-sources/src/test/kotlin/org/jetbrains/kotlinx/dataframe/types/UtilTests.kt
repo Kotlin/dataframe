@@ -1,12 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.types
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
 import org.jetbrains.kotlinx.dataframe.impl.commonParents
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.commonTypeListifyValues
 import org.jetbrains.kotlinx.dataframe.impl.createType
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
+import org.jetbrains.kotlinx.dataframe.impl.isArray
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.junit.Test
@@ -16,6 +19,56 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 class UtilTests {
+
+    @OptIn(ExperimentalUnsignedTypes::class)
+    @Test
+    fun `isArray tests`() {
+        // KClass isArray
+        BooleanArray::class.isArray shouldBe true
+        UIntArray::class.isArray shouldBe true
+        Array::class.isArray shouldBe true
+
+        // KClass isPrimitiveArray
+        BooleanArray::class.isPrimitiveArray shouldBe true
+        UIntArray::class.isPrimitiveArray shouldBe true
+        Array::class.isPrimitiveArray shouldBe false
+
+        // KType isArray
+        typeOf<BooleanArray>().isArray shouldBe true
+        typeOf<UIntArray>().isArray shouldBe true
+        typeOf<Array<Int>>().isArray shouldBe true
+        typeOf<Array<Int?>>().isArray shouldBe true
+        typeOf<Array<*>>().isArray shouldBe true
+
+        // KType isPrimitiveArray
+        typeOf<BooleanArray>().isPrimitiveArray shouldBe true
+        typeOf<UIntArray>().isPrimitiveArray shouldBe true
+        typeOf<Array<Int>>().isPrimitiveArray shouldBe false
+        typeOf<Array<Int?>>().isPrimitiveArray shouldBe false
+        typeOf<Array<*>>().isPrimitiveArray shouldBe false
+
+        // Any isArray
+        booleanArrayOf().isArray shouldBe true
+        uintArrayOf().isArray shouldBe true
+        arrayOf(1).isArray shouldBe true
+        arrayOf(1, null).isArray shouldBe true
+        arrayOfNulls<Any?>(1).isArray shouldBe true
+
+        // Any isPrimitiveArray
+        booleanArrayOf().isPrimitiveArray shouldBe true
+        uintArrayOf().isPrimitiveArray shouldBe true
+        arrayOf(1).isPrimitiveArray shouldBe false
+        arrayOf(1, null).isPrimitiveArray shouldBe false
+        arrayOfNulls<Any?>(1).isPrimitiveArray shouldBe false
+
+        // Any asArrayToList
+        booleanArrayOf(true, false).asArrayAsListOrNull() shouldBe listOf(true, false)
+        uintArrayOf(1u, 2u).asArrayAsListOrNull() shouldBe listOf(1u, 2u)
+        arrayOf(1, 2).asArrayAsListOrNull() shouldBe listOf(1, 2)
+        arrayOf(1, null).asArrayAsListOrNull() shouldBe listOf(1, null)
+        arrayOfNulls<Any?>(1).asArrayAsListOrNull() shouldBe listOf(null)
+        1.asArrayAsListOrNull() shouldBe null
+    }
 
     @Test
     fun commonParentsTests() {

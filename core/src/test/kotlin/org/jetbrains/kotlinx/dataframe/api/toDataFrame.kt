@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
@@ -193,6 +193,7 @@ class CreateDataFrameTests {
     fun treatErasedGenericAsAny() {
         class IncompatibleVersionErrorData<T>(val expected: T, val actual: T)
         class DeserializedContainerSource(val incompatibility: IncompatibleVersionErrorData<*>)
+
         val functions = listOf(DeserializedContainerSource(IncompatibleVersionErrorData(1, 2)))
 
         val df = functions.toDataFrame(maxDepth = 2)
@@ -219,16 +220,16 @@ class CreateDataFrameTests {
     @Test
     fun builtInTypes() {
         val string = listOf("aaa", "aa", null)
-        string.toDataFrame().also { it.print() } shouldBe dataFrameOf("value")(*string.toTypedArray())
+        string.toDataFrame() shouldBe dataFrameOf("value")(*string.toTypedArray())
 
         val int = listOf(1, 2, 3)
-        int.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*int.toTypedArray())
+        int.toDataFrame() shouldBe dataFrameOf("value")(*int.toTypedArray())
 
         val doubles = listOf(1.0, 2.0, 3.0)
-        doubles.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*doubles.toTypedArray())
+        doubles.toDataFrame() shouldBe dataFrameOf("value")(*doubles.toTypedArray())
 
         val floats = listOf(1.0f, 2.0f, 3.0f)
-        floats.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*floats.toTypedArray())
+        floats.toDataFrame() shouldBe dataFrameOf("value")(*floats.toTypedArray())
     }
 
     @Ignore
@@ -311,5 +312,89 @@ class CreateDataFrameTests {
     @Test
     fun `convert private class with public members`() {
         listOf(PrivateClass(1)).toDataFrame() shouldBe dataFrameOf("a")(1)
+    }
+
+    class KotlinPojo {
+
+        private var a: Int = 0
+        private var b: String = ""
+
+        constructor(b: String, a: Int) {
+            this.a = a
+            this.b = b
+        }
+
+        fun getA(): Int = a
+        fun setA(a: Int) {
+            this.a = a
+        }
+
+        fun getB(): String = b
+        fun setB(b: String) {
+            this.b = b
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is KotlinPojo) return false
+
+            if (a != other.a) return false
+            if (b != other.b) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = a
+            result = 31 * result + b.hashCode()
+            return result
+        }
+
+        override fun toString(): String {
+            return "FakePojo(a=$a, b='$b')"
+        }
+    }
+
+    @Test
+    fun `convert POJO to DF`() {
+        // even though the names b, a, follow the constructor order
+        listOf(KotlinPojo("bb", 1)).toDataFrame() shouldBe dataFrameOf("b", "a")("bb", 1)
+
+        // cannot read java constructor parameter names with reflection, so sort lexicographically
+        listOf(JavaPojo(2.0, null, "bb", 1)).toDataFrame() shouldBe
+            dataFrameOf(
+                DataColumn.createValueColumn("a", listOf(1), typeOf<Int>()),
+                DataColumn.createValueColumn("b", listOf("bb"), typeOf<String>()),
+                DataColumn.createValueColumn("c", listOf(null), typeOf<Int?>()),
+                DataColumn.createValueColumn("d", listOf(2.0), typeOf<Number>()),
+            )
+
+        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getA) } shouldBe
+            dataFrameOf("a")(1)
+        listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getB) } shouldBe
+            dataFrameOf("b")("bb")
+
+        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
+            properties(JavaPojo::getA)
+        } shouldBe dataFrameOf("a")(1)
+
+        listOf(JavaPojo(2.0, 3, "bb", 1)).toDataFrame {
+            properties(JavaPojo::getB)
+        } shouldBe dataFrameOf("b")("bb")
+    }
+
+    data class Arrays(val a: IntArray, val b: Array<Int>, val c: Array<Int?>)
+
+    @Test
+    fun `arrays in to DF`() {
+        val df = listOf(
+            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null))
+        ).toDataFrame(maxDepth = Int.MAX_VALUE)
+
+        df.schema() shouldBe dataFrameOf(
+            DataColumn.createValueColumn("a", listOf(intArrayOf(1, 2)), typeOf<IntArray>()),
+            DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
+            DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
+        ).schema()
     }
 }

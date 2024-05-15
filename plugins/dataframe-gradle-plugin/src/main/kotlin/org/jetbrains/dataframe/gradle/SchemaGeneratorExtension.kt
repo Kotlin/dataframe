@@ -132,9 +132,17 @@ data class JsonOptionsDsl(
     var keyValuePaths: List<JsonPath> = emptyList(),
 ) : Serializable
 
+/**
+ * Represents the configuration options for JDBC data source.
+ *
+ * @property [user] The username used to authenticate with the database. Default is an empty string.
+ * @property [password] The password used to authenticate with the database. Default is an empty string.
+ * @property [tableName] The name of the table to generate schema for. Default is an empty string.
+ * @property [sqlQuery] The SQL query used to generate schema. Default is an empty string.
+ */
 data class JdbcOptionsDsl(
-    var user: String = "", // TODO: I'm not sure about the default parameters
-    var password: String = "", // TODO: I'm not sure about the default parameters
+    var user: String = "",
+    var password: String = "",
     var tableName: String = "",
     var sqlQuery: String = ""
 ) : Serializable

@@ -1,5 +1,5 @@
 [versions]
-ksp = "1.9.22-1.0.17"
+ksp = "1.9.23-1.0.20"
 kotlinJupyter = "0.12.0-139"
 
 # TODO Updating requires major changes all across the project
@@ -31,6 +31,7 @@ fuel = "2.3.1"
 poi = "5.2.5"
 mariadb = "3.3.2"
 h2db = "2.2.224"
+mssql = "12.6.1.jre11"
 mysql = "8.3.0"
 postgresql = "42.7.2"
 sqlite = "3.45.1.0"
@@ -48,7 +49,7 @@ kotestAsserions = "5.5.4"
 
 jsoup = "1.17.2"
 arrow = "15.0.0"
-docProcessor = "0.3.3"
+docProcessor = "0.3.5"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
 plugin-publish = "1.2.1"
@@ -75,6 +76,7 @@ fuel = { group = "com.github.kittinunf.fuel", name = "fuel", version.ref = "fuel
 poi = { group = "org.apache.poi", name = "poi", version.ref = "poi" }
 mariadb = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
+mssql = { group = "com.microsoft.sqlserver", name = "mssql-jdbc", version.ref = "mssql" }
 mysql = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }

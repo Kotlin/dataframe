@@ -136,7 +136,8 @@ val clearSamplesOutputs by tasks.creating {
 
     doFirst {
         delete {
-            delete(fileTree(File(projectDir, "../docs/StardustDocs/snippets")))
+            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets")).exclude("**/manual/**")
+            delete(generatedSnippets)
         }
     }
 }
@@ -185,7 +186,6 @@ val installGitPreCommitHook by tasks.creating(Copy::class) {
     } else {
         logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
     }
-
 }
 tasks.named("assemble") {
     dependsOn(installGitPreCommitHook)

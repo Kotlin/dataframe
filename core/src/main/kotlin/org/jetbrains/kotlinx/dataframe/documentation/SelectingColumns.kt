@@ -53,7 +53,8 @@ internal interface SelectingColumns {
      */
     interface OperationArg
 
-    /** {@set [OperationArg] operation} */
+    // Using <code>` notation to not create double `` when including
+    /** {@set [OperationArg] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 
     /**
@@ -85,9 +86,9 @@ internal interface SelectingColumns {
          *
          * `df.`{@get [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@get [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * `df.`{@get [OperationArg]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@get [OperationArg]}` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * `df.`{@get [OperationArg]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
          */
@@ -125,9 +126,9 @@ internal interface SelectingColumns {
          *
          * `df.`{@get [OperationArg]}` { length }`
          *
-         * `df.`{@get [OperationArg]}` { `[col][ColumnsSelectionDsl.col]`(1) }`
+         * `df.`{@get [OperationArg]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
          *
-         * `df.`{@get [OperationArg]}` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * `df.`{@get [OperationArg]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample

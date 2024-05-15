@@ -246,10 +246,17 @@ The versions with a limit parameter will only read up to the specified number of
 This function allows reading a ResultSet object from your SQL database 
 and transforms it into an AnyFrame object. 
 
+A ResultSet object maintains a cursor pointing to its current row of data. 
+By default, a ResultSet object is not updatable and has a cursor that moves forward only. 
+Therefore, you can iterate it only once and only from the first row to the last row. 
+
+More details about ResultSet can be found in the [official Java documentation](https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html).
+
+Note that reading from the ResultSet could potentially change its state.
+
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.), 
 supported by a library. 
 Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
-
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
