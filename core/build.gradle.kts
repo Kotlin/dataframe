@@ -136,7 +136,8 @@ val clearSamplesOutputs by tasks.creating {
 
     doFirst {
         delete {
-            delete(fileTree(File(projectDir, "../docs/StardustDocs/snippets")))
+            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets")).exclude("**/manual/**")
+            delete(generatedSnippets)
         }
     }
 }
