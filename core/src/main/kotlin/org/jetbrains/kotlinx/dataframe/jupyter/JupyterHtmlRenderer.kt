@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 /** Starting from this version, dataframe integration will respond with additional data for rendering in Kotlin Notebooks plugin. */
 private const val MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI = "0.11.0.311"
 private const val MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA = 241
+private const val MIN_IDE_VERSION_SUPPORT_IMAGE_VIEWER = 242
 
 internal class JupyterHtmlRenderer(
     val display: DisplayConfiguration,
@@ -64,8 +65,8 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
         val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
 
-        val jsonEncodedDf =
-            if (ideBuildNumber == null || ideBuildNumber.majorVersion < MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA) {
+        val jsonEncodedDf = when {
+            !ideBuildNumber.supportsDynamicNestedTables() -> {
                 json {
                     obj(
                         "nrow" to df.size.nrow,
@@ -74,18 +75,31 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
                         "kotlin_dataframe" to encodeFrame(df.take(limit)),
                     )
                 }.toJsonString()
-            } else {
+            }
+
+            else -> {
+                val imageEncodingOptions =
+                    if (ideBuildNumber.supportsImageViewer()) Base64ImageEncodingOptions() else null
+
                 df.toJsonWithMetadata(
                     limit,
                     reifiedDisplayConfiguration.rowsLimit,
-                    imageEncodingOptions = Base64ImageEncodingOptions()
+                    imageEncodingOptions = imageEncodingOptions
                 )
             }
+        }
+
         notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf)
     } else {
         notebook.renderHtmlAsIFrameIfNeeded(html)
     }
 }
+
+private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsDynamicNestedTables() =
+    this != null && majorVersion >= MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA
+
+private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsImageViewer() =
+    this != null && majorVersion >= MIN_IDE_VERSION_SUPPORT_IMAGE_VIEWER
 
 internal fun Notebook.renderAsIFrameAsNeeded(
     data: HtmlData,
