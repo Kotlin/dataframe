@@ -114,7 +114,7 @@ val passengers = DataFrame.read("titanic.csv")
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df = DataFrame.read("titanic.csv")
+val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
 ```
 
 <!---END-->

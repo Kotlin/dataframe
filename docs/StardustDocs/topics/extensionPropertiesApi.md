@@ -16,7 +16,8 @@ val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
 
 <!---END-->
 
-TODO make df <dataFrame>
+
+<dataFrame src="manual/extensionPropertiesApi1.html"/>
 
 
 In normal Kotlin code, we would now have a variable of type [`AnyFrame` (=`DataFrame<*>`)](DataFrame.md)  that doesn't
