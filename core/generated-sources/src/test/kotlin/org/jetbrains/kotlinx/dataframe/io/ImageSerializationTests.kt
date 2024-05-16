@@ -31,7 +31,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         val json = encodeImagesAsJson(images, encodingOptions)
 
         if (encodingOptions == DISABLED) {
-            checkImagesEncodedAsStrings(json, images.size)
+            checkImagesEncodedAsToString(json, images.size)
             return
         }
 
@@ -65,7 +65,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         return parseJsonStr(jsonStr)
     }
 
-    private fun checkImagesEncodedAsStrings(json: JsonObject, numImgs: Int) {
+    private fun checkImagesEncodedAsToString(json: JsonObject, numImgs: Int) {
         for (i in 0..<numImgs) {
             val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[i] as JsonObject
             val img = row["imgs"] as String
