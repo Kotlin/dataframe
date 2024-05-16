@@ -17,7 +17,7 @@
         <enable-browser-edits>true</enable-browser-edits>
         <browser-edits-url>https://github.com/Kotlin/dataframe/edit/master/docs/StardustDocs/</browser-edits-url>
     </variables>
-    <sitemap priority="0.35" change-frequency="monthly"/>
+    <sitemap change-frequency="monthly"/>
     <build-profile instance="d">
         <variables>
             <noindex-content>false</noindex-content>
