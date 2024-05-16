@@ -1068,7 +1068,7 @@ class OpenApiTests : JupyterReplTestCase() {
             if (separatorChar == '\\') it.replace("\\", "\\\\")
             else it
         }
-        @Language("kts")
+        @Language("kt")
         val _1 = execRaw(
             """
                 val ApiGuru = importDataSchema(File("$filePath"))
@@ -1077,7 +1077,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
         val apiGuruDataTripleQuote = "\"\"\"${apiGuruData.replace("$", "\${'$'}")}\"\"\""
 
-        @Language("kts")
+        @Language("kt")
         val _2 = execRaw(
             """
                 val df = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
@@ -1087,10 +1087,21 @@ class OpenApiTests : JupyterReplTestCase() {
 
         println(_2)
 
-        @Language("kts")
+        @Language("kt")
         val _3 = execRaw(
             """
                 df.filter {
+                  value.versions.value.any {
+                    (updated ?: added).year >= 2021
+                  }
+                }
+            """.trimIndent()
+        ) as AnyFrame
+
+        @Language("kt")
+        val _4 = execRaw(
+            """
+                ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote).filter {
                   value.versions.value.any {
                     (updated ?: added).year >= 2021
                   }
