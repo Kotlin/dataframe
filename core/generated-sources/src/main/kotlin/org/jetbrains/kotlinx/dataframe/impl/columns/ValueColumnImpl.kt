@@ -14,7 +14,7 @@ internal open class ValueColumnImpl<T>(
     type: KType,
     val defaultValue: T? = null,
     distinct: Lazy<Set<T>>? = null,
-) : DataColumnImpl<T>(values, name, type, distinct), ValueColumn<T> {
+) : DataColumnImpl<T>(values.toOptimizedList(type), name, type, distinct), ValueColumn<T> {
 
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 

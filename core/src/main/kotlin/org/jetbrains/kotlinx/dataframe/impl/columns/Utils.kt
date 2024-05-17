@@ -497,3 +497,45 @@ internal fun AnyCol.isMissingColumn() = this is MissingDataColumn
 internal fun <T> ColumnGroup<T>.extractDataFrame(): DataFrame<T> = DataFrameImpl(columns(), nrow)
 
 internal fun <T> BaseColumn<T>.addParent(parent: ColumnGroup<*>) = (this as DataColumnInternal<T>).addParent(parent)
+
+private const val optimizedListOfPrimitivesClassName: String = "kotlin.collections.ArraysKt___ArraysJvmKt\$asList"
+
+/** returns true if this list was created by [PrimitiveArray.asList()][kotlin.collections.asList] */
+internal val List<*>.isOptimizedListOfPrimitives: Boolean
+    get() = optimizedListOfPrimitivesClassName in this::class.java.name
+
+/**
+ * Attempts to optimize [this] [List] if it's not already [isOptimizedListOfPrimitives].
+ *
+ * When [this] contains just primitives (as checked by [type]), it will be converted to a primitive
+ * array and wrapped to a list with [PrimitiveArray.asList()][kotlin.collections.asList].
+ *
+ * If it's not, [this] will be returned as is.
+ */
+@OptIn(ExperimentalUnsignedTypes::class)
+@Suppress("UNCHECKED_CAST")
+internal fun <T : Any?> List<T>.toOptimizedList(type: KType): List<T> {
+    if (isOptimizedListOfPrimitives) return this
+
+    return try {
+        when (type) {
+            typeOf<Boolean>() -> (this as List<Boolean>).toBooleanArray().asList()
+            typeOf<Byte>() -> (this as List<Byte>).toByteArray().asList()
+            typeOf<Short>() -> (this as List<Short>).toShortArray().asList()
+            typeOf<Int>() -> (this as List<Int>).toIntArray().asList()
+            typeOf<Long>() -> (this as List<Long>).toLongArray().asList()
+            typeOf<Float>() -> (this as List<Float>).toFloatArray().asList()
+            typeOf<Double>() -> (this as List<Double>).toDoubleArray().asList()
+            typeOf<Char>() -> (this as List<Char>).toCharArray().asList()
+            typeOf<UByte>() -> (this as List<UByte>).toUByteArray().asList()
+            typeOf<UShort>() -> (this as List<UShort>).toUShortArray().asList()
+            typeOf<UInt>() -> (this as List<UInt>).toUIntArray().asList()
+            typeOf<ULong>() -> (this as List<ULong>).toULongArray().asList()
+
+            else -> this
+        } as List<T>
+    } catch (e: ClassCastException) {
+        val likelyType = firstOrNull()?.let { it::class } ?: Any::class
+        throw IllegalArgumentException("List \"$this\" is not of type $type, but likely of type $likelyType")
+    }
+}
