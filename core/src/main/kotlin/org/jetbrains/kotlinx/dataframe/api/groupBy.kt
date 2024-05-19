@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
@@ -27,6 +29,7 @@ import kotlin.reflect.KProperty
  *
  * `df.add("columnName") { "someColumn"<Int>() + 15 }.groupBy("columnName")`
  */
+@Interpretable("DataFrameGroupBy")
 public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> =
     groupByImpl(moveToTop, cols)
 
@@ -92,7 +95,9 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
 public interface Grouped<out T> : Aggregatable<T> {
 
-    public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T>
+//    @Refine
+//    @Interpretable("Aggregate")
+//    fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T>
 }
 
 public data class ReducedGroupBy<T, G>(

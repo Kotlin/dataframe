@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
