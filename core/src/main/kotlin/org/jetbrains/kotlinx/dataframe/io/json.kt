@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -185,7 +185,7 @@ public fun DataRow.Companion.readJson(
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
  * @return [DataFrame] from the given [path].
  */
-@Refine
+@OptInRefine
 @Interpretable("ReadJson0")
 public fun DataFrame.Companion.readJson(
     path: String,

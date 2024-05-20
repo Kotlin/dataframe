@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.jupyter.api.Code
@@ -286,7 +286,7 @@ public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()
 public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
-@Refine()
+@OptInRefine
 @Interpretable("Read0")
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asURL(path), header)

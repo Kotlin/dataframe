@@ -15,6 +15,12 @@ public annotation class Interpretable(val interpreter: String)
  */
 public annotation class Refine
 
+public annotation class OptInRefine
+
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE, AnnotationTarget.EXPRESSION)
 public annotation class DisableInterpretation
+
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.EXPRESSION)
+public annotation class Import
