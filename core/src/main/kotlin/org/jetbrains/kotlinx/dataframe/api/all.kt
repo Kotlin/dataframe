@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubse
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.FunctionArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.FunctionColsArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.TitleArg
+import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.After
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.Before
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.ColumnGroupName
@@ -36,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -88,8 +90,9 @@ public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all {
  * ## All Flavors of All (Cols) {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
+ * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
-public interface AllColumnsSelectionDsl {
+public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * ## Grammar of All Flavors of All (Cols):

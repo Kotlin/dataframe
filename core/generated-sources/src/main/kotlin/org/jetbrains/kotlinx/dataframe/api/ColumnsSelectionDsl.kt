@@ -82,16 +82,16 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     SingleColumnsSelectionDsl,
 
     // col(name), col(5), [5]
-    ColColumnsSelectionDsl,
+    ColColumnsSelectionDsl<T>,
     // valueCol(name), valueCol(5)
-    ValueColColumnsSelectionDsl,
+    ValueColColumnsSelectionDsl<T>,
     // frameCol(name), frameCol(5)
-    FrameColColumnsSelectionDsl,
+    FrameColColumnsSelectionDsl<T>,
     // colGroup(name), colGroup(5)
-    ColGroupColumnsSelectionDsl,
+    ColGroupColumnsSelectionDsl<T>,
 
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5), [{}]
-    ColsColumnsSelectionDsl,
+    ColsColumnsSelectionDsl<T>,
 
     // colA.."colB"
     ColumnRangeColumnsSelectionDsl,
@@ -106,7 +106,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColsOfKindColumnsSelectionDsl,
 
     // all(Cols), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
-    AllColumnsSelectionDsl,
+    AllColumnsSelectionDsl<T>,
     // colsAtAnyDepth {}, colsAtAnyDepth()
     ColsAtAnyDepthColumnsSelectionDsl,
     // colsInGroups {}, colsInGroups()
