@@ -183,7 +183,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsAfter(pathOf("firstName")) },
             df.select { "name".allColsAfter(pathOf("name", "firstName")) },
 
-            df.select { Person::name.allColsAfter { firstName } },
+            // df.select { Person::name.allColsAfter { firstName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsAfter { firstNameAccessor } },
             df.select { Person::name.allColsAfter(name.firstName) },
             df.select { Person::name.allColsAfter(firstNameAccessor) },
@@ -226,7 +226,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsFrom(pathOf("lastName")) },
             df.select { "name".allColsFrom(pathOf("name", "lastName")) },
 
-            df.select { Person::name.allColsFrom { lastName } },
+//            df.select { Person::name.allColsFrom { lastName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsFrom { lastNameAccessor } },
             df.select { Person::name.allColsFrom(name.lastName) },
             df.select { Person::name.allColsFrom(lastNameAccessor) },
@@ -280,7 +280,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsBefore(pathOf("lastName")) },
             df.select { "name".allColsBefore(pathOf("name", "lastName")) },
 
-            df.select { Person::name.allColsBefore { lastName } },
+//            df.select { Person::name.allColsBefore { lastName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsBefore { lastNameAccessor } },
             df.select { Person::name.allColsBefore(name.lastName) },
             df.select { Person::name.allColsBefore(lastNameAccessor) },
@@ -323,7 +323,7 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsUpTo(pathOf("firstName")) },
             df.select { "name".allColsUpTo(pathOf("name", "firstName")) },
 
-            df.select { Person::name.allColsUpTo { firstName } },
+//            df.select { Person::name.allColsUpTo { firstName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsUpTo { firstNameAccessor } },
             df.select { Person::name.allColsUpTo(name.firstName) },
             df.select { Person::name.allColsUpTo(firstNameAccessor) },

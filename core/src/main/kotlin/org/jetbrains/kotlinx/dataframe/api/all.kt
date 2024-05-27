@@ -506,11 +506,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]`{@get [KPropertyAllAfterDocs.Arg]} }`
-     *
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
     @ExcludeFromSources
     private interface KPropertyAllAfterDocs {
@@ -522,18 +517,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] \ \{ myColumn \}}
      */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C> KProperty<C>.allColsAfter(column: ColumnSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsAfter(column)
-
-    /**
-     * @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] \ \{ myColumn \}}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowAllColsAfter")
-    public fun <C> KProperty<DataRow<C>>.allColsAfter(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsAfter(column)
 
     /** @include [KPropertyAllAfterDocs] {@set [KPropertyAllAfterDocs.Arg] ("pathTo"["myColumn"])} */
@@ -753,11 +737,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]`{@get [KPropertyAllFromDocs.Arg]} }`
-     *
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
     @ExcludeFromSources
     private interface KPropertyAllFromDocs {
@@ -769,18 +748,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] \ \{ myColumn \}}
      */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C> KProperty<C>.allColsFrom(column: ColumnSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsFrom(column)
-
-    /**
-     * @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] \ \{ myColumn \}}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowAllColsFrom")
-    public fun <C> KProperty<DataRow<C>>.allColsFrom(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsFrom(column)
 
     /** @include [KPropertyAllFromDocs] {@set [KPropertyAllFromDocs.Arg] ("pathTo"["myColumn"])} */
@@ -997,11 +965,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]`{@get [KPropertyAllBeforeDocs.Arg]} }`
-     *
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
     @ExcludeFromSources
     private interface KPropertyAllBeforeDocs {
@@ -1013,18 +976,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] \ \{ myColumn \}}
      */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C> KProperty<C>.allColsBefore(column: ColumnSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsBefore(column)
-
-    /**
-     * @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] \ \{ myColumn \}}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowAllColsBefore")
-    public fun <C> KProperty<DataRow<C>>.allColsBefore(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsBefore(column)
 
     /** @include [KPropertyAllBeforeDocs] {@set [KPropertyAllBeforeDocs.Arg] ("pathTo"["myColumn"])} */
@@ -1244,11 +1196,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @set [CommonAllSubsetDocs.ExampleArg]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]`{@get [KPropertyAllUpToDocs.Arg]} }`
-     *
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
     @ExcludeFromSources
     private interface KPropertyAllUpToDocs {
@@ -1260,18 +1207,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] \ \{ myColumn \}}
      */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C> KProperty<C>.allColsUpTo(column: ColumnSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsUpTo(column)
-
-    /**
-     * @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] \ \{ myColumn \}}
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowAllColsUpTo")
-    public fun <C> KProperty<DataRow<C>>.allColsUpTo(column: ColumnSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsUpTo(column)
 
     /** @include [KPropertyAllUpToDocs] {@set [KPropertyAllUpToDocs.Arg] ("pathTo"["myColumn"])} */

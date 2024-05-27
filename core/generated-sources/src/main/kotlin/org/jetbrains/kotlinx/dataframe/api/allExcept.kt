@@ -2858,10 +2858,6 @@ public interface AllExceptColumnsSelectionDsl {
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`Person::name.`</code>[allColsExcept][KProperty.allColsExcept]<code>` { firstName }`</code>` }`
-     * ## NOTE: 
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      *
      * @param [selector] A lambda in which you specify the columns that need to be
      *  excluded from the current selection in [this] column group. The other columns will be included in the selection
@@ -2874,110 +2870,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(selector)
-
-    /**
-     * ## (All) (Cols) Except
-     *
-     * Perform a selection of columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] to
-     * exclude from the current selection.
-     *
-     * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.Grammar]
-     *
-     * ### On [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
-     * This function can be explained the easiest with [ColumnSets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age`  and  `height`.
-     *
-     * We can do:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  (age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height) }`
-     *
-     * which will 'subtract' the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by `age `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height` from the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] created by [colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Int][Int]`>()`.
-     *
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * This operation can also be used to exclude columns from [Column Groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
-     *
-     * For instance:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsAtAnyDepth][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  { "a"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]`() } `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` userData.age }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     *
-     * Note that the selection of columns to exclude from [column sets][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] is always done relative to the outer
-     * scope. Use the [Extension Properties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApi] to prevent scoping issues if possible.
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], it is excepted
-     * each time it is encountered (including inside [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]). You could say the receiver [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]
-     * is [simplified][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify] before the operation is performed:
-     *
-     * [cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
-     *
-     * `== `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(a).`[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`(a.b)`
-     *
-     * ### In the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
-     * Instead of having to write [all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` { ... }` in the DSL,
-     * you can use [allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]` { ... }` to achieve the same result.
-     *
-     * For example:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[allExcept][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]`  { userData.age  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height } }`
-     *
-     * ### On [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
-     * The variant of this function on [ColumnGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] is a bit different as it changes the scope relative to
-     * the column group.
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * In other words:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allColsExcept][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.allColsExcept]`  { colA  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } }`
-     *
-     * is shorthand for
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `[all][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  { colA  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` colB } } }`
-     *
-     * or
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColGroup.`[allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`() `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]`  { myColGroup.colA  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` myColGroup.colB } }`
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;
-     *
-     * Also note the name change, similar to [allCols][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
-     * columns inside the group, 'lifting' them out.
-     *
-     * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`Person::name.`</code>[allColsExcept][KProperty.allColsExcept]<code>` { firstName }`</code>` }`
-     * ## NOTE: 
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
-     *
-     * @param [selector] A lambda in which you specify the columns that need to be
-     *  excluded from the current selection in [this] column group. The other columns will be included in the selection
-     *  by default. The scope of the selector is relative to the column group.
-     * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns in [this] except the specified ones.
-     * @see ColumnsSelectionDsl.select
-     * @see ColumnsSelectionDsl.all
-     * @see ColumnsSelectionDsl.allBefore
-     * @see ColumnsSelectionDsl.allAfter
-     * @see ColumnsSelectionDsl.allUpTo
-     * @see ColumnsSelectionDsl.allFrom
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowAllColsExcept")
-    public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
     @Deprecated(
@@ -4125,38 +4018,7 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public infix fun <C> KProperty<C>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(selector.toColumns())
-
-    /**
-     * ## EXPERIMENTAL: Except on Column Group
-     *
-     * Selects the current column group itself, except for the specified columns. This is different from
-     * [allColsExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
-     *
-     * As usual, all overloads for each [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi] are available.
-     *
-     * These produce the same result:
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(colGroup) `[except][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.except]` colGroup.col }`
-     *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { colGroup  `[exceptNew][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except]` { col } }`
-     *
-     * These functions are experimental and may be removed or changed in the future.
-     *
-     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][org.jetbrains.kotlinx.dataframe.api.ExperimentalExceptCsDsl]`::class)` first.
-     *
-     * ## NOTE:
-     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.except] functions
-     * are deleted.
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public infix fun <C> KProperty<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(selector.toColumns())
 
     @ExperimentalExceptCsDsl

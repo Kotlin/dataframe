@@ -581,31 +581,10 @@ public interface AllExceptColumnsSelectionDsl {
 
     /**
      * @include [ColumnGroupDocs]
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.SelectorArgs]
      */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        columnGroup(this).allColsExcept(selector)
-
-    /**
-     * @include [ColumnGroupDocs]
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
-     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
-     * @include [ColumnGroupDocs.SelectorArgs]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowAllColsExcept")
-    public fun <C> KProperty<DataRow<C>>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
     @Deprecated(
@@ -866,19 +845,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ExperimentalExceptDocs]
      */
     @ExperimentalExceptCsDsl
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public infix fun <C> KProperty<C>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(selector.toColumns())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public infix fun <C> KProperty<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(selector.toColumns())
 
     @ExperimentalExceptCsDsl
