@@ -4,6 +4,7 @@ import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
@@ -210,6 +211,53 @@ class RenderingTests : JupyterReplTestCase() {
             previousCategory = currentCategory
             previousId = currentId
         }
+    }
+
+    @Test
+    fun `json metadata contains schema metadata`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+                val col1 by columnOf("a", "b", "c")
+                val col2 by columnOf(1, 2, 3)
+                val col3 by columnOf("Foo", "Bar", null)
+                val df2 = dataFrameOf(Pair("header", listOf("A", "B", "C")))
+                val col4 by columnOf(df2, df2, df2)
+                var df = dataFrameOf(col1, col2, col3, col4)
+                df.group(col1, col2).into("group")            
+            """.trimIndent()
+        )
+        json.keys shouldContain "metadata"
+        val metadata = json["metadata"] as JsonObject
+        metadata.keys shouldContain "schema"
+        val schema = (metadata["schema"] as JsonArray<*>).toJsonString(prettyPrint = true)
+        val expectedSchema = """
+            [{
+              "name": "group",
+              "kind": "ColumnGroup",
+              "group": [{
+                "name": "col1",
+                "kind": "ValueColumn",
+                "type": "kotlin.String"
+              }, {
+                "name": "col2",
+                "kind": "ValueColumn",
+                "type": "kotlin.Int"
+              }]
+            }, {
+              "name": "col3",
+              "kind": "ValueColumn",
+              "type": "kotlin.String?"
+            }, {
+              "name": "col4",
+              "kind": "FrameColumn",
+              "dataframe": [{
+                "name": "header",
+                "kind": "ValueColumn",
+                "type": "kotlin.String"
+              }]
+            }]
+        """.trimIndent()
+        schema shouldBe expectedSchema
     }
 
     @Test

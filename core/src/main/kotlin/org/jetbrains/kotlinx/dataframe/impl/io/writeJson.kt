@@ -3,15 +3,9 @@ package org.jetbrains.kotlinx.dataframe.impl.io
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.KlaxonJson
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.isList
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -22,13 +16,15 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAM
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.SCHEMA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
 import org.jetbrains.kotlinx.dataframe.io.valueColumnName
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.awt.image.BufferedImage
 import java.io.IOException
 
@@ -53,9 +49,19 @@ internal object SerializationKeys {
     const val VERSION = "\$version"
     const val COLUMNS = "columns"
     const val KOTLIN_DATAFRAME = "kotlin_dataframe"
+    const val SCHEMA = "schema"
 }
 
-internal const val SERIALIZATION_VERSION = "2.0.0"
+/**
+ * Changes:
+ * 1.0.0:
+ *  -
+ * 2.0.0:
+ *  -
+ * 2.1.0:
+ *  - Added "schema" entry to metadata
+ */
+internal const val SERIALIZATION_VERSION = "2.1.0"
 
 internal fun KlaxonJson.encodeRowWithMetadata(
     frame: ColumnsContainer<*>,
@@ -256,6 +262,7 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
     return obj(
         VERSION to SERIALIZATION_VERSION,
         METADATA to obj(
+            SCHEMA to frame.schema().toJson(),
             COLUMNS to frame.columnNames(),
             NROW to frame.rowsCount(),
             NCOL to frame.columnsCount()
@@ -266,4 +273,30 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
             imageEncodingOptions
         ),
     )
+}
+
+/**
+ * Turn a [DataFrameSchema] into a datastructure that can be parsed
+ * to a JSON serializer
+ *
+ * Each column is represented the following way:
+ * - value columns: `{name: "<columnName>", kind: "ValueColumn", type: "<kType>" }`
+ * - colum groups: `{name: "<groupNameName>", kind: "ColumnGroup", group: [<GroupMember>,...] }`
+ * - data frames: `{name: "<columnName>", kind: "FrameColumn", dataframe: [<InnerDataFrameSchema>,...] }`
+ */
+internal fun DataFrameSchema.toJson(): MutableList<MutableMap<String, Any?>> {
+    val list: MutableList<MutableMap<String, Any?>> = mutableListOf()
+    columns.forEach { (name: String, columnSchema: ColumnSchema) ->
+        val schemaData = mutableMapOf<String, Any?>()
+        schemaData["name"] = name
+        schemaData["kind"] = columnSchema.kind.toString()
+        when (columnSchema) {
+            is ColumnSchema.Value -> schemaData["type"] = columnSchema.type.toString()
+            is ColumnSchema.Group -> schemaData["group"] = columnSchema.schema.toJson()
+            is ColumnSchema.Frame -> schemaData["dataframe"] = columnSchema.schema.toJson()
+            else -> error("Unsupported column type: $columnSchema")
+        }
+        list.add(schemaData)
+    }
+    return list
 }
