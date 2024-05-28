@@ -17,12 +17,29 @@ internal class ConfiguredAggregateColumn<C> private constructor(
     private fun ColumnWithPath<C>.toDescriptor(keepName: Boolean): AggregateColumnDescriptor<C> =
         when (val col = this) {
             is AggregateColumnDescriptor<C> -> {
-                val path = if (keepName) newPath?.plus(col.newPath ?: col.column.shortPath()) ?: col.newPath
-                else newPath ?: col.newPath
-                AggregateColumnDescriptor(col.column, default ?: col.default, path)
+
+                // Fix for K2 smart-casting changes
+                val currentDefault = this@ConfiguredAggregateColumn.default
+                val currentNewPath = this@ConfiguredAggregateColumn.newPath
+
+                val newPath = when {
+                    currentNewPath == null -> col.newPath
+                    keepName -> currentNewPath + (col.newPath ?: col.column.shortPath())
+                    else -> currentNewPath
+                }
+                AggregateColumnDescriptor(
+                    column = col.column,
+                    default = currentDefault ?: col.default,
+                    newPath = newPath,
+                )
             }
 
-            else -> AggregateColumnDescriptor(col, default, if (keepName) newPath?.plus(col.name) else newPath)
+            else ->
+                AggregateColumnDescriptor(
+                    column = col,
+                    default = default,
+                    newPath = if (keepName) newPath?.plus(col.name) else newPath,
+                )
         }
 
     private fun resolve(context: ColumnResolutionContext, columns: ColumnsResolver<C>): List<ColumnWithPath<C>> {
