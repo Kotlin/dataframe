@@ -57,10 +57,8 @@ private const val MIN_KERNEL_VERSION = "0.11.0.198"
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-internal class Integration(
-    private val notebook: Notebook,
-    private val options: MutableMap<String, String?>,
-) : JupyterIntegration() {
+internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
+    JupyterIntegration() {
 
     val version = options["v"]
 
@@ -70,8 +68,12 @@ internal class Integration(
             val result = execute(code)
             if (codeWithConverter.hasConverter) {
                 result.name
-            } else null
-        } else null
+            } else {
+                null
+            }
+        } else {
+            null
+        }
     }
 
     private fun KotlinKernelHost.execute(
@@ -105,7 +107,9 @@ internal class Integration(
             }
 
             is CodeGenerationReadResult.Error -> {
-                execute("""DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""")
+                execute(
+                    """DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""",
+                )
                 null
             }
         }
@@ -173,7 +177,7 @@ internal class Integration(
             setMinimalKernelVersion(MIN_KERNEL_VERSION)
         } catch (_: NoSuchMethodError) { // will be thrown when a version < 0.11.0.198
             throw IllegalStateException(
-                getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType)
+                getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType),
             )
         }
         val codeGen = ReplCodeGenerator.create()
@@ -206,7 +210,7 @@ internal class Integration(
         with(JupyterHtmlRenderer(config.display, this)) {
             render<DisableRowsLimitWrapper>(
                 { "DataRow: index = ${it.value.rowsCount()}, columnsCount = ${it.value.columnsCount()}" },
-                applyRowsLimit = false
+                applyRowsLimit = false,
             )
 
             render<GroupClause<*, *>>({ "Group" })
@@ -230,13 +234,15 @@ internal class Integration(
                 { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
             )
             render<ColumnGroup<*>>(
-                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
+                {
+                    """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"""
+                },
             )
             render<AnyCol>(
                 { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
             )
             render<AnyFrame>(
-                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
+                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
             )
             render<FormattedFrame<*>>(
                 { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
@@ -285,13 +291,11 @@ internal class Integration(
                     else -> error("${instance::class} should not be handled by Dataframe field handler")
                 }
             }
-            override fun accepts(value: Any?, property: KProperty<*>): Boolean {
-                return value is AnyCol ||
-                    value is ColumnGroup<*> ||
-                    value is AnyRow ||
-                    value is AnyFrame ||
-                    value is ImportDataSchema
-            }
+            override fun accepts(value: Any?, property: KProperty<*>): Boolean = value is AnyCol ||
+                value is ColumnGroup<*> ||
+                value is AnyRow ||
+                value is AnyFrame ||
+                value is ImportDataSchema
         })
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {

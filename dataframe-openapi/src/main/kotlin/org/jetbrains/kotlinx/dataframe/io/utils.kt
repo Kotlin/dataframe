@@ -11,15 +11,19 @@ import kotlin.reflect.typeOf
 internal fun String.withTopInterfaceName(topInterfaceName: ValidFieldName): String =
     if (startsWith("${topInterfaceName.quotedIfNeeded}.")) this else "${topInterfaceName.quotedIfNeeded}.$this"
 
-internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): String =
-    if (startsWith("${topInterfaceName.quotedIfNeeded}.")) substringAfter("${topInterfaceName.quotedIfNeeded}.") else this
+internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): String = if (startsWith(
+        "${topInterfaceName.quotedIfNeeded}.",
+    )
+) {
+    substringAfter("${topInterfaceName.quotedIfNeeded}.")
+} else {
+    this
+}
 
-internal fun String.snakeToLowerCamelCase(): String =
-    toCamelCaseByDelimiters(DELIMITERS_REGEX)
+internal fun String.snakeToLowerCamelCase(): String = toCamelCaseByDelimiters(DELIMITERS_REGEX)
 
-internal fun String.snakeToUpperCamelCase(): String =
-    snakeToLowerCamelCase()
-        .replaceFirstChar { it.uppercaseChar() }
+internal fun String.snakeToUpperCamelCase(): String = snakeToLowerCamelCase()
+    .replaceFirstChar { it.uppercaseChar() }
 
 internal fun String.toNullable() = if (this.last() == '?') this else "$this?"
 
@@ -42,10 +46,7 @@ internal fun generatedFieldOf(
 )
 
 /** Helper function to create a [GeneratedField] for enums. */
-internal fun generatedEnumFieldOf(
-    fieldName: ValidFieldName,
-    columnName: String,
-): GeneratedField = generatedFieldOf(
+internal fun generatedEnumFieldOf(fieldName: ValidFieldName, columnName: String): GeneratedField = generatedFieldOf(
     fieldName = fieldName,
     columnName = columnName,
     overrides = false,

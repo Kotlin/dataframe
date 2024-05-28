@@ -55,13 +55,13 @@ class MediumTests {
         val df = dataFrameOf("a", "b", "c")(
             1.0, 2.0, 3.0,
             1.3, 2.3, 3.3,
-            1.57, 2.57, 3.57
+            1.57, 2.57, 3.57,
         )
 
         val expected = dataFrameOf("a", "b", "c")(
             -1, 0, 1,
             -1, 0, 1,
-            -1, 0, 1
+            -1, 0, 1,
         )
 
         df.convert { colsOf<Double>() }.with { (it - rowMean()).roundToInt() } shouldBe expected
@@ -91,7 +91,7 @@ class MediumTests {
             nan, nan, nan, 0.04, 0.76, nan, nan, 0.67, 0.76, 0.16,
             nan, nan, 0.5, nan, 0.31, 0.4, nan, nan, 0.24, 0.01,
             0.49, nan, nan, 0.62, 0.73, 0.26, 0.85, nan, nan, nan,
-            nan, nan, 0.41, nan, 0.05, nan, 0.61, nan, 0.48, 0.68
+            nan, nan, 0.41, nan, 0.05, nan, 0.61, nan, 0.48, 0.68,
         )
 
         val expected = columnOf("e", "c", "d", "h", "d").named("res")
@@ -135,7 +135,7 @@ class MediumTests {
             "(60, 70]", 405,
             "(70, 80]", 561,
             "(80, 90]", 657,
-            "(90, 100]", 527
+            "(90, 100]", 527,
         )
 
         df.groupBy { a.map { (it - 1) / 10 } }.sum { b }

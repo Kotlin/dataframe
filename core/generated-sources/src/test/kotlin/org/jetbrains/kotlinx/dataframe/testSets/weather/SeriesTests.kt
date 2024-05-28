@@ -27,7 +27,7 @@ class SeriesTests {
         "Moscow", 2, 20,
         "London", 2, 15,
         "Moscow", 5, 10,
-        "London", 5, 18
+        "London", 5, 18,
     )
 
     // Generated code
@@ -50,7 +50,9 @@ class SeriesTests {
             .concat()
 
         val srcData = typed.rows().map { (it.city to it.day) to it.temp }.toMap()
-        val expected = typed.sortBy { city and day }.rows().map { row -> srcData[row.city to (row.day - 1)]?.let { row.temp - it } ?: 0 }
+        val expected = typed.sortBy {
+            city and day
+        }.rows().map { row -> srcData[row.city to (row.day - 1)]?.let { row.temp - it } ?: 0 }
         withDiff["diff"].toList() shouldBe expected
     }
 
@@ -67,7 +69,11 @@ class SeriesTests {
         val expected = typed
             .sortBy { city and day }
             .rows()
-            .map { row -> (0 until k).map { srcData[row.city to row.day - it] }.filterNotNull().let { it.sum().toDouble() / it.size } }
+            .map { row ->
+                (0 until k).map {
+                    srcData[row.city to row.day - it]
+                }.filterNotNull().let { it.sum().toDouble() / it.size }
+            }
 
         withMa["ma_temp"].toList() shouldBe expected
     }

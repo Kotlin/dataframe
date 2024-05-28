@@ -43,7 +43,9 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
                 val otherType = schema.columns[name]
                 if (otherType == null) {
                     columnsToUpdate.add(name)
-                } else columnSchemas.add(otherType)
+                } else {
+                    columnSchemas.add(otherType)
+                }
             }
             columnsToUpdate.forEach { collectedTypes.remove(it) }
             columnsToUpdate.clear()
@@ -104,41 +106,38 @@ internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) 
 }
 
 /** Create "empty" column, filled with either null or empty dataframes. */
-internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): AnyCol =
-    when (this) {
-        is ColumnSchema.Value -> DataColumn.createValueColumn(
-            name = name,
-            values = List(numberOfRows) { null },
-            type = type,
-        )
+internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): AnyCol = when (this) {
+    is ColumnSchema.Value -> DataColumn.createValueColumn(
+        name = name,
+        values = List(numberOfRows) { null },
+        type = type,
+    )
 
-        is ColumnSchema.Group -> DataColumn.createColumnGroup(
-            name = name,
-            df = schema.createEmptyDataFrame(numberOfRows),
-        ) as AnyCol
+    is ColumnSchema.Group -> DataColumn.createColumnGroup(
+        name = name,
+        df = schema.createEmptyDataFrame(numberOfRows),
+    ) as AnyCol
 
-        is ColumnSchema.Frame -> DataColumn.createFrameColumn(
-            name = name,
-            groups = List(numberOfRows) { emptyDataFrame<Any?>() },
-            schema = lazyOf(schema),
-        )
+    is ColumnSchema.Frame -> DataColumn.createFrameColumn(
+        name = name,
+        groups = List(numberOfRows) { emptyDataFrame<Any?>() },
+        schema = lazyOf(schema),
+    )
 
-        else -> error("Unexpected ColumnSchema: $this")
-    }
+    else -> error("Unexpected ColumnSchema: $this")
+}
 
-internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
+internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame = columns.map { (name, schema) ->
+    schema.createEmptyColumn(name)
+}.toDataFrame()
+
+internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame = if (columns.isEmpty()) {
+    DataFrame.empty(numberOfRows)
+} else {
     columns.map { (name, schema) ->
-        schema.createEmptyColumn(name)
+        schema.createEmptyColumn(name, numberOfRows)
     }.toDataFrame()
-
-internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
-    if (columns.isEmpty()) {
-        DataFrame.empty(numberOfRows)
-    } else {
-        columns.map { (name, schema) ->
-            schema.createEmptyColumn(name, numberOfRows)
-        }.toDataFrame()
-    }
+}
 
 @PublishedApi
 internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =

@@ -131,8 +131,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[drop][ColumnsSelectionDsl.drop]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> =
-        asSingleColumn().dropCols(n)
+    public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
 
     /**
      * @include [CommonDropFirstDocs]
@@ -196,8 +195,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> =
-        this.asSingleColumn().dropLastCols(n)
+    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]

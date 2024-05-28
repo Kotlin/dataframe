@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
 import org.junit.Test
 
+@Suppress("ktlint:standard:max-line-length")
 class CodeGenerationTests : BaseTest() {
 
     val personClassName = Person::class.qualifiedName!!
@@ -35,30 +36,62 @@ class CodeGenerationTests : BaseTest() {
     val intName = Int::class.simpleName!!
 
     fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false) = buildString {
-        appendLine("""val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>""")
-        appendLine("""val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName""")
+        appendLine(
+            """val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>""",
+        )
+        appendLine(
+            """val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName""",
+        )
         if (addNullable) {
-            appendLine("""val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>""")
-            appendLine("""val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?""")
+            appendLine(
+                """val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>""",
+            )
+            appendLine(
+                """val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?""",
+            )
         }
-        appendLine("""val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""")
-        appendLine("""val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?""")
+        appendLine(
+            """val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
+        )
+        appendLine(
+            """val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?""",
+        )
         if (addNullable) {
-            appendLine("""val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""")
-            appendLine("""val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?""")
+            appendLine(
+                """val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
+            )
+            appendLine(
+                """val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?""",
+            )
         }
-        appendLine("""val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>""")
-        appendLine("""val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName""")
+        appendLine(
+            """val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>""",
+        )
+        appendLine(
+            """val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName""",
+        )
         if (addNullable) {
-            appendLine("""val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>""")
-            appendLine("""val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?""")
+            appendLine(
+                """val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>""",
+            )
+            appendLine(
+                """val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?""",
+            )
         }
-        appendLine("""val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""")
-        append("""val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?""")
+        appendLine(
+            """val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+        )
+        append(
+            """val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+        )
         if (addNullable) {
             appendLine("")
-            appendLine("""val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""")
-            append("""val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?""")
+            appendLine(
+                """val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+            )
+            append(
+                """val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+            )
         }
     }
 
@@ -190,8 +223,8 @@ class CodeGenerationTests : BaseTest() {
             isOpen = true,
             visibility = MarkerVisibility.IMPLICIT_PUBLIC,
             knownMarkers = listOf(
-                MarkersExtractor.get<Person>()
-            )
+                MarkersExtractor.get<Person>(),
+            ),
         ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         val expected = """
@@ -271,7 +304,7 @@ class CodeGenerationTests : BaseTest() {
             true,
             true,
             false,
-            MarkerVisibility.EXPLICIT_PUBLIC
+            MarkerVisibility.EXPLICIT_PUBLIC,
         ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe """

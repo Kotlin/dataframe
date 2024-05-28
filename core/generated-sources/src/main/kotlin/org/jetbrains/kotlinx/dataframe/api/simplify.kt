@@ -105,7 +105,6 @@ public interface SimplifyColumnsSelectionDsl {
  *
  * A.k.a. it gets a sub-list of columns that are roots of the trees of columns.
  */
-internal fun ColumnsResolver<*>.simplifyInternal(): ColumnSet<*> =
-    allColumnsInternal().transform { it.simplify() }
+internal fun ColumnsResolver<*>.simplifyInternal(): ColumnSet<*> = allColumnsInternal().transform { it.simplify() }
 
 // endregion

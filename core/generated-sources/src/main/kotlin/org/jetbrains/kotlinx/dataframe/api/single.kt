@@ -35,12 +35,11 @@ public fun <C> DataColumn<C>.single(): C = values.single()
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.single(): DataRow<T> =
-    when (nrow) {
-        0 -> throw NoSuchElementException("DataFrame has no rows. Use `singleOrNull`.")
-        1 -> get(0)
-        else -> throw IllegalArgumentException("DataFrame has more than one row.")
-    }
+public fun <T> DataFrame<T>.single(): DataRow<T> = when (nrow) {
+    0 -> throw NoSuchElementException("DataFrame has no rows. Use `singleOrNull`.")
+    1 -> get(0)
+    else -> throw IllegalArgumentException("DataFrame has more than one row.")
+}
 
 public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
@@ -359,9 +358,10 @@ public interface SingleColumnsSelectionDsl {
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnsResolver<C>.singleInternal(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
-    (allColumnsInternal() as TransformableColumnSet<C>)
-        .transform { listOf(it.single(condition)) }
-        .singleOrNullWithTransformerImpl()
+internal fun <C> ColumnsResolver<C>.singleInternal(
+    condition: ColumnFilter<C> = { true },
+): TransformableSingleColumn<C> = (allColumnsInternal() as TransformableColumnSet<C>)
+    .transform { listOf(it.single(condition)) }
+    .singleOrNullWithTransformerImpl()
 
 // endregion

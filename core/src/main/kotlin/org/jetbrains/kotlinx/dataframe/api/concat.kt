@@ -42,9 +42,7 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
 
 // region Iterable
 
-public fun <T> Iterable<DataFrame<T>>.concat(): DataFrame<T> {
-    return concatImpl(asList())
-}
+public fun <T> Iterable<DataFrame<T>>.concat(): DataFrame<T> = concatImpl(asList())
 
 public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
     val list = asList()

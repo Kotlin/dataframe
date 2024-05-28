@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlin.backend.common.FileLoweringPass
-import org.jetbrains.kotlin.backend.common.extensions.FirIncompatiblePluginAPI
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
@@ -47,9 +46,9 @@ import java.io.File
 
 data class ContainingDeclarations(val clazz: IrClass?, val function: IrFunction?, val statementIndex: Int = 0)
 
-class ExplainerIrTransformer(
-    val pluginContext: IrPluginContext
-) : FileLoweringPass, IrElementTransformer<ContainingDeclarations> {
+class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
+    FileLoweringPass,
+    IrElementTransformer<ContainingDeclarations> {
     lateinit var file: IrFile
     lateinit var source: String
     override fun lower(irFile: IrFile) {
@@ -70,16 +69,16 @@ class ExplainerIrTransformer(
     }
 
     override fun visitBlockBody(body: IrBlockBody, data: ContainingDeclarations): IrBody {
+        @Suppress("ktlint")
         for (i in 0 until body.statements.size) {
             @Suppress("UNCHECKED_CAST")
-            (body.statements.set(i, (body.statements.get(i) as IrElementBase).transform(this, data.copy(statementIndex = i)) as IrStatement)) // ktlint-disable
+            (body.statements.set(i, (body.statements.get(i) as IrElementBase).transform(this, data.copy(statementIndex = i)) as IrStatement))
         }
         return body
     }
 
-    override fun visitClass(declaration: IrClass, data: ContainingDeclarations): IrStatement {
-        return super.visitClass(declaration, data.copy(clazz = declaration))
-    }
+    override fun visitClass(declaration: IrClass, data: ContainingDeclarations): IrStatement =
+        super.visitClass(declaration, data.copy(clazz = declaration))
 
     override fun visitFunction(declaration: IrFunction, data: ContainingDeclarations): IrStatement {
         val annotated = declaration.annotations.any {
@@ -104,9 +103,7 @@ class ExplainerIrTransformer(
         return declaration
     }
 
-    override fun visitExpressionBody(body: IrExpressionBody, data: ContainingDeclarations): IrBody {
-        return body
-    }
+    override fun visitExpressionBody(body: IrExpressionBody, data: ContainingDeclarations): IrBody = body
 
     val dataFrameLike = setOf(
         FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
@@ -122,7 +119,7 @@ class ExplainerIrTransformer(
         FqName("org.jetbrains.kotlinx.dataframe.api.FormattedFrame"),
         FqName("org.jetbrains.kotlinx.dataframe.api.GroupBy"),
         FqName("org.jetbrains.kotlinx.dataframe.DataFrame"),
-        FqName("org.jetbrains.kotlinx.dataframe.DataRow")
+        FqName("org.jetbrains.kotlinx.dataframe.DataRow"),
     )
 
     val explainerPackage = FqName("org.jetbrains.kotlinx.dataframe.explainer")
@@ -161,9 +158,11 @@ class ExplainerIrTransformer(
         expression: IrDeclarationReference,
         ownerName: Name,
         receiver: IrExpression?,
-        data: ContainingDeclarations
+        data: ContainingDeclarations,
     ): IrCall {
-        val alsoReference = pluginContext.referenceFunctions(CallableId(FqName("kotlin"), Name.identifier("also"))).single()
+        val alsoReference = pluginContext.referenceFunctions(
+            CallableId(FqName("kotlin"), Name.identifier("also")),
+        ).single()
 
         val result = IrCallImpl(-1, -1, expression.type, alsoReference, 1, 1).apply {
             this.extensionReceiver = expression
@@ -185,7 +184,7 @@ class ExplainerIrTransformer(
                 isSuspend = false,
                 isOperator = false,
                 isInfix = false,
-                isExpect = false
+                isExpect = false,
             ).apply {
                 valueParameters = buildList {
                     add(
@@ -201,8 +200,8 @@ class ExplainerIrTransformer(
                             isCrossinline = false,
                             isNoinline = false,
                             isHidden = false,
-                            isAssignable = false
-                        )
+                            isAssignable = false,
+                        ),
                     )
                 }
                 val itSymbol = valueParameters[0].symbol
@@ -227,7 +226,7 @@ class ExplainerIrTransformer(
                     val callableId = CallableId(
                         explainerPackage,
                         FqName("PluginCallbackProxy"),
-                        Name.identifier("doAction")
+                        Name.identifier("doAction"),
                     )
                     val doAction = pluginContext.referenceFunctions(callableId).single()
                     statements += IrCallImpl(
@@ -236,7 +235,7 @@ class ExplainerIrTransformer(
                         type = doAction.owner.returnType,
                         symbol = doAction,
                         typeArgumentsCount = 0,
-                        valueArgumentsCount = valueArguments.size
+                        valueArgumentsCount = valueArguments.size,
                     ).apply {
                         val clazz = ClassId(explainerPackage, Name.identifier("PluginCallbackProxy"))
                         val plugin = pluginContext.referenceClass(clazz)!!
@@ -253,7 +252,7 @@ class ExplainerIrTransformer(
                 type = pluginContext.irBuiltIns.functionN(2)
                     .typeWith(listOf(expression.type, pluginContext.irBuiltIns.unitType)),
                 function = alsoLambda,
-                origin = IrStatementOrigin.LAMBDA
+                origin = IrStatementOrigin.LAMBDA,
             )
             putValueArgument(0, alsoLambdaExpression)
         }

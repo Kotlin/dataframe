@@ -1,10 +1,27 @@
 package org.jetbrains.kotlinx.dataframe.puzzles
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.api.relative
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortByDesc
+import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 import kotlin.math.round
@@ -73,7 +90,7 @@ class HardTests {
             -2, "B", 21.0,
             -1, "A", 16.0,
             -19, "B", 21.0,
-            23, "A", 23.0
+            23, "A", 23.0,
         )
 
         val means = df.filter { vals >= 0 }

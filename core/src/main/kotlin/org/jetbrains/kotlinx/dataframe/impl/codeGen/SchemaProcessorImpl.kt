@@ -37,7 +37,13 @@ internal class SchemaProcessorImpl(
         var attempt = 2
         while (usedNames.contains(result.quotedIfNeeded)) {
             result =
-                if (result.needsQuote) baseName + ValidFieldName.of(" ($attempt)") else baseName + ValidFieldName.of("$attempt")
+                if (result.needsQuote) {
+                    baseName + ValidFieldName.of(
+                        " ($attempt)",
+                    )
+                } else {
+                    baseName + ValidFieldName.of("$attempt")
+                }
             attempt++
         }
         return result
@@ -46,8 +52,9 @@ internal class SchemaProcessorImpl(
     private fun generateUniqueMarkerClassName(prefix: String): String {
         if (!usedMarkerNames.contains(prefix)) return prefix
         var id = 1
-        while (usedMarkerNames.contains("$prefix$id"))
+        while (usedMarkerNames.contains("$prefix$id")) {
             id++
+        }
         return "$prefix$id"
     }
 
@@ -61,10 +68,12 @@ internal class SchemaProcessorImpl(
 
         fun getFieldType(columnSchema: ColumnSchema): FieldType = when (columnSchema) {
             is ColumnSchema.Value -> FieldType.ValueFieldType(columnSchema.type.toString())
+
             is ColumnSchema.Group -> FieldType.GroupFieldType(process(columnSchema.schema, false, visibility).name)
+
             is ColumnSchema.Frame -> FieldType.FrameFieldType(
                 process(columnSchema.schema, false, visibility).name,
-                columnSchema.nullable
+                columnSchema.nullable,
             )
 
             else -> throw NotImplementedError()
@@ -87,6 +96,7 @@ internal class SchemaProcessorImpl(
                 }
 
                 superFields.isNotEmpty() -> emptyList()
+
                 else -> {
                     val fieldName = generateValidFieldName(columnName, index, usedFieldNames)
                     usedFieldNames.add(fieldName.quotedIfNeeded)
@@ -125,21 +135,21 @@ internal class SchemaProcessorImpl(
                         newColumns.removeAll(bestMarker.first.columnNames.toSet())
                         baseMarkers += bestMarker.first
                         availableMarkers -= bestMarker.first
-                    } else break
+                    } else {
+                        break
+                    }
                 }
             }
             generateFields(scheme, visibility, baseMarkers)
-        } else generateFields(scheme, visibility)
+        } else {
+            generateFields(scheme, visibility)
+        }
         return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
     }
 
     private fun DataFrameSchema.getRequiredMarkers() = registeredMarkers.filterRequiredForSchema(this)
 
-    override fun process(
-        schema: DataFrameSchema,
-        isOpen: Boolean,
-        visibility: MarkerVisibility,
-    ): Marker {
+    override fun process(schema: DataFrameSchema, isOpen: Boolean, visibility: MarkerVisibility): Marker {
         val markerName: String
         val required = schema.getRequiredMarkers()
         val existingMarker = registeredMarkers.firstOrNull {

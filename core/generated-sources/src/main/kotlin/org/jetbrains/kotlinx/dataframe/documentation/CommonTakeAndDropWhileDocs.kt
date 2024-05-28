@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.FirstOrLastArg
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.NounArg
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.OperationArg

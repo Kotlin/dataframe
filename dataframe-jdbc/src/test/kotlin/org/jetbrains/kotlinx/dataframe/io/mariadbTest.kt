@@ -173,7 +173,7 @@ class MariadbTest {
             )
         """
             connection.createStatement().execute(
-                createTableQuery.trimIndent()
+                createTableQuery.trimIndent(),
             )
 
             @Language("SQL")
@@ -213,7 +213,7 @@ class MariadbTest {
             )
             """
             connection.createStatement().execute(
-                createTableQuery2.trimIndent()
+                createTableQuery2.trimIndent(),
             )
 
             @Language("SQL")

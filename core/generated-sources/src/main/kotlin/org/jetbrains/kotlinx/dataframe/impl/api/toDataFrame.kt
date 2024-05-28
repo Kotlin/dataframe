@@ -59,8 +59,9 @@ internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
     private val clazz: KClass<*>,
     private val prefix: ColumnPath = emptyPath(),
-    private val configuration: TraverseConfiguration = TraverseConfiguration()
-) : CreateDataFrameDsl<T>(), TraversePropertiesDsl by configuration {
+    private val configuration: TraverseConfiguration = TraverseConfiguration(),
+) : CreateDataFrameDsl<T>(),
+    TraversePropertiesDsl by configuration {
 
     internal val columns = mutableListOf<Pair<ColumnPath, AnyBaseCol>>()
 
@@ -171,13 +172,11 @@ internal fun convertToDataFrame(
             clazz.memberProperties
                 .filter { it.visibility == KVisibility.PUBLIC }
         }
-
         // fall back to getter functions for pojo-like classes if no member properties were found
         .ifEmpty {
             clazz.memberFunctions
                 .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
         }
-
         // sort properties by order in constructor
         .sortWithConstructor(clazz)
 
@@ -194,7 +193,9 @@ internal fun convertToDataFrame(
                 "value class $kClass is expected to have primary constructor, but couldn't obtain it"
             }
             val parameter = constructor.parameters.singleOrNull()
-                ?: error("conversion of value class $kClass with multiple parameters in constructor is not yet supported")
+                ?: error(
+                    "conversion of value class $kClass with multiple parameters in constructor is not yet supported",
+                )
             // there's no need to unwrap if underlying field is nullable
             if (parameter.type.isMarkedNullable) return@let null
             // box and unbox impl methods are part of binary API of value classes
@@ -275,7 +276,7 @@ internal fun convertToDataFrame(
             shouldCreateFrameCol ->
                 DataColumn.createFrameColumn(
                     name = it.columnName,
-                    groups = values as List<AnyFrame>
+                    groups = values as List<AnyFrame>,
                 )
 
             shouldCreateColumnGroup ->

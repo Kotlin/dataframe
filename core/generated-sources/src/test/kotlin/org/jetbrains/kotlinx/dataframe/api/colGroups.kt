@@ -2,13 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.samples.api.age
-import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
-import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
-import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
-import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class ColGroupsTests : ColumnsSelectionDslTests() {

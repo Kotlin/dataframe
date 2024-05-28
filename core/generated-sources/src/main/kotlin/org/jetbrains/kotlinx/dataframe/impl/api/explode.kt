@@ -42,8 +42,11 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
                 is List<*> -> value.size
                 else -> 1
             }
-            if (!dropEmpty && n == 0) 1
-            else n
+            if (!dropEmpty && n == 0) {
+                1
+            } else {
+                n
+            }
         }
     }
 
@@ -70,6 +73,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
 
                         DataColumn.createColumnGroup(dstCol.name, newDf)
                     }
+
                     is ValueColumn<*> -> {
                         val collector = createDataCollector(outputRowsCount)
                         dstCol.asSequence().forEachIndexed { rowIndex, value ->
@@ -82,6 +86,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
                         }
                         collector.toColumn(dstCol.name)
                     }
+
                     else -> error("")
                 }
             } else { // values in current column will be duplicated
@@ -95,12 +100,15 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
                         }
                     }
                 }
-                if (srcCol.isFrameColumn()) DataColumn.createFrameColumn(
-                    srcCol.name,
-                    collector.values as List<AnyFrame>,
-                    srcCol.asAnyFrameColumn().schema // keep original schema
-                )
-                else collector.toColumn(srcCol.name)
+                if (srcCol.isFrameColumn()) {
+                    DataColumn.createFrameColumn(
+                        srcCol.name,
+                        collector.values as List<AnyFrame>,
+                        srcCol.asAnyFrameColumn().schema, // keep original schema
+                    )
+                } else {
+                    collector.toColumn(srcCol.name)
+                }
             }
         }
         return newColumns.toDataFrame()

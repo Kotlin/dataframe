@@ -102,7 +102,9 @@ private fun Float8Vector.values(range: IntRange): List<Double?> = range.map { ge
 
 private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it) }
 private fun DateDayVector.values(range: IntRange): List<LocalDate?> = range.map {
-    if (getObject(it) == null) null else {
+    if (getObject(it) == null) {
+        null
+    } else {
         DateUtility.getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
             .toLocalDate()
     }
@@ -237,35 +239,65 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
         val range = 0 until root.rowCount
         val (list, type) = when (val vector = root.getVector(field)) {
             is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is LargeVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is VarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is LargeVarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is BitVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is SmallIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TinyIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is UInt1Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is UInt2Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is UInt4Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is UInt8Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is IntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is BigIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is DecimalVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is Decimal256Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is Float8Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is Float4Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is DurationVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is DateDayVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is DateMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeStampNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeStampMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is NullVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             else -> {
                 throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
             }
@@ -283,9 +315,7 @@ internal fun DataFrame.Companion.readArrowIPCImpl(
     channel: ReadableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame {
-    return readArrowImpl(ArrowStreamReader(channel, allocator), nullability)
-}
+): AnyFrame = readArrowImpl(ArrowStreamReader(channel, allocator), nullability)
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
@@ -294,16 +324,14 @@ internal fun DataFrame.Companion.readArrowFeatherImpl(
     channel: SeekableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame {
-    return readArrowImpl(ArrowFileReader(channel, allocator), nullability)
-}
+): AnyFrame = readArrowImpl(ArrowFileReader(channel, allocator), nullability)
 
 /**
  * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]
  */
 internal fun DataFrame.Companion.readArrowImpl(
     reader: ArrowReader,
-    nullability: NullabilityOptions = NullabilityOptions.Infer
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame {
     reader.use {
         val flattened = buildList {
@@ -317,6 +345,7 @@ internal fun DataFrame.Companion.readArrowImpl(
                         add(df)
                     }
                 }
+
                 else -> {
                     val root = reader.vectorSchemaRoot
                     val schema = root.schema

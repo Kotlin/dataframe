@@ -29,7 +29,9 @@ import kotlin.reflect.KType
  *
  * @param T Schema marker. It identifies column schema and is used to generate schema-specific extension properties for typed data access. It is covariant, so `DataFrame<A>` is assignable to variable of type `DataFrame<B>` if `A` is a subtype of `B`.
  */
-public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
+public interface DataFrame<out T> :
+    Aggregatable<T>,
+    ColumnsContainer<T> {
 
     public companion object {
         public val Empty: AnyFrame = DataFrameImpl<Unit>(emptyList(), 0)
@@ -105,8 +107,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 /**
  * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
  */
-public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
-    this.get(columns)
+public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = this.get(columns)
 
 public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }

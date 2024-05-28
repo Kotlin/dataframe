@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS_REPLACE
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -60,8 +59,7 @@ private interface CommonSelectDocs
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
-    get(columns).toDataFrame().cast()
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
 
 /**
  * @include [CommonSelectDocs]
@@ -194,8 +192,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  { "myColGroup"  `[`{`][String.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][String.select]` }`
      */
-    public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        columnGroup(this).select(selector)
+    public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 
     /**
      * @include [CommonSelectDocs]
@@ -209,8 +206,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[pathOf][pathOf]`("pathTo", "myColGroup")`[`() {`][ColumnPath.select]`  someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() `[`}`][ColumnPath.select]` }`
      */
-    public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        columnGroup(this).select(selector)
+    public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 
     // region deprecated
 

@@ -16,7 +16,13 @@ class SplitTests {
 
     @Test
     fun `split with default`() {
-        val recentDelays = listOf(listOf(23, 47), listOf(), listOf(24, 43, 87), listOf(13), listOf(67, 32)).toColumn("RecentDelays")
+        val recentDelays = listOf(
+            listOf(23, 47),
+            listOf(),
+            listOf(24, 43, 87),
+            listOf(13),
+            listOf(67, 32),
+        ).toColumn("RecentDelays")
         val df = dataFrameOf(recentDelays)
         val split = df.split(recentDelays).default(0).into { "delay$it" }
         split.columns().forEach {
@@ -31,7 +37,7 @@ class SplitTests {
             "Toy Story (1995)",
             "Jumanji (1995)",
             "Grumpier Old Men (1995)",
-            "Waiting to Exhale (1995)"
+            "Waiting to Exhale (1995)",
         )
 
         val regex = """(.*) \((\d{4})\)""".toRegex()
@@ -51,7 +57,7 @@ class SplitTests {
             1, 2, 3,
             1, 4, 5,
             2, 3, 4,
-            3, 6, 7
+            3, 6, 7,
         )
         val res = df.groupBy("a").updateGroups { it.remove("a") }.into("g")
             .update("g").at(1).with { DataFrame.empty() }
@@ -61,7 +67,7 @@ class SplitTests {
         res shouldBe dataFrameOf("a", "b", "c")(
             1, listOf(2, 4), listOf(3, 5),
             2, emptyList<Int>(), emptyList<Int>(),
-            3, emptyList<Int>(), emptyList<Int>()
+            3, emptyList<Int>(), emptyList<Int>(),
         )
     }
 
@@ -71,7 +77,7 @@ class SplitTests {
 
         res shouldBe dataFrameOf(
             columnOf(columnOf("22") named "left", columnOf("65") named "right") named "first",
-            columnOf(columnOf("22") named "left", columnOf("66") named "right") named "second"
+            columnOf(columnOf("22") named "left", columnOf("66") named "right") named "second",
         )
     }
 
@@ -83,7 +89,7 @@ class SplitTests {
             columnOf("22") named "left",
             columnOf("65") named "right",
             columnOf("22") named "left1",
-            columnOf("66") named "right1"
+            columnOf("66") named "right1",
         )
     }
 
@@ -93,7 +99,7 @@ class SplitTests {
 
         res shouldBe dataFrameOf(
             columnOf(columnOf("22") named "split1", columnOf("65") named "split2") named "first",
-            columnOf(columnOf("22") named "split1", columnOf("66") named "split2") named "second"
+            columnOf(columnOf("22") named "split1", columnOf("66") named "split2") named "second",
         )
     }
 
@@ -105,7 +111,7 @@ class SplitTests {
             columnOf("22") named "split1",
             columnOf("65") named "split2",
             columnOf("22") named "split3",
-            columnOf("66") named "split4"
+            columnOf("66") named "split4",
         )
     }
 
@@ -118,7 +124,7 @@ class SplitTests {
             columnOf("22") named "split1",
             columnOf("65") named "split2",
             columnOf("22") named "split3",
-            columnOf("66") named "split4"
+            columnOf("66") named "split4",
         )
     }
 
@@ -132,7 +138,7 @@ class SplitTests {
             .inward("first", "second") // no name conflict
 
         res shouldBe dataFrameOf(
-            columnOf(columnOf("22-66") named "first", columnOf("22-65") named "second") named "group"
+            columnOf(columnOf("22-66") named "first", columnOf("22-65") named "second") named "group",
         )
     }
 
@@ -143,8 +149,8 @@ class SplitTests {
                 columnOf("a") named "first",
                 columnOf(
                     columnOf("b") named "first",
-                    columnOf("c") named "second"
-                ) named "nestedGroup"
+                    columnOf("c") named "second",
+                ) named "nestedGroup",
             ) named "topLevelGroup",
             columnOf("d") named "first",
         )
@@ -160,7 +166,7 @@ class SplitTests {
             columnOf(
                 columnOf("a") named "first",
                 columnOf("b") named "first1",
-                columnOf("c") named "second"
+                columnOf("c") named "second",
             ) named "topLevelGroup",
             columnOf("d") named "first",
         )

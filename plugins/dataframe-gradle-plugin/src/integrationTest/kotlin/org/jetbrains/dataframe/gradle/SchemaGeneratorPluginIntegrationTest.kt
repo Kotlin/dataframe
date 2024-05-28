@@ -136,7 +136,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             main.writeText(
                 """
                 import org.example.Schema
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             """
@@ -181,7 +181,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             main.writeText(
                 """
                 import org.example.Schema
-                """.trimIndent()
+                """.trimIndent(),
             )
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -250,7 +250,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 fun main() {
                         val df = DataFrame.read("${TestData.csvName}").cast<Schema>()
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             """
@@ -309,7 +309,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     val df = DataFrame.read("${TestData.csvName}").cast<MySchema>()
                     val df1 = df.filter { age != null }
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             @Suppress("DuplicatedCode")
@@ -357,7 +357,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     val df = MySchema.readCSV()
                     val df1 = df.filter { age != null }
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             """
@@ -383,8 +383,6 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    @Test
-    @Ignore
     // TODO: test is broken
         /*
         e: file://test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
@@ -398,7 +396,9 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         e: file://test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
         e: file://test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
         e: file://test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
-        */
+         */
+    @Test
+    @Ignore
     fun `preprocessor imports schema from database`() {
         val connectionUrl = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
         DriverManager.getConnection(connectionUrl).use {
@@ -444,7 +444,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
  
                     }
                 }
-                    """.trimIndent()
+                    """.trimIndent(),
                 )
 
                 """
@@ -480,7 +480,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 name VARCHAR(50),
                 age INT
             )
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         // Create table Sale
@@ -491,7 +491,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 customerId INT,
                 amount DECIMAL(10, 2)
             )
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         // add data to the Customer table
@@ -554,7 +554,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 fun main() {
                     console.log("Hello, Kotlin/JS!")
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
             dataFile.writeText(TestData.csvSample)
             """
@@ -602,7 +602,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 fun main() {
                     println("Hello, Kotlin/JVM!")
                 }
-                """.trimIndent()
+                """.trimIndent(),
             )
             dataFile.writeText(TestData.csvSample)
             """

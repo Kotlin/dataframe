@@ -637,7 +637,10 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun groupByExpr_strings() {
         // SampleStart
-        df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
+        df.groupBy {
+            expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named
+                "nameLength"
+        }
         // SampleEnd
     }
 
@@ -786,12 +789,14 @@ class Analyze : TestBase() {
         df.groupBy { city }.max { age } // max age into column "age"
         df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
         df.groupBy { city }.count() // number of rows into column "count"
-        df.groupBy { city }
-            .max { name.firstName.length() and name.lastName.length() } // maximum length of firstName or lastName into column "max"
+        // maximum length of firstName or lastName into column "max"
+        df.groupBy { city }.max { name.firstName.length() and name.lastName.length() }
         df.groupBy { city }
             .medianFor { age and weight } // median age into column "age", median weight into column "weight"
         df.groupBy { city }
-            .minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
+            .minFor {
+                (age into "min age") and (weight into "min weight")
+            } // min age into column "min age", min weight into column "min weight"
         df.groupBy { city }.meanOf("mean ratio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
         // SampleEnd
     }
@@ -817,7 +822,9 @@ class Analyze : TestBase() {
         df.groupBy { city }
             .medianFor { age and weight } // median age into column "age", median weight into column "weight"
         df.groupBy { city }
-            .minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
+            .minFor {
+                (age into "min age") and (weight into "min weight")
+            } // min age into column "min age", min weight into column "min weight"
         df.groupBy { city }.meanOf("mean ratio") { weight()?.div(age()) } // mean of weight/age into column "mean ratio"
         // SampleEnd
     }
@@ -837,7 +844,9 @@ class Analyze : TestBase() {
         df.groupBy("city")
             .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
         df.groupBy("city")
-            .minFor { ("age"<Int>() into "min age") and ("weight"<Int?>() into "min weight") } // min age into column "min age", min weight into column "min weight"
+            .minFor {
+                ("age"<Int>() into "min age") and ("weight"<Int?>() into "min weight")
+            } // min age into column "min age", min weight into column "min weight"
         df.groupBy("city").meanOf("mean ratio") {
             "weight"<Int?>()?.div("age"<Int>())
         } // mean of weight/age into column "mean ratio"

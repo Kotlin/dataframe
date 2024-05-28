@@ -117,10 +117,7 @@ class ConvertToTests {
     }
 
     @DataSchema
-    data class Location(
-        val name: String,
-        val gps: Gps?,
-    )
+    data class Location(val name: String, val gps: Gps?)
 
     @DataSchema
     data class Gps(val latitude: Double, val longitude: Double)
@@ -128,8 +125,10 @@ class ConvertToTests {
     // @Test TODO: https://github.com/Kotlin/dataframe/issues/177
     fun `convert df with nullable DataRow`() {
         val locations: AnyFrame = dataFrameOf("name", "gps")(
-            "Home", Gps(0.0, 0.0),
-            "Away", null,
+            "Home",
+            Gps(0.0, 0.0),
+            "Away",
+            null,
         )
 
         locations.print(borders = true, title = true, columnTypes = true)
@@ -255,8 +254,10 @@ class ConvertToTests {
     @Test
     fun `Convert generic interface to itself`() {
         val df = dataFrameOf("key", "value")(
-            "a", 1,
-            "b", 2,
+            "a",
+            1,
+            "b",
+            2,
         ).alsoDebug()
         val converted = df.convertTo<MySchema>().alsoDebug()
         converted shouldBe df
@@ -317,7 +318,7 @@ class ConvertToTests {
     }
 
     @Test
-    fun `convert ValueColumn of lists, nulls and frames into FrameColumn`(){
+    fun `convert ValueColumn of lists, nulls and frames into FrameColumn`() {
         @DataSchema
         data class Entry(val v: Int)
 

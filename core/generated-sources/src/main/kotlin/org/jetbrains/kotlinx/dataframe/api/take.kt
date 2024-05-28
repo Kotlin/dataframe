@@ -266,8 +266,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    public fun ColumnsSelectionDsl<*>.take(n: Int): ColumnSet<*> =
-        this.asSingleColumn().takeCols(n)
+    public fun ColumnsSelectionDsl<*>.take(n: Int): ColumnSet<*> = this.asSingleColumn().takeCols(n)
 
     /**
      * ## Take (Cols)
@@ -500,8 +499,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> =
-        asSingleColumn().takeLastCols(n)
+    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> = asSingleColumn().takeLastCols(n)
 
     /**
      * ## Take Last (Cols)

@@ -18,4 +18,5 @@ internal fun <T> Aggregatable<T>.remainingColumnsSelector() = internal().remaini
 internal fun <T> Aggregatable<T>.internal(): AggregatableInternal<T> = this as AggregatableInternal<T>
 
 @PublishedApi
-internal fun <T, R> Grouped<T>.aggregateInternal(body: AggregateBodyInternal<T, R>): DataFrame<T> = aggregate(body as AggregateGroupedBody<T, R>)
+internal fun <T, R> Grouped<T>.aggregateInternal(body: AggregateBodyInternal<T, R>): DataFrame<T> =
+    aggregate(body as AggregateGroupedBody<T, R>)

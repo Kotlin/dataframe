@@ -55,10 +55,8 @@ internal fun <C> TransformableSingleColumn<C>.atAnyDepthImpl(
  * A [ColumnsResolverTransformer] implementation around the [ColumnsResolver.flattenRecursively] function.
  * Created only using [atAnyDepthImpl].
  */
-private class AtAnyDepthTransformer(
-    val includeGroups: Boolean = true,
-    val includeTopLevel: Boolean = true,
-) : ColumnsResolverTransformer {
+private class AtAnyDepthTransformer(val includeGroups: Boolean = true, val includeTopLevel: Boolean = true) :
+    ColumnsResolverTransformer {
 
     override fun transform(columnsResolver: ColumnsResolver<*>): ColumnsResolver<*> =
         columnsResolver.flattenRecursively(
@@ -66,17 +64,15 @@ private class AtAnyDepthTransformer(
             includeTopLevel = includeTopLevel,
         )
 
-    override fun transformSet(columnSet: ColumnSet<*>): ColumnsResolver<*> =
-        columnSet.flattenRecursively(
-            includeGroups = includeGroups,
-            includeTopLevel = includeTopLevel,
-        )
+    override fun transformSet(columnSet: ColumnSet<*>): ColumnsResolver<*> = columnSet.flattenRecursively(
+        includeGroups = includeGroups,
+        includeTopLevel = includeTopLevel,
+    )
 
-    override fun transformSingle(singleColumn: SingleColumn<*>): ColumnsResolver<*> =
-        singleColumn.flattenRecursively(
-            includeGroups = includeGroups,
-            includeTopLevel = includeTopLevel,
-        )
+    override fun transformSingle(singleColumn: SingleColumn<*>): ColumnsResolver<*> = singleColumn.flattenRecursively(
+        includeGroups = includeGroups,
+        includeTopLevel = includeTopLevel,
+    )
 }
 
 /**

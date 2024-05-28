@@ -26,16 +26,16 @@ class DateRangeIterator(first: LocalDate, last: LocalDate, val step: Int) : Iter
 
 operator fun ClosedRange<LocalDate>.iterator() = DateRangeIterator(this.start, this.endInclusive, 1)
 
-fun ClosedRange<LocalDate>.toList(): List<LocalDate> {
-    return when (val size = this.start.daysUntil(this.endInclusive)) {
-        0 -> emptyList()
-        1 -> listOf(iterator().next())
-        else -> {
-            val dest = ArrayList<LocalDate>(size)
-            for (item in this) {
-                dest.add(item)
-            }
-            dest
+fun ClosedRange<LocalDate>.toList(): List<LocalDate> = when (val size = this.start.daysUntil(this.endInclusive)) {
+    0 -> emptyList()
+
+    1 -> listOf(iterator().next())
+
+    else -> {
+        val dest = ArrayList<LocalDate>(size)
+        for (item in this) {
+            dest.add(item)
         }
+        dest
     }
 }

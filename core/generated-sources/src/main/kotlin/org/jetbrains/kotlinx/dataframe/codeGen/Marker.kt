@@ -5,7 +5,9 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 
 public enum class MarkerVisibility {
-    INTERNAL, IMPLICIT_PUBLIC, EXPLICIT_PUBLIC
+    INTERNAL,
+    IMPLICIT_PUBLIC,
+    EXPLICIT_PUBLIC,
 }
 
 public interface IsolatedMarker {
@@ -26,10 +28,7 @@ public interface IsolatedMarker {
     public val typeArguments: String
 }
 
-public abstract class AbstractMarker(
-    typeParameters: List<String>,
-    typeArguments: List<String>,
-) : IsolatedMarker {
+public abstract class AbstractMarker(typeParameters: List<String>, typeArguments: List<String>) : IsolatedMarker {
     override val typeParameters: String = typeParameters.join()
     override val typeArguments: String = typeArguments.join()
 
@@ -87,7 +86,9 @@ public open class Marker(
 
     public val columnNames: List<String> get() = allFields.map { it.columnName }
 
-    public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.associate { it.columnName to it.columnSchema }) }
+    public val schema: DataFrameSchema by lazy {
+        DataFrameSchemaImpl(allFields.associate { it.columnName to it.columnSchema })
+    }
 
     public fun implements(schema: Marker): Boolean =
         if (schema.name == name) true else allSuperMarkers[schema.name]?.let { it === schema } ?: false

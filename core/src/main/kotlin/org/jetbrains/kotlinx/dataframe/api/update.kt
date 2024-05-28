@@ -151,8 +151,7 @@ private interface UpdateWithNote
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [Update.DslParam]
  */
-public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> =
-    Update(this, null, columns)
+public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> = Update(this, null, columns)
 
 /**
  * @include [CommonUpdateFunctionDoc]
@@ -257,7 +256,8 @@ private interface SeeAlsoPerRowCol
 /** ## Update Expression
  * @see ExpressionsGivenRow.RowValueExpression.WithExample
  * @see ExpressionsGivenRow.AddDataRowNote
- */ // doc processor plugin does not work with type aliases yet
+ */
+// doc processor plugin does not work with type aliases yet
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 /** ## With
@@ -372,8 +372,7 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
 }
 
 /** @include [Update.notNull] */
-public fun <T, C> Update<T, C?>.notNull(): Update<T, C> =
-    where { it != null } as Update<T, C>
+public fun <T, C> Update<T, C?>.notNull(): Update<T, C> = where { it != null } as Update<T, C>
 
 /**
  * ## Not Null
@@ -415,8 +414,7 @@ public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
     expression: UpdateExpression<T, C, C>,
-): DataFrame<T> =
-    update(*headPlusArray(firstCol, cols)).with(expression)
+): DataFrame<T> = update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
  * @include [CommonUpdateFunctionDoc]
@@ -434,8 +432,7 @@ public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
     expression: UpdateExpression<T, C, C>,
-): DataFrame<T> =
-    update(*headPlusArray(firstCol, cols)).with(expression)
+): DataFrame<T> = update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
  * @include [CommonUpdateFunctionDoc]
@@ -453,8 +450,7 @@ public fun <T> DataFrame<T>.update(
     firstCol: String,
     vararg cols: String,
     expression: UpdateExpression<T, Any?, Any?>,
-): DataFrame<T> =
-    update(*headPlusArray(firstCol, cols)).with(expression)
+): DataFrame<T> = update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
  * Specific version of [with] that simply sets the value of each selected row to {@get [FirstArg]}.

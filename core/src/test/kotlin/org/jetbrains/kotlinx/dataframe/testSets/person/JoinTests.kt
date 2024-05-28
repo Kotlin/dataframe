@@ -98,11 +98,23 @@ class JoinTests : BaseJoinTest() {
 
     @Test
     fun `test overloads contract`() {
-        typed.innerJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Inner) { name and it.city.match(right.origin) }
-        typed.leftJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Left) { name and it.city.match(right.origin) }
-        typed.rightJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Right) { name and it.city.match(right.origin) }
-        typed.fullJoin(typed2) { name and it.city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Full) { name and it.city.match(right.origin) }
-        typed.excludeJoin(typed2) { city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Exclude) { city.match(right.origin) }
-        typed.filterJoin(typed2) { city.match(right.origin) } shouldBe typed.join(typed2, JoinType.Filter) { city.match(right.origin) }
+        typed.innerJoin(typed2) {
+            name and it.city.match(right.origin)
+        } shouldBe typed.join(typed2, JoinType.Inner) { name and it.city.match(right.origin) }
+        typed.leftJoin(typed2) {
+            name and it.city.match(right.origin)
+        } shouldBe typed.join(typed2, JoinType.Left) { name and it.city.match(right.origin) }
+        typed.rightJoin(typed2) {
+            name and it.city.match(right.origin)
+        } shouldBe typed.join(typed2, JoinType.Right) { name and it.city.match(right.origin) }
+        typed.fullJoin(typed2) {
+            name and it.city.match(right.origin)
+        } shouldBe typed.join(typed2, JoinType.Full) { name and it.city.match(right.origin) }
+        typed.excludeJoin(typed2) {
+            city.match(right.origin)
+        } shouldBe typed.join(typed2, JoinType.Exclude) { city.match(right.origin) }
+        typed.filterJoin(typed2) {
+            city.match(right.origin)
+        } shouldBe typed.join(typed2, JoinType.Filter) { city.match(right.origin) }
     }
 }

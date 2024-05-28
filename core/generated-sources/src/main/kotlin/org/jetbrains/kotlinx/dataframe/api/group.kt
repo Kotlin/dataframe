@@ -36,8 +36,9 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
     df.move(columns).under { column(it).toColumnAccessor() }
 
 @JvmName("intoColumn")
-public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference): DataFrame<T> =
-    df.move(columns).under(column)
+public fun <T, C> GroupClause<T, C>.into(
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+): DataFrame<T> = df.move(columns).under(column)
 
 public fun <T, C> GroupClause<T, C>.into(column: String): DataFrame<T> = into(columnGroup().named(column))
 

@@ -4,9 +4,10 @@ import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 
-abstract class DataFrameJupyterTest : JupyterReplTestCase(
-    ReplProvider.forLibrariesTesting(listOf("dataframe"))
-)
+abstract class DataFrameJupyterTest :
+    JupyterReplTestCase(
+        ReplProvider.forLibrariesTesting(listOf("dataframe")),
+    )
 
 fun interface CodeReplacer {
     fun replace(code: String): String
@@ -32,13 +33,11 @@ fun interface CellClause {
     }
 }
 
-infix fun CellClause.and(other: CellClause): CellClause {
-    return CellClause { cell ->
-        // Prevent lazy evaluation
-        val acceptedThis = this.isAccepted(cell)
-        val acceptedOther = other.isAccepted(cell)
-        acceptedThis && acceptedOther
-    }
+infix fun CellClause.and(other: CellClause): CellClause = CellClause { cell ->
+    // Prevent lazy evaluation
+    val acceptedThis = this.isAccepted(cell)
+    val acceptedOther = other.isAccepted(cell)
+    acceptedThis && acceptedOther
 }
 
 fun CellClause.Companion.stopAfter(breakClause: CellClause) = object : CellClause {

@@ -117,7 +117,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
         values.any() && values.all { it is AnyCol } ->
             DataColumn.createColumnGroup(
                 name = "",
-                df = (values as Iterable<AnyCol>).toDataFrame()
+                df = (values as Iterable<AnyCol>).toDataFrame(),
             ).asDataColumn().cast()
 
         // values is a non-empty list of DataFrames and nulls
@@ -125,7 +125,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
         values.any() && values.all { it is AnyFrame? } && !values.all { it == null } ->
             DataColumn.createFrameColumn(
                 name = "",
-                groups = values.map { it as? AnyFrame ?: DataFrame.empty() }
+                groups = values.map { it as? AnyFrame ?: DataFrame.empty() },
             ).asDataColumn().cast()
 
         guessType ->
@@ -156,7 +156,10 @@ internal fun <C> createColumnSet(
 
 internal fun <C> createTransformableColumnSet(
     resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
-    transformResolve: (context: ColumnResolutionContext, transformer: ColumnsResolverTransformer) -> List<ColumnWithPath<C>>,
+    transformResolve: (
+        context: ColumnResolutionContext,
+        transformer: ColumnsResolverTransformer,
+    ) -> List<ColumnWithPath<C>>,
 ): TransformableColumnSet<C> = object : TransformableColumnSet<C> {
     override fun resolve(context: ColumnResolutionContext) = resolver(context)
 
@@ -220,11 +223,15 @@ internal fun <T> guessColumnType(
     nullable: Boolean? = null,
 ): DataColumn<T> {
     val detectType = suggestedType == null || suggestedTypeIsUpperBound
-    val type = if (detectType) guessValueType(
-        values = values.asSequence(),
-        upperBound = suggestedType,
-        listifyValues = false,
-    ) else suggestedType!!
+    val type = if (detectType) {
+        guessValueType(
+            values = values.asSequence(),
+            upperBound = suggestedType,
+            listifyValues = false,
+        )
+    } else {
+        suggestedType!!
+    }
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
@@ -251,6 +258,7 @@ internal fun <T> guessColumnType(
             val lists = values.map {
                 when (it) {
                     null -> if (nullable) null else emptyList()
+
                     is List<*> -> {
                         if (isListOfRows != false && it.isNotEmpty()) isListOfRows = it.all { it is AnyRow }
                         it
@@ -264,8 +272,11 @@ internal fun <T> guessColumnType(
             }
             if (isListOfRows == true) {
                 val frames = lists.map {
-                    if (it == null) DataFrame.empty()
-                    else (it as List<AnyRow>).concat()
+                    if (it == null) {
+                        DataFrame.empty()
+                    } else {
+                        (it as List<AnyRow>).concat()
+                    }
                 }
                 DataColumn.createFrameColumn(name, frames).cast()
             } else {
@@ -282,12 +293,14 @@ internal fun <T> guessColumnType(
                     infer = if (detectType) Infer.None else Infer.Nulls,
                     defaultValue = defaultValue,
                 )
-            } else DataColumn.createValueColumn(
-                name = name,
-                values = values,
-                type = type.withNullability(nullable),
-                defaultValue = defaultValue,
-            )
+            } else {
+                DataColumn.createValueColumn(
+                    name = name,
+                    values = values,
+                    type = type.withNullability(nullable),
+                    defaultValue = defaultValue,
+                )
+            }
         }
     }
 }

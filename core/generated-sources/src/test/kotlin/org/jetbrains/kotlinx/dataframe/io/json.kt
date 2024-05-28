@@ -361,7 +361,7 @@ class JsonTests {
         val df = dataFrameOf("colInt", "colDouble?", "colBoolean?")(
             1, 1.0, true,
             2, null, false,
-            3, 3.0, null
+            3, 3.0, null,
         ).alsoDebug("df:")
 
         val res = DataFrame.readJsonStr(df.toJson()).alsoDebug("res:")
@@ -373,7 +373,7 @@ class JsonTests {
         val df = dataFrameOf("colInt", "colDouble?", "colBoolean?")(
             1, 1.0, true,
             2, null, false,
-            3, 3.0, null
+            3, 3.0, null,
         ).alsoDebug("df:")
 
         val res =
@@ -791,7 +791,7 @@ class JsonTests {
 
         // $["a"] should be read as keyValue
         val keyValuePaths = listOf(
-            JsonPath().append("a")
+            JsonPath().append("a"),
         )
 
         // after
@@ -900,7 +900,7 @@ class JsonTests {
 
         // $["a"] should be read as keyValue
         val keyValuePaths = listOf(
-            JsonPath().append("a")
+            JsonPath().append("a"),
         )
 
         // after

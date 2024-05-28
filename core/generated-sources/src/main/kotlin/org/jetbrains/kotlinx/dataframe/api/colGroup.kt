@@ -361,7 +361,9 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
     public fun <C> SingleColumn<DataRow<*>>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): SingleColumn<DataRow<C>> =
         this.ensureIsColumnGroup().transformSingle {
             val child = it.getCol(colGroup)
-                ?: throw IllegalStateException("ColumnGroup '${colGroup.path()}' not found in column group '${it.path}'")
+                ?: throw IllegalStateException(
+                    "ColumnGroup '${colGroup.path()}' not found in column group '${it.path}'",
+                )
             child.data.ensureIsColumnGroup()
             listOf(child)
         }.singleImpl()
@@ -797,8 +799,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<*>> =
-        colGroup<Any?>(name)
+    public fun SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<*>> = colGroup<Any?>(name)
 
     /**
      * ## Col Group
@@ -913,8 +914,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(name)
+    public fun AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
      * ## Col Group
@@ -1024,8 +1024,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun String.colGroup(name: String): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(name)
+    public fun String.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
      * ## Col Group
@@ -1135,8 +1134,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun KProperty<*>.colGroup(name: String): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(name)
+    public fun KProperty<*>.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
      * ## Col Group
@@ -1246,8 +1244,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun ColumnPath.colGroup(name: String): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(name)
+    public fun ColumnPath.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
      * ## Col Group
@@ -1523,8 +1520,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<*>> =
-        colGroup<Any?>(path)
+    public fun SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<*>> = colGroup<Any?>(path)
 
     /**
      * ## Col Group
@@ -1640,8 +1636,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(path)
+    public fun AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
      * ## Col Group
@@ -1751,8 +1746,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun String.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(path)
+    public fun String.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
      * ## Col Group
@@ -1862,8 +1856,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun KProperty<*>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(path)
+    public fun KProperty<*>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
      * ## Col Group
@@ -1973,8 +1966,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun ColumnPath.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> =
-        colGroup<Any?>(path)
+    public fun ColumnPath.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
      * ## Col Group
@@ -2959,8 +2951,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun ColumnsSelectionDsl<*>.colGroup(index: Int): SingleColumn<DataRow<*>> =
-        colGroup<Any?>(index)
+    public fun ColumnsSelectionDsl<*>.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
      * ## Col Group
@@ -3072,8 +3063,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<*>> =
-        colGroup<Any?>(index)
+    public fun SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
      * ## Col Group
@@ -3128,12 +3118,11 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column group.
      */
-    public fun <C> SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<C>> =
-        this.ensureIsColumnGroup()
-            .allColumnsInternal()
-            .getAt(index)
-            .cast<DataRow<C>>()
-            .ensureIsColumnGroup()
+    public fun <C> SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<C>> = this.ensureIsColumnGroup()
+        .allColumnsInternal()
+        .getAt(index)
+        .cast<DataRow<C>>()
+        .ensureIsColumnGroup()
 
     /**
      * ## Col Group
@@ -3189,8 +3178,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun String.colGroup(index: Int): SingleColumn<DataRow<*>> =
-        colGroup<Any?>(index)
+    public fun String.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
      * ## Col Group
@@ -3245,8 +3233,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column group.
      */
-    public fun <C> String.colGroup(index: Int): SingleColumn<DataRow<C>> =
-        columnGroup(this).colGroup<C>(index)
+    public fun <C> String.colGroup(index: Int): SingleColumn<DataRow<C>> = columnGroup(this).colGroup<C>(index)
 
     /**
      * ## Col Group
@@ -3302,8 +3289,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<*>> =
-        colGroup<Any?>(index)
+    public fun KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
      * ## Col Group
@@ -3358,8 +3344,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column group.
      */
-    public fun <C> KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<C>> =
-        columnGroup(this).colGroup<C>(index)
+    public fun <C> KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<C>> = columnGroup(this).colGroup<C>(index)
 
     /**
      * ## Col Group
@@ -3415,8 +3400,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
-    public fun ColumnPath.colGroup(index: Int): SingleColumn<DataRow<*>> =
-        colGroup<Any?>(index)
+    public fun ColumnPath.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
      * ## Col Group
@@ -3471,8 +3455,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column group.
      */
-    public fun <C> ColumnPath.colGroup(index: Int): SingleColumn<DataRow<C>> =
-        columnGroup(this).colGroup<C>(index)
+    public fun <C> ColumnPath.colGroup(index: Int): SingleColumn<DataRow<C>> = columnGroup(this).colGroup<C>(index)
 
     // endregion
 }

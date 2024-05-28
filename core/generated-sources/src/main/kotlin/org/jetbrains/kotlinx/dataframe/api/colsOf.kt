@@ -231,10 +231,8 @@ public interface ColsOfColumnsSelectionDsl {
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> String.colsOf(
-        type: KType,
-        filter: ColumnFilter<C> = { true },
-    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
+    public fun <C> String.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+        columnGroup(this).colsOf(type, filter)
 
     /**
      * ## Cols Of
@@ -281,10 +279,8 @@ public interface ColsOfColumnsSelectionDsl {
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> KProperty<*>.colsOf(
-        type: KType,
-        filter: ColumnFilter<C> = { true },
-    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
+    public fun <C> KProperty<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+        columnGroup(this).colsOf(type, filter)
 
     /**
      * ## Cols Of
@@ -331,10 +327,8 @@ public interface ColsOfColumnsSelectionDsl {
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> ColumnPath.colsOf(
-        type: KType,
-        filter: ColumnFilter<C> = { true },
-    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
+    public fun <C> ColumnPath.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+        columnGroup(this).colsOf(type, filter)
 }
 
 /**
@@ -382,10 +376,8 @@ public interface ColsOfColumnsSelectionDsl {
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-public fun <C> ColumnSet<*>.colsOf(
-    type: KType,
-    filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = colsOfInternal(type, filter)
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
+    colsOfInternal(type, filter)
 
 /**
  * ## Cols Of
@@ -639,10 +631,7 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
  * match the given [filter] and are the given [type].
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnsResolver<*>.colsOfInternal(
-    type: KType,
-    filter: ColumnFilter<C>,
-): TransformableColumnSet<C> =
+internal fun <C> ColumnsResolver<*>.colsOfInternal(type: KType, filter: ColumnFilter<C>): TransformableColumnSet<C> =
     colsInternal {
         it.isSubtypeOf(type) && filter(it.cast())
     } as TransformableColumnSet<C>

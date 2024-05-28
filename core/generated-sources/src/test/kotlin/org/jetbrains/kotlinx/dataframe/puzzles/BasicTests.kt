@@ -23,7 +23,7 @@ class BasicTests {
         val expected = dataFrameOf("animal", "age", "visits", "priority")(
             "cat", 2.5, 1, "yes",
             "cat", 3.0, 3, "yes",
-            "snake", 0.5, 2, "no"
+            "snake", 0.5, 2, "no",
         )
 
         df[0 until 3] shouldBe expected
@@ -44,9 +44,12 @@ class BasicTests {
     @Test
     fun `select rows (3, 4, 8) and columns (animal, age)`() {
         val expected = dataFrameOf("animal", "age")(
-            "dog", Double.NaN,
-            "dog", 5.0,
-            "dog", 7.0
+            "dog",
+            Double.NaN,
+            "dog",
+            5.0,
+            "dog",
+            7.0,
         )
 
         df[3, 4, 8][animal, age] shouldBe expected
@@ -60,7 +63,7 @@ class BasicTests {
         val expected = dataFrameOf("animal", "age", "visits", "priority")(
             "cat", 3.0, 3, "yes",
             "dog", Double.NaN, 3, "yes",
-            "cat", 2.0, 3, "no"
+            "cat", 2.0, 3, "no",
         )
 
         df.filter { visits > 2 } shouldBe expected
@@ -70,8 +73,14 @@ class BasicTests {
     @Test
     fun `select rows where age is missing`() {
         val expected = dataFrameOf("animal", "age", "visits", "priority")(
-            "dog", Double.NaN, 3, "yes",
-            "cat", Double.NaN, 1, "yes"
+            "dog",
+            Double.NaN,
+            3,
+            "yes",
+            "cat",
+            Double.NaN,
+            1,
+            "yes",
         )
 
         df.filter { age().isNaN() } shouldBe expected
@@ -81,8 +90,14 @@ class BasicTests {
     @Test
     fun `select rows where animal is a cat and age is less than 3`() {
         val expected = dataFrameOf("animal", "age", "visits", "priority")(
-            "cat", 2.5, 1, "yes",
-            "cat", 2.0, 3, "no"
+            "cat",
+            2.5,
+            1,
+            "yes",
+            "cat",
+            2.0,
+            3,
+            "no",
         )
 
         df.filter { animal() == "cat" && age() < 3 } shouldBe expected
@@ -95,7 +110,7 @@ class BasicTests {
             "cat", 2.5, 1, "yes",
             "cat", 3.0, 3, "yes",
             "cat", 2.0, 3, "no",
-            "dog", 3.0, 1, "no"
+            "dog", 3.0, 1, "no",
         )
 
         df.filter { age() in 2.0..4.0 } shouldBe expected
@@ -124,9 +139,12 @@ class BasicTests {
     @Test
     fun `calculate mean age for each animal`() {
         val expected = dataFrameOf("animal", "age")(
-            "cat", Double.NaN,
-            "snake", 2.5,
-            "dog", Double.NaN
+            "cat",
+            Double.NaN,
+            "snake",
+            2.5,
+            "dog",
+            Double.NaN,
         )
 
         df.groupBy { animal }.mean { age } shouldBe expected
@@ -146,9 +164,12 @@ class BasicTests {
     @Test
     fun `count number of each type of animal`() {
         val expected = dataFrameOf("animal", "count")(
-            "cat", 4,
-            "snake", 2,
-            "dog", 4,
+            "cat",
+            4,
+            "snake",
+            2,
+            "dog",
+            4,
         )
 
         df.groupBy { animal }.count() shouldBe expected
@@ -195,7 +216,7 @@ class BasicTests {
         val expected = dataFrameOf("animal", "1", "3", "2")(
             "cat", 2.5, 2.5, null,
             "snake", 4.5, null, 0.5,
-            "dog", 3.0, Double.NaN, 6.0
+            "dog", 3.0, Double.NaN, 6.0,
         )
 
         val actualDfAcc = df.pivot(inward = false) { visits }.groupBy { animal }.mean(skipNA = true) { age }

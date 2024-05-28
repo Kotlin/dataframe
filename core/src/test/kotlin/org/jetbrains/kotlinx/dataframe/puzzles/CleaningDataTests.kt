@@ -2,9 +2,6 @@ package org.jetbrains.kotlinx.dataframe.puzzles
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 
@@ -15,7 +12,7 @@ class CleaningDataTests {
         "MAdrid_miLAN",
         "londON_StockhOlm",
         "Budapest_PaRis",
-        "Brussels_londOn"
+        "Brussels_londOn",
     ).toColumn("From_To")
     private val flightNumber = listOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0).toColumn("FlightNumber")
     private val recentDelays =
@@ -25,7 +22,7 @@ class CleaningDataTests {
         "{Air France} (12)",
         "(British Airways. )",
         "12. Air France",
-        "'Swiss Air'"
+        "'Swiss Air'",
     ).toColumn("Airline")
 
     private var df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
@@ -40,7 +37,11 @@ class CleaningDataTests {
 
         df.update { "FlightNumber"<Double>() }.where { it.isNaN() }
             .with {
-                prev()!![ { "FlightNumber"<Double>() }] + (next()!![ { "FlightNumber"<Double>() }] - prev()!![ { "FlightNumber"<Double>() }]) / 2
+                prev()!![
+                    {
+                        "FlightNumber"<Double>()
+                    },
+                ] + (next()!![{ "FlightNumber"<Double>() }] - prev()!![{ "FlightNumber"<Double>() }]) / 2
             }
             .convert { flightNumber }.toInt()["FlightNumber"] shouldBe expected
     }
@@ -52,7 +53,7 @@ class CleaningDataTests {
             "MAdrid", "miLAN",
             "londON", "StockhOlm",
             "Budapest", "PaRis",
-            "Brussels", "londOn"
+            "Brussels", "londOn",
         )
 
         df.split { fromTo }.by('_').into("From", "To")["From", "To"] shouldBe expected
@@ -69,7 +70,7 @@ class CleaningDataTests {
             "Madrid", "Milan",
             "London", "Stockholm",
             "Budapest", "Paris",
-            "Brussels", "London"
+            "Brussels", "London",
         )
 
         df
@@ -106,7 +107,7 @@ class CleaningDataTests {
             Double.NaN, Double.NaN, Double.NaN,
             24.0, 43.0, 87.0,
             13.0, Double.NaN, Double.NaN,
-            67.0, 32.0, Double.NaN
+            67.0, 32.0, Double.NaN,
         )
 
         df

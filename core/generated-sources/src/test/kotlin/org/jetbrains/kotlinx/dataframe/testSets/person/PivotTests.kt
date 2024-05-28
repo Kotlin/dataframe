@@ -3,7 +3,57 @@ package org.jetbrains.kotlinx.dataframe.testSets.person
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.associate
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.columnNames
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.columnsCount
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.drop
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.explodeLists
+import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.frames
+import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.group
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.groupByOther
+import org.jetbrains.kotlinx.dataframe.api.implode
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isList
+import org.jetbrains.kotlinx.dataframe.api.join
+import org.jetbrains.kotlinx.dataframe.api.last
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapKeys
+import org.jetbrains.kotlinx.dataframe.api.mapValues
+import org.jetbrains.kotlinx.dataframe.api.matches
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.notNull
+import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.replace
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.toInt
+import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.api.where
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
@@ -17,7 +67,9 @@ import kotlin.reflect.typeOf
 class PivotTests {
 
     val df = dataFrameOf(
-        "name", "key", "value"
+        "name",
+        "key",
+        "value",
     )(
         "Alice", "age", 15,
         "Alice", "city", "London",
@@ -31,7 +83,10 @@ class PivotTests {
     )
 
     val defaultExpected = dataFrameOf(
-        "name", "age", "city", "weight",
+        "name",
+        "age",
+        "city",
+        "weight",
     )(
         "Alice", listOf(15, 55), "London", 54,
         "Bob", listOf(45), "-", 87,
@@ -74,7 +129,9 @@ class PivotTests {
                 val value = it[columnName] as Boolean
                 if (value) {
                     (it.name to columnName)
-                } else null
+                } else {
+                    null
+                }
             }.filterNotNull()
         }.toSet()
 
@@ -130,7 +187,7 @@ class PivotTests {
         pivoted shouldBe dataFrameOf("name", "age", "city", "weight")(
             "Alice", listOf("_15", "_55"), "_London", "_54",
             "Bob", listOf("_45"), null, "_87",
-            "Charlie", listOf("_20"), "_Moscow", "_null"
+            "Charlie", listOf("_20"), "_Moscow", "_null",
         )
     }
 
@@ -145,15 +202,18 @@ class PivotTests {
             columnOf(
                 it named "value",
                 it.map(Infer.Type) {
-                    if (it is List<*>) it.map { it?.toString() }.asList()
-                    else it?.toString()
-                } named "str"
+                    if (it is List<*>) {
+                        it.map { it?.toString() }.asList()
+                    } else {
+                        it?.toString()
+                    }
+                } named "str",
             ) named it.name()
         }
 
         pivoted.renderToString(title = true, columnTypes = true) shouldBe expected.renderToString(
             title = true,
-            columnTypes = true
+            columnTypes = true,
         )
     }
 
@@ -247,11 +307,13 @@ class PivotTests {
         cols.forEach {
             when {
                 it.isList() -> it.path().dropLast(1) shouldBe listOf("Alice", "age")
+
                 it.hasNulls() -> {
                     it.path().dropLast(1) shouldBe listOf("Charlie", "weight")
                 }
 
                 it.name() == "type" -> it.typeClass shouldBe KClass::class
+
                 else -> it.name() shouldBe "value"
             }
         }
@@ -340,7 +402,9 @@ class PivotTests {
     @Test
     fun `gather doubles with value conversion`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { valueConverter(value) }
-        val gathered = pivoted.remove { "key"["city"] }.gather { "key".allCols() }.explodeLists().notNull().cast<Double>()
+        val gathered = pivoted.remove {
+            "key"["city"]
+        }.gather { "key".allCols() }.explodeLists().notNull().cast<Double>()
             .mapValues { it.toInt() }.into("key", "value")
         val expected = typed.filter { key != "city" && value != null }.convert { value }.toInt().sortBy { name and key }
         gathered shouldBe expected

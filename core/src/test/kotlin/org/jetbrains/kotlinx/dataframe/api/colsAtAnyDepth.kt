@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
@@ -101,7 +100,8 @@ class AtAnyDepth : TestBase() {
 
     @Test
     fun `colsOf atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { colsAtAnyDepth().colsOf<String?>() }.sortedBy { it.name } shouldBe atAnyDepthString
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().colsOf<String?>() }.sortedBy { it.name } shouldBe
+            atAnyDepthString
     }
 
     @Test
@@ -160,7 +160,7 @@ class AtAnyDepth : TestBase() {
             },
             dfGroup.getColumnsWithPaths {
                 asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { "e" in it.name }
-            }
+            },
         ).map {
             it.sortedBy { it.name }.map { it.name to it.path }
         }.shouldAllBeEqual()

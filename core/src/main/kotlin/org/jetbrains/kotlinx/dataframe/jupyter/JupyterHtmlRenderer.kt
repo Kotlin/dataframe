@@ -26,10 +26,7 @@ private const val MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI = "0.11.0.311"
 private const val MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA = 241
 private const val MIN_IDE_VERSION_SUPPORT_IMAGE_VIEWER = 242
 
-internal class JupyterHtmlRenderer(
-    val display: DisplayConfiguration,
-    val builder: JupyterIntegration.Builder,
-)
+internal class JupyterHtmlRenderer(val display: DisplayConfiguration, val builder: JupyterIntegration.Builder)
 
 internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     noinline getFooter: (T) -> String,
@@ -56,7 +53,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
             // is added later to make sure it's put outside of potential iFrames
             configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
             cellRenderer = contextRenderer,
-        ) { footer }
+        ) { footer },
     ).toJupyterHtmlData()
 
     // Generates a static version of the table which can be displayed in GitHub previews etc.
@@ -84,7 +81,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
                 df.toJsonWithMetadata(
                     limit,
                     reifiedDisplayConfiguration.rowsLimit,
-                    imageEncodingOptions = imageEncodingOptions
+                    imageEncodingOptions = imageEncodingOptions,
                 )
             }
         }
@@ -104,7 +101,7 @@ private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsImageViewer() =
 internal fun Notebook.renderAsIFrameAsNeeded(
     data: HtmlData,
     staticData: HtmlData,
-    jsonEncodedDf: String
+    jsonEncodedDf: String,
 ): MimeTypedResult {
     val textHtml = if (jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
         data.generateIframePlaneText(currentColorScheme) +
@@ -115,7 +112,7 @@ internal fun Notebook.renderAsIFrameAsNeeded(
 
     return mimeResult(
         "text/html" to textHtml,
-        "application/kotlindataframe+json" to jsonEncodedDf
+        "application/kotlindataframe+json" to jsonEncodedDf,
     ).also { it.isolatedHtml = false }
 }
 

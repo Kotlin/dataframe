@@ -13,7 +13,7 @@ open class BaseJoinTest : BaseTest() {
         "Bob", "Paris", 5, "old",
         "Charlie", "Moscow", 1, "young",
         "Charlie", "Moscow", 2, "old",
-        "Bob", "Paris", 4, null
+        "Bob", "Paris", 4, null,
     )
     val typed2: DataFrame<Person2> = df2.cast()
 

@@ -98,7 +98,7 @@ public object FormattingDSL {
 
     public fun linearBg(value: Number, from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): CellAttributes =
         background(
-            linear(value, from, to)
+            linear(value, from, to),
         )
 
     public fun linear(value: Number, from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): RGBColor {
@@ -111,27 +111,21 @@ public object FormattingDSL {
 
 public typealias RowColFormatter<T, C> = FormattingDSL.(DataRow<T>, DataColumn<C>) -> CellAttributes?
 
-public class FormattedFrame<T>(
-    internal val df: DataFrame<T>,
-    internal val formatter: RowColFormatter<T, *>? = null,
-) {
+public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val formatter: RowColFormatter<T, *>? = null) {
     /**
      * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
      */
-    public fun toHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData {
-        return df.toHTML(getDisplayConfiguration(configuration))
-    }
+    public fun toHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
+        df.toHTML(getDisplayConfiguration(configuration))
 
     /**
      * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
      */
-    public fun toStandaloneHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData {
-        return df.toStandaloneHTML(getDisplayConfiguration(configuration))
-    }
+    public fun toStandaloneHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT): DataFrameHtmlData =
+        df.toStandaloneHTML(getDisplayConfiguration(configuration))
 
-    public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration {
-        return configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)
-    }
+    public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration =
+        configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)
 }
 
 public data class FormatClause<T, C>(
@@ -149,9 +143,10 @@ public typealias CellFormatter<V> = FormattingDSL.(V) -> CellAttributes?
 public fun <T, C : Number?> FormatClause<T, C>.linearBg(
     from: Pair<Number, RGBColor>,
     to: Pair<Number, RGBColor>,
-): FormattedFrame<T> =
-    with {
-        if (it != null) {
-            background(linear(it, from, to))
-        } else null
+): FormattedFrame<T> = with {
+    if (it != null) {
+        background(linear(it, from, to))
+    } else {
+        null
     }
+}

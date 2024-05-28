@@ -33,10 +33,9 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     public fun getValueOrNull(row: AnyRow): C? = resolveFor(row.df())?.get(row.index())
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
-        context.df
-            .getColumn<C>(path(), context.unresolvedColumnsPolicy)
-            ?.addPath(path())
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? = context.df
+        .getColumn<C>(path(), context.unresolvedColumnsPolicy)
+        ?.addPath(path())
 }
 
 internal fun <C> ColumnReference<C>.renamedReference(newName: String): ColumnReference<C> =

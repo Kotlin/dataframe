@@ -21,25 +21,27 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         },
         cleanup = {
             File("jetbrains.json").delete()
-        }
+        },
     )
 
     @Test
     @Ignore
     fun titanic() = exampleTest(
-        "titanic", "Titanic",
+        "titanic",
+        "Titanic",
         replacer = CodeReplacer.byMap(
-            "../../idea-examples/" to "$ideaExamplesPath/"
-        )
+            "../../idea-examples/" to "$ideaExamplesPath/",
+        ),
     )
 
     @Test
     @Ignore
     fun wine() = exampleTest(
-        "wine", "WineNetWIthKotlinDL",
+        "wine",
+        "WineNetWIthKotlinDL",
         replacer = CodeReplacer.byMap(
-            testFile("wine", "winequality-red.csv")
-        )
+            testFile("wine", "winequality-red.csv"),
+        ),
     )
 
     @Test
@@ -55,7 +57,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
                 replacer = CodeReplacer.byMap(
                     testFile("netflix", "country_codes.csv"),
                     testFile("netflix", "netflix_titles.csv"),
-                )
+                ),
             )
         } finally {
             Locale.setDefault(currentLocale)
@@ -67,12 +69,12 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     fun movies() = exampleTest(
         "movies",
         replacer = CodeReplacer.byMap(
-            "ml-latest/movies.csv" to "$ideaExamplesPath/movies/src/main/resources/movies.csv"
+            "ml-latest/movies.csv" to "$ideaExamplesPath/movies/src/main/resources/movies.csv",
         ),
         // There is no tags data in repository
         cellClause = CellClause.stopAfter { cell ->
             "tags.csv" in cell.source
-        }
+        },
     )
 
     private fun doTest(
@@ -114,10 +116,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         doTest("$notebookExamplesPath/$dir/$fileName", replacer, cellClause, cleanup)
     }
 
-    data class CodeCellData(
-        val code: String,
-        val outputs: List<Output>,
-    )
+    data class CodeCellData(val code: String, val outputs: List<Output>)
 
     companion object {
         const val ideaExamplesPath = "../examples/idea-examples"

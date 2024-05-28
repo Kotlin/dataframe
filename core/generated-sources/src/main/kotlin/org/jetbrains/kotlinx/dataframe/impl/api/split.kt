@@ -20,7 +20,7 @@ internal fun valueToList(value: Any?, splitStrings: Boolean = true): List<Any?> 
 
 internal fun <T, C, R> splitImpl(
     clause: SplitWithTransform<T, C, R>,
-    columnNamesGenerator: ColumnWithPath<C>.(Int) -> List<String>
+    columnNamesGenerator: ColumnWithPath<C>.(Int) -> List<String>,
 ): DataFrame<T> {
     val nrow = clause.df.nrow
 
@@ -46,8 +46,9 @@ internal fun <T, C, R> splitImpl(
                 }
                 columnCollectors[j].add(list[j])
             }
-            for (j in list.size until columnCollectors.size)
+            for (j in list.size until columnCollectors.size) {
                 columnCollectors[j].add(clause.default)
+            }
         }
 
         val names = columnNamesGenerator(column, columnCollectors.size)
@@ -73,12 +74,14 @@ internal fun generateUnusedName(
     df: DataFrame<*>,
     preferredName: String?,
     insertPath: ColumnPath,
-    columnsToBeInserted: List<ColumnToInsert>
+    columnsToBeInserted: List<ColumnToInsert>,
 ): String {
     // check if column with this name already exists in the df in the same position in the hierarchy,
     // or we already have a column with this name in the list of columns to be inserted to the same position in the hierarchy
-    fun isUsed(name: String) =
-        df.getColumnOrNull(insertPath + name) != null || columnsToBeInserted.any { it.insertionPath == insertPath + name }
+    fun isUsed(name: String) = df.getColumnOrNull(
+        insertPath + name,
+    ) != null ||
+        columnsToBeInserted.any { it.insertionPath == insertPath + name }
 
     fun generateNameVariationByTryingNumericSuffixes(original: String? = null, startSuffix: Int): String {
         var k = startSuffix

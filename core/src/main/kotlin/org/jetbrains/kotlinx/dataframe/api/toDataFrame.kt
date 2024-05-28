@@ -35,8 +35,9 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     var uniqueDf: DataFrame<T>? = null
     for (row in this) {
-        if (uniqueDf == null) uniqueDf = row.df()
-        else {
+        if (uniqueDf == null) {
+            uniqueDf = row.df()
+        } else {
             if (uniqueDf !== row.df()) {
                 uniqueDf = null
                 break
@@ -46,7 +47,9 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     return if (uniqueDf != null) {
         val permutation = map { it.index }
         uniqueDf[permutation]
-    } else map { it.toDataFrame() }.concat()
+    } else {
+        map { it.toDataFrame() }.concat()
+    }
 }
 
 @JvmName("toDataFrameAnyColumn")
@@ -99,19 +102,21 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
             val col = DataColumn.createColumnGroup(columnNames[index], nestedDf)
             assert(columns[index] == null)
             columns[index] = col
-        } else assert(columns[index] != null)
+        } else {
+            assert(columns[index] != null)
+        }
     }
     return columns.map { it!! }.toDataFrame().cast()
 }
 
 @JvmName("toDataFrameColumnPathAnyNullable")
-public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
-    return map { it.first to guessColumnType(it.first.last(), it.second.asList()) }.toDataFrameFromPairs<Unit>()
-}
+public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame = map {
+    it.first to guessColumnType(it.first.last(), it.second.asList())
+}.toDataFrameFromPairs<Unit>()
 
-public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
-    return map { ColumnPath(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrameFromPairs<Unit>()
-}
+public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame = map {
+    ColumnPath(it.first) to guessColumnType(it.first, it.second.asList())
+}.toDataFrameFromPairs<Unit>()
 
 public interface TraversePropertiesDsl {
 
@@ -162,8 +167,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
         add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
 
-    public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit =
-        add(this, expression)
+    public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
 
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
@@ -272,18 +276,16 @@ public interface ValueProperty<T> {
 
 // region Create DataFrame from Map
 
-public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { DataColumn.createWithTypeInference(it.key, it.value.asList()) }.toDataFrame()
-}
+public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame = map {
+    DataColumn.createWithTypeInference(it.key, it.value.asList())
+}.toDataFrame()
 
 @JvmName("toDataFrameColumnPathAnyNullable")
-public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map {
-        it.key to DataColumn.createWithTypeInference(
-            it.key.last(),
-            it.value.asList()
-        )
-    }.toDataFrameFromPairs<Unit>()
-}
+public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame = map {
+    it.key to DataColumn.createWithTypeInference(
+        it.key.last(),
+        it.value.asList(),
+    )
+}.toDataFrameFromPairs<Unit>()
 
 // endregion

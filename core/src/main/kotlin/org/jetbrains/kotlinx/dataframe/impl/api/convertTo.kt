@@ -70,10 +70,7 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDslInternal<T> {
         fillers.add(Filler(columns, expr))
     }
 
-    override fun convertIf(
-        condition: (KType, ColumnSchema) -> Boolean,
-        converter: ConverterScope.(Any?) -> Any?,
-    ) {
+    override fun convertIf(condition: (KType, ColumnSchema) -> Boolean, converter: ConverterScope.(Any?) -> Any?) {
         flexibleConverters[condition] = Converter(converter, false)
     }
 
@@ -130,7 +127,9 @@ internal fun AnyFrame.convertToImpl(
                         val targetSchema = mapOf(originalColumn.name to targetSchema)
                             .render(0, StringBuilder(), "\t")
 
-                        throw IllegalArgumentException("Column has schema:\n $originalSchema\n that differs from target schema:\n $targetSchema")
+                        throw IllegalArgumentException(
+                            "Column has schema:\n $originalSchema\n that differs from target schema:\n $targetSchema",
+                        )
                     }
 
                     else -> {
@@ -151,16 +150,20 @@ internal fun AnyFrame.convertToImpl(
                                         it
                                     }
 
-                                if (!nullsAllowed && result == null) throw TypeConversionException(
-                                    it,
-                                    from,
-                                    to,
-                                    originalColumn.path()
-                                )
+                                if (!nullsAllowed && result == null) {
+                                    throw TypeConversionException(
+                                        it,
+                                        from,
+                                        to,
+                                        originalColumn.path(),
+                                    )
+                                }
 
                                 result
                             }
-                        } else null
+                        } else {
+                            null
+                        }
 
                         when (targetSchema.kind) {
                             ColumnKind.Value ->
@@ -171,7 +174,10 @@ internal fun AnyFrame.convertToImpl(
                                     convertedColumn != null -> convertedColumn
 
                                     // Value column of DataRows (if it ever occurs) can be converted to a group column
-                                    originalColumn.kind == ColumnKind.Value && originalColumn.all { it is DataRow<*> } ->
+                                    originalColumn.kind == ColumnKind.Value &&
+                                        originalColumn.all {
+                                            it is DataRow<*>
+                                        } ->
                                         DataColumn.createColumnGroup(
                                             name = originalColumn.name,
                                             df = originalColumn.values().let { it as Iterable<DataRow<*>> }
@@ -210,7 +216,13 @@ internal fun AnyFrame.convertToImpl(
                                         (column as FrameColumn<*>).values()
 
                                     ColumnKind.Value -> {
-                                        require(column.all { it == null || it is AnyFrame || (it is List<*> && it.all { it is AnyRow? }) }) {
+                                        require(
+                                            column.all {
+                                                it == null ||
+                                                    it is AnyFrame ||
+                                                    (it is List<*> && it.all { it is AnyRow? })
+                                            },
+                                        ) {
                                             "Column `${column.name}` is ValueColumn and contains objects that can not be converted into `DataFrame`"
                                         }
                                         column.values().map {
@@ -227,7 +239,7 @@ internal fun AnyFrame.convertToImpl(
                                     }
                                 }
 
-                                val convertedFrames = frames.map { it.convertToSchema(frameSchema, columnPath)}
+                                val convertedFrames = frames.map { it.convertToSchema(frameSchema, columnPath) }
 
                                 DataColumn.createFrameColumn(
                                     name = column.name(),
@@ -245,9 +257,12 @@ internal fun AnyFrame.convertToImpl(
         val size = this.size.nrow
         schema.columns.forEach { (name, targetColumn) ->
             val isNullable =
-                targetColumn.nullable || // like value column of type Int?
-                    targetColumn.type.isMarkedNullable || // like value column of type Int? (backup check)
-                    targetColumn.contentType?.isMarkedNullable == true || // like DataRow<Something?> for a group column (all columns in the group will be nullable)
+                targetColumn.nullable ||
+                    // like value column of type Int?
+                    targetColumn.type.isMarkedNullable ||
+                    // like value column of type Int? (backup check)
+                    targetColumn.contentType?.isMarkedNullable == true ||
+                    // like DataRow<Something?> for a group column (all columns in the group will be nullable)
                     targetColumn.kind == ColumnKind.Frame // frame column can be filled with empty dataframes
 
             if (name !in visited) {
@@ -273,7 +288,11 @@ internal fun AnyFrame.convertToImpl(
     }
 
     if (missingPaths.isNotEmpty()) {
-        throw IllegalArgumentException("The following columns were not found in DataFrame: ${missingPaths.map { it.joinToString() }}, and their type was not nullable. Use `fill` to initialize these columns")
+        throw IllegalArgumentException(
+            "The following columns were not found in DataFrame: ${missingPaths.map {
+                it.joinToString()
+            }}, and their type was not nullable. Use `fill` to initialize these columns",
+        )
     }
 
     return result

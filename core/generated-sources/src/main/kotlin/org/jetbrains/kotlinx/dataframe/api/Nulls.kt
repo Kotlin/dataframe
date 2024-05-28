@@ -217,8 +217,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  *  
  * @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
-public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
-    fillNulls { columns.toColumnSet() }
+public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> = fillNulls { columns.toColumnSet() }
 
 /**
  * ## The Fill Nulls Operation
@@ -513,8 +512,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  *  
  * @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
-public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
-    fillNaNs { columns.toColumnSet() }
+public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = fillNaNs { columns.toColumnSet() }
 
 /**
  * ## The Fill NaNs Operation
@@ -543,8 +541,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
  *  
  * @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
-public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> =
-    fillNaNs { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> = fillNaNs { columns.toColumnSet() }
 
 /**
  * ## The Fill NaNs Operation
@@ -787,8 +784,7 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  *  
  * @param [columns] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
-public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
-    fillNA { columns.toColumnSet() }
+public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fillNA { columns.toColumnSet() }
 
 /**
  * ## The Fill NA Operation
@@ -817,8 +813,7 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
  *  
  * @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
-public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> =
-    fillNA { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> = fillNA { columns.toColumnSet() }
 
 /**
  * ## The Fill NA Operation
@@ -920,8 +915,11 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
  */
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
-    return if (whereAllNull) drop { row -> cols.all { col -> col[row] == null } }
-    else drop { row -> cols.any { col -> col[row] == null } }
+    return if (whereAllNull) {
+        drop { row -> cols.all { col -> col[row] == null } }
+    } else {
+        drop { row -> cols.any { col -> col[row] == null } }
+    }
 }
 
 /**
@@ -941,8 +939,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: Co
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
  */
-public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { all() }
+public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { all() }
 
 /**
  * ## The Drop Nulls Operation
@@ -1101,8 +1098,11 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  */
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
-    return if (whereAllNA) drop { cols.all { this[it].isNA } }
-    else drop { cols.any { this[it].isNA } }
+    return if (whereAllNA) {
+        drop { cols.all { this[it].isNA } }
+    } else {
+        drop { cols.any { this[it].isNA } }
+    }
 }
 
 /**
@@ -1208,19 +1208,17 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
  *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
  *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.documentation.NA].
  */
-public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { all() }
+public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { all() }
 
 /**
  * ## The Drop `NA` Operation
  *
  * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
  */
-public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
-    when (typeClass) {
-        Double::class, Float::class -> filter { !it.isNA }.cast()
-        else -> (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
-    }
+public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> = when (typeClass) {
+    Double::class, Float::class -> filter { !it.isNA }.cast()
+    else -> (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
+}
 
 // endregion
 
@@ -1281,8 +1279,11 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  */
 public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
-    return if (whereAllNaN) drop { cols.all { this[it].isNaN } }
-    else drop { cols.any { this[it].isNaN } }
+    return if (whereAllNaN) {
+        drop { cols.all { this[it].isNaN } }
+    } else {
+        drop { cols.any { this[it].isNaN } }
+    }
 }
 
 /**
@@ -1388,18 +1389,16 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAl
  *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
  *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
  */
-public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { all() }
+public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> = dropNaNs(whereAllNaN) { all() }
 
 /**
  * ## The Drop `NaN` Operation
  *
  * Removes [`NaN`][NaN] values from this [DataColumn], adjusting the type accordingly.
  */
-public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> =
-    when (typeClass) {
-        Double::class, Float::class -> filter { !it.isNaN }.cast()
-        else -> this
-    }
+public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> = when (typeClass) {
+    Double::class, Float::class -> filter { !it.isNaN }.cast()
+    else -> this
+}
 
 // endregion

@@ -27,9 +27,7 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
         return if (iFrame < firstBatchSize) iFrame else iFrame - firstBatchSize
     }
 
-    fun expectedNull(rowNumber: Int): Boolean {
-        return (rowNumber + 1) % 5 == 0
-    }
+    fun expectedNull(rowNumber: Int): Boolean = (rowNumber + 1) % 5 == 0
 
     fun assertValueOrNull(rowNumber: Int, actual: Any?, expected: Any) {
         if (hasNulls && expectedNull(rowNumber)) {
@@ -102,13 +100,24 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
     val unsignedIntCol = exampleFrame["unsigned_int"] as DataColumn<Long?>
     unsignedIntCol.type() shouldBe typeOf<Long>().withNullability(expectedNullable)
     unsignedIntCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, iBatch(i).toLong() * 100000000 % (Int.MIN_VALUE.toLong() * 2).absoluteValue)
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            iBatch(i).toLong() * 100000000 % (Int.MIN_VALUE.toLong() * 2).absoluteValue,
+        )
     }
 
     val unsignedLongIntCol = exampleFrame["unsigned_longInt"] as DataColumn<BigInteger?>
     unsignedLongIntCol.type() shouldBe typeOf<BigInteger>().withNullability(expectedNullable)
     unsignedLongIntCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, iBatch(i).toBigInteger() * 100000000000000000L.toBigInteger() % (Long.MIN_VALUE.toBigInteger() * 2.toBigInteger()).abs())
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            iBatch(
+                i,
+            ).toBigInteger() * 100000000000000000L.toBigInteger() %
+                (Long.MIN_VALUE.toBigInteger() * 2.toBigInteger()).abs(),
+        )
     }
 
     val floatCol = exampleFrame["float"] as DataColumn<Float?>
@@ -132,7 +141,11 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
     val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDateTime?>
     datetimeCol.type() shouldBe typeOf<LocalDateTime>().withNullability(expectedNullable)
     datetimeCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, LocalDateTime.ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC))
+        assertValueOrNull(
+            iBatch(i),
+            element,
+            LocalDateTime.ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC),
+        )
     }
 
     val timeSecCol = exampleFrame["time32_seconds"] as DataColumn<LocalTime?>

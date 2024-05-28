@@ -77,10 +77,10 @@ internal object MarkersExtractor {
 
                 else -> {
                     fieldType = FieldType.ValueFieldType(
-                        if (nullableProperties) type.toString().toNullable() else type.toString()
+                        if (nullableProperties) type.toString().toNullable() else type.toString(),
                     )
                     ColumnSchema.Value(
-                        if (nullableProperties) type.withNullability(true) else type
+                        if (nullableProperties) type.withNullability(true) else type,
                     )
                 }
             }

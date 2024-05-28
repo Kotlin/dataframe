@@ -97,12 +97,10 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
-public fun AnyCol.setNullable(nullable: Boolean): AnyCol {
-    return if (nullable) {
-        this.castToNullable()
-    } else {
-        this.castToNotNullable()
-    }
+public fun AnyCol.setNullable(nullable: Boolean): AnyCol = if (nullable) {
+    this.castToNullable()
+} else {
+    this.castToNotNullable()
 }
 
 // region to array
@@ -277,7 +275,9 @@ public enum class Infer {
     /**
      * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using optionally provided base type as an upper bound.
      */
-    Type;
+    Type,
+
+    ;
 
     /**
      * @param [infer] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
@@ -305,10 +305,10 @@ public enum class NullabilityOptions {
     /**
      * Set [DataColumn.hasNulls] to expected value by default. Change False to True if column should be not nullable but there are null values.
      */
-    Widening
+    Widening,
 }
 
-public class NullabilityException() : Exception()
+public class NullabilityException : Exception()
 
 /**
  * @return if column should be marked nullable for current [NullabilityOptions] value with actual [data] and [expectedNulls] per some schema/signature.
@@ -318,6 +318,7 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
     val hasNulls = data.anyNull()
     return when (this) {
         NullabilityOptions.Infer -> hasNulls
+
         NullabilityOptions.Checking -> {
             if (!expectedNulls && hasNulls) {
                 throw NullabilityException()
@@ -331,14 +332,13 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
     }
 }
 
-public inline fun <reified T> Iterable<T>.toColumn(
-    name: String = "",
-    infer: Infer = Infer.Nulls,
-): DataColumn<T> =
-    (
-        if (infer == Infer.Type) DataColumn.createWithTypeInference(name, asList())
-        else DataColumn.create(name, asList(), typeOf<T>(), infer)
-        ).forceResolve()
+public inline fun <reified T> Iterable<T>.toColumn(name: String = "", infer: Infer = Infer.Nulls): DataColumn<T> = (
+    if (infer == Infer.Type) {
+        DataColumn.createWithTypeInference(name, asList())
+    } else {
+        DataColumn.create(name, asList(), typeOf<T>(), infer)
+    }
+    ).forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
     DataColumn.create(name, asList() as List<T>, typeOf<T>()).forceResolve()

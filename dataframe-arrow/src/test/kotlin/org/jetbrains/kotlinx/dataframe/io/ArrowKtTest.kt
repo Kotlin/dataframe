@@ -33,7 +33,6 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
@@ -72,7 +71,7 @@ internal class ArrowKtTest {
                 "c1" to Text("inner"),
                 "c2" to 4.0,
                 "c3" to 50.0,
-            ) as Map<String, Any?>
+            ) as Map<String, Any?>,
         ).toColumn()
         val d by columnOf("four")
         val expected = dataFrameOf(a, b, c, d)
@@ -239,7 +238,7 @@ internal class ArrowKtTest {
                 NullabilityOptions.Infer,
             ),
             expectedNullable = true,
-            hasNulls = true
+            hasNulls = true,
         )
 
         shouldThrow<IllegalArgumentException> {
@@ -289,9 +288,11 @@ internal class ArrowKtTest {
             citiesDeserialized["is_capital"] shouldBe citiesExampleFrame["is_capital"]
             citiesDeserialized["population"] shouldBe citiesExampleFrame["population"]
             citiesDeserialized["area"] shouldBe citiesExampleFrame["area"]
-            citiesDeserialized["settled"].type() shouldBe typeOf<LocalDate>() // cities["settled"].type() refers to FlexibleTypeImpl(LocalDate..LocalDate?) and does not match typeOf<LocalDate>()
+            // cities["settled"].type() refers to FlexibleTypeImpl(LocalDate..LocalDate?) and does not match typeOf<LocalDate>()
+            citiesDeserialized["settled"].type() shouldBe typeOf<LocalDate>()
             citiesDeserialized["settled"].values() shouldBe citiesExampleFrame["settled"].values()
-            citiesDeserialized["page_in_wiki"].type() shouldBe typeOf<String>() // cities["page_in_wiki"].type() is URI, not supported by Arrow directly
+            // cities["page_in_wiki"].type() is URI, not supported by Arrow directly
+            citiesDeserialized["page_in_wiki"].type() shouldBe typeOf<String>()
             citiesDeserialized["page_in_wiki"].values() shouldBe
                 citiesExampleFrame["page_in_wiki"].values().map { it.toString() }
         }
@@ -325,7 +326,7 @@ internal class ArrowKtTest {
         val warnings = ArrayList<ConvertingMismatch>()
         val testRestrictWidening = citiesExampleFrame.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Mode.STRICT
+            ArrowWriter.Mode.STRICT,
         ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.WideningMismatch.RejectedColumn("page_in_wiki"))
         shouldThrow<IllegalArgumentException> { DataFrame.readArrowFeather(testRestrictWidening)["page_in_wiki"] }
@@ -337,7 +338,7 @@ internal class ArrowKtTest {
                 restrictNarrowing = true,
                 strictType = true,
                 strictNullable = true,
-            )
+            ),
         ).use { it.saveArrowFeatherToByteArray() }
         DataFrame.readArrowFeather(testAllowWidening)["page_in_wiki"].values() shouldBe
             citiesExampleFrame["page_in_wiki"]
@@ -351,7 +352,7 @@ internal class ArrowKtTest {
 
         frameWithoutRequiredField.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Mode.STRICT
+            ArrowWriter.Mode.STRICT,
         ).use {
             shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
         }
@@ -363,8 +364,8 @@ internal class ArrowKtTest {
                 restrictWidening = true,
                 restrictNarrowing = false,
                 strictType = true,
-                strictNullable = true
-            )
+                strictNullable = true,
+            ),
         ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.NarrowingMismatch.NotPresentedColumnIgnored("settled"))
         shouldThrow<IllegalArgumentException> { DataFrame.readArrowFeather(testAllowNarrowing)["settled"] }
@@ -377,12 +378,12 @@ internal class ArrowKtTest {
             frameRenaming.add(
                 frameRenaming["is_capital"].map { value -> value ?: false }
                     .rename("settled")
-                    .convertToBoolean()
+                    .convertToBoolean(),
             )
 
         frameWithIncompatibleField.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Mode.STRICT
+            ArrowWriter.Mode.STRICT,
         ).use {
             shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
         }
@@ -394,8 +395,8 @@ internal class ArrowKtTest {
                 restrictWidening = true,
                 restrictNarrowing = true,
                 strictType = false,
-                strictNullable = true
-            )
+                strictNullable = true,
+            ),
         ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
         warnings.map { it.toString() }.shouldContain(
             ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored(
@@ -403,9 +404,9 @@ internal class ArrowKtTest {
                 TypeConverterNotFoundException(
                     typeOf<Boolean>(),
                     typeOf<kotlinx.datetime.LocalDateTime?>(),
-                    pathOf("settled")
-                )
-            ).toString()
+                    pathOf("settled"),
+                ),
+            ).toString(),
         )
         DataFrame.readArrowFeather(testLoyalType)["settled"].type() shouldBe typeOf<Boolean>()
     }
@@ -417,12 +418,12 @@ internal class ArrowKtTest {
             DataColumn.createValueColumn(
                 "settled",
                 arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList(),
-            )
+            ),
         )
 
         frameWithNulls.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Mode.STRICT
+            ArrowWriter.Mode.STRICT,
         ).use {
             shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
         }
@@ -435,11 +436,13 @@ internal class ArrowKtTest {
                 restrictNarrowing = true,
                 strictType = true,
                 strictNullable = false,
-            )
+            ),
         ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.NullableMismatch.NullValueIgnored("settled", 0))
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].type() shouldBe typeOf<LocalDateTime?>()
-        DataFrame.readArrowFeather(testLoyalNullable)["settled"].values() shouldBe arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList()
+        DataFrame.readArrowFeather(
+            testLoyalNullable,
+        )["settled"].values() shouldBe arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList()
     }
 
     @Test
@@ -454,7 +457,7 @@ internal class ArrowKtTest {
             listOf(
                 Field("columnDot", targetType, emptyList()),
                 Field("columnComma", targetType, emptyList()),
-            )
+            ),
         )
 
         val currentLocale = Locale.getDefault()
@@ -463,13 +466,13 @@ internal class ArrowKtTest {
             val serializedAsUs = frameString.arrowWriter(targetSchema).saveArrowFeatherToByteArray()
             DataFrame.readArrowFeather(serializedAsUs) shouldBe dataFrameOf("columnDot", "columnComma")(
                 columnDoubleFraction,
-                columnDoubleRound
+                columnDoubleRound,
             )
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
             val serializedAsRu = frameString.arrowWriter(targetSchema).saveArrowFeatherToByteArray()
             DataFrame.readArrowFeather(serializedAsRu) shouldBe dataFrameOf("columnDot", "columnComma")(
                 columnDoubleFraction,
-                columnDoubleFraction
+                columnDoubleFraction,
             )
         } finally {
             Locale.setDefault(currentLocale)
@@ -484,18 +487,18 @@ internal class ArrowKtTest {
     }
 
     @Test
-    fun testTimeStamp(){
+    fun testTimeStamp() {
         val dates = listOf(
             LocalDateTime.of(2023, 11, 23, 9, 30, 25),
             LocalDateTime.of(2015, 5, 25, 14, 20, 13),
-            LocalDateTime.of(2013, 6, 19, 11, 20, 13)
+            LocalDateTime.of(2013, 6, 19, 11, 20, 13),
         )
 
         val dataFrame = dataFrameOf(
             "ts_nano" to dates,
             "ts_micro" to dates,
             "ts_milli" to dates,
-            "ts_sec" to dates
+            "ts_sec" to dates,
         )
 
         DataFrame.readArrowFeather(writeArrowTimestamp(dates)) shouldBe dataFrame
@@ -507,28 +510,28 @@ internal class ArrowKtTest {
             val timeStampMilli = Field(
                 "ts_milli",
                 FieldType.nullable(ArrowType.Timestamp(TimeUnit.MILLISECOND, null)),
-                null
+                null,
             )
 
             val timeStampMicro = Field(
                 "ts_micro",
                 FieldType.nullable(ArrowType.Timestamp(TimeUnit.MICROSECOND, null)),
-                null
+                null,
             )
 
             val timeStampNano = Field(
                 "ts_nano",
                 FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, null)),
-                null
+                null,
             )
 
             val timeStampSec = Field(
                 "ts_sec",
                 FieldType.nullable(ArrowType.Timestamp(TimeUnit.SECOND, null)),
-                null
+                null,
             )
             val schemaTimeStamp = Schema(
-                listOf(timeStampNano, timeStampMicro, timeStampMilli, timeStampSec)
+                listOf(timeStampNano, timeStampMicro, timeStampMilli, timeStampSec),
             )
             VectorSchemaRoot.create(schemaTimeStamp, allocator).use { vectorSchemaRoot ->
                 val timeStampMilliVector = vectorSchemaRoot.getVector("ts_milli") as TimeStampMilliVector
@@ -570,7 +573,7 @@ internal class ArrowKtTest {
             LocalDateTime.of(2020, 11, 23, 9, 30, 25),
             LocalDateTime.of(2015, 5, 25, 14, 20, 13),
             LocalDateTime.of(2013, 6, 19, 11, 20, 13),
-            LocalDateTime.of(2000, 1, 1, 0, 0, 0)
+            LocalDateTime.of(2000, 1, 1, 0, 0, 0),
         )
 
         return dataFrameOf(
@@ -578,7 +581,7 @@ internal class ArrowKtTest {
             "int" to listOf(1, 2, 3, 4),
             "float" to listOf(1.0f, 2.0f, 3.0f, 4.0f),
             "double" to listOf(1.0, 2.0, 3.0, 4.0),
-            "datetime" to dates
+            "datetime" to dates,
         )
     }
 

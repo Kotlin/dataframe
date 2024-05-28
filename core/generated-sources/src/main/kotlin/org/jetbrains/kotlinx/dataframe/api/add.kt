@@ -22,7 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import kotlin.reflect.KProperty
 
-/**
+/*
  * `add` operation adds new columns to DataFrame.
  */
 
@@ -124,28 +124,25 @@ public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>
-): DataFrame<T> =
-    (this + mapToColumn(name, infer, expression))
+    noinline expression: AddExpression<T, R>,
+): DataFrame<T> = (this + mapToColumn(name, infer, expression))
 
 public inline fun <reified R, T> DataFrame<T>.add(
     property: KProperty<R>,
     infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>
-): DataFrame<T> =
-    (this + mapToColumn(property, infer, expression))
+    noinline expression: AddExpression<T, R>,
+): DataFrame<T> = (this + mapToColumn(property, infer, expression))
 
 public inline fun <reified R, T> DataFrame<T>.add(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>
-): DataFrame<T> =
-    add(column.path(), infer, expression)
+    noinline expression: AddExpression<T, R>,
+): DataFrame<T> = add(column.path(), infer, expression)
 
 public inline fun <reified R, T> DataFrame<T>.add(
     path: ColumnPath,
     infer: Infer = Infer.Nulls,
-    noinline expression: AddExpression<T, R>
+    noinline expression: AddExpression<T, R>,
 ): DataFrame<T> {
     val col = mapToColumn(path.name(), infer, expression)
     if (path.size == 1) return this + col
@@ -156,7 +153,9 @@ public inline fun <reified R, T> DataFrame<T>.add(
 
 // region Create and add several columns
 
-public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
+public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) :
+    ColumnsContainer<T> by df,
+    ColumnSelectionDsl<T> {
 
     // TODO: support adding column into path
     internal val columns = mutableListOf<AnyCol>()
@@ -171,12 +170,13 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     internal inline fun <reified R> add(
         name: String,
         infer: Infer = Infer.Nulls,
-        noinline expression: RowExpression<T, R>
+        noinline expression: RowExpression<T, R>,
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
-    public inline fun <reified R> expr(infer: Infer = Infer.Nulls, noinline expression: RowExpression<T, R>): DataColumn<R> {
-        return df.mapToColumn("", infer, expression)
-    }
+    public inline fun <reified R> expr(
+        infer: Infer = Infer.Nulls,
+        noinline expression: RowExpression<T, R>,
+    ): DataColumn<R> = df.mapToColumn("", infer, expression)
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean =
         add(this, Infer.Nulls, expression)
@@ -221,16 +221,14 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     name: String,
     infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<G, R>
-): GroupBy<T, G> =
-    updateGroups { add(name, infer, expression) }
+    noinline expression: RowExpression<G, R>,
+): GroupBy<T, G> = updateGroups { add(name, infer, expression) }
 
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     column: ColumnAccessor<G>,
     infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<G, R>
-): GroupBy<T, G> =
-    add(column.name(), infer, expression)
+    noinline expression: RowExpression<G, R>,
+): GroupBy<T, G> = add(column.name(), infer, expression)
 
 public class AddGroup<T>(internal val body: AddDsl<T>.() -> Unit)
 

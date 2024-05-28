@@ -56,7 +56,7 @@ class XlsxTest {
     fun `first sheet is default sheet`() {
         DataFrame.readExcel(
             testResource("sample.xls"),
-            "Sheet1"
+            "Sheet1",
         ) shouldBe DataFrame.readExcel(testResource("sample.xls"))
     }
 
@@ -64,8 +64,10 @@ class XlsxTest {
     fun `read and write are isomorphic for string, double and null values`() {
         val temp = Files.createTempFile("excel", ".xlsx").toFile()
         val df = dataFrameOf("col1", "col2")(
-            "string value", 3.2,
-            "string value 1", null,
+            "string value",
+            3.2,
+            "string value 1",
+            null,
         )
         val extendedDf = List(10) { df }.concat()
         extendedDf.writeExcel(temp)

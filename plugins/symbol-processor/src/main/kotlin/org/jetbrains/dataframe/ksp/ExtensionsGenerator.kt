@@ -45,10 +45,7 @@ class ExtensionsGenerator(
         return Pair(preprocessedDeclarations, invalidDeclarations)
     }
 
-    class DataSchemaDeclaration(
-        val origin: KSClassDeclaration,
-        val properties: List<KSAnnotatedWithType>,
-    )
+    class DataSchemaDeclaration(val origin: KSClassDeclaration, val properties: List<KSAnnotatedWithType>)
 
     class KSAnnotatedWithType(
         private val declaration: KSAnnotated,
@@ -56,33 +53,33 @@ class ExtensionsGenerator(
         val type: KSTypeReference,
     ) : KSAnnotated by declaration
 
-    private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {
-        return when {
-            isClassOrInterface() && effectivelyPublicOrInternal() -> {
-                DataSchemaDeclaration(
-                    origin = this,
-                    properties = getAllProperties()
-                        .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
-                        .toList(),
-                )
-            }
-
-            else -> null
+    private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? = when {
+        isClassOrInterface() && effectivelyPublicOrInternal() -> {
+            DataSchemaDeclaration(
+                origin = this,
+                properties = getAllProperties()
+                    .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
+                    .toList(),
+            )
         }
+
+        else -> null
     }
 
     private fun KSClassDeclaration.isClassOrInterface() =
         classKind == ClassKind.INTERFACE || classKind == ClassKind.CLASS
 
-    private fun KSClassDeclaration.effectivelyPublicOrInternal(): Boolean {
-        return effectivelyPublicOrInternalOrNull(dataSchema = this) != null
-    }
+    private fun KSClassDeclaration.effectivelyPublicOrInternal(): Boolean =
+        effectivelyPublicOrInternalOrNull(dataSchema = this) != null
 
     private fun KSDeclaration.effectivelyPublicOrInternalOrNull(dataSchema: KSClassDeclaration): Visibility? {
         val visibility = getVisibility()
         if (visibility !in EXPECTED_VISIBILITIES) {
             val message = buildString {
-                append("DataSchema declaration ${dataSchema.nameString} at ${dataSchema.location} should be $EXPECTED_VISIBILITIES")
+                append(
+                    "DataSchema declaration ${dataSchema.nameString} at ${dataSchema.location} " +
+                        "should be $EXPECTED_VISIBILITIES",
+                )
                 if (this@effectivelyPublicOrInternalOrNull != dataSchema) {
                     append(", but it's parent $nameString is $visibility")
                 } else {
@@ -95,6 +92,7 @@ class ExtensionsGenerator(
 
         return when (val parentDeclaration = parentDeclaration) {
             null -> visibility
+
             else -> when (parentDeclaration.effectivelyPublicOrInternalOrNull(dataSchema)) {
                 Visibility.PUBLIC -> visibility
                 Visibility.INTERNAL -> Visibility.INTERNAL
@@ -123,7 +121,7 @@ class ExtensionsGenerator(
                     visibility = getMarkerVisibility(dataSchema),
                     properties = properties.map { property ->
                         Property(getColumnName(property), property.simpleName.asString(), property.type)
-                    }
+                    },
                 )
                 it.appendLine(extensions)
             }
@@ -142,14 +140,13 @@ class ExtensionsGenerator(
         appendLine()
     }
 
-    private fun getFileName(dataSchema: KSClassDeclaration) =
-        if (dataSchema.isTopLevel) {
-            val simpleName = dataSchema.simpleName.asString()
-            "$simpleName${'$'}Extensions"
-        } else {
-            val fqName = dataSchema.getQualifiedNameOrThrow()
-            "${fqName}${'$'}Extensions"
-        }
+    private fun getFileName(dataSchema: KSClassDeclaration) = if (dataSchema.isTopLevel) {
+        val simpleName = dataSchema.simpleName.asString()
+        "$simpleName${'$'}Extensions"
+    } else {
+        val fqName = dataSchema.getQualifiedNameOrThrow()
+        "${fqName}${'$'}Extensions"
+    }
 
     private val KSDeclaration.isTopLevel get() = parentDeclaration == null
 
@@ -196,10 +193,16 @@ class ExtensionsGenerator(
     }
 
     private fun typeMismatchError(property: KSAnnotatedWithType, arg: KSValueArgument): Nothing {
-        error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got ${arg.value}")
+        error(
+            "Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, " +
+                "but got ${arg.value}",
+        )
     }
 
     private fun argumentMismatchError(property: KSAnnotatedWithType, args: List<KSValueArgument>): Nothing {
-        error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
+        error(
+            "Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, " +
+                "but got $args",
+        )
     }
 }

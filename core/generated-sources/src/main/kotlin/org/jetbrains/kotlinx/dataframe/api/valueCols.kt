@@ -213,8 +213,9 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
-        asSingleColumn().valueColumnsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.valueCols(
+        filter: Predicate<ValueColumn<*>> = { true },
+    ): TransformableColumnSet<*> = asSingleColumn().valueColumnsInternal(filter)
 
     /**
      * ## Value Columns
@@ -248,8 +249,9 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
-    public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().valueColumnsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.valueCols(
+        filter: Predicate<ValueColumn<*>> = { true },
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().valueColumnsInternal(filter)
 
     /**
      * ## Value Columns

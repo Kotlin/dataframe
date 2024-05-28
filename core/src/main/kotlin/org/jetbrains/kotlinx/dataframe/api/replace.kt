@@ -40,7 +40,9 @@ public fun <T, C> ReplaceClause<T, C>.with(vararg columns: AnyCol): DataFrame<T>
 public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T> {
     var index = 0
     return with {
-        require(index < newColumns.size) { "Insufficient number of new columns in 'replace': ${newColumns.size} instead of ${df[columns].size}" }
+        require(index < newColumns.size) {
+            "Insufficient number of new columns in 'replace': ${newColumns.size} instead of ${df[columns].size}"
+        }
         newColumns[index++]
     }
 }

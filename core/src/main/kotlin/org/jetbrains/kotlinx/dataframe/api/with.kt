@@ -11,13 +11,18 @@ import kotlin.reflect.typeOf
 
 // region Pivot
 
-public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> = delegate { with(expression) }
+public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> = delegate {
+    with(expression)
+}
 
 // endregion
 
 // region ReducedPivot
 
-public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> = pivot.delegate { reduce(reducer).with(expression) }
+public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> =
+    pivot.delegate {
+        reduce(reducer).with(expression)
+    }
 
 // endregion
 
@@ -37,8 +42,11 @@ public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression
     return pivot.aggregate {
         val value = reducer(this)?.let {
             val value = expression(it, it)
-            if (value is AnyColumnReference) it[value]
-            else value
+            if (value is AnyColumnReference) {
+                it[value]
+            } else {
+                value
+            }
         }
         internal().yield(emptyPath(), value, type)
     }

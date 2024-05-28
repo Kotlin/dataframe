@@ -38,7 +38,7 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 // region DataRow
 
 public fun AnyRow.rowMedianOrNull(): Any? = Aggregators.median.aggregateMixed(
-    values().filterIsInstance<Comparable<Any?>>().asIterable()
+    values().filterIsInstance<Comparable<Any?>>().asIterable(),
 )
 
 public fun AnyRow.rowMedian(): Any = rowMedianOrNull().suggestIfNull("rowMedian")
@@ -87,8 +87,9 @@ public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: Colu
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: KProperty<C?>): C? =
     medianOrNull { columns.toColumnSet() }
 
-public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(crossinline expression: RowExpression<T, R?>): R? =
-    Aggregators.median.of(this, expression) as R?
+public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(
+    crossinline expression: RowExpression<T, R?>,
+): R? = Aggregators.median.of(this, expression) as R?
 
 // endregion
 
@@ -157,9 +158,8 @@ public fun <T, C : Comparable<C>> Pivot<T>.median(columns: ColumnsSelector<T, C?
 
 public fun <T> Pivot<T>.median(vararg columns: String): DataRow<T> = median { columns.toComparableColumns() }
 
-public fun <T, C : Comparable<C>> Pivot<T>.median(
-    vararg columns: ColumnReference<C?>,
-): DataRow<T> = median { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> Pivot<T>.median(vararg columns: ColumnReference<C?>): DataRow<T> =
+    median { columns.toColumnSet() }
 
 public fun <T, C : Comparable<C>> Pivot<T>.median(vararg columns: KProperty<C?>): DataRow<T> =
     median { columns.toColumnSet() }
@@ -198,9 +198,8 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(columns: ColumnsSelecto
 
 public fun <T> PivotGroupBy<T>.median(vararg columns: String): DataFrame<T> = median { columns.toComparableColumns() }
 
-public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(
-    vararg columns: ColumnReference<C?>,
-): DataFrame<T> = median { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(vararg columns: ColumnReference<C?>): DataFrame<T> =
+    median { columns.toColumnSet() }
 
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(vararg columns: KProperty<C?>): DataFrame<T> =
     median { columns.toColumnSet() }

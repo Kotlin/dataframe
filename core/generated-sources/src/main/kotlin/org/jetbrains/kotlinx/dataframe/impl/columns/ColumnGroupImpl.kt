@@ -38,7 +38,8 @@ internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T
 
     override fun get(index: Int) = super<DataFrameImpl>.get(index)
 
-    override fun get(firstIndex: Int, vararg otherIndices: Int) = ColumnGroupImpl(name, super<DataFrameImpl>.get(firstIndex, *otherIndices))
+    override fun get(firstIndex: Int, vararg otherIndices: Int) =
+        ColumnGroupImpl(name, super<DataFrameImpl>.get(firstIndex, *otherIndices))
 
     override fun rename(newName: String) = if (newName == name) this else ColumnGroupImpl(newName, this)
 
@@ -80,16 +81,23 @@ internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T
 
     override fun get(columnName: String): AnyCol = getColumn(columnName)
 
-    override fun contains(value: DataRow<T>) = if (distinct.isInitialized()) distinct.value.contains(value) else asColumnGroup().firstOrNull { it == value } != null
+    override fun contains(value: DataRow<T>) = if (distinct.isInitialized()) {
+        distinct.value.contains(value)
+    } else {
+        asColumnGroup().firstOrNull {
+            it == value
+        } != null
+    }
 }
 
-internal class ResolvingColumnGroup<T>(
-    override val source: ColumnGroupImpl<T>
-) : DataColumnGroup<T> by source, ForceResolvedColumn<DataRow<T>> {
+internal class ResolvingColumnGroup<T>(override val source: ColumnGroupImpl<T>) :
+    DataColumnGroup<T> by source,
+    ForceResolvedColumn<DataRow<T>> {
 
     override fun resolve(context: ColumnResolutionContext) = super<DataColumnGroup>.resolve(context)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataRow<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
+    override fun resolveSingle(context: ColumnResolutionContext) =
+        context.df.getColumn<DataRow<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
 
     override fun getValue(row: AnyRow) = super<DataColumnGroup>.getValue(row)
 

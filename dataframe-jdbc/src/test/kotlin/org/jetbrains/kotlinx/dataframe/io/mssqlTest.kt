@@ -5,7 +5,6 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.io.JdbcTest.Companion
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -131,7 +130,7 @@ class MSSQLTest {
             """
 
             connection.createStatement().execute(
-                createTableQuery.trimIndent()
+                createTableQuery.trimIndent(),
             )
 
             @Language("SQL")
@@ -174,7 +173,7 @@ class MSSQLTest {
                     st.setTime(24, java.sql.Time(System.currentTimeMillis())) // timeColumn
                     st.setTimestamp(25, java.sql.Timestamp(System.currentTimeMillis())) // timestampColumn
                     st.setInt(26, 123) // tinyintColumn
-                    //st.setObject(27, null) // udtColumn (assuming nullable)
+                    // st.setObject(27, null) // udtColumn (assuming nullable)
                     st.setObject(27, UUID.randomUUID()) // uniqueidentifierColumn
                     st.setBytes(28, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryColumn
                     st.setBytes(29, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryMaxColumn
@@ -186,8 +185,8 @@ class MSSQLTest {
                         34,
                         byteArrayOf(
                             0xE6.toByte(), 0x10, 0x00, 0x00, 0x01, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-                            0x44, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x05, 0x4C, 0x0
-                        )
+                            0x44, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x05, 0x4C, 0x0,
+                        ),
                     ) // geometryColumn
                     st.setString(35, "POINT(1 1)") // geographyColumn
                     st.executeUpdate()
@@ -303,10 +302,18 @@ class MSSQLTest {
 
         connection.createStatement().execute(createTestTable1Query)
 
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)",
+        )
 
         // start testing `readSqlTable` method
 

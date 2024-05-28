@@ -63,8 +63,7 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
 public fun <T, G, C> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<G, C>,
-): GroupBy<T, G> =
-    updateGroups { cumSum(skipNA, columns) }
+): GroupBy<T, G> = updateGroups { cumSum(skipNA, columns) }
 
 public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) { columns.toColumnSet() }

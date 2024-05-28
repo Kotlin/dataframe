@@ -49,7 +49,7 @@ class CsvTests {
             1,
             null,
             2,
-            null
+            null,
         ).convert("col2").toStr()
 
         val str = StringWriter()
@@ -190,8 +190,12 @@ class CsvTests {
         }
 
         df shouldBe dataFrameOf("col1", "col2", "col3")(
-            568, 801, 587,
-            780, 588, null
+            568,
+            801,
+            587,
+            780,
+            588,
+            null,
         )
     }
 
@@ -200,7 +204,7 @@ class CsvTests {
         val df = dataFrameOf("a", "b", "c")(
             1, 2, 3,
             1, 3, 2,
-            2, 1, 3
+            2, 1, 3,
         )
         val grouped = df.groupBy("a").into("g")
         val str = grouped.toCsv()
@@ -211,8 +215,12 @@ class CsvTests {
     @Test
     fun `write and read column group`() {
         val df = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            1, 3, 2
+            1,
+            2,
+            3,
+            1,
+            3,
+            2,
         )
         val grouped = df.group("b", "c").into("d")
         val str = grouped.toCsv()
@@ -236,8 +244,12 @@ class CsvTests {
     @Test
     fun `write csv without header produce correct file`() {
         val df = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            1, 3, 2,
+            1,
+            2,
+            3,
+            1,
+            3,
+            2,
         )
         df.writeCSV(
             "src/test/resources/without_header.csv",

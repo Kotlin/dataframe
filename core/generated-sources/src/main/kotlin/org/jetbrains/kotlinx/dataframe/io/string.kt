@@ -42,7 +42,9 @@ internal fun AnyFrame.renderToString(
     val header = cols.mapIndexed { colIndex, col ->
         if (columnTypes && (!rowIndex || colIndex > 0)) {
             "${col.name()}:${renderType(col)}"
-        } else col.name()
+        } else {
+            col.name()
+        }
     }
     val values = cols.map {
         val top = it.take(rowsLimit)
@@ -127,7 +129,7 @@ internal fun AnyRow.renderToString(): String {
     if (values.isEmpty()) return "{ }"
     return values.joinToString(
         prefix = "{ ",
-        postfix = " }"
+        postfix = " }",
     ) { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }
 }
 
@@ -154,38 +156,45 @@ internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedCont
     }
 
     is AnyRow -> RenderedContent.textWithLength("DataRow $value", "DataRow".length)
+
     is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
-    else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable, RendererDecimalFormat.DEFAULT)
-    else renderValueForStdout(value, valueToStringLimitForRowAsTable)
+
+    else -> if (forHtml) {
+        renderValueForHtml(value, valueToStringLimitForRowAsTable, RendererDecimalFormat.DEFAULT)
+    } else {
+        renderValueForStdout(value, valueToStringLimitForRowAsTable)
+    }
 }
 
 internal fun renderValueForStdout(
     value: Any?,
     limit: Int = valueToStringLimitDefault,
     decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
-): RenderedContent =
-    renderValueToString(value, decimalFormat).truncate(limit)
-        .let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
+): RenderedContent = renderValueToString(value, decimalFormat).truncate(limit)
+    .let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
 
-internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalFormat): String =
-    when (value) {
-        is AnyFrame -> "[${value.size}]".let { if (value.nrow == 1) it + " " + value[0].toString() else it }
-        is Double -> value.format(decimalFormat)
-        is Float -> value.format(decimalFormat)
-        is BigDecimal -> value.format(decimalFormat)
-        is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
-        is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
-        else ->
-            value
-                ?.asArrayAsListOrNull()?.let { renderValueToString(it, decimalFormat) }
-                ?: value.toString()
-    }
+internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalFormat): String = when (value) {
+    is AnyFrame -> "[${value.size}]".let { if (value.nrow == 1) it + " " + value[0].toString() else it }
 
-internal fun internallyRenderable(value: Any?): Boolean {
-    return when (value) {
-        is AnyFrame, is Double, is List<*>, null, "" -> true
-        else -> false
-    }
+    is Double -> value.format(decimalFormat)
+
+    is Float -> value.format(decimalFormat)
+
+    is BigDecimal -> value.format(decimalFormat)
+
+    is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
+
+    is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
+
+    else ->
+        value
+            ?.asArrayAsListOrNull()?.let { renderValueToString(it, decimalFormat) }
+            ?: value.toString()
+}
+
+internal fun internallyRenderable(value: Any?): Boolean = when (value) {
+    is AnyFrame, is Double, is List<*>, null, "" -> true
+    else -> false
 }
 
 internal fun Double.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)

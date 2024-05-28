@@ -61,8 +61,11 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
 
         val guessType = types.size > 1
         val baseType = types.commonType()
-        val tartypeOf = if (guessType || !hasList) baseType.withNullability(nulls)
-        else getListType(baseType.withNullability(listOfNullable))
+        val tartypeOf = if (guessType || !hasList) {
+            baseType.withNullability(nulls)
+        } else {
+            getListType(baseType.withNullability(listOfNullable))
+        }
         return guessColumnType(name, list, tartypeOf, guessType, defaultValue).cast()
     }
 }

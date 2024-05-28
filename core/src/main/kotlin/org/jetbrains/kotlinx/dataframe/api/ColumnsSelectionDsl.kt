@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
@@ -407,8 +406,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * `df.`[select][DataFrame.select]`  { "myColGroup"  `[`{`][String.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][String.select]` }`
      */
-    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        select(selector)
+    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
@@ -422,8 +420,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * `df.`[select][DataFrame.select]`  {  `[`pathOf`][pathOf]`("pathTo", "myColGroup")`[`() {`][ColumnPath.select]`  someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() `[`}`][ColumnPath.select]` }`
      */
-    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        select(selector)
+    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
     // endregion
 }

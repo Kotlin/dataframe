@@ -29,7 +29,7 @@ class DataFrameJdbcSymbolProcessorTest {
             import org.jetbrains.kotlinx.dataframe.* 
         """.trimIndent()
 
-        const val generatedFile = "HelloJdbc${'$'}Extensions.kt"
+        const val GENERATED_FILE = "HelloJdbc${'$'}Extensions.kt"
 
         @JvmStatic
         @BeforeClass
@@ -57,7 +57,7 @@ class DataFrameJdbcSymbolProcessorTest {
                     name VARCHAR(50),
                     age INT
                 )
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             // Create table Sale
@@ -68,7 +68,7 @@ class DataFrameJdbcSymbolProcessorTest {
                         customerId INT,
                         amount DECIMAL(10, 2)
                     )
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             // add data to the Customer table
@@ -111,10 +111,10 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
                         import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                        """.trimIndent()
-                    )
-                )
-            )
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         result.successfulCompilation shouldBe false
     }
@@ -145,10 +145,10 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
                         import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                        """.trimIndent()
-                    )
-                )
-            )
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         println(result.kspGeneratedFiles)
         result.inspectLines("Customer.Generated.kt") {
@@ -204,10 +204,10 @@ class DataFrameJdbcSymbolProcessorTest {
  
                     }
                 }
-                        """.trimIndent()
-                    )
-                )
-            )
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         result.successfulCompilation shouldBe true
     }
@@ -260,16 +260,16 @@ class DataFrameJdbcSymbolProcessorTest {
  
                     }
                 }
-                        """.trimIndent()
-                    )
-                )
-            )
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         result.successfulCompilation shouldBe true
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
-        inspectLines(generatedFile, f)
+        inspectLines(GENERATED_FILE, f)
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(filename: String, f: (List<String>) -> Unit) {

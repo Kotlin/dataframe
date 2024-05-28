@@ -85,11 +85,7 @@ public interface SupportedCodeGenerationFormat : SupportedFormat {
      * @param name the name of the top-level interface to generate
      * @param generateHelperCompanionObject whether to generate a helper companion object (only needed for Jupyter)
      */
-    public fun readCodeForGeneration(
-        file: File,
-        name: String,
-        generateHelperCompanionObject: Boolean = false,
-    ): Code
+    public fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean = false): Code
 }
 
 public class MethodArguments {
@@ -246,28 +242,24 @@ internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: A
 
 internal infix fun SupportedDataFrameFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
 
-internal data class GeneratedCode(
-    val format: SupportedCodeGenerationFormat,
-    val code: Code,
-)
+internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val code: Code)
 
-internal infix fun SupportedCodeGenerationFormat.to(code: Code) =
-    GeneratedCode(this, code)
+internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, code)
 
-public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
-    read(
-        file = file,
-        format = guessFormat(file)?.also {
-            if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
-        } as SupportedDataFrameFormat?,
-        header = header,
-    ).df
+public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame = read(
+    file = file,
+    format = guessFormat(file)?.also {
+        if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
+    } as SupportedDataFrameFormat?,
+    header = header,
+).df
 
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(file, header).single()
 
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame = when {
     isFile(url) -> read(urlAsFile(url), header)
+
     isProtocolSupported(url) -> catchHttpResponse(url) {
         read(
             stream = it,

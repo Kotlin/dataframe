@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.testSets.person.city
 import org.jetbrains.kotlinx.dataframe.testSets.person.weight
 import org.junit.Test
 
+@Suppress("ktlint:standard:class-naming")
 class ReplCodeGenTests : BaseTest() {
 
     val dfName = (ColumnsContainer::class).simpleName!!
@@ -44,12 +45,16 @@ class ReplCodeGenTests : BaseTest() {
         interface _DataFrameType1
 
         @DataSchema(isOpen = false)
-        interface _DataFrameType2 : _DataFrameType, _DataFrameType1
+        interface _DataFrameType2 :
+            _DataFrameType,
+            _DataFrameType1
     }
 
     object Test3 {
         @DataSchema
-        interface A { val x: List<*> }
+        interface A {
+            val x: List<*>
+        }
 
         @DataSchema
         interface B : A
@@ -199,10 +204,14 @@ class ReplCodeGenTests : BaseTest() {
     object Test4 {
 
         @DataSchema
-        interface A { val a: Int? }
+        interface A {
+            val a: Int?
+        }
 
         @DataSchema
-        interface B { val a: Int? }
+        interface B {
+            val a: Int?
+        }
 
         val df = dataFrameOf("a")(1)
     }

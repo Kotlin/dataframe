@@ -30,7 +30,7 @@ val WritersideStyle = DataFrameHtmlData(
     summary {
         padding: 6px;
     }
-    """.trimIndent()
+    """.trimIndent(),
 )
 
 val WritersideFooter: (DataFrame<*>) -> String = { "" }

@@ -33,7 +33,6 @@ import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REP
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVERS
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_SELECTOR
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -228,8 +227,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetInfixDocs.ArgumentArg1] `{ "age" `[and][ColumnsSelectionDsl.and]` height }`
      * @set [ColumnSetInfixDocs.ArgumentArg2] `{ name.firstName }`
      */
-    public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> =
-        except(selector())
+    public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> = except(selector())
 
     /**
      * @include [ColumnSetInfixDocs]
@@ -238,8 +236,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetInfixDocs.ArgumentArg1] `"age" `[and][ColumnsSelectionDsl.and]` height`
      * @set [ColumnSetInfixDocs.ArgumentArg2] `name.firstName`
      */
-    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> =
-        exceptInternal(other)
+    public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> = exceptInternal(other)
 
     /**
      * @include [ColumnSetVarargDocs]
@@ -248,8 +245,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetVarargDocs.ArgumentArg1] `(age, userData.height)`
      * @set [ColumnSetVarargDocs.ArgumentArg2] `(name.firstName, name.middleName)`
      */
-    public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> =
-        except(others.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> = except(others.toColumnSet())
 
     /**
      * @include [ColumnSetInfixDocs]
@@ -258,8 +254,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetInfixDocs.ArgumentArg1] `"age"`
      * @set [ColumnSetInfixDocs.ArgumentArg2] `"name"`
      */
-    public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> =
-        except(column<Any?>(other))
+    public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> = except(column<Any?>(other))
 
     /**
      * @include [ColumnSetVarargDocs]
@@ -268,8 +263,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetVarargDocs.ArgumentArg1] `("age", "height")`
      * @set [ColumnSetVarargDocs.ArgumentArg2] `("name")`
      */
-    public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> =
-        except(others.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> = except(others.toColumnSet())
 
     /**
      * @include [ColumnSetInfixDocs]
@@ -278,8 +272,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetInfixDocs.ArgumentArg1] `Person::age`
      * @set [ColumnSetInfixDocs.ArgumentArg2] `Person::name`
      */
-    public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> =
-        except(column(other))
+    public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> = except(column(other))
 
     /**
      * @include [ColumnSetVarargDocs]
@@ -288,8 +281,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetVarargDocs.ArgumentArg1] `(Person::age, Person::height)`
      * @set [ColumnSetVarargDocs.ArgumentArg2] `(Person::name)`
      */
-    public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> =
-        except(others.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> = except(others.toColumnSet())
 
     /**
      * @include [ColumnSetInfixDocs]
@@ -298,8 +290,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetInfixDocs.ArgumentArg1] `"userdata"["age"]`
      * @set [ColumnSetInfixDocs.ArgumentArg2] `pathOf("name", "firstName")`
      */
-    public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> =
-        except(column<Any?>(other))
+    public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> = except(column<Any?>(other))
 
     /**
      * @include [ColumnSetVarargDocs]
@@ -308,8 +299,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @set [ColumnSetVarargDocs.ArgumentArg1] `(pathOf("age"), "userdata"["height"])`
      * @set [ColumnSetVarargDocs.ArgumentArg2] `("name"["firstName"], "name"["middleName"])`
      */
-    public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> =
-        except(others.toColumnSet())
+    public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> = except(others.toColumnSet())
 
     // endregion
 
@@ -1043,8 +1033,7 @@ public interface AllExceptColumnsSelectionDsl {
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER),
         level = DeprecationLevel.ERROR,
     )
-    public infix fun SingleColumn<DataRow<*>>.except(other: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept { other }
+    public infix fun SingleColumn<DataRow<*>>.except(other: ColumnsResolver<*>): ColumnSet<*> = allColsExcept { other }
 
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
@@ -1059,88 +1048,77 @@ public interface AllExceptColumnsSelectionDsl {
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
         level = DeprecationLevel.ERROR,
     )
-    public infix fun SingleColumn<DataRow<*>>.except(other: String): ColumnSet<*> =
-        allColsExcept(other)
+    public infix fun SingleColumn<DataRow<*>>.except(other: String): ColumnSet<*> = allColsExcept(other)
 
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
         level = DeprecationLevel.ERROR,
     )
-    public fun SingleColumn<DataRow<*>>.except(vararg others: String): ColumnSet<*> =
-        allColsExcept(*others)
+    public fun SingleColumn<DataRow<*>>.except(vararg others: String): ColumnSet<*> = allColsExcept(*others)
 
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
         level = DeprecationLevel.ERROR,
     )
-    public infix fun SingleColumn<DataRow<*>>.except(other: KProperty<*>): ColumnSet<*> =
-        allColsExcept(other)
+    public infix fun SingleColumn<DataRow<*>>.except(other: KProperty<*>): ColumnSet<*> = allColsExcept(other)
 
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
         level = DeprecationLevel.ERROR,
     )
-    public fun SingleColumn<DataRow<*>>.except(vararg others: KProperty<*>): ColumnSet<*> =
-        allColsExcept(*others)
+    public fun SingleColumn<DataRow<*>>.except(vararg others: KProperty<*>): ColumnSet<*> = allColsExcept(*others)
 
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
         level = DeprecationLevel.ERROR,
     )
-    public infix fun SingleColumn<DataRow<*>>.except(other: ColumnPath): ColumnSet<*> =
-        allColsExcept(other)
+    public infix fun SingleColumn<DataRow<*>>.except(other: ColumnPath): ColumnSet<*> = allColsExcept(other)
 
     @Deprecated(
         message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
         level = DeprecationLevel.ERROR,
     )
-    public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnPath): ColumnSet<*> =
-        allColsExcept(*others)
+    public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnPath): ColumnSet<*> = allColsExcept(*others)
 
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_SELECTOR),
         level = DeprecationLevel.ERROR,
     )
-    public fun <C> ColumnsSelectionDsl<C>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        allExcept(selector)
+    public fun <C> ColumnsSelectionDsl<C>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> = allExcept(selector)
 
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
         level = DeprecationLevel.ERROR,
     )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        allExcept(*others)
+    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> = allExcept(*others)
 
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
         level = DeprecationLevel.ERROR,
     )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: String): ColumnSet<*> =
-        allExcept(*others)
+    public fun ColumnsSelectionDsl<*>.except(vararg others: String): ColumnSet<*> = allExcept(*others)
 
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
         level = DeprecationLevel.ERROR,
     )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: KProperty<*>): ColumnSet<*> =
-        allExcept(*others)
+    public fun ColumnsSelectionDsl<*>.except(vararg others: KProperty<*>): ColumnSet<*> = allExcept(*others)
 
     @Deprecated(
         message = COL_SELECT_DSL_EXCEPT,
         replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
         level = DeprecationLevel.ERROR,
     )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnPath): ColumnSet<*> =
-        allExcept(*others)
+    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnPath): ColumnSet<*> = allExcept(*others)
 
     // endregion
 }
@@ -1153,12 +1131,11 @@ public interface AllExceptColumnsSelectionDsl {
  * @return The new ColumnSet with the remaining columns.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnSet<C> =
-    createColumnSet { context ->
-        val resolvedCols = this.resolve(context)
-        val resolvedColsToExcept = other.resolve(context)
-        resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
-    } as ColumnSet<C>
+internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnSet<C> = createColumnSet { context ->
+    val resolvedCols = this.resolve(context)
+    val resolvedColsToExcept = other.resolve(context)
+    resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
+} as ColumnSet<C>
 
 /**
  * Returns a new ColumnSet that contains all columns from inside the receiver column group
@@ -1178,16 +1155,17 @@ internal fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolv
  * @return A new [SingleColumn] with the filtered columns excluded.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> SingleColumn<DataRow<C>>.exceptExperimentalInternal(other: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
-    this.ensureIsColumnGroup().transformSingle { singleCol ->
-        val columnsToExcept = singleCol.asColumnGroup()
-            .getColumnsWithPaths { other }
-            .map { it.changePath(singleCol.path + it.path) }
+internal fun <C> SingleColumn<DataRow<C>>.exceptExperimentalInternal(
+    other: ColumnsResolver<*>,
+): SingleColumn<DataRow<C>> = this.ensureIsColumnGroup().transformSingle { singleCol ->
+    val columnsToExcept = singleCol.asColumnGroup()
+        .getColumnsWithPaths { other }
+        .map { it.changePath(singleCol.path + it.path) }
 
-        val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
+    val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
 
-        newCols as List<ColumnWithPath<DataRow<*>>>
-    }.singleInternal() as SingleColumn<DataRow<C>>
+    newCols as List<ColumnWithPath<DataRow<*>>>
+}.singleInternal() as SingleColumn<DataRow<C>>
 
 /**
  * Functions annotated with this annotation are experimental and will be removed or renamed in the future.

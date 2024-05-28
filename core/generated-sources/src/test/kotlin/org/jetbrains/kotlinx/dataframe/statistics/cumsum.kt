@@ -55,7 +55,7 @@ class CumsumTests {
             "b", 2,
             "c", null,
             "a", 3,
-            "c", 4
+            "c", 4,
         )
         df.groupBy("str").cumSum().concat() shouldBe
             dataFrameOf("str", "col")(
@@ -63,7 +63,7 @@ class CumsumTests {
                 "a", 4,
                 "b", 2,
                 "c", null,
-                "c", 4
+                "c", 4,
             )
     }
 }

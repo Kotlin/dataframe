@@ -31,8 +31,10 @@ class Schemas {
     fun createDfNullable() {
         // SampleStart
         val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", null
+            "Alice",
+            15,
+            "Bob",
+            null,
         )
         // SampleEnd
     }
@@ -42,8 +44,10 @@ class Schemas {
     fun createDf() {
         // SampleStart
         val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20
+            "Alice",
+            15,
+            "Bob",
+            20,
         )
         // SampleEnd
     }
@@ -53,8 +57,12 @@ class Schemas {
     fun extendedDf() {
         // SampleStart
         val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5
+            "Merton, Alice",
+            15,
+            60.0,
+            "Marley, Bob",
+            20,
+            73.5,
         )
         // SampleEnd
         df.print()
@@ -64,8 +72,12 @@ class Schemas {
     @TransformDataFrameExpressions
     fun splitNameWorks() {
         val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5
+            "Merton, Alice",
+            15,
+            60.0,
+            "Marley, Bob",
+            20,
+            73.5,
         ).cast<Person>()
         // SampleStart
         df.splitName()
@@ -76,8 +88,12 @@ class Schemas {
     @TransformDataFrameExpressions
     fun adultsWorks() {
         val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5
+            "Merton, Alice",
+            15,
+            60.0,
+            "Marley, Bob",
+            20,
+            73.5,
         ).cast<Person>()
         // SampleStart
         df.adults()
@@ -92,12 +108,17 @@ class Schemas {
         // SampleStart
         @DataSchema
         data class Name(val firstName: String, val lastName: String)
+
         @DataSchema
         data class Person(val name: Name, val age: Int?)
 
         val df = dataFrameOf("name", "age", "weight")(
-            "Merton, Alice", "15", 60.0,
-            "Marley, Bob", "20", 73.5
+            "Merton, Alice",
+            "15",
+            60.0,
+            "Marley, Bob",
+            "20",
+            73.5,
         ).split { "name"<String>() }.inward("firstName", "lastName")
 
         val persons = df.cast<Person>().toList()
@@ -109,8 +130,10 @@ class Schemas {
     fun useProperties() {
         // SampleStart
         val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20
+            "Alice",
+            15,
+            "Bob",
+            20,
         ).cast<Person>()
         // age only available after executing `build` or `kspKotlin`!
         val teens = df.filter { age in 10..19 }

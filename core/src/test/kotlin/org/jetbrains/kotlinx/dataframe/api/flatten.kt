@@ -84,7 +84,7 @@ class FlattenTests {
             "Charlie", "Chaplin", 40, "Milan", 41, true,
             "Bob", "Marley", 30, "Tokyo", 68, true,
             "Alice", "Wolf", 20, "Milan", 55, false,
-            "Charlie", "Byrd", 30, "Moscow", 90, true
+            "Charlie", "Byrd", 30, "Moscow", 90, true,
         ).cast<Person>()
 
         val aggregate = df.groupBy("city")
@@ -104,7 +104,7 @@ class FlattenTests {
             "mean_happy_separator_age",
             "mean_happy_separator_weight",
             "std_happy_separator_age",
-            "std_happy_separator_weight"
+            "std_happy_separator_weight",
         )
     }
 

@@ -274,8 +274,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
-    public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> =
-        asSingleColumn().dropCols(n)
+    public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
 
     /**
      * ## Drop (Cols)
@@ -506,8 +505,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
-    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> =
-        this.asSingleColumn().dropLastCols(n)
+    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
 
     /**
      * ## Drop Last (Cols)

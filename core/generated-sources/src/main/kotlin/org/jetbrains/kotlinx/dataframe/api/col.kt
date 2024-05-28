@@ -773,8 +773,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun SingleColumn<DataRow<*>>.col(name: String): SingleColumn<*> =
-        col<Any?>(name)
+    public fun SingleColumn<DataRow<*>>.col(name: String): SingleColumn<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -884,8 +883,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun AnyColumnGroupAccessor.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun AnyColumnGroupAccessor.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -937,8 +935,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column. 
      * @param [C] The type of the column.
      */
-    public fun <C> AnyColumnGroupAccessor.col(name: String): ColumnAccessor<C> =
-        this.ensureIsColumnGroup().column(name)
+    public fun <C> AnyColumnGroupAccessor.col(name: String): ColumnAccessor<C> = this.ensureIsColumnGroup().column(name)
 
     /**
      * ## Col
@@ -991,8 +988,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun String.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun String.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -1044,10 +1040,9 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column. 
      * @param [C] The type of the column.
      */
-    public fun <C> String.col(name: String): ColumnAccessor<C> =
-        columnGroup(this)
-            .ensureIsColumnGroup()
-            .column(name)
+    public fun <C> String.col(name: String): ColumnAccessor<C> = columnGroup(this)
+        .ensureIsColumnGroup()
+        .column(name)
 
     /**
      * ## Col
@@ -1100,8 +1095,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun KProperty<*>.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun KProperty<*>.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -1207,8 +1201,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnPath.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun ColumnPath.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -1474,8 +1467,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<*> =
-        col<Any?>(path)
+    public fun SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1585,8 +1577,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1692,8 +1683,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun String.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun String.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1799,8 +1789,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun KProperty<*>.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun KProperty<*>.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1906,8 +1895,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnPath.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun ColumnPath.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -2114,8 +2102,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the column.
      * @param [C] The type of the column. 
      */
-    public fun <C> SingleColumn<DataRow<*>>.col(property: KProperty<C>): SingleColumn<C> =
-        col<C>(property.name)
+    public fun <C> SingleColumn<DataRow<*>>.col(property: KProperty<C>): SingleColumn<C> = col<C>(property.name)
 
     /**
      * ## Col
@@ -2538,8 +2525,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2592,8 +2578,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column.
      */
-    public fun <C> ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<C> =
-        asSingleColumn().col<C>(index)
+    public fun <C> ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<C> = asSingleColumn().col<C>(index)
 
     /**
      * ## Col
@@ -2647,8 +2632,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2701,11 +2685,10 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column.
      */
-    public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> =
-        this.ensureIsColumnGroup()
-            .allColumnsInternal()
-            .getAt(index)
-            .cast()
+    public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> = this.ensureIsColumnGroup()
+        .allColumnsInternal()
+        .getAt(index)
+        .cast()
 
     /**
      * ## Col
@@ -2759,8 +2742,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun String.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun String.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2813,8 +2795,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column.
      */
-    public fun <C> String.col(index: Int): SingleColumn<C> =
-        columnGroup(this).col<C>(index)
+    public fun <C> String.col(index: Int): SingleColumn<C> = columnGroup(this).col<C>(index)
 
     /**
      * ## Col
@@ -2868,8 +2849,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun KProperty<*>.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun KProperty<*>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2922,8 +2902,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column.
      */
-    public fun <C> KProperty<*>.col(index: Int): SingleColumn<C> =
-        columnGroup(this).col<C>(index)
+    public fun <C> KProperty<*>.col(index: Int): SingleColumn<C> = columnGroup(this).col<C>(index)
 
     /**
      * ## Col
@@ -2977,8 +2956,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnPath.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun ColumnPath.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -3031,8 +3009,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the column.
      */
-    public fun <C> ColumnPath.col(index: Int): SingleColumn<C> =
-        columnGroup(this).col<C>(index)
+    public fun <C> ColumnPath.col(index: Int): SingleColumn<C> = columnGroup(this).col<C>(index)
 
     // endregion
 }

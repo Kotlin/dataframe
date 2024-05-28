@@ -15,7 +15,7 @@ open class Base {
         "Mark", "Avrely", 40, "Milan", null,
         "Bob", "Marley", 30, "Tokyo", 68,
         "Alice", "Lindt", 20, null, 55,
-        "Mark", "Petrov", 30, "Moscow", 90
+        "Mark", "Petrov", 30, "Moscow", 90,
     ).group("firstName", "lastName").into("name")
         .cast<Person>()
 

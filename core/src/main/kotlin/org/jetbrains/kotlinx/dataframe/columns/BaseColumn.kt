@@ -50,8 +50,8 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
         headPlusIterable(
             firstIndex,
-            otherIndices.asIterable()
-        )
+            otherIndices.asIterable(),
+        ),
     )
     public operator fun get(row: AnyRow): T = get(row.index())
 
@@ -91,7 +91,8 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     override fun rename(newName: String): BaseColumn<T>
 
-    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
+    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> =
+        (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()

@@ -146,7 +146,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             val parsedDf = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {
                 is DfReadResult.Error -> throw Exception(
                     "Error while reading dataframe from data at $url",
-                    readResult.reason
+                    readResult.reason,
                 )
 
                 is DfReadResult.Success -> readResult
@@ -175,10 +175,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     }
 
     // TODO: copy pasted from symbol-processor: DataSchemaGenerator, should be refactored somehow
-    private fun generateSchemaByJdbcOptions(
-        jdbcOptions: JdbcOptionsDsl,
-        connection: Connection,
-    ): DataFrameSchema {
+    private fun generateSchemaByJdbcOptions(jdbcOptions: JdbcOptionsDsl, connection: Connection): DataFrameSchema {
         logger.debug("Table name: ${jdbcOptions.tableName}")
         logger.debug("SQL query: ${jdbcOptions.sqlQuery}")
 
@@ -207,36 +204,36 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
         DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
 
-    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing {
-        throw RuntimeException(
-            "Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
-                "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
-        )
-    }
+    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing = throw RuntimeException(
+        "Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
+            "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL " +
+            "table or result of SQL query!",
+    )
 
-    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing {
-        throw RuntimeException(
-            "Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
-                "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
-        )
-    }
+    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing = throw RuntimeException(
+        "Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
+            "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL " +
+            "table or result of SQL query!",
+    )
 
-    private fun stringOf(data: Any): String =
-        when (data) {
-            is File -> data.absolutePath
-            is URL -> data.toExternalForm()
-            is String ->
-                when {
-                    isURL(data) -> stringOf(URL(data))
-                    else -> {
-                        val relativeFile = project.file(data)
-                        val absoluteFile = File(data)
-                        stringOf(if (relativeFile.exists()) relativeFile else absoluteFile)
-                    }
+    private fun stringOf(data: Any): String = when (data) {
+        is File -> data.absolutePath
+
+        is URL -> data.toExternalForm()
+
+        is String ->
+            when {
+                isURL(data) -> stringOf(URL(data))
+
+                else -> {
+                    val relativeFile = project.file(data)
+                    val absoluteFile = File(data)
+                    stringOf(if (relativeFile.exists()) relativeFile else absoluteFile)
                 }
+            }
 
-            else -> unsupportedType()
-        }
+        else -> unsupportedType()
+    }
 
     private fun escapePackageName(packageName: String): String {
         // See RegexExpectationsTest
@@ -248,26 +245,28 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         }
     }
 
-    private fun urlOf(data: Any): URL =
-        when (data) {
-            is File -> data.toURI()
-            is URL -> data.toURI()
-            is String -> when {
-                isURL(data) -> URL(data).toURI()
-                else -> {
-                    val relativeFile = project.file(data)
-                    val absoluteFile = File(data)
+    private fun urlOf(data: Any): URL = when (data) {
+        is File -> data.toURI()
 
-                    if (relativeFile.exists()) {
-                        relativeFile
-                    } else {
-                        absoluteFile
-                    }.toURI()
-                }
+        is URL -> data.toURI()
+
+        is String -> when {
+            isURL(data) -> URL(data).toURI()
+
+            else -> {
+                val relativeFile = project.file(data)
+                val absoluteFile = File(data)
+
+                if (relativeFile.exists()) {
+                    relativeFile
+                } else {
+                    absoluteFile
+                }.toURI()
             }
+        }
 
-            else -> unsupportedType()
-        }.toURL()
+        else -> unsupportedType()
+    }.toURL()
 
     private fun unsupportedType(): Nothing =
         throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")

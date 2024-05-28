@@ -2,8 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.samples.api.age
-import org.jetbrains.kotlinx.dataframe.samples.api.firstName
-import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
@@ -142,7 +140,7 @@ class AndTests : ColumnsSelectionDslTests() {
             df.select { age.and("name" and Person::weight) },
             df.select { age.and(Person::name and Person::weight) },
             df.select { age.and(pathOf("name") and Person::weight) },
-            df.select { age.and(cols(name) and Person::weight) }
+            df.select { age.and(cols(name) and Person::weight) },
         ).shouldAllBeEqual()
     }
 }

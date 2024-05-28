@@ -96,8 +96,7 @@ public fun <T> ColumnGroupReference.valueColumn(): ColumnDelegate<T> = ColumnDel
 public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> = ColumnAccessorImpl(path() + name)
 
 @JvmName("valueColumnTyped")
-public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> =
-    ColumnAccessorImpl(path() + name)
+public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
 public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
     ColumnAccessorImpl(this.path() + path)
@@ -227,17 +226,16 @@ public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(va
 
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
-public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> =
-    DataColumn.createColumnGroup(
-        name = "",
-        df = dataFrameOf(columns)
-    )
-        .asDataColumn()
-        .forceResolve()
+public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> = DataColumn.createColumnGroup(
+    name = "",
+    df = dataFrameOf(columns),
+)
+    .asDataColumn()
+    .forceResolve()
 
 public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataColumn.createFrameColumn(
     "",
-    frames.toList()
+    frames.toList(),
 ).forceResolve()
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
@@ -286,7 +284,7 @@ public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> I
         fill(value).asList().let {
             DataColumn.create(
                 value.toString(),
-                it
+                it,
             )
         }
     }.toDataFrame()
@@ -336,7 +334,7 @@ public class DataFrameBuilder(private val header: List<String>) {
             valuesBuilder(name).let {
                 DataColumn.create(
                     name,
-                    it.asList()
+                    it.asList(),
                 )
             }
         }
@@ -345,7 +343,7 @@ public class DataFrameBuilder(private val header: List<String>) {
         DataColumn.createValueColumn(
             name,
             List(nrow) { value },
-            typeOf<C>().withNullability(value == null)
+            typeOf<C>().withNullability(value == null),
         )
     }
 
@@ -355,14 +353,14 @@ public class DataFrameBuilder(private val header: List<String>) {
         withColumns { name ->
             DataColumn.create(
                 name,
-                List(nrow) { init(it, name) }
+                List(nrow) { init(it, name) },
             )
         }
 
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): AnyFrame = withColumns { name ->
         DataColumn.create(
             name,
-            List(nrow, init)
+            List(nrow, init),
         )
     }
 
@@ -370,7 +368,7 @@ public class DataFrameBuilder(private val header: List<String>) {
         DataColumn.createValueColumn(
             name,
             List(nrow, init),
-            typeOf<C>()
+            typeOf<C>(),
         )
     }
 
@@ -416,9 +414,7 @@ public class DynamicDataFrameBuilder {
         return uniqueName
     }
 
-    public fun toDataFrame(): AnyFrame {
-        return dataFrameOf(cols)
-    }
+    public fun toDataFrame(): AnyFrame = dataFrameOf(cols)
 }
 
 /**

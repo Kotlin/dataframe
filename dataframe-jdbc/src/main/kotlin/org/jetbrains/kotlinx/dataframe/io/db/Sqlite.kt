@@ -16,23 +16,15 @@ public object Sqlite : DbType("sqlite") {
     override val driverClassName: String
         get() = "org.sqlite.JDBC"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        return null
-    }
+    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? = null
 
-    override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return tableMetadata.name.startsWith("sqlite_")
-    }
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean = tableMetadata.name.startsWith("sqlite_")
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
-        return TableMetadata(
-            tables.getString("TABLE_NAME"),
-            tables.getString("TABLE_SCHEM"),
-            tables.getString("TABLE_CAT")
-        )
-    }
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata = TableMetadata(
+        tables.getString("TABLE_NAME"),
+        tables.getString("TABLE_SCHEM"),
+        tables.getString("TABLE_CAT"),
+    )
 
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        return null
-    }
+    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 }

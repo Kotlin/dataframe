@@ -38,9 +38,8 @@ import org.jetbrains.kotlinx.dataframe.values
 internal class GroupByImpl<T, G>(
     val df: DataFrame<T>,
     override val groups: FrameColumn<G>,
-    internal val keyColumnsInGroups: ColumnsSelector<G, *>
-) :
-    GroupBy<T, G>,
+    internal val keyColumnsInGroups: ColumnsSelector<G, *>,
+) : GroupBy<T, G>,
     AggregatableInternal<G> {
 
     override val keys by lazy { df - groups }
@@ -48,14 +47,23 @@ internal class GroupByImpl<T, G>(
     override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
         df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>
 
-    override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
+    override fun toDataFrame(groupedColumnName: String?) =
+        if (groupedColumnName == null || groupedColumnName == groups.name()) {
+            df
+        } else {
+            df.rename(
+                groups,
+            ).into(groupedColumnName)
+        }
 
     override fun toString() = df.toString()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
         keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
 
-    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).cast<G>()
+    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), {
+        groups
+    }, removeColumns = true, body).cast<G>()
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
         val indices = (0 until df.nrow).filter {
@@ -70,7 +78,7 @@ internal fun <T, G, R> aggregateGroupBy(
     df: DataFrame<T>,
     selector: ColumnSelector<T, DataFrame<G>?>,
     removeColumns: Boolean,
-    body: AggregateGroupedBody<G, R>
+    body: AggregateGroupedBody<G, R>,
 ): DataFrame<T> {
     val defaultAggregateName = "aggregated"
 
@@ -81,15 +89,22 @@ internal fun <T, G, R> aggregateGroupBy(
     val hasKeyColumns = removed.df.ncol > 0
 
     val groupedFrame = column.values.map {
-        if (it == null) null
-        else {
+        if (it == null) {
+            null
+        } else {
             val builder = GroupByReceiverImpl(it, hasKeyColumns)
             val result = body(builder, builder)
-            if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) builder.yield(
-                NamedValue.create(
-                    pathOf(defaultAggregateName), result, null, null, true
+            if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) {
+                builder.yield(
+                    NamedValue.create(
+                        pathOf(defaultAggregateName),
+                        result,
+                        null,
+                        null,
+                        true,
+                    ),
                 )
-            )
+            }
             builder.compute()
         }
     }.concat()

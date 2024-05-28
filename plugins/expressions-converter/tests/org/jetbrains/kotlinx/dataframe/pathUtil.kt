@@ -78,32 +78,34 @@ fun tryGetResourcePathForClass(aClass: Class<*>): File? {
     }
 }
 
-fun getResourcePathForClass(aClass: Class<*>): File {
-    return tryGetResourcePathForClass(aClass) ?: throw IllegalStateException("Resource for class: ${aClass.name} not found")
+fun getResourcePathForClass(aClass: Class<*>): File = tryGetResourcePathForClass(
+    aClass,
+) ?: throw IllegalStateException("Resource for class: ${aClass.name} not found")
+
+fun tryGetResourcePathForClassByName(name: String, classLoader: ClassLoader): File? = try {
+    classLoader.loadClass(name)?.let(::tryGetResourcePathForClass)
+} catch (_: ClassNotFoundException) {
+    null
+} catch (_: NoClassDefFoundError) {
+    null
 }
 
-fun tryGetResourcePathForClassByName(name: String, classLoader: ClassLoader): File? =
-    try {
-        classLoader.loadClass(name)?.let(::tryGetResourcePathForClass)
-    } catch (_: ClassNotFoundException) {
+internal fun URL.toFileOrNull() = try {
+    File(toURI())
+} catch (e: IllegalArgumentException) {
+    null
+} catch (e: java.net.URISyntaxException) {
+    null
+} ?: run {
+    if (protocol != "file") {
         null
-    } catch (_: NoClassDefFoundError) {
-        null
+    } else {
+        File(file)
     }
+}
 
-internal fun URL.toFileOrNull() =
-    try {
-        File(toURI())
-    } catch (e: IllegalArgumentException) {
-        null
-    } catch (e: java.net.URISyntaxException) {
-        null
-    } ?: run {
-        if (protocol != "file") null
-        else File(file)
-    }
-
-internal fun URL.toContainingJarOrNull(): File? =
-    if (protocol == "jar") {
-        (openConnection() as? JarURLConnection)?.jarFileURL?.toFileOrNull()
-    } else null
+internal fun URL.toContainingJarOrNull(): File? = if (protocol == "jar") {
+    (openConnection() as? JarURLConnection)?.jarFileURL?.toFileOrNull()
+} else {
+    null
+}

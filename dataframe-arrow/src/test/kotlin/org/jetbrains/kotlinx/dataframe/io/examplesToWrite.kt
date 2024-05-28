@@ -17,8 +17,8 @@ val citiesExampleFrame = dataFrameOf(
             "New York",
             "Washington",
             "Saint Petersburg",
-            "Vatican"
-        )
+            "Vatican",
+        ),
     ),
     DataColumn.createValueColumn(
         "affiliation",
@@ -28,8 +28,8 @@ val citiesExampleFrame = dataFrameOf(
             "The USA",
             "The USA",
             "Russia",
-            null
-        )
+            null,
+        ),
     ),
     DataColumn.createValueColumn(
         "is_capital",
@@ -39,8 +39,8 @@ val citiesExampleFrame = dataFrameOf(
             false,
             true,
             false,
-            null
-        )
+            null,
+        ),
     ),
     DataColumn.createValueColumn(
         "population",
@@ -50,8 +50,8 @@ val citiesExampleFrame = dataFrameOf(
             8_467_513,
             689_545,
             5_377_503,
-            825
-        )
+            825,
+        ),
     ),
     DataColumn.createValueColumn(
         "area",
@@ -61,8 +61,8 @@ val citiesExampleFrame = dataFrameOf(
             1223.59,
             177.0,
             1439.0,
-            0.44
-        )
+            0.44,
+        ),
     ),
     DataColumn.createValueColumn(
         "settled",
@@ -72,8 +72,8 @@ val citiesExampleFrame = dataFrameOf(
             LocalDate.of(1624, 1, 1),
             LocalDate.of(1790, 7, 16),
             LocalDate.of(1703, 5, 27),
-            LocalDate.of(1929, 2, 11)
-        )
+            LocalDate.of(1929, 2, 11),
+        ),
     ),
     DataColumn.createValueColumn(
         "page_in_wiki",
@@ -83,9 +83,9 @@ val citiesExampleFrame = dataFrameOf(
             URL("https://en.wikipedia.org/wiki/New_York_City"),
             URL("https://en.wikipedia.org/wiki/Washington,_D.C."),
             URL("https://en.wikipedia.org/wiki/Saint_Petersburg"),
-            URL("https://en.wikipedia.org/wiki/Vatican_City")
-        )
-    )
+            URL("https://en.wikipedia.org/wiki/Vatican_City"),
+        ),
+    ),
 )
 
 /**

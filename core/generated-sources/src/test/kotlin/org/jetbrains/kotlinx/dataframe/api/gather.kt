@@ -107,7 +107,7 @@ class GatherTests {
                 mode.withValues(cols.map { it.name() }),
                 dataRows.map { it.getValueOrNull<String>("c1") }.toColumn("c1"),
                 dataRows.map { it.getValueOrNull<String>("c2") }.toColumn("c2"),
-                dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3")
+                dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3"),
             ).toDataFrame()
 
             newDf
@@ -177,9 +177,12 @@ class GatherTests {
             .into("key", "value")
 
         df shouldBe dataFrameOf("key", "value")(
-            "a", 1,
-            "b", 3,
-            "b", 5
+            "a",
+            1,
+            "b",
+            3,
+            "b",
+            5,
         )
     }
 }

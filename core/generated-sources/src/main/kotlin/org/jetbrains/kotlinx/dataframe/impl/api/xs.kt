@@ -14,9 +14,13 @@ import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 internal fun <T, C> DataFrame<T>.xsImpl(
     keyColumns: ColumnsSelector<T, C>,
     allowMissingColumns: Boolean,
-    vararg keyValues: C
+    vararg keyValues: C,
 ): DataFrame<T> {
-    val cols = getColumnsImpl(if (allowMissingColumns) UnresolvedColumnsPolicy.Create else UnresolvedColumnsPolicy.Fail, keyColumns)
+    val cols =
+        getColumnsImpl(
+            if (allowMissingColumns) UnresolvedColumnsPolicy.Create else UnresolvedColumnsPolicy.Fail,
+            keyColumns,
+        )
     val n = keyValues.count()
     require(cols.size == n) { "Number of key values $n doesn't equal to number of key columns ${cols.size}" }
     val pairs = cols.zip(keyValues).filter { !it.first.isMissingColumn() }

@@ -6,7 +6,11 @@ import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -104,7 +108,7 @@ class JdbcTest {
             """
 
             connection.createStatement().execute(
-                createSaleTableQuery
+                createSaleTableQuery,
             )
 
             // add data to the Customer table
@@ -200,7 +204,7 @@ class JdbcTest {
                     '2023-07-18 12:45:30', NULL,
                     'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
                 )
-            """.trimIndent()
+            """.trimIndent(),
         ).executeUpdate()
 
         connection.prepareStatement(
@@ -214,7 +218,7 @@ class JdbcTest {
                     '2023-07-19 18:15:30', NULL,
                     'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
                 )
-            """.trimIndent()
+            """.trimIndent(),
         ).executeUpdate()
 
         connection.prepareStatement(
@@ -230,7 +234,7 @@ class JdbcTest {
                     '"address": { "street": "123 Main St", "city": "Exampleville", "zipcode": "12345"}}', 
                     '345e6789-e89b-12d3-a456-426655440002'
                 )
-            """.trimIndent()
+            """.trimIndent(),
         ).executeUpdate()
 
         val tableName = "TestTable"
@@ -501,7 +505,7 @@ class JdbcTest {
             """
 
         connection.createStatement().execute(
-            createAlterTableQuery
+            createAlterTableQuery,
         )
 
         @Language("SQL")
@@ -693,10 +697,18 @@ class JdbcTest {
 
         connection.createStatement().execute(createTestTable1Query)
 
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)",
+        )
 
         // start testing `readSqlTable` method
 

@@ -11,8 +11,12 @@ class RenameTests : ColumnsSelectionDslTests() {
 
     companion object {
         val simpleDf = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            4, 5, 6,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
         )
         val groupedDf = simpleDf.group { "a" and "b" }.into("group")
 
@@ -22,8 +26,12 @@ class RenameTests : ColumnsSelectionDslTests() {
     @Test
     fun `simple rename`() {
         val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
-            1, 2, 3,
-            4, 5, 6,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
         )
 
         simpleDf.rename { all() }.into { it.name + "_renamed" } shouldBe renamedDf
@@ -33,8 +41,12 @@ class RenameTests : ColumnsSelectionDslTests() {
     @Test
     fun `partial grouped rename`() {
         val renamedDf = dataFrameOf("a_renamed", "b", "c")(
-            1, 2, 3,
-            4, 5, 6,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
         ).group { "a_renamed" and "b" }.into("group_renamed")
 
         groupedDf
@@ -45,8 +57,12 @@ class RenameTests : ColumnsSelectionDslTests() {
     @Test
     fun `grouped rename`() {
         val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
-            1, 2, 3,
-            4, 5, 6,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
         ).group { "a_renamed" and "b_renamed" }.into("group_renamed")
 
         groupedDf
@@ -57,8 +73,12 @@ class RenameTests : ColumnsSelectionDslTests() {
     @Test
     fun `double grouped rename in 3 steps`() {
         val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
-            1, 2, 3,
-            4, 5, 6,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
         ).group { "a_renamed" and "b_renamed" }.into("group_renamed")
             .group { "group_renamed"["a_renamed"] }.into { "group_renamed"["aGroup_renamed"] }
 
@@ -152,12 +172,12 @@ class RenameToCamelCaseTests {
     companion object {
         val nestedDf = dataFrameOf("test_name")(dataFrameOf("another_name")(1))
         val nestedColumnGroup = dataFrameOf("test_name")(
-            dataFrameOf("another_name")(1).first()
+            dataFrameOf("another_name")(1).first(),
         )
         val doublyNestedColumnGroup = dataFrameOf("test_name")(
             dataFrameOf("another_name")(
-                dataFrameOf("third_name")(1).first()
-            ).first()
+                dataFrameOf("third_name")(1).first(),
+            ).first(),
         )
         val deeplyNestedDf = kotlin.run {
             val df = dataFrameOf("another_name")(1)
@@ -187,8 +207,8 @@ class RenameToCamelCaseTests {
     fun `doubly nested row`() {
         val doublyNestedColumnGroup = dataFrameOf("test_name")(
             dataFrameOf("another_name")(
-                dataFrameOf("third_name")(1).first()
-            ).first()
+                dataFrameOf("third_name")(1).first(),
+            ).first(),
         )
 
         val df = doublyNestedColumnGroup.renameToCamelCase()

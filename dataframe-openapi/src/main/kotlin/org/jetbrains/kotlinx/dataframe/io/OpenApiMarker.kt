@@ -22,16 +22,16 @@ internal sealed class OpenApiMarker private constructor(
     fields: List<GeneratedField>,
     superMarkers: List<Marker>,
     prependTopInterfaceName: Boolean = true,
-) : IsObject,
-    Marker(
-        name = if (prependTopInterfaceName) name.withTopInterfaceName(topInterfaceName) else name,
-        isOpen = false,
-        fields = fields,
-        superMarkers = superMarkers,
-        visibility = visibility,
-        typeParameters = emptyList(),
-        typeArguments = emptyList(),
-    ) {
+) : Marker(
+    name = if (prependTopInterfaceName) name.withTopInterfaceName(topInterfaceName) else name,
+    isOpen = false,
+    fields = fields,
+    superMarkers = superMarkers,
+    visibility = visibility,
+    typeParameters = emptyList(),
+    typeArguments = emptyList(),
+),
+    IsObject {
 
     abstract val additionalPropertyPaths: List<JsonPath>
     abstract fun withName(name: String, prependTopInterfaceName: Boolean = true): OpenApiMarker
@@ -72,32 +72,29 @@ internal sealed class OpenApiMarker private constructor(
 
         override val additionalPropertyPaths: List<JsonPath> = emptyList()
 
-        override fun toFieldType(): FieldType =
-            FieldType.ValueFieldType(
-                // nullable or not, an enum must contain null to be nullable
-                // https://github.com/OAI/OpenAPI-Specification/blob/main/proposals/2019-10-31-Clarify-Nullable.md#if-a-schema-specifies-nullable-true-and-enum-1-2-3-does-that-schema-allow-null-values-see-1900
-                // if not required, it can still be omitted, resulting in null in Kotlin
-                typeFqName = name + if (nullable) "?" else "",
-            )
+        override fun toFieldType(): FieldType = FieldType.ValueFieldType(
+            // nullable or not, an enum must contain null to be nullable
+            // https://github.com/OAI/OpenAPI-Specification/blob/main/proposals/2019-10-31-Clarify-Nullable.md#if-a-schema-specifies-nullable-true-and-enum-1-2-3-does-that-schema-allow-null-values-see-1900
+            // if not required, it can still be omitted, resulting in null in Kotlin
+            typeFqName = name + if (nullable) "?" else "",
+        )
 
-        override fun withName(name: String, prependTopInterfaceName: Boolean): Enum =
-            Enum(
-                nullable = nullable,
-                fields = fields,
-                name = name,
-                topInterfaceName = topInterfaceName,
-                visibility = visibility,
-                prependTopInterfaceName = prependTopInterfaceName,
-            )
+        override fun withName(name: String, prependTopInterfaceName: Boolean): Enum = Enum(
+            nullable = nullable,
+            fields = fields,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            visibility = visibility,
+            prependTopInterfaceName = prependTopInterfaceName,
+        )
 
-        override fun withVisibility(visibility: MarkerVisibility): Enum =
-            Enum(
-                nullable = nullable,
-                fields = fields,
-                name = name,
-                topInterfaceName = topInterfaceName,
-                visibility = visibility
-            )
+        override fun withVisibility(visibility: MarkerVisibility): Enum = Enum(
+            nullable = nullable,
+            fields = fields,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            visibility = visibility,
+        )
     }
 
     /**
@@ -130,33 +127,30 @@ internal sealed class OpenApiMarker private constructor(
         // Will be a DataFrame<*>
         override val isObject = true
 
-        override fun toFieldType(): FieldType =
-            FieldType.GroupFieldType(
-                markerName = name + if (nullable) "?" else "",
-            )
+        override fun toFieldType(): FieldType = FieldType.GroupFieldType(
+            markerName = name + if (nullable) "?" else "",
+        )
 
-        override fun withName(name: String, prependTopInterfaceName: Boolean): Interface =
-            Interface(
-                nullable = nullable,
-                fields = fields,
-                superMarkers = superMarkers.values.toList(),
-                name = name,
-                topInterfaceName = topInterfaceName,
-                additionalPropertyPaths = additionalPropertyPaths,
-                visibility = visibility,
-                prependTopInterfaceName = prependTopInterfaceName,
-            )
+        override fun withName(name: String, prependTopInterfaceName: Boolean): Interface = Interface(
+            nullable = nullable,
+            fields = fields,
+            superMarkers = superMarkers.values.toList(),
+            name = name,
+            topInterfaceName = topInterfaceName,
+            additionalPropertyPaths = additionalPropertyPaths,
+            visibility = visibility,
+            prependTopInterfaceName = prependTopInterfaceName,
+        )
 
-        override fun withVisibility(visibility: MarkerVisibility): Interface =
-            Interface(
-                nullable = nullable,
-                fields = fields,
-                superMarkers = superMarkers.values.toList(),
-                name = name,
-                topInterfaceName = topInterfaceName,
-                additionalPropertyPaths = additionalPropertyPaths,
-                visibility = visibility
-            )
+        override fun withVisibility(visibility: MarkerVisibility): Interface = Interface(
+            nullable = nullable,
+            fields = fields,
+            superMarkers = superMarkers.values.toList(),
+            name = name,
+            topInterfaceName = topInterfaceName,
+            additionalPropertyPaths = additionalPropertyPaths,
+            visibility = visibility,
+        )
     }
 
     /**
@@ -203,11 +197,10 @@ internal sealed class OpenApiMarker private constructor(
         // Will be a DataFrame<out AdditionalProperty>
         override val isObject = true
 
-        override fun toFieldType(): FieldType =
-            FieldType.FrameFieldType(
-                markerName = name + if (nullable) "?" else "",
-                nullable = false,
-            )
+        override fun toFieldType(): FieldType = FieldType.FrameFieldType(
+            markerName = name + if (nullable) "?" else "",
+            nullable = false,
+        )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): AdditionalPropertyInterface =
             AdditionalPropertyInterface(
@@ -227,7 +220,7 @@ internal sealed class OpenApiMarker private constructor(
                 name = name,
                 topInterfaceName = topInterfaceName,
                 additionalPropertyPaths = additionalPropertyPaths,
-                visibility = visibility
+                visibility = visibility,
             )
     }
 
@@ -264,38 +257,35 @@ internal sealed class OpenApiMarker private constructor(
                 visibility = MarkerVisibility.IMPLICIT_PUBLIC,
                 typeParameters = emptyList(),
                 typeArguments = emptyList(),
-            )
+            ),
         ),
         prependTopInterfaceName = prependTopInterfaceName,
     ) {
 
         override val isObject = false
 
-        override fun toFieldType(): FieldType =
-            FieldType.ValueFieldType(
-                typeFqName = name + if (nullable) "?" else "",
-            )
+        override fun toFieldType(): FieldType = FieldType.ValueFieldType(
+            typeFqName = name + if (nullable) "?" else "",
+        )
 
-        override fun withName(name: String, prependTopInterfaceName: Boolean): TypeAlias =
-            TypeAlias(
-                nullable = nullable,
-                name = name,
-                topInterfaceName = topInterfaceName,
-                superMarkerName = superMarkerName,
-                additionalPropertyPaths = additionalPropertyPaths,
-                visibility = visibility,
-                prependTopInterfaceName = prependTopInterfaceName,
-            )
+        override fun withName(name: String, prependTopInterfaceName: Boolean): TypeAlias = TypeAlias(
+            nullable = nullable,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            superMarkerName = superMarkerName,
+            additionalPropertyPaths = additionalPropertyPaths,
+            visibility = visibility,
+            prependTopInterfaceName = prependTopInterfaceName,
+        )
 
-        override fun withVisibility(visibility: MarkerVisibility): TypeAlias =
-            TypeAlias(
-                nullable = nullable,
-                name = name,
-                topInterfaceName = topInterfaceName,
-                superMarkerName = superMarkerName,
-                additionalPropertyPaths = additionalPropertyPaths,
-                visibility = visibility,
-            )
+        override fun withVisibility(visibility: MarkerVisibility): TypeAlias = TypeAlias(
+            nullable = nullable,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            superMarkerName = superMarkerName,
+            additionalPropertyPaths = additionalPropertyPaths,
+            visibility = visibility,
+        )
     }
 
     /**
@@ -328,28 +318,25 @@ internal sealed class OpenApiMarker private constructor(
 
         override val additionalPropertyPaths: List<JsonPath> = superMarker.additionalPropertyPaths
 
-        override fun toFieldType(): FieldType =
-            FieldType.GroupFieldType(
-                markerName = name + if (nullable) "?" else "",
-            )
+        override fun toFieldType(): FieldType = FieldType.GroupFieldType(
+            markerName = name + if (nullable) "?" else "",
+        )
 
-        override fun withName(name: String, prependTopInterfaceName: Boolean): MarkerAlias =
-            MarkerAlias(
-                superMarker = superMarker,
-                topInterfaceName = topInterfaceName,
-                nullable = nullable,
-                name = name,
-                visibility = visibility,
-                prependTopInterfaceName = prependTopInterfaceName,
-            )
+        override fun withName(name: String, prependTopInterfaceName: Boolean): MarkerAlias = MarkerAlias(
+            superMarker = superMarker,
+            topInterfaceName = topInterfaceName,
+            nullable = nullable,
+            name = name,
+            visibility = visibility,
+            prependTopInterfaceName = prependTopInterfaceName,
+        )
 
-        override fun withVisibility(visibility: MarkerVisibility): MarkerAlias =
-            MarkerAlias(
-                superMarker = superMarker,
-                topInterfaceName = topInterfaceName,
-                nullable = nullable,
-                name = name,
-                visibility = visibility,
-            )
+        override fun withVisibility(visibility: MarkerVisibility): MarkerAlias = MarkerAlias(
+            superMarker = superMarker,
+            topInterfaceName = topInterfaceName,
+            nullable = nullable,
+            name = name,
+            visibility = visibility,
+        )
     }
 }

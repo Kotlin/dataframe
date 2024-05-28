@@ -67,8 +67,11 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
             else -> col.toList()
         }
 
-        if (forceYieldLists) yield(path, values, getListType(col.type), col.default)
-        else yieldOneOrMany(path, values, col.type, col.default)
+        if (forceYieldLists) {
+            yield(path, values, getListType(col.type), col.default)
+        } else {
+            yieldOneOrMany(path, values, col.type, col.default)
+        }
     }
 }
 
@@ -90,8 +93,11 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
 internal fun <T, V> AggregateInternalDsl<T>.withExpr(type: KType, path: ColumnPath, expression: RowExpression<T, V>) {
     val values = df.rows().map {
         val value = expression(it, it)
-        if (value is AnyColumnReference) it[value]
-        else value
+        if (value is AnyColumnReference) {
+            it[value]
+        } else {
+            value
+        }
     }
     yieldOneOrMany(path, values, type)
 }

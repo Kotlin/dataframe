@@ -18,8 +18,11 @@ class ExprTests : ColumnsSelectionDslTests() {
 
         df.get {
             expr("fibonacci") {
-                if (index() < 2) 1
-                else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+                if (index() < 2) {
+                    1
+                } else {
+                    prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+                }
             }
         }.toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13)
 

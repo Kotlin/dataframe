@@ -68,7 +68,7 @@ internal object KotlinCompilationUtil {
             kotlinScriptRuntimeJar = compilation.kotlinScriptRuntimeJar
 
             inheritedClasspath = getClasspathFromClassloader(
-                KotlinCompilationUtil::class.java.classLoader
+                KotlinCompilationUtil::class.java.classLoader,
             )
         }
     }
@@ -116,9 +116,7 @@ internal object KotlinCompilationUtil {
  *
  * @see getSystemClasspaths
  */
-fun getSystemClasspathFiles(): Set<File> {
-    return getSystemClasspaths().map { File(it) }.toSet()
-}
+fun getSystemClasspathFiles(): Set<File> = getSystemClasspaths().map { File(it) }.toSet()
 
 /**
  * Returns the file paths from the system class loader

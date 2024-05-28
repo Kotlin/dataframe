@@ -199,7 +199,7 @@ class DataFrameTests : BaseTest() {
             typed.name named "bla",
             typed.age named "",
             typed.city.rename("qq"),
-            typed.weight.named("asda")
+            typed.weight.named("asda"),
         ) shouldBe df
 
         val c1 = typed.name.toList().toValueColumn()
@@ -340,8 +340,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `incorrect column nullability`() {
-        val col =
-            column<Int>().named("weight") // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
+        // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
+        val col = column<Int>().named("weight")
 
         shouldThrow<NullPointerException> {
             println(df[2][col])
@@ -986,7 +986,7 @@ class DataFrameTests : BaseTest() {
             "Bill",
             135,
             "Charlie",
-            160
+            160,
         ).cast<Unit>()
 
         val res = typed.concat(other)
@@ -1403,7 +1403,7 @@ class DataFrameTests : BaseTest() {
                 this.name,
                 this["Int"]["age"],
                 this["String"]["city"],
-                this["Int"]["weight"]
+                this["Int"]["weight"],
             ).toDataFrame().cast<Person>()
             res shouldBe typed
         }
@@ -1420,7 +1420,7 @@ class DataFrameTests : BaseTest() {
             grouped["info"]["name"],
             grouped["info"]["age"],
             grouped["info"]["city"],
-            grouped.weight
+            grouped.weight,
         ).toDataFrame().cast<Person>()
         res shouldBe typed
     }
@@ -1666,7 +1666,7 @@ class DataFrameTests : BaseTest() {
             2, null, 2,
             3, 1, 1,
             3, 2, 2,
-            4, null, 1
+            4, null, 1,
         )
         res shouldBe expected
     }
@@ -1691,7 +1691,7 @@ class DataFrameTests : BaseTest() {
             2, 1, 1, "1",
             2, null, 2, "2",
             3, 1, 1, "1",
-            3, 2, 2, "2"
+            3, 2, 2, "2",
         )
         res shouldBe expected
     }
@@ -1762,7 +1762,7 @@ class DataFrameTests : BaseTest() {
             "Philip",
             25,
             "Chelyabinsk",
-            36
+            36,
         )
         res.nrow shouldBe typed.nrow + 2
     }
@@ -1771,8 +1771,10 @@ class DataFrameTests : BaseTest() {
     fun `append wrong number of arguments`() {
         shouldThrow<IllegalStateException> {
             dataFrameOf("name", "age")(
-                "Alice", 15,
-                "Bob", 20
+                "Alice",
+                15,
+                "Bob",
+                20,
             )
                 .append("John")
         }
@@ -1837,8 +1839,9 @@ class DataFrameTests : BaseTest() {
         counter shouldBe df.nrow
 
         var ageSum = 0
-        for (a in typed.age)
+        for (a in typed.age) {
             ageSum += a
+        }
 
         ageSum shouldBe typed.age.sum()
     }
@@ -2180,12 +2183,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun convertTo() {
-        data class Target(
-            val name: String,
-            val age: Int,
-            val city: String?,
-            val weight: Int?,
-        )
+        data class Target(val name: String, val age: Int, val city: String?, val weight: Int?)
 
         df.convertTo<Target>() shouldBe df
         df.convert { age }.toStr().convertTo<Target>() shouldBe df
@@ -2212,7 +2210,7 @@ class DataFrameTests : BaseTest() {
             df.convert { age }.toStr().convertToImpl(
                 typeOf<Target>(),
                 allowConversion = false,
-                ExcessiveColumns.Remove
+                ExcessiveColumns.Remove,
             )
         }
 
@@ -2386,13 +2384,9 @@ class DataFrameTests : BaseTest() {
         typed.select { allExcept { age and weight } } shouldBe typed.select { name and city }
 
         typed.group { age and weight and city }.into("info")
-
             .alsoDebug()
-
             .select { allExcept { "info"["age"] } }
-
             .alsoDebug()
-
             .let {
                 it.name shouldBe typed.name
                 it["info"]["weight"] shouldBe typed.weight

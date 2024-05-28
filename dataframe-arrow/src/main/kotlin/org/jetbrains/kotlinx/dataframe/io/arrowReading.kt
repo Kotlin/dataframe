@@ -29,15 +29,14 @@ public class ArrowFeather : SupportedDataFrameFormat {
 
     override val testOrder: Int = 50000
 
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        return DefaultReadArrowMethod(pathRepresentation)
-    }
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
+        DefaultReadArrowMethod(pathRepresentation)
 }
 
-private const val readArrowFeather = "readArrowFeather"
+private const val READ_ARROW_FEATHER = "readArrowFeather"
 
 private class DefaultReadArrowMethod(path: String?) :
-    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readArrowFeather)
+    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_ARROW_FEATHER)
 
 internal object Allocator {
     val ROOT by lazy {
@@ -71,8 +70,7 @@ public fun DataFrame.Companion.readArrowFeather(
 public fun DataFrame.Companion.readArrowIPC(
     file: File,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    Files.newByteChannel(file.toPath()).use { readArrowIPC(it, nullability = nullability) }
+): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it, nullability = nullability) }
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [byteArray]
@@ -80,8 +78,7 @@ public fun DataFrame.Companion.readArrowIPC(
 public fun DataFrame.Companion.readArrowIPC(
     byteArray: ByteArray,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it, nullability = nullability) }
+): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it, nullability = nullability) }
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [stream]
@@ -89,8 +86,7 @@ public fun DataFrame.Companion.readArrowIPC(
 public fun DataFrame.Companion.readArrowIPC(
     stream: InputStream,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    Channels.newChannel(stream).use { readArrowIPC(it, nullability = nullability) }
+): AnyFrame = Channels.newChannel(stream).use { readArrowIPC(it, nullability = nullability) }
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [url]
@@ -98,14 +94,15 @@ public fun DataFrame.Companion.readArrowIPC(
 public fun DataFrame.Companion.readArrowIPC(
     url: URL,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    when {
-        isFile(url) -> readArrowIPC(urlAsFile(url), nullability)
-        isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it, nullability) }
-        else -> {
-            throw IllegalArgumentException("Invalid protocol for url $url")
-        }
+): AnyFrame = when {
+    isFile(url) -> readArrowIPC(urlAsFile(url), nullability)
+
+    isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it, nullability) }
+
+    else -> {
+        throw IllegalArgumentException("Invalid protocol for url $url")
     }
+}
 
 public fun DataFrame.Companion.readArrowIPC(
     path: String,
@@ -124,8 +121,7 @@ public fun DataFrame.Companion.readArrowIPC(
 public fun DataFrame.Companion.readArrowFeather(
     file: File,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    Files.newByteChannel(file.toPath()).use { readArrowFeather(it, nullability = nullability) }
+): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it, nullability = nullability) }
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [byteArray]
@@ -133,8 +129,7 @@ public fun DataFrame.Companion.readArrowFeather(
 public fun DataFrame.Companion.readArrowFeather(
     byteArray: ByteArray,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it, nullability = nullability) }
+): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it, nullability = nullability) }
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [stream]
@@ -142,8 +137,7 @@ public fun DataFrame.Companion.readArrowFeather(
 public fun DataFrame.Companion.readArrowFeather(
     stream: InputStream,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    readArrowFeather(stream.readBytes(), nullability)
+): AnyFrame = readArrowFeather(stream.readBytes(), nullability)
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [url]
@@ -151,14 +145,15 @@ public fun DataFrame.Companion.readArrowFeather(
 public fun DataFrame.Companion.readArrowFeather(
     url: URL,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    when {
-        isFile(url) -> readArrowFeather(urlAsFile(url), nullability)
-        isProtocolSupported(url) -> readArrowFeather(url.readBytes(), nullability)
-        else -> {
-            throw IllegalArgumentException("Invalid protocol for url $url")
-        }
+): AnyFrame = when {
+    isFile(url) -> readArrowFeather(urlAsFile(url), nullability)
+
+    isProtocolSupported(url) -> readArrowFeather(url.readBytes(), nullability)
+
+    else -> {
+        throw IllegalArgumentException("Invalid protocol for url $url")
     }
+}
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [path]
@@ -177,12 +172,11 @@ public fun DataFrame.Companion.readArrowFeather(
  */
 public fun DataFrame.Companion.readArrow(
     reader: ArrowReader,
-    nullability: NullabilityOptions = NullabilityOptions.Infer
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame = readArrowImpl(reader, nullability)
 
 /**
  * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [ArrowReader]
  */
-public fun ArrowReader.toDataFrame(
-    nullability: NullabilityOptions = NullabilityOptions.Infer
-): AnyFrame = DataFrame.Companion.readArrowImpl(this, nullability)
+public fun ArrowReader.toDataFrame(nullability: NullabilityOptions = NullabilityOptions.Infer): AnyFrame =
+    DataFrame.Companion.readArrowImpl(this, nullability)

@@ -73,21 +73,18 @@ public interface DataColumn<out T> : BaseColumn<T> {
             values: List<T>,
             infer: Infer = Infer.None,
         ): ValueColumn<T> = createValueColumn(
-            name, values,
+            name,
+            values,
             getValuesType(
                 values,
                 typeOf<T>(),
-                infer
-            )
+                infer,
+            ),
         )
 
         public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(name, df)
 
-        public fun <T> createFrameColumn(
-            name: String,
-            df: DataFrame<T>,
-            startIndices: Iterable<Int>,
-        ): FrameColumn<T> =
+        public fun <T> createFrameColumn(name: String, df: DataFrame<T>, startIndices: Iterable<Int>): FrameColumn<T> =
             FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence()).toList(), lazy { df.schema() })
 
         public fun <T> createFrameColumn(
@@ -102,13 +99,12 @@ public interface DataColumn<out T> : BaseColumn<T> {
             nullable: Boolean? = null,
         ): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
 
-        public fun <T> create(name: String, values: List<T>, type: KType, infer: Infer = Infer.None): DataColumn<T> {
-            return when (type.toColumnKind()) {
+        public fun <T> create(name: String, values: List<T>, type: KType, infer: Infer = Infer.None): DataColumn<T> =
+            when (type.toColumnKind()) {
                 ColumnKind.Value -> createValueColumn(name, values, type, infer)
                 ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().cast()
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
-        }
 
         public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
             create(name, values, typeOf<T>(), infer)

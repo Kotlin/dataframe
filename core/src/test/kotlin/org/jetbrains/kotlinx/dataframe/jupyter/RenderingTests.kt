@@ -31,7 +31,7 @@ class RenderingTests : JupyterReplTestCase() {
                 "Charlie", 160
             )
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html shouldContain "Bill"
 
@@ -41,7 +41,7 @@ class RenderingTests : JupyterReplTestCase() {
             USE {
                 render<Int> { (it * 2).toString() }
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         useRes shouldBe Unit
 
@@ -58,7 +58,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class Person(val age: Int, val name: String)
             val df = (1..70).map { Person(it, "A".repeat(it)) }.toDataFrame()
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html1 shouldContain "showing only top 20 of 70 rows"
 
@@ -67,7 +67,7 @@ class RenderingTests : JupyterReplTestCase() {
             """
             dataFrameConfig.display.rowsLimit = 50
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html2 shouldContain "showing only top 50 of 70 rows"
     }
@@ -93,7 +93,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class Row(val id: Int)
             val df = (1..100).map { Row(it) }.toDataFrame()
             KotlinNotebookPluginUtils.getRowsSubsetForRendering(df, 20 , 50)
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 30, 1)
@@ -133,7 +133,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class CustomRow(val id: Int, val category: String)
             val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
             KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(false))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -158,7 +158,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class CustomRow(val id: Int, val category: String)
             val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
             KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(true))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -176,7 +176,7 @@ class RenderingTests : JupyterReplTestCase() {
                 KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("category"), listOf("id")), listOf(true, false)),
                 0, 100
             )
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -189,8 +189,11 @@ class RenderingTests : JupyterReplTestCase() {
     private fun assertSortedByCategory(rows: JsonArray<JsonObject>) {
         rows.forEachIndexed { i, row ->
             val currentCategory = row.string("category")
-            if (i < 50) currentCategory shouldBe "odd"
-            else currentCategory shouldBe "even"
+            if (i < 50) {
+                currentCategory shouldBe "odd"
+            } else {
+                currentCategory shouldBe "even"
+            }
         }
     }
 
@@ -219,7 +222,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class Row(val id: Int, val group: Int)
             val df = (1..20).map { Row(it, if (it <= 10) 1 else 2) }.toDataFrame()
             KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group"))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 2, 2)
@@ -238,7 +241,7 @@ class RenderingTests : JupyterReplTestCase() {
                 data class Row(val id: Int, val group: Int)
                 val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
                 KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group").first())
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             assertDataFrameDimensions(json, 2, 2)

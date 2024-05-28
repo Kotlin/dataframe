@@ -98,7 +98,7 @@ class CreateDataFrameTests {
 
         val data = listOf(
             B("q", d1, d1[0], emptyList(), A(7)),
-            B("w", d2, d2[1], listOf(A(6)), A(8))
+            B("w", d2, d2[1], listOf(A(6)), A(8)),
         )
 
         val df = data.toDataFrame()
@@ -114,7 +114,10 @@ class CreateDataFrameTests {
         df.list[1].v[0] shouldBe 6
         df.a[0].v shouldBe 7
 
-        val df2 = data.toDataFrame { preserve(B::row); properties { preserve(DataFrame::class) } }
+        val df2 = data.toDataFrame {
+            preserve(B::row)
+            properties { preserve(DataFrame::class) }
+        }
         df2.frame.kind shouldBe ColumnKind.Value
         df2.frame.type shouldBe typeOf<DataFrame<A>>()
         df2["row"].kind shouldBe ColumnKind.Value
@@ -235,7 +238,9 @@ class CreateDataFrameTests {
     @Ignore
     @Test
     fun generateBuiltInsOverrides() {
-        listOf("Byte", "Short", "Int", "Long", "String", "Char", "Boolean", "UByte", "UShort", "UInt", "ULong").forEach { type ->
+        listOf("Byte", "Short", "Int", "Long", "String", "Char", "Boolean", "UByte", "UShort", "UInt", "ULong").forEach {
+                type,
+            ->
             val typeParameter = type.first()
             val func = """
             @JvmName("toDataFrame$type")
@@ -252,10 +257,7 @@ class CreateDataFrameTests {
     @JvmInline
     internal value class Speed(val kmh: Number?)
 
-    internal class PathSegment(
-        val id: String,
-        val speedLimit: Speed? = null,
-    )
+    internal class PathSegment(val id: String, val speedLimit: Speed? = null)
 
     @Test
     fun valueClassNullableField() {
@@ -276,10 +278,7 @@ class CreateDataFrameTests {
     @JvmInline
     internal value class Speed1(val kmh: Number)
 
-    internal class PathSegment1(
-        val id: String,
-        val speedLimit: Speed1? = null,
-    )
+    internal class PathSegment1(val id: String, val speedLimit: Speed1? = null)
 
     @Test
     fun valueClass() {
@@ -350,9 +349,7 @@ class CreateDataFrameTests {
             return result
         }
 
-        override fun toString(): String {
-            return "FakePojo(a=$a, b='$b')"
-        }
+        override fun toString(): String = "FakePojo(a=$a, b='$b')"
     }
 
     @Test
@@ -388,7 +385,7 @@ class CreateDataFrameTests {
     @Test
     fun `arrays in to DF`() {
         val df = listOf(
-            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null))
+            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null)),
         ).toDataFrame(maxDepth = Int.MAX_VALUE)
 
         df.schema() shouldBe dataFrameOf(

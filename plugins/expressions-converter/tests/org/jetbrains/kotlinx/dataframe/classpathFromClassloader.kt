@@ -66,27 +66,40 @@ fun classpathFromClassloader(currentClassLoader: ClassLoader, unpackJarCollectio
             Runtime.getRuntime().addShutdownHook(
                 Thread {
                     deleteRecursively()
-                }
+                },
             )
         }
     }
     return allRelatedClassLoaders(currentClassLoader).flatMap { classLoader ->
         var classPath = emptySequence<File>()
-        if (unpackJarCollections && JAR_COLLECTIONS_KEY_PATHS.any { classLoader.getResource(it)?.file?.isNotEmpty() == true }) {
+        if (unpackJarCollections &&
+            JAR_COLLECTIONS_KEY_PATHS.any {
+                classLoader.getResource(
+                    it,
+                )?.file?.isNotEmpty() == true
+            }
+        ) {
             // if cache dir is specified, find all jar collections (spring boot fat jars and WARs so far, and unpack it accordingly
-            val jarCollections = JAR_COLLECTIONS_KEY_PATHS.asSequence().flatMap { currentClassLoader.getResources(it).asSequence() }
+            val jarCollections = JAR_COLLECTIONS_KEY_PATHS.asSequence().flatMap {
+                currentClassLoader.getResources(
+                    it,
+                ).asSequence()
+            }
                 .mapNotNull {
                     it.toContainingJarOrNull()?.takeIf { file ->
                         // additionally mark/check processed collection jars since unpacking is expensive
                         file.extension in validJarCollectionFilesExtensions && processedJars.add(file)
                     }
                 }
-            classPath += jarCollections.flatMap { it.unpackJarCollection(unpackJarCollectionsDir) }.filter { it.isValidClasspathFile() }
+            classPath += jarCollections.flatMap {
+                it.unpackJarCollection(unpackJarCollectionsDir)
+            }.filter { it.isValidClasspathFile() }
         }
         classPath += when (classLoader) {
             is URLClassLoader -> {
                 classLoader.urLs.asSequence().mapNotNull { url -> url.toValidClasspathFileOrNull() }
             }
+
             else -> {
                 classLoader.classPathFromGetUrlsMethodOrNull()
                     ?: classLoader.classPathFromTypicalResourceUrls()
@@ -103,16 +116,14 @@ internal fun URL.toValidClasspathFileOrNull(): File? =
 internal fun File.isValidClasspathFile(): Boolean =
     isDirectory || (isFile && extension in validClasspathFilesExtensions)
 
-private fun ClassLoader.classPathFromGetUrlsMethodOrNull(): Sequence<File>? {
-    return try {
-        // e.g. for IDEA platform UrlClassLoader
-        val getUrls = this::class.java.getMethod("getUrls")
-        getUrls.isAccessible = true
-        val result = getUrls.invoke(this) as? List<Any?>
-        result?.asSequence()?.filterIsInstance<URL>()?.mapNotNull { it.toValidClasspathFileOrNull() }
-    } catch (e: Throwable) {
-        null
-    }
+private fun ClassLoader.classPathFromGetUrlsMethodOrNull(): Sequence<File>? = try {
+    // e.g. for IDEA platform UrlClassLoader
+    val getUrls = this::class.java.getMethod("getUrls")
+    getUrls.isAccessible = true
+    val result = getUrls.invoke(this) as? List<Any?>
+    result?.asSequence()?.filterIsInstance<URL>()?.mapNotNull { it.toValidClasspathFileOrNull() }
+} catch (e: Throwable) {
+    null
 }
 
 internal class ClassLoaderResourceRootFIlePathCalculator(private val keyResourcePath: String) {
@@ -120,7 +131,15 @@ internal class ClassLoaderResourceRootFIlePathCalculator(private val keyResource
 
     operator fun invoke(resourceFile: File): File {
         if (keyResourcePathDepth < 0) {
-            keyResourcePathDepth = if (keyResourcePath.isBlank()) 0 else (keyResourcePath.trim('/').count { it == '/' } + 1)
+            keyResourcePathDepth = if (keyResourcePath.isBlank()) {
+                0
+            } else {
+                (
+                    keyResourcePath.trim(
+                        '/',
+                    ).count { it == '/' } + 1
+                    )
+            }
         }
         var root = resourceFile
         for (i in 0 until keyResourcePathDepth) {
@@ -189,29 +208,29 @@ private fun File.unpackJarCollection(rootTempDir: File): Sequence<File> {
     }
 }
 
-fun classpathFromClasspathProperty(): List<File>? =
-    System.getProperty("java.class.path")
-        ?.split(String.format("\\%s", File.pathSeparatorChar).toRegex())
-        ?.dropLastWhile(String::isEmpty)
-        ?.map(::File)
+fun classpathFromClasspathProperty(): List<File>? = System.getProperty("java.class.path")
+    ?.split(String.format("\\%s", File.pathSeparatorChar).toRegex())
+    ?.dropLastWhile(String::isEmpty)
+    ?.map(::File)
 
 fun classpathFromClass(classLoader: ClassLoader, klass: KClass<out Any>): List<File>? =
     classpathFromFQN(classLoader, klass.qualifiedName!!)
 
-fun classpathFromClass(klass: KClass<out Any>): List<File>? =
-    classpathFromClass(klass.java.classLoader, klass)
+fun classpathFromClass(klass: KClass<out Any>): List<File>? = classpathFromClass(klass.java.classLoader, klass)
 
 inline fun <reified T : Any> classpathFromClass(): List<File>? = classpathFromClass(T::class)
 
 fun classpathFromFQN(classLoader: ClassLoader, fqn: String): List<File>? {
     val clp = "${fqn.replace('.', '/')}.class"
-    return classLoader.rawClassPathFromKeyResourcePath(clp).filter { it.isValidClasspathFile() }.toList().takeIf { it.isNotEmpty() }
+    return classLoader.rawClassPathFromKeyResourcePath(clp).filter {
+        it.isValidClasspathFile()
+    }.toList().takeIf { it.isNotEmpty() }
 }
 
-fun File.matchMaybeVersionedFile(baseName: String) =
-    name == baseName ||
-        name == baseName.removeSuffix(".jar") || // for classes dirs
-        Regex(Regex.escape(baseName.removeSuffix(".jar")) + "(-\\d.*)?\\.jar").matches(name)
+fun File.matchMaybeVersionedFile(baseName: String) = name == baseName ||
+    name == baseName.removeSuffix(".jar") ||
+    // for classes dirs
+    Regex(Regex.escape(baseName.removeSuffix(".jar")) + "(-\\d.*)?\\.jar").matches(name)
 
 fun File.hasParentNamed(baseName: String): Boolean =
     nameWithoutExtension == baseName || parentFile?.hasParentNamed(baseName) ?: false
@@ -219,7 +238,10 @@ fun File.hasParentNamed(baseName: String): Boolean =
 private const val KOTLIN_COMPILER_EMBEDDABLE_JAR = "$KOTLIN_COMPILER_NAME-embeddable.jar"
 
 // Iterating over classloaders tree in a regular, parent-first order
-private fun allRelatedClassLoaders(clsLoader: ClassLoader, visited: MutableSet<ClassLoader> = HashSet()): Sequence<ClassLoader> {
+private fun allRelatedClassLoaders(
+    clsLoader: ClassLoader,
+    visited: MutableSet<ClassLoader> = HashSet(),
+): Sequence<ClassLoader> {
     if (!visited.add(clsLoader)) return emptySequence()
 
     val singleParent = clsLoader.parent
@@ -237,16 +259,14 @@ private fun allRelatedClassLoaders(clsLoader: ClassLoader, visited: MutableSet<C
     }
 }
 
-private fun getParentClassLoaders(clsLoader: ClassLoader): Array<ClassLoader> {
-    return try {
-        getParentsForNewClassLoader(clsLoader)
-    } catch (exception: NoSuchMethodException) {
-        try {
-            getParentsForOldClassLoader(clsLoader)
-        } catch (exception: NoSuchFieldException) {
-            // Possibly idea sources and kotlin compiler had diverged
-            emptyArray()
-        }
+private fun getParentClassLoaders(clsLoader: ClassLoader): Array<ClassLoader> = try {
+    getParentsForNewClassLoader(clsLoader)
+} catch (exception: NoSuchMethodException) {
+    try {
+        getParentsForOldClassLoader(clsLoader)
+    } catch (exception: NoSuchFieldException) {
+        // Possibly idea sources and kotlin compiler had diverged
+        emptyArray()
     }
 }
 
@@ -270,10 +290,9 @@ private fun getParentsForNewClassLoader(clsLoader: ClassLoader): Array<ClassLoad
     return method.invoke(clsLoader) as Array<ClassLoader>
 }
 
-internal fun List<File>.takeIfContainsAll(vararg keyNames: String): List<File>? =
-    takeIf { classpath ->
-        keyNames.all { key -> classpath.any { it.matchMaybeVersionedFile(key) } }
-    }
+internal fun List<File>.takeIfContainsAll(vararg keyNames: String): List<File>? = takeIf { classpath ->
+    keyNames.all { key -> classpath.any { it.matchMaybeVersionedFile(key) } }
+}
 
 internal fun List<File>.filterIfContainsAll(vararg keyNames: String): List<File>? {
     val foundKeys = mutableSetOf<String>()
@@ -290,16 +309,15 @@ internal fun List<File>.filterIfContainsAll(vararg keyNames: String): List<File>
     return res.takeIf { foundKeys.containsAll(keyNames.asList()) }
 }
 
-internal fun List<File>.takeIfContainsAny(vararg keyNames: String): List<File>? =
-    takeIf { classpath ->
-        keyNames.any { key -> classpath.any { it.matchMaybeVersionedFile(key) } }
-    }
+internal fun List<File>.takeIfContainsAny(vararg keyNames: String): List<File>? = takeIf { classpath ->
+    keyNames.any { key -> classpath.any { it.matchMaybeVersionedFile(key) } }
+}
 
 fun scriptCompilationClasspathFromContextOrNull(
     vararg keyNames: String,
     classLoader: ClassLoader = Thread.currentThread().contextClassLoader,
     wholeClasspath: Boolean = false,
-    unpackJarCollections: Boolean = false
+    unpackJarCollections: Boolean = false,
 ): List<File>? {
     fun List<File>.takeAndFilter() = when {
         isEmpty() -> null
@@ -318,15 +336,17 @@ fun scriptCompilationClasspathFromContext(
     vararg keyNames: String,
     classLoader: ClassLoader = Thread.currentThread().contextClassLoader,
     wholeClasspath: Boolean = false,
-    unpackJarCollections: Boolean = false
-): List<File> =
-    scriptCompilationClasspathFromContextOrNull(
-        *keyNames,
-        classLoader = classLoader,
-        wholeClasspath = wholeClasspath,
-        unpackJarCollections = unpackJarCollections
+    unpackJarCollections: Boolean = false,
+): List<File> = scriptCompilationClasspathFromContextOrNull(
+    *keyNames,
+    classLoader = classLoader,
+    wholeClasspath = wholeClasspath,
+    unpackJarCollections = unpackJarCollections,
+)
+    ?: throw ClasspathExtractionException(
+        "Unable to get script compilation classpath from context, please specify explicit classpath " +
+            "via \"$KOTLIN_SCRIPT_CLASSPATH_PROPERTY\" property",
     )
-        ?: throw ClasspathExtractionException("Unable to get script compilation classpath from context, please specify explicit classpath via \"$KOTLIN_SCRIPT_CLASSPATH_PROPERTY\" property")
 
 object KotlinJars {
 
@@ -346,42 +366,53 @@ object KotlinJars {
     private fun findCompilerClasspath(withScripting: Boolean): List<File> {
         val kotlinCompilerJars = listOf(
             KOTLIN_COMPILER_JAR,
-            KOTLIN_COMPILER_EMBEDDABLE_JAR
+            KOTLIN_COMPILER_EMBEDDABLE_JAR,
         )
         val kotlinLibsJars = listOf(
             KOTLIN_JAVA_STDLIB_JAR,
             KOTLIN_JAVA_REFLECT_JAR,
             KOTLIN_JAVA_SCRIPT_RUNTIME_JAR,
-            TROVE4J_JAR
+            TROVE4J_JAR,
         )
-        val kotlinScriptingJars = if (withScripting) listOf(
-            KOTLIN_SCRIPTING_COMPILER_JAR,
-            KOTLIN_SCRIPTING_COMPILER_EMBEDDABLE_JAR,
-            KOTLIN_SCRIPTING_COMPILER_IMPL_JAR,
-            KOTLIN_SCRIPTING_COMPILER_IMPL_EMBEDDABLE_JAR,
-            KOTLIN_SCRIPTING_COMMON_JAR,
-            KOTLIN_SCRIPTING_JVM_JAR
-        ) else emptyList()
+        val kotlinScriptingJars = if (withScripting) {
+            listOf(
+                KOTLIN_SCRIPTING_COMPILER_JAR,
+                KOTLIN_SCRIPTING_COMPILER_EMBEDDABLE_JAR,
+                KOTLIN_SCRIPTING_COMPILER_IMPL_JAR,
+                KOTLIN_SCRIPTING_COMPILER_IMPL_EMBEDDABLE_JAR,
+                KOTLIN_SCRIPTING_COMMON_JAR,
+                KOTLIN_SCRIPTING_JVM_JAR,
+            )
+        } else {
+            emptyList()
+        }
 
         val kotlinBaseJars = kotlinCompilerJars + kotlinLibsJars + kotlinScriptingJars
 
         val classpath = explicitCompilerClasspath
             // search classpath from context classloader and `java.class.path` property
             ?: (
-                classpathFromFQN(Thread.currentThread().contextClassLoader, "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler")
+                classpathFromFQN(
+                    Thread.currentThread().contextClassLoader,
+                    "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+                )
                     ?: classpathFromClassloader(Thread.currentThread().contextClassLoader)?.takeIf { it.isNotEmpty() }
                     ?: classpathFromClasspathProperty()
                 )?.filter { f -> kotlinBaseJars.any { f.matchMaybeVersionedFile(it) } }?.takeIf { it.isNotEmpty() }
         // if autodetected, additionally check for presence of the compiler jars
-        if (classpath == null || (
-            explicitCompilerClasspath == null && classpath.none { f ->
-                kotlinCompilerJars.any {
-                    f.matchMaybeVersionedFile(it)
-                }
-            }
-            )
+        if (classpath == null ||
+            (
+                explicitCompilerClasspath == null &&
+                    classpath.none { f ->
+                        kotlinCompilerJars.any {
+                            f.matchMaybeVersionedFile(it)
+                        }
+                    }
+                )
         ) {
-            throw FileNotFoundException("Cannot find kotlin compiler jar, set kotlin.compiler.classpath property to proper location")
+            throw FileNotFoundException(
+                "Cannot find kotlin compiler jar, set kotlin.compiler.classpath property to proper location",
+            )
         }
         return classpath
     }
@@ -391,16 +422,24 @@ object KotlinJars {
             ?: run {
                 val requestedClassloader = classLoader ?: Thread.currentThread().contextClassLoader
                 val byName =
-                    if (requestedClassloader == markerClass.java.classLoader) null
-                    else tryGetResourcePathForClassByName(markerClass.java.name, requestedClassloader)
+                    if (requestedClassloader == markerClass.java.classLoader) {
+                        null
+                    } else {
+                        tryGetResourcePathForClassByName(markerClass.java.name, requestedClassloader)
+                    }
                 byName ?: tryGetResourcePathForClass(markerClass.java)
             }?.takeIf(File::exists)
 
-    fun getLib(propertyName: String, jarName: String, markerClassName: String, classLoader: ClassLoader? = null): File? =
-        getExplicitLib(propertyName, jarName)
-            ?: tryGetResourcePathForClassByName(
-                markerClassName, classLoader ?: Thread.currentThread().contextClassLoader
-            )?.takeIf(File::exists)
+    fun getLib(
+        propertyName: String,
+        jarName: String,
+        markerClassName: String,
+        classLoader: ClassLoader? = null,
+    ): File? = getExplicitLib(propertyName, jarName)
+        ?: tryGetResourcePathForClassByName(
+            markerClassName,
+            classLoader ?: Thread.currentThread().contextClassLoader,
+        )?.takeIf(File::exists)
 
     private fun getExplicitLib(propertyName: String, jarName: String) =
         System.getProperty(propertyName)?.let(::File)?.takeIf(File::exists)
@@ -411,20 +450,22 @@ object KotlinJars {
             ?: getLib(
                 KOTLIN_RUNTIME_JAR_PROPERTY,
                 KOTLIN_JAVA_STDLIB_JAR,
-                JvmStatic::class
+                JvmStatic::class,
             )
     }
 
     val stdlib: File by lazy {
         stdlibOrNull
-            ?: throw Exception("Unable to find kotlin stdlib, please specify it explicitly via \"$KOTLIN_STDLIB_JAR_PROPERTY\" property")
+            ?: throw Exception(
+                "Unable to find kotlin stdlib, please specify it explicitly via \"$KOTLIN_STDLIB_JAR_PROPERTY\" property",
+            )
     }
 
     val reflectOrNull: File? by lazy {
         getLib(
             KOTLIN_REFLECT_JAR_PROPERTY,
             KOTLIN_JAVA_REFLECT_JAR,
-            "kotlin.reflect.full.KClasses" // using a class that is a part of the kotlin-reflect.jar
+            "kotlin.reflect.full.KClasses", // using a class that is a part of the kotlin-reflect.jar
         )
     }
 }

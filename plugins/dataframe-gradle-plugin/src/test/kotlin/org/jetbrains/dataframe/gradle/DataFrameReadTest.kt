@@ -108,7 +108,7 @@ class DataFrameReadTest {
                         name VARCHAR(50),
                         age INT
                     )
-                    """.trimIndent()
+                    """.trimIndent(),
                 )
 
                 // Create table Sale
@@ -119,7 +119,7 @@ class DataFrameReadTest {
                         customerId INT,
                         amount DECIMAL(10, 2)
                     )
-                    """.trimIndent()
+                    """.trimIndent(),
                 )
 
                 // add data to the Customer table

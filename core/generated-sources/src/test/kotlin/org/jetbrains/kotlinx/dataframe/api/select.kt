@@ -27,13 +27,13 @@ class SelectTests : ColumnsSelectionDslTests() {
             df.select { colGroup("name").select { colsOf<String>() } },
             df.select { colGroup<Name>("name").select { colsOf<String>() } },
             df.select { (colGroup<Name>("name")) { colsOf<String>() } },
-            df.select { colGroup<Name>("name")() { colsOf<String>() } },
+            df.select { colGroup<Name>("name") { colsOf<String>() } },
             df.select { "name".select { "firstName" and "lastName" } },
             df.select { "name" { "firstName" and "lastName" } },
             df.select { pathOf("name").select { "firstName" and "lastName" } },
-            df.select { pathOf("name")() { "firstName" and "lastName" } },
+            df.select { pathOf("name") { "firstName" and "lastName" } },
             df.select { it["name"].asColumnGroup().select { colsOf<String>() } },
-            df.select { it["name"].asColumnGroup()() { colsOf<String>() } },
+            df.select { it["name"].asColumnGroup { colsOf<String>() } },
             df.select { name { colsOf<String>() } },
             df.select { (it["name"].asColumnGroup()) { colsOf<String>() } },
 
@@ -46,9 +46,9 @@ class SelectTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name { firstName and lastName } },
 
             df.select { "name"<DataRow<Name>>().select { colsOf<String>() } },
-            df.select { "name"<DataRow<Name>>()() { colsOf<String>() } },
+            df.select { "name"<DataRow<Name>> { colsOf<String>() } },
             df.select { colGroup("name").select { colsOf<String>() } },
-            df.select { colGroup("name")() { colsOf<String>() } },
+            df.select { colGroup("name") { colsOf<String>() } },
         ).shouldAllBeEqual()
     }
 }

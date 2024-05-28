@@ -11,16 +11,17 @@ import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
 import kotlin.reflect.KProperty
 
-public inline fun <reified T> DataColumn<T>.unfold(): AnyCol =
-    when (kind()) {
-        ColumnKind.Group, ColumnKind.Frame -> this
-        else -> when {
-            isPrimitive() -> this
-            else -> values().createDataFrameImpl(typeClass) {
-                (this as CreateDataFrameDsl<T>).properties()
-            }.asColumnGroup(name()).asDataColumn()
-        }
+public inline fun <reified T> DataColumn<T>.unfold(): AnyCol = when (kind()) {
+    ColumnKind.Group, ColumnKind.Frame -> this
+
+    else -> when {
+        isPrimitive() -> this
+
+        else -> values().createDataFrameImpl(typeClass) {
+            (this as CreateDataFrameDsl<T>).properties()
+        }.asColumnGroup(name()).asDataColumn()
     }
+}
 
 public fun <T> DataFrame<T>.unfold(columns: ColumnsSelector<T, *>): DataFrame<T> = replace(columns).with { it.unfold() }
 

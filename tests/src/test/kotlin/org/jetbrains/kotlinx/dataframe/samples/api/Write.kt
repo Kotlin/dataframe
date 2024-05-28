@@ -116,8 +116,12 @@ class Write : TestBase() {
 
             // Create different sheets from different data frames in the workbook
             val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
-            val happyPersonsSheet = df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
-            val unhappyPersonsSheet = df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
+            val happyPersonsSheet = df.filter { person -> person.isHappy }.remove(
+                "isHappy",
+            ).writeExcel(wb, sheetName = "happyPersons")
+            val unhappyPersonsSheet = df.filter { person -> !person.isHappy }.remove(
+                "isHappy",
+            ).writeExcel(wb, sheetName = "unhappyPersons")
 
             // Do anything you want by POI
             listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
@@ -226,9 +230,13 @@ class Write : TestBase() {
             // Create a new Excel workbook with a single sheet called "allPersons", replacing the file if it already exists -> Current sheets: allPersons
             df.writeExcel(file, sheetName = "allPersons")
             // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons
-            df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "happyPersons", keepFile = true)
+            df.filter { person -> person.isHappy }.remove(
+                "isHappy",
+            ).writeExcel(file, sheetName = "happyPersons", keepFile = true)
             // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons, unhappyPersons
-            df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
+            df.filter { person -> !person.isHappy }.remove(
+                "isHappy",
+            ).writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
             // SampleEnd
         }
     }

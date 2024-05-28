@@ -4,14 +4,23 @@ import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.toJavaLocalDate
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.flatten
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.maxBy
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.sum
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 import java.time.temporal.WeekFields
-import java.util.*
+import java.util.Locale
 import kotlin.math.round
 import kotlin.random.Random
 
@@ -44,7 +53,7 @@ class DateTests {
             Month.SEPTEMBER, 0.44344455128172383,
             Month.OCTOBER, 0.41726495068242264,
             Month.NOVEMBER, 0.43862977969202627,
-            Month.DECEMBER, 0.5130316016982762
+            Month.DECEMBER, 0.5130316016982762,
         )
 
         df.groupBy { dti.map { it.month } named "month" }.mean() shouldBe expected

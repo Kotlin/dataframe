@@ -21,34 +21,35 @@ import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
 internal fun String.truncate(limit: Int): RenderedContent = if (limit in 1 until length) {
-    if (limit < 4) RenderedContent.truncatedText("...", this)
-    else RenderedContent.truncatedText(substring(0, (limit - 3).coerceAtLeast(1)) + "...", this)
+    if (limit < 4) {
+        RenderedContent.truncatedText("...", this)
+    } else {
+        RenderedContent.truncatedText(substring(0, (limit - 3).coerceAtLeast(1)) + "...", this)
+    }
 } else {
     RenderedContent.text(this)
 }
 
-internal fun renderSchema(df: AnyFrame): String =
-    df.columns().joinToString { "${it.name()}:${renderType(it)}" }
+internal fun renderSchema(df: AnyFrame): String = df.columns().joinToString { "${it.name()}:${renderType(it)}" }
 
 internal fun renderSchema(schema: DataFrameSchema): String =
     schema.columns.map { "${it.key}:${renderType(it.value)}" }.joinToString()
 
-internal fun renderType(column: ColumnSchema) =
-    when (column) {
-        is ColumnSchema.Value -> {
-            renderType(column.type)
-        }
-
-        is ColumnSchema.Frame -> {
-            "[${renderSchema(column.schema)}]"
-        }
-
-        is ColumnSchema.Group -> {
-            "{${renderSchema(column.schema)}}"
-        }
-
-        else -> throw NotImplementedError()
+internal fun renderType(column: ColumnSchema) = when (column) {
+    is ColumnSchema.Value -> {
+        renderType(column.type)
     }
+
+    is ColumnSchema.Frame -> {
+        "[${renderSchema(column.schema)}]"
+    }
+
+    is ColumnSchema.Group -> {
+        "{${renderSchema(column.schema)}}"
+    }
+
+    else -> throw NotImplementedError()
+}
 
 internal fun renderType(type: KType?): String {
     return when (type?.classifier) {
@@ -98,19 +99,19 @@ internal fun renderType(type: KType?): String {
     }
 }
 
-internal fun renderType(column: AnyCol) =
-    when (column.kind()) {
-        ColumnKind.Value -> renderType(column.type)
-        ColumnKind.Frame -> {
-            val table = column.asAnyFrameColumn()
-            "[${renderSchema(table.schema.value)}]"
-        }
+internal fun renderType(column: AnyCol) = when (column.kind()) {
+    ColumnKind.Value -> renderType(column.type)
 
-        ColumnKind.Group -> {
-            val group = column.asColumnGroup()
-            "{${renderSchema(group)}}"
-        }
+    ColumnKind.Frame -> {
+        val table = column.asAnyFrameColumn()
+        "[${renderSchema(table.schema.value)}]"
     }
+
+    ColumnKind.Group -> {
+        val group = column.asColumnGroup()
+        "{${renderSchema(group)}}"
+    }
+}
 
 internal fun AnyCol.renderShort() = when (kind()) {
     ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()

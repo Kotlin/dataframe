@@ -73,7 +73,7 @@ class HardTests {
             -2, "B", 21.0,
             -1, "A", 16.0,
             -19, "B", 21.0,
-            23, "A", 23.0
+            23, "A", 23.0,
         )
 
         val means = df.filter { vals >= 0 }

@@ -84,7 +84,10 @@ internal class ArrowWriterImpl(
     private fun countTotalBytes(column: AnyCol): Long? {
         val columnType = column.type()
         return when {
-            columnType.isSubtypeOf(typeOf<String?>()) -> column.values.fold(0L) { totalBytes, value -> totalBytes + value.toString().length * 4 }
+            columnType.isSubtypeOf(
+                typeOf<String?>(),
+            ) -> column.values.fold(0L) { totalBytes, value -> totalBytes + value.toString().length * 4 }
+
             else -> null
         }
     }
@@ -108,21 +111,37 @@ internal class ArrowWriterImpl(
         if (column == null) return null
         return when (targetFieldType) {
             ArrowType.Utf8() -> column.map { it?.toString() }
+
             ArrowType.LargeUtf8() -> column.map { it?.toString() }
+
             ArrowType.Bool() -> column.convertToBoolean()
+
             ArrowType.Int(8, true) -> column.convertToByte()
+
             ArrowType.Int(16, true) -> column.convertToShort()
+
             ArrowType.Int(32, true) -> column.convertToInt()
+
             ArrowType.Int(64, true) -> column.convertToLong()
+
             is ArrowType.Decimal -> column.convertToBigDecimal()
+
             ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToDouble()
-                .convertToFloat() // Use [convertToDouble] as locale logic step
+                .convertToFloat()
+
+            // Use [convertToDouble] as locale logic step
             ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE) -> column.convertToDouble()
+
             ArrowType.Date(DateUnit.DAY) -> column.convertToLocalDate()
+
             ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
+
             is ArrowType.Time -> column.convertToLocalTime()
+
             else -> {
-                throw NotImplementedError("Saving ${targetFieldType.javaClass.canonicalName} is currently not implemented")
+                throw NotImplementedError(
+                    "Saving ${targetFieldType.javaClass.canonicalName} is currently not implemented",
+                )
             }
         }
     }
@@ -267,8 +286,8 @@ internal class ArrowWriterImpl(
                     ConvertingMismatch.TypeConversionFail.ConversionFailIgnored(
                         e.column?.name() ?: "",
                         e.row,
-                        e
-                    )
+                        e,
+                    ),
                 )
                 column to column!!.toArrowField(mismatchSubscriber)
             }
@@ -301,13 +320,13 @@ internal class ArrowWriterImpl(
                 mismatchSubscriber(
                     ConvertingMismatch.NullableMismatch.NullValueIgnored(
                         actualField.name,
-                        firstNullValue
-                    )
+                        firstNullValue,
+                    ),
                 )
                 Field(
                     actualField.name,
                     FieldType(true, actualField.fieldType.type, actualField.fieldType.dictionary),
-                    actualField.children
+                    actualField.children,
                 ).createVector(allocator)!!
             }
         } else {

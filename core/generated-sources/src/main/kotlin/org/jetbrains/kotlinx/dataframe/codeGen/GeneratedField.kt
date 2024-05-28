@@ -14,12 +14,11 @@ public sealed interface FieldType {
  * Returns whether the column type ends with `?` or not.
  * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
-public fun FieldType.isNullable(): Boolean =
-    when (this) {
-        is FieldType.FrameFieldType -> markerName.endsWith("?") || markerName == "*"
-        is FieldType.GroupFieldType -> markerName.endsWith("?") || markerName == "*"
-        is FieldType.ValueFieldType -> typeFqName.endsWith("?") || typeFqName == "*"
-    }
+public fun FieldType.isNullable(): Boolean = when (this) {
+    is FieldType.FrameFieldType -> markerName.endsWith("?") || markerName == "*"
+    is FieldType.GroupFieldType -> markerName.endsWith("?") || markerName == "*"
+    is FieldType.ValueFieldType -> typeFqName.endsWith("?") || typeFqName == "*"
+}
 
 /**
  * Returns whether the column type doesn't end with `?` or whether it does.
@@ -33,45 +32,56 @@ private fun String.toNullable() = if (this.last() == '?' || this == "*") this el
  * Returns a new fieldType with the same type but with nullability in the column type.
  * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
-public fun FieldType.toNullable(): FieldType =
-    if (isNotNullable()) {
-        when (this) {
-            is FieldType.FrameFieldType -> FieldType.FrameFieldType(markerName.toNullable(), nullable)
-            is FieldType.GroupFieldType -> FieldType.GroupFieldType(markerName.toNullable())
-            is FieldType.ValueFieldType -> FieldType.ValueFieldType(typeFqName.toNullable())
-        }
-    } else this
+public fun FieldType.toNullable(): FieldType = if (isNotNullable()) {
+    when (this) {
+        is FieldType.FrameFieldType -> FieldType.FrameFieldType(markerName.toNullable(), nullable)
+        is FieldType.GroupFieldType -> FieldType.GroupFieldType(markerName.toNullable())
+        is FieldType.ValueFieldType -> FieldType.ValueFieldType(typeFqName.toNullable())
+    }
+} else {
+    this
+}
 
 /**
  * Returns a new fieldType with the same type but with nullability disabled in the column type.
  * NOTE: for [FieldType.FrameFieldType], the `nullable` property indicates the nullability of the frame itself, not the type of the column.
  */
-public fun FieldType.toNotNullable(): FieldType =
-    if (isNullable()) {
-        when (this) {
-            is FieldType.FrameFieldType -> FieldType.FrameFieldType(
-                markerName = markerName.let {
-                    if (it == "*") "Any"
-                    else it.removeSuffix("?")
-                },
-                nullable = nullable,
-            )
+public fun FieldType.toNotNullable(): FieldType = if (isNullable()) {
+    when (this) {
+        is FieldType.FrameFieldType -> FieldType.FrameFieldType(
+            markerName = markerName.let {
+                if (it == "*") {
+                    "Any"
+                } else {
+                    it.removeSuffix("?")
+                }
+            },
+            nullable = nullable,
+        )
 
-            is FieldType.GroupFieldType -> FieldType.GroupFieldType(
-                markerName = markerName.let {
-                    if (it == "*") "Any"
-                    else it.removeSuffix("?")
-                },
-            )
+        is FieldType.GroupFieldType -> FieldType.GroupFieldType(
+            markerName = markerName.let {
+                if (it == "*") {
+                    "Any"
+                } else {
+                    it.removeSuffix("?")
+                }
+            },
+        )
 
-            is FieldType.ValueFieldType -> FieldType.ValueFieldType(
-                typeFqName = typeFqName.let {
-                    if (it == "*") "Any"
-                    else it.removeSuffix("?")
-                },
-            )
-        }
-    } else this
+        is FieldType.ValueFieldType -> FieldType.ValueFieldType(
+            typeFqName = typeFqName.let {
+                if (it == "*") {
+                    "Any"
+                } else {
+                    it.removeSuffix("?")
+                }
+            },
+        )
+    }
+} else {
+    this
+}
 
 public val FieldType.name: String
     get() = when (this) {
@@ -84,9 +94,8 @@ public class ValidFieldName private constructor(private val identifier: String, 
     public val unquoted: String get() = identifier
     public val quotedIfNeeded: String get() = if (needsQuote) "`$identifier`" else identifier
 
-    public operator fun plus(other: ValidFieldName): ValidFieldName {
-        return ValidFieldName(identifier = identifier + other.identifier, needsQuote = needsQuote || other.needsQuote)
-    }
+    public operator fun plus(other: ValidFieldName): ValidFieldName =
+        ValidFieldName(identifier = identifier + other.identifier, needsQuote = needsQuote || other.needsQuote)
 
     public companion object {
         public fun of(name: String): ValidFieldName {
@@ -118,21 +127,25 @@ public interface BaseField {
     public val fieldType: FieldType
 }
 
-public fun BaseField.toNullable(): BaseField =
-    if (fieldType.isNullable()) this
-    else object : BaseField {
+public fun BaseField.toNullable(): BaseField = if (fieldType.isNullable()) {
+    this
+} else {
+    object : BaseField {
         override val fieldName: ValidFieldName = this@toNullable.fieldName
         override val columnName: String = this@toNullable.columnName
         override val fieldType: FieldType = this@toNullable.fieldType.toNullable()
     }
+}
 
-public fun BaseField.toNotNullable(): BaseField =
-    if (fieldType.isNotNullable()) this
-    else object : BaseField {
+public fun BaseField.toNotNullable(): BaseField = if (fieldType.isNotNullable()) {
+    this
+} else {
+    object : BaseField {
         override val fieldName: ValidFieldName = this@toNotNullable.fieldName
         override val columnName: String = this@toNotNullable.columnName
         override val fieldType: FieldType = this@toNotNullable.fieldType.toNotNullable()
     }
+}
 
 public data class GeneratedField(
     override val fieldName: ValidFieldName,

@@ -37,12 +37,11 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
     private val generator: CodeGenerator = CodeGenerator.create(useFqNames = false)
 
-    private fun getMarkerClass(type: KType): KClass<*>? =
-        when (type.classifier) {
-            DataFrame::class -> type.arguments[0].type?.jvmErasure
-            DataRow::class -> type.arguments[0].type?.jvmErasure
-            else -> null
-        }
+    private fun getMarkerClass(type: KType): KClass<*>? = when (type.classifier) {
+        DataFrame::class -> type.arguments[0].type?.jvmErasure
+        DataRow::class -> type.arguments[0].type?.jvmErasure
+        else -> null
+    }
 
     override fun process(row: AnyRow, property: KProperty<*>?): CodeWithConverter = process(row.df(), property)
 
@@ -78,11 +77,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
-    fun generate(
-        schema: DataFrameSchema,
-        name: String,
-        isOpen: Boolean,
-    ): CodeWithConverter {
+    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithConverter {
         val result = generator.generate(
             schema = schema,
             name = name,

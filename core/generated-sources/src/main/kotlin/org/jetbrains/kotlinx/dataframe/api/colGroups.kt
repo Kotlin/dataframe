@@ -216,8 +216,9 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun ColumnsSelectionDsl<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        asSingleColumn().columnGroupsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.colGroups(
+        filter: Predicate<ColumnGroup<*>> = { true },
+    ): TransformableColumnSet<AnyRow> = asSingleColumn().columnGroupsInternal(filter)
 
     /**
      * ## Column Groups
@@ -251,8 +252,9 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
-    public fun SingleColumn<DataRow<*>>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        this.ensureIsColumnGroup().columnGroupsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.colGroups(
+        filter: Predicate<ColumnGroup<*>> = { true },
+    ): TransformableColumnSet<AnyRow> = this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     /**
      * ## Column Groups
@@ -364,12 +366,14 @@ public interface ColGroupsColumnsSelectionDsl {
         columnGroupsInternal(filter)
 
     @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun SingleColumn<DataRow<*>>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        this.ensureIsColumnGroup().columnGroupsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.groups(
+        filter: Predicate<ColumnGroup<*>> = { true },
+    ): TransformableColumnSet<AnyRow> = this.ensureIsColumnGroup().columnGroupsInternal(filter)
 
     @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun ColumnsSelectionDsl<*>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        this.asSingleColumn().columnGroupsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.groups(
+        filter: Predicate<ColumnGroup<*>> = { true },
+    ): TransformableColumnSet<AnyRow> = this.asSingleColumn().columnGroupsInternal(filter)
 
     @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
     public fun String.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
@@ -393,7 +397,9 @@ public interface ColGroupsColumnsSelectionDsl {
  * @return A [TransformableColumnSet] containing the column groups that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun ColumnsResolver<*>.columnGroupsInternal(filter: (ColumnGroup<*>) -> Boolean): TransformableColumnSet<AnyRow> =
+internal fun ColumnsResolver<*>.columnGroupsInternal(
+    filter: (ColumnGroup<*>) -> Boolean,
+): TransformableColumnSet<AnyRow> =
     colsInternal { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
 
 // endregion

@@ -104,27 +104,46 @@ class JoinWithTests : BaseJoinTest() {
     @Test
     fun rightJoin() {
         val df = dataFrameOf("a", "b")(
-            1, "a",
-            2, "b",
-            3, "c",
+            1,
+            "a",
+            2,
+            "b",
+            3,
+            "c",
         )
 
         val df1 = dataFrameOf("a", "c")(
-            5, "V",
-            1, "I",
-            2, "II",
-            3, "III",
+            5,
+            "V",
+            1,
+            "I",
+            2,
+            "II",
+            3,
+            "III",
         )
         df.append(4, "e").excludeJoin(df1).print()
     }
 
     @Test
     fun `test overloads contract`() {
-        typed.innerJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Inner) { name == right.name && city == right.origin }
-        typed.leftJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Left) { name == right.name && city == right.origin }
-        typed.rightJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Right) { name == right.name && city == right.origin }
-        typed.fullJoinWith(typed2) { name == right.name && city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Full) { name == right.name && city == right.origin }
-        typed.excludeJoinWith(typed2) { city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Exclude) { city == right.origin }
-        typed.filterJoinWith(typed2) { city == right.origin } shouldBe typed.joinWith(typed2, JoinType.Filter) { city == right.origin }
+        typed.innerJoinWith(typed2) {
+            name == right.name && city == right.origin
+        } shouldBe typed.joinWith(typed2, JoinType.Inner) { name == right.name && city == right.origin }
+        typed.leftJoinWith(typed2) {
+            name == right.name && city == right.origin
+        } shouldBe typed.joinWith(typed2, JoinType.Left) { name == right.name && city == right.origin }
+        typed.rightJoinWith(typed2) {
+            name == right.name && city == right.origin
+        } shouldBe typed.joinWith(typed2, JoinType.Right) { name == right.name && city == right.origin }
+        typed.fullJoinWith(typed2) {
+            name == right.name && city == right.origin
+        } shouldBe typed.joinWith(typed2, JoinType.Full) { name == right.name && city == right.origin }
+        typed.excludeJoinWith(typed2) {
+            city == right.origin
+        } shouldBe typed.joinWith(typed2, JoinType.Exclude) { city == right.origin }
+        typed.filterJoinWith(typed2) {
+            city == right.origin
+        } shouldBe typed.joinWith(typed2, JoinType.Filter) { city == right.origin }
     }
 }

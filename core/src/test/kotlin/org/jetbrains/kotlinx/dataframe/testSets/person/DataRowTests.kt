@@ -54,8 +54,9 @@ class DataRowTests : BaseTest() {
     fun std() {
         typed.mapToColumn("std") { rowStd(skipNA = true, ddof = 0) }.values() shouldBe typed.age.values()
             .zip(typed.weight.values()) { a, b ->
-                if (b == null) .0
-                else {
+                if (b == null) {
+                    .0
+                } else {
                     val mean = (a + b) / 2.0
                     sqrt(((a - mean) * (a - mean) + (b - mean) * (b - mean)) / 2)
                 }
@@ -65,7 +66,9 @@ class DataRowTests : BaseTest() {
     @Test
     fun sum() {
         typed.convert { weight }.toDouble()
-            .mapToColumn("sum") { rowSum() }.values() shouldBe typed.age.values().zip(typed.weight.values()) { a, b -> a + (b ?: 0).toDouble() }
+            .mapToColumn("sum") {
+                rowSum()
+            }.values() shouldBe typed.age.values().zip(typed.weight.values()) { a, b -> a + (b ?: 0).toDouble() }
     }
 
     @Test

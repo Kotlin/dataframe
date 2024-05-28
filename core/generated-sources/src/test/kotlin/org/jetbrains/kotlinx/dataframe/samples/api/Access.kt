@@ -455,7 +455,8 @@ class Access : TestBase() {
         df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
         df.dropNulls { city } // remove rows with null value in 'city' column
         df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
-        df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
+        // remove rows with null value in 'city' AND 'weight' columns
+        df.dropNulls(whereAllNull = true) { city and weight }
         // SampleEnd
     }
 

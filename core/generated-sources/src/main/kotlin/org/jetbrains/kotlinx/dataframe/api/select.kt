@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS_REPLACE
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -166,8 +165,7 @@ private interface CommonSelectDocs
  *  
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
-    get(columns).toDataFrame().cast()
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
 
 /**
  * ## The Select Operation
@@ -480,8 +478,7 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
-    public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        columnGroup(this).select(selector)
+    public fun <R> String.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 
     /**
      * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
@@ -529,8 +526,7 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
-    public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        columnGroup(this).select(selector)
+    public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
 
     // region deprecated
 

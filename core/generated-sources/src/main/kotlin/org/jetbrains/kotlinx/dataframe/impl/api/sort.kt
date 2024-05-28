@@ -24,18 +24,14 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 
 @Suppress("UNCHECKED_CAST", "RemoveExplicitTypeArguments")
-internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> =
-    toDataFrame()
-
-        // sort the individual groups by the columns specified
-        .update { groups }
-        .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
-
-        // sort the groups by the columns specified (must be either be the keys column or "groups")
-        // will do nothing if the columns specified are not the keys column or "groups"
-        .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
-
-        .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
+internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> = toDataFrame()
+    // sort the individual groups by the columns specified
+    .update { groups }
+    .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
+    // sort the groups by the columns specified (must be either be the keys column or "groups")
+    // will do nothing if the columns specified are not the keys column or "groups"
+    .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
+    .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
@@ -70,20 +66,22 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 internal fun <T, C> DataFrame<T>.getSortColumns(
     columns: SortColumnsSelector<T, C>,
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-): List<SortColumnDescriptor<*>> =
-    columns.toColumnSet().resolve(this, unresolvedColumnsPolicy)
-        .filterNot { it.data is MissingColumnGroup<*> } // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
-        .map {
-            when (val col = it.data) {
-                is SortColumnDescriptor<*> -> col
-                is ValueColumn<*> -> SortColumnDescriptor(col)
-                else -> throw IllegalStateException("Can not use ${col.kind} as sort column")
-            }
+): List<SortColumnDescriptor<*>> = columns.toColumnSet().resolve(this, unresolvedColumnsPolicy)
+    .filterNot {
+        it.data is MissingColumnGroup<*>
+    } // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
+    .map {
+        when (val col = it.data) {
+            is SortColumnDescriptor<*> -> col
+            is ValueColumn<*> -> SortColumnDescriptor(col)
+            else -> throw IllegalStateException("Can not use ${col.kind} as sort column")
         }
+    }
 
 internal enum class SortFlag { Reversed, NullsLast }
 
-internal fun <C> ColumnsResolver<C>.addFlag(flag: SortFlag): ColumnSetWithSortFlag<C> = ColumnSetWithSortFlag(this, flag)
+internal fun <C> ColumnsResolver<C>.addFlag(flag: SortFlag): ColumnSetWithSortFlag<C> =
+    ColumnSetWithSortFlag(this, flag)
 
 internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
     val col = data
@@ -107,8 +105,7 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
 }
 
 internal class ColumnSetWithSortFlag<C>(val column: ColumnsResolver<C>, val flag: SortFlag) : ColumnSet<C> {
-    override fun resolve(context: ColumnResolutionContext) =
-        column.resolve(context).map { it.addFlag(flag) }
+    override fun resolve(context: ColumnResolutionContext) = column.resolve(context).map { it.addFlag(flag) }
 }
 
 internal class SortColumnDescriptor<C>(

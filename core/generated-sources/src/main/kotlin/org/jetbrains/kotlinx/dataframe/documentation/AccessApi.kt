@@ -90,12 +90,7 @@ internal interface AccessApi {
      *
      * For example:
      * ```kotlin
-     * data class Passenger(
-     *     val survived: Boolean,
-     *     val home: String,
-     *     val age: Int,
-     *     val lastName: String
-     * )
+     * data class Passenger(val survived: Boolean, val home: String, val age: Int, val lastName: String)
      *
      * val passengers = DataFrame.read("titanic.csv")
      *     .add(Passenger::lastName) { "name"<String>().split(",").last() }

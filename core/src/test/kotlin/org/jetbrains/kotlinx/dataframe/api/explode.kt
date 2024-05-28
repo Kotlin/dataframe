@@ -25,7 +25,7 @@ class ExplodeTests {
             .explode().ungroup("c")
         exploded shouldBe dataFrameOf("a", "b", "x", "y", "d")(
             1, 2, 4, 5, 8,
-            1, 3, 6, 7, null
+            1, 3, 6, 7, null,
         )
     }
 

@@ -29,42 +29,41 @@ public class JSON(
     private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     private val keyValuePaths: List<JsonPath> = emptyList(),
 ) : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readJson(
-            stream = stream,
-            header = header,
-            typeClashTactic = typeClashTactic,
-            keyValuePaths = keyValuePaths,
-        )
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJson(
+        stream = stream,
+        header = header,
+        typeClashTactic = typeClashTactic,
+        keyValuePaths = keyValuePaths,
+    )
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readJson(
-            file = file,
-            header = header,
-            typeClashTactic = typeClashTactic,
-            keyValuePaths = keyValuePaths,
-        )
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJson(
+        file = file,
+        header = header,
+        typeClashTactic = typeClashTactic,
+        keyValuePaths = keyValuePaths,
+    )
 
     override fun acceptsExtension(ext: String): Boolean = ext == "json"
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
     override val testOrder: Int = 10_000
 
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
-        DefaultReadJsonMethod(
-            path = pathRepresentation,
-            arguments = MethodArguments()
-                .add(
-                    "keyValuePaths",
-                    typeOf<List<JsonPath>>(),
-                    "listOf(${keyValuePaths.joinToString { "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")" }})",
-                )
-                .add(
-                    "typeClashTactic",
-                    typeOf<TypeClashTactic>(),
-                    "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
-                ),
-        )
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod = DefaultReadJsonMethod(
+        path = pathRepresentation,
+        arguments = MethodArguments()
+            .add(
+                "keyValuePaths",
+                typeOf<List<JsonPath>>(),
+                "listOf(${keyValuePaths.joinToString {
+                    "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
+                }})",
+            )
+            .add(
+                "typeClashTactic",
+                typeOf<TypeClashTactic>(),
+                "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
+            ),
+    )
 
     /**
      * Allows the choice of how to handle type clashes when reading a JSON file.
@@ -260,11 +259,9 @@ public fun DataRow.Companion.readJsonStr(
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
 ): AnyRow = DataFrame.readJsonStr(text, header, keyValuePaths, typeClashTactic).single()
 
-public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
-    return json {
-        encodeFrame(this@toJson)
-    }.toJsonString(prettyPrint, canonical)
-}
+public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String = json {
+    encodeFrame(this@toJson)
+}.toJsonString(prettyPrint, canonical)
 
 /**
  * Converts the DataFrame to a JSON string representation with additional metadata about serialized data.
@@ -285,12 +282,10 @@ public fun AnyFrame.toJsonWithMetadata(
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
     canonical: Boolean = false,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null
-): String {
-    return json {
-        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
-    }.toJsonString(prettyPrint, canonical)
-}
+    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+): String = json {
+    encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
+}.toJsonString(prettyPrint, canonical)
 
 internal const val DEFAULT_IMG_SIZE = 600
 
@@ -302,7 +297,7 @@ internal const val DEFAULT_IMG_SIZE = 600
  */
 public class Base64ImageEncodingOptions(
     public val imageSizeLimit: Int = DEFAULT_IMG_SIZE,
-    private val options: Int = GZIP_ON or LIMIT_SIZE_ON
+    private val options: Int = GZIP_ON or LIMIT_SIZE_ON,
 ) {
     public val isGzipOn: Boolean
         get() = options and GZIP_ON == GZIP_ON
@@ -317,11 +312,9 @@ public class Base64ImageEncodingOptions(
     }
 }
 
-public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
-    return json {
-        encodeRow(df(), index())
-    }?.toJsonString(prettyPrint, canonical) ?: ""
-}
+public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String = json {
+    encodeRow(df(), index())
+}?.toJsonString(prettyPrint, canonical) ?: ""
 
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
     file.writeText(toJson(prettyPrint, canonical))

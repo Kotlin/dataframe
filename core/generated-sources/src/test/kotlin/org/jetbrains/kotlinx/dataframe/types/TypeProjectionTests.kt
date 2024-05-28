@@ -28,7 +28,9 @@ class TypeProjectionTests {
         interface B<T> : A<A<T>>
         interface C<T> : A<B<T>>
         interface D<T>
-        interface X<T : Number, V : Number> : C<T>, D<V>
+        interface X<T : Number, V : Number> :
+            C<T>,
+            D<V>
 
         @Test
         fun test() {

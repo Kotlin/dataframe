@@ -10,7 +10,11 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import kotlin.reflect.KType
 
-internal class AggregatePivotDslImpl<T>(override val df: DataFrame<T>) : AggregateDsl<T>(), AggregateInternalDsl<T>, DataFrame<T> by df, AggregatableInternal<T> by df.internal() {
+internal class AggregatePivotDslImpl<T>(override val df: DataFrame<T>) :
+    AggregateDsl<T>(),
+    AggregateInternalDsl<T>,
+    DataFrame<T> by df,
+    AggregatableInternal<T> by df.internal() {
 
     internal val values = mutableListOf<NamedValue>()
 
@@ -18,7 +22,8 @@ internal class AggregatePivotDslImpl<T>(override val df: DataFrame<T>) : Aggrega
 
     override fun pathForSingleColumn(column: AnyCol) = emptyPath()
 
-    override fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?) = yield(path, value, type, default, true)
+    override fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?) =
+        yield(path, value, type, default, true)
 
     override val hasGroupingKeys: Boolean get() = false
 }

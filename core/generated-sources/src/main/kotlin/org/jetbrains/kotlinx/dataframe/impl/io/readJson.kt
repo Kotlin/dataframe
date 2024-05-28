@@ -49,8 +49,7 @@ import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
-private fun DataFrame<Any?>.unwrapUnnamedColumns() =
-    dataFrameOf(columns().map { it.unwrapUnnamedColumn() })
+private fun DataFrame<Any?>.unwrapUnnamedColumns() = dataFrameOf(columns().map { it.unwrapUnnamedColumn() })
 
 private fun AnyCol.unwrapUnnamedColumn() = if (this is UnnamedColumn) col else this
 
@@ -136,7 +135,9 @@ internal fun fromJsonListAnyColumns(
             }
 
             is JsonArray<*> -> hasArray = true
+
             null -> Unit
+
             else -> hasPrimitive = true
         }
     }
@@ -158,8 +159,11 @@ internal fun fromJsonListAnyColumns(
         // Create one column of type Any? (or guessed primitive type) from all the records
         colType == AnyColType.ANY -> {
             val collector: DataCollectorBase<Any?> =
-                if (justPrimitives) createDataCollector(records.size) // guess the type
-                else createDataCollector(records.size, typeOf<Any?>()) // use Any?
+                if (justPrimitives) {
+                    createDataCollector(records.size) // guess the type
+                } else {
+                    createDataCollector(records.size, typeOf<Any?>()) // use Any?
+                }
 
             val nanIndices = mutableListOf<Int>()
             records.forEachIndexed { i, v ->
@@ -172,8 +176,11 @@ internal fun fromJsonListAnyColumns(
                                 jsonPath = jsonPath.replaceLastWildcardWithIndex(i),
                             )
                         collector.add(
-                            if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
-                            else parsed.firstOrNull() ?: DataRow.empty
+                            if (parsed.isSingleUnnamedColumn()) {
+                                (parsed.getColumn(0) as UnnamedColumn).col.values.first()
+                            } else {
+                                parsed.firstOrNull() ?: DataRow.empty
+                            },
                         )
                     }
 
@@ -184,8 +191,11 @@ internal fun fromJsonListAnyColumns(
                             jsonPath = jsonPath.replaceLastWildcardWithIndex(i).appendArrayWithWildcard(),
                         )
                         collector.add(
-                            if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.asList()
-                            else parsed.unwrapUnnamedColumns()
+                            if (parsed.isSingleUnnamedColumn()) {
+                                (parsed.getColumn(0) as UnnamedColumn).col.values.asList()
+                            } else {
+                                parsed.unwrapUnnamedColumns()
+                            },
                         )
                     }
 
@@ -207,7 +217,9 @@ internal fun fromJsonListAnyColumns(
                             j++
                             nextNanIndex = if (j < nanIndices.size) nanIndices[j] else -1
                             nanValue
-                        } else v
+                        } else {
+                            v
+                        }
                     }
                 }
                 when (column.typeClass) {
@@ -216,7 +228,9 @@ internal fun fromJsonListAnyColumns(
                     String::class -> column.cast<String?>().updateNaNs("NaN")
                     else -> column
                 }
-            } else column
+            } else {
+                column
+            }
             listOf(UnnamedColumn(res))
         }
 
@@ -272,8 +286,11 @@ internal fun fromJsonListAnyColumns(
                                 keyValuePaths = keyValuePaths,
                                 jsonPath = jsonPath.append(key),
                             )
-                            if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
-                            else parsed.unwrapUnnamedColumns().firstOrNull()
+                            if (parsed.isSingleUnnamedColumn()) {
+                                (parsed.getColumn(0) as UnnamedColumn).col.values.first()
+                            } else {
+                                parsed.unwrapUnnamedColumns().firstOrNull()
+                            }
                         }
                         val valueType = map.values.map {
                             guessValueType(sequenceOf(it))
@@ -289,6 +306,7 @@ internal fun fromJsonListAnyColumns(
                     }
 
                     null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+
                     else -> error("Expected JsonObject, got $it")
                 }
             }
@@ -298,6 +316,7 @@ internal fun fromJsonListAnyColumns(
                 // in these cases we can safely combine the columns to get a single column schema
                 valueColumns.all { it is ColumnGroup<*> } || valueColumns.all { it is FrameColumn<*> } ->
                     valueColumns.concat().extractSchema()
+
                 // to avoid listification, we create the value columns schema ourselves (https://github.com/Kotlin/dataframe/issues/184)
                 else -> ColumnSchema.Value(valueTypes.commonType())
             }
@@ -312,11 +331,11 @@ internal fun fromJsonListAnyColumns(
                                 columns = mapOf(
                                     KeyValueProperty<*>::key.name to ColumnSchema.Value(typeOf<String>()),
                                     KeyValueProperty<*>::value.name to valueColumnSchema,
-                                )
+                                ),
                             )
                         },
-                    )
-                )
+                    ),
+                ),
             )
         }
 
@@ -408,7 +427,9 @@ internal fun fromJsonListArrayAndValueColumns(
             }
 
             is JsonArray<*> -> hasArray = true
+
             null -> Unit
+
             else -> hasPrimitive = true
         }
     }
@@ -417,12 +438,16 @@ internal fun fromJsonListArrayAndValueColumns(
     // Add a value column to the collected names if needed
     val valueColumn = if (hasPrimitive || records.isEmpty()) {
         nameGenerator.addUnique(valueColumnName)
-    } else null
+    } else {
+        null
+    }
 
     // Add an array column to the collected names if needed
     val arrayColumn = if (hasArray) {
         nameGenerator.addUnique(arrayColumnName)
-    } else null
+    } else {
+        null
+    }
 
     // only properties that consist of just objects (or are empty) can be merged to key/value FrameColumns
     if (isKeyValue && (hasPrimitive || hasArray)) {
@@ -442,8 +467,11 @@ internal fun fromJsonListArrayAndValueColumns(
                                 keyValuePaths = keyValuePaths,
                                 jsonPath = jsonPath.append(key),
                             )
-                            if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
-                            else parsed.unwrapUnnamedColumns().firstOrNull()
+                            if (parsed.isSingleUnnamedColumn()) {
+                                (parsed.getColumn(0) as UnnamedColumn).col.values.first()
+                            } else {
+                                parsed.unwrapUnnamedColumns().firstOrNull()
+                            }
                         }
                         val valueType =
                             map.values.map { guessValueType(sequenceOf(it)) }
@@ -460,6 +488,7 @@ internal fun fromJsonListArrayAndValueColumns(
                     }
 
                     null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+
                     else -> error("Expected JsonObject, got $it")
                 }
             }
@@ -472,8 +501,8 @@ internal fun fromJsonListArrayAndValueColumns(
                         schema = lazy {
                             dataFrames.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
                         },
-                    )
-                )
+                    ),
+                ),
             )
         }
 
@@ -488,7 +517,9 @@ internal fun fromJsonListArrayAndValueColumns(
                         records.forEachIndexed { i, v ->
                             when (v) {
                                 is JsonObject -> collector.add(null)
+
                                 is JsonArray<*> -> collector.add(null)
+
                                 "NaN" -> {
                                     nanIndices.add(i)
                                     collector.add(null)
@@ -507,7 +538,9 @@ internal fun fromJsonListArrayAndValueColumns(
                                         j++
                                         nextNanIndex = if (j < nanIndices.size) nanIndices[j] else -1
                                         nanValue
-                                    } else v
+                                    } else {
+                                        v
+                                    }
                                 }
                             }
                             when (column.typeClass) {
@@ -516,7 +549,9 @@ internal fun fromJsonListArrayAndValueColumns(
                                 String::class -> column.cast<String?>().updateNaNs("NaN")
                                 else -> column
                             }
-                        } else column
+                        } else {
+                            column
+                        }
                         UnnamedColumn(res)
                     }
 

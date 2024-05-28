@@ -17,4 +17,5 @@ internal fun <T> DataColumn<T>.internal() = this as DataColumnInternal<T>
 
 // TODO: replace forced column resolution with column origin tracking
 @PublishedApi
-internal fun <T : AnyCol> T.forceResolve(): T = if (this is ForceResolvedColumn<*>) this else internal().forceResolve() as T
+internal fun <T : AnyCol> T.forceResolve(): T =
+    if (this is ForceResolvedColumn<*>) this else internal().forceResolve() as T

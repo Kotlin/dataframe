@@ -109,7 +109,10 @@ class TaskSourceSetPropertyTest {
             project.evaluate()
         }
         exception.causes.shouldHaveSize(1)
-        exception.causes.forOne { it.message shouldContain "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly" }
+        exception.causes.forOne {
+            it.message shouldContain
+                "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly"
+        }
     }
 
     @Test
@@ -150,7 +153,8 @@ class TaskSourceSetPropertyTest {
         }
         exception.causes.shouldHaveSize(1)
         exception.causes.forOne {
-            it.message shouldContain "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly"
+            it.message shouldContain
+                "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly"
         }
     }
 }

@@ -57,7 +57,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
 
     private fun encodeImagesAsJson(
         images: List<BufferedImage>,
-        encodingOptions: Base64ImageEncodingOptions?
+        encodingOptions: Base64ImageEncodingOptions?,
     ): JsonObject {
         val df = dataFrameOf(listOf("imgs"), images)
         val jsonStr = df.toJsonWithMetadata(20, nestedRowLimit = 20, imageEncodingOptions = encodingOptions)
@@ -77,7 +77,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
     private fun decodeImagesFromJson(
         json: JsonObject,
         imgsNum: Int,
-        encodingOptions: Base64ImageEncodingOptions
+        encodingOptions: Base64ImageEncodingOptions,
     ): List<BufferedImage> {
         val result = mutableListOf<BufferedImage>()
         for (i in 0..<imgsNum) {
@@ -93,19 +93,16 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         return result
     }
 
-    private fun decodeBase64Image(imgString: String, encodingOptions: Base64ImageEncodingOptions): ByteArray =
-        when {
-            encodingOptions.isGzipOn -> decompressGzip(Base64.getDecoder().decode(imgString))
-            else -> Base64.getDecoder().decode(imgString)
-        }
+    private fun decodeBase64Image(imgString: String, encodingOptions: Base64ImageEncodingOptions): ByteArray = when {
+        encodingOptions.isGzipOn -> decompressGzip(Base64.getDecoder().decode(imgString))
+        else -> Base64.getDecoder().decode(imgString)
+    }
 
-    private fun decompressGzip(input: ByteArray): ByteArray {
-        return ByteArrayOutputStream().use { byteArrayOutputStream ->
-            GZIPInputStream(input.inputStream()).use { inputStream ->
-                inputStream.copyTo(byteArrayOutputStream)
-            }
-            byteArrayOutputStream.toByteArray()
+    private fun decompressGzip(input: ByteArray): ByteArray = ByteArrayOutputStream().use { byteArrayOutputStream ->
+        GZIPInputStream(input.inputStream()).use { inputStream ->
+            inputStream.copyTo(byteArrayOutputStream)
         }
+        byteArrayOutputStream.toByteArray()
     }
 
     private fun resizeIfNeeded(image: BufferedImage, encodingOptions: Base64ImageEncodingOptions): BufferedImage =
@@ -156,19 +153,18 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         private val DEFAULT = Base64ImageEncodingOptions()
         private val GZIP_ON_RESIZE_OFF = Base64ImageEncodingOptions(options = GZIP_ON)
         private val GZIP_OFF_RESIZE_OFF = Base64ImageEncodingOptions(options = ALL_OFF)
-        private val GZIP_ON_RESIZE_TO_700 = Base64ImageEncodingOptions(imageSizeLimit = 700, options = GZIP_ON or LIMIT_SIZE_ON)
+        private val GZIP_ON_RESIZE_TO_700 =
+            Base64ImageEncodingOptions(imageSizeLimit = 700, options = GZIP_ON or LIMIT_SIZE_ON)
         private val DISABLED = null
 
         @JvmStatic
         @Parameterized.Parameters
-        fun imageEncodingOptionsToTest(): Collection<Base64ImageEncodingOptions?> {
-            return listOf(
-                DEFAULT,
-                GZIP_ON_RESIZE_OFF,
-                GZIP_OFF_RESIZE_OFF,
-                GZIP_ON_RESIZE_TO_700,
-                null,
-            )
-        }
+        fun imageEncodingOptionsToTest(): Collection<Base64ImageEncodingOptions?> = listOf(
+            DEFAULT,
+            GZIP_ON_RESIZE_OFF,
+            GZIP_OFF_RESIZE_OFF,
+            GZIP_ON_RESIZE_TO_700,
+            null,
+        )
     }
 }

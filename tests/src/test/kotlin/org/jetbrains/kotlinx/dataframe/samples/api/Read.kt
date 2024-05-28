@@ -30,7 +30,7 @@ class Read {
             file,
             delimiter = '|',
             header = listOf("A", "B", "C", "D"),
-            parserOptions = ParserOptions(nullStrings = setOf("not assigned"))
+            parserOptions = ParserOptions(nullStrings = setOf("not assigned")),
         )
         // SampleEnd
         df.rowsCount() shouldBe 3
@@ -104,7 +104,7 @@ class Read {
         // SampleStart
         val df = DataFrame.readCSV(
             file,
-            colTypes = mapOf("colName" to ColType.String)
+            colTypes = mapOf("colName" to ColType.String),
         )
         // SampleEnd
     }

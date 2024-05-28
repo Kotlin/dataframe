@@ -8,8 +8,9 @@ internal abstract class DataColumnImpl<T>(
     protected val values: List<T>,
     val name: String,
     val type: KType,
-    distinct: Lazy<Set<T>>? = null
-) : DataColumn<T>, DataColumnInternal<T> {
+    distinct: Lazy<Set<T>>? = null,
+) : DataColumn<T>,
+    DataColumnInternal<T> {
 
     protected val distinct = distinct ?: lazy { values.toSet() }
 
@@ -21,7 +22,8 @@ internal abstract class DataColumnImpl<T>(
 
     override fun toSet() = distinct.value
 
-    override fun contains(value: T): Boolean = if (distinct.isInitialized()) distinct.value.contains(value) else values.contains(value)
+    override fun contains(value: T): Boolean =
+        if (distinct.isInitialized()) distinct.value.contains(value) else values.contains(value)
 
     override fun toString() = dataFrameOf(this).toString() // "${name()}: $type"
 

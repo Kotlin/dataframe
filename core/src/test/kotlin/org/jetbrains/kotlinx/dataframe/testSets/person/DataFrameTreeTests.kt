@@ -7,13 +7,97 @@ import io.kotest.matchers.shouldNotBe
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.dataframe.impl.codeGen.generate
-import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.GroupWithKey
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.addId
+import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.append
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
+import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.by
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.columnGroup
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.columnsCount
+import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.distinct
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.duplicate
+import org.jetbrains.kotlinx.dataframe.api.duplicateRows
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.frameColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getColumnPath
+import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
+import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.getValue
+import org.jetbrains.kotlinx.dataframe.api.group
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.implode
+import org.jetbrains.kotlinx.dataframe.api.indices
+import org.jetbrains.kotlinx.dataframe.api.insert
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.intoRows
+import org.jetbrains.kotlinx.dataframe.api.inward
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.join
+import org.jetbrains.kotlinx.dataframe.api.last
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.max
+import org.jetbrains.kotlinx.dataframe.api.maxBy
+import org.jetbrains.kotlinx.dataframe.api.median
+import org.jetbrains.kotlinx.dataframe.api.minus
+import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.moveTo
+import org.jetbrains.kotlinx.dataframe.api.moveToLeft
+import org.jetbrains.kotlinx.dataframe.api.moveToRight
+import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.split
+import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
+import org.jetbrains.kotlinx.dataframe.api.toTop
+import org.jetbrains.kotlinx.dataframe.api.under
+import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.depth
+import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -68,7 +152,9 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `select atAnyDepth under group`() {
         df2.select { nameAndCity.colsAtAnyDepth().colsOf<String>() } shouldBe typed2.select { nameAndCity.name }
-        df2.select { nameAndCity.colsAtAnyDepth().colsOf<String?>() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
+        df2.select {
+            nameAndCity.colsAtAnyDepth().colsOf<String?>()
+        } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
     }
 
     @Test
@@ -88,7 +174,12 @@ class DataFrameTreeTests : BaseTest() {
         typed2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
         typed2.select { nameAndCity["city"] } shouldBe typed2.select { nameAndCity.city }
-        typed2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
+        typed2.select {
+            nameAndCity.cols(
+                "city",
+                "name",
+            )
+        } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
         typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.allCols() }
         typed2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
         typed2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
@@ -207,15 +298,19 @@ class DataFrameTreeTests : BaseTest() {
         val df2 = modified.move { name and city }.under("nameAndCity")
         val typed2 = df2.cast<GroupedPerson>()
 
-        fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> = keys.rows().mapIndexedNotNull { index, row ->
-            val group = groups[index]
-            val g = GroupWithKey(row, group)
-            body(g, g)
-        }
+        fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
+            keys.rows().mapIndexedNotNull { index, row ->
+                val group = groups[index]
+                val g = GroupWithKey(row, group)
+                body(g, g)
+            }
 
         val expected = modified.cast<Person>().groupBy { name and city }.map {
-            val value = if (key.city == "Moscow") group.age.toList()
-            else group.age[0]
+            val value = if (key.city == "Moscow") {
+                group.age.toList()
+            } else {
+                group.age[0]
+            }
             (key.name to key.city.toString()) to value
         }.plus("Bob" to "Moscow" to emptyList<Int>()).toMap()
 
@@ -226,8 +321,11 @@ class DataFrameTreeTests : BaseTest() {
             this[name] shouldBe typed.name.distinct()
             val data = cities.columns()
             data.forEach {
-                if (it.name() == "Moscow") it.type() shouldBe typeOf<List<Int>>()
-                else it.type() shouldBe typeOf<Int?>()
+                if (it.name() == "Moscow") {
+                    it.type() shouldBe typeOf<List<Int>>()
+                } else {
+                    it.type() shouldBe typeOf<Int?>()
+                }
             }
 
             val actual = data.flatMap { col ->
@@ -239,8 +337,10 @@ class DataFrameTreeTests : BaseTest() {
 
         typed2.pivot { nameAndCity.city }.groupBy { nameAndCity.name }.values { age }.check()
         df2.pivot(nameAndCity[city]).groupBy { nameAndCity[name] }.values(age).check()
-        df2.pivot { it[GroupedPerson::nameAndCity][NameAndCity::city] }.groupBy { it[GroupedPerson::nameAndCity][NameAndCity::name] }.values(
-            GroupedPerson::age
+        df2.pivot {
+            it[GroupedPerson::nameAndCity][NameAndCity::city]
+        }.groupBy { it[GroupedPerson::nameAndCity][NameAndCity::name] }.values(
+            GroupedPerson::age,
         ).check()
         df2.pivot { it["nameAndCity"]["city"] }.groupBy { it["nameAndCity"]["name"] }.values("age").check()
     }
@@ -270,16 +370,26 @@ class DataFrameTreeTests : BaseTest() {
                     expValues == null -> when (value) {
                         null -> {
                         }
+
                         is AnyRow -> value.isEmpty() shouldBe true
+
                         is AnyFrame -> value.columnsCount() shouldBe 0
                     }
+
                     expValues.size == 1 -> {
                         value shouldNotBe null
                         val single =
-                            if (value is AnyRow) value else if (value is AnyFrame) value[0] else fail("invalid value type")
+                            if (value is AnyRow) {
+                                value
+                            } else if (value is AnyFrame) {
+                                value[0]
+                            } else {
+                                fail("invalid value type")
+                            }
                         single.columnsCount() shouldBe 2
                         single.getValue<Int>("age") to single.getValue<Int?>("weight") shouldBe expValues[0]
                     }
+
                     else -> {
                         val df = value as? AnyFrame
                         df shouldNotBe null
@@ -353,7 +463,7 @@ class DataFrameTreeTests : BaseTest() {
     fun extensionPropertiesTest() {
         val code = CodeGenerator.create().generate<GroupedPerson>(
             interfaceMode = InterfaceGenerationMode.None,
-            extensionProperties = true
+            extensionProperties = true,
         ).declarations
         val columnsContainer = ColumnsContainer::class.qualifiedName
         val dataFrameRowBase = DataRow::class.qualifiedName
@@ -416,7 +526,7 @@ class DataFrameTreeTests : BaseTest() {
         moved.nameAndCity.select { all() } shouldBe dataFrameOf(
             typed2.nameAndCity.name,
             typed2.age,
-            typed2.nameAndCity.city
+            typed2.nameAndCity.city,
         )
     }
 
@@ -434,7 +544,9 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = grouped.groups.name()
         val plain = grouped.toDataFrame()
         val res =
-            plain.split(grouped.groups).intoRows().remove { it[groupCol]["city"] }.ungroup(groupCol).sortBy { name and age }
+            plain.split(
+                grouped.groups,
+            ).intoRows().remove { it[groupCol]["city"] }.ungroup(groupCol).sortBy { name and age }
         res shouldBe typed.sortBy { name and age }.moveToLeft { city }
     }
 
@@ -444,7 +556,9 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = grouped.groups.name()
         val plain = grouped.toDataFrame()
         val res =
-            plain.split(grouped.groups).intoRows().remove { it[groupCol]["city"] }.ungroup(groupCol).sortBy { name and age }
+            plain.split(
+                grouped.groups,
+            ).intoRows().remove { it[groupCol]["city"] }.ungroup(groupCol).sortBy { name and age }
         res shouldBe typed.sortBy { name and age }.moveToLeft { city }
     }
 
@@ -520,7 +634,7 @@ class DataFrameTreeTests : BaseTest() {
             nameAndCity.columnNames() shouldBe listOf(
                 typed2.nameAndCity.name.name(),
                 colName,
-                typed2.nameAndCity.city.name()
+                typed2.nameAndCity.city.name(),
             )
         }
 
@@ -561,7 +675,9 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `distinct at column group`() {
-        typed2.nameAndCity.distinct().filter { name.startsWith("A") }.columns() shouldBe typed.select { name and city }.distinct()
+        typed2.nameAndCity.distinct().filter {
+            name.startsWith("A")
+        }.columns() shouldBe typed.select { name and city }.distinct()
             .filter { name.startsWith("A") }.columns()
     }
 

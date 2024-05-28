@@ -33,26 +33,32 @@ import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
 internal fun <T, C> Update<T, C>.updateImpl(expression: (AddDataRow<T>, DataColumn<C>, C) -> C?): DataFrame<T> =
-    if (df.isEmpty()) df
-    else df.replace(columns).with { it.updateImpl(df, filter, expression) }
-
-internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: ColumnExpression<C, C>) =
-    if (df.isEmpty()) df
-    else {
-        df.replace(columns).with {
-            val value = selector(it, it)
-            val convertedValue = value?.convertTo(it.type()) as C
-            it.updateImpl(df, filter) { _, _, _ -> convertedValue }
-        }
+    if (df.isEmpty()) {
+        df
+    } else {
+        df.replace(columns).with { it.updateImpl(df, filter, expression) }
     }
+
+internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: ColumnExpression<C, C>) = if (df.isEmpty()) {
+    df
+} else {
+    df.replace(columns).with {
+        val value = selector(it, it)
+        val convertedValue = value?.convertTo(it.type()) as C
+        it.updateImpl(df, filter) { _, _, _ -> convertedValue }
+    }
+}
 
 /**
  * Implementation for Update As Frame:
  * Replaces selected column groups with the result of the expression only where the filter is true.
  */
-internal fun <T, C, R> Update<T, DataRow<C>>.asFrameImpl(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
-    if (df.isEmpty()) df
-    else df.replace(columns).with {
+internal fun <T, C, R> Update<T, DataRow<C>>.asFrameImpl(
+    expression: DataFrameExpression<C, DataFrame<R>>,
+): DataFrame<T> = if (df.isEmpty()) {
+    df
+} else {
+    df.replace(columns).with {
         // First, we create an updated column group with the result of the expression
         val srcColumnGroup = it.asColumnGroup()
         val updatedColumnGroup = srcColumnGroup
@@ -74,6 +80,7 @@ internal fun <T, C, R> Update<T, DataRow<C>>.asFrameImpl(expression: DataFrameEx
             }
         }
     }
+}
 
 private fun <C, R> ColumnGroup<C>.replaceRowsIf(
     from: ColumnGroup<R>,
@@ -140,8 +147,11 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
         values.forEach {
             when (it) {
                 null -> nulls = true
+
                 else -> {
-                    require(it.javaClass.kotlin.isSubclassOf(kclass)) { "Can not add value '$it' to column '$name' of type $type" }
+                    require(
+                        it.javaClass.kotlin.isSubclassOf(kclass),
+                    ) { "Can not add value '$it' to column '$name' of type $type" }
                 }
             }
         }

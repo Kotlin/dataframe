@@ -190,11 +190,10 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        columnsOfKindInternal(
-            kinds = headPlusArray(kind, others).toSet(),
-            filter = filter
-        )
+    ): TransformableColumnSet<*> = columnsOfKindInternal(
+        kinds = headPlusArray(kind, others).toSet(),
+        filter = filter,
+    )
 
     /**
      * ## Cols Of Kind
@@ -232,11 +231,10 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        asSingleColumn().columnsOfKindInternal(
-            kinds = headPlusArray(kind, others).toSet(),
-            filter = filter
-        )
+    ): TransformableColumnSet<*> = asSingleColumn().columnsOfKindInternal(
+        kinds = headPlusArray(kind, others).toSet(),
+        filter = filter,
+    )
 
     /**
      * ## Cols Of Kind
@@ -274,11 +272,10 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().columnsOfKindInternal(
-            kinds = headPlusArray(kind, others).toSet(),
-            filter = filter
-        )
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().columnsOfKindInternal(
+        kinds = headPlusArray(kind, others).toSet(),
+        filter = filter,
+    )
 
     /**
      * ## Cols Of Kind
@@ -316,8 +313,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * ## Cols Of Kind
@@ -355,8 +351,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * ## Cols Of Kind
@@ -394,8 +389,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     // endregion
 }

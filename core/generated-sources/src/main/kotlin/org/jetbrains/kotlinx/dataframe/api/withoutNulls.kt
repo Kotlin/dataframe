@@ -181,8 +181,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> =
-        asSingleColumn().colsWithoutNulls()
+    public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> = asSingleColumn().colsWithoutNulls()
 
     /**
      * ## (Cols) Without Nulls
@@ -235,8 +234,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun String.colsWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).colsWithoutNulls()
+    public fun String.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 
     /**
      * ## (Cols) Without Nulls
@@ -262,8 +260,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun KProperty<*>.colsWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).colsWithoutNulls()
+    public fun KProperty<*>.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 
     /**
      * ## (Cols) Without Nulls
@@ -289,8 +286,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
-    public fun ColumnPath.colsWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).colsWithoutNulls()
+    public fun ColumnPath.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 }
 
 // endregion

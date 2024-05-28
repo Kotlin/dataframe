@@ -239,9 +239,12 @@ class Create : TestBase() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
         val df = dataFrameOf("name", "age")(
-            "Alice", 15,
-            "Bob", 20,
-            "Charlie", 100
+            "Alice",
+            15,
+            "Bob",
+            20,
+            "Charlie",
+            100,
         )
         // SampleEnd
     }
@@ -253,7 +256,7 @@ class Create : TestBase() {
         // DataFrame with 2 columns and 3 rows
         val df = dataFrameOf(
             "name" to listOf("Alice", "Bob", "Charlie"),
-            "age" to listOf(15, 20, 100)
+            "age" to listOf(15, 20, 100),
         )
         // SampleEnd
     }
@@ -335,9 +338,12 @@ class Create : TestBase() {
         // SampleStart
         val names = listOf("name", "age")
         val values = listOf(
-            "Alice", 15,
-            "Bob", 20,
-            "Charlie", 22
+            "Alice",
+            15,
+            "Bob",
+            20,
+            "Charlie",
+            22,
         )
         val df = dataFrameOf(names, values)
         // SampleEnd
@@ -384,7 +390,7 @@ class Create : TestBase() {
 
         val students = listOf(
             Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
-            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
+            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
         )
 
         val df = students.toDataFrame(maxDepth = 1)
@@ -405,7 +411,7 @@ class Create : TestBase() {
 
         val students = listOf(
             Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
-            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
+            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
         )
 
         // SampleStart

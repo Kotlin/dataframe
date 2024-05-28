@@ -100,7 +100,7 @@ internal class SchemaGeneratorPluginTest {
                         packageName = "org.test"
                     }
                 }
-            """.trimIndent()
+            """.trimIndent(),
         )
         val result = gradleRunner(buildDir, ":generateDataFrameTest").build()
         result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
@@ -133,7 +133,7 @@ internal class SchemaGeneratorPluginTest {
                         withNormalizationBy('-_\t ')
                     }
                 }
-            """.trimIndent()
+            """.trimIndent(),
         )
         val result = gradleRunner(buildDir, ":generateDataFrameTest").build()
         result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
@@ -342,7 +342,7 @@ internal class SchemaGeneratorPluginTest {
                 """
                 a;b;c
                 1;2;3
-                """.trimIndent()
+                """.trimIndent(),
             )
             // language=kts
             """
@@ -404,6 +404,8 @@ internal class SchemaGeneratorPluginTest {
         project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
         project.evaluate()
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("build/generated/dataframe/main1/kotlin/org/example/test/dataframe/321.Generated.kt"))
+            .shouldBe(
+                project.file("build/generated/dataframe/main1/kotlin/org/example/test/dataframe/321.Generated.kt"),
+            )
     }
 }

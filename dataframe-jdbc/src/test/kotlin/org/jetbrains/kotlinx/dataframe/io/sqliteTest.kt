@@ -70,7 +70,7 @@ class SqliteTest {
             """
 
             connection.createStatement().execute(
-                createCustomersTableQuery
+                createCustomersTableQuery,
             )
 
             @Language("SQL")
@@ -85,7 +85,7 @@ class SqliteTest {
             """
 
             connection.createStatement().execute(
-                createOrderTableQuery
+                createOrderTableQuery,
             )
 
             val profilePicture = "SampleProfilePictureData".toByteArray()
@@ -109,7 +109,9 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement("INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)")
+            connection.prepareStatement(
+                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
+            )
                 .use {
                     it.setString(1, null)
                     it.setString(2, "2023-07-21")
@@ -118,7 +120,9 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement("INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)")
+            connection.prepareStatement(
+                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
+            )
                 .use {
                     it.setString(1, "John Doe")
                     it.setString(2, "2023-08-21")

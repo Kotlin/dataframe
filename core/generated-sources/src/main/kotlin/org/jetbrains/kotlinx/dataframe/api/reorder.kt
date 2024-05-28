@@ -42,12 +42,11 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
     atAnyDepth: Boolean = true,
     desc: Boolean = false,
     expression: Selector<AnyCol, V>,
-): DataFrame<T> =
-    Reorder(
-        df = this,
-        columns = { if (atAnyDepth) colsAtAnyDepth() else all() },
-        inFrameColumns = atAnyDepth,
-    ).reorderImpl(desc, expression)
+): DataFrame<T> = Reorder(
+    df = this,
+    columns = { if (atAnyDepth) colsAtAnyDepth() else all() },
+    inFrameColumns = atAnyDepth,
+).reorderImpl(desc, expression)
 
 public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, desc: Boolean = false): DataFrame<T> =
     reorderColumnsBy(atAnyDepth, desc) { name() }

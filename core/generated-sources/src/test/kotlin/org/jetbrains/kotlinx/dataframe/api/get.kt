@@ -63,8 +63,8 @@ class GetTests {
         val df = dataFrameOf(
             columnOf(
                 dataFrameOf("a")(1),
-                dataFrameOf("a", "b")(2, 3, 4, 5)
-            ).named("x")
+                dataFrameOf("a", "b")(2, 3, 4, 5),
+            ).named("x"),
         )
         val x by frameColumn<Schema>()
         df[x][0].a[0] shouldBe 1
@@ -74,7 +74,7 @@ class GetTests {
     @Test
     fun `create typed column group accessor`() {
         val df = dataFrameOf(
-            dataFrameOf("a", "b")(1, 2, 3, 4).asColumnGroup("x")
+            dataFrameOf("a", "b")(1, 2, 3, 4).asColumnGroup("x"),
         )
         val x by columnGroup<Schema>()
         df[x][0].a shouldBe 1

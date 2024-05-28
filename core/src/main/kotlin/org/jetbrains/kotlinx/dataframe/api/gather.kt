@@ -14,15 +14,14 @@ import kotlin.reflect.typeOf
 
 // region gather
 
-public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> =
-    Gather(
-        df = this,
-        columns = selector,
-        filter = null,
-        keyType = typeOf<String>(),
-        keyTransform = { it },
-        valueTransform = null,
-    )
+public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> = Gather(
+    df = this,
+    columns = selector,
+    filter = null,
+    keyType = typeOf<String>(),
+    keyTransform = { it },
+    valueTransform = null,
+)
 
 public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> =
     gather { columns.toColumnSet() }
@@ -38,13 +37,13 @@ public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C
 public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): Gather<T, C, K, R> =
     copy(filter = this.filter and filter)
 
-public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> =
-    where { it != null } as Gather<T, C, K, R>
+public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = where { it != null } as Gather<T, C, K, R>
 
-public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
-    copy(explode = true)
+public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> = copy(explode = true)
 
-public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(noinline transform: (String) -> K): Gather<T, C, K, R> =
+public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
+    noinline transform: (String) -> K,
+): Gather<T, C, K, R> =
     copy(keyTransform = transform as ((String) -> Nothing), keyType = typeOf<K>()) as Gather<T, C, K, R>
 
 public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gather<T, C, K, R> =
@@ -68,51 +67,39 @@ public data class Gather<T, C, K, R>(
 
 // region into
 
-public fun <T, C, K, R> Gather<T, C, K, R>.into(
-    keyColumn: String,
-    valueColumn: String,
-): DataFrame<T> = gatherImpl(keyColumn, valueColumn)
+public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: String, valueColumn: String): DataFrame<T> =
+    gatherImpl(keyColumn, valueColumn)
 
 public fun <T, C, K, R> Gather<T, C, K, R>.into(
     keyColumn: ColumnAccessor<K>,
     valueColumn: ColumnAccessor<R>,
 ): DataFrame<T> = into(keyColumn.name(), valueColumn.name)
 
-public fun <T, C, K, R> Gather<T, C, K, R>.into(
-    keyColumn: KProperty<K>,
-    valueColumn: KProperty<R>,
-): DataFrame<T> = into(keyColumn.columnName, valueColumn.columnName)
+public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: KProperty<K>, valueColumn: KProperty<R>): DataFrame<T> =
+    into(keyColumn.columnName, valueColumn.columnName)
 
 // endregion
 
 // region keysInto
 
-public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(
-    keyColumn: String,
-): DataFrame<T> = gatherImpl(keyColumn, null)
+public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: String): DataFrame<T> = gatherImpl(keyColumn, null)
 
-public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(
-    keyColumn: ColumnAccessor<K>,
-): DataFrame<T> = keysInto(keyColumn.name())
+public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: ColumnAccessor<K>): DataFrame<T> =
+    keysInto(keyColumn.name())
 
-public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(
-    keyColumn: KProperty<K>,
-): DataFrame<T> = keysInto(keyColumn.columnName)
+public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: KProperty<K>): DataFrame<T> =
+    keysInto(keyColumn.columnName)
 
 // endregion
 
 // region valuesInto
 
-public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(
-    valueColumn: String,
-): DataFrame<T> = gatherImpl(null, valueColumn)
+public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(valueColumn: String): DataFrame<T> = gatherImpl(null, valueColumn)
 
-public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(
-    valueColumn: ColumnAccessor<K>,
-): DataFrame<T> = valuesInto(valueColumn.name())
+public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(valueColumn: ColumnAccessor<K>): DataFrame<T> =
+    valuesInto(valueColumn.name())
 
-public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(
-    valueColumn: KProperty<K>,
-): DataFrame<T> = valuesInto(valueColumn.columnName)
+public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(valueColumn: KProperty<K>): DataFrame<T> =
+    valuesInto(valueColumn.columnName)
 
 // endregion

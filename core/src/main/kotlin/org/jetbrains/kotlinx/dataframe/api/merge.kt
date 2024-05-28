@@ -18,8 +18,7 @@ import kotlin.reflect.typeOf
 public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): Merge<T, C, List<C>> =
     Merge(this, selector, false, { it }, typeOf<Any?>(), Infer.Type)
 
-public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> =
-    merge { columns.toColumnSet() }
+public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> = merge { columns.toColumnSet() }
 
 public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): Merge<T, C, List<C>> =
     merge { columns.toColumnSet() }
@@ -84,23 +83,24 @@ public fun <T, C, R> Merge<T, C, R>.by(
     postfix: CharSequence = "",
     limit: Int = -1,
     truncated: CharSequence = "...",
-): Merge<T, C, String> =
-    Merge(
-        df, selector, notNull,
-        transform = {
-            it.joinToString(
-                separator = separator,
-                prefix = prefix,
-                postfix = postfix,
-                limit = limit,
-                truncated = truncated
-            )
-        },
-        typeOf<String>(), Infer.Nulls
-    )
+): Merge<T, C, String> = Merge(
+    df,
+    selector,
+    notNull,
+    transform = {
+        it.joinToString(
+            separator = separator,
+            prefix = prefix,
+            postfix = postfix,
+            limit = limit,
+            truncated = truncated,
+        )
+    },
+    typeOf<String>(),
+    Infer.Nulls,
+)
 
 public inline fun <T, C, R, reified V> Merge<T, C, R>.by(
     infer: Infer = Infer.Nulls,
     crossinline transform: DataRow<T>.(R) -> V,
-): Merge<T, C, V> =
-    Merge(df, selector, notNull, { transform(this@by.transform(this, it)) }, typeOf<V>(), infer)
+): Merge<T, C, V> = Merge(df, selector, notNull, { transform(this@by.transform(this, it)) }, typeOf<V>(), infer)

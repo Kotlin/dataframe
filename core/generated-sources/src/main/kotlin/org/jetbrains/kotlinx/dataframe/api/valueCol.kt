@@ -361,7 +361,9 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
             val child = it.getCol(valueCol)
-                ?: throw IllegalStateException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
+                ?: throw IllegalStateException(
+                    "ValueColumn '${valueCol.path()}' not found in column group '${it.path}'",
+                )
             child.data.ensureIsValueColumn()
             listOf(child)
         }.singleImpl()
@@ -797,8 +799,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<*> =
-        valueCol<Any?>(name)
+    public fun SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -913,8 +914,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -1024,8 +1024,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun String.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -1135,8 +1134,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -1246,8 +1244,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun ColumnPath.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -1523,8 +1520,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<*> =
-        valueCol<Any?>(path)
+    public fun SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1639,8 +1635,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1750,8 +1745,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun String.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1861,8 +1855,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1972,8 +1965,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -2569,8 +2561,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2625,8 +2616,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the value column.
      */
-    public fun <C> ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<C> =
-        asSingleColumn().valueCol<C>(index)
+    public fun <C> ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<C> = asSingleColumn().valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -2682,8 +2672,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2738,12 +2727,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the value column.
      */
-    public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> =
-        this.ensureIsColumnGroup()
-            .allColumnsInternal()
-            .getAt(index)
-            .ensureIsValueColumn()
-            .cast()
+    public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> = this.ensureIsColumnGroup()
+        .allColumnsInternal()
+        .getAt(index)
+        .ensureIsValueColumn()
+        .cast()
 
     /**
      * ## Value Col
@@ -2799,8 +2787,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun String.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2855,8 +2842,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the value column.
      */
-    public fun <C> String.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> String.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -2912,8 +2898,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2968,8 +2953,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the value column.
      */
-    public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -3025,8 +3009,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun ColumnPath.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -3081,8 +3064,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
      * @param [C] The type of the value column.
      */
-    public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     // endregion
 }
@@ -3092,21 +3074,19 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
  * by adding a check to see it's a [ValueColumn] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
-internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
-    onResolve { col: ColumnWithPath<*>? ->
-        require(col?.isValueColumn() != false) {
-            "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
-        }
+internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> = onResolve { col: ColumnWithPath<*>? ->
+    require(col?.isValueColumn() != false) {
+        "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
     }
+}
 
 /** Checks the validity of this [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn],
  * by adding a check to see it's a [ValueColumn][org.jetbrains.kotlinx.dataframe.columns.ValueColumn] (so, a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not. */
-internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
-    onResolve { col: ColumnWithPath<*>? ->
-        require(col?.isValueColumn() != false) {
-            "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
-        }
+internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> = onResolve { col: ColumnWithPath<*>? ->
+    require(col?.isValueColumn() != false) {
+        "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
     }
+}
 
 // endregion

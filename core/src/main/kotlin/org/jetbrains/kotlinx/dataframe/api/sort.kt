@@ -96,15 +96,15 @@ public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
     DataColumn.create(name, values().sortedWith(comparator), type) as C
 
 /** @include [CommonDataColumnSortWithDocs] */
-public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C =
-    sortWith(Comparator(comparator))
+public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C = sortWith(Comparator(comparator))
 
 // endregion
 
 // region DataFrame
 
 public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataFrame<T> = sortByImpl(
-    UnresolvedColumnsPolicy.Fail, columns
+    UnresolvedColumnsPolicy.Fail,
+    columns,
 )
 
 public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<Comparable<*>?>): DataFrame<T> =
@@ -165,11 +165,9 @@ public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C
 private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
     receiver: ColumnsSelectionDsl<T>,
     expression: DataFrameExpression<G, C>,
-): DataColumn<C?> {
-    return receiver.newColumnWithActualType("") { row ->
-        val group = row[groups]
-        expression(group, group)
-    }
+): DataColumn<C?> = receiver.newColumnWithActualType("") { row ->
+    val group = row[groups]
+    expression(group, group)
 }
 
 public fun <T, G, C> GroupBy<T, G>.sortByGroup(

@@ -31,15 +31,13 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
      * Casts this column to a [ColumnGroup] and returns a column with the specified [name] or null if it
      * can't be found.
      */
-    public fun getCol(name: String): ColumnWithPath<Any?>? =
-        asColumnGroup().getColumnOrNull(name)?.addParentPath(path)
+    public fun getCol(name: String): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(name)?.addParentPath(path)
 
     /**
      * Casts this column to a [ColumnGroup] and returns a column with the specified [index] or null if it
      * can't be found.
      */
-    public fun getCol(index: Int): ColumnWithPath<Any?>? =
-        asColumnGroup().getColumnOrNull(index)?.addParentPath(path)
+    public fun getCol(index: Int): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(index)?.addParentPath(path)
 
     /**
      * Casts this column to a [ColumnGroup] and returns a column with the specified [accessor] or null if it
@@ -51,12 +49,11 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
     /**
      * Returns all ("children") columns in this column if it's a group, else it returns an empty list.
      */
-    public fun cols(): List<ColumnWithPath<Any?>> =
-        if (isColumnGroup()) {
-            data.asColumnGroup().columns().map { it.addParentPath(path) }
-        } else {
-            emptyList()
-        }
+    public fun cols(): List<ColumnWithPath<Any?>> = if (isColumnGroup()) {
+        data.asColumnGroup().columns().map { it.addParentPath(path) }
+    } else {
+        emptyList()
+    }
 
     override fun path(): ColumnPath = path
 

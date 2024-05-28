@@ -1,6 +1,56 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.chunked
+import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.columnGroup
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.countDistinct
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.distinct
+import org.jetbrains.kotlinx.dataframe.api.distinctBy
+import org.jetbrains.kotlinx.dataframe.api.drop
+import org.jetbrains.kotlinx.dataframe.api.dropLast
+import org.jetbrains.kotlinx.dataframe.api.dropNA
+import org.jetbrains.kotlinx.dataframe.api.dropNaNs
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.dropWhile
+import org.jetbrains.kotlinx.dataframe.api.fillNaNs
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.filterBy
+import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.group
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapToRows
+import org.jetbrains.kotlinx.dataframe.api.maxBy
+import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
+import org.jetbrains.kotlinx.dataframe.api.minBy
+import org.jetbrains.kotlinx.dataframe.api.minus
+import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.notNull
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.takeLast
+import org.jetbrains.kotlinx.dataframe.api.takeWhile
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.api.withZero
+import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
@@ -455,7 +505,8 @@ class Access : TestBase() {
         df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
         df.dropNulls { city } // remove rows with null value in 'city' column
         df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
-        df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
+        // remove rows with null value in 'city' AND 'weight' columns
+        df.dropNulls(whereAllNull = true) { city and weight }
         // SampleEnd
     }
 

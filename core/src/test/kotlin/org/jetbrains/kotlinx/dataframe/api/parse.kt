@@ -143,6 +143,9 @@ class ParseTests {
 
     @Test
     fun `parse duration`() {
-        columnOf("1d 15m", "20h 35m 11s").parse() shouldBe columnOf(1.days + 15.minutes, 20.hours + 35.minutes + 11.seconds)
+        columnOf(
+            "1d 15m",
+            "20h 35m 11s",
+        ).parse() shouldBe columnOf(1.days + 15.minutes, 20.hours + 35.minutes + 11.seconds)
     }
 }

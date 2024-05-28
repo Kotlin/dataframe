@@ -73,15 +73,17 @@ internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T = when (tartyp
 
 internal fun BooleanArray.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in indices)
+    for (i in indices) {
         if (this[i]) res.add(i)
+    }
     return res
 }
 
 internal fun List<Boolean>.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in indices)
+    for (i in indices) {
         if (this[i]) res.add(i)
+    }
     return res
 }
 
@@ -98,8 +100,9 @@ internal fun <T> Iterable<T>.equalsByElement(other: Iterable<T>): Boolean {
 internal fun <T> Iterable<T>.rollingHash(): Int {
     val i = iterator()
     var hash = 0
-    while (i.hasNext())
+    while (i.hasNext()) {
         hash = 31 * hash + (i.next()?.hashCode() ?: 5)
+    }
     return hash
 }
 
@@ -150,6 +153,7 @@ internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
     val nullable = distinct.any { it?.isMarkedNullable ?: true }
     return when {
         distinct.isEmpty() || distinct.contains(null) -> typeOf<Any>().withNullability(nullable)
+
         distinct.size == 1 -> distinct.single()!!
 
         else -> {
@@ -256,9 +260,11 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
     return maxIndex
 }
 
-internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
-    if (this == Nothing::class) nothingType(nullable) // would be Void otherwise
-    else this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType = if (this == Nothing::class) {
+    nothingType(nullable) // would be Void otherwise
+} else {
+    this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+}
 
 internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
@@ -295,26 +301,34 @@ internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Arra
 internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iterable<C> =
     (listOf(head) + cols.asIterable())
 
-internal fun <T> DataFrame<T>.splitByIndices(
-    startIndices: Sequence<Int>,
-): Sequence<DataFrame<T>> {
-    return (startIndices + nrow).zipWithNext { start, endExclusive ->
-        if (start == endExclusive) DataFrame.empty().cast()
-        else get(start until endExclusive)
+internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<DataFrame<T>> =
+    (startIndices + nrow).zipWithNext {
+            start,
+            endExclusive,
+        ->
+        if (start == endExclusive) {
+            DataFrame.empty().cast()
+        } else {
+            get(start until endExclusive)
+        }
     }
-}
 
-internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> {
-    return (startIndices + size).zipWithNext { start, endExclusive ->
+internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> =
+    (startIndices + size).zipWithNext {
+            start,
+            endExclusive,
+        ->
         subList(start, endExclusive)
     }
-}
 
 internal fun <T> T.asNullable() = this as T?
 internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
 internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
-    if (includeBoundaries) this in left..right
-    else this > left && this < right
+    if (includeBoundaries) {
+        this in left..right
+    } else {
+        this > left && this < right
+    }
 
 private const val DELIMITERS = "[_\\s]"
 public val DELIMITERS_REGEX: Regex = DELIMITERS.toRegex()
@@ -322,32 +336,29 @@ public val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
 
 internal val CAMEL_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
 
-public fun String.toCamelCaseByDelimiters(delimiters: Regex): String =
-    split(delimiters).joinToCamelCaseString()
+public fun String.toCamelCaseByDelimiters(delimiters: Regex): String = split(delimiters).joinToCamelCaseString()
 
-internal fun String.toSnakeCase(): String =
-    if ("[A-Z_]+".toRegex().matches(this)) {
-        this
-    } else {
-        CAMEL_REGEX
-            .replace(this) { "_${it.value}" }
-            .replace(" ", "_")
-            .lowercase()
-    }
-
-internal fun List<String>.joinToCamelCaseString(): String {
-    return joinToString(separator = "") { it.replaceFirstChar { it.uppercaseChar() } }
-        .replaceFirstChar { it.lowercaseChar() }
+internal fun String.toSnakeCase(): String = if ("[A-Z_]+".toRegex().matches(this)) {
+    this
+} else {
+    CAMEL_REGEX
+        .replace(this) { "_${it.value}" }
+        .replace(" ", "_")
+        .lowercase()
 }
+
+internal fun List<String>.joinToCamelCaseString(): String = joinToString(separator = "") {
+    it.replaceFirstChar { it.uppercaseChar() }
+}
+    .replaceFirstChar { it.lowercaseChar() }
 
 /** Returns `true` if this callable is a getter-like function.
  *
  * A callable is considered getter-like if it is either a property getter,
  * or it's a function with no (type) parameters that starts with "get"/"is". */
-internal fun KFunction<*>.isGetterLike(): Boolean =
-    (name.startsWith("get") || name.startsWith("is")) &&
-        valueParameters.isEmpty() &&
-        typeParameters.isEmpty()
+internal fun KFunction<*>.isGetterLike(): Boolean = (name.startsWith("get") || name.startsWith("is")) &&
+    valueParameters.isEmpty() &&
+    typeParameters.isEmpty()
 
 /** Returns `true` if this callable is a getter-like function.
  *
@@ -361,12 +372,11 @@ internal fun KProperty<*>.isGetterLike(): Boolean = true
  * A callable is considered getter-like if it is either a property getter,
  * or it's a function with no (type) parameters that starts with "get"/"is".
  */
-internal fun KCallable<*>.isGetterLike(): Boolean =
-    when (this) {
-        is KProperty<*> -> isGetterLike()
-        is KFunction<*> -> isGetterLike()
-        else -> false
-    }
+internal fun KCallable<*>.isGetterLike(): Boolean = when (this) {
+    is KProperty<*> -> isGetterLike()
+    is KFunction<*> -> isGetterLike()
+    else -> false
+}
 
 /** Returns the column name for this callable.
  * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.

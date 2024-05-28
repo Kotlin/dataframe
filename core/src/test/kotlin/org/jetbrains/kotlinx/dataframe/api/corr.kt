@@ -8,8 +8,12 @@ import org.junit.Test
 class CorrTests {
 
     val df = dataFrameOf("a", "b", "c")(
-        3, true, 1,
-        6, false, 2
+        3,
+        true,
+        1,
+        6,
+        false,
+        2,
     )
 
     @Test
@@ -37,7 +41,7 @@ class CorrTests {
         val expected = dataFrameOf("column", "a", "b", "c")(
             "a", 1.0, -1.0, 1.0,
             "b", -1.0, 1.0, -1.0,
-            "c", 1.0, -1.0, 1.0
+            "c", 1.0, -1.0, 1.0,
         )
         corr.columns().zip(expected.columns()).forEach { (a, b) ->
             a.type() shouldBe b.type()

@@ -19,7 +19,7 @@ public enum class InterfaceGenerationMode {
     WithFields,
     Enum,
     TypeAlias,
-    None;
+    None,
 }
 
 public data class CodeGenResult(val code: CodeWithConverter, val newMarkers: List<Marker>)
@@ -46,12 +46,10 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
     ): CodeWithConverter
 
     public companion object {
-        public fun create(useFqNames: Boolean = true): CodeGenerator {
-            return if (useFqNames) {
-                CodeGeneratorImpl(FullyQualifiedNames)
-            } else {
-                CodeGeneratorImpl(ShortNames)
-            }
+        public fun create(useFqNames: Boolean = true): CodeGenerator = if (useFqNames) {
+            CodeGeneratorImpl(FullyQualifiedNames)
+        } else {
+            CodeGeneratorImpl(ShortNames)
         }
     }
 }
@@ -64,7 +62,7 @@ internal fun CodeGenerator.generate(
 ): CodeWithConverter = generate(
     MarkersExtractor.get(markerClass),
     interfaceMode,
-    extensionProperties
+    extensionProperties,
 )
 
 public inline fun <reified T> CodeGenerator.generate(

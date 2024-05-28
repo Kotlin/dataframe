@@ -54,7 +54,6 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
     .rename {
         colsAtAnyDepth { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }
     }.toCamelCase()
-
     // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
     .update {
         colsAtAnyDepth().colsOf<AnyFrame>()
@@ -63,8 +62,7 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 
-public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> =
-    renameImpl(newNames)
+public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFrame<T> =
     into(*newNames.map { it.name }.toTypedArray())
@@ -252,8 +250,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
-    public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
-        named(nameOf.name)
+    public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf.name)
 
     /**
      * @include [CommonRenameDocs]
@@ -261,8 +258,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
-    public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
-        named(nameOf.columnName)
+    public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf.columnName)
 
     /**
      * @include [CommonRenameDocs]

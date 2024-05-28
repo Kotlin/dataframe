@@ -28,12 +28,15 @@ public fun <T> DataColumn<T>.valueCounts(
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,
-    resultColumn: String = defaultCountColumnName
+    resultColumn: String = defaultCountColumnName,
 ): DataFrame<ValueCount> {
     var grouped = toList().groupBy { it }.map { it.key to it.value.size }
     if (sort) {
-        grouped = if (ascending) grouped.sortedBy { it.second }
-        else grouped.sortedByDescending { it.second }
+        grouped = if (ascending) {
+            grouped.sortedBy { it.second }
+        } else {
+            grouped.sortedByDescending { it.second }
+        }
     }
     if (dropNA) grouped = grouped.filter { !it.first.isNA }
     val nulls = if (dropNA) false else hasNulls()
@@ -52,7 +55,7 @@ public fun <T> DataFrame<T>.valueCounts(
     ascending: Boolean = false,
     dropNA: Boolean = true,
     resultColumn: String = defaultCountColumnName,
-    columns: ColumnsSelector<T, *>? = null
+    columns: ColumnsSelector<T, *>? = null,
 ): DataFrame<T> {
     var df = if (columns != null) select(columns) else this
     if (dropNA) df = df.dropNA()

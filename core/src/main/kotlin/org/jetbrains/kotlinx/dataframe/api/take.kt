@@ -123,8 +123,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[take][ColumnsSelectionDsl.take]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.take(n: Int): ColumnSet<*> =
-        this.asSingleColumn().takeCols(n)
+    public fun ColumnsSelectionDsl<*>.take(n: Int): ColumnSet<*> = this.asSingleColumn().takeCols(n)
 
     /**
      * @include [CommonTakeFirstDocs]
@@ -190,8 +189,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[takeLast][ColumnsSelectionDsl.takeLast]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> =
-        asSingleColumn().takeLastCols(n)
+    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> = asSingleColumn().takeLastCols(n)
 
     /**
      * @include [CommonTakeLastDocs]

@@ -48,7 +48,7 @@ public open class TestBase {
         "Charlie", "Chaplin", 40, "Milan", null, true,
         "Bob", "Marley", 30, "Tokyo", 68, true,
         "Alice", "Wolf", 20, null, 55, false,
-        "Charlie", "Byrd", 30, "Moscow", 90, true
+        "Charlie", "Byrd", 30, "Moscow", 90, true,
     ).group("firstName", "lastName").into("name").cast<Person>()
 
     val dfGroup = df.convert { name.firstName }.to {
@@ -113,7 +113,10 @@ public open class TestBase {
      */
     fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {
         this should {
-            it.reduce { a, b -> a shouldBe b; b }
+            it.reduce { a, b ->
+                a shouldBe b
+                b
+            }
         }
         return this
     }
@@ -123,8 +126,11 @@ public open class TestBase {
      */
     fun List<ColumnWithPath<*>>.print() {
         forEach {
-            if (it.isValueColumn()) println("${it.name}: ${it.type()}")
-            else it.print()
+            if (it.isValueColumn()) {
+                println("${it.name}: ${it.type()}")
+            } else {
+                it.print()
+            }
         }
         println()
     }
