@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.*
  * @see [TransformableColumnSet]
  * @see [TransformableSingleColumn]
  */
-public interface ColumnsResolver<out C> {
+public sealed interface ColumnsResolver<out C> {
 
     /**
      * Resolves this [ColumnsResolver] as a [List]<[ColumnWithPath]<[C]>>.
