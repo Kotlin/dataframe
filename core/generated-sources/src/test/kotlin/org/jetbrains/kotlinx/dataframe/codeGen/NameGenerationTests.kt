@@ -18,13 +18,13 @@ class NameGenerationTests {
     fun `interface generation`() {
         val codeGen = CodeGenerator.create()
         val code = codeGen.generate(
-            df.schema(),
-            "DataType",
-            true,
-            false,
+            schema = df.schema(),
+            name = "DataType",
+            fields = true,
+            extensionProperties = false,
             isOpen = false,
-            MarkerVisibility.IMPLICIT_PUBLIC,
-            emptyList(),
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            knownMarkers = emptyList(),
         ).code
 
         val expected = """
@@ -41,9 +41,9 @@ class NameGenerationTests {
         code.declarations shouldBe expected
     }
 
+    @Suppress("ktlint:standard:property-naming")
     @DataSchema
     interface DataRecord {
-        @Suppress("ktlint:standard:property-naming")
         @ColumnName("first column")
         val `first column`: Int
 

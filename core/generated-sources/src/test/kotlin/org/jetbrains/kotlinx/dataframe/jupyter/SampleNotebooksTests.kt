@@ -30,7 +30,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         "titanic",
         "Titanic",
         replacer = CodeReplacer.byMap(
-            "../../idea-examples/" to "$ideaExamplesPath/",
+            "../../idea-examples/" to "$IDEA_EXAMPLES_PATH/",
         ),
     )
 
@@ -69,7 +69,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     fun movies() = exampleTest(
         "movies",
         replacer = CodeReplacer.byMap(
-            "ml-latest/movies.csv" to "$ideaExamplesPath/movies/src/main/resources/movies.csv",
+            "ml-latest/movies.csv" to "$IDEA_EXAMPLES_PATH/movies/src/main/resources/movies.csv",
         ),
         // There is no tags data in repository
         cellClause = CellClause.stopAfter { cell ->
@@ -113,15 +113,15 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         cleanup: () -> Unit = {},
     ) {
         val fileName = if (notebookName == null) "$dir.ipynb" else "$notebookName.ipynb"
-        doTest("$notebookExamplesPath/$dir/$fileName", replacer, cellClause, cleanup)
+        doTest("$NOTEBOOK_EXAMPLES_PATH/$dir/$fileName", replacer, cellClause, cleanup)
     }
 
     data class CodeCellData(val code: String, val outputs: List<Output>)
 
     companion object {
-        const val ideaExamplesPath = "../examples/idea-examples"
-        const val notebookExamplesPath = "../examples/notebooks"
+        const val IDEA_EXAMPLES_PATH = "../examples/idea-examples"
+        const val NOTEBOOK_EXAMPLES_PATH = "../examples/notebooks"
 
-        fun testFile(folder: String, fileName: String) = fileName to "$notebookExamplesPath/$folder/$fileName"
+        fun testFile(folder: String, fileName: String) = fileName to "$NOTEBOOK_EXAMPLES_PATH/$folder/$fileName"
     }
 }
