@@ -226,38 +226,107 @@ class RenderingTests : JupyterReplTestCase() {
                 df.group(col1, col2).into("group")            
             """.trimIndent()
         )
-        json.keys shouldContain "metadata"
-        val metadata = json["metadata"] as JsonObject
-        metadata.keys shouldContain "schema"
-        val schema = (metadata["schema"] as JsonArray<*>).toJsonString(prettyPrint = true)
-        val expectedSchema = """
-            [{
-              "name": "group",
-              "kind": "ColumnGroup",
-              "group": [{
-                "name": "col1",
-                "kind": "ValueColumn",
-                "type": "kotlin.String"
+        val jsonOutput = json.toJsonString(prettyPrint = true)
+        val expectedOutput = """
+            {
+              "${'$'}version": "2.1.0",
+              "metadata": {
+                "columns": ["group", "col3", "col4"],
+                "types": ["org.jetbrains.kotlinx.dataframe.DataRow<*>", "kotlin.String?", "org.jetbrains.kotlinx.dataframe.DataFrame<*>"],
+                "nrow": 3,
+                "ncol": 3
+              },
+              "kotlin_dataframe": [{
+                "group": {
+                  "data": {
+                    "col1": "a",
+                    "col2": 1
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": ["kotlin.String", "kotlin.Int"]
+                  }
+                },
+                "col3": "Foo",
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": ["kotlin.String"],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
               }, {
-                "name": "col2",
-                "kind": "ValueColumn",
-                "type": "kotlin.Int"
+                "group": {
+                  "data": {
+                    "col1": "b",
+                    "col2": 2
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": ["kotlin.String", "kotlin.Int"]
+                  }
+                },
+                "col3": "Bar",
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": ["kotlin.String"],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
+              }, {
+                "group": {
+                  "data": {
+                    "col1": "c",
+                    "col2": 3
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": ["kotlin.String", "kotlin.Int"]
+                  }
+                },
+                "col3": null,
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": ["kotlin.String"],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
               }]
-            }, {
-              "name": "col3",
-              "kind": "ValueColumn",
-              "type": "kotlin.String?"
-            }, {
-              "name": "col4",
-              "kind": "FrameColumn",
-              "dataframe": [{
-                "name": "header",
-                "kind": "ValueColumn",
-                "type": "kotlin.String"
-              }]
-            }]
+            }
         """.trimIndent()
-        schema shouldBe expectedSchema
+        jsonOutput shouldBe expectedOutput
     }
 
     @Test

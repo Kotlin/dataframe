@@ -16,13 +16,11 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAM
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.SCHEMA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
 import org.jetbrains.kotlinx.dataframe.io.valueColumnName
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.awt.image.BufferedImage
@@ -49,7 +47,7 @@ internal object SerializationKeys {
     const val VERSION = "\$version"
     const val COLUMNS = "columns"
     const val KOTLIN_DATAFRAME = "kotlin_dataframe"
-    const val SCHEMA = "schema"
+    const val TYPES = "types"
 }
 
 /**
@@ -71,24 +69,47 @@ internal fun KlaxonJson.encodeRowWithMetadata(
 ): JsonObject? {
     val values = frame.columns().map { col ->
         when (col) {
-            is ColumnGroup<*> -> obj(
-                DATA to encodeRowWithMetadata(col, index, rowLimit, imageEncodingOptions),
-                METADATA to obj(KIND to ColumnKind.Group.toString())
-            )
-
+            is ColumnGroup<*> -> {
+                val schema = col.schema()
+                obj(
+                    DATA to encodeRowWithMetadata(col, index, rowLimit, imageEncodingOptions),
+                    METADATA to obj(
+                        KIND to ColumnKind.Group.toString(),
+                        COLUMNS to schema.columns.keys,
+                        TYPES to schema.columns.values.map { colSchema: ColumnSchema ->
+                            when(colSchema.kind) {
+                                ColumnKind.Value -> colSchema.type.toString()
+                                ColumnKind.Group -> null
+                                ColumnKind.Frame -> null
+                            }
+                        }
+                    ),
+                )
+            }
             is FrameColumn<*> -> {
-                val data = if (rowLimit == null) encodeFrameWithMetadata(col[index], null, imageEncodingOptions)
-                else encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit, imageEncodingOptions)
+                val data = if (rowLimit == null) {
+                    encodeFrameWithMetadata(col[index], null, imageEncodingOptions)
+                } else {
+                    encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit, imageEncodingOptions)
+                }
+                val schema = col.schema.value
                 obj(
                     DATA to data,
                     METADATA to obj(
                         KIND to ColumnKind.Frame.toString(),
+                        COLUMNS to schema.columns.keys,
+                        TYPES to schema.columns.values.map { colSchema: ColumnSchema ->
+                            when(colSchema.kind) {
+                                ColumnKind.Value -> colSchema.type.toString()
+                                ColumnKind.Group -> null
+                                ColumnKind.Frame -> null
+                            }
+                        },
                         NCOL to col[index].ncol,
                         NROW to col[index].nrow
                     )
                 )
             }
-
             else -> encodeValue(col, index, imageEncodingOptions)
         }.let { col.name to it }
     }
@@ -262,8 +283,8 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
     return obj(
         VERSION to SERIALIZATION_VERSION,
         METADATA to obj(
-            SCHEMA to frame.schema().toJson(),
             COLUMNS to frame.columnNames(),
+            TYPES to frame.columnTypes().map { it.toString() },
             NROW to frame.rowsCount(),
             NCOL to frame.columnsCount()
         ),
@@ -273,30 +294,4 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
             imageEncodingOptions
         ),
     )
-}
-
-/**
- * Turn a [DataFrameSchema] into a datastructure that can be parsed
- * to a JSON serializer
- *
- * Each column is represented the following way:
- * - value columns: `{name: "<columnName>", kind: "ValueColumn", type: "<kType>" }`
- * - colum groups: `{name: "<groupNameName>", kind: "ColumnGroup", group: [<GroupMember>,...] }`
- * - data frames: `{name: "<columnName>", kind: "FrameColumn", dataframe: [<InnerDataFrameSchema>,...] }`
- */
-internal fun DataFrameSchema.toJson(): MutableList<MutableMap<String, Any?>> {
-    val list: MutableList<MutableMap<String, Any?>> = mutableListOf()
-    columns.forEach { (name: String, columnSchema: ColumnSchema) ->
-        val schemaData = mutableMapOf<String, Any?>()
-        schemaData["name"] = name
-        schemaData["kind"] = columnSchema.kind.toString()
-        when (columnSchema) {
-            is ColumnSchema.Value -> schemaData["type"] = columnSchema.type.toString()
-            is ColumnSchema.Group -> schemaData["group"] = columnSchema.schema.toJson()
-            is ColumnSchema.Frame -> schemaData["dataframe"] = columnSchema.schema.toJson()
-            else -> error("Unsupported column type: $columnSchema")
-        }
-        list.add(schemaData)
-    }
-    return list
 }

@@ -1,15 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import com.beust.klaxon.json
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.SCHEMA
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
-import org.jetbrains.kotlinx.dataframe.impl.io.toJson
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
@@ -72,13 +69,13 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
         val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
 
+        // TODO Do we need to handle the improved meta data here as well?
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() -> {
                 json {
                     obj(
                         NROW to df.size.nrow,
                         NCOL to df.size.ncol,
-                        SCHEMA to df.schema().toJson(),
                         COLUMNS to df.columnNames(),
                         KOTLIN_DATAFRAME to encodeFrame(df.take(limit)),
                     )
