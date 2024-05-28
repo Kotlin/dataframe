@@ -17,7 +17,6 @@ internal class ConfiguredAggregateColumn<C> private constructor(
     private fun ColumnWithPath<C>.toDescriptor(keepName: Boolean): AggregateColumnDescriptor<C> =
         when (val col = this) {
             is AggregateColumnDescriptor<C> -> {
-
                 // Fix for K2 smart-casting changes
                 val currentDefault = this@ConfiguredAggregateColumn.default
                 val currentNewPath = this@ConfiguredAggregateColumn.newPath

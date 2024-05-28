@@ -33,6 +33,5 @@ internal fun <C> SingleColumn<C>.asColumnSet(): ColumnSet<C> =
         else -> object : ColumnSet<C>, SingleColumn<C> by this {}
     }
 
-
 internal fun <C> ColumnsSelectionDsl<C>.asColumnSet(): ColumnSet<DataRow<C>> =
     asSingleColumn().asColumnSet()
