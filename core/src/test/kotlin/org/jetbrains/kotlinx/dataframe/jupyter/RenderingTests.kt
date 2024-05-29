@@ -232,7 +232,14 @@ class RenderingTests : JupyterReplTestCase() {
               "${'$'}version": "2.1.0",
               "metadata": {
                 "columns": ["group", "col3", "col4"],
-                "types": ["org.jetbrains.kotlinx.dataframe.DataRow<*>", "kotlin.String?", "org.jetbrains.kotlinx.dataframe.DataFrame<*>"],
+                "types": [{
+                  "kind": "ColumnGroup"
+                }, {
+                  "kind": "ValueColumn",
+                  "type": "kotlin.String?"
+                }, {
+                  "kind": "FrameColumn"
+                }],
                 "nrow": 3,
                 "ncol": 3
               },
@@ -245,7 +252,13 @@ class RenderingTests : JupyterReplTestCase() {
                   "metadata": {
                     "kind": "ColumnGroup",
                     "columns": ["col1", "col2"],
-                    "types": ["kotlin.String", "kotlin.Int"]
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
                   }
                 },
                 "col3": "Foo",
@@ -260,7 +273,10 @@ class RenderingTests : JupyterReplTestCase() {
                   "metadata": {
                     "kind": "FrameColumn",
                     "columns": ["header"],
-                    "types": ["kotlin.String"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
                     "ncol": 1,
                     "nrow": 3
                   }
@@ -274,7 +290,13 @@ class RenderingTests : JupyterReplTestCase() {
                   "metadata": {
                     "kind": "ColumnGroup",
                     "columns": ["col1", "col2"],
-                    "types": ["kotlin.String", "kotlin.Int"]
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
                   }
                 },
                 "col3": "Bar",
@@ -289,7 +311,10 @@ class RenderingTests : JupyterReplTestCase() {
                   "metadata": {
                     "kind": "FrameColumn",
                     "columns": ["header"],
-                    "types": ["kotlin.String"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
                     "ncol": 1,
                     "nrow": 3
                   }
@@ -303,7 +328,13 @@ class RenderingTests : JupyterReplTestCase() {
                   "metadata": {
                     "kind": "ColumnGroup",
                     "columns": ["col1", "col2"],
-                    "types": ["kotlin.String", "kotlin.Int"]
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
                   }
                 },
                 "col3": null,
@@ -318,7 +349,10 @@ class RenderingTests : JupyterReplTestCase() {
                   "metadata": {
                     "kind": "FrameColumn",
                     "columns": ["header"],
-                    "types": ["kotlin.String"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
                     "ncol": 1,
                     "nrow": 3
                   }

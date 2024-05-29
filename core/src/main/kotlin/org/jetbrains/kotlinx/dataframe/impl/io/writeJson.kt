@@ -3,9 +3,15 @@ package org.jetbrains.kotlinx.dataframe.impl.io
 import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.KlaxonJson
-import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.indices
+import org.jetbrains.kotlinx.dataframe.api.isList
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -16,13 +22,17 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAM
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
 import org.jetbrains.kotlinx.dataframe.io.valueColumnName
+import org.jetbrains.kotlinx.dataframe.name
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.typeClass
 import java.awt.image.BufferedImage
 import java.io.IOException
 
@@ -47,18 +57,12 @@ internal object SerializationKeys {
     const val VERSION = "\$version"
     const val COLUMNS = "columns"
     const val KOTLIN_DATAFRAME = "kotlin_dataframe"
+    const val TYPE = "type"
     const val TYPES = "types"
 }
 
-/**
- * Changes:
- * 1.0.0:
- *  -
- * 2.0.0:
- *  -
- * 2.1.0:
- *  - Added "schema" entry to metadata
- */
+// See docs/serialization_format.md for a description of
+// serialization versions and format.
 internal const val SERIALIZATION_VERSION = "2.1.0"
 
 internal fun KlaxonJson.encodeRowWithMetadata(
@@ -76,12 +80,8 @@ internal fun KlaxonJson.encodeRowWithMetadata(
                     METADATA to obj(
                         KIND to ColumnKind.Group.toString(),
                         COLUMNS to schema.columns.keys,
-                        TYPES to schema.columns.values.map { colSchema: ColumnSchema ->
-                            when(colSchema.kind) {
-                                ColumnKind.Value -> colSchema.type.toString()
-                                ColumnKind.Group -> null
-                                ColumnKind.Frame -> null
-                            }
+                        TYPES to schema.columns.values.map { columnSchema ->
+                            createJsonTypeDescriptor(columnSchema)
                         }
                     ),
                 )
@@ -98,12 +98,8 @@ internal fun KlaxonJson.encodeRowWithMetadata(
                     METADATA to obj(
                         KIND to ColumnKind.Frame.toString(),
                         COLUMNS to schema.columns.keys,
-                        TYPES to schema.columns.values.map { colSchema: ColumnSchema ->
-                            when(colSchema.kind) {
-                                ColumnKind.Value -> colSchema.type.toString()
-                                ColumnKind.Group -> null
-                                ColumnKind.Frame -> null
-                            }
+                        TYPES to schema.columns.values.map { columnSchema ->
+                            createJsonTypeDescriptor(columnSchema)
                         },
                         NCOL to col[index].ncol,
                         NROW to col[index].nrow
@@ -173,6 +169,16 @@ private fun encodeBufferedImageAsBase64(
     } catch (e: IOException) {
         null
     }
+}
+
+private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject {
+    return JsonObject(
+        mutableMapOf(KIND to columnSchema.kind.toString()).also {
+            if (columnSchema.kind == ColumnKind.Value) {
+                it.put(TYPE, columnSchema.type.toString())
+            }
+        }
+    )
 }
 
 internal fun KlaxonJson.encodeFrameWithMetadata(
@@ -284,7 +290,9 @@ internal fun KlaxonJson.encodeDataFrameWithMetadata(
         VERSION to SERIALIZATION_VERSION,
         METADATA to obj(
             COLUMNS to frame.columnNames(),
-            TYPES to frame.columnTypes().map { it.toString() },
+            TYPES to frame.schema().columns.values.map { colSchema ->
+                createJsonTypeDescriptor(colSchema)
+            },
             NROW to frame.rowsCount(),
             NCOL to frame.columnsCount()
         ),
