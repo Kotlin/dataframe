@@ -24,3 +24,6 @@ public annotation class DisableInterpretation
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.EXPRESSION)
 public annotation class Import
+
+@Target(AnnotationTarget.PROPERTY)
+public annotation class Order(val order: Int)
