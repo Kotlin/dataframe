@@ -128,7 +128,10 @@ val samplesTest = tasks.register<Test>("samplesTest") {
     ignoreFailures = true
 
     testClassesDirs = fileTree("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin")
-    classpath = files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+    classpath =
+        files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") +
+        configurations["samplesRuntimeClasspath"] +
+        sourceSets["main"].runtimeClasspath
 }
 
 val clearSamplesOutputs by tasks.creating {
@@ -177,10 +180,12 @@ val installGitPreCommitHook by tasks.creating(Copy::class) {
         fileMode = 755
 
         // Workaround for https://github.com/Kotlin/dataframe/issues/612
-        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) doLast {
-            exec {
-                workingDir(gitHooksDir)
-                commandLine("chmod", "755", "pre-commit")
+        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) {
+            doLast {
+                exec {
+                    workingDir(gitHooksDir)
+                    commandLine("chmod", "755", "pre-commit")
+                }
             }
         }
     } else {
@@ -207,14 +212,17 @@ val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sour
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
+// Include both test and main sources for cross-referencing, Exclude generated sources
+val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
+    .filterNot { pathOf("build", "generated") in it.path }
+
 // Task to generate the processed documentation
-val processKDocsMain by creatingProcessDocTask(
-    sources = (kotlinMainSources + kotlinTestSources) // Include both test and main sources for cross-referencing
-        .filterNot { pathOf("build", "generated") in it.path }, // Exclude generated sources
-) {
+val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
-
+    exportAsHtml {
+        dir = file("../docs/StardustDocs/snippets")
+    }
     task {
         group = "KDocs"
         doLast {
@@ -246,9 +254,11 @@ tasks.withType<Jar> {
                         pathOf("src", "test", "kotlin") in it.path ||
                             pathOf("src", "test", "java") in it.path
                     } // filter out test sources again
-                    .plus(kotlinMainSources.filter {
-                        pathOf("build", "generated") in it.path
-                    }) // Include generated sources (which were excluded above)
+                    .plus(
+                        kotlinMainSources.filter {
+                            pathOf("build", "generated") in it.path
+                        },
+                    ), // Include generated sources (which were excluded above)
             )
         }
     }
@@ -361,8 +371,8 @@ tasks.test {
         excludes.set(
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
-                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
-            )
+                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
+            ),
         )
     }
 }
