@@ -1,5 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -53,7 +54,12 @@ dependencies {
 }
 
 private enum class Version : Comparable<Version> {
-    SNAPSHOT, DEV, ALPHA, BETA, RC, STABLE;
+    SNAPSHOT,
+    DEV,
+    ALPHA,
+    BETA,
+    RC,
+    STABLE,
 }
 
 private fun String.findVersion(): Version {
@@ -125,9 +131,11 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
 }
 
 allprojects {
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "1.8"
+    afterEvaluate {
+        extensions.findByType(KotlinJvmProjectExtension::class)?.apply {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_1_8
+            }
         }
     }
 
@@ -140,22 +148,9 @@ allprojects {
     afterEvaluate {
         try {
             kotlinter {
+                failBuildWhenCannotAutoFormat = false
                 ignoreFailures = false
                 reporters = arrayOf("checkstyle", "plain")
-                experimentalRules = true
-                disabledRules = arrayOf(
-                    "no-wildcard-imports",
-                    "experimental:spacing-between-declarations-with-annotations",
-                    "experimental:enum-entry-name-case",
-                    "experimental:argument-list-wrapping",
-                    "experimental:annotation",
-                    "max-line-length",
-                    "filename",
-                    "comment-spacing",
-                    "curly-spacing",
-                    "experimental:annotation-spacing",
-                    "no-unused-imports", // broken
-                )
             }
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set kotlinter config on :${this.name}")
@@ -219,13 +214,13 @@ kotlinPublications {
     sonatypeSettings(
         project.findProperty("kds.sonatype.user") as String?,
         project.findProperty("kds.sonatype.password") as String?,
-        "dataframe project, v. ${project.version}"
+        "dataframe project, v. ${project.version}",
     )
 
     signingCredentials(
         project.findProperty("kds.sign.key.id") as String?,
         project.findProperty("kds.sign.key.private") as String?,
-        project.findProperty("kds.sign.key.passphrase") as String?
+        project.findProperty("kds.sign.key.passphrase") as String?,
     )
 
     pom {
