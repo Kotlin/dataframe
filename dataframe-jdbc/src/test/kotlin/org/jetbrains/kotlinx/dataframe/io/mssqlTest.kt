@@ -4,7 +4,9 @@ import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -15,7 +17,8 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true"
@@ -335,7 +338,9 @@ class MSSQLTest {
         // with inferNullability: Boolean = false
         val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
         df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+        // this column changed type because it doesn't contain nulls
+        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -362,7 +367,9 @@ class MSSQLTest {
 
         // with inferNullability: Boolean = false
         val df3 = DataFrame.readSqlQuery(connection, sqlQuery, inferNullability = false)
-        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+        // this column changed type because it doesn't contain nulls
+        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -396,7 +403,9 @@ class MSSQLTest {
 
                 val df5 = DataFrame.readResultSet(rs, H2, inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+                // this column changed type because it doesn't contain nulls
+                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["age"]!!.type shouldBe typeOf<Int>()
             }

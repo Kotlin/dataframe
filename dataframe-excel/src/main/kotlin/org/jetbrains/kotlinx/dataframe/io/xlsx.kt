@@ -54,10 +54,11 @@ public class Excel : SupportedDataFrameFormat {
         DefaultReadExcelMethod(pathRepresentation)
 }
 
-internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readExcel)
+internal class DefaultReadExcelMethod(path: String?) :
+    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_EXCEL)
 
-private const val readExcel = "readExcel"
-private const val readExcelTempFolderPrefix = "dataframe-excel"
+private const val READ_EXCEL = "readExcel"
+private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
 
 /**
  * To prevent [Issue #402](https://github.com/Kotlin/dataframe/issues/402):
@@ -67,7 +68,7 @@ private const val readExcelTempFolderPrefix = "dataframe-excel"
  */
 private fun setWorkbookTempDirectory() {
     val tempDir = try {
-        Files.createTempDirectory(readExcelTempFolderPrefix)
+        Files.createTempDirectory(READ_EXCEL_TEMP_FOLDER_PREFIX)
             .toFile()
             .also { it.deleteOnExit() }
     } catch (e: Exception) {
@@ -267,27 +268,29 @@ private fun repairNameIfRequired(
         nameFromCell
     }
 
-    NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
-        val emptyName = "Unknown column"
-        if (columnNameCounters.contains(emptyName)) {
-            "${emptyName}${columnNameCounters[emptyName]}"
+    NameRepairStrategy.MAKE_UNIQUE ->
+        if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
+            val emptyName = "Unknown column"
+            if (columnNameCounters.contains(emptyName)) {
+                "${emptyName}${columnNameCounters[emptyName]}"
+            } else {
+                emptyName
+            }
         } else {
-            emptyName
+            if (columnNameCounters.contains(nameFromCell)) {
+                "${nameFromCell}${columnNameCounters[nameFromCell]}"
+            } else {
+                nameFromCell
+            }
         }
-    } else {
-        if (columnNameCounters.contains(nameFromCell)) {
-            "${nameFromCell}${columnNameCounters[nameFromCell]}"
-        } else {
-            nameFromCell
-        }
-    }
 }
 
 private fun Cell?.cellValue(sheetName: String): Any? {
     if (this == null) return null
     fun getValueFromType(type: CellType?): Any? = when (type) {
         CellType._NONE -> error(
-            "Cell $address of sheet $sheetName has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues",
+            "Cell $address of sheet $sheetName has a CellType that should only be used internally. " +
+                "This is a bug, please report https://github.com/Kotlin/dataframe/issues",
         )
 
         CellType.NUMERIC -> {
@@ -320,7 +323,7 @@ public fun <T> DataFrame<T>.writeExcel(
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
     keepFile: Boolean = false,
-) = writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
+): Unit = writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
 
 public enum class WorkBookType {
     XLS,

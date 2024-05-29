@@ -457,7 +457,8 @@ object KotlinJars {
     val stdlib: File by lazy {
         stdlibOrNull
             ?: throw Exception(
-                "Unable to find kotlin stdlib, please specify it explicitly via \"$KOTLIN_STDLIB_JAR_PROPERTY\" property",
+                "Unable to find kotlin stdlib, please specify it explicitly via \"$KOTLIN_STDLIB_JAR_PROPERTY\" " +
+                    "property",
             )
     }
 

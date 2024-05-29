@@ -161,7 +161,9 @@ class ReplCodeGenTests : BaseTest() {
         repl.process(typed.select { age and name })
         repl.process<Test2._DataFrameType>() shouldBe ""
         repl.process(typed.select { city and weight })
-        repl.process<Test1._DataFrameType1>() shouldBe "" // processed wrong marker (doesn't implement Test2.DataFrameType)
+
+        // processed wrong marker (doesn't implement Test2.DataFrameType)
+        repl.process<Test1._DataFrameType1>() shouldBe ""
 
         val marker = Test2._DataFrameType2::class.simpleName!!
         val expected = """

@@ -67,7 +67,8 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
     override fun add(value: T?) {
         if (checkTypes && value != null && !value.javaClass.kotlin.isSubclassOf(kclass)) {
             throw IllegalArgumentException(
-                "Can not add value of class ${value.javaClass.kotlin.qualifiedName} to column of type $type. Value = $value",
+                "Can not add value of class ${value.javaClass.kotlin.qualifiedName} to column of type $type. " +
+                    "Value = $value",
             )
         }
         super.add(value)

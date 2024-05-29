@@ -12,9 +12,9 @@ import org.jetbrains.kotlinx.jupyter.api.VariableName
 public data class CodeWithConverter(val declarations: Code, val converter: (VariableName) -> Code = EmptyConverter) {
 
     public companion object {
-        public const val EmptyDeclarations: Code = ""
+        public const val EMPTY_DECLARATIONS: Code = ""
         public val EmptyConverter: (VariableName) -> Code = { it }
-        public val Empty: CodeWithConverter = CodeWithConverter(EmptyDeclarations, EmptyConverter)
+        public val Empty: CodeWithConverter = CodeWithConverter(EMPTY_DECLARATIONS, EmptyConverter)
     }
 
     val hasDeclarations: Boolean get() = declarations.isNotBlank()

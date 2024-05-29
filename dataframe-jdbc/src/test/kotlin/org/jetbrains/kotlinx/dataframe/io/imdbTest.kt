@@ -79,6 +79,7 @@ class ImdbTestTest {
 
     @Test
     fun `read sql query`() {
+        @Suppress("ktlint:standard:max-line-length")
         val sqlQuery = "select name, year, rank,\n" +
             "GROUP_CONCAT (genre) as \"genres\"\n" +
             "from movies join movies_directors on  movie_id = movies.id\n" +

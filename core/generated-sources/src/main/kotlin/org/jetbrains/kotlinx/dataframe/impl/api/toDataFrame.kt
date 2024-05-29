@@ -217,7 +217,7 @@ internal fun convertToDataFrame(
             } else {
                 val value = try {
                     val value = it.call(obj)
-                    /**
+                    /*
                      * here we do what compiler does
                      * @see org.jetbrains.kotlinx.dataframe.api.CreateDataFrameTests.testKPropertyGetLibrary
                      */

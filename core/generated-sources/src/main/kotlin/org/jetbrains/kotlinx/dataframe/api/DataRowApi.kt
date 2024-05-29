@@ -96,28 +96,29 @@ internal interface DiffDocs
  */
 internal interface DiffOrNullDocs
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
-public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double = prev()?.let { p ->
-    expression(
-        this,
-        this,
-    ) - expression(p, p)
-} ?: firstRowResult
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
+    prev()?.let { p ->
+        expression(
+            this,
+            this,
+        ) - expression(p, p)
+    } ?: firstRowResult
 
+/**
+ * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
+ *
+ * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
+ */
 // required to resolve `diff(0) { intValue }`
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-/**
- * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
- *
- * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
- */
 public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int = prev()?.let { p ->
     expression(
         this,
@@ -141,13 +142,13 @@ public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T
 public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
     prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
 public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? = prev()?.let { p ->
     expression(
         this,

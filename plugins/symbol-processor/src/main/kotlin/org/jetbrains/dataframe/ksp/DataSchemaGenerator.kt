@@ -110,7 +110,8 @@ class DataSchemaGenerator(
                 data.toURI().toURL() ?: return null
             } catch (exception: MalformedURLException) {
                 logger.error(
-                    "Failed to convert resolved path '${relativeFile.absolutePath}' or '${absoluteFile.absolutePath}' to URL: ${exception.message}",
+                    "Failed to convert resolved path '${relativeFile.absolutePath}' or " +
+                        "'${absoluteFile.absolutePath}' to URL: ${exception.message}",
                     file,
                 )
                 return null
@@ -251,7 +252,8 @@ class DataSchemaGenerator(
         val parsedDf = when (val readResult = CodeGenerator.urlDfReader(importStatement.dataSource.data, formats)) {
             is DfReadResult.Error -> {
                 logger.error(
-                    "Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${readResult.reason}",
+                    "Error while reading dataframe from data at " +
+                        "${importStatement.dataSource.pathRepresentation}: ${readResult.reason}",
                 )
                 return
             }
@@ -316,11 +318,13 @@ class DataSchemaGenerator(
 
     private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing = throw RuntimeException(
         "Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
-            "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!",
+            "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table " +
+            "or result of SQL query!",
     )
 
     private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing = throw RuntimeException(
         "Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
-            "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!",
+            "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for " +
+            "SQL table or result of SQL query!",
     )
 }

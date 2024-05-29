@@ -6,7 +6,10 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -274,7 +277,7 @@ public fun DataFrame.Companion.readDelim(
         require(readLines >= 0) { "`readLines` must not be negative" }
         val records = ArrayList<CSVRecord>(readLines)
         val iter = csvParser.iterator()
-        var count = readLines ?: 0
+        var count = readLines
         while (iter.hasNext() && 0 < count--) {
             records.add(iter.next())
         }

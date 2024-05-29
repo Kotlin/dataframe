@@ -33,11 +33,11 @@ import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
+import org.jetbrains.kotlinx.dataframe.io.ARRAY_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
-import org.jetbrains.kotlinx.dataframe.io.valueColumnName
+import org.jetbrains.kotlinx.dataframe.io.VALUE_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -207,7 +207,7 @@ internal fun fromJsonListAnyColumns(
                     else -> collector.add(v)
                 }
             }
-            val column = collector.toColumn(valueColumnName)
+            val column = collector.toColumn(VALUE_COLUMN_NAME)
             val res = if (nanIndices.isNotEmpty()) {
                 fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                     var j = 0
@@ -258,14 +258,14 @@ internal fun fromJsonListAnyColumns(
                     val elementType = col.type
                     val values = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
                     DataColumn.createValueColumn(
-                        name = arrayColumnName,
+                        name = ARRAY_COLUMN_NAME,
                         values = values,
                         type = List::class.createType(listOf(KTypeProjection.invariant(elementType))),
                     )
                 }
 
                 else -> DataColumn.createFrameColumn(
-                    name = arrayColumnName, // will be erased
+                    name = ARRAY_COLUMN_NAME, // will be erased
                     df = parsed.unwrapUnnamedColumns(),
                     startIndices = startIndices,
                 )
@@ -324,7 +324,7 @@ internal fun fromJsonListAnyColumns(
             listOf(
                 UnnamedColumn(
                     DataColumn.createFrameColumn(
-                        name = valueColumnName, // will be erased unless at top-level
+                        name = VALUE_COLUMN_NAME, // will be erased unless at top-level
                         groups = dataFrames,
                         schema = lazy {
                             DataFrameSchemaImpl(
@@ -437,14 +437,14 @@ internal fun fromJsonListArrayAndValueColumns(
 
     // Add a value column to the collected names if needed
     val valueColumn = if (hasPrimitive || records.isEmpty()) {
-        nameGenerator.addUnique(valueColumnName)
+        nameGenerator.addUnique(VALUE_COLUMN_NAME)
     } else {
         null
     }
 
     // Add an array column to the collected names if needed
     val arrayColumn = if (hasArray) {
-        nameGenerator.addUnique(arrayColumnName)
+        nameGenerator.addUnique(ARRAY_COLUMN_NAME)
     } else {
         null
     }
@@ -496,7 +496,7 @@ internal fun fromJsonListArrayAndValueColumns(
             listOf(
                 UnnamedColumn(
                     DataColumn.createFrameColumn(
-                        name = valueColumnName, // will be erased unless at top-level
+                        name = VALUE_COLUMN_NAME, // will be erased unless at top-level
                         groups = dataFrames,
                         schema = lazy {
                             dataFrames.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()

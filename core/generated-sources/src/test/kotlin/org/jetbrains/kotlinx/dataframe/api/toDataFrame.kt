@@ -238,19 +238,18 @@ class CreateDataFrameTests {
     @Ignore
     @Test
     fun generateBuiltInsOverrides() {
-        listOf("Byte", "Short", "Int", "Long", "String", "Char", "Boolean", "UByte", "UShort", "UInt", "ULong").forEach {
-                type,
-            ->
-            val typeParameter = type.first()
-            val func = """
-            @JvmName("toDataFrame$type")
-            public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
-                ValueProperty<$typeParameter>::value from { it }
-            }.cast()
-            """.trimIndent()
-            println(func)
-            println()
-        }
+        listOf("Byte", "Short", "Int", "Long", "String", "Char", "Boolean", "UByte", "UShort", "UInt", "ULong")
+            .forEach { type ->
+                val typeParameter = type.first()
+                val func = """
+                    @JvmName("toDataFrame$type")
+                    public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
+                        ValueProperty<$typeParameter>::value from { it }
+                    }.cast()
+                """.trimIndent()
+                println(func)
+                println()
+            }
     }
 
     // nullable field here - no generated unwrapping code

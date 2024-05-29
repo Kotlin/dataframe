@@ -6,7 +6,7 @@ public class UnequalColumnSizesException(
 ) : IllegalArgumentException() {
 
     override val message: String
-        get() = "Unequal column sizes. Expected rows count: $expectedRowsCount. Actual column sizes:\n${columnSizes.joinToString(
-            "\n",
-        ) { it.first + ": " + it.second }}"
+        get() = "Unequal column sizes. " +
+            "Expected rows count: $expectedRowsCount. " +
+            "Actual column sizes:\n${columnSizes.joinToString("\n") { it.first + ": " + it.second }}"
 }

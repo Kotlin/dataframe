@@ -70,7 +70,7 @@ public annotation class ColumnsSelectionDslMarker
  *
  */
 @ColumnsSelectionDslMarker
-public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
+public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     ColumnSelectionDsl<T>,
 
     // first {}, firstCol()

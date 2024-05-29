@@ -27,7 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import kotlin.reflect.KProperty
 
-internal const val unnamedColumnPrefix = "untitled"
+internal const val UNNAMED_COLUMN_PREFIX = "untitled"
 
 internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
     DataFrame<T>,
@@ -65,7 +65,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
             columns = cols.mapIndexed { i, col ->
                 val name = col.name
                 if (name.isEmpty()) {
-                    val uniqueName = nameGenerator.addUnique(unnamedColumnPrefix)
+                    val uniqueName = nameGenerator.addUnique(UNNAMED_COLUMN_PREFIX)
                     val renamed = col.rename(uniqueName)
                     columnsMap[uniqueName] = i
                     renamed

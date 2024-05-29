@@ -96,24 +96,25 @@ internal interface DiffDocs
  */
 internal interface DiffOrNullDocs
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
 /**
  * @include [DiffDocs]
  */
-public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double = prev()?.let { p ->
-    expression(
-        this,
-        this,
-    ) - expression(p, p)
-} ?: firstRowResult
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
+    prev()?.let { p ->
+        expression(
+            this,
+            this,
+        ) - expression(p, p)
+    } ?: firstRowResult
 
+/**
+ * @include [DiffDocs]
+ */
 // required to resolve `diff(0) { intValue }`
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-/**
- * @include [DiffDocs]
- */
 public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int = prev()?.let { p ->
     expression(
         this,
@@ -133,11 +134,11 @@ public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T
 public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
     prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
 /**
  * @include [DiffOrNullDocs]
  */
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
 public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? = prev()?.let { p ->
     expression(
         this,

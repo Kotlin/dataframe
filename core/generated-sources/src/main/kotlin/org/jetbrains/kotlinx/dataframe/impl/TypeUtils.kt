@@ -12,7 +12,9 @@ import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVariance
-import kotlin.reflect.KVariance.*
+import kotlin.reflect.KVariance.IN
+import kotlin.reflect.KVariance.INVARIANT
+import kotlin.reflect.KVariance.OUT
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.createType
@@ -214,7 +216,8 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> = when
             .filterNot { it == Nothing::class } // Nothing is a subtype of everything
             .let {
                 when {
-                    it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> { // if there is only one class - return it
+                    // if there is only one class - return it
+                    it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> {
                         listOf(it[0])
                     }
 
@@ -440,7 +443,8 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
                 if (listifyValues) {
                     val typeInLists = classesInCollection.commonType(
                         nullable = nullsInCollection || allListsAreEmpty,
-                        upperBound = nothingType(nullable = false), // for when the list is empty, make it Nothing instead of Any?
+                        // for when the list is empty, make it Nothing instead of Any?
+                        upperBound = nothingType(nullable = false),
                     )
                     val typeOfOthers = classes.commonType(nullable = nullsInCollection, upperBound = upperBound)
                     val commonType = listOf(typeInLists, typeOfOthers).commonTypeListifyValues()

@@ -268,7 +268,8 @@ private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): 
             }
         } catch (e: NoSuchElementException) {
             throw IllegalStateException(
-                "Exception while converting OpenApi schemas to markers. ${retrievableMarkers.keys.toList()} cannot find a ref marker.",
+                "Exception while converting OpenApi schemas to markers. " +
+                    "${retrievableMarkers.keys.toList()} cannot find a ref marker.",
                 e,
             )
         }
@@ -433,7 +434,8 @@ private fun Schema<*>.toMarker(
             properties != null -> {
                 if (additionalProperties != null && additionalProperties != false) {
                     println(
-                        "OpenAPI warning: type $name has both properties and additionalProperties defined, but only properties will be generated in the data schema.",
+                        "OpenAPI warning: type $name has both properties and additionalProperties defined, " +
+                            "but only properties will be generated in the data schema.",
                     )
                 }
 

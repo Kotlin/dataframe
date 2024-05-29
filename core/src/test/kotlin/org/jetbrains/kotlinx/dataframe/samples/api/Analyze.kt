@@ -818,7 +818,7 @@ class Analyze : TestBase() {
         df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
         df.groupBy { city }.count() // number of rows into column "count"
         df.groupBy { city }
-            .max { firstName.length() and lastName.length() } // maximum length of firstName or lastName into column "max"
+            .max { firstName.length() and lastName.length() } // max length of firstName or lastName into column "max"
         df.groupBy { city }
             .medianFor { age and weight } // median age into column "age", median weight into column "weight"
         df.groupBy { city }
@@ -1337,4 +1337,13 @@ class Analyze : TestBase() {
         df.valueCounts { name and city }
         // SampleEnd
     }
+}
+
+class DB {
+    operator fun <T> get(query: DB.() -> T): T = TODO()
+}
+
+fun main() {
+    val db = DB()
+    val query = db[{ 123 }]
 }

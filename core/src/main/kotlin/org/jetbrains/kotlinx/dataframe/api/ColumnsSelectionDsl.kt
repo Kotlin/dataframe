@@ -44,7 +44,7 @@ public annotation class ColumnsSelectionDslMarker
  * It does not directly implement [SingleColumn] for DSL purposes.
  */
 @ColumnsSelectionDslMarker
-public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
+public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     ColumnSelectionDsl<T>,
 
     // first {}, firstCol()

@@ -15,6 +15,7 @@ import java.io.File
 import java.io.File.separatorChar
 import java.io.InputStream
 
+@Suppress("ktlint:standard:max-line-length")
 class OpenApiTests : JupyterReplTestCase() {
 
     private val openApi = OpenApi()
@@ -410,6 +411,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(status1Enum)
 
+        // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
         @Language("kt")
         val petInterface = """
             @DataSchema(isOpen = false)
@@ -421,7 +423,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
                 val status: $functionName.Status1?
                 public companion object {
-        """.trimLines() // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
+        """.trimLines()
 
         code should haveSubstring(petInterface)
 
@@ -572,6 +574,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(breed1Enum)
 
+        // hunts is required but marked nullable, age is either integer or number, breed is nullable enum
         @Language("kt")
         val catInterface = """
             @DataSchema(isOpen = false)
@@ -587,7 +590,7 @@ class OpenApiTests : JupyterReplTestCase() {
                           convertDataRowsWithOpenApi() 
                           convertTo()
                     }
-        """.trimLines() // hunts is required but marked nullable, age is either integer or number, breed is nullable enum
+        """.trimLines()
 
         code should haveSubstring(catInterface)
 
@@ -621,6 +624,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(eyeColorEnum)
 
+        // petType was named pet_type, id is either Long or String,
+        // other is not integer, eyeColor is a required but nullable enum
         @Language("kt")
         val petInterface = """
             @DataSchema(isOpen = false)
@@ -642,7 +647,7 @@ class OpenApiTests : JupyterReplTestCase() {
                           convertDataRowsWithOpenApi() 
                           convertTo()
                       }
-        """.trimLines() // petType was named pet_type, id is either Long or String, other is not integer, eyeColor is a required but nullable enum
+        """.trimLines()
 
         code should haveSubstring(petInterface)
 

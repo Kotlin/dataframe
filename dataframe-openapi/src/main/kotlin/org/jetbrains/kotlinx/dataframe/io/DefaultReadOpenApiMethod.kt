@@ -68,7 +68,7 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
 
         fun getReadAndConvertMethod(readMethod: String): String = """
             return ${DataFrame::class.asClassName()}
-                .$readMethod${if (marker is OpenApiMarker.AdditionalPropertyInterface) "[\"$valueColumnName\"].first().let { it as DataFrame<*> }" else ""}
+                .$readMethod${if (marker is OpenApiMarker.AdditionalPropertyInterface) "[\"$VALUE_COLUMN_NAME\"].first().let { it as DataFrame<*> }" else ""}
                 .convertTo${marker.shortName}()
         """.trimIndent()
 
