@@ -93,12 +93,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
     }
 }
 
-public interface Grouped<out T> : Aggregatable<T> {
-
-//    @Refine
-//    @Interpretable("Aggregate")
-//    fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T>
-}
+public interface Grouped<out T> : Aggregatable<T>
 
 public data class ReducedGroupBy<T, G>(
     @PublishedApi internal val groupBy: GroupBy<T, G>,
