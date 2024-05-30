@@ -32,10 +32,10 @@ df.move { name.firstName and name.lastName }.after { city }
         <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html"/>
 </tab>
     <tab title="On a Column Set">
-        <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.html"/>
+        <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"/>
 </tab>
     <tab title="On a Column Group">
-        <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.html"/>
+        <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"/>
 </tab>
 </tabs>
 

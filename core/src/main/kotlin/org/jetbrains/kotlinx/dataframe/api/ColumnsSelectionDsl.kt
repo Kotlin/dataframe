@@ -242,7 +242,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         public interface PlainDslPartOfGrammar
 
         /**
-         * {@include [Indent]}[**`[`**][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
+         * {@include [Indent]}\[**`\[`**\][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}\[**`\]`**\][ColumnsSelectionDsl.col]
          *
          * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
          *
@@ -296,8 +296,16 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
          *
          * {@include [Indent]}`| `{@include [WithoutNullsColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
          */
-        @ExportAsHtml
-        public interface ColumnSetPartOfGrammar
+        public interface ColumnSetPartOfGrammar {
+
+            /**
+             * {@include [DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetRef]}
+             *
+             * {@include [ColumnSetPartOfGrammar]}
+             */
+            @ExportAsHtml
+            public interface ForHtml
+        }
 
         /**
          * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`[**`]`**][cols]
@@ -362,8 +370,16 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
          *
          * {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          */
-        @ExportAsHtml
-        public interface ColumnGroupPartOfGrammar
+        public interface ColumnGroupPartOfGrammar {
+
+            /**
+             * {@include [DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupRef]}
+             *
+             * {@include [ColumnGroupPartOfGrammar]}
+             */
+            @ExportAsHtml
+            public interface ForHtml
+        }
     }
 
     /**
