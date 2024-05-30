@@ -146,14 +146,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
 
     
 
-    
-
-    
-
-    
-
-    
-
     /**
      * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].
      */
