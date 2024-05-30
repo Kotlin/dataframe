@@ -180,12 +180,10 @@ val installGitPreCommitHook by tasks.creating(Copy::class) {
         fileMode = 755
 
         // Workaround for https://github.com/Kotlin/dataframe/issues/612
-        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) {
-            doLast {
-                exec {
-                    workingDir(gitHooksDir)
-                    commandLine("chmod", "755", "pre-commit")
-                }
+        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) doLast {
+            exec {
+                workingDir(gitHooksDir)
+                commandLine("chmod", "755", "pre-commit")
             }
         }
     } else {
@@ -372,7 +370,7 @@ tasks.test {
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
                 "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
-            ),
+            )
         )
     }
 }
