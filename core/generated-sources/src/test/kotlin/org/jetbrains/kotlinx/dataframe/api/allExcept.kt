@@ -176,8 +176,6 @@ class AllExceptTests : ColumnsSelectionDslTests() {
 //            df.select { "name".allColsExcept(pathOf("name", "lastName")) }, // breaks
             df.select { "name".allColsExcept { cols { "last" in it.name } } },
 
-//            df.select { Person::name.allColsExcept { lastName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
-//            df.select { Person::name.allColsExcept { lastNameAccessor } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
 //            df.select { Person::name.allColsExcept(name.lastName) }, // blocked
 //            df.select { Person::name.allColsExcept(lastNameAccessor) }, // blocked
             df.select { Person::name.allColsExcept("lastName") },
@@ -336,13 +334,6 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { "name".exceptNew(pathOf("firstName")) },
             df.select { "name".exceptNew(pathOf("firstName"), pathOf("firstName")) },
 
-            // https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
-//            df.select { Person::name exceptNew { cols { "first" in it.name } } },
-//            df.select { Person::name.exceptNew { cols { "first" in it.name } and cols { "first" in it.name } } },
-//            df.select { Person::name exceptNew { firstName } },
-//            df.select { Person::name.exceptNew { firstNameAccessor } },
-//            df.select { Person::name exceptNew { firstName and firstName } },
-//            df.select { Person::name.exceptNew { firstNameAccessor and firstNameAccessor } },
 //            df.select { Person::name exceptNew name.firstName }, // not allowed
 //            df.select { Person::name.exceptNew(name.firstName and name.firstName) }, // not allowed
 //            df.select { Person::name exceptNew firstNameAccessor }, // not allowed
