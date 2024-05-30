@@ -128,7 +128,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @set [DslGrammarTemplate.ColumnSetFunctionsArg] {@include [ColumnSetPartOfGrammar]}
      * @set [DslGrammarTemplate.ColumnGroupFunctionsArg] {@include [ColumnGroupPartOfGrammar]}
      */
-    @ExcludeFromSources
     public interface DslGrammar {
 
         /**
@@ -178,7 +177,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
          *
          * {@include [DslGrammarTemplate.TextDef]}
          */
-        @ExportAsHtml
+        @[ExcludeFromSources ExportAsHtml]
         public interface DefinitionsPartOfGrammar
 
         /**
@@ -238,7 +237,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
          *
          * `| `{@include [WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName]}**`()`**
          */
-        @ExportAsHtml
+        @[ExcludeFromSources ExportAsHtml]
         public interface PlainDslPartOfGrammar
 
         /**
@@ -296,6 +295,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
          *
          * {@include [Indent]}`| `{@include [WithoutNullsColumnsSelectionDsl.Grammar.ColumnSetName]}**`()`**
          */
+        @ExcludeFromSources
         public interface ColumnSetPartOfGrammar {
 
             /**
@@ -370,6 +370,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
          *
          * {@include [Indent]}{@include [ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          */
+        @ExcludeFromSources
         public interface ColumnGroupPartOfGrammar {
 
             /**
