@@ -1,5 +1,6 @@
 [versions]
-ksp = "1.9.23-1.0.20"
+ksp = "2.0.0-1.0.21"
+#ksp = "1.9.23-1.0.20"
 kotlinJupyter = "0.12.0-139"
 
 # TODO Updating requires major changes all across the project
@@ -7,7 +8,8 @@ kotlinJupyter = "0.12.0-139"
 ktlint = "3.4.5"
 
 # make sure to sync manually with :generator module
-kotlin = "1.9.22"
+kotlin = "2.0.0"
+#kotlin = "1.9.22"
 kotlinpoet = "1.16.0"
 dokka = "1.9.10"
 

@@ -40,23 +40,41 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
     // optimization when no filter is applied
     if (filter == null) {
         // add key and value columns
-        if (keysColumn != null) {
-            df = df.add(keysColumn) { keys }
-        }
-
-        if (valuesColumn != null) {
-            df = df.add(valuesColumn) { row ->
-                columnsToGather.map { col ->
-                    val value = col[row]
-                    if (valueTransform != null) {
-                        when {
-                            explode && value is List<*> -> (value as List<C>).map(valueTransform)
-                            else -> valueTransform(value)
-                        }
-                    } else value
+        df = df.add { // add columns for names and values
+            if (keysColumn != null) {
+                keysColumn from { keys }
+            }
+            if (valuesColumn != null) {
+                valuesColumn from { row ->
+                    columnsToGather.map { col ->
+                        val value = col[row]
+                        if (valueTransform != null) {
+                            when {
+                                explode && value is List<*> -> (value as List<C>).map(valueTransform)
+                                else -> valueTransform(value)
+                            }
+                        } else value
+                    }
                 }
             }
         }
+//        if (keysColumn != null) {
+//            df = df.add(keysColumn) { keys }
+//        }
+//
+//        if (valuesColumn != null) {
+//            df = df.add(valuesColumn) { row ->
+//                columnsToGather.map { col ->
+//                    val value = col[row]
+//                    if (valueTransform != null) {
+//                        when {
+//                            explode && value is List<*> -> (value as List<C>).map(valueTransform)
+//                            else -> valueTransform(value)
+//                        }
+//                    } else value
+//                }
+//            }
+//        }
 
         // explode keys and values
         df = when {
