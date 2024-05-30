@@ -183,7 +183,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /**
          * {@include [DslGrammarTemplate.ColumnRef]}` `{@include [ColumnRangeColumnsSelectionDsl.Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
          *
-         * `| `**`this`**`/`**`it`**[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`]`**][cols]
+         * `| `**`this`**`/`**`it`**[**`\[`**\][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`\]`**\][cols]
          *
          * `| `**`this`**`/`**`it`**[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
@@ -243,7 +243,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
         /**
          * {@include [Indent]}\[**`\[`**\][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}\[**`\]`**\][ColumnsSelectionDsl.col]
          *
-         * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
+         * {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]
          *
          * {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
          *
