@@ -8,14 +8,14 @@ public annotation class HasSchema(val schemaArg: Int)
  * Needed because some function calls only serve as a part of overall compile time DataSchema evaluation
  * There's no need to update return type of such calls
  */
-public annotation class Interpretable(val interpreter: String)
+internal annotation class Interpretable(val interpreter: String)
 
 /**
  * Compiler plugin will replace return type of calls to the annotated function
  */
-public annotation class Refine
+internal annotation class Refine
 
-public annotation class OptInRefine
+internal annotation class OptInRefine
 
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE, AnnotationTarget.EXPRESSION)
@@ -27,3 +27,6 @@ public annotation class Import
 
 @Target(AnnotationTarget.PROPERTY)
 public annotation class Order(val order: Int)
+
+@Target(AnnotationTarget.FUNCTION)
+internal annotation class Check
