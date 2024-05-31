@@ -183,28 +183,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
-    // TODO: [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
     public fun <C, R> KProperty<C>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
-        columnGroup(this).select(selector)
-
-    /**
-     * @include [CommonSelectDocs]
-     * @set [CommonSelectDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[select][KProperty.select]`  { someCol  `[and][ColumnsSelectionDsl.and]` `[colsOf][SingleColumn.colsOf]`<`[String][String]`>() } }`
-     *
-     * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
-     *
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowSelect")
-    public fun <C, R> KProperty<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 
     /**
