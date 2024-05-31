@@ -13,17 +13,19 @@ public interface ColumnsForAggregateSelectionDsl<out T> : ColumnsSelectionDsl<T>
         ConfiguredAggregateColumn.withDefault(this, defaultValue)
 
     public infix fun <C> SingleColumn<C>.default(defaultValue: C): SingleColumn<C> =
-        ConfiguredAggregateColumn.withDefault(this, defaultValue).single()
+        ConfiguredAggregateColumn.withDefault(this, defaultValue)
 
     public fun path(vararg names: String): ColumnPath = ColumnPath(names.asList())
 
-    public infix fun <C> ColumnSet<C>.into(name: String): ColumnSet<C> = ConfiguredAggregateColumn.withPath(this, pathOf(name))
+    public infix fun <C> ColumnSet<C>.into(name: String): ColumnSet<C> =
+        ConfiguredAggregateColumn.withPath(this, pathOf(name))
 
     public infix fun <C> SingleColumn<C>.into(name: String): SingleColumn<C> =
-        ConfiguredAggregateColumn.withPath(this, pathOf(name)).single()
+        ConfiguredAggregateColumn.withPath(this, pathOf(name))
 
-    public infix fun <C> ColumnSet<C>.into(path: ColumnPath): ColumnSet<C> = ConfiguredAggregateColumn.withPath(this, path)
+    public infix fun <C> ColumnSet<C>.into(path: ColumnPath): ColumnSet<C> =
+        ConfiguredAggregateColumn.withPath(this, path)
 
     public infix fun <C> SingleColumn<C>.into(path: ColumnPath): SingleColumn<C> =
-        ConfiguredAggregateColumn.withPath(this, path).single()
+        ConfiguredAggregateColumn.withPath(this, path)
 }

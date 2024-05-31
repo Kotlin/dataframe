@@ -58,16 +58,16 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     SingleColumnsSelectionDsl,
 
     // col(name), col(5), [5]
-    ColColumnsSelectionDsl,
+    ColColumnsSelectionDsl<T>,
     // valueCol(name), valueCol(5)
-    ValueColColumnsSelectionDsl,
+    ValueColColumnsSelectionDsl<T>,
     // frameCol(name), frameCol(5)
-    FrameColColumnsSelectionDsl,
+    FrameColColumnsSelectionDsl<T>,
     // colGroup(name), colGroup(5)
-    ColGroupColumnsSelectionDsl,
+    ColGroupColumnsSelectionDsl<T>,
 
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5), [{}]
-    ColsColumnsSelectionDsl,
+    ColsColumnsSelectionDsl<T>,
 
     // colA.."colB"
     ColumnRangeColumnsSelectionDsl,
@@ -82,7 +82,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColsOfKindColumnsSelectionDsl,
 
     // all(Cols), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
-    AllColumnsSelectionDsl,
+    AllColumnsSelectionDsl<T>,
     // colsAtAnyDepth {}, colsAtAnyDepth()
     ColsAtAnyDepthColumnsSelectionDsl,
     // colsInGroups {}, colsInGroups()
@@ -426,27 +426,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[`select`][KProperty.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
      * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
-     *
-     * ## NOTE: {@comment TODO fix warning}
-     * If you get a warning `CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION`, you
-     * can safely ignore this. It is caused by a workaround for a bug in the Kotlin compiler
-     * ([KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)).
      */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowInvoke")
-    public operator fun <C, R> KProperty<DataRow<C>>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
-        select(selector)
-
-    /**
-     * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
-     *
-     * `df.`[select][DataFrame.select]` { Type::myColGroup.`[`select`][KProperty.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
-     *
-     * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
-     */
-    @OptIn(ExperimentalTypeInference::class)
-    @OverloadResolutionByLambdaReturnType
     public operator fun <C, R> KProperty<C>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 
