@@ -69,6 +69,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
         val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
 
+        // TODO Do we need to handle the improved meta data here as well?
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() -> {
                 json {
