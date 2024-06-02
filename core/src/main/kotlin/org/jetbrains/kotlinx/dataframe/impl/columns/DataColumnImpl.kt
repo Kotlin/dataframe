@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.BuildConfig
+import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.isArray
@@ -11,10 +12,9 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
 internal abstract class DataColumnImpl<T>(
-    protected val values: List<T>,
+    protected val values: ColumnDataHolder<T>,
     val name: String,
     val type: KType,
-    distinct: Lazy<Set<T>>? = null,
 ) : DataColumn<T>,
     DataColumnInternal<T> {
 
@@ -43,11 +43,12 @@ internal abstract class DataColumnImpl<T>(
         }
     }
 
-    protected val distinct = distinct ?: lazy { values.toSet() }
+    protected val distinct
+        get() = values.distinct
 
     override fun name() = name
 
-    override fun values() = values
+    override fun values(): List<T> = values.toList()
 
     override fun type() = type
 
@@ -70,7 +71,7 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override operator fun get(range: IntRange) = createWithValues(values.subList(range.first, range.last + 1))
+    override operator fun get(range: IntRange) = createWithValues(values[range])
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
 }
