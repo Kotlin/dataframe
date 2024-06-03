@@ -32,22 +32,24 @@ internal class ColumnDataHolderImpl<T> private constructor(
         internal fun <T> of(list: Collection<T>, type: KType, distinct: Lazy<Set<T>>? = null): ColumnDataHolder<T> {
             if (list is ColumnDataHolder<*>) return list as ColumnDataHolder<T>
 
-            return try {
-                when (type) {
-                    BOOLEAN -> ColumnDataHolderImpl((list as Collection<Boolean>).toBooleanArray().asList(), distinct)
-                    BYTE -> ColumnDataHolderImpl((list as Collection<Byte>).toByteArray().asList(), distinct)
-                    SHORT -> ColumnDataHolderImpl((list as Collection<Short>).toShortArray().asList(), distinct)
-                    INT -> ColumnDataHolderImpl((list as Collection<Int>).toIntArray().asList(), distinct)
-                    LONG -> ColumnDataHolderImpl((list as Collection<Long>).toLongArray().asList(), distinct)
-                    FLOAT -> ColumnDataHolderImpl((list as Collection<Float>).toFloatArray().asList(), distinct)
-                    DOUBLE -> ColumnDataHolderImpl((list as Collection<Double>).toDoubleArray().asList(), distinct)
-                    CHAR -> ColumnDataHolderImpl((list as Collection<Char>).toCharArray().asList(), distinct)
-                    UBYTE -> ColumnDataHolderImpl((list as Collection<UByte>).toUByteArray().asList(), distinct)
-                    USHORT -> ColumnDataHolderImpl((list as Collection<UShort>).toUShortArray().asList(), distinct)
-                    UINT -> ColumnDataHolderImpl((list as Collection<UInt>).toUIntArray().asList(), distinct)
-                    ULONG -> ColumnDataHolderImpl((list as Collection<ULong>).toULongArray().asList(), distinct)
-                    else -> ColumnDataHolderImpl(list.asList(), distinct)
-                } as ColumnDataHolder<T>
+            try {
+                val newList = when (type) {
+                    BOOLEAN -> (list as Collection<Boolean>).toBooleanArray().asList()
+                    BYTE -> (list as Collection<Byte>).toByteArray().asList()
+                    SHORT -> (list as Collection<Short>).toShortArray().asList()
+                    INT -> (list as Collection<Int>).toIntArray().asList()
+                    LONG -> (list as Collection<Long>).toLongArray().asList()
+                    FLOAT -> (list as Collection<Float>).toFloatArray().asList()
+                    DOUBLE -> (list as Collection<Double>).toDoubleArray().asList()
+                    CHAR -> (list as Collection<Char>).toCharArray().asList()
+                    UBYTE -> (list as Collection<UByte>).toUByteArray().asList()
+                    USHORT -> (list as Collection<UShort>).toUShortArray().asList()
+                    UINT -> (list as Collection<UInt>).toUIntArray().asList()
+                    ULONG -> (list as Collection<ULong>).toULongArray().asList()
+                    else -> list.asList()
+                } as List<T>
+
+                return ColumnDataHolderImpl(newList, distinct)
             } catch (e: Exception) {
                 throw IllegalArgumentException("Can't create ColumnDataHolder from $list and type $type", e)
             }
@@ -59,83 +61,63 @@ internal class ColumnDataHolderImpl<T> private constructor(
          * wrapped with [asList].
          */
         @Suppress("UNCHECKED_CAST")
-        internal fun <T> of(array: Array<T>, type: KType, distinct: Lazy<Set<T>>? = null): ColumnDataHolder<T> =
+        internal fun <T> of(array: Array<T>, type: KType, distinct: Lazy<Set<T>>? = null): ColumnDataHolder<T> {
             try {
-                when (type) {
-                    BOOLEAN -> ColumnDataHolderImpl((array as Array<Boolean>).toBooleanArray().asList(), distinct)
-                    BYTE -> ColumnDataHolderImpl((array as Array<Byte>).toByteArray().asList(), distinct)
-                    SHORT -> ColumnDataHolderImpl((array as Array<Short>).toShortArray().asList(), distinct)
-                    INT -> ColumnDataHolderImpl((array as Array<Int>).toIntArray().asList(), distinct)
-                    LONG -> ColumnDataHolderImpl((array as Array<Long>).toLongArray().asList(), distinct)
-                    FLOAT -> ColumnDataHolderImpl((array as Array<Float>).toFloatArray().asList(), distinct)
-                    DOUBLE -> ColumnDataHolderImpl((array as Array<Double>).toDoubleArray().asList(), distinct)
-                    CHAR -> ColumnDataHolderImpl((array as Array<Char>).toCharArray().asList(), distinct)
-                    UBYTE -> ColumnDataHolderImpl((array as Array<UByte>).toUByteArray().asList(), distinct)
-                    USHORT -> ColumnDataHolderImpl((array as Array<UShort>).toUShortArray().asList(), distinct)
-                    UINT -> ColumnDataHolderImpl((array as Array<UInt>).toUIntArray().asList(), distinct)
-                    ULONG -> ColumnDataHolderImpl((array as Array<ULong>).toULongArray().asList(), distinct)
-                    else -> ColumnDataHolderImpl(array.asList(), distinct)
-                } as ColumnDataHolder<T>
+                val list = when (type) {
+                    BOOLEAN -> (array as Array<Boolean>).toBooleanArray().asList()
+                    BYTE -> (array as Array<Byte>).toByteArray().asList()
+                    SHORT -> (array as Array<Short>).toShortArray().asList()
+                    INT -> (array as Array<Int>).toIntArray().asList()
+                    LONG -> (array as Array<Long>).toLongArray().asList()
+                    FLOAT -> (array as Array<Float>).toFloatArray().asList()
+                    DOUBLE -> (array as Array<Double>).toDoubleArray().asList()
+                    CHAR -> (array as Array<Char>).toCharArray().asList()
+                    UBYTE -> (array as Array<UByte>).toUByteArray().asList()
+                    USHORT -> (array as Array<UShort>).toUShortArray().asList()
+                    UINT -> (array as Array<UInt>).toUIntArray().asList()
+                    ULONG -> (array as Array<ULong>).toULongArray().asList()
+                    else -> array.asList()
+                } as List<T>
+
+                return ColumnDataHolderImpl(list, distinct)
             } catch (e: Exception) {
                 throw IllegalArgumentException(
                     "Can't create ColumnDataHolder from $array and mismatching type $type",
                     e
                 )
             }
+        }
 
         /**
          * Constructs [ColumnDataHolderImpl] using an [asList] wrapper around the [primitiveArray].
          * [primitiveArray] must be an array of primitives, returns `null` if something goes wrong.
          */
         @Suppress("UNCHECKED_CAST")
-        internal fun <T> of(primitiveArray: Any, type: KType, distinct: Lazy<Set<T>>? = null): ColumnDataHolder<T> =
-            when {
-                type == BOOLEAN && primitiveArray is BooleanArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
+        internal fun <T> of(primitiveArray: Any, type: KType, distinct: Lazy<Set<T>>? = null): ColumnDataHolder<T> {
+            val newList = when {
+                type == BOOLEAN && primitiveArray is BooleanArray -> primitiveArray.asList()
+                type == BYTE && primitiveArray is ByteArray -> primitiveArray.asList()
+                type == SHORT && primitiveArray is ShortArray -> primitiveArray.asList()
+                type == INT && primitiveArray is IntArray -> primitiveArray.asList()
+                type == LONG && primitiveArray is LongArray -> primitiveArray.asList()
+                type == FLOAT && primitiveArray is FloatArray -> primitiveArray.asList()
+                type == DOUBLE && primitiveArray is DoubleArray -> primitiveArray.asList()
+                type == CHAR && primitiveArray is CharArray -> primitiveArray.asList()
+                type == UBYTE && primitiveArray is UByteArray -> primitiveArray.asList()
+                type == USHORT && primitiveArray is UShortArray -> primitiveArray.asList()
+                type == UINT && primitiveArray is UIntArray -> primitiveArray.asList()
+                type == ULONG && primitiveArray is ULongArray -> primitiveArray.asList()
+                !primitiveArray.isPrimitiveArray -> throw IllegalArgumentException(
+                    "Can't create ColumnDataHolder from non primitive array $primitiveArray and type $type"
+                )
 
-                type == BYTE && primitiveArray is ByteArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
+                else -> throw IllegalArgumentException(
+                    "Can't create ColumnDataHolder from primitive array $primitiveArray and type $type"
+                )
+            } as List<T>
 
-                type == SHORT && primitiveArray is ShortArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == INT && primitiveArray is IntArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == LONG && primitiveArray is LongArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == FLOAT && primitiveArray is FloatArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == DOUBLE && primitiveArray is DoubleArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == CHAR && primitiveArray is CharArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == UBYTE && primitiveArray is UByteArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == USHORT && primitiveArray is UShortArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == UINT && primitiveArray is UIntArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                type == ULONG && primitiveArray is ULongArray ->
-                    ColumnDataHolderImpl(primitiveArray.asList(), distinct)
-
-                !primitiveArray.isPrimitiveArray ->
-                    throw IllegalArgumentException(
-                        "Can't create ColumnDataHolder from non primitive array $primitiveArray and type $type"
-                    )
-
-                else ->
-                    throw IllegalArgumentException(
-                        "Can't create ColumnDataHolder from primitive array $primitiveArray and type $type"
-                    )
-            } as ColumnDataHolder<T>
+            return ColumnDataHolderImpl(newList, distinct)
+        }
     }
 }
 
