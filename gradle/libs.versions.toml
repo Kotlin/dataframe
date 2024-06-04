@@ -48,7 +48,7 @@ junit-platform = "1.10.2"
 kotestAsserions = "5.5.4"
 
 jsoup = "1.17.2"
-arrow = "15.0.0"
+arrow = "16.0.0"
 docProcessor = "0.3.5"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
@@ -100,6 +100,7 @@ jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref = "arrow" }
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
+arrow-dataset = { group = "org.apache.arrow", name = "arrow-dataset", version.ref = "arrow" }
 arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
 
 

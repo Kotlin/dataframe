@@ -33,7 +33,6 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
@@ -612,5 +611,18 @@ internal class ArrowKtTest {
             Assert.assertTrue(dbArrowReader.javaClass.name.equals("org.apache.arrow.c.ArrowArrayStreamReader"))
             DataFrame.readArrow(dbArrowReader) shouldBe expected
         }
+    }
+
+    @Test
+    fun testReadParquet(){
+        val path = testResource("test.arrow.parquet").path
+        val dataFrame = DataFrame.readParquet(URL("file:$path"))
+        dataFrame.rowsCount() shouldBe 300
+        assertEstimations(
+            exampleFrame = dataFrame,
+            expectedNullable = false,
+            hasNulls = false,
+            fromParquet = true
+        )
     }
 }
