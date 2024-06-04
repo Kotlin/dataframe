@@ -7,8 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.io.db.DbType
-import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
+import org.jetbrains.kotlinx.dataframe.io.db.*
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.math.BigDecimal
@@ -328,7 +327,28 @@ public fun DataFrame.Companion.readAllSqlTables(
 ): List<AnyFrame> {
     val metaData = connection.metaData
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val modeQuery = "SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'"
+    var mode = ""
+    connection.createStatement().use { st ->
+        st.executeQuery(
+            modeQuery
+        ).use { rs ->
+            rs.next()
+            mode = rs.getString("SETTING_VALUE")
+        }
+    }
+
+    val dbType = when (mode.toLowerCase()) {
+        "mysql" -> H2(MySql)
+        "mariadb" -> H2(MariaDb)
+        "mssqlserver" -> H2(MsSql)
+        "postgresql" -> H2(PostgreSql)
+        else -> H2(MySql) // TODO: exception
+    }
+
+    //val dbType = extractDBTypeFromUrl(url)
+    // TODO: rewrite the extractDBTypeFromUrl(url) to the extractDBTypeFromConnection and handle separately for H2, update all the methods
+
 
     // exclude a system and other tables without data, but it looks like it supported badly for many databases
     val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))

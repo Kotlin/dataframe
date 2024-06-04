@@ -10,33 +10,32 @@ import kotlin.reflect.KType
 /**
  * Represents the H2 database type.
  *
- * This class provides methods to convert data from a ResultSet to the appropriate type for H2,
+ * This class provides methods to convert data from a ResultSet to the appropriate type for H2
  * and to generate the corresponding column schema.
  *
- * NOTE: All date and timestamp related types are converted to String to avoid java.sql.* types.
+ * NOTE: All date and timestamp-related types are converted to String to avoid java.sql.* types.
  */
-public object H2 : DbType("h2") {
+public class H2 (public val dialect: DbType) : DbType("h2") {
+    init {
+        require(dialect.javaClass.simpleName != "H2kt") { "H2 database could not be specified with H2 dialect!"}
+    }
+
     override val driverClassName: String
         get() = "org.h2.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        return null
+        return dialect.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return tableMetadata.name.lowercase(Locale.getDefault()).contains("sys_") ||
-            tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
+        return dialect.isSystemTable(tableMetadata)
     }
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata {
-        return TableMetadata(
-            tables.getString("TABLE_NAME"),
-            tables.getString("TABLE_SCHEM"),
-            tables.getString("TABLE_CAT")
-        )
+        return dialect.buildTableMetadata(tables)
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        return null
+        return dialect.convertSqlTypeToKType(tableColumnMetadata)
     }
 }

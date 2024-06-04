@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.JdbcTest.Companion
 import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.io.db.MsSql
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
@@ -369,7 +370,7 @@ class MSSQLTest {
 
             st.executeQuery(selectStatement).use { rs ->
                 // ith default inferNullability: Boolean = true
-                val df4 = DataFrame.readResultSet(rs, H2)
+                val df4 = DataFrame.readResultSet(rs, MsSql)
                 df4.schema().columns["id"]!!.type shouldBe typeOf<Int>()
                 df4.schema().columns["name"]!!.type shouldBe typeOf<String>()
                 df4.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
@@ -377,7 +378,7 @@ class MSSQLTest {
 
                 rs.beforeFirst()
 
-                val dataSchema3 = DataFrame.getSchemaForResultSet(rs, H2)
+                val dataSchema3 = DataFrame.getSchemaForResultSet(rs, MsSql)
                 dataSchema3.columns.size shouldBe 4
                 dataSchema3.columns["id"]!!.type shouldBe typeOf<Int>()
                 dataSchema3.columns["name"]!!.type shouldBe typeOf<String?>()
@@ -387,7 +388,7 @@ class MSSQLTest {
                 // with inferNullability: Boolean = false
                 rs.beforeFirst()
 
-                val df5 = DataFrame.readResultSet(rs, H2, inferNullability = false)
+                val df5 = DataFrame.readResultSet(rs, MsSql, inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
                 df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
