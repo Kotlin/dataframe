@@ -290,33 +290,35 @@ public fun DataFrame.Companion.readResultSet(
 }
 
 /**
- * Reads all tables from the given database using the provided database configuration and limit.
+ * Reads all non-system tables from a database and returns them
+ * as a map of SQL tables and corresponding dataframes using the provided database configuration and limit.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [limit] the maximum number of rows to read from each table.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return a list of [AnyFrame] objects representing the non-system tables from the database.
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
     dbConfig: DatabaseConfiguration,
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): List<AnyFrame> {
+): Map<String, AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readAllSqlTables(connection, catalogue, limit, inferNullability)
     }
 }
 
 /**
- * Reads all non-system tables from a database and returns them as a list of data frames.
+ * Reads all non-system tables from a database and returns them
+ * as a map of SQL tables and corresponding dataframes.
  *
  * @param [connection] the database connection to read tables from.
  * @param [limit] the maximum number of rows to read from each table.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return a list of [AnyFrame] objects representing the non-system tables from the database.
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * @see DriverManager.getConnection
  */
@@ -325,7 +327,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): List<AnyFrame> {
+): Map<String, AnyFrame> {
     val metaData = connection.metaData
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
@@ -333,12 +335,12 @@ public fun DataFrame.Companion.readAllSqlTables(
     // exclude a system and other tables without data, but it looks like it supported badly for many databases
     val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
 
-    val dataFrames = mutableListOf<AnyFrame>()
+    val dataFrames = mutableMapOf<String, AnyFrame>()
 
     while (tables.next()) {
         val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
-            // we filter her second time because of specific logic with SQLite and possible issues with future databases
+            // we filter her a second time because of specific logic with SQLite and possible issues with future databases
             val tableName = when {
                 catalogue != null && table.schemaName != null -> "$catalogue.${table.schemaName}.${table.name}"
                 catalogue != null && table.schemaName == null -> "$catalogue.${table.name}"
@@ -351,7 +353,7 @@ public fun DataFrame.Companion.readAllSqlTables(
             logger.debug { "Reading table: $tableName" }
 
             val dataFrame = readSqlTable(connection, tableName, limit, inferNullability)
-            dataFrames += dataFrame
+            dataFrames += tableName to dataFrame
             logger.debug { "Finished reading table: $tableName" }
         }
     }
@@ -474,24 +476,24 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, conne
 }
 
 /**
- * Retrieves the schema of all non-system tables in the database using the provided database configuration.
+ * Retrieves the schemas of all non-system tables in the database using the provided database configuration.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @return a list of [DataFrameSchema] objects representing the schema of each non-system table.
+ * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): Map<String, DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForAllSqlTables(connection)
     }
 }
 
 /**
- * Retrieves the schema of all non-system tables in the database using the provided database connection.
+ * Retrieves the schemas of all non-system tables in the database using the provided database connection.
  *
  * @param [connection] the database connection.
- * @return a list of [DataFrameSchema] objects representing the schema of each non-system table.
+ * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): List<DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): Map<String, DataFrameSchema> {
     val metaData = connection.metaData
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
@@ -500,14 +502,15 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection):
     // exclude a system and other tables without data
     val tables = metaData.getTables(null, null, null, tableTypes)
 
-    val dataFrameSchemas = mutableListOf<DataFrameSchema>()
+    val dataFrameSchemas = mutableMapOf<String, DataFrameSchema>()
 
     while (tables.next()) {
         val jdbcTable = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(jdbcTable)) {
-            // we filter her second time because of specific logic with SQLite and possible issues with future databases
-            val dataFrameSchema = getSchemaForSqlTable(connection, jdbcTable.name)
-            dataFrameSchemas += dataFrameSchema
+            // we filter her a second time because of specific logic with SQLite and possible issues with future databases
+            val tableName = jdbcTable.name
+            val dataFrameSchema = getSchemaForSqlTable(connection, tableName)
+            dataFrameSchemas += tableName to dataFrameSchema
         }
     }
 

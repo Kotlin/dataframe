@@ -63,7 +63,7 @@ interface Table1MSSSQL {
     val geographyColumn: String
 }
 
-@Ignore
+
 class MSSQLTest {
     companion object {
         private lateinit var connection: Connection
@@ -277,7 +277,7 @@ class MSSQLTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4)
+        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MSSSQL>()
 
