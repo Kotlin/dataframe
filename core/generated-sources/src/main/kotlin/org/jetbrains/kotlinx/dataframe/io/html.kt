@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.impl.truncate
@@ -30,9 +31,8 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_HTML_MESSAGE
-import org.jetbrains.kotlinx.dataframe.util.DATAFRAME_HTML_REPLACE
 import java.awt.Desktop
+import java.awt.image.BufferedImage
 import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
@@ -154,7 +154,8 @@ internal fun AnyFrame.toHtmlData(
                     DataFrameReference(id, value.size)
                 }
             } else {
-                val html = formatter.format(value, cellRenderer, renderConfig)
+                val html =
+                    formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
                 val style = renderConfig.cellFormatter?.invoke(FormattingDSL, it, col)?.attributes()?.ifEmpty { null }
                     ?.joinToString(";") { "${it.first}:${it.second}" }
                 HtmlContent(html, style)
@@ -182,6 +183,26 @@ internal fun AnyFrame.toHtmlData(
     return DataFrameHtmlData(style = "", body = body, script = script)
 }
 
+private const val DEFAULT_HTML_IMG_SIZE = 100
+
+/**
+ * This method resizes a BufferedImage if necessary, according to the provided DisplayConfiguration.
+ * It is essential to prevent potential memory problems when serializing HTML data for display in the Kotlin Notebook plugin.
+ *
+ * @param value The input value to be checked and possibly downsized.
+ * @param renderConfig The DisplayConfiguration to determine if downsizing is needed.
+ * @return The downsized BufferedImage if value is a BufferedImage and downsizing is enabled in the DisplayConfiguration,
+ *         otherwise returns the input value unchanged.
+ */
+private fun downsizeBufferedImageIfNeeded(value: Any?, renderConfig: DisplayConfiguration): Any? =
+    when {
+        value is BufferedImage && renderConfig.downsizeBufferedImage -> {
+            value.resizeKeepingAspectRatio(DEFAULT_HTML_IMG_SIZE)
+        }
+
+        else -> value
+    }
+
 /**
  * Renders [this] [DataFrame] as static HTML (meaning no JS is used).
  * CSS rendering is enabled by default but can be turned off using [includeCss]
@@ -203,7 +224,7 @@ public fun AnyFrame.toStaticHtml(
     val id = "static_df_${nextTableId()}"
 
     // Retrieve all columns, including nested ones
-    val flattenedCols = getColumnsWithPaths { cols { !it.isColumnGroup() }.recursively() }
+    val flattenedCols = getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
 
     // Get a grid of columns for the header, as well as the side borders for each cell
     val colGrid = getColumnsHeaderGrid()
@@ -391,9 +412,9 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
 
     fun ColumnWithPath<*>.addChildren(depth: Int = 0, breadth: Int = 0) {
         var breadth = breadth
-        val children = children()
+        val children = cols()
         val lastIndex = children.lastIndex
-        for ((i, child) in children().withIndex()) {
+        for ((i, child) in cols().withIndex()) {
             matrix[depth][breadth] = matrix[depth][breadth].copy(columnWithPath = child)
 
             // draw colGroup side borders unless at start/end of table
@@ -421,13 +442,6 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
 }
 
 internal fun DataFrameHtmlData.print() = println(this)
-
-@Deprecated(
-    message = DATAFRAME_HTML_MESSAGE,
-    replaceWith = ReplaceWith(DATAFRAME_HTML_REPLACE, "org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML"),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T> DataFrame<T>.html(): String = toStandaloneHTML().toString()
 
 /**
  * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
@@ -577,6 +591,7 @@ public data class DisplayConfiguration(
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
     var useDarkColorScheme: Boolean = false,
     var enableFallbackStaticTables: Boolean = true,
+    var downsizeBufferedImage: Boolean = true
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()

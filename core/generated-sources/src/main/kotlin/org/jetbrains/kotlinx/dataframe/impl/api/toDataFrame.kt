@@ -18,15 +18,19 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
+import org.jetbrains.kotlinx.dataframe.impl.isArray
+import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
-import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertiesOrder
+import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.time.temporal.Temporal
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
@@ -34,7 +38,7 @@ import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 
-internal val valueTypes = setOf(
+private val valueTypes = setOf(
     String::class,
     Boolean::class,
     kotlin.time.Duration::class,
@@ -43,11 +47,13 @@ internal val valueTypes = setOf(
     kotlinx.datetime.Instant::class,
 )
 
-internal val KClass<*>.isValueType: Boolean get() =
-    this in valueTypes ||
-        this.isSubclassOf(Number::class) ||
-        this.isSubclassOf(Enum::class) ||
-        this.isSubclassOf(Temporal::class)
+internal val KClass<*>.isValueType: Boolean
+    get() =
+        this in valueTypes ||
+            this.isSubclassOf(Number::class) ||
+            this.isSubclassOf(Enum::class) ||
+            this.isSubclassOf(Temporal::class) ||
+            this.isArray
 
 internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
@@ -72,13 +78,13 @@ internal class CreateDataFrameDslImpl<T>(
 
     internal class TraverseConfiguration : TraversePropertiesDsl {
 
-        val excludeProperties = mutableSetOf<KProperty<*>>()
+        val excludeProperties = mutableSetOf<KCallable<*>>()
 
         val excludeClasses = mutableSetOf<KClass<*>>()
 
         val preserveClasses = mutableSetOf<KClass<*>>()
 
-        val preserveProperties = mutableSetOf<KProperty<*>>()
+        val preserveProperties = mutableSetOf<KCallable<*>>()
 
         fun clone(): TraverseConfiguration = TraverseConfiguration().also {
             it.excludeClasses.addAll(excludeClasses)
@@ -87,7 +93,12 @@ internal class CreateDataFrameDslImpl<T>(
             it.preserveClasses.addAll(preserveClasses)
         }
 
-        override fun exclude(vararg properties: KProperty<*>) {
+        override fun exclude(vararg properties: KCallable<*>) {
+            for (prop in properties) {
+                require(prop.isGetterLike()) {
+                    "${prop.name} is not a property or getter-like function. Only those are traversed and can be excluded."
+                }
+            }
             excludeProperties.addAll(properties)
         }
 
@@ -99,17 +110,36 @@ internal class CreateDataFrameDslImpl<T>(
             preserveClasses.addAll(classes)
         }
 
-        override fun preserve(vararg properties: KProperty<*>) {
+        override fun preserve(vararg properties: KCallable<*>) {
+            for (prop in properties) {
+                require(prop.isGetterLike()) {
+                    "${prop.name} is not a property or getter-like function. Only those are traversed and can be preserved."
+                }
+            }
             preserveProperties.addAll(properties)
         }
     }
 
-    override fun properties(vararg roots: KProperty<*>, maxDepth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
+    override fun properties(vararg roots: KCallable<*>, maxDepth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
+        for (prop in roots) {
+            require(prop.isGetterLike()) {
+                "${prop.name} is not a property or getter-like function. Only those are traversed and can be added as roots."
+            }
+        }
+
         val dsl = configuration.clone()
         if (body != null) {
             body(dsl)
         }
-        val df = convertToDataFrame(source, clazz, roots.toList(), dsl.excludeProperties, dsl.preserveClasses, dsl.preserveProperties, maxDepth)
+        val df = convertToDataFrame(
+            data = source,
+            clazz = clazz,
+            roots = roots.toList(),
+            excludes = dsl.excludeProperties,
+            preserveClasses = dsl.preserveClasses,
+            preserveProperties = dsl.preserveProperties,
+            maxDepth = maxDepth,
+        )
         df.columns().forEach {
             add(it)
         }
@@ -117,7 +147,10 @@ internal class CreateDataFrameDslImpl<T>(
 }
 
 @PublishedApi
-internal fun <T> Iterable<T>.createDataFrameImpl(clazz: KClass<*>, body: CreateDataFrameDslImpl<T>.() -> Unit): DataFrame<T> {
+internal fun <T> Iterable<T>.createDataFrameImpl(
+    clazz: KClass<*>,
+    body: CreateDataFrameDslImpl<T>.() -> Unit,
+): DataFrame<T> {
     val builder = CreateDataFrameDslImpl(this, clazz)
     builder.body()
     return builder.columns.toDataFrameFromPairs()
@@ -127,18 +160,26 @@ internal fun <T> Iterable<T>.createDataFrameImpl(clazz: KClass<*>, body: CreateD
 internal fun convertToDataFrame(
     data: Iterable<*>,
     clazz: KClass<*>,
-    roots: List<KProperty<*>>,
-    excludes: Set<KProperty<*>>,
+    roots: List<KCallable<*>>,
+    excludes: Set<KCallable<*>>,
     preserveClasses: Set<KClass<*>>,
-    preserveProperties: Set<KProperty<*>>,
-    maxDepth: Int
+    preserveProperties: Set<KCallable<*>>,
+    maxDepth: Int,
 ): AnyFrame {
-    val order = getPropertiesOrder(clazz)
+    val properties: List<KCallable<*>> = roots
+        .ifEmpty {
+            clazz.memberProperties
+                .filter { it.visibility == KVisibility.PUBLIC }
+        }
 
-    val properties = roots.ifEmpty {
-        clazz.memberProperties
-            .filter { it.visibility == KVisibility.PUBLIC && it.parameters.toList().size == 1 }
-    }.sortedBy { order[it.name] ?: Int.MAX_VALUE }
+        // fall back to getter functions for pojo-like classes if no member properties were found
+        .ifEmpty {
+            clazz.memberFunctions
+                .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
+        }
+
+        // sort properties by order in constructor
+        .sortWithConstructor(clazz)
 
     val columns = properties.mapNotNull {
         val property = it
@@ -147,22 +188,23 @@ internal fun convertToDataFrame(
         class ValueClassConverter(val unbox: Method, val box: Method)
 
         val valueClassConverter = (it.returnType.classifier as? KClass<*>)?.let { kClass ->
-            if (!kClass.isValue) null else {
-                val constructor =
-                    requireNotNull(kClass.primaryConstructor) { "value class $kClass is expected to have primary constructor, but couldn't obtain it" }
-                val parameter = constructor.parameters.singleOrNull()
-                    ?: error("conversion of value class $kClass with multiple parameters in constructor is not yet supported")
-                // there's no need to unwrap if underlying field is nullable
-                if (parameter.type.isMarkedNullable) return@let null
-                // box and unbox impl methods are part of binary API of value classes
-                // https://youtrack.jetbrains.com/issue/KT-50518/Boxing-Unboxing-methods-for-JvmInline-value-classes-should-be-public-accessible
-                val unbox = kClass.java.getMethod("unbox-impl")
-                val box = kClass.java.methods.single { it.name == "box-impl" }
-                val valueClassConverter = ValueClassConverter(unbox, box)
-                valueClassConverter
+            if (!kClass.isValue) return@let null
+
+            val constructor = requireNotNull(kClass.primaryConstructor) {
+                "value class $kClass is expected to have primary constructor, but couldn't obtain it"
             }
+            val parameter = constructor.parameters.singleOrNull()
+                ?: error("conversion of value class $kClass with multiple parameters in constructor is not yet supported")
+            // there's no need to unwrap if underlying field is nullable
+            if (parameter.type.isMarkedNullable) return@let null
+            // box and unbox impl methods are part of binary API of value classes
+            // https://youtrack.jetbrains.com/issue/KT-50518/Boxing-Unboxing-methods-for-JvmInline-value-classes-should-be-public-accessible
+            val unbox = kClass.java.getMethod("unbox-impl")
+            val box = kClass.java.methods.single { it.name == "box-impl" }
+            val valueClassConverter = ValueClassConverter(unbox, box)
+            valueClassConverter
         }
-        property.javaField?.isAccessible = true
+        (property as? KProperty<*>)?.javaField?.isAccessible = true
         property.isAccessible = true
 
         var nullable = false
@@ -205,59 +247,111 @@ internal fun convertToDataFrame(
                 typeOf<Any>()
             }
         }
-        val kclass = (returnType.classifier as KClass<*>)
+        val kClass = returnType.classifier as KClass<*>
+
+        val shouldCreateValueCol = (
+            maxDepth <= 0 &&
+                !returnType.shouldBeConvertedToFrameColumn() &&
+                !returnType.shouldBeConvertedToColumnGroup()
+            ) ||
+            kClass == Any::class ||
+            kClass in preserveClasses ||
+            property in preserveProperties ||
+            kClass.isValueType
+
+        val shouldCreateFrameCol = kClass == DataFrame::class && !nullable
+        val shouldCreateColumnGroup = kClass == DataRow::class
+
         when {
             hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable)
-            kclass == Any::class || preserveClasses.contains(kclass) || preserveProperties.contains(property) || (maxDepth <= 0 && !returnType.shouldBeConvertedToFrameColumn() && !returnType.shouldBeConvertedToColumnGroup()) || kclass.isValueType ->
-                DataColumn.createValueColumn(it.columnName, values, returnType.withNullability(nullable))
-            kclass == DataFrame::class && !nullable -> DataColumn.createFrameColumn(it.columnName, values as List<AnyFrame>)
-            kclass == DataRow::class -> DataColumn.createColumnGroup(it.columnName, (values as List<AnyRow>).concat())
-            kclass.isSubclassOf(Iterable::class) -> {
-                val elementType = returnType.projectUpTo(Iterable::class).arguments.firstOrNull()?.type
-                if (elementType == null) {
-                    DataColumn.createValueColumn(
-                        it.columnName,
-                        values,
-                        returnType.withNullability(nullable)
-                    )
-                } else {
-                    val elementClass = (elementType.classifier as? KClass<*>)
 
-                    when {
-                        elementClass == null -> {
-                            val listValues = values.map {
-                                (it as? Iterable<*>)?.asList()
-                            }
+            shouldCreateValueCol ->
+                DataColumn.createValueColumn(
+                    name = it.columnName,
+                    values = values,
+                    type = returnType.withNullability(nullable),
+                )
 
-                            DataColumn.createWithTypeInference(it.columnName, listValues)
-                        }
-                        elementClass.isValueType -> {
-                            val listType = getListType(elementType).withNullability(nullable)
-                            val listValues = values.map {
-                                (it as? Iterable<*>)?.asList()
-                            }
-                            DataColumn.createValueColumn(it.columnName, listValues, listType)
-                        }
-                        else -> {
-                            val frames = values.map {
-                                if (it == null) DataFrame.empty()
-                                else {
-                                    require(it is Iterable<*>)
-                                    convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties, maxDepth - 1)
+            shouldCreateFrameCol ->
+                DataColumn.createFrameColumn(
+                    name = it.columnName,
+                    groups = values as List<AnyFrame>
+                )
+
+            shouldCreateColumnGroup ->
+                DataColumn.createColumnGroup(
+                    name = it.columnName,
+                    df = (values as List<AnyRow>).concat(),
+                )
+
+            kClass.isSubclassOf(Iterable::class) ->
+                when (val elementType = returnType.projectUpTo(Iterable::class).arguments.firstOrNull()?.type) {
+                    null ->
+                        DataColumn.createValueColumn(
+                            name = it.columnName,
+                            values = values,
+                            type = returnType.withNullability(nullable),
+                        )
+
+                    else -> {
+                        val elementClass = elementType.classifier as? KClass<*>
+                        when {
+                            elementClass == null -> {
+                                val listValues = values.map {
+                                    (it as? Iterable<*>)?.asList()
                                 }
+
+                                DataColumn.createWithTypeInference(it.columnName, listValues)
                             }
-                            DataColumn.createFrameColumn(it.columnName, frames)
+
+                            elementClass.isValueType -> {
+                                val listType = getListType(elementType).withNullability(nullable)
+                                val listValues = values.map {
+                                    (it as? Iterable<*>)?.asList()
+                                }
+                                DataColumn.createValueColumn(it.columnName, listValues, listType)
+                            }
+
+                            else -> {
+                                val frames = values.map {
+                                    if (it == null) {
+                                        DataFrame.empty()
+                                    } else {
+                                        require(it is Iterable<*>)
+                                        convertToDataFrame(
+                                            data = it,
+                                            clazz = elementClass,
+                                            roots = emptyList(),
+                                            excludes = excludes,
+                                            preserveClasses = preserveClasses,
+                                            preserveProperties = preserveProperties,
+                                            maxDepth = maxDepth - 1,
+                                        )
+                                    }
+                                }
+                                DataColumn.createFrameColumn(it.columnName, frames)
+                            }
                         }
                     }
                 }
-            }
+
             else -> {
-                val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserveClasses, preserveProperties, maxDepth - 1)
-                DataColumn.createColumnGroup(it.columnName, df)
+                val df = convertToDataFrame(
+                    data = values,
+                    clazz = kClass,
+                    roots = emptyList(),
+                    excludes = excludes,
+                    preserveClasses = preserveClasses,
+                    preserveProperties = preserveProperties,
+                    maxDepth = maxDepth - 1,
+                )
+                DataColumn.createColumnGroup(name = it.columnName, df = df)
             }
         }
     }
     return if (columns.isEmpty()) {
         DataFrame.empty(data.count())
-    } else dataFrameOf(columns)
+    } else {
+        dataFrameOf(columns)
+    }
 }

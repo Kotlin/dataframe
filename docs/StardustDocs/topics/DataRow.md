@@ -11,7 +11,7 @@
 * `prev(): DataRow?` — previous row (`null` for the first row)
 * `next(): DataRow?` — next row (`null` for the last row)
 * `diff(T) { rowExpression }: T / diffOrNull { rowExpression }: T?` — difference between the results of a [row expression](DataRow.md#row-expressions) calculated for current and previous rows
-* `explode(columns): DataFrame<T>` — spread lists and [`DataFrames`](DataFrame.md) vertically into new rows
+* `explode(columns): DataFrame<T>` — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows
 * `values(): List<Any?>` — list of all cell values from the current row
 * `valuesOf<T>(): List<T>` — list of values of the given type 
 * `columnsCount(): Int` — number of columns
@@ -19,11 +19,11 @@
 * `columnTypes(): List<KType>` — list of all column types 
 * `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
 * `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
-* `transpose(): DataFrame<NameValuePair<*>>` — dataframe of two columns: `name: String` is column names and `value: Any?` is cell values
-* `transposeTo<T>(): DataFrame<NameValuePair<T>>`— dataframe of two columns: `name: String` is column names and `value: T` is cell values
+* `transpose(): DataFrame<NameValuePair<*>>` — [`DataFrame`](DataFrame.md) of two columns: `name: String` is column names and `value: Any?` is cell values
+* `transposeTo<T>(): DataFrame<NameValuePair<T>>`— [`DataFrame`](DataFrame.md) of two columns: `name: String` is column names and `value: T` is cell values
 * `getRow(Int): DataRow` — row from [`DataFrame`](DataFrame.md) by row index
-* `getRows(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by absolute row index. 
-* `relative(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
+* `getRows(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with subset of rows selected by absolute row index. 
+* `relative(Iterable<Int>): DataFrame` — [`DataFrame`](DataFrame.md) with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
 * `getValue<T>(columnName)` — cell value of type `T` by this row and given `columnName`
 * `getValueOrNull<T>(columnName)` — cell value of type `T?` by this row and given `columnName` or `null` if there's no such column
 * `get(column): T` — cell value by this row and given `column`

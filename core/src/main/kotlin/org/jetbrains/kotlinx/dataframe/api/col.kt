@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -30,8 +31,9 @@ import kotlin.reflect.KProperty
  * ## Col {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
+ * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
-public interface ColColumnsSelectionDsl {
+public interface ColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * ## Col Grammar
@@ -50,27 +52,26 @@ public interface ColColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`)`**
-     *  `|` [**`[`**][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
+     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`)`**`  |  `[**`[`**][ColumnsSelectionDsl.col]{@include [DslGrammarTemplate.IndexRef]}[**`]`**][ColumnsSelectionDsl.col]
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      */
     public interface Grammar {
 
-        /** [**col**][ColumnsSelectionDsl.col] */
+        /** [**`col`**][ColumnsSelectionDsl.col] */
         public interface PlainDslName
 
-        /** .[**col**][ColumnsSelectionDsl.col] */
+        /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
         public interface ColumnSetName
 
-        /** .[**col**][ColumnsSelectionDsl.col] */
+        /** __`.`__[**`col`**][ColumnsSelectionDsl.col] */
         public interface ColumnGroupName
     }
 
@@ -86,21 +87,21 @@ public interface ColColumnsSelectionDsl {
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a column inside a [ColumnGroup].
      * {@include [LineBreak]}
-     * {@get [CommonColDocs.Note]}
+     * $[CommonColDocs.Note]
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[col][col]`<`[String][String]`>("colA") }`
+     * `df.`[select][DataFrame.select]`  {  `[col][col]`<`[String][String]`>("colA") }`
      *
-     * `df.`[select][DataFrame.select]` { `[col][col]`(SomeType::colB) }`
+     * `df.`[select][DataFrame.select]`  {  `[col][col]`(SomeType::colB) }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[col][col]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonColDocs.ExampleArg]}
+     * $[CommonColDocs.ExampleArg]
      *
      * To create a [ColumnAccessor] for a specific kind of column with runtime checks, take a look at the functions
      * [valueCol][ColumnsSelectionDsl.valueCol],
@@ -122,14 +123,14 @@ public interface ColColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`({@get [CommonColDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColDocs.ReceiverArg]`[col][col]`($[CommonColDocs.Arg]) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`({@get [CommonColDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColDocs.ReceiverArg]`[col][col]`($[CommonColDocs.Arg]) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonColDocs.ReceiverArg]}`[col][col]`<`[String][String]`>({@get [CommonColDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColDocs.ReceiverArg]`[col][col]`<`[String][String]`>($[CommonColDocs.Arg]) \}`
          */
         interface DoubleExample
 
@@ -475,7 +476,7 @@ public interface ColColumnsSelectionDsl {
      * {@set [CommonColDocs.ExampleArg]
      * {@include [CommonColDocs.SingleExample]}
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
      * }
      * {@set [CommonColDocs.Note] NOTE: You can use the get-[] operator on [ColumnSets][ColumnSet] as well!}
      */
@@ -487,7 +488,7 @@ public interface ColColumnsSelectionDsl {
      * {@set [CommonColDocs.ExampleArg]
      * {@include [CommonColDocs.SingleExample]}
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][col]`1`[`]`][col]` \}`
      * }
      */
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = col(index)

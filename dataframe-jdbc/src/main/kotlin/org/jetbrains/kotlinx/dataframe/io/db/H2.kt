@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
 
 /**
@@ -24,15 +24,16 @@ public object H2 : DbType("h2") {
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return tableMetadata.name.lowercase(Locale.getDefault()).contains("sys_")
-            || tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
+        return tableMetadata.name.lowercase(Locale.getDefault()).contains("sys_") ||
+            tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
     }
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata {
         return TableMetadata(
             tables.getString("TABLE_NAME"),
             tables.getString("TABLE_SCHEM"),
-            tables.getString("TABLE_CAT"))
+            tables.getString("TABLE_CAT")
+        )
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {

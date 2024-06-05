@@ -14,7 +14,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
@@ -23,6 +25,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
@@ -337,5 +340,51 @@ internal fun List<String>.joinToCamelCaseString(): String {
         .replaceFirstChar { it.lowercaseChar() }
 }
 
+/** @include [KCallable.isGetterLike] */
+internal fun KFunction<*>.isGetterLike(): Boolean =
+    (name.startsWith("get") || name.startsWith("is")) &&
+        valueParameters.isEmpty() &&
+        typeParameters.isEmpty()
+
+/** @include [KCallable.isGetterLike] */
+internal fun KProperty<*>.isGetterLike(): Boolean = true
+
+/**
+ * Returns `true` if this callable is a getter-like function.
+ *
+ * A callable is considered getter-like if it is either a property getter,
+ * or it's a function with no (type) parameters that starts with "get"/"is".
+ */
+internal fun KCallable<*>.isGetterLike(): Boolean =
+    when (this) {
+        is KProperty<*> -> isGetterLike()
+        is KFunction<*> -> isGetterLike()
+        else -> false
+    }
+
+/** @include [KCallable.columnName] */
 @PublishedApi
-internal val <T> KProperty<T>.columnName: String get() = findAnnotation<ColumnName>()?.name ?: name
+internal val KFunction<*>.columnName: String
+    get() = findAnnotation<ColumnName>()?.name
+        ?: name
+            .removePrefix("get")
+            .removePrefix("is")
+            .replaceFirstChar { it.lowercase() }
+
+/** @include [KCallable.columnName] */
+@PublishedApi
+internal val KProperty<*>.columnName: String
+    get() = findAnnotation<ColumnName>()?.name ?: name
+
+/**
+ * Returns the column name for this callable.
+ * If the callable contains the [ColumnName] annotation, its [ColumnName.name] is returned.
+ * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction].
+ */
+@PublishedApi
+internal val KCallable<*>.columnName: String
+    get() = when (this) {
+        is KFunction<*> -> columnName
+        is KProperty<*> -> columnName
+        else -> findAnnotation<ColumnName>()?.name ?: name
+    }

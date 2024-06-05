@@ -6,6 +6,7 @@ import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
+import xyz.ronella.gradle.plugin.simple.git.OSType
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
@@ -137,7 +138,8 @@ val clearSamplesOutputs by tasks.creating {
 
     doFirst {
         delete {
-            delete(fileTree(File(projectDir, "../docs/StardustDocs/snippets")))
+            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets")).exclude("**/manual/**")
+            delete(generatedSnippets)
         }
     }
 }
@@ -175,10 +177,17 @@ val installGitPreCommitHook by tasks.creating(Copy::class) {
         from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
         into(gitHooksDir)
         fileMode = 755
+
+        // Workaround for https://github.com/Kotlin/dataframe/issues/612
+        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) doLast {
+            exec {
+                workingDir(gitHooksDir)
+                commandLine("chmod", "755", "pre-commit")
+            }
+        }
     } else {
         logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
     }
-
 }
 tasks.named("assemble") {
     dependsOn(installGitPreCommitHook)

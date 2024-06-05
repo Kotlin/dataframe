@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io.db
 
 import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
+import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
 import java.util.Locale
-import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
@@ -19,7 +19,7 @@ public object MySql : DbType("mysql") {
         get() = "com.mysql.jdbc.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        if(tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
+        if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
             val kType = Long::class.createType(nullable = tableColumnMetadata.isNullable)
             return ColumnSchema.Value(kType)
         }
@@ -34,24 +34,26 @@ public object MySql : DbType("mysql") {
         val schemaName = tableMetadata.schemaName
         val name = tableMetadata.name
 
-        return schemaName.containsWithLowercase("information_schema")
-            || tableMetadata.catalogue.containsWithLowercase("performance_schema")
-            || tableMetadata.catalogue.containsWithLowercase("mysql")
-            || schemaName?.contains("mysql.") == true
-            || name.contains("mysql.")
-            || name.contains("sys_config")
+        return schemaName.containsWithLowercase("information_schema") ||
+            tableMetadata.catalogue.containsWithLowercase("performance_schema") ||
+            tableMetadata.catalogue.containsWithLowercase("mysql") ||
+            schemaName?.contains("mysql.") == true ||
+            name.contains("mysql.") ||
+            name.contains("sys_config")
     }
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata {
         return TableMetadata(
             tables.getString("table_name"),
             tables.getString("table_schem"),
-            tables.getString("table_cat"))
+            tables.getString("table_cat")
+        )
     }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        if(tableColumnMetadata.sqlTypeName == "INT UNSIGNED")
+        if (tableColumnMetadata.sqlTypeName == "INT UNSIGNED") {
             return Long::class.createType(nullable = tableColumnMetadata.isNullable)
+        }
         return null
     }
 }

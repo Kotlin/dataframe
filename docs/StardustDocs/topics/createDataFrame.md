@@ -218,8 +218,9 @@ val df = students.toDataFrame {
 
 ### DynamicDataFrameBuilder
 
-Previously mentioned dataframe constructors throw an exception when column names are duplicated. 
-When implementing a custom operation involving multiple dataframes, or computed columns or when parsing some third-party data,
+Previously mentioned [`DataFrame`](DataFrame.md) constructors throw an exception when column names are duplicated. 
+When implementing a custom operation involving multiple [`DataFrame`](DataFrame.md) objects,
+or computed columns or when parsing some third-party data,
 it might be desirable to disambiguate column names instead of throwing an exception. 
 
 <!---FUN duplicatedColumns-->

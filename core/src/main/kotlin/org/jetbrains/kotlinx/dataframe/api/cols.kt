@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
@@ -28,8 +29,9 @@ import kotlin.reflect.KProperty
  * ## Cols {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
+ * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
-public interface ColsColumnsSelectionDsl {
+public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * ## Cols Grammar
@@ -53,29 +55,29 @@ public interface ColsColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
+     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  `|` {@include [PlainDslName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
+     *  `| `{@include [PlainDslName]}`  [  `**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**`  \}  `**`]`
      *
-     *  `|` **`this`**`/`**`it`** [**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
+     *  `| `**`this`**`/`**`it `**[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
-     *  `|` **`this`**`/`**`it`** [**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. `[**`]`**][cols]
+     *  `| `**`this`**`/`**`it `**[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**`  ..  `[**`]`**][cols]
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`| `{@include [ColumnSetName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
+     *  {@include [Indent]}`| `{@include [ColumnSetName]}`  [  `**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**`  \}  `**`]`
      *
      *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
-     *  {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
+     *  {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRef]}**`,`**` .. | `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
-     *  {@include [Indent]}`| `{@include [ColumnGroupName]}` [ `**` { `**{@include [DslGrammarTemplate.ConditionRef]}**` \} `**`]`
+     *  {@include [Indent]}`| `{@include [ColumnGroupName]}`  [  `**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**`  \}  `**`]`
      *
      *  {@include [Indent]}`| `[**`[`**][cols]**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**[**`]`**][cols]
      *
@@ -84,13 +86,13 @@ public interface ColsColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**cols**][ColumnsSelectionDsl.cols] */
+        /** [**`cols`**][ColumnsSelectionDsl.cols] */
         public interface PlainDslName
 
-        /** .[**cols**][ColumnsSelectionDsl.cols] */
+        /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
         public interface ColumnSetName
 
-        /** .[**cols**][ColumnsSelectionDsl.cols] */
+        /** __`.`__[**`cols`**][ColumnsSelectionDsl.cols] */
         public interface ColumnGroupName
     }
 
@@ -104,16 +106,16 @@ public interface ColsColumnsSelectionDsl {
      *
      * This function operates solely on columns at the top-level.
      *
-     * Aside from calling [cols] directly, you can also use the [get][ColumnSet.get] operator in most cases.
+     * Aside from calling [cols] directly, you can also use the [`get`][ColumnSet.get] operator in most cases.
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
-     * `df.`[remove][DataFrame.remove]` { `[cols][ColumnsSelectionDsl.cols]` { it.`[hasNulls][DataColumn.hasNulls]`() } }`
+     * `df.`[`remove`][DataFrame.remove]`  {  `[`cols`][ColumnsSelectionDsl.cols]` { it.`[`hasNulls`][DataColumn.hasNulls]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { myGroupCol.`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[`select`][DataFrame.select]` { myGroupCol.`[`cols`][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][ColumnSet.cols]`1, 3, 5`[`]`][ColumnSet.cols]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][ColumnSet.cols]`1, 3, 5`[`]`][ColumnSet.cols]` }`
      *
      * #### Examples for this overload:
      *
@@ -168,11 +170,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1, 3, 2) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][SingleColumn.cols]`(1, 3, 2) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>()`[`[`][SingleColumn.get]`5, 1, 2`[`]`][SingleColumn.get]` }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(0, 2) }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`(0, 2) }`
      *
      * #### Examples for this overload:
      *
@@ -199,11 +201,11 @@ public interface ColsColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`Int`][Int]`>()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`cols`][String.cols]`(0`[`..`][Int.rangeTo]`2) }`
      *
      * #### Examples for this overload:
      *
@@ -226,15 +228,15 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @set [CommonColsDocs.Examples]
      *
-     * `// although these can be shortened to just the `[colsOf<>{ }][ColumnsSelectionDsl.colsOf]` call`
+     * `// although these can be shortened to just the `[`colsOf<>{ }`][ColumnsSelectionDsl.colsOf]` call`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>().`[`cols`][ColumnSet.cols]`  { "e"  `[`in`\][String.contains\]` it.`[`name`][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>()`[`[`][ColumnSet.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnSet.cols]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][ColumnSet.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnSet.cols]` }`
      *
-     * `// identity call, same as `[all][ColumnsSelectionDsl.all]`()`
+     * `// identity call, same as `[`all`][ColumnsSelectionDsl.all]`()`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[String][String]`>().`[cols][ColumnSet.cols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>().`[`cols`][ColumnSet.cols]`() }`
      *
      * @see [ColumnsSelectionDsl.all\]
      * @see [ColumnsSelectionDsl.filter\]
@@ -256,13 +258,13 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { "e"  `[`in`\][String.contains\]` it.`[`name`][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnsSelectionDsl.cols]` }`
      *
-     * `// same as `[all][ColumnsSelectionDsl.all]`()`
+     * `// same as `[`all`][ColumnsSelectionDsl.all]`()`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`() }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`() }`
      *
      * {@include [LineBreak]}
      *
@@ -284,13 +286,13 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`.[cols][SingleColumn.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup`.[`cols`][SingleColumn.cols]`  { "e"  `[`in`\][String.contains\]` it.`[`name`][ColumnPath.name]`() } }`
      *
-     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
+     * `// same as `[`allCols`][ColumnsSelectionDsl.allCols]`()`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`() }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`() }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`{ ... }`[`]`][SingleColumn.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`{ ... }`[`]`][SingleColumn.cols]` }`
      * {@include [LineBreak]}
      *
      * @see [ColumnsSelectionDsl.allCols\]
@@ -313,13 +315,13 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "myGroupCol".`[cols][String.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[`select`][DataFrame.select]` { "myGroupCol".`[`cols`][String.cols]`  { "e"  `[`in`\][String.contains\]` it.`[`name`][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { "myGroupCol"`[`[`][String.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][String.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "myGroupCol"`[`[`][String.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][String.cols]` }`
      *
-     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
+     * `// same as `[`allCols`][ColumnsSelectionDsl.allCols]`()`
      *
-     * `df.`[select][DataFrame.select]` { "myGroupCol".`[cols][String.cols]`() }`
+     * `df.`[`select`][DataFrame.select]` { "myGroupCol".`[`cols`][String.cols]`() }`
      */
     private interface StringColsPredicateDocs
 
@@ -337,13 +339,13 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][KProperty.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[`select`][DataFrame.select]` { Type::columnGroup.`[`cols`][KProperty.cols]`  { "e"  `[`in`\][String.contains\]` it.`[`name`][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup`[`[`][SingleColumn.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { Type::columnGroup`[`[`][SingleColumn.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][SingleColumn.cols]` }`
      *
-     * `// same as `[allCols][ColumnsSelectionDsl.allCols]`()`
+     * `// same as `[`allCols`][ColumnsSelectionDsl.allCols]`()`
      *
-     * `df.`[select][DataFrame.select]` { Type::columnGroup.`[cols][SingleColumn.cols]`() }`
+     * `df.`[`select`][DataFrame.select]` { Type::columnGroup.`[`cols`][SingleColumn.cols]`() }`
      *
      * @see [ColumnsSelectionDsl.allCols\]
      */
@@ -363,11 +365,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Predicate]
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][ColumnPath.cols]` { "e" `[in\][String.contains\]` it.`[name][ColumnPath.name]`() } }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][ColumnPath.cols]`  { "e"  `[`in`\][String.contains\]` it.`[`name`][ColumnPath.name]`() } }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][ColumnPath.cols]`{ it.`[any][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnPath.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][ColumnPath.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][ColumnPath.cols]` }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[cols][ColumnPath.cols]`() } // identity call, same as `[allCols][ColumnsSelectionDsl.allCols]
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][ColumnPath.cols]`() } // identity call, same as `[`allCols`][ColumnsSelectionDsl.allCols]
      */
     private interface ColumnPathPredicateDocs
 
@@ -389,9 +391,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(colGroup.columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`colGroup.columnA, columnB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
 
@@ -411,9 +413,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`columnA, columnB`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargColumnReferenceDocs
 
@@ -435,9 +437,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(columnA, columnB) }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`columnA, columnB`[`]`][String.cols]` }`
      */
     private interface StringColsVarargColumnReferenceDocs
 
@@ -457,9 +459,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(columnA, columnB) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"pathTo"["colA"], "pathTo"["colB"]`[`]`][KProperty.cols]` }`
      */
     private interface KPropertyColsVarargColumnReferenceDocs
 
@@ -479,11 +481,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnReference]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(columnA, columnB) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"].`[`cols`][ColumnPath.cols]`(columnA, columnB) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"].`[`cols`][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"]) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`columnA, columnB`[`]`][ColumnPath.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`columnA, columnB`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargColumnReferenceDocs
 
@@ -507,11 +509,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [String]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("columnA", "columnB") }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"columnA", "columnB"`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslVarargStringDocs
 
@@ -539,9 +541,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [String]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("columnA", "columnB") }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"columnA", "columnB"`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargStringDocs
 
@@ -571,9 +573,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [String]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("columnA", "columnB") }`
+     * `df.`[`select`][DataFrame.select]` { "columnGroup".`[`cols`][String.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`"columnA", "columnB"`[`]`][String.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`"columnA", "columnB"`[`]`][String.cols]` }`
      */
     private interface StringColsVarargStringDocs
 
@@ -601,9 +603,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [String]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("columnA", "columnB") }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][KProperty.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
     private interface KPropertiesColsVarargStringDocs
 
@@ -631,9 +633,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [String]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("columnA", "columnB") }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"].`[`cols`][ColumnPath.cols]`("columnA", "columnB") }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"columnA", "columnB"`[`]`][ColumnPath.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"columnA", "columnB"`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargStringDocs
 
@@ -665,11 +667,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [String]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslVarargColumnPathDocs
 
@@ -697,11 +699,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargColumnPathDocs
 
@@ -731,11 +733,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { "columnGroup".`[`cols`][String.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { "columnGroup".`[cols][String.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { "columnGroup".`[`cols`][String.cols]`<`[`String`][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "columnGroup"`[`[`][String.cols]`""pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
     private interface StringColsVarargColumnPathDocs
 
@@ -763,11 +765,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][KProperty.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][KProperty.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][KProperty.cols]`<`[`String`][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { DataSchemaType::myColumnGroup`[`[`][KProperty.cols]`"columnA", "columnB"`[`]`][KProperty.cols]` }`
      */
     private interface KPropertiesColsVarargColumnPathDocs
 
@@ -795,11 +797,11 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [ColumnPath]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"].`[`cols`][ColumnPath.cols]`("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"].`[`cols`][ColumnPath.cols]`<`[`String`][String]`>("pathTo"["colA"], "pathTo"["colB"])) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`"pathTo"["colA"], "pathTo"["colB"])`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargColumnPathDocs
 
@@ -831,9 +833,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [KProperty]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { this`[`[`][ColumnsSelectionDsl.cols]`Type::colA, Type::colB`[`]`][ColumnsSelectionDsl.cols]` }`
      */
     private interface ColumnsSelectionDslColsVarargKPropertyDocs
 
@@ -853,9 +855,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [KProperty]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
     private interface SingleColumnColsVarargKPropertyDocs
 
@@ -875,9 +877,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [KProperty]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(Type::colA, Type::colB) }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`Type::colA, Type::colB`[`]`][String.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup"`[`[`][String.cols]`Type::colA, Type::colB`[`]`][String.cols]` }`
      */
     private interface StringColsVarargKPropertyDocs
 
@@ -897,9 +899,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [KProperty]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(Type::colA, Type::colB) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup`[`[`][SingleColumn.cols]`Type::colA, Type::colB`[`]`][SingleColumn.cols]` }`
      */
     private interface KPropertyColsVarargKPropertyDocs
 
@@ -919,9 +921,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsDocs.Vararg] {@set [CommonColsDocs.Vararg.AccessorType] [KProperty]}
      * @set [CommonColsDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"].`[cols][ColumnPath.cols]`(Type::colA, Type::colB) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"].`[`cols`][ColumnPath.cols]`(Type::colA, Type::colB) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`Type::colA, Type::colB`[`]`][ColumnPath.cols]` }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["columnGroup"]`[`[`][ColumnPath.cols]`Type::colA, Type::colB`[`]`][ColumnPath.cols]` }`
      */
     private interface ColumnPathColsVarargKPropertyDocs
 
@@ -945,9 +947,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsIndicesDocs]
      * @set [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[cols][ColumnSet.cols]`(1, 3) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`cols`][ColumnSet.cols]`(1, 3) }`
      *
-     * `df.`[select][DataFrame.select]` { `[all][ColumnsSelectionDsl.all]`()`[`[`][ColumnSet.cols]`5, 1`[`]`][ColumnSet.cols]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`all`][ColumnsSelectionDsl.all]`()`[`[`][ColumnSet.cols]`5, 1`[`]`][ColumnSet.cols]` }`
      */
     private interface ColumnSetColsIndicesDocs
 
@@ -968,9 +970,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsIndicesDocs]
      * @set [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1, 3) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(1, 3) }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>(1, 3) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>(1, 3) }`
      */
     private interface ColumnsSelectionDslColsIndicesDocs
 
@@ -992,9 +994,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsIndicesDocs]
      * @set [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1, 3) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`(1, 3) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(3, 4) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(3, 4) }`
      */
     private interface SingleColumnColsIndicesDocs
 
@@ -1016,9 +1018,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsIndicesDocs]
      * @set [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`(5, 3, 1) }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`(5, 3, 1) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[cols][String.cols]`<`[String][String]`>(5, 3, 1) }`
+     * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`<`[`String`][String]`>(5, 3, 1) }`
      */
     private interface StringColsIndicesDocs
 
@@ -1040,9 +1042,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsIndicesDocs]
      * @set [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(5, 4) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`(5, 4) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(5, 4) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(5, 4) }`
      */
     private interface KPropertyColsIndicesDocs
 
@@ -1064,9 +1066,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsIndicesDocs]
      * @set [CommonColsIndicesDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0, 1) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`(0, 1) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>(0, 1) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`<`[`String`][String]`>(0, 1) }`
      */
     private interface ColumnPathColsIndicesDocs
 
@@ -1092,9 +1094,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsRangeDocs]
      * @set [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[cols][ColumnSet.cols]`(1`[..][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`cols`][ColumnSet.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { `[all][all]`()`[`[`][ColumnSet.cols]`1`[..][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`all`][all]`()`[`[`][ColumnSet.cols]`1`[`..`][Int.rangeTo]`5`[`]`][ColumnSet.cols]` }`
      */
     private interface ColumnSetColsRangeDocs
 
@@ -1109,9 +1111,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsRangeDocs]
      * @set [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
     private interface ColumnsSelectionDslColsRangeDocs
 
@@ -1129,9 +1131,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsRangeDocs]
      * @set [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
     private interface SingleColumnColsRangeDocs
 
@@ -1149,9 +1151,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsRangeDocs]
      * @set [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`cols`][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { "myColGroup".`[cols][String.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`cols`][String.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      */
     private interface StringColsRangeDocs
 
@@ -1167,9 +1169,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsRangeDocs]
      * @set [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
-     * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[cols][SingleColumn.cols]`<`[String][String]`>(1`[`..`][Int.rangeTo]`3) }`
+     * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`<`[`String`][String]`>(1`[`..`][Int.rangeTo]`3) }`
      *
      */
     private interface KPropertyColsRangeDocs
@@ -1186,9 +1188,9 @@ public interface ColsColumnsSelectionDsl {
      * @include [CommonColsRangeDocs]
      * @set [CommonColsRangeDocs.ExampleArg]
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`(0`[`..`][Int.rangeTo]`1) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`(0`[`..`][Int.rangeTo]`1) }`
      *
-     * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[cols][ColumnPath.cols]`<`[String][String]`>(0`[`..`][Int.rangeTo]`1) }`
+     * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`<`[`String`][String]`>(0`[`..`][Int.rangeTo]`1) }`
      */
     private interface ColumnPathColsRangeDocs
 

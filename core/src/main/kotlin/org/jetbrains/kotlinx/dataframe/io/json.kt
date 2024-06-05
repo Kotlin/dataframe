@@ -25,61 +25,29 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
 import kotlinx.serialization.json.longOrNull
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import com.beust.klaxon.Parser
+import com.beust.klaxon.json
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.firstOrNull
-import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.isList
-import org.jetbrains.kotlinx.dataframe.api.mapIndexed
-import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.splitInto
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
-import org.jetbrains.kotlinx.dataframe.impl.asList
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
-import org.jetbrains.kotlinx.dataframe.impl.commonType
-import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.dataframe.impl.guessValueType
-import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
-import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
-import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
+import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
+import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
+import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
+import org.jetbrains.kotlinx.dataframe.impl.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.typeClass
-import org.jetbrains.kotlinx.dataframe.values
 import java.io.File
 import java.io.InputStream
 import java.net.URL
-import kotlin.reflect.KType
-import kotlin.reflect.KTypeProjection
-import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
 public class JSON(
@@ -163,6 +131,9 @@ public class JSON(
         ANY_COLUMNS,
     }
 }
+
+internal const val arrayColumnName: String = "array"
+internal const val valueColumnName: String = "value"
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -1002,6 +973,10 @@ public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
         allowSpecialFloatingPointValues = true
     }
     return json.encodeToString(JsonElement.serializer(), encodeFrame(this@toJson))
+public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
+    return json {
+        encodeFrame(this@toJson)
+    }.toJsonString(prettyPrint, canonical)
 }
 
 public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
@@ -1011,6 +986,61 @@ public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
         allowSpecialFloatingPointValues = true
     }
     return json.encodeToString(JsonElement.serializer(), encodeRow(df(), index()))
+/**
+ * Converts the DataFrame to a JSON string representation with additional metadata about serialized data.
+ * It is heavily used to implement some integration features in Kotlin Notebook IntellJ IDEA plugin.
+ *
+ * @param rowLimit The maximum number of top-level dataframe rows to include in the output JSON.
+ * @param nestedRowLimit The maximum number of nested frame rows to include in the output JSON.
+ * If null, all rows are included.
+ * Applied for each frame column recursively
+ * @param prettyPrint Specifies whether the output JSON should be formatted with indentation and line breaks.
+ * @param canonical Specifies whether the output JSON should be in a canonical form.
+ * @param imageEncodingOptions The options for encoding images. The default is null, which indicates that the image is not encoded as Base64.
+ *
+ * @return The DataFrame converted to a JSON string with metadata.
+ */
+public fun AnyFrame.toJsonWithMetadata(
+    rowLimit: Int,
+    nestedRowLimit: Int? = null,
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+    imageEncodingOptions: Base64ImageEncodingOptions? = null
+): String {
+    return json {
+        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
+    }.toJsonString(prettyPrint, canonical)
+}
+
+internal const val DEFAULT_IMG_SIZE = 600
+
+/**
+ * Class representing the options for encoding images.
+ *
+ * @property imageSizeLimit The maximum size to which images should be resized. Defaults to the value of DEFAULT_IMG_SIZE.
+ * @property options Bitwise-OR of the [GZIP_ON] and [LIMIT_SIZE_ON] constants. Defaults to [GZIP_ON] or [LIMIT_SIZE_ON].
+ */
+public class Base64ImageEncodingOptions(
+    public val imageSizeLimit: Int = DEFAULT_IMG_SIZE,
+    private val options: Int = GZIP_ON or LIMIT_SIZE_ON
+) {
+    public val isGzipOn: Boolean
+        get() = options and GZIP_ON == GZIP_ON
+
+    public val isLimitSizeOn: Boolean
+        get() = options and LIMIT_SIZE_ON == LIMIT_SIZE_ON
+
+    public companion object {
+        public const val ALL_OFF: Int = 0
+        public const val GZIP_ON: Int = 1 // 2^0
+        public const val LIMIT_SIZE_ON: Int = 2 // 2^1
+    }
+}
+
+public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
+    return json {
+        encodeRow(df(), index())
+    }?.toJsonString(prettyPrint, canonical) ?: ""
 }
 
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {

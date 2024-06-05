@@ -2,6 +2,9 @@
 
 1. Run code inspections (fix typos, Kotlin issues, fix code formatting, linter). **RC**
 2. Write missed KDocs for new APIs. **RC**
+3. Update documentation on Kotlin site **RC**
+   - The overview [page](https://kotlinlang.org/docs/data-analysis-overview.html)
+   - The Data Analysis subchapter, for example, the [page](https://kotlinlang.org/docs/data-analysis-work-with-data-sources.html)
 3. Update tutorials according to the latest code changes.
 4. Update README.MD according last code changes:
    - update an artifact version.
@@ -23,16 +26,17 @@
     - Check on Datalore with a test project (TODO: add link).
     - Check for Android with a test project (TODO: add link).
     - Check for ServerSide with a test project (TODO: add link).
-15. Publish Documentation from [GitHub Action](https://github.com/Kotlin/dataframe/actions/workflows/main.yml)
-16. Prepare and publish the Release Notes. **RC**
-17. Create a Release from the release tag on GitHub. **RC**
-18. Update a KDF version in the [Kotlin Jupyter Descriptor](https://github.com/Kotlin/kotlin-jupyter-libraries/blob/master/dataframe.json). Now the Renovate bot does this.
-19. Update the DataFrame version in the `gradle.properties` file for the next release cycle (i.e. 0.10.0 -> 0.11.0)
-20. Update deprecated functions in [deprecationMessages.kt](/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/util/deprecationMessages.kt)
+15. Run `./gradlew korro` to update the code snippets for the docs.
+16. Publish Documentation from [GitHub Action](https://github.com/Kotlin/dataframe/actions/workflows/main.yml)
+17. Prepare and publish the Release Notes. **RC**
+18. Create a Release from the release tag on GitHub. **RC**
+19. Update a KDF version in the [Kotlin Jupyter Descriptor](https://github.com/Kotlin/kotlin-jupyter-libraries/blob/master/dataframe.json). Now the Renovate bot does this.
+20. Update the DataFrame version in the `gradle.properties` file for the next release cycle (i.e. 0.10.0 -> 0.11.0)
+21. Update deprecated functions in [deprecationMessages.kt](/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/util/deprecationMessages.kt)
     such that 
     - `Level.WARNING` messages are changed to `Level.ERROR`
     - `Level.ERROR` messages and their functions are removed.
     - Update regions in the file accordingly.
-21. Update Notebook examples, both in the project and on Datalore.
+22. Update Notebook examples, both in the project and on Datalore.
 
 (Activities that need to be done for **R**elease **C**andidate releases are marked as such)

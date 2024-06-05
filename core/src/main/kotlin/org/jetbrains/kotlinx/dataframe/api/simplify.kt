@@ -39,7 +39,7 @@ public interface SimplifyColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** .[**simplify**][ColumnsSelectionDsl.simplify] */
+        /** __`.`__[**`simplify`**][ColumnsSelectionDsl.simplify] */
         public interface ColumnSetName
     }
 
@@ -58,7 +58,7 @@ public interface SimplifyColumnsSelectionDsl {
      *
      * [cols][ColumnsSelectionDsl.cols]`(a, a.b, d.c).`[simplify][SimplifyColumnsSelectionDsl.simplify]`() == `[cols][ColumnsSelectionDsl.cols]`(a, d.c)`
      * {@include [LineBreak]}
-     * `df.`[select][DataFrame.select]` { `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "e" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[simplify][ColumnSet.simplify]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "e"  `[in][String.contains]` it.`[name][DataColumn.name]` }.`[simplify][ColumnSet.simplify]`() }`
      *
      * @return A [ColumnSet][ColumnSet]`<`[C][C]`>` containing only the columns that are not inside any column group in [this].
      */
@@ -67,11 +67,8 @@ public interface SimplifyColumnsSelectionDsl {
 
     // region deprecated
 
-    @Deprecated(TOP_MESSAGE, ReplaceWith("simplify()"), DeprecationLevel.WARNING)
-    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = simplify()
-
     @Deprecated(TOP_MESSAGE, ReplaceWith("simplify()"), DeprecationLevel.ERROR)
-    public fun <C> ColumnSet<C>.top(): ColumnSet<C> = simplify()
+    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = simplify()
 
     // endregion
 }

@@ -104,7 +104,7 @@ class JoinWith : TestBase() {
         }
     }
 
-    private fun AnyFrame.uwrapColoredValues(): AnyFrame {
+    private fun AnyFrame.unwrapColoredValues(): AnyFrame {
         return convert { colsAtAnyDepth().colsOf<ColoredValue<*>?>() }.with(Infer.Type) { it?.value }
     }
 
@@ -171,9 +171,9 @@ class JoinWith : TestBase() {
     }
 
     private fun snippetOutput(coloredResult: DataFrame<Any?>, result: DataFrame<Any?>) {
-        coloredCampaigns.uwrapColoredValues() shouldBe campaigns
-        coloredVisits.uwrapColoredValues() shouldBe visits
-        coloredResult.uwrapColoredValues() shouldBe result
+        coloredCampaigns.unwrapColoredValues() shouldBe campaigns
+        coloredVisits.unwrapColoredValues() shouldBe visits
+        coloredResult.unwrapColoredValues() shouldBe result
 
         PluginCallbackProxy.overrideHtmlOutput(
             manualOutput = DataFrameHtmlData.tableDefinitions()

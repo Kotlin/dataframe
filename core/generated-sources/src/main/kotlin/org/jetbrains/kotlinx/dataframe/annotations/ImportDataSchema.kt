@@ -49,9 +49,21 @@ public annotation class CsvOptions(
     public val delimiter: Char,
 )
 
+/**
+ * An annotation class that represents options for JDBC connection.
+ *
+ * @property [user] The username for the JDBC connection. Default value is an empty string.
+ * If [extractCredFromEnv] is true, the [user] value will be interpreted as key for system environment variable.
+ * @property [password] The password for the JDBC connection. Default value is an empty string.
+ * If [extractCredFromEnv] is true, the [password] value will be interpreted as key for system environment variable.
+ * @property [extractCredFromEnv] Whether to extract the JDBC credentials from environment variables. Default value is false.
+ * @property [tableName] The name of the table for the JDBC connection. Default value is an empty string.
+ * @property [sqlQuery] The SQL query to be executed in the JDBC connection. Default value is an empty string.
+ */
 public annotation class JdbcOptions(
-    public val user: String = "", // TODO: I'm not sure about the default parameters
-    public val password: String = "", // TODO: I'm not sure about the default parameters)
+    public val user: String = "",
+    public val password: String = "",
+    public val extractCredFromEnv: Boolean = false,
     public val tableName: String = "",
     public val sqlQuery: String = ""
 )

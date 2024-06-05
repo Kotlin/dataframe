@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.rendering
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -11,7 +12,9 @@ import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
@@ -173,5 +176,21 @@ class RenderingTests : TestBase() {
         dfGroup.name.firstName.maxWidth() shouldBe 3
         dfGroup.name.lastName.maxWidth() shouldBe 1
         dfGroup.name.firstName.secondName.maxWidth() shouldBe 1
+    }
+
+    @Test
+    fun `render array types correctly`() {
+        val df = dataFrameOf(
+            columnOf(1, null).named("a"),
+            columnOf(intArrayOf(1), intArrayOf(2)).named("b"),
+            // TODO https://github.com/Kotlin/dataframe/issues/679
+            // columnOf(arrayOf(1), arrayOf(2)).named("d"),
+            DataColumn.createValueColumn("c", listOf(arrayOf(1), arrayOf(2))),
+            columnOf(arrayOf(1, null), arrayOf(2, null)).named("d"),
+        )
+
+        val schema = df.schema()
+        val rendered = schema.toString()
+        rendered shouldBe "a: Int?\nb: IntArray\nc: Array<Int>\nd: Array<Int?>"
     }
 }

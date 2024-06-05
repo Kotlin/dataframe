@@ -3,7 +3,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(kover)
-        // TODO enable later: alias(libs.kotlinter)
+        alias(kotlinter)
         alias(jupyter.api)
     }
 }
@@ -25,6 +25,7 @@ dependencies {
     testImplementation(libs.postgresql)
     testImplementation(libs.mysql)
     testImplementation(libs.h2db)
+    testImplementation(libs.mssql)
     testImplementation(libs.junit)
     testImplementation(libs.sl4j)
     testImplementation(libs.kotestAssertions) {

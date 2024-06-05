@@ -52,7 +52,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [append](append.md) — add rows
 * [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get list of top-level columns, column names or column types
 * [columnsCount](columnsCount.md) — number of top-level columns
-* [concat](concat.md) — union rows from several [`DataFrames`](DataFrame.md)
+* [concat](concat.md) — union rows from several [`DataFrame`](DataFrame.md) objects
 * [convert](convert.md) — change column values and/or column types
 * [corr](corr.md) — pairwise correlation of columns
 * [count](count.md) — number of rows that match condition 
@@ -62,7 +62,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) / [dropNaNs](drop.md#dropnans) — remove rows by condition
 * [duplicate](duplicate.md) — duplicate rows 
-* [explode](explode.md) — spread lists and [`DataFrames`](DataFrame.md) vertically into new rows
+* [explode](explode.md) — spread lists and [`DataFrame`](DataFrame.md) objects vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows by condition
 * [first](first.md) / [firstOrNull](first.md#firstornull) — find first row by condition
@@ -73,12 +73,12 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [getColumn](getColumn.md) / [getColumnOrNull](getColumn.md#getcolumnornull) / [getColumnGroup](getColumn.md#getcolumngroup) / [getColumns](getColumn.md#getcolumns) — get one or several columns
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [groupBy](groupBy.md) — group rows by key columns
-* [head](head.md) — get first 5 rows of [`DataFrames`](DataFrame.md)
+* [head](head.md) — get first 5 rows of [`DataFrame`](DataFrame.md)
 * [implode](implode.md) — collapse column values into lists grouping by other columns
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
-* [join](join.md) — join [`DataFrames`](DataFrame.md) by key columns
-* [joinWith](joinWith.md) — join [`DataFrames`](DataFrame.md) by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
+* [join](join.md) — join two [`DataFrame`](DataFrame.md) objects by key columns
+* [joinWith](joinWith.md) — join two [`DataFrame`](DataFrame.md) object by an expression that evaluates joined [DataRows](DataRow.md) to Boolean
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
 * [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) — max of values 

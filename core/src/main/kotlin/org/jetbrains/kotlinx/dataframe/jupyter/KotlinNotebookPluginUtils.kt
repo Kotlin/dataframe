@@ -41,6 +41,8 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
  * DISPLAY(KotlinNotebooksPluginUtils.getRowsSubsetForRendering(Out[...], 0, 20), "")
  */
 public object KotlinNotebookPluginUtils {
+    private const val KTNB_IDE_BUILD_PROP = "KTNB_IDE_BUILD_NUMBER"
+
     /**
      * Returns a subset of rows from the given dataframe for rendering.
      * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
@@ -166,4 +168,36 @@ public object KotlinNotebookPluginUtils {
         usedNames: List<String> = emptyList()
     ): String =
         ColumnNameGenerator(usedNames).addUnique(preferredName)
+
+    /**
+     * Retrieves the build number of the Kotlin Notebook IDE.
+     *
+     * @return The build number of the Kotlin Notebook IDE as an instance of [IdeBuildNumber],
+     * or null if the build number is not available.
+     */
+    public fun getKotlinNotebookIDEBuildNumber(): IdeBuildNumber? {
+        val value = System.getProperty(KTNB_IDE_BUILD_PROP, null) ?: return null
+        return IdeBuildNumber.fromString(value)
+    }
+
+    public data class IdeBuildNumber(val ideName: String, val majorVersion: Int, val buildId: Int) {
+        public companion object {
+            public fun fromString(buildNumber: String): IdeBuildNumber? {
+                val parts = buildNumber.split(";")
+                return if (parts.size >= 3) constructIdeBuildNumber(parts) else null
+            }
+
+            private fun constructIdeBuildNumber(parts: List<String>): IdeBuildNumber? {
+                val ideName = parts[0]
+                val majorVersion = parts[1].toIntOrNull()
+                val buildId = parts[2].toIntOrNull()
+
+                return if (majorVersion != null && buildId != null) {
+                    IdeBuildNumber(ideName, majorVersion, buildId)
+                } else {
+                    null
+                }
+            }
+        }
+    }
 }

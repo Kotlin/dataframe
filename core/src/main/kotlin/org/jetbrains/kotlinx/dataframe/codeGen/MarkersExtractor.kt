@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertiesOrder
+import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertyOrderFromPrimaryConstructor
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -53,7 +53,7 @@ internal object MarkersExtractor {
         }
 
     private fun getFields(markerClass: KClass<*>, nullableProperties: Boolean): List<GeneratedField> {
-        val order = getPropertiesOrder(markerClass)
+        val order = getPropertyOrderFromPrimaryConstructor(markerClass) ?: emptyMap()
         return markerClass.memberProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { _, it ->
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted

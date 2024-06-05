@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
@@ -27,17 +28,13 @@ import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_MESSAGE
-import org.jetbrains.kotlinx.dataframe.util.UPDATE_AS_NULLABLE_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE
-import org.jetbrains.kotlinx.dataframe.util.UPDATE_WITH_VALUE_REPLACE
 import kotlin.reflect.KProperty
 
 /**
  * ## The Update Operation
  *
  * Returns the [DataFrame] with changed values in some cells
- * (column types can not be changed).
+ * (column types cannot be changed).
  *
  * ### Check out: [Grammar]
  *
@@ -55,6 +52,7 @@ public data class Update<T, C>(
      * This argument providing the (clickable) name of the update-like function.
      * Note: If clickable, make sure to [alias][your type].
      */
+    @ExcludeFromSources
     internal interface UpdateOperationArg
 
     /**
@@ -63,36 +61,36 @@ public data class Update<T, C>(
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * {@get [UpdateOperationArg]} **`{ `**[columns][SelectingColumns]**` }`**
+     * {@get [UpdateOperationArg]}**`  {  `**[`columns`][SelectingColumns]**` }`**
      *
      * {@include [Indent]}
-     * `[ .`[**where**][Update.where]**` { `**[rowValueCondition][SelectingRows.RowValueCondition.WithExample]**` } `**`]`
+     * `[ `__`.`__[**`where`**][Update.where]**`  {  `**[`rowValueCondition`][SelectingRows.RowValueCondition.WithExample]**`  }  `**`]`
      *
      * {@include [Indent]}
-     * `[ .`[**at**][Update.at]**`(`**[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
+     * `[ `__`.`__[**`at`**][Update.at]**`(`**[`rowIndices`][CommonUpdateAtFunctionDoc.RowIndicesParam]**`)`**` ]`
      *
      * {@include [Indent]}
-     * `.`[**with**][Update.with]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * __`.`__[**`with`**][Update.with]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**notNull**][Update.notNull]**` { `**[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
+     * `| `__`.`__[**`notNull`**][Update.notNull]**`  {  `**[`rowExpression`][ExpressionsGivenRow.RowValueExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**perCol**][Update.perCol]**` { `**[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[**`perCol`**][Update.perCol]**`  {  `**[`colExpression`][ExpressionsGivenColumn.ColumnExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**perRowCol**][Update.perRowCol]**` { `**[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
+     * `| `__`.`__[**`perRowCol`**][Update.perRowCol]**`  {  `**[`rowColExpression`][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]**` }`**
      *
      * {@include [Indent]}
-     * `| .`[**withNull**][Update.withNull]**`()`**
+     * `| `__`.`__[**`withNull`**][Update.withNull]**`()`**
      *
      * {@include [Indent]}
-     * `| .`[**withZero**][Update.withZero]**`()`**
+     * `| `__`.`__[**`withZero`**][Update.withZero]**`()`**
      *
      * {@include [Indent]}
-     * `| .`[**asFrame**][Update.asFrame]**` { `**[dataFrameExpression][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
+     * `| `__`.`__[**`asFrame`**][Update.asFrame]**`  {  `**[`dataFrameExpression`][ExpressionsGivenDataFrame.DataFrameExpression.WithExample]**` }`**
      *
-     * {@set [UpdateOperationArg] [**update**][update]}{@comment The default name of the `update` operation function name.}
+     * {@set [UpdateOperationArg] [**`update`**][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Grammar
 
@@ -128,6 +126,7 @@ public data class Update<T, C>(
 // region update
 
 /** {@set [SelectingColumns.OperationArg] [update][update]} */
+@ExcludeFromSources
 private interface SetSelectingColumnsOperationArg
 
 /**
@@ -136,6 +135,7 @@ private interface SetSelectingColumnsOperationArg
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
  * ### This Update Overload
  */
+@ExcludeFromSources
 private interface CommonUpdateFunctionDoc
 
 /**
@@ -143,6 +143,7 @@ private interface CommonUpdateFunctionDoc
  * Combine `df.`[update][update]`(...).`[with][Update.with]` { ... }`
  * into `df.`[update][update]`(...) { ... }`
  */
+@ExcludeFromSources
 private interface UpdateWithNote
 
 /**
@@ -203,6 +204,7 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  *
  * ### This At Overload
  */
+@ExcludeFromSources
 private interface CommonUpdateAtFunctionDoc {
 
     /** The indices of the rows to update. Either a [Collection]<[Int]>, an [IntRange], or just `vararg` indices. */
@@ -249,6 +251,7 @@ public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C
     updateImpl { row, column, _ -> expression(row, column) }
 
 /** [Update per row col][Update.perRowCol] to provide a new value for every selected cell giving its row and column. */
+@ExcludeFromSources
 private interface SeeAlsoPerRowCol
 
 /** ## Update Expression
@@ -274,6 +277,7 @@ public fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): Dat
     }
 
 /** [Update with][Update.with] to provide a new value for every selected cell giving its row. */
+@ExcludeFromSources
 private interface SeeAlsoWith
 
 /** ## As Frame
@@ -287,13 +291,6 @@ private interface SeeAlsoWith
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
 
-@Deprecated(
-    message = UPDATE_AS_NULLABLE_MESSAGE,
-    replaceWith = ReplaceWith(UPDATE_AS_NULLABLE_REPLACE),
-    level = DeprecationLevel.ERROR,
-)
-public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
-
 /** ## Per Col
  *
  * Per Col can be used for two different types of operations:
@@ -305,10 +302,12 @@ public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C
  *  - {@include [SeeAlsoPerRowCol]}
  * ### This Per Col Overload
  */
+@ExcludeFromSources
 private interface CommonUpdatePerColDoc
 
 /** Provide a new value for every selected cell per column using a [Map][Map]`<`[colName: String][String]`, value: C>`
  *  or [DataRow][DataRow] as Map. */
+@ExcludeFromSources
 private interface UpdatePerColMap
 
 /**
@@ -323,6 +322,7 @@ private interface UpdatePerColMap
  *
  * @throws [IllegalArgumentException] if a value for a selected cell's column is not defined in [values\].
  */
+@ExcludeFromSources
 private interface CommonUpdatePerColMapDoc
 
 /**
@@ -340,11 +340,11 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> = up
  * {@include [CommonUpdatePerColMapDoc]}
  * {@set [CommonUpdatePerColMapDoc] df.`[getRows][DataFrame.getRows]`(`[listOf][listOf]`(0))`
  *
- *   `.`[update][update]` { name \}.`[with][Update.with]` { "Empty" \}`
+ * {@include [Indent]}`.`[update][update]` { name \}.`[with][Update.with]` { "Empty" \}`
  *
- *   `.`[update][update]` { age \}.`[with][Update.with]` { 0 \}`
+ * {@include [Indent]}`.`[update][update]` { age \}.`[with][Update.with]` { 0 \}`
  *
- *   `.first()}
+ * {@include [Indent]}`.first()}
  *
  * @param [values] The [DataRow] to provide a new value for every selected cell.
  */
@@ -361,6 +361,7 @@ public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): Da
     updateWithValuePerColumnImpl(valueSelector)
 
 /** [Update per col][Update.perCol] to provide a new value for every selected cell giving its column. */
+@ExcludeFromSources
 private interface SeeAlsoPerCol
 
 /** Chains up two row value filters together. */
@@ -383,7 +384,7 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> =
  *
  * For example:
  *
- * `df.`[update][update]` { `[colsOf][colsOf]`<`[Number][Number]`?>() }.`[notNull][notNull]`()`.[perCol][Update.perCol] `{ `[mean][mean]`() }`
+ * `df.`[update][update]`  {  `[colsOf][colsOf]`<`[Number][Number]`?>() }.`[notNull][notNull]`().`[perCol][Update.perCol]`  {  `[mean][mean]`() }`
  *
  * ### Optional
  * Provide an [expression] to update the rows with.
@@ -405,7 +406,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [SelectingColumns.ColumnAccessors]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@set [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
+ * {@set [ExpressionsGivenRow.OperationArg] [update][update]<code>`("city")`</code>}
  *
  * @include [Update.ColumnAccessorsParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -424,7 +425,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [SelectingColumns.KProperties]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@set [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
+ * {@set [ExpressionsGivenRow.OperationArg] [update][update]<code>`("city")`</code>}
  *
  * @include [Update.KPropertiesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -443,7 +444,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [SelectingColumns.ColumnNames]
  *
  * {@include [ExpressionsGivenRow.RowValueExpression.WithExample]}
- * {@set [ExpressionsGivenRow.OperationArg] [update][update]`("city")` }
+ * {@set [ExpressionsGivenRow.OperationArg] [update][update]<code>`("city")`</code>}
  *
  * @include [Update.ColumnNamesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
@@ -456,43 +457,34 @@ public fun <T> DataFrame<T>.update(
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 /**
- * Specific version of [with] that simply sets the value of each selected row to {@get [CommonSpecificWithDocFirstArg]}.
+ * Specific version of [with] that simply sets the value of each selected row to {@get [FirstArg]}.
  *
  * For example:
  *
- * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@get [CommonSpecificWithDocSecondArg]}`
+ * `df.`[update][update]` { id }.`[where][Update.where]` { it < 0 }.`{@get [SecondArg]}`
  */
-private interface CommonSpecificWithDoc
+@ExcludeFromSources
+private interface CommonSpecificWithDoc {
 
-/** Arg for the resulting value */
-private interface CommonSpecificWithDocFirstArg
+    /** Arg for the resulting value */
+    private interface FirstArg
 
-/** Arg for the function call */
-private interface CommonSpecificWithDocSecondArg
+    /** Arg for the function call */
+    private interface SecondArg
+}
 
 /**
  * ## With Null
  * @include [CommonSpecificWithDoc]
- * {@set [CommonSpecificWithDocFirstArg] `null`}
- * {@set [CommonSpecificWithDocSecondArg] [withNull][withNull]`()}
+ * {@set [CommonSpecificWithDoc.FirstArg] `null`}
+ * {@set [CommonSpecificWithDoc.SecondArg] [withNull][withNull]`()}
  */
 public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 
 /**
  * ## With Zero
  * @include [CommonSpecificWithDoc]
- * {@set [CommonSpecificWithDocFirstArg] `0`}
- * {@set [CommonSpecificWithDocSecondArg] [withZero][withZero]`()}
+ * {@set [CommonSpecificWithDoc.FirstArg] `0`}
+ * {@set [CommonSpecificWithDoc.SecondArg] [withZero][withZero]`()}
  */
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
-
-/**
- * ## With Value (Deprecated)
- * @include [CommonSpecificWithDoc]
- * {@set [CommonSpecificWithDocFirstArg] [value]}
- * {@set [CommonSpecificWithDocSecondArg] [withValue][withValue]`(-1)}
- *
- * @param [value] The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
- */
-@Deprecated(UPDATE_WITH_VALUE, ReplaceWith(UPDATE_WITH_VALUE_REPLACE), DeprecationLevel.ERROR)
-public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }

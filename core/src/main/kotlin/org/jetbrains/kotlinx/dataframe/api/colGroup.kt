@@ -2,9 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.PlainDslName
@@ -17,13 +17,12 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_GROUP_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -32,8 +31,9 @@ import kotlin.reflect.KProperty
  * ## Column Group {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
+ * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
-public interface ColGroupColumnsSelectionDsl {
+public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * ## Col Group Grammar
@@ -52,7 +52,7 @@ public interface ColGroupColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
@@ -60,18 +60,18 @@ public interface ColGroupColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      */
     public interface Grammar {
 
-        /** [**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** [**`colGroup`**][ColumnsSelectionDsl.colGroup] */
         public interface PlainDslName
 
-        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
         public interface ColumnSetName
 
-        /** .[**colGroup**][ColumnsSelectionDsl.colGroup] */
+        /** __`.`__[**`colGroup`**][ColumnsSelectionDsl.colGroup] */
         public interface ColumnGroupName
     }
 
@@ -88,21 +88,21 @@ public interface ColGroupColumnsSelectionDsl {
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a column group inside a [ColumnGroup].
      * {@include [LineBreak]}
-     * {@get [CommonColGroupDocs.Note]}
+     * $[CommonColGroupDocs.Note]
      *
      * ### Check out: [Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`<`[String][String]`>("colGroupA") }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroup][colGroup]`<`[String][String]`>("colGroupA") }`
      *
-     * `df.`[select][DataFrame.select]` { `[colGroup][colGroup]`(SomeType::colGroupB) }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroup][colGroup]`(SomeType::colGroupB) }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colGroup][colGroup]`(1) }`
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonColGroupDocs.ExampleArg]}
+     * $[CommonColGroupDocs.ExampleArg]
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
      * [col][ColumnsSelectionDsl.col],
@@ -125,14 +125,14 @@ public interface ColGroupColumnsSelectionDsl {
         interface ExampleArg
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`($[CommonColGroupDocs.Arg]) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`({@get [CommonColGroupDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`($[CommonColGroupDocs.Arg]) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonColGroupDocs.ReceiverArg]}`[colGroup][colGroup]`<`[String][String]`>({@get [CommonColGroupDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`<`[String][String]`>($[CommonColGroupDocs.Arg]) \}`
          */
         interface DoubleExample
 
@@ -618,17 +618,6 @@ public interface ColGroupColumnsSelectionDsl {
      */
     public fun <C> ColumnPath.colGroup(index: Int): SingleColumn<DataRow<C>> =
         columnGroup(this).colGroup<C>(index)
-
-    // endregion
-
-    // region deprecated
-
-    @Deprecated(
-        message = COL_SELECT_DSL_GROUP,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_GROUP_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     // endregion
 }

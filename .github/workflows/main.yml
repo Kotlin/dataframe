@@ -17,7 +17,7 @@ env:
   ALGOLIA_INDEX_NAME: prod_DATAFRAME_HELP
   ALGOLIA_KEY: ${{ secrets.ALGOLIA_KEY }}
   CONFIG_JSON_PRODUCT: Dataframe
-  CONFIG_JSON_VERSION: '0.12'
+  CONFIG_JSON_VERSION: '0.13'
 
 jobs:
   build-job:
@@ -33,15 +33,15 @@ jobs:
           apt-get update
           apt-get install -y zip
           mkdir -p artifacts
-      - name: Build docs and include sitemap.xml
+      - name: Build docs # and include sitemap.xml TODO: uncomment when sitemap.xml is available
         run: |
           export DISPLAY=:99
           Xvfb :99 &
           /opt/builder/bin/idea.sh helpbuilderinspect -source-dir . -product $PRODUCT --runner github -output-dir artifacts/ || true
           test -e artifacts/$ARTIFACT && echo $ARTIFACT exists
-          cp docs/StardustDocs/sitemap.xml artifacts/sitemap.xml
-          cd artifacts
-          zip -r $ARTIFACT sitemap.xml
+#          cp docs/StardustDocs/sitemap.xml artifacts/sitemap.xml
+#          cd artifacts
+#          zip -r $ARTIFACT sitemap.xml
         working-directory: ${{ github.workspace }}
       - name: Upload modified documentation artifact
         uses: actions/upload-artifact@v3

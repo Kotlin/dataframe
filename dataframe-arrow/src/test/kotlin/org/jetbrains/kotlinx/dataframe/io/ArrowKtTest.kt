@@ -11,6 +11,7 @@ import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowFileWriter
+import org.apache.arrow.vector.ipc.ArrowReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.ipc.ArrowStreamWriter
 import org.apache.arrow.vector.types.FloatingPointPrecision
@@ -21,6 +22,9 @@ import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.ByteArrayReadableSeekableByteChannel
 import org.apache.arrow.vector.util.Text
+import org.duckdb.DuckDBConnection
+import org.duckdb.DuckDBResultSet
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
@@ -29,17 +33,20 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
+import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URL
 import java.nio.channels.Channels
+import java.sql.DriverManager
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -558,23 +565,26 @@ internal class ArrowKtTest {
         }
     }
 
-    @Test
-    fun testArrowReaderExtension() {
+    private fun expectedSimpleDataFrame(): AnyFrame {
         val dates = listOf(
-            LocalDateTime.of(2023, 11, 23, 9, 30, 25),
+            LocalDateTime.of(2020, 11, 23, 9, 30, 25),
             LocalDateTime.of(2015, 5, 25, 14, 20, 13),
             LocalDateTime.of(2013, 6, 19, 11, 20, 13),
             LocalDateTime.of(2000, 1, 1, 0, 0, 0)
         )
 
-        val expected = dataFrameOf(
+        return dataFrameOf(
             "string" to listOf("a", "b", "c", "d"),
             "int" to listOf(1, 2, 3, 4),
             "float" to listOf(1.0f, 2.0f, 3.0f, 4.0f),
             "double" to listOf(1.0, 2.0, 3.0, 4.0),
             "datetime" to dates
         )
+    }
 
+    @Test
+    fun testArrowReaderExtension() {
+        val expected = expectedSimpleDataFrame()
         val featherChannel = ByteArrayReadableSeekableByteChannel(expected.saveArrowFeatherToByteArray())
         val arrowFileReader = ArrowFileReader(featherChannel, RootAllocator())
         arrowFileReader.toDataFrame() shouldBe expected
@@ -582,5 +592,25 @@ internal class ArrowKtTest {
         val ipcInputStream = ByteArrayInputStream(expected.saveArrowIPCToByteArray())
         val arrowStreamReader = ArrowStreamReader(ipcInputStream, RootAllocator())
         arrowStreamReader.toDataFrame() shouldBe expected
+    }
+
+    @Test
+    fun testDuckDBArrowIntegration() {
+        val expected = expectedSimpleDataFrame()
+        val query = """
+            select 'a' as string, 1 as int, CAST(1.0 as FLOAT) as float, CAST(1.0 as DOUBLE) as double, TIMESTAMP '2020-11-23 09:30:25'  as datetime
+            UNION ALL SELECT 'b', 2, 2.0, 2.0, TIMESTAMP '2015-05-25 14:20:13'
+            UNION ALL SELECT 'c', 3, 3.0, 3.0, TIMESTAMP '2013-06-19 11:20:13'
+            UNION ALL SELECT 'd', 4, 4.0, 4.0, TIMESTAMP '2000-01-01 00:00:00'
+        """.trimIndent()
+
+        Class.forName("org.duckdb.DuckDBDriver")
+        val conn = DriverManager.getConnection("jdbc:duckdb:") as DuckDBConnection
+        conn.use {
+            val resultSet = it.createStatement().executeQuery(query) as DuckDBResultSet
+            val dbArrowReader = resultSet.arrowExportStream(RootAllocator(), 256) as ArrowReader
+            Assert.assertTrue(dbArrowReader.javaClass.name.equals("org.apache.arrow.c.ArrowArrayStreamReader"))
+            DataFrame.readArrow(dbArrowReader) shouldBe expected
+        }
     }
 }

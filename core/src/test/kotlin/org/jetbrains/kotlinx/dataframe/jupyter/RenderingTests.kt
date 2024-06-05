@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
@@ -13,8 +14,12 @@ import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
+import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
+import org.junit.BeforeClass
 import org.junit.Test
 
 class RenderingTests : JupyterReplTestCase() {
@@ -97,7 +102,7 @@ class RenderingTests : JupyterReplTestCase() {
 
         assertDataFrameDimensions(json, 30, 1)
 
-        val rows = json["kotlin_dataframe"]!!.jsonArray
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
         rows.getObj(0)["id"]?.jsonPrimitive?.int shouldBe 21
         rows.getObj(rows.lastIndex)["id"]?.jsonPrimitive?.int shouldBe 50
     }
@@ -114,8 +119,8 @@ class RenderingTests : JupyterReplTestCase() {
     }
 
     private fun assertDataFrameDimensions(json: JsonObject, expectedRows: Int, expectedColumns: Int) {
-        json["nrow"]?.jsonPrimitive?.int shouldBe expectedRows
-        json["ncol"]?.jsonPrimitive?.int shouldBe expectedColumns
+        json.obj(METADATA)!!.int("nrow") shouldBe expectedRows
+        json.obj(METADATA)!!.int("ncol") shouldBe expectedColumns
     }
 
     private fun parseDataframeJson(result: MimeTypedResult): JsonObject {
@@ -140,7 +145,7 @@ class RenderingTests : JupyterReplTestCase() {
 
     @Suppress("UNCHECKED_CAST")
     private fun assertSortedById(json: JsonObject, desc: Boolean) {
-        val rows = json["kotlin_dataframe"]!!.jsonArray as List<JsonObject>
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray as List<JsonObject>
         var previousId = if (desc) 101 else 0
         rows.forEach { row: JsonObject ->
             val currentId = row["id"]!!.jsonPrimitive.int
@@ -179,7 +184,7 @@ class RenderingTests : JupyterReplTestCase() {
 
         assertDataFrameDimensions(json, 100, 2)
 
-        val rows = json["kotlin_dataframe"]!!.jsonArray as List<JsonObject>
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray as List<JsonObject>
         assertSortedByCategory(rows)
         assertSortedById(rows)
     }
@@ -211,18 +216,168 @@ class RenderingTests : JupyterReplTestCase() {
     }
 
     @Test
+    fun `json metadata contains schema metadata`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+                val col1 by columnOf("a", "b", "c")
+                val col2 by columnOf(1, 2, 3)
+                val col3 by columnOf("Foo", "Bar", null)
+                val df2 = dataFrameOf(Pair("header", listOf("A", "B", "C")))
+                val col4 by columnOf(df2, df2, df2)
+                var df = dataFrameOf(col1, col2, col3, col4)
+                df.group(col1, col2).into("group")            
+            """.trimIndent()
+        )
+        val jsonOutput = json.toJsonString(prettyPrint = true)
+        val expectedOutput = """
+            {
+              "${'$'}version": "2.1.0",
+              "metadata": {
+                "columns": ["group", "col3", "col4"],
+                "types": [{
+                  "kind": "ColumnGroup"
+                }, {
+                  "kind": "ValueColumn",
+                  "type": "kotlin.String?"
+                }, {
+                  "kind": "FrameColumn"
+                }],
+                "nrow": 3,
+                "ncol": 3
+              },
+              "kotlin_dataframe": [{
+                "group": {
+                  "data": {
+                    "col1": "a",
+                    "col2": 1
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
+                  }
+                },
+                "col3": "Foo",
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
+              }, {
+                "group": {
+                  "data": {
+                    "col1": "b",
+                    "col2": 2
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
+                  }
+                },
+                "col3": "Bar",
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
+              }, {
+                "group": {
+                  "data": {
+                    "col1": "c",
+                    "col2": 3
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
+                  }
+                },
+                "col3": null,
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
+              }]
+            }
+        """.trimIndent()
+        jsonOutput shouldBe expectedOutput
+    }
+
+    @Test
     fun `test kotlin dataframe conversion groupby`() {
         val json = executeScriptAndParseDataframeResult(
             """
             data class Row(val id: Int, val group: Int)
-            val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
+            val df = (1..20).map { Row(it, if (it <= 10) 1 else 2) }.toDataFrame()
             KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group"))
             """.trimIndent()
         )
 
         assertDataFrameDimensions(json, 2, 2)
 
-        val rows = json["kotlin_dataframe"]!!.jsonArray
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
         rows.getObj(0).get("group1")!!.jsonArray.size shouldBe 50
         rows.getObj(1).get("group1")!!.jsonArray.size shouldBe 50
     }
@@ -240,6 +395,17 @@ class RenderingTests : JupyterReplTestCase() {
             )
 
             assertDataFrameDimensions(json, 2, 2)
+        }
+    }
+
+    companion object {
+        /**
+         * Set the system property for the IDE version needed for specific serialization testing purposes.
+         */
+        @BeforeClass
+        @JvmStatic
+        internal fun setupOnce() {
+            System.setProperty("KTNB_IDE_BUILD_NUMBER", "IU;241;14015")
         }
     }
 }
