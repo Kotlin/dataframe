@@ -332,7 +332,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
-    // exclude a system and other tables without data, but it looks like it supported badly for many databases
+    // exclude a system and other tables without data, but it looks like it is supported badly for many databases
     val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
 
     val dataFrames = mutableMapOf<String, AnyFrame>()
@@ -340,7 +340,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     while (tables.next()) {
         val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
-            // we filter her a second time because of specific logic with SQLite and possible issues with future databases
+            // we filter here a second time because of specific logic with SQLite and possible issues with future databases
             val tableName = when {
                 catalogue != null && table.schemaName != null -> "$catalogue.${table.schemaName}.${table.name}"
                 catalogue != null && table.schemaName == null -> "$catalogue.${table.name}"

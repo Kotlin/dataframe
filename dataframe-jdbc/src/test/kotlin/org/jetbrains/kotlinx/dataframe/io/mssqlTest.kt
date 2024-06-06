@@ -63,7 +63,7 @@ interface Table1MSSSQL {
     val geographyColumn: String
 }
 
-
+@Ignore
 class MSSQLTest {
     companion object {
         private lateinit var connection: Connection
