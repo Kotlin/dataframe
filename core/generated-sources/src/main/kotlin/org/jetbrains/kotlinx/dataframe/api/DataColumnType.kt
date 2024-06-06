@@ -19,7 +19,8 @@ public fun AnyCol.isFrameColumn(): Boolean = kind() == ColumnKind.Frame
 
 public fun AnyCol.isValueColumn(): Boolean = kind() == ColumnKind.Value
 
-public fun AnyCol.isSubtypeOf(type: KType): Boolean = this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
+public fun AnyCol.isSubtypeOf(type: KType): Boolean =
+    this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
 
 public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf<T>())
 
@@ -43,4 +44,9 @@ public fun AnyCol.isComparable(): Boolean =
 @PublishedApi
 internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()
 
-internal fun KClass<*>.isPrimitive(): Boolean = isSubclassOf(Number::class) || this == String::class || this == Char::class || this == Array::class || isSubclassOf(Collection::class)
+internal fun KClass<*>.isPrimitive(): Boolean =
+    isSubclassOf(Number::class) ||
+        this == String::class ||
+        this == Char::class ||
+        this == Array::class ||
+        isSubclassOf(Collection::class)
