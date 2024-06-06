@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
@@ -79,6 +80,7 @@ import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isNA
@@ -119,6 +121,7 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -165,18 +168,22 @@ import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
+import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.projectTo
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.math.mean
+import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
@@ -2356,6 +2363,47 @@ class DataFrameTests : BaseTest() {
         desc["median"][2] shouldBe 30
         desc["max"][2] shouldBe 45
         desc.print()
+    }
+
+    @DataSchema
+    data class ComparableTest(
+        val int: Int,
+        val comparableInt: Comparable<Int>,
+        val string: String,
+        val comparableString: Comparable<String>,
+        val comparableStar: Comparable<*>,
+        val comparableNothing: Comparable<Nothing>,
+    )
+
+    @Test
+    fun `is comparable`() {
+        val df = listOf(
+            ComparableTest(1, 1, "a", "a", 1, 1),
+            ComparableTest(2, 2, "b", "b", "2", "2"),
+        ).toDataFrame()
+
+        df.int.isComparable() shouldBe true
+        df.comparableInt.isComparable() shouldBe true
+        df.string.isComparable() shouldBe true
+        df.comparableString.isComparable() shouldBe true
+        df.comparableStar.isComparable() shouldBe false
+        df.comparableNothing.isComparable() shouldBe false
+    }
+
+    @Test
+    fun `describe twice minimal`() {
+        val df = dataFrameOf("a", "b")(1, "foo", 3, "bar")
+        val desc1 = df.describe()
+        val desc2 = desc1.describe()
+        desc2::class shouldBe DataFrameImpl::class
+    }
+
+    @Test
+    fun `describe twice`() {
+        val df = typed.group { age and weight }.into("info").groupBy { city }.toDataFrame()
+        val desc1 = df.describe()
+        val desc2 = desc1.describe()
+        desc2::class shouldBe DataFrameImpl::class
     }
 
     @Test
