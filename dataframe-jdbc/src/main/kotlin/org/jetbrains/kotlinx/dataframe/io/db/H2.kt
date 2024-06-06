@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import java.util.Locale
+import java.util.*
 import kotlin.reflect.KType
 
 /**
@@ -15,9 +15,16 @@ import kotlin.reflect.KType
  *
  * NOTE: All date and timestamp-related types are converted to String to avoid java.sql.* types.
  */
-public class H2 (public val dialect: DbType) : DbType("h2") {
+public class H2 (public val dialect: DbType = MySql) : DbType("h2") {
     init {
         require(dialect.javaClass.simpleName != "H2kt") { "H2 database could not be specified with H2 dialect!"}
+    }
+
+    public companion object {
+        public const val MODE_MYSQL: String = "MySQL"
+        public const val MODE_POSTGRESQL: String = "PostgreSQL"
+        public const val MODE_MSSQLSERVER: String = "MSSQLServer"
+        public const val MODE_MARIADB: String = "MariaDB"
     }
 
     override val driverClassName: String
@@ -28,7 +35,14 @@ public class H2 (public val dialect: DbType) : DbType("h2") {
     }
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return dialect.isSystemTable(tableMetadata)
+        val locale = Locale.getDefault()
+        fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
+        val schemaName = tableMetadata.schemaName
+
+        // could be extended for other symptoms of the system tables for H2
+        val isH2SystemTable = schemaName.containsWithLowercase("information_schema")
+
+        return isH2SystemTable || dialect.isSystemTable(tableMetadata)
     }
 
     override fun buildTableMetadata(tables: ResultSet): TableMetadata {
@@ -37,5 +51,9 @@ public class H2 (public val dialect: DbType) : DbType("h2") {
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         return dialect.convertSqlTypeToKType(tableColumnMetadata)
+    }
+
+    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String {
+        return dialect.sqlQueryLimit(sqlQuery, limit)
     }
 }

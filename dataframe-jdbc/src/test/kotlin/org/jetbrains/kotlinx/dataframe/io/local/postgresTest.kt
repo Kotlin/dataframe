@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.io
+package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
@@ -8,9 +8,9 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.*
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import org.postgresql.util.PGobject
 import java.math.BigDecimal
@@ -77,7 +77,6 @@ interface ViewTable {
     val textCol: String?
 }
 
-@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection

@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.io
+package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -7,6 +7,7 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.io.*
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
 import org.junit.AfterClass
