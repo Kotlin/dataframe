@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import io.kotest.assertions.throwables.shouldNotThrow
-import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
@@ -12,6 +11,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
@@ -119,15 +119,15 @@ class RenderingTests : JupyterReplTestCase() {
     }
 
     private fun assertDataFrameDimensions(json: JsonObject, expectedRows: Int, expectedColumns: Int) {
-        json.obj(METADATA)!!.int("nrow") shouldBe expectedRows
-        json.obj(METADATA)!!.int("ncol") shouldBe expectedColumns
+        json[METADATA]!!.jsonObject["nrow"]!!.jsonPrimitive.int shouldBe expectedRows
+        json[METADATA]!!.jsonObject["ncol"]!!.jsonPrimitive.int shouldBe expectedColumns
     }
 
     private fun parseDataframeJson(result: MimeTypedResult): JsonObject {
         return Json.decodeFromString<JsonObject>(result["application/kotlindataframe+json"]!!)
     }
 
-    private fun JsonArray.getObj(index: Int) = this[index] as JsonObject
+    private fun JsonArray.getObj(index: Int) = this[index].jsonObject
 
     @Test
     fun `test kotlin notebook plugin utils sort by one column asc`() {
@@ -228,7 +228,6 @@ class RenderingTests : JupyterReplTestCase() {
                 df.group(col1, col2).into("group")            
             """.trimIndent()
         )
-        val jsonOutput = json.toJsonString(prettyPrint = true)
         val expectedOutput = """
             {
               "${'$'}version": "2.1.0",
@@ -362,7 +361,7 @@ class RenderingTests : JupyterReplTestCase() {
               }]
             }
         """.trimIndent()
-        jsonOutput shouldBe expectedOutput
+        json shouldBe Json.parseToJsonElement(expectedOutput)
     }
 
     @Test
@@ -378,8 +377,8 @@ class RenderingTests : JupyterReplTestCase() {
         assertDataFrameDimensions(json, 2, 2)
 
         val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
-        rows.getObj(0).get("group1")!!.jsonArray.size shouldBe 50
-        rows.getObj(1).get("group1")!!.jsonArray.size shouldBe 50
+        rows.getObj(0)["group1"]!!.jsonObject[DATA]!!.jsonArray.size shouldBe 10
+        rows.getObj(1)["group1"]!!.jsonObject[DATA]!!.jsonArray.size shouldBe 10
     }
 
     // Regression KTNB-424

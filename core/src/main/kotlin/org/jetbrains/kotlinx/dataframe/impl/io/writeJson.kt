@@ -1,8 +1,18 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package org.jetbrains.kotlinx.dataframe.impl.io
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.KlaxonJson
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.putJsonArray
+import kotlinx.serialization.json.putJsonObject
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -36,17 +46,9 @@ import org.jetbrains.kotlinx.dataframe.typeClass
 import java.awt.image.BufferedImage
 import java.io.IOException
 
-internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject? {
-    val values = frame.columns().map { col ->
-        when (col) {
-            is ColumnGroup<*> -> encodeRow(col, index)
-            is FrameColumn<*> -> encodeFrame(col[index])
-            else -> encodeValue(col, index)
-        }.let { col.name to it }
-    }
-    if (values.isEmpty()) return null
-    return obj(values)
-}
+// See docs/serialization_format.md for a description of
+// serialization versions and format.
+internal const val SERIALIZATION_VERSION = "2.1.0"
 
 internal object SerializationKeys {
     const val DATA = "data"
@@ -61,31 +63,70 @@ internal object SerializationKeys {
     const val TYPES = "types"
 }
 
-// See docs/serialization_format.md for a description of
-// serialization versions and format.
-internal const val SERIALIZATION_VERSION = "2.1.0"
+private val valueTypes =
+    setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
 
-internal fun KlaxonJson.encodeRowWithMetadata(
+@OptIn(ExperimentalSerializationApi::class)
+private fun convert(value: Any?): JsonElement = when (value) {
+    is JsonElement -> value
+    is Number -> JsonPrimitive(value)
+    is String -> JsonPrimitive(value)
+    is Char -> JsonPrimitive(value.toString())
+    is Boolean -> JsonPrimitive(value)
+    null -> JsonPrimitive(null)
+    else -> JsonPrimitive(value.toString())
+}
+
+internal fun encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject {
+    val values: Map<String, JsonElement> = frame.columns().associate { col ->
+        col.name to when {
+            col is ColumnGroup<*> -> encodeRow(col, index)
+            col is FrameColumn<*> -> encodeFrame(col[index])
+            col.isList() -> {
+                col[index]?.let {
+                    JsonArray((it as List<*>).map { value -> convert(value) })
+                } ?: JsonPrimitive(null)
+            }
+
+            col.typeClass in valueTypes -> {
+                val v = col[index]
+                convert(v)
+            }
+
+            else -> JsonPrimitive(col[index]?.toString())
+        }
+    }
+
+    if (values.isEmpty()) return buildJsonObject { }
+    return JsonObject(values)
+}
+
+internal fun encodeRowWithMetadata(
     frame: ColumnsContainer<*>,
     index: Int,
     rowLimit: Int? = null,
     imageEncodingOptions: Base64ImageEncodingOptions? = null
-): JsonObject? {
-    val values = frame.columns().map { col ->
+): JsonElement? {
+    val values: List<Pair<String, JsonElement>> = frame.columns().map { col ->
         when (col) {
             is ColumnGroup<*> -> {
                 val schema = col.schema()
-                obj(
-                    DATA to encodeRowWithMetadata(col, index, rowLimit, imageEncodingOptions),
-                    METADATA to obj(
-                        KIND to ColumnKind.Group.toString(),
-                        COLUMNS to schema.columns.keys,
-                        TYPES to schema.columns.values.map { columnSchema ->
-                            createJsonTypeDescriptor(columnSchema)
+                buildJsonObject {
+                    put(DATA, encodeRowWithMetadata(col, index, rowLimit, imageEncodingOptions) ?: JsonPrimitive(null))
+                    putJsonObject(METADATA) {
+                        put(KIND, JsonPrimitive(ColumnKind.Group.toString()))
+                        put(COLUMNS, Json.encodeToJsonElement(schema.columns.keys))
+                        putJsonArray(TYPES) {
+                            addAll(
+                                schema.columns.values.map { columnSchema ->
+                                    createJsonTypeDescriptor(columnSchema)
+                                }
+                            )
                         }
-                    ),
-                )
+                    }
+                }
             }
+
             is FrameColumn<*> -> {
                 val data = if (rowLimit == null) {
                     encodeFrameWithMetadata(col[index], null, imageEncodingOptions)
@@ -93,59 +134,50 @@ internal fun KlaxonJson.encodeRowWithMetadata(
                     encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit, imageEncodingOptions)
                 }
                 val schema = col.schema.value
-                obj(
-                    DATA to data,
-                    METADATA to obj(
-                        KIND to ColumnKind.Frame.toString(),
-                        COLUMNS to schema.columns.keys,
-                        TYPES to schema.columns.values.map { columnSchema ->
-                            createJsonTypeDescriptor(columnSchema)
-                        },
-                        NCOL to col[index].ncol,
-                        NROW to col[index].nrow
-                    )
-                )
+                buildJsonObject {
+                    put(DATA, data)
+                    putJsonObject(METADATA) {
+                        put(KIND, JsonPrimitive(ColumnKind.Frame.toString()))
+                        put(COLUMNS, Json.encodeToJsonElement(schema.columns.keys))
+                        putJsonArray(TYPES) {
+                            addAll(
+                                schema.columns.values.map { columnSchema ->
+                                    createJsonTypeDescriptor(columnSchema)
+                                }
+                            )
+                        }
+                        put(NCOL, JsonPrimitive(col[index].ncol))
+                        put(NROW, JsonPrimitive(col[index].nrow))
+                    }
+                }
             }
+
             else -> encodeValue(col, index, imageEncodingOptions)
         }.let { col.name to it }
     }
     if (values.isEmpty()) return null
-    return obj(values)
+    JsonObject(mapOf("exampleKey" to JsonPrimitive("exampleValue")))
+    return JsonObject(values.toMap())
 }
 
-private val valueTypes =
-    setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
-
-internal fun KlaxonJson.encodeValue(
+internal fun encodeValue(
     col: AnyCol,
     index: Int,
     imageEncodingOptions: Base64ImageEncodingOptions? = null
-): Any? = when {
+): JsonElement = when {
     col.isList() -> col[index]?.let { list ->
-        val values = (list as List<*>).map {
-            when (it) {
-                null, is Int, is Double, is Float, is Long, is Boolean, is Short, is Byte -> it
-                // Klaxon default serializers will try to use reflection and can sometimes fail.
-                // We can't have exceptions in Notebook DataFrame renderer
-                else -> it.toString()
-            }
-        }
-        array(values)
-    } ?: array()
+        val values = (list as List<*>).map { convert(it) }
+        JsonArray(values)
+    } ?: JsonArray(emptyList())
 
-    col.typeClass in valueTypes -> {
-        val v = col[index]
-        if ((v is Double && v.isNaN()) || (v is Float && v.isNaN())) {
-            v.toString()
-        } else v
-    }
+    col.typeClass in valueTypes -> convert(col[index])
 
     col.typeClass == BufferedImage::class && imageEncodingOptions != null ->
         col[index]?.let { image ->
-            encodeBufferedImageAsBase64(image as BufferedImage, imageEncodingOptions)
-        } ?: ""
+            JsonPrimitive(encodeBufferedImageAsBase64(image as BufferedImage, imageEncodingOptions))
+        } ?: JsonPrimitive("")
 
-    else -> col[index]?.toString()
+    else -> JsonPrimitive(col[index]?.toString())
 }
 
 private fun encodeBufferedImageAsBase64(
@@ -173,19 +205,19 @@ private fun encodeBufferedImageAsBase64(
 
 private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject {
     return JsonObject(
-        mutableMapOf(KIND to columnSchema.kind.toString()).also {
+        mutableMapOf(KIND to JsonPrimitive(columnSchema.kind.toString())).also {
             if (columnSchema.kind == ColumnKind.Value) {
-                it.put(TYPE, columnSchema.type.toString())
+                it[TYPE] = JsonPrimitive(columnSchema.type.toString())
             }
         }
     )
 }
 
-internal fun KlaxonJson.encodeFrameWithMetadata(
+internal fun encodeFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int? = null,
     imageEncodingOptions: Base64ImageEncodingOptions? = null
-): JsonArray<*> {
+): JsonArray {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
 
@@ -205,7 +237,7 @@ internal fun KlaxonJson.encodeFrameWithMetadata(
             ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, imageEncodingOptions)
     }
 
-    return array(data)
+    return buildJsonArray { addAll(data.map { convert(it) }) }
 }
 
 internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
@@ -232,9 +264,9 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
         }
 }
 
-// if there is only 1 column, then `isValidValueColumn` always true.
-// But at the same time, we shouldn't treat dataFrameOf("value")(1,2,3) like unnamed column
-// because it was created by user.
+// If there is only 1 column, then `isValidValueColumn` always true.
+// But at the same time, we shouldn't treat dataFrameOf("value")(1,2,3) like an unnamed column
+// because it was created by the user.
 internal val AnyFrame.isPossibleToFindUnnamedColumns: Boolean
     get() = columns().size != 1
 
@@ -261,45 +293,48 @@ internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
         }
 }
 
-internal fun KlaxonJson.encodeFrame(frame: AnyFrame): JsonArray<*> {
+internal fun encodeFrame(frame: AnyFrame): JsonArray {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
 
     val arraysAreFrames = arrayColumn?.kind() == ColumnKind.Frame
 
     val data = frame.indices().map { rowIndex ->
-        valueColumn
-            ?.get(rowIndex)
-            ?: arrayColumn?.get(rowIndex)
-                ?.let {
-                    if (arraysAreFrames) encodeFrame(it as AnyFrame) else null
-                }
-            ?: encodeRow(frame, rowIndex)
+        valueColumn?.get(rowIndex) ?: arrayColumn?.get(rowIndex)?.let {
+            if (arraysAreFrames) encodeFrame(it as AnyFrame) else null
+        } ?: encodeRow(frame, rowIndex)
     }
 
-    return array(data)
+    return buildJsonArray { addAll(data.map { convert(it) }) }
 }
 
-internal fun KlaxonJson.encodeDataFrameWithMetadata(
+internal fun encodeDataFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     imageEncodingOptions: Base64ImageEncodingOptions? = null
 ): JsonObject {
-    return obj(
-        VERSION to SERIALIZATION_VERSION,
-        METADATA to obj(
-            COLUMNS to frame.columnNames(),
-            TYPES to frame.schema().columns.values.map { colSchema ->
-                createJsonTypeDescriptor(colSchema)
-            },
-            NROW to frame.rowsCount(),
-            NCOL to frame.columnsCount()
-        ),
-        KOTLIN_DATAFRAME to encodeFrameWithMetadata(
-            frame.take(rowLimit),
-            rowLimit = nestedRowLimit,
-            imageEncodingOptions
-        ),
-    )
+    return buildJsonObject {
+        put(VERSION, JsonPrimitive(SERIALIZATION_VERSION))
+        putJsonObject(METADATA) {
+            putJsonArray(COLUMNS) { addAll(frame.columnNames().map { JsonPrimitive(it) }) }
+            putJsonArray(TYPES) {
+                addAll(
+                    frame.schema().columns.values.map { colSchema ->
+                        createJsonTypeDescriptor(colSchema)
+                    }
+                )
+            }
+            put(NROW, JsonPrimitive(frame.rowsCount()))
+            put(NCOL, JsonPrimitive(frame.columnsCount()))
+        }
+        put(
+            KOTLIN_DATAFRAME,
+            encodeFrameWithMetadata(
+                frame.take(rowLimit),
+                rowLimit = nestedRowLimit,
+                imageEncodingOptions
+            )
+        )
+    }
 }

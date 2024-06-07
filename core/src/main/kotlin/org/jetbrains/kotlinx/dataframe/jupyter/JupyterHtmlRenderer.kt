@@ -5,8 +5,6 @@ import kotlinx.serialization.json.addAll
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
@@ -29,6 +27,7 @@ import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.mimeResult
+import org.jetbrains.kotlinx.jupyter.api.outputs.isIsolatedHtml
 import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 
 /** Starting from this version, dataframe integration will respond with additional data for rendering in Kotlin Notebooks plugin. */
@@ -79,14 +78,12 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         // TODO Do we need to handle the improved meta data here as well?
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() -> {
-                json {
-                    obj(
-                        NROW to df.size.nrow,
-                        NCOL to df.size.ncol,
-                        COLUMNS to df.columnNames(),
-                        KOTLIN_DATAFRAME to encodeFrame(df.take(limit)),
-                    )
-                }.toJsonString()
+                buildJsonObject {
+                    put(NROW, df.size.nrow)
+                    put(NCOL, df.size.ncol)
+                    putJsonArray(COLUMNS) { addAll(df.columnNames()) }
+                    put(KOTLIN_DATAFRAME, encodeFrame(df.take(limit)))
+                }.toString()
             }
 
             else -> {
@@ -128,7 +125,7 @@ internal fun Notebook.renderAsIFrameAsNeeded(
     return mimeResult(
         "text/html" to textHtml,
         "application/kotlindataframe+json" to jsonEncodedDf
-    ).also { it.isolatedHtml = false }
+    ).also { it.isIsolatedHtml = false }
 }
 
 internal fun DataFrameHtmlData.toJupyterHtmlData() = HtmlData(style, body, script)

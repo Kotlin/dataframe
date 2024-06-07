@@ -21,6 +21,8 @@ import java.io.InputStream
 import java.net.URL
 import kotlin.reflect.typeOf
 
+private const val valueColumnName: String = "value"
+
 /**
  * Used to add `readJson` and `convertToMyMarker` functions to the generated interfaces.
  * Makes sure [convertDataRowsWithOpenApi] is always used in conversions.
