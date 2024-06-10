@@ -12,9 +12,9 @@ private val logger = KotlinLogging.logger {}
  *
  * @param [connection] the database connection.
  * @return the corresponding [DbType].
- * @throws IllegalStateException if URL information is missing in connection meta-data.
- * @throws IllegalArgumentException if the URL specifies an unsupported database type.
- * @throws SQLException if the URL is null.
+ * @throws [IllegalStateException] if URL information is missing in connection meta-data.
+ * @throws [IllegalArgumentException] if the URL specifies an unsupported database type.
+ * @throws [SQLException] if the URL is null.
  */
 public fun extractDBTypeFromConnection(connection: Connection): DbType {
     val url = connection.metaData?.url ?: throw IllegalStateException("URL information is missing in connection meta data!")
@@ -63,7 +63,7 @@ public fun extractDBTypeFromConnection(connection: Connection): DbType {
  *
  * @param [url] the JDBC URL.
  * @return the corresponding [DbType].
- * @throws RuntimeException if the url is null.
+ * @throws [RuntimeException] if the url is null.
  */
 public fun extractDBTypeFromUrl(url: String?): DbType {
     if (url != null) {
@@ -85,6 +85,13 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
     }
 }
 
+/**
+ * Creates an instance of DbType based on the provided JDBC URL.
+ *
+ * @param [url] The JDBC URL representing the database connection.
+ * @return The corresponding [DbType] instance.
+ * @throws [IllegalArgumentException] if the provided URL does not contain a valid mode.
+ */
 private fun createH2Instance(url: String): DbType {
     val modePattern = "MODE=(.*?);".toRegex()
     val matchResult = modePattern.find(url)

@@ -35,6 +35,7 @@ mssql = "12.6.1.jre11"
 mysql = "8.3.0"
 postgresql = "42.7.2"
 sqlite = "3.45.1.0"
+jtsCore = "1.18.1"
 kotlinDatetime = "0.5.0"
 openapi = "2.1.20"
 kotlinLogging = "6.0.3"
@@ -80,6 +81,7 @@ mssql = { group = "com.microsoft.sqlserver", name = "mssql-jdbc", version.ref = 
 mysql = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+jts = { group = "org.locationtech.jts", name = "jts-core", version.ref = "jtsCore" }
 
 poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "poi" }
 kotlin-datetimeJvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
