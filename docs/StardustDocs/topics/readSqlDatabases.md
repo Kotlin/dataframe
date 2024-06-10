@@ -59,7 +59,7 @@ In the second, be sure that you can establish a connection to the database.
 
 For this, usually, you need to have three things: a URL to a database, a username and a password.
 
-Call one of the following functions to obtain data from a database and transform it to the dataframe.
+Call one of the following functions to collect data from a database and transform it to the dataframe.
 
 For example, if you have a local PostgreSQL database named as `testDatabase` with table `Customer`,
 you could read first 100 rows and print the data just copying the code below:
@@ -105,7 +105,7 @@ Next, import `Kotlin DataFrame` library in the cell below.
 **NOTE:** The order of cell execution is important, 
 the dataframe library is waiting for a JDBC driver to force classloading.
 
-Find full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
+Find a full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
  
 
 ## Reading Specific Tables
@@ -315,9 +315,9 @@ connection.close()
 These functions read all data from all tables in the connected database. 
 Variants with a limit parameter restrict how many rows will be read from each table.
 
-**readAllSqlTables(connection: Connection): List\<AnyFrame>**
+**readAllSqlTables(connection: Connection): Map\<String, AnyFrame>**
 
-Retrieves data from all the non-system tables in the SQL database and returns them as a list of AnyFrame objects.
+Retrieves data from all the non-system tables in the SQL database and returns them as a map of table names to AnyFrame objects.
 
 The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
@@ -330,7 +330,7 @@ val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PAS
 val dataframes = DataFrame.readAllSqlTables(dbConfig)
 ```
 
-**readAllSqlTables(connection: Connection, limit: Int): List\<AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int): Map\<String, AnyFrame>**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read from each table.
@@ -493,10 +493,10 @@ connection.close()
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
-**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List\<DataFrameSchema>**
+**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): Map\<String, DataFrameSchema>**
 
 This function retrieves the schema of all tables from an SQL database 
-and returns them as a list of [`DataFrameSchema`](schema.md).
+and returns them as a map of table names to [`DataFrameSchema`](schema.md) objects.
 
 The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
@@ -509,7 +509,7 @@ val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PAS
 val schemas = DataFrame.getSchemaForAllSqlTables(dbConfig)
 ```
 
-**getSchemaForAllSqlTables(connection: Connection): List\<DataFrameSchema>**
+**getSchemaForAllSqlTables(connection: Connection): Map\<String, DataFrameSchema>**
 
 This function retrieves the schema of all tables using a JDBC connection: `Connection` object 
 and returns them as a list of [`DataFrameSchema`](schema.md).

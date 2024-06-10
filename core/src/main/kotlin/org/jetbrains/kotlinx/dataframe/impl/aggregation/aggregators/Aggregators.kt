@@ -16,6 +16,9 @@ internal object Aggregators {
     private fun <C : Any, R> mergedValues(aggregate: Iterable<C?>.(KType) -> R?) =
         MergedValuesAggregator.Factory(aggregate, true)
 
+    private fun <C : Any, R> mergedValuesChangingTypes(aggregate: Iterable<C?>.(KType) -> R?) =
+        MergedValuesAggregator.Factory(aggregate, false)
+
     private fun <C, R> changesType(aggregate1: Iterable<C>.(KType) -> R, aggregate2: Iterable<R>.(KType) -> R) =
         TwoStepAggregator.Factory(aggregate1, aggregate2, false)
 
@@ -33,7 +36,7 @@ internal object Aggregators {
     val max by preservesType<Comparable<Any?>> { maxOrNull() }
 
     val std by withOption2<Boolean, Int, Number, Double> { skipNA, ddof ->
-        mergedValues { std(it, skipNA, ddof) }
+        mergedValuesChangingTypes { std(it, skipNA, ddof) }
     }
 
     val mean by withOption<Boolean, Number, Double> { skipNA ->
