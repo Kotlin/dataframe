@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.api.dataFrameOf
 import org.junit.Test
 
 class MoveTests {
@@ -91,21 +90,5 @@ class MoveTests {
         shouldNotThrowAny {
             df.move("1").after("2") shouldBe dataFrameOf("2", "1")(2, 1)
         }
-    }
-
-    @Test
-    fun test() {
-        val df = dataFrameOf("a", "b", "c").withValues(emptyList())
-
-        //val df1 = df.move("a", "b").under("c") // Can not insert columns under a column 'c', because it is not a column group
-        val df1 = df.move("a", "b").under("d")
-//        df1.schema().print()
-
-//        df.group("a", "b").into { pathOf("d", "e") }.schema().print()
-
-        df1.group("c").into("d").schema().print()
-
-//        df.ungroup("")
-//        grouped.schema().print()
     }
 }

@@ -27,13 +27,11 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         maven(jupyterApiTCRepo)
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
     }
 }
 
 pluginManagement {
     repositories {
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
         mavenLocal()
         gradlePluginPortal()
     }

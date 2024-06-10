@@ -98,8 +98,8 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
 public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
     public val right: DataFrame<B>
-    @Interpretable("Match0")
 
+    @Interpretable("Match0")
     public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
 
     public infix fun <C> String.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(toColumnOf(), other)

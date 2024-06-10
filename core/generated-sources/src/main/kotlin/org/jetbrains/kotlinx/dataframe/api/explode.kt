@@ -15,16 +15,12 @@ import kotlin.reflect.KProperty
 private val defaultExplodeColumns: ColumnsSelector<*, *> = { colsAtAnyDepth { it.isList() || it.isFrameColumn() } }
 
 // region explode DataFrame
-
+@Refine
+@Interpretable("Explode0")
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
     selector: ColumnsSelector<T, *> = defaultExplodeColumns
 ): DataFrame<T> = explodeImpl(dropEmpty, selector)
-
-@Refine
-@Interpretable("Explode0")
-public fun <T> DataFrame<T>.explode(selector: ColumnsSelector<T, *>): DataFrame<T> =
-    explodeImpl(true, selector)
 
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }

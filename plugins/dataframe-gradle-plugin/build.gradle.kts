@@ -8,7 +8,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
     maven(url = "https://jitpack.io")
     google()
 }

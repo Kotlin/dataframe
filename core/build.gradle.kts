@@ -39,7 +39,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
     maven(jupyterApiTCRepo)
 }
 

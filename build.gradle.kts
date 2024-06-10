@@ -36,7 +36,6 @@ val projectName: String by project
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
     maven(jupyterApiTCRepo)
 }
@@ -178,7 +177,6 @@ koverMerged {
                 ":plugins:dataframe-gradle-plugin",
                 ":plugins:symbol-processor",
                 ":plugins:dataframe-gradle-plugin",
-                ":plugins:dataframe-introspection"
             )
         }
     }
