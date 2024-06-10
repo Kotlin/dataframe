@@ -88,5 +88,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Generated sources have been updated. Please check the changes at this commit: [link](https://github.com/${{ github.repository }}/commit/${{ steps.git-commit.outputs.commit }})",
+              body: "Generated sources will be updated after merging this PR.\nPlease inspect the changes in [here](https://github.com/${{ github.repository }}/commit/${{ steps.git-commit.outputs.commit }}).",
             });
