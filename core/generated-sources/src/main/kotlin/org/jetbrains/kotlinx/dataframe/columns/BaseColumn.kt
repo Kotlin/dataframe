@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.impl.api.Col
+import org.jetbrains.kotlinx.dataframe.impl.api.GenericColumn
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -19,7 +19,7 @@ import kotlin.reflect.KType
  *
  * @param T type of values contained in column.
  */
-public interface BaseColumn<out T> : ColumnReference<T>, Col {
+public interface BaseColumn<out T> : ColumnReference<T>, GenericColumn {
 
     // region info
 

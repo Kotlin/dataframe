@@ -60,7 +60,7 @@ internal fun <T> insertImplDataFrame(
     return if (columns.isEmpty()) df ?: DataFrame.empty().cast() else {
         insertImplGenericContainer(
             df?.let { DfAdapter(it) },
-            columns.map { ColumnToInsert1(it.insertionPath, it.column, it.referenceNode) },
+            columns.map { GenericColumnsToInsert(it.insertionPath, it.column, it.referenceNode) },
             treeNode,
             depth,
             factory = { DfAdapter(it.toDataFrame().cast()) },
@@ -73,20 +73,20 @@ internal fun <T> insertImplDataFrame(
     }
 }
 
-internal interface DataFrameLikeContainer<T : Col> {
+internal interface DataFrameLikeContainer<T : GenericColumn> {
     fun columns(): List<T>
 }
 
-internal fun <T : DataFrameLikeContainer<Column>, Column : Col, ColumnGroup> insertImplGenericContainer(
+internal fun <T : DataFrameLikeContainer<Column>, Column : GenericColumn, ColumnGroup> insertImplGenericContainer(
     df: T?,
-    columns: List<ColumnToInsert1<Column>>,
+    columns: List<GenericColumnsToInsert<Column>>,
     treeNode: ReadonlyTreeNode<ReferenceData>?,
     depth: Int,
     factory: (List<Column>) -> T,
     empty: T,
     rename: Column.(String) -> Column,
     createColumnGroup: (String, List<Column>) -> Column,
-): T where ColumnGroup : MyColumnGroup<Column> {
+): T where ColumnGroup : GenericColumnGroup<Column> {
     if (columns.isEmpty()) return df ?: empty
 
     val res: List<Column> = insertImplGenericTree(
@@ -100,22 +100,22 @@ internal fun <T : DataFrameLikeContainer<Column>, Column : Col, ColumnGroup> ins
     return factory(res)
 }
 
-public interface Col {
+public interface GenericColumn {
     public fun name(): String
 }
 
-public interface MyColumnGroup<Column : Col> : Col {
+public interface GenericColumnGroup<Column : GenericColumn> : GenericColumn {
     public fun columns(): List<Column>
 }
 
-internal data class ColumnToInsert1<Column : Col> (
+internal data class GenericColumnsToInsert<Column : GenericColumn> (
     val insertionPath: ColumnPath,
     val column: Column,
     val referenceNode: ReadonlyTreeNode<ReferenceData>? = null
 )
 
-internal fun <Column : Col, ColumnGroup : MyColumnGroup<Column>> insertImplGenericTree(
-    columns: List<ColumnToInsert1<Column>>,
+internal fun <Column : GenericColumn, ColumnGroup : GenericColumnGroup<Column>> insertImplGenericTree(
+    columns: List<GenericColumnsToInsert<Column>>,
     treeNode: ReadonlyTreeNode<ReferenceData>?,
     depth: Int,
     existingColumns: List<Column>?,
