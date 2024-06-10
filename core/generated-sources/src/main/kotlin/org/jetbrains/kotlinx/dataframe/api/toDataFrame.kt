@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
@@ -19,13 +21,19 @@ import kotlin.reflect.KProperty
 
 // region read DataFrame from objects
 
+@Refine
+@Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> = toDataFrame {
     properties()
 }
 
+@Refine
+@Interpretable("toDataFrameDsl")
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
     createDataFrameImpl(T::class, body)
 
+@Refine
+@Interpretable("toDataFrame")
 public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, maxDepth: Int = 0): DataFrame<T> =
     toDataFrame {
         properties(roots = props, maxDepth = maxDepth)
@@ -118,23 +126,27 @@ public interface TraversePropertiesDsl {
     /**
      * Skip given [classes] during recursive (dfs) traversal.
      */
+    @Interpretable("Exclude0")
     public fun exclude(vararg classes: KClass<*>)
 
     /**
      * Skip given [properties] during recursive (dfs) traversal.
      * These can also be getter-like functions (like `getX()` or `isX()`).
      */
+    @Interpretable("Exclude1")
     public fun exclude(vararg properties: KCallable<*>)
 
     /**
      * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      */
+    @Interpretable("Preserve0")
     public fun preserve(vararg classes: KClass<*>)
 
     /**
      * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      * These can also be getter-like functions (like `getX()` or `isX()`).
      */
+    @Interpretable("Preserve1")
     public fun preserve(vararg properties: KCallable<*>)
 }
 
@@ -150,6 +162,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
 
+    @Interpretable("Properties0")
     public abstract fun properties(
         vararg roots: KCallable<*>,
         maxDepth: Int = 0,

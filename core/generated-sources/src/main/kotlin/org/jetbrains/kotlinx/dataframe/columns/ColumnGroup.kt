@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
@@ -24,6 +25,7 @@ import kotlin.reflect.KProperty
  *
  * @param T Schema marker. See [DataFrame] for details.
  */
+@HasSchema(schemaArg = 0)
 public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T>, MyColumnGroup<BaseColumn<*>> {
 
     /**

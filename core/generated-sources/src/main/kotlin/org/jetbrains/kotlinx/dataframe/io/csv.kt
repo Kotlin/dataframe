@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
@@ -68,6 +69,8 @@ internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extens
 
 internal fun isCompressed(url: URL) = isCompressed(url.path)
 
+@Refine
+@Interpretable("ReadDelimStr")
 public fun DataFrame.Companion.readDelimStr(
     text: String,
     colTypes: Map<String, ColType> = mapOf(),
@@ -101,7 +104,7 @@ public fun DataFrame.Companion.read(
         )
     }
 
-@Refine
+@OptInRefine
 @Interpretable("ReadCSV0")
 public fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
