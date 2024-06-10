@@ -9,16 +9,33 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false): DataFrame<T> = flatten(keepParentNameForColumns) { all() }
+public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, separator: String = "."): DataFrame<T> =
+    flatten(keepParentNameForColumns, separator) { all() }
 
-public fun <T, C> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> = flattenImpl(columns, keepParentNameForColumns)
+public fun <T, C> DataFrame<T>.flatten(
+    keepParentNameForColumns: Boolean = false,
+    separator: String = ".",
+    columns: ColumnsSelector<T, C>
+): DataFrame<T> = flattenImpl(columns, keepParentNameForColumns, separator)
 
-public fun <T> DataFrame<T>.flatten(vararg columns: String, keepParentNameForColumns: Boolean = false): DataFrame<T> = flatten(keepParentNameForColumns) { columns.toColumnSet() }
+public fun <T> DataFrame<T>.flatten(
+    vararg columns: String,
+    keepParentNameForColumns: Boolean = false,
+    separator: String = "."
+): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
-public fun <T, C> DataFrame<T>.flatten(vararg columns: ColumnReference<C>, keepParentNameForColumns: Boolean = false): DataFrame<T> =
-    flatten(keepParentNameForColumns) { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.flatten(
+    vararg columns: ColumnReference<C>,
+    keepParentNameForColumns: Boolean = false,
+    separator: String = "."
+): DataFrame<T> =
+    flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
-public fun <T, C> DataFrame<T>.flatten(vararg columns: KProperty<C>, keepParentNameForColumns: Boolean = false): DataFrame<T> =
-    flatten(keepParentNameForColumns) { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.flatten(
+    vararg columns: KProperty<C>,
+    keepParentNameForColumns: Boolean = false,
+    separator: String = "."
+): DataFrame<T> =
+    flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
 // endregion

@@ -302,6 +302,23 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     }
 
     @Test
+    fun `type converter does not conflict with other type converters`() {
+        @Language("kts")
+        val anotherTypeConverter = """
+            notebook.fieldsHandlersProcessor.register(
+                FieldHandlerFactory.createUpdateHandler<ByteArray>(TypeDetection.RUNTIME) { _, prop ->
+                     execute(prop.name + ".toList()").name
+                },
+                ProcessingPriority.LOW
+            )
+        """.trimIndent()
+        execEx(anotherTypeConverter)
+        execEx("val x = ByteArray(1)")
+        val res1 = execRaw("x")
+        res1.shouldBeInstanceOf<List<*>>()
+    }
+
+    @Test
     fun `generate a new marker when dataframe marker is not a data schema so that columns are accessible with extensions`() {
         @Language("kts")
         val a = execRendered(

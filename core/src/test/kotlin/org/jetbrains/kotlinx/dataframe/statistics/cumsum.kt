@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.cumSum
@@ -43,7 +44,7 @@ class CumsumTests {
 
     @Test
     fun `number column`() {
-        val doubles by columnOf(1, 2, null, Double.NaN, 4)
+        val doubles: DataColumn<Number?> by columnOf(1, 2, null, Double.NaN, 4)
         doubles.cumSum().toList() shouldBe listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
     }
 

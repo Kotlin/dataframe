@@ -42,18 +42,18 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnSet: `[ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[String][String]
+     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<* | `[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>` | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `condition: `[ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -62,7 +62,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [**colsInGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]
+     *  [**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -71,9 +71,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnSet][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsInGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -82,9 +82,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [columnGroup][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
+     *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;.[**colsInGroups**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` [` **`{ `**[condition][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`** `]`
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -101,13 +101,13 @@ public interface ColsInGroupsColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
+        /** [**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
         public interface PlainDslName
 
-        /** .[**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
+        /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
         public interface ColumnSetName
 
-        /** .[**colsInGroups**][ColumnsSelectionDsl.colsInGroups] */
+        /** __`.`__[**`colsInGroups`**][ColumnsSelectionDsl.colsInGroups] */
         public interface ColumnGroupName
     }
 
@@ -132,11 +132,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * you can use:
      *
-     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -144,7 +144,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][DataFrame.select]` { `[colGroups][ColumnsSelectionDsl.colGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` }.`[colsInGroups][ColumnSet.colsInGroups]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -185,11 +185,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -197,16 +197,16 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -237,11 +237,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -249,16 +249,16 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
      * #### Examples of this overload:
      *
-     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
-     * `df.`[select][DataFrame.select]` { `[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
      *
      * @see [ColumnsSelectionDsl.cols]
      * @see [ColumnsSelectionDsl.colGroups]
@@ -289,11 +289,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -301,7 +301,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -341,11 +341,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -353,7 +353,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -391,11 +391,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -403,7 +403,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -443,11 +443,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * you can use:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`() }`
      *
      * and
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]` { "user" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colsInGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -455,7 +455,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[colGroups][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[colsInGroups][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.colsInGroups]`() }`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -474,25 +474,41 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     // region deprecated
 
-    @Deprecated(COL_SELECT_DSL_CHILDREN, ReplaceWith(COL_SELECT_DSL_CHILDREN_REPLACE))
+    @Deprecated(COL_SELECT_DSL_CHILDREN, ReplaceWith(COL_SELECT_DSL_CHILDREN_REPLACE), level = DeprecationLevel.ERROR)
     public fun ColumnSet<*>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         colsInGroups(predicate)
 
-    @Deprecated(COL_SELECT_DSL_CHILDREN_SINGLE_COL, ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
+        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         ensureIsColumnGroup().colsInternal(predicate)
 
-    @Deprecated(COL_SELECT_DSL_CHILDREN_SINGLE_COL, ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
+        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun String.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).children(predicate)
+        columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
 
-    @Deprecated(COL_SELECT_DSL_CHILDREN_SINGLE_COL, ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
+        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).children(predicate)
+        columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
 
-    @Deprecated(COL_SELECT_DSL_CHILDREN_SINGLE_COL, ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE))
+    @Deprecated(
+        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
+        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
+        level = DeprecationLevel.ERROR
+    )
     public fun ColumnPath.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).children(predicate)
+        columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
 
     // endregion
 }

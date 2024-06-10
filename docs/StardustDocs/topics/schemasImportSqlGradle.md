@@ -82,7 +82,7 @@ To generate a schema for an existing SQL table,
 you need to define a few parameters to establish a JDBC connection:
 URL (passing to `data` field), username, and password.
 
-Also, the `tableName` parameter should be specified to convert the data from the table with that name to the dataframe.
+Also, the `tableName` parameter should be specified to convert the data from the table with that name to the [`DataFrame`](DataFrame.md).
 
 ```kotlin
 dataframes {

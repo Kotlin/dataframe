@@ -370,7 +370,7 @@ class MariadbTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 1000)
+        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 1000).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MariaDb>()
 

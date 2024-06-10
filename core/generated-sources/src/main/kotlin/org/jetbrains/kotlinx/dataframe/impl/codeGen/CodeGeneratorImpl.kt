@@ -107,11 +107,11 @@ internal interface TypeRenderingStrategy {
 
 internal object FullyQualifiedNames : TypeRenderingStrategy {
 
-    private val DataRow = DataRow::class.qualifiedName!!
-    private val ColumnsContainer = ColumnsContainer::class.qualifiedName!!
-    private val DataFrame = DataFrame::class.qualifiedName!!
-    private val DataColumn = DataColumn::class.qualifiedName!!
-    private val ColumnGroup = ColumnGroup::class.qualifiedName!!
+    private val DataRow = org.jetbrains.kotlinx.dataframe.DataRow::class.qualifiedName!!
+    private val ColumnsContainer = org.jetbrains.kotlinx.dataframe.ColumnsContainer::class.qualifiedName!!
+    private val DataFrame = org.jetbrains.kotlinx.dataframe.DataFrame::class.qualifiedName!!
+    private val DataColumn = org.jetbrains.kotlinx.dataframe.DataColumn::class.qualifiedName!!
+    private val ColumnGroup = org.jetbrains.kotlinx.dataframe.columns.ColumnGroup::class.qualifiedName!!
 
     override fun renderRowTypeName(markerName: String) = "$DataRow<$markerName>"
 
@@ -156,11 +156,11 @@ internal object FullyQualifiedNames : TypeRenderingStrategy {
 
 internal object ShortNames : TypeRenderingStrategy {
 
-    private val DataRow = DataRow::class.simpleName!!
-    private val ColumnsContainer = ColumnsContainer::class.simpleName!!
-    private val DataFrame = DataFrame::class.simpleName!!
-    private val DataColumn = DataColumn::class.simpleName!!
-    private val ColumnGroup = ColumnGroup::class.simpleName!!
+    private val DataRow = org.jetbrains.kotlinx.dataframe.DataRow::class.simpleName!!
+    private val ColumnsContainer = org.jetbrains.kotlinx.dataframe.ColumnsContainer::class.simpleName!!
+    private val DataFrame = org.jetbrains.kotlinx.dataframe.DataFrame::class.simpleName!!
+    private val DataColumn = org.jetbrains.kotlinx.dataframe.DataColumn::class.simpleName!!
+    private val ColumnGroup = org.jetbrains.kotlinx.dataframe.columns.ColumnGroup::class.simpleName!!
 
     override fun renderRowTypeName(markerName: String): String = "$DataRow<${markerName.shorten()}>"
 

@@ -1,5 +1,6 @@
 # Default ignored files
 .idea
 .gradle
+.kotlin
 build
 .ipynb_checkpoints

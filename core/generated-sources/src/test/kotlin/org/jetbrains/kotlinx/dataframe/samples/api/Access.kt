@@ -874,7 +874,7 @@ class Access : TestBase() {
         // SampleStart
         // by condition
         df.select { cols { it.name().startsWith("year") } }
-        df.select { startsWith("year") }
+        df.select { nameStartsWith("year") }
 
         // by type
         df.select { colsOf<String>() }
@@ -919,7 +919,7 @@ class Access : TestBase() {
         df.select { colsAtAnyDepth().colsOf<String>() }
 
         // all columns except given column set
-        df.select { except { colsOf<String>() } }
+        df.select { allExcept { colsOf<String>() } }
 
         // union of column sets
         df.select { take(2) and col(3) }

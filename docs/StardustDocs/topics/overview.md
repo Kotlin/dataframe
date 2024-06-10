@@ -12,7 +12,7 @@ This documentation is written in such a way that it could be read sequentially a
 Data frame is an abstraction for working with structured data. Essentially it’s a 2-dimensional table with labeled columns of potentially different types. You can think of it like a spreadsheet or SQL table, or a dictionary of series objects.
 
 The handiness of this abstraction is not in the table itself but in a set of operations defined on it. 
-The Kotlin Dataframe library is an idiomatic Kotlin DSL defining such operations. 
+The Kotlin DataFrame library is an idiomatic Kotlin DSL defining such operations. 
 The process of working with data frame is often called *data wrangling* which 
 is the process of transforming and mapping data from one "raw" data form into another format 
 that is more appropriate for analytics and visualization. 
@@ -35,8 +35,12 @@ The generated properties ensures you’ll never misspell column name and don’t
 
 * **Generic** — columns can store objects of any type, not only numbers or strings.
 
-* [**Polymorphic**](schemas.md) — if all columns of [`DataFrame`](DataFrame.md) are presented in some other [`DataFrames`](DataFrame.md), then the first one could be a superclass for latter. 
-Thus, one can define a function on an interface with some set of columns and then execute it in a safe way on any [`DataFrames`](DataFrame.md) which contains this set of columns.
+* [**Polymorphic**](schemas.md) —
+  if all columns of [`DataFrame`](DataFrame.md) are presented in some other dataframes,
+  then the first one could be a superclass for latter. 
+Thus,
+  one can define a function on an interface with some set of columns
+  and then execute it in a safe way on any [`DataFrame`](DataFrame.md) which contains this set of columns.
 
 * **Immutable** — all operations on [`DataFrame`](DataFrame.md) produce new instance, while underlying data is reused wherever it's possible
 

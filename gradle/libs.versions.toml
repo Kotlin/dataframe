@@ -1,5 +1,5 @@
 [versions]
-ksp = "1.9.22-1.0.17"
+ksp = "1.9.23-1.0.20"
 kotlinJupyter = "0.12.0-139"
 
 # TODO Updating requires major changes all across the project
@@ -15,7 +15,7 @@ libsPublisher = "1.8.10-dev-43"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "0.13.0-dev-2838"
+dataframe = "0.13.1"
 
 # TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
 korro = "0.1.5"
@@ -31,6 +31,7 @@ fuel = "2.3.1"
 poi = "5.2.5"
 mariadb = "3.3.2"
 h2db = "2.2.224"
+mssql = "12.6.1.jre11"
 mysql = "8.3.0"
 postgresql = "42.7.2"
 sqlite = "3.45.1.0"
@@ -48,7 +49,7 @@ kotestAsserions = "5.5.4"
 
 jsoup = "1.17.2"
 arrow = "15.0.0"
-docProcessor = "0.3.3"
+docProcessor = "0.3.7"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
 plugin-publish = "1.2.1"
@@ -56,6 +57,7 @@ shadow = "8.1.1"
 android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
 ktor-server-netty = "2.3.8"
 kotlin-compile-testing = "1.5.0"
+duckdb = "0.10.0"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -74,6 +76,7 @@ fuel = { group = "com.github.kittinunf.fuel", name = "fuel", version.ref = "fuel
 poi = { group = "org.apache.poi", name = "poi", version.ref = "poi" }
 mariadb = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
+mssql = { group = "com.microsoft.sqlserver", name = "mssql-jdbc", version.ref = "mssql" }
 mysql = { group = "com.mysql", name = "mysql-connector-j", version.ref = "mysql" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
@@ -97,6 +100,8 @@ jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref = "arrow" }
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
+arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
+
 
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
@@ -120,6 +125,7 @@ kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupy
 
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
 
+duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref= "duckdb"}
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }

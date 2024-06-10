@@ -130,10 +130,10 @@ public interface RenameColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -142,11 +142,11 @@ public interface RenameColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef] [**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`/`[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into] [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
+     *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`/`[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
-     *  `| `[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef].[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**
+     *  `| `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]__`.`__[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**
      *
-     *  `| `[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef].[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]**`(`**[column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**
+     *  `| `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]__`.`__[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**
      *
      *
      *
@@ -172,10 +172,10 @@ public interface RenameColumnsSelectionDsl {
         /** [**into**][ColumnsSelectionDsl.into] */
         public interface InfixIntoName
 
-        /** .[**named**][ColumnsSelectionDsl.named] */
+        /** __`.`__[**named**][ColumnsSelectionDsl.named] */
         public interface NamedName
 
-        /** .[**into**][ColumnsSelectionDsl.into] */
+        /** __`.`__[**into**][ColumnsSelectionDsl.into] */
         public interface IntoName
     }
 
@@ -190,15 +190,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][DataFrame.select]` { name `[named][ColumnReference.named]` "Full Name" }`
+     * `df.`[select][DataFrame.select]`  { name  `[named][ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][DataFrame.select]` { `[expr][expr]` { 0 } `[into][ColumnReference.into]` "zeroes" }`
+     * `df.`[select][DataFrame.select]`  {  `[expr][expr]`  { 0 }  `[into][ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][DataFrame.select]` { "colA" `[named][String.named]` Type::colB }`
+     * `df.`[select][DataFrame.select]`  { "colA"  `[named][String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]` {  `[][.]`  }`
+     * `df.`[select][DataFrame.select]`  {   `[][.]`  }`
      *
      * @receiver The [] referencing the column to rename.
      * @param [] A [] used to specify the new name of the column.
@@ -261,15 +261,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[named][ColumnReference.named]` "columnB" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { columnA  `[named][ColumnReference.named]` "columnB" }`
      *
      * @receiver The [ColumnReference] referencing the column to rename.
      * @param [newName] A [String] used to specify the new name of the column.
@@ -288,15 +288,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[named][ColumnReference.named]` columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { columnA  `[named][ColumnReference.named]` columnB }`
      *
      * @receiver The [ColumnReference] referencing the column to rename.
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
@@ -316,15 +316,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[named][ColumnReference.named]` Type::columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { columnA  `[named][ColumnReference.named]` Type::columnB }`
      *
      * @receiver The [ColumnReference] referencing the column to rename.
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
@@ -344,15 +344,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[named][String.named]` "columnB" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "columnA"  `[named][String.named]` "columnB" }`
      *
      * @receiver The [String] referencing the column to rename.
      * @param [newName] A [String] used to specify the new name of the column.
@@ -371,15 +371,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[named][String.named]` columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "columnA"  `[named][String.named]` columnB }`
      *
      * @receiver The [String] referencing the column to rename.
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
@@ -399,15 +399,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[named][String.named]` Type::columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "columnA"  `[named][String.named]` Type::columnB }`
      *
      * @receiver The [String] referencing the column to rename.
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
@@ -427,15 +427,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[named][KProperty.named]` "columnB" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::columnA  `[named][KProperty.named]` "columnB" }`
      *
      * @receiver The [KProperty] referencing the column to rename.
      * @param [newName] A [String] used to specify the new name of the column.
@@ -454,15 +454,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[named][KProperty.named]` columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::columnA  `[named][KProperty.named]` columnB }`
      *
      * @receiver The [KProperty] referencing the column to rename.
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
@@ -482,15 +482,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[named][KProperty.named]` Type::columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::columnA  `[named][KProperty.named]` Type::columnB }`
      *
      * @receiver The [KProperty] referencing the column to rename.
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
@@ -514,15 +514,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[into][ColumnReference.into]` "columnB" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { columnA  `[into][ColumnReference.into]` "columnB" }`
      *
      * @receiver The [ColumnReference] referencing the column to rename.
      * @param [newName] A [String] used to specify the new name of the column.
@@ -541,15 +541,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[into][ColumnReference.into]` columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { columnA  `[into][ColumnReference.into]` columnB }`
      *
      * @receiver The [ColumnReference] referencing the column to rename.
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
@@ -568,15 +568,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { columnA `[into][ColumnReference.into]` Type::columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { columnA  `[into][ColumnReference.into]` Type::columnB }`
      *
      * @receiver The [ColumnReference] referencing the column to rename.
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
@@ -595,15 +595,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[into][String.into]` "columnB" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "columnA"  `[into][String.into]` "columnB" }`
      *
      * @receiver The [String] referencing the column to rename.
      * @param [newName] A [String] used to specify the new name of the column.
@@ -622,15 +622,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[into][String.into]` columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "columnA"  `[into][String.into]` columnB }`
      *
      * @receiver The [String] referencing the column to rename.
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
@@ -649,15 +649,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "columnA" `[into][String.into]` Type::columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "columnA"  `[into][String.into]` Type::columnB }`
      *
      * @receiver The [String] referencing the column to rename.
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
@@ -676,15 +676,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[into][KProperty.into]` "columnB" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::columnA  `[into][KProperty.into]` "columnB" }`
      *
      * @receiver The [KProperty] referencing the column to rename.
      * @param [newName] A [String] used to specify the new name of the column.
@@ -703,15 +703,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[into][KProperty.into]` columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::columnA  `[into][KProperty.into]` columnB }`
      *
      * @receiver The [KProperty] referencing the column to rename.
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
@@ -730,15 +730,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { name `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { name  `[named][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[expr][org.jetbrains.kotlinx.dataframe.api.expr]` { 0 } `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[expr][org.jetbrains.kotlinx.dataframe.api.expr]`  { 0 }  `[into][org.jetbrains.kotlinx.dataframe.columns.ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "colA" `[named][kotlin.String.named]` Type::colB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[named][kotlin.String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnA `[into][KProperty.into]` Type::columnB }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::columnA  `[into][KProperty.into]` Type::columnB }`
      *
      * @receiver The [KProperty] referencing the column to rename.
      * @param [nameOf] A [KProperty] used to specify the new name of the column.

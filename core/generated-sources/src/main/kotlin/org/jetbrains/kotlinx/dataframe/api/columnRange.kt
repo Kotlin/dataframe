@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import kotlin.reflect.KProperty
@@ -30,10 +31,10 @@ public interface ColumnRangeColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `column: `[ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]` | `[String][String]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[KProperty][kotlin.reflect.KProperty]`<*> | `[ColumnPath][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -42,7 +43,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef] [**..**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo] [column][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
+     *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**`..`**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
      *
      *
@@ -61,51 +62,24 @@ public interface ColumnRangeColumnsSelectionDsl {
      */
     public interface Grammar {
 
-        /** [**..**][ColumnsSelectionDsl.rangeTo] */
+        /** [**`..`**][ColumnsSelectionDsl.rangeTo] */
         public interface PlainDslName
     }
 
-    /**
-     * ## Range of Columns
-     * Creates a [ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
-     *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
-     * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
-     *
-     * ### Check out: [Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]` { `` }`
-     *
-     * @param [endInclusive] The last column in the subset.
-     * @receiver The first column in the subset.
-     * @return A [ColumnSet] containing all columns from [this] to [endInclusive].
-     * @throws [IllegalArgumentException] if the columns have different parents or the end column is before the
-     *   start column.
-     * @see [ColumnsSelectionDsl.allBefore]
-     * @see [ColumnsSelectionDsl.allAfter]
-     * @see [ColumnsSelectionDsl.allFrom]
-     * @see [ColumnsSelectionDsl.allUpTo]
-     */
-    private interface CommonRangeOfColumnsDocs {
-
-        /** Examples key */
-        interface Example
-    }
+    
 
     /**
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn"[`..`][String.rangeTo]"toColumn"` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -125,14 +99,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn"[`..`][String.rangeTo]Type::toColumn` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -152,14 +126,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `"fromColumn"[`..`][String.rangeTo]toColumn` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`"fromColumn"`[`..`][String.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -179,14 +153,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `Type::fromColumn[`..`][KProperty.rangeTo]"toColumn"` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -206,14 +180,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `Type::fromColumn[`..`][KProperty.rangeTo]Type::toColumn` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -233,14 +207,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `Type::fromColumn[`..`][KProperty.rangeTo]toColumn` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -260,14 +234,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn[`..`][ColumnReference.rangeTo]"toColumn"` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`"toColumn"`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -287,14 +261,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn[`..`][ColumnReference.rangeTo]Type::toColumn` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`Type::toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.
@@ -314,14 +288,14 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns
      * Creates a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this] up to (and including) [endInclusive].
      *
-     * Columns inside of column groups are also supported (as long as they share the same direct parent),
+     * Columns inside column groups are also supported (as long as they share the same direct parent),
      * as well as any combination of [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi].
      *
      * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar]
      *
      * #### For example:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `fromColumn[`..`][ColumnReference.rangeTo]toColumn` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `<code>`fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`</code>` }`
      *
      * @param [endInclusive] The last column in the subset.
      * @receiver The first column in the subset.

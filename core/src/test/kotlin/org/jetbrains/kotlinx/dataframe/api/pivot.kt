@@ -41,7 +41,7 @@ class PivotTests {
         }
         pivoted.columnsCount() shouldBe 3
         pivoted.rowsCount() shouldBe 2
-        val cols = pivoted.getColumns { except(a).colsAtAnyDepth { !it.isColumnGroup() } }
+        val cols = pivoted.getColumns { allExcept(a).colsAtAnyDepth { !it.isColumnGroup() } }
         cols.size shouldBe 4
         cols.forEach {
             it.type() shouldBe typeOf<Char>()
@@ -152,5 +152,20 @@ class PivotTests {
                 0, 2, -1,
                 1, -1, 5
             )
+    }
+
+    @Test
+    fun `pivot then in aggregate`() {
+        val df = dataFrameOf(
+            "category1" to List(12) { it % 3 },
+            "category2" to List(12) { "category2_${it % 2}" },
+            "category3" to List(12) { "category3_${it % 5}" },
+            "value" to List(12) { it }
+        )
+
+        val df1 = df.groupBy("category1").aggregate {
+            pivot { "category2" then "category3" }.count()
+        }
+        df1 shouldBe df.pivot { "category2" then "category3" }.groupBy("category1").count()
     }
 }

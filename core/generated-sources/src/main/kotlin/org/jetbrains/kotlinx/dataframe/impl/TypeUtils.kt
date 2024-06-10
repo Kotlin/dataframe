@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -467,3 +469,100 @@ internal fun nothingType(nullable: Boolean): KType =
     } else {
         typeOf<List<Nothing>>()
     }.arguments.first().type!!
+
+@OptIn(ExperimentalUnsignedTypes::class)
+private val primitiveArrayClasses = setOf(
+    BooleanArray::class,
+    ByteArray::class,
+    ShortArray::class,
+    IntArray::class,
+    LongArray::class,
+    FloatArray::class,
+    DoubleArray::class,
+    CharArray::class,
+
+    UByteArray::class,
+    UShortArray::class,
+    UIntArray::class,
+    ULongArray::class,
+)
+
+/**
+ * Returns `true` if this class is a primitive array class like `XArray`.
+ *
+ * Use [KClass.isArray] to also check for `Array<>`.
+ */
+internal val KClass<*>.isPrimitiveArray: Boolean
+    get() = this in primitiveArrayClasses
+
+/**
+ * Returns `true` if this class is an array, either a primitive array like `XArray` or `Array<>`.
+ *
+ * Use [KClass.isPrimitiveArray] to only check for primitive arrays.
+ */
+internal val KClass<*>.isArray: Boolean
+    get() = this in primitiveArrayClasses ||
+        this.qualifiedName == Array::class.qualifiedName // instance check fails
+
+/**
+ * Returns `true` if this type is of a primitive array like `XArray`.
+ *
+ * Use [KType.isArray] to also check for `Array<>`.
+ */
+internal val KType.isPrimitiveArray: Boolean
+    get() =
+        if (arguments.isNotEmpty()) {
+            // Catching https://github.com/Kotlin/dataframe/issues/678
+            // as typeOf<Array<Int>>().classifier == IntArray::class
+            false
+        } else {
+            (classifier as? KClass<*>)?.isPrimitiveArray == true
+        }
+
+/**
+ * Returns `true` if this type is of an array, either a primitive array like `XArray` or `Array<>`.
+ *
+ * Use [KType.isPrimitiveArray] to only check for primitive arrays.
+ */
+internal val KType.isArray: Boolean
+    get() = (classifier as? KClass<*>)?.isArray == true
+
+/**
+ * Returns `true` if this object is a primitive array like `XArray`.
+ *
+ * Use [Any.isArray] to also check for the `Array<>` object.
+ */
+internal val Any.isPrimitiveArray: Boolean
+    get() = this::class.isPrimitiveArray
+
+/**
+ * Returns `true` if this object is an array, either a primitive array like `XArray` or `Array<>`.
+ *
+ * Use [Any.isPrimitiveArray] to only check for primitive arrays.
+ */
+internal val Any.isArray: Boolean
+    get() = this::class.isArray
+
+/**
+ * If [this] is an array of any kind, the function returns it as a list of values,
+ * else it returns `null`.
+ */
+internal fun Any.asArrayAsListOrNull(): List<*>? =
+    when (this) {
+        is BooleanArray -> asList()
+        is ByteArray -> asList()
+        is ShortArray -> asList()
+        is IntArray -> asList()
+        is LongArray -> asList()
+        is FloatArray -> asList()
+        is DoubleArray -> asList()
+        is CharArray -> asList()
+
+        is UByteArray -> asList()
+        is UShortArray -> asList()
+        is UIntArray -> asList()
+        is ULongArray -> asList()
+
+        is Array<*> -> asList()
+        else -> null
+    }

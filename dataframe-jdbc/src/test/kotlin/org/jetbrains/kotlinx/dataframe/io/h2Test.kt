@@ -6,10 +6,7 @@ import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -600,7 +597,11 @@ class JdbcTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection)
+        val dataFrameMap = DataFrame.readAllSqlTables(connection)
+        dataFrameMap.containsKey("Customer") shouldBe true
+        dataFrameMap.containsKey("Sale") shouldBe true
+
+        val dataframes = dataFrameMap.values.toList()
 
         val customerDf = dataframes[0].cast<Customer>()
 
@@ -614,7 +615,7 @@ class JdbcTest {
         saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataframes1 = DataFrame.readAllSqlTables(connection, limit = 1)
+        val dataframes1 = DataFrame.readAllSqlTables(connection, limit = 1).values.toList()
 
         val customerDf1 = dataframes1[0].cast<Customer>()
 
@@ -628,7 +629,11 @@ class JdbcTest {
         saleDf1.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataSchemas = DataFrame.getSchemaForAllSqlTables(connection)
+        val dataFrameSchemaMap = DataFrame.getSchemaForAllSqlTables(connection)
+        dataFrameSchemaMap.containsKey("Customer") shouldBe true
+        dataFrameSchemaMap.containsKey("Sale") shouldBe true
+
+        val dataSchemas = dataFrameSchemaMap.values.toList()
 
         val customerDataSchema = dataSchemas[0]
         customerDataSchema.columns.size shouldBe 3
@@ -636,10 +641,11 @@ class JdbcTest {
 
         val saleDataSchema = dataSchemas[1]
         saleDataSchema.columns.size shouldBe 3
+        // TODO: fix nullability
         saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
-        val dataframes2 = DataFrame.readAllSqlTables(dbConfig)
+        val dataframes2 = DataFrame.readAllSqlTables(dbConfig).values.toList()
 
         val customerDf2 = dataframes2[0].cast<Customer>()
 
@@ -653,7 +659,7 @@ class JdbcTest {
         saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1)
+        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1).values.toList()
 
         val customerDf3 = dataframes3[0].cast<Customer>()
 
@@ -667,7 +673,7 @@ class JdbcTest {
         saleDf3.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig)
+        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig).values.toList()
 
         val customerDataSchema1 = dataSchemas1[0]
         customerDataSchema1.columns.size shouldBe 3
@@ -676,5 +682,118 @@ class JdbcTest {
         val saleDataSchema1 = dataSchemas1[1]
         saleDataSchema1.columns.size shouldBe 3
         saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+    }
+
+    // TODO: add the same test for each particular database and refactor the scenario to the common test case
+    // https://github.com/Kotlin/dataframe/issues/688
+    @Test
+    fun `infer nullability`() {
+        // prepare tables and data
+        @Language("SQL")
+        val createTestTable1Query = """
+                CREATE TABLE TestTable1 (
+                    id INT PRIMARY KEY,
+                    name VARCHAR(50),
+                    surname VARCHAR(50),
+                    age INT NOT NULL
+                )
+            """
+
+        connection.createStatement().execute(createTestTable1Query)
+
+        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
+        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
+        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
+        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+
+        // start testing `readSqlTable` method
+
+        // with default inferNullability: Boolean = true
+        val tableName = "TestTable1"
+        val df = DataFrame.readSqlTable(connection, tableName)
+        df.schema().columns["id"]!!.type shouldBe typeOf<Int>()
+        df.schema().columns["name"]!!.type shouldBe typeOf<String>()
+        df.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
+        df.schema().columns["age"]!!.type shouldBe typeOf<Int>()
+
+        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
+        dataSchema.columns.size shouldBe 4
+        dataSchema.columns["id"]!!.type shouldBe typeOf<Int>()
+        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+        dataSchema.columns["surname"]!!.type shouldBe typeOf<String?>()
+        dataSchema.columns["age"]!!.type shouldBe typeOf<Int>()
+
+        // with inferNullability: Boolean = false
+        val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
+        df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
+        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+        df1.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
+        df1.schema().columns["age"]!!.type shouldBe typeOf<Int>()
+
+        // end testing `readSqlTable` method
+
+        // start testing `readSQLQuery` method
+
+        // ith default inferNullability: Boolean = true
+        @Language("SQL")
+        val sqlQuery = """
+            SELECT name, surname, age FROM TestTable1
+        """.trimIndent()
+
+        val df2 = DataFrame.readSqlQuery(connection, sqlQuery)
+        df2.schema().columns["name"]!!.type shouldBe typeOf<String>()
+        df2.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
+        df2.schema().columns["age"]!!.type shouldBe typeOf<Int>()
+
+        val dataSchema2 = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+        dataSchema2.columns.size shouldBe 3
+        dataSchema2.columns["name"]!!.type shouldBe typeOf<String?>()
+        dataSchema2.columns["surname"]!!.type shouldBe typeOf<String?>()
+        dataSchema2.columns["age"]!!.type shouldBe typeOf<Int>()
+
+        // with inferNullability: Boolean = false
+        val df3 = DataFrame.readSqlQuery(connection, sqlQuery, inferNullability = false)
+        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+        df3.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
+        df3.schema().columns["age"]!!.type shouldBe typeOf<Int>()
+
+        // end testing `readSQLQuery` method
+
+        // start testing `readResultSet` method
+
+        connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
+            @Language("SQL")
+            val selectStatement = "SELECT * FROM TestTable1"
+
+            st.executeQuery(selectStatement).use { rs ->
+                // ith default inferNullability: Boolean = true
+                val df4 = DataFrame.readResultSet(rs, H2)
+                df4.schema().columns["id"]!!.type shouldBe typeOf<Int>()
+                df4.schema().columns["name"]!!.type shouldBe typeOf<String>()
+                df4.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
+                df4.schema().columns["age"]!!.type shouldBe typeOf<Int>()
+
+                rs.beforeFirst()
+
+                val dataSchema3 = DataFrame.getSchemaForResultSet(rs, H2)
+                dataSchema3.columns.size shouldBe 4
+                dataSchema3.columns["id"]!!.type shouldBe typeOf<Int>()
+                dataSchema3.columns["name"]!!.type shouldBe typeOf<String?>()
+                dataSchema3.columns["surname"]!!.type shouldBe typeOf<String?>()
+                dataSchema3.columns["age"]!!.type shouldBe typeOf<Int>()
+
+                // with inferNullability: Boolean = false
+                rs.beforeFirst()
+
+                val df5 = DataFrame.readResultSet(rs, H2, inferNullability = false)
+                df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
+                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+                df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
+                df5.schema().columns["age"]!!.type shouldBe typeOf<Int>()
+            }
+        }
+        // end testing `readResultSet` method
+
+        connection.createStatement().execute("DROP TABLE TestTable1")
     }
 }

@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.index
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -123,28 +124,30 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFra
 public interface TraversePropertiesDsl {
 
     /**
-     * Skip given [classes] during recursive (dfs) traversal
+     * Skip given [classes] during recursive (dfs) traversal.
      */
     @Interpretable("Exclude0")
     public fun exclude(vararg classes: KClass<*>)
 
     /**
-     * Skip given [properties] during recursive (dfs) traversal
+     * Skip given [properties] during recursive (dfs) traversal.
+     * These can also be getter-like functions (like `getX()` or `isX()`).
      */
     @Interpretable("Exclude1")
-    public fun exclude(vararg properties: KProperty<*>)
+    public fun exclude(vararg properties: KCallable<*>)
 
     /**
-     * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns
+     * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      */
     @Interpretable("Preserve0")
     public fun preserve(vararg classes: KClass<*>)
 
     /**
-     * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns
+     * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
+     * These can also be getter-like functions (like `getX()` or `isX()`).
      */
     @Interpretable("Preserve1")
-    public fun preserve(vararg properties: KProperty<*>)
+    public fun preserve(vararg properties: KCallable<*>)
 }
 
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
@@ -161,7 +164,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     @Interpretable("Properties0")
     public abstract fun properties(
-        vararg roots: KProperty<*>,
+        vararg roots: KCallable<*>,
         maxDepth: Int = 0,
         body: (TraversePropertiesDsl.() -> Unit)? = null,
     )
@@ -243,6 +246,16 @@ public inline fun <reified C : Char?> Iterable<C>.toDataFrame(): DataFrame<Value
 @JvmName("toDataFrameBoolean")
 public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> = toDataFrame {
     ValueProperty<B>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameFloat")
+public inline fun <reified F : Float?> Iterable<F>.toDataFrame(): DataFrame<ValueProperty<F>> = toDataFrame {
+    ValueProperty<F>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameDouble")
+public inline fun <reified D : Double?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> = toDataFrame {
+    ValueProperty<D>::value from { it }
 }.cast()
 
 @JvmName("toDataFrameUByte")

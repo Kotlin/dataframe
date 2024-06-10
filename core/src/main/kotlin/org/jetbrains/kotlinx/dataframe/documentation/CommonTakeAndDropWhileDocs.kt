@@ -34,11 +34,11 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
  * ### Check out: [Usage\]
  *
  * #### Examples:
- * `df.`[select][DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` }.`[{@get [OperationArg]}While][ColumnSet.{@get [OperationArg]}While]` { "my" `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+ * `df.`[select][DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` }.`[\`{@get [OperationArg]}While\`][ColumnSet.{@get [OperationArg]}While]` { "my" `[`in`][String.contains]` it.`[`name`][DataColumn.name]` } }`
  *
- * `df.`[select][DataFrame.select]` { myColumnGroup.`[{@get [OperationArg]}While][SingleColumn.{@get [OperationArg]}ColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+ * `df.`[select][DataFrame.select]` { myColumnGroup.`[\`{@get [OperationArg]}While\`][SingleColumn.{@get [OperationArg]}ColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
  *
- * `df.`[select][DataFrame.select]` { "myColumnGroup".`[{@get [OperationArg]}ColsWhile][String.{@get [OperationArg]}ColsWhile]` { it.`[kind][ColumnWithPath.kind]`() == `[ColumnKind.Value][ColumnKind.Value]` } }`
+ * `df.`[select][DataFrame.select]` { "myColumnGroup".`[\`{@get [OperationArg]}ColsWhile\`][String.{@get [OperationArg]}ColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][ColumnKind.Value]` } }`
  *
  * #### Examples for this overload:
  *

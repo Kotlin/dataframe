@@ -148,7 +148,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
 
 // region pivot
 
-public fun <T> AggregateGroupedDsl<T>.pivot(inward: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
+public fun <T> AggregateGroupedDsl<T>.pivot(inward: Boolean = true, columns: PivotColumnsSelector<T, *>): PivotGroupBy<T> =
     PivotInAggregateImpl(this, columns, inward)
 
 public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: String, inward: Boolean = true): PivotGroupBy<T> =

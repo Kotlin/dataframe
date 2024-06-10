@@ -45,6 +45,7 @@ private interface SetFillNullsOperationArg
  * ### This Fill Nulls Overload
  *
  */
+@ExcludeFromSources
 private interface CommonFillNullsFunctionDoc
 
 /**
@@ -126,6 +127,7 @@ internal interface FillNaNs {
 }
 
 /** {@set [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
+@ExcludeFromSources
 internal interface SetFillNaNsOperationArg
 
 /**
@@ -135,6 +137,7 @@ internal interface SetFillNaNsOperationArg
  * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
  * ### This Fill NaNs Overload
  */
+@ExcludeFromSources
 private interface CommonFillNaNsFunctionDoc
 
 /**
@@ -196,6 +199,7 @@ internal interface FillNA {
 }
 
 /** {@set [SelectingColumns.OperationArg] [fillNA][fillNA]} */
+@ExcludeFromSources
 internal interface SetFillNAOperationArg
 
 /**
@@ -205,6 +209,7 @@ internal interface SetFillNAOperationArg
  * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNA.FillNASelectingOptions]}
  * ### This Fill NA Overload
  */
+@ExcludeFromSources
 private interface CommonFillNAFunctionDoc
 
 /**
@@ -242,15 +247,19 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
 // endregion
 
 /** @param columns The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to drop rows in. */
+@ExcludeFromSources
 private interface DropDslParam
 
 /** @param columns The [KProperties][KProperty] used to select the columns of this [DataFrame] to drop rows in. */
+@ExcludeFromSources
 private interface DropKPropertiesParam
 
-/** @param columns The [Strings][String] corresponding to the names of colums in this [DataFrame] to drop rows in. */
+/** @param columns The [Strings][String] corresponding to the names of columns in this [DataFrame] to drop rows in. */
+@ExcludeFromSources
 private interface DropColumnNamesParam
 
 /** @param columns The [Column References][ColumnReference] used to select the columns of this [DataFrame] to drop rows in. */
+@ExcludeFromSources
 private interface DropColumnAccessorsParam
 
 // region dropNulls
@@ -267,6 +276,7 @@ private interface DropColumnAccessorsParam
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNulls]}
  */
+@ExcludeFromSources
 internal interface DropNulls {
 
     /**
@@ -284,12 +294,14 @@ internal interface DropNulls {
 }
 
 /** {@set [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
+@ExcludeFromSources
 private interface SetDropNullsOperationArg
 
 /**
  * @include [DropNulls] {@comment Description of the dropNulls operation.}
  * ### This Drop Nulls Overload
  */
+@ExcludeFromSources
 private interface CommonDropNullsFunctionDoc
 
 /**
@@ -368,6 +380,7 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNA]}
  */
+@ExcludeFromSources
 internal interface DropNA {
 
     /**
@@ -385,12 +398,14 @@ internal interface DropNA {
 }
 
 /** {@set [SelectingColumns.OperationArg] [dropNA][dropNA]} */
+@ExcludeFromSources
 private interface SetDropNAOperationArg
 
 /**
  * @include [DropNA] {@comment Description of the dropNA operation.}
  * ### This Drop NA Overload
  */
+@ExcludeFromSources
 private interface CommonDropNAFunctionDoc
 
 /**
@@ -470,6 +485,7 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
  *
  * For more information: {@include [DocumentationUrls.Drop.DropNaNs]}
  */
+@ExcludeFromSources
 internal interface DropNaNs {
 
     /**
@@ -487,12 +503,14 @@ internal interface DropNaNs {
 }
 
 /** {@set [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */
+@ExcludeFromSources
 private interface SetDropNaNsOperationArg
 
 /**
  * @include [DropNaNs] {@comment Description of the dropNaNs operation.}
  * ### This Drop NaNs Overload
  */
+@ExcludeFromSources
 private interface CommonDropNaNsFunctionDoc
 
 /**

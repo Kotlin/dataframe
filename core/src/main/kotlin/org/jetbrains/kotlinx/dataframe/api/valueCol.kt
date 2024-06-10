@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.PlainDslName
@@ -17,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
@@ -30,8 +32,9 @@ import kotlin.reflect.KProperty
  * ## Value Col {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
+ * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
-public interface ValueColColumnsSelectionDsl {
+public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * ## Value Col Grammar
@@ -50,7 +53,7 @@ public interface ValueColColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
      * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
@@ -58,18 +61,18 @@ public interface ValueColColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
-     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}` | `{@include [DslGrammarTemplate.IndexRef]}**`)`**
+     *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      */
     public interface Grammar {
 
-        /** [**valueCol**][ColumnsSelectionDsl.valueCol] */
+        /** [**`valueCol`**][ColumnsSelectionDsl.valueCol] */
         public interface PlainDslName
 
-        /** .[**valueCol**][ColumnsSelectionDsl.valueCol] */
+        /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
         public interface ColumnSetName
 
-        /** .[**valueCol**][ColumnsSelectionDsl.valueCol] */
+        /** __`.`__[**`valueCol`**][ColumnsSelectionDsl.valueCol] */
         public interface ColumnGroupName
     }
 
@@ -92,9 +95,9 @@ public interface ValueColColumnsSelectionDsl {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]` { `[valueCol][valueCol]`<`[String][String]`>("valueColA") }`
+     * `df.`[select][DataFrame.select]`  {  `[valueCol][valueCol]`<`[String][String]`>("valueColA") }`
      *
-     * `df.`[select][DataFrame.select]` { `[valueCol][valueCol]`(SomeType::valueColB) }`
+     * `df.`[select][DataFrame.select]`  {  `[valueCol][valueCol]`(SomeType::valueColB) }`
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[valueCol][valueCol]`(1) }`
      *

@@ -21,7 +21,7 @@ Additionally, support for JSON and date-time types is limited.
 Please take this into consideration when using these functions.
 
 
-## Getting started with reading from SQL database
+## Getting started with reading from SQL database in Gradle Project
 
 In the first, you need to add a dependency
 
@@ -59,7 +59,7 @@ In the second, be sure that you can establish a connection to the database.
 
 For this, usually, you need to have three things: a URL to a database, a username and a password.
 
-Call one of the following functions to obtain data from a database and transform it to the dataframe.
+Call one of the following functions to collect data from a database and transform it to the dataframe.
 
 For example, if you have a local PostgreSQL database named as `testDatabase` with table `Customer`,
 you could read first 100 rows and print the data just copying the code below:
@@ -81,24 +81,32 @@ val df = DataFrame.readSqlTable(dbConfig, tableName, 100)
 df.print()
 ```
 
-Find full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/).
+Find a full example project [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/).
 
 ## Getting Started with Notebooks
 
 To use the latest version of the Kotlin DataFrame library 
-and a specific version of the JDBC driver for your database (MariaDB is used as an example below) in your Notebook, run the following cell.
+and a specific version of the JDBC driver for your database (MariaDB is used as an example below) in your Notebook,
+run the following two cells.
 
-```jupyter
-%use dataframe
+First of all, specify the version of the JDBC driver
 
+```
 USE {
     dependencies("org.mariadb.jdbc:mariadb-java-client:$version")
 }
 ```
+Next, import `Kotlin DataFrame` library in the cell below.
 
-Find full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
+```
+%use dataframe
+```
+
+**NOTE:** The order of cell execution is important, 
+the dataframe library is waiting for a JDBC driver to force classloading.
+
+Find a full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb).
  
-**NOTE:** The user should specify the version of the JDBC driver.
 
 ## Reading Specific Tables
 
@@ -238,10 +246,17 @@ The versions with a limit parameter will only read up to the specified number of
 This function allows reading a ResultSet object from your SQL database 
 and transforms it into an AnyFrame object. 
 
+A ResultSet object maintains a cursor pointing to its current row of data. 
+By default, a ResultSet object is not updatable and has a cursor that moves forward only. 
+Therefore, you can iterate it only once and only from the first row to the last row. 
+
+More details about ResultSet can be found in the [official Java documentation](https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html).
+
+Note that reading from the ResultSet could potentially change its state.
+
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.), 
 supported by a library. 
 Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
-
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
@@ -300,9 +315,9 @@ connection.close()
 These functions read all data from all tables in the connected database. 
 Variants with a limit parameter restrict how many rows will be read from each table.
 
-**readAllSqlTables(connection: Connection): List\<AnyFrame>**
+**readAllSqlTables(connection: Connection): Map\<String, AnyFrame>**
 
-Retrieves data from all the non-system tables in the SQL database and returns them as a list of AnyFrame objects.
+Retrieves data from all the non-system tables in the SQL database and returns them as a map of table names to AnyFrame objects.
 
 The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
@@ -315,7 +330,7 @@ val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PAS
 val dataframes = DataFrame.readAllSqlTables(dbConfig)
 ```
 
-**readAllSqlTables(connection: Connection, limit: Int): List\<AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int): Map\<String, AnyFrame>**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read from each table.
@@ -478,10 +493,10 @@ connection.close()
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
-**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List\<DataFrameSchema>**
+**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): Map\<String, DataFrameSchema>**
 
 This function retrieves the schema of all tables from an SQL database 
-and returns them as a list of [`DataFrameSchema`](schema.md).
+and returns them as a map of table names to [`DataFrameSchema`](schema.md) objects.
 
 The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
@@ -494,7 +509,7 @@ val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PAS
 val schemas = DataFrame.getSchemaForAllSqlTables(dbConfig)
 ```
 
-**getSchemaForAllSqlTables(connection: Connection): List\<DataFrameSchema>**
+**getSchemaForAllSqlTables(connection: Connection): Map\<String, DataFrameSchema>**
 
 This function retrieves the schema of all tables using a JDBC connection: `Connection` object 
 and returns them as a list of [`DataFrameSchema`](schema.md).

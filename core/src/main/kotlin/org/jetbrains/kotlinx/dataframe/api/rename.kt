@@ -132,7 +132,7 @@ public interface RenameColumnsSelectionDsl {
      * }
      *
      * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
-     *  {@include [DslGrammarTemplate.ColumnRef]} {@include [InfixNamedName]}`/`{@include [InfixIntoName]} {@include [DslGrammarTemplate.ColumnRef]}
+     *  {@include [DslGrammarTemplate.ColumnRef]}` `{@include [InfixNamedName]}`/`{@include [InfixIntoName]}` `{@include [DslGrammarTemplate.ColumnRef]}
      *
      *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [NamedName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
      *
@@ -150,10 +150,10 @@ public interface RenameColumnsSelectionDsl {
         /** [**into**][ColumnsSelectionDsl.into] */
         public interface InfixIntoName
 
-        /** .[**named**][ColumnsSelectionDsl.named] */
+        /** __`.`__[**named**][ColumnsSelectionDsl.named] */
         public interface NamedName
 
-        /** .[**into**][ColumnsSelectionDsl.into] */
+        /** __`.`__[**into**][ColumnsSelectionDsl.into] */
         public interface IntoName
     }
 
@@ -168,15 +168,15 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### For Example:
      *
-     * `df.`[select][DataFrame.select]` { name `[named][ColumnReference.named]` "Full Name" }`
+     * `df.`[select][DataFrame.select]`  { name  `[named][ColumnReference.named]` "Full Name" }`
      *
-     * `df.`[select][DataFrame.select]` { `[expr][expr]` { 0 } `[into][ColumnReference.into]` "zeroes" }`
+     * `df.`[select][DataFrame.select]`  {  `[expr][expr]`  { 0 }  `[into][ColumnReference.into]` "zeroes" }`
      *
-     * `df.`[select][DataFrame.select]` { "colA" `[named][String.named]` Type::colB }`
+     * `df.`[select][DataFrame.select]`  { "colA"  `[named][String.named]` Type::colB }`
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]` { {@get [CommonRenameDocs.ReceiverArg]} `[{@get [CommonRenameDocs.FunctionNameArg]}][{@get [CommonRenameDocs.ReceiverTypeArg]}.{@get [CommonRenameDocs.FunctionNameArg]}]` {@get [CommonRenameDocs.ParamArg]} }`
+     * `df.`[select][DataFrame.select]`  { {@get [CommonRenameDocs.ReceiverArg]}  `[{@get [CommonRenameDocs.FunctionNameArg]}][{@get [CommonRenameDocs.ReceiverTypeArg]}.{@get [CommonRenameDocs.FunctionNameArg]}]` {@get [CommonRenameDocs.ParamArg]} }`
      *
      * @receiver The [{@get [ReceiverTypeArg]}] referencing the column to rename.
      * @param [{@get [ParamNameArg]}\] A [{@get [ParamTypeArg]}\] used to specify the new name of the column.

@@ -95,7 +95,17 @@ class FlattenTests {
 
         aggregate
             .flatten(keepParentNameForColumns = true)
-            .columnNames() shouldBe listOf("city", "age.mean", "weight.mean", "age.std", "weight.std")
+            .columnNames() shouldBe listOf("city", "mean.age", "mean.weight", "std.age", "std.weight")
+
+        aggregate
+            .flatten(keepParentNameForColumns = true, separator = "_happy_separator_")
+            .columnNames() shouldBe listOf(
+            "city",
+            "mean_happy_separator_age",
+            "mean_happy_separator_weight",
+            "std_happy_separator_age",
+            "std_happy_separator_weight"
+        )
     }
 
     @DataSchema
