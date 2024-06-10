@@ -20,7 +20,7 @@ import java.sql.SQLException
 import java.util.UUID
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
+private const val URL = "jdbc:h2:mem:test3;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
 
 @DataSchema
 interface Table1 {
@@ -231,7 +231,7 @@ class PostgresH2Test {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
         val table1Df = dataframes[0].cast<Table1>()
 

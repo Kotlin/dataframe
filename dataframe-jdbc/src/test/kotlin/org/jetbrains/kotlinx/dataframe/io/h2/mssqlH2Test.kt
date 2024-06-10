@@ -18,7 +18,7 @@ import java.sql.SQLException
 import java.util.*
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
+private const val URL = "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
 
 @DataSchema
 interface Table1MSSSQL {
@@ -56,7 +56,7 @@ interface Table1MSSSQL {
     val geographyColumn: String
 }
 
-class MSSQLTest {
+class MSSQLH2Test {
     companion object {
         private lateinit var connection: Connection
 
@@ -228,7 +228,7 @@ class MSSQLTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, limit = 4)
+        val dataframes = DataFrame.readAllSqlTables(connection, limit = 4).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MSSSQL>()
 

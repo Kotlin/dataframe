@@ -102,6 +102,7 @@ interface Table3MySql {
     val setCol: Char?
 }
 
+@Ignore
 class MySqlTest {
     companion object {
         private lateinit var connection: Connection

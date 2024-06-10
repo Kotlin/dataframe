@@ -18,6 +18,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
+import org.junit.Ignore
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:postgresql://localhost:5432/test"
@@ -77,6 +78,7 @@ interface ViewTable {
     val textCol: String?
 }
 
+@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection

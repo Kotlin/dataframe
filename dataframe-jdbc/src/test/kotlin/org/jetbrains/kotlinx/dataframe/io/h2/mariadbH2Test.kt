@@ -18,7 +18,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MariaDB;DATABASE_TO_LOWER=TRUE"
+private const val URL = "jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=MariaDB;DATABASE_TO_LOWER=TRUE"
 
 @DataSchema
 interface Table1MariaDb {
@@ -337,7 +337,7 @@ class MariadbH2Test {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, limit = 1000)
+        val dataframes = DataFrame.readAllSqlTables(connection, limit = 1000).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MariaDb>()
 

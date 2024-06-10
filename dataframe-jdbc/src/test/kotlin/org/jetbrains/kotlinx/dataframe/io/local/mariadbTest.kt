@@ -19,7 +19,7 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:mariadb://localhost:3306"
+private const val URL = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
