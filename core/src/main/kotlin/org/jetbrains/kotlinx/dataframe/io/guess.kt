@@ -35,10 +35,10 @@ public sealed interface SupportedFormat {
 public sealed interface SupportedFormatSample {
 
     @JvmInline
-    public value class File(public val sampleFile: java.io.File) : SupportedFormatSample
+    public value class DataFile(public val sampleFile: File) : SupportedFormatSample
 
     @JvmInline
-    public value class URL(public val sampleUrl: java.net.URL) : SupportedFormatSample
+    public value class DataUrl(public val sampleUrl: URL) : SupportedFormatSample
 
     @JvmInline
     public value class PathString(public val samplePath: String) : SupportedFormatSample
@@ -138,13 +138,13 @@ internal fun guessFormatForExtension(
 internal fun guessFormat(
     file: File,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: SupportedFormatSample.File? = SupportedFormatSample.File(file),
+    sample: SupportedFormatSample.DataFile? = SupportedFormatSample.DataFile(file),
 ): SupportedFormat? = guessFormatForExtension(file.extension.lowercase(), formats, sample = sample)
 
 internal fun guessFormat(
     url: URL,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: SupportedFormatSample.URL? = SupportedFormatSample.URL(url),
+    sample: SupportedFormatSample.DataUrl? = SupportedFormatSample.DataUrl(url),
 ): SupportedFormat? = guessFormatForExtension(url.path.substringAfterLast("."), formats, sample = sample)
 
 internal fun guessFormat(
