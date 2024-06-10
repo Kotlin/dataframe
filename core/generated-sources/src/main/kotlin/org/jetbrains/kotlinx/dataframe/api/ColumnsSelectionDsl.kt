@@ -10,6 +10,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.ExportAsHtml
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -152,60 +154,51 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `columnGroupReference: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*>`
+     *  `columnGroupReference: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `colSelector: `[`ColumnSelector`][org.jetbrains.kotlinx.dataframe.ColumnSelector]
      *
-     *  `colSelector: `[`ColumnSelector`][org.jetbrains.kotlinx.dataframe.ColumnSelector]
+     * `colsSelector: `[`ColumnsSelector`][org.jetbrains.kotlinx.dataframe.ColumnsSelector]
      *
-     *  `colsSelector: `[`ColumnsSelector`][org.jetbrains.kotlinx.dataframe.ColumnsSelector]
+     * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
+     * `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `columnNoAccessor: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
+     * `columnOrSet: `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
      *
-     *  `columnNoAccessor: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     * `columnsResolver: `[`ColumnsResolver`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]
      *
-     *  `columnOrSet: `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
+     * `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
-     *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
+     * `expression: `[Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression]
      *
-     *  `columnsResolver: `[`ColumnsResolver`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]
+     * `ignoreCase: `[`Boolean`][Boolean]
      *
-     *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     * `index: `[`Int`][Int]
      *
-     *  `expression: `[Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression]
+     * `indexRange: `[`IntRange`][IntRange]
      *
-     *  `ignoreCase: `[`Boolean`][Boolean]
+     * `infer: `[`Infer`][org.jetbrains.kotlinx.dataframe.api.Infer]
      *
-     *  `index: `[`Int`][Int]
+     * `kind: `[`ColumnKind`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind]
      *
-     *  `indexRange: `[`IntRange`][IntRange]
+     * `kType: `[`KType`][kotlin.reflect.KType]
      *
-     *  `infer: `[`Infer`][org.jetbrains.kotlinx.dataframe.api.Infer]
+     * `name: `[`String`][String]
      *
-     *  `kind: `[`ColumnKind`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind]
+     * `number: `[`Int`][Int]
      *
-     *  `kType: `[`KType`][kotlin.reflect.KType]
+     * `regex: `[`Regex`][Regex]
      *
-     *  `name: `[`String`][String]
+     * `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
      *
-     *  `number: `[`Int`][Int]
+     * `T: Column type`
      *
-     *  `regex: `[`Regex`][Regex]
-     *
-     *  `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
-     *
-     *  `T: Column type`
-     *
-     *  `text: `[`String`][String]
+     * `text: `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -216,59 +209,59 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**`..`**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
-     *  `| `**`this`**`/`**`it`**[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. `[**`]`**][cols]
+     * `| `**`this`**`/`**`it`**[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. `[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
-     *  `| `**`this`**`/`**`it`**[**`[`**][cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     * `| `**`this`**`/`**`it`**[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
-     *  `| `[**`all`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
+     * `| `[**`all`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
      *
-     *  `| `**`all`**`(`[**`Before`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**`After`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**`From`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**`UpTo`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**` | `**`{ `**[`colSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
+     * `| `**`all`**`(`[**`Before`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**`After`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**`From`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**`UpTo`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**` | `**`{ `**[`colSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
      *
-     *  `| `[**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
+     * `| `[**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
      *
-     *  `| `[**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
+     * `| `[**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
      *
-     *  `| `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` `[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`  [  `**`{`**`  ]  `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]`  [  `**`}`**`  ]  `
+     * `| `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` `[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`  [  `**`{`**`  ]  `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]`  [  `**`}`**`  ]  `
      *
-     *  `| `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     * `| `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
-     *  `| (`[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `[**`valueCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `[**`colGroup`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
+     * `| (`[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `[**`valueCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `[**`colGroup`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
      * `| (`[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `[**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `[**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  `| `[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
+     * `| `[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
-     *  `| `[**`colsAtAnyDepth`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * `| `[**`colsAtAnyDepth`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  `| `[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * `| `[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  `| `[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * `| `[**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  `| `[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * `| `[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  `| `[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+     * `| `[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  `| `[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     * `| `[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
-     *  `| `[**`expr`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[`name`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NameDef]**`,`**`][`[`infer`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.InferDef]`]`**`) { `**[`expression`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnExpressionDef]**` }`**
+     * `| `[**`expr`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.expr]**`(`**`[`[`name`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NameDef]**`,`**`][`[`infer`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.InferDef]`]`**`) { `**[`expression`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnExpressionDef]**` }`**
      *
-     *  `| (`[**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`| `[**`last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`| `[**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * `| (`[**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`| `[**`last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`| `[**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  `| `[**`nameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
+     * `| `[**`nameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
      *
-     *  `| `__`name`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
+     * `| `__`name`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
      *
-     *  `| `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`/`[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
+     * `| `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`/`[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
-     *  `| `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`(`__`.`__[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`|`__`.`__[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]`)`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**
+     * `| `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`(`__`.`__[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`|`__`.`__[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]`)`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**
      *
-     *  `| `[**`none`**][org.jetbrains.kotlinx.dataframe.api.NoneColumnsSelectionDsl.none]**`()`**
+     * `| `[**`none`**][org.jetbrains.kotlinx.dataframe.api.NoneColumnsSelectionDsl.none]**`()`**
      *
-     *  `| `[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+     * `| `[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  `| `[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     * `| `[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
-     *  `| `[**`withoutNulls`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
+     * `| `[**`withoutNulls`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -279,59 +272,59 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;[**`[`**][ColumnsSelectionDsl.col][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef][**`]`**][ColumnsSelectionDsl.col]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;[**`[`**][ColumnsSelectionDsl.col][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef][**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef][**`]`**][cols]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef][**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`all`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`all`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]**`()`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.all`**`(`[**`Before`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**`After`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**`From`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**`UpTo`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` )`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.all`**`(`[**`Before`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**`After`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**`From`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**`UpTo`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` )`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `__`.`__[**`valueCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `__`.`__[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `__`.`__[**`colGroup`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)`**`(`**[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `__`.`__[**`valueCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `__`.`__[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `__`.`__[**`colGroup`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)`**`(`**[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `__`.`__[**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `__`.`__[**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`(`**[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsAtAnyDepth`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsAtAnyDepth`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`distinct`**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`distinct`**][org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.distinct]**`()`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.dropLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.drop]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.dropLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.dropWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` [`**`  {  `**`] `[`columnsResolver`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsResolverDef]` [`**`  }  `**`]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` [`**`  {  `**`] `[`columnsResolver`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsResolverDef]` [`**`  }  `**`]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.`**[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.`**[**`except`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`filter`**][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`filter`**][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`| `__`.`__[**`last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`| `__`.`__[**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`| `__`.`__[**`last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.last]`| `__`.`__[**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.name`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.name`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`nameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`nameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`simplify`**][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify]**`()`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`simplify`**][org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.simplify]**`()`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.takeLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.take]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.takeLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeLastWhile]`)`[**`While`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.takeWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`withoutNulls`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`withoutNulls`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.withoutNulls]**`()`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -342,78 +335,71 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`[**`]`**][cols]
+     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`{`**][ColumnsSelectionDsl.select]` `[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]` `[**`}`**][ColumnsSelectionDsl.select]
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`{`**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]` `[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]` `[**`}`**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`allCols`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]**`()`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`allCols`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]**`()`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.allCols`**`(`[**`Before`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**`After`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**`From`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**`UpTo`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[`colSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.allCols`**`(`[**`Before`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsBefore]`|`[**`After`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allAfter]`|`[**`From`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsFrom]`|`[**`UpTo`**][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allColsUpTo]`) ( `**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`)`**`  |  `**`{ `**[`colSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSelectorDef]**` }`**` )`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`allColsExcept`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**`  }  `**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`allColsExcept`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**`  }  `**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`allColsExcept`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`allColsExcept`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]**` (`**`|`**`{ `**[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]**` }`**`|`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `__`.`__[**`valueCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `__`.`__[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `__`.`__[**`colGroup`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`| `__`.`__[**`valueCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`| `__`.`__[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`| `__`.`__[**`colGroup`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroup]`)[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `__`.`__[**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`| `__`.`__[**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`| `__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`| `__`.`__[**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`cols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` .. | `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**` .. | `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsAtAnyDepth`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsAtAnyDepth`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsAtAnyDepth]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsInGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsInGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.colsName`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.colsName`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsNameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsNameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsOfKind`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]**`(`**[`kind`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnKindDef]**`,`**` ..`**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsWithoutNulls`**][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.colsWithoutNulls]**`()`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`colsWithoutNulls`**][org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.colsWithoutNulls]**`()`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropCols]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropCols]**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropCols]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropCols]**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`) EXPERIMENTAL!`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`) EXPERIMENTAL!`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`firstCol`**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`| `__`.`__[**`lastCol`**][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol]`| `__`.`__[**`singleCol`**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`firstCol`**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`| `__`.`__[**`lastCol`**][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol]`| `__`.`__[**`singleCol`**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`select`**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`select`**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeCols]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeLastCols]`)`[**`Cols`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeCols]**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeCols]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeLastCols]`)`[**`Cols`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeCols]**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeColsWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeLastColsWhile]`)`[**`ColsWhile`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeColsWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`take`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeColsWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeLastColsWhile]`)`[**`ColsWhile`**][org.jetbrains.kotlinx.dataframe.api.TakeColumnsSelectionDsl.takeColsWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     *  [`singleColumn`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.SingleColumnDef]
+     * [`singleColumn`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.SingleColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     * &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     *  [`columnGroupReference`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupNoSingleColumnDef]
+     * [`columnGroupReference`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupNoSingleColumnDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
-     *
-     *
-     *
-     *
-     *
-     *
-     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      *
      *
@@ -422,7 +408,16 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *
      */
-    public interface DslGrammar
+    public interface DslGrammar {
+
+        
+
+        
+
+        
+
+        
+    }
 
     /**
      * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].
