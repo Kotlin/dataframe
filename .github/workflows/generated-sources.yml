@@ -15,6 +15,11 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -45,6 +50,32 @@ jobs:
           git commit -m "Update generated sources with recent changes"
           git push origin docs-update-${{ github.run_number }}
           echo "::set-output name=commit::$(git rev-parse HEAD)"
+
+      - name: Remove old comments
+        uses: actions/github-script@v5
+        if: steps.git-diff.outputs.changed == 'true'
+        with:
+          script: |
+            const issue_number = context.issue.number;
+            const { owner, repo } = context.repo;
+
+            const comments = await github.rest.issues.listComments({
+              issue_number,
+              owner,
+              repo,
+            });
+
+            const botComments = comments.data.filter(
+              (comment) => comment.user.login === 'github-actions[bot]'
+            );
+
+            for (const comment of botComments) {
+              await github.rest.issues.deleteComment({
+                comment_id: comment.id,
+                owner,
+                repo,
+              });
+            }
 
       - name: Add comment to PR
         uses: actions/github-script@v5
