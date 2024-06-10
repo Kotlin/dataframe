@@ -48,7 +48,7 @@ jobs:
           git checkout -b generated-sources/docs-update-${{ github.run_number }}
           git add './core/generated-sources'
           git commit -m "Update generated sources with recent changes"
-          git push origin docs-update-${{ github.run_number }}
+          git push origin generated-sources/docs-update-${{ github.run_number }}
           echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: Remove old comments
