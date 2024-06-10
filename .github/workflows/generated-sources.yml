@@ -4,6 +4,10 @@ on:
   pull_request:
     types:
       - edited
+      - opened
+      - synchronize
+      - converted_to_draft
+      - ready_for_review
 
 jobs:
   build:
@@ -50,5 +54,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "KDocs have been updated. Please check the changes at [this branch](https://github.com/${{ github.repository }}/tree/docs-update-${{ github.run_number }})",
+              body: "Generated sources have been updated. Please check the changes at [this branch](https://github.com/${{ github.repository }}/tree/docs-update-${{ github.run_number }})",
             })
