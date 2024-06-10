@@ -43,7 +43,7 @@ internal interface QuadrupleIndent
  * Any `Documentable` annotated with this annotation will be excluded from the generated sources by
  * the documentation processor.
  *
- * Do not rename!
+ * **NOTE: DO NOT RENAME!**
  */
 @Target(
     CLASS, ANNOTATION_CLASS, PROPERTY, FIELD, LOCAL_VARIABLE, VALUE_PARAMETER,
@@ -58,7 +58,7 @@ internal annotation class ExcludeFromSources
  * You can use @exportAsHtmlStart and @exportAsHtmlEnd to specify a range of the doc to
  * export to HTML.
  *
- * Do not rename!
+ * **NOTE: DO NOT RENAME!**
  *
  * @param theme Whether to include a simple theme in the HTML file. Default is `true`.
  * @param stripReferences Whether to strip `[references]` from the HTML file. Default is `true`.
