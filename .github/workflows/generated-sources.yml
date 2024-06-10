@@ -44,6 +44,7 @@ jobs:
           git add './core/generated-sources'
           git commit -m "Update generated sources with recent changes"
           git push origin docs-update-${{ github.run_number }}
+          echo "::set-output name=commit::$(git rev-parse HEAD)"
 
       - name: Add comment to PR
         uses: actions/github-script@v5
@@ -54,5 +55,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Generated sources have been updated. Please check the changes at [this branch](https://github.com/${{ github.repository }}/tree/docs-update-${{ github.run_number }})",
+              body: "Generated sources have been updated. Please check the changes at this commit: [link](https://github.com/${{ github.repository }}/commit/${{ steps.git-commit.outputs.commit }})",
             })
