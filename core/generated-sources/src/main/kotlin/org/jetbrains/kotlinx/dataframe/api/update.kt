@@ -12,15 +12,10 @@ import org.jetbrains.kotlinx.dataframe.api.Update.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
-import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows
 import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
@@ -47,8 +42,6 @@ public data class Update<T, C>(
 ) {
     public fun <R : C> cast(): Update<T, R> =
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
-
-    
 
     /**
      * ## [**`update`**][update] Operation Grammar
@@ -95,7 +88,7 @@ public data class Update<T, C>(
 
     /**
      * The columns to update need to be selected. See [Selecting Columns][UpdateSelectingOptions]
-     * for all the selecting options. 
+     * for all the selecting options.
      */
     public interface Columns {
 
@@ -170,7 +163,7 @@ public data class Update<T, C>(
      * ```
      *
      * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(Person::length, Person::age)`
-     *  
+     *
      */
     public interface UpdateSelectingOptions
 
@@ -189,12 +182,6 @@ public data class Update<T, C>(
 
 // region update
 
-
-
-
-
-
-
 /**
  * ## The Update Operation
  *
@@ -203,12 +190,12 @@ public data class Update<T, C>(
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
- * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Update.UpdateSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options.
  * ### This Update Overload
  * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
  * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
@@ -239,7 +226,7 @@ public data class Update<T, C>(
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
  *
- *  
+ *
  * @param [columns] The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
 public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> = Update(this, null, columns)
@@ -252,12 +239,12 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
- * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Update.UpdateSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options.
  * ### This Update Overload
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
@@ -265,7 +252,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * #### For example:
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`("length", "age")`
- *  
+ *
  * ## Optional
  * Combine `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...).`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { ... }`
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
@@ -281,12 +268,12 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
- * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Update.UpdateSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options.
  * ### This Update Overload
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
  *
@@ -296,7 +283,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * ```
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(Person::length, Person::age)`
- *  
+ *
  * ## Optional
  * Combine `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...).`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { ... }`
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
@@ -312,12 +299,12 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
- * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Update.UpdateSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options.
  * ### This Update Overload
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
@@ -329,7 +316,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(length, age)`
- *  
+ *
  * ## Optional
  * Combine `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...).`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { ... }`
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
@@ -357,8 +344,6 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
  */
 public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
     copy(filter = filter and predicate)
-
-
 
 /**
  * ## At
@@ -442,8 +427,6 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
 public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
-
-
 /** ## Update Expression
  * @see ExpressionsGivenRow.RowValueExpression.WithExample
  * @see ExpressionsGivenRow.AddDataRowNote
@@ -478,8 +461,6 @@ public fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): Dat
         expression(row, value)
     }
 
-
-
 /** ## As Frame
  *
  * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
@@ -494,12 +475,6 @@ public fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): Dat
  */
 public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
-
-
-
-
-
-
 
 /**
  * ## Per Col
@@ -593,8 +568,6 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
 public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
 
-
-
 /** Chains up two row value filters together. */
 internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>): RowValueFilter<T, C> {
     if (this == null) return other
@@ -655,12 +628,12 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
- * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Update.UpdateSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options.
  * ### This Update Overload
  * This overload is a combination of [update] and [with][Update.with].
  *
@@ -695,12 +668,12 @@ public fun <T, C> DataFrame<T>.update(
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
- * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Update.UpdateSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options.
  * ### This Update Overload
  * This overload is a combination of [update] and [with][Update.with].
  *
@@ -734,12 +707,12 @@ public fun <T, C> DataFrame<T>.update(
  *
  * ### Check out: [Grammar][org.jetbrains.kotlinx.dataframe.api.Update.Grammar]
  *
- * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
+ * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html)
  *
  * &nbsp;&nbsp;&nbsp;&nbsp;
  *
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Update.UpdateSelectingOptions]
- * for all the selecting options.  
+ * for all the selecting options.
  * ### This Update Overload
  * This overload is a combination of [update] and [with][Update.with].
  *
@@ -765,8 +738,6 @@ public fun <T> DataFrame<T>.update(
     vararg cols: String,
     expression: UpdateExpression<T, Any?, Any?>,
 ): DataFrame<T> = update(*headPlusArray(firstCol, cols)).with(expression)
-
-
 
 /**
  * ## With Null

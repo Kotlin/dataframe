@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.AnyApiLinks
-
 /**
  * ## Access APIs
  *

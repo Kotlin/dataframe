@@ -31,6 +31,3 @@ ktlint_standard_filename = disabled
 
 [*/build/**/*]
 ktlint = disabled
-
-[*/generated-sources/**/*]
-ktlint = disabled

@@ -59,7 +59,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     /**
      * Retrieves the value of this [ColumnPath] from the [DataFrame].
      * This is a shorthand for [getColumn][ColumnsContainer.getColumn]`(myColumnPath)` and
-     * is most often used in combination with `operator fun String.get(column: String)`, 
+     * is most often used in combination with `operator fun String.get(column: String)`,
      * for instance:
      * ```kotlin
      * "myColumn"["myNestedColumn"]<NestedColumnType>()

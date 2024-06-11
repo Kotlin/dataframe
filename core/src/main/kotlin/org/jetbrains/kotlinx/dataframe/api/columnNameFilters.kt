@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -112,6 +113,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith\]
      * {@set [ExtraParamsArg]}
      */
+    @ExcludeFromSources
     private interface CommonNameContainsDocs {
 
         /* Example to give */
@@ -295,6 +297,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @return A [ColumnSet] containing
      *   all columns {@get [CommonNameStartsEndsDocs.NounArg]} with {@get [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      */
+    @ExcludeFromSources
     private interface CommonNameStartsEndsDocs {
 
         /* "Starts" or "Ends" */

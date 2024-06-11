@@ -3,21 +3,12 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamNameArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ReceiverTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixIntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixNamedName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.IntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.NamedName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
@@ -133,7 +124,7 @@ public interface RenameColumnsSelectionDsl {
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`/`[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]

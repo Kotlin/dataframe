@@ -1,15 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 
@@ -33,22 +29,22 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `text: `[`String`][String]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `ignoreCase: `[`Boolean`][Boolean]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `regex: `[`Regex`][Regex]
@@ -57,7 +53,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`nameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
@@ -68,7 +64,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -81,7 +77,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
@@ -125,51 +121,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     }
 
     // region nameContains
-
-    /**
-     * ## (Cols) Name Contains
-     * Returns a [ColumnSet] containing all columns from [this] having
-     *  in their name.
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * NOTE: For [column groups][ColumnGroup], `nameContains` is named `colsNameContains` to avoid confusion.
-     *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]`  {  `` `[in][String.contains]` it.`[name][DataColumn.name]` }`.
-     *
-     * ### Check out: [Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]`  {  `[nameContains][SingleColumn.colsNameContains]`("my") }`
-     *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[nameContains][String.colsNameContains]`(`[Regex][Regex]`("my[a-zA-Z][a-zA-Z0-9]*")) }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[nameContains][SingleColumn.colsNameContains]`("my", ignoreCase = true) }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @param  what the column name should contain to be included in the result.
-     *
-     * @return A [ColumnSet] containing
-     *   all columns containing  in their name.
-     * @see [nameEndsWith]
-     * @see [nameStartsWith]
-     *
-     */
-    private interface CommonNameContainsDocs {
-
-        /* Example to give */
-        interface ExampleArg
-
-        /* [text\] or [regex\] */
-        interface ArgumentArg
-
-        /* Optional extra params. */
-        interface ExtraParamsArg
-    }
 
     /**
      * ## (Cols) Name Contains
@@ -695,60 +646,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
         columnGroup(this).colsNameContains(regex)
 
     // endregion
-
-    /**
-     * ## (Cols) Name  With
-     * Returns a [ColumnSet] containing all columns from [this]
-     *  with  in their name.
-     *
-     * This function operates solely on columns at the top-level.
-     *
-     * NOTE: For [column groups][ColumnGroup], the function is named `` to avoid confusion.
-     *
-     * This function is a shorthand for [cols][ColumnsSelectionDsl.cols]` { it.`[name][DataColumn.name]`.`[][String.]`(``) }`.
-     *
-     * ### Check out: [Grammar]
-     *
-     * #### For example:
-     *
-     * `df.`[select][DataFrame.select]`  {  `[][ColumnsSelectionDsl.]`("order") }`
-     *
-     * `df.`[select][DataFrame.select]` { "someGroupCol".`[][String.]`("b") }`
-     *
-     * `df.`[select][DataFrame.select]` { Type::someGroupCol.`[][SingleColumn.]`("a", ignoreCase = true) }`
-     *
-     * #### Examples for this overload:
-     *
-     *
-     *
-     * @param  Columns  with this  in their name will be returned.
-     * @param [ignoreCase] `true` to ignore character case when comparing strings. By default `false`.
-     *
-     * @return A [ColumnSet] containing
-     *   all columns  with  in their name.
-     */
-    private interface CommonNameStartsEndsDocs {
-
-        /* "Starts" or "Ends" */
-        interface CapitalTitleArg
-
-        /* "starting" or "ending" */
-        interface NounArg
-
-        /* "startsWith" or "endsWith" */
-        interface OperationNameArg
-
-        /* "nameStartsWith" or "nameEndsWith" */
-        interface NameOperationNameArg
-
-        /* "colsNameStartsWith" or "colsNameEndsWith" */
-        interface ColsNameOperationNameArg
-
-        /* [prefix\] or [suffix\] */
-        interface ArgumentArg
-
-        interface ExampleArg
-    }
 
     // region nameStartsWith
 

@@ -3,18 +3,11 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.InfixName
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.Name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import kotlin.reflect.KProperty
 
@@ -38,21 +31,21 @@ public interface AndColumnsSelectionDsl {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
      * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnOrSet: `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -61,7 +54,7 @@ public interface AndColumnsSelectionDsl {
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]` `[**`and`**][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]`  [  `**`{`**`  ]  `[`columnOrSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnOrColumnSetDef]`  [  `**`}`**` ]`
@@ -72,7 +65,7 @@ public interface AndColumnsSelectionDsl {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -83,7 +76,7 @@ public interface AndColumnsSelectionDsl {
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
@@ -211,7 +204,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -243,7 +236,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -275,7 +268,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`"colB"`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`"colB"`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -307,7 +300,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`Type::colB`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { ... }  `[`and`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver.and]` `<code>`Type::colB`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -379,7 +372,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -411,7 +404,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -443,7 +436,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`"colB"`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`"colB"`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -475,7 +468,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`Type::colB`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { "colA"  `[`and`][kotlin.String.and]` `<code>`Type::colB`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -547,7 +540,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -579,7 +572,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" }`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -612,7 +605,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`"colB"`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`"colB"`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
@@ -644,7 +637,7 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`Type::colB`</code>` }` 
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  { Type::colA  `[`and`][kotlin.reflect.KProperty.and]` `<code>`Type::colB`</code>` }`
      *
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.

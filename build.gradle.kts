@@ -11,6 +11,24 @@ import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
 
+buildscript {
+    configurations.classpath {
+        resolutionStrategy {
+            force(
+                "com.pinterest.ktlint:ktlint-rule-engine:1.3.0",
+                "com.pinterest.ktlint:ktlint-rule-engine-core:1.3.0",
+                "com.pinterest.ktlint:ktlint-cli-reporter-core:1.3.0",
+                "com.pinterest.ktlint:ktlint-cli-reporter-checkstyle:1.3.0",
+                "com.pinterest.ktlint:ktlint-cli-reporter-json:1.3.0",
+                "com.pinterest.ktlint:ktlint-cli-reporter-html:1.3.0",
+                "com.pinterest.ktlint:ktlint-cli-reporter-plain:1.3.0",
+                "com.pinterest.ktlint:ktlint-cli-reporter-sarif:1.3.0",
+                "com.pinterest.ktlint:ktlint-ruleset-standard:1.3.0",
+            )
+        }
+    }
+}
+
 plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)

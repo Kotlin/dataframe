@@ -5,6 +5,7 @@ import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_F
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.FormatTask
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.OSType
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
@@ -201,6 +202,11 @@ val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
     args.set(listOf("-A", generatedSourcesFolderName))
 }
 
+val formatGeneratedSources by tasks.creating(FormatTask::class) {
+    group = "KDocs"
+    source(files(generatedSourcesFolderName))
+}
+
 // Backup the kotlin source files location
 val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
 val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sourceDirectories
@@ -221,6 +227,7 @@ val processKDocsMain by creatingProcessDocTask(
             // ensure generated sources are added to git
             addGeneratedSourcesToGit.executeCommand()
         }
+        finalizedBy(formatGeneratedSources)
     }
 }
 

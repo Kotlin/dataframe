@@ -10,9 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.AddDataRowNote
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpressionLink
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpressionLink
 import org.jetbrains.kotlinx.dataframe.RowExpression as DfRowExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpression
 
