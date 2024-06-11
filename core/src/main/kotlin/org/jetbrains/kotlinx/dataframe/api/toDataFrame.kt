@@ -175,6 +175,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
         add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
 
+    @Interpretable("ToDataFrameFrom0")
     public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit =
         add(this, expression)
 
