@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -167,5 +168,21 @@ class PivotTests {
             pivot { "category2" then "category3" }.count()
         }
         df1 shouldBe df.pivot { "category2" then "category3" }.groupBy("category1").count()
+    }
+
+    @Test
+    fun `pivot with default of other type`() {
+        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+            "Alice", "Cooper", 15, "London", 54, true,
+            "Bob", "Dylan", 45, "Dubai", 87, true,
+            "Charlie", "Daniels", 20, "Moscow", null, false,
+            "Charlie", "Chaplin", 40, "Milan", null, true,
+            "Bob", "Marley", 30, "Tokyo", 68, true,
+            "Alice", "Wolf", 20, null, 55, false,
+            "Charlie", "Byrd", 30, "Moscow", 90, true
+        ).group("firstName", "lastName").into("name")
+
+        val pivoted = df.pivot("city").groupBy("name").default(0).min()
+        pivoted["city"]["London"]["isHappy"].type() shouldBe listOf(typeOf<Int>(), typeOf<Boolean>()).commonType()
     }
 }
