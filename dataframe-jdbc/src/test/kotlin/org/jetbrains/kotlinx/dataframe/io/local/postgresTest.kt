@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.*
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import org.postgresql.util.PGobject
 import java.math.BigDecimal
@@ -18,7 +19,6 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.UUID
-import org.junit.Ignore
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:postgresql://localhost:5432/test"

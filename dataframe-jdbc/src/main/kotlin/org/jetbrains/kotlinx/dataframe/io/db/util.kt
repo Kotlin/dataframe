@@ -45,7 +45,7 @@ public fun extractDBTypeFromConnection(connection: Connection): DbType {
             H2.MODE_MARIADB.lowercase(Locale.getDefault()) -> H2(MariaDb)
             else -> {
                 val message = "Unsupported database type in the url: $url. " +
-                        "Only MySQL, MariaDB, MSSQL and PostgreSQL are supported!"
+                    "Only MySQL, MariaDB, MSSQL and PostgreSQL are supported!"
                 logger.error { message }
 
                 throw IllegalArgumentException(message)

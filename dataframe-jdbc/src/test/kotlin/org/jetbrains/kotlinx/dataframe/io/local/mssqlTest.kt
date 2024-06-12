@@ -19,7 +19,6 @@ import java.sql.SQLException
 import java.util.*
 import kotlin.reflect.typeOf
 
-
 private const val URL = "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
