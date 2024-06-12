@@ -156,7 +156,6 @@ internal fun encodeRowWithMetadata(
         }.let { col.name to it }
     }
     if (values.isEmpty()) return null
-    JsonObject(mapOf("exampleKey" to JsonPrimitive("exampleValue")))
     return JsonObject(values.toMap())
 }
 

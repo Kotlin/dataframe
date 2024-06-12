@@ -167,7 +167,7 @@ internal fun fromJsonListAnyColumns(
 
     @Suppress("KotlinConstantConditions")
     val columns: List<AnyCol> = when {
-        // Create one column of type Any? (or guessed a primitive type) from all the records
+        // Create one column of type Any? (or guessed primitive type) from all the records
         colType == AnyColType.ANY -> {
             val collector: DataCollectorBase<Any?> =
                 if (justPrimitives) createDataCollector(records.size) // guess the type
@@ -419,7 +419,7 @@ internal fun fromJsonListArrayAndValueColumns(
 
     // list element type can be JsonObject, JsonArray or primitive
     // So first, we gather all properties of objects to merge including "array" and "value" if needed
-    // so the resulting type of property with instances 123, ["abc"], and { "a": 1, "b": 2 } will be
+    // so the resulting type of a property with instances 123, ["abc"], and { "a": 1, "b": 2 } will be
     // { array: List<String>, value: Int?, a: Int?, b: Int? }
     // and instances will look like
     // { "array": [], "value": 123, "a": null, "b": null }

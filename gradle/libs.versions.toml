@@ -26,7 +26,7 @@ kover = "0.6.1"
 
 commonsCsv = "1.10.0"
 commonsCompress = "1.26.0"
-serialization = "1.6.2"
+serialization = "1.7.0"
 fuel = "2.3.1"
 poi = "5.2.5"
 mariadb = "3.3.2"
