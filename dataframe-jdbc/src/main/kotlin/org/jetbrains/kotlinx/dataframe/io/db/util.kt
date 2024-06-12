@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io.db
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.sql.Connection
 import java.sql.SQLException
-import java.util.*
+import java.util.Locale
 
 private val logger = KotlinLogging.logger {}
 
