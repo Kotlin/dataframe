@@ -87,7 +87,11 @@ internal fun <T, G, R> aggregateGroupBy(
             val result = body(builder, builder)
             if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) builder.yield(
                 NamedValue.create(
-                    pathOf(defaultAggregateName), result, null, null, true
+                    path = pathOf(defaultAggregateName),
+                    value = result,
+                    type = null,
+                    defaultValue = null,
+                    guessType = true,
                 )
             )
             builder.compute()
