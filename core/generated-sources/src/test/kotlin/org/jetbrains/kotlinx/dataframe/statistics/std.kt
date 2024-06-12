@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.columnTypes
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.math.std
@@ -21,6 +22,7 @@ class StdTests {
         value.std() shouldBe expected
         df[value].std() shouldBe expected
         df.std { value } shouldBe expected
+        df.std().columnTypes().single() shouldBe typeOf<Double>()
     }
 
     @Test
