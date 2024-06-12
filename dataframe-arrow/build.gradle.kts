@@ -9,6 +9,10 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api(project(":core"))
 
