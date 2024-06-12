@@ -277,7 +277,7 @@ class MSSQLTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4)
+        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MSSSQL>()
 

@@ -298,7 +298,7 @@ class PostgresTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
         val table1Df = dataframes[0].cast<Table1>()
 

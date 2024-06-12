@@ -75,9 +75,9 @@ public class OpenApi : SupportedCodeGenerationFormat {
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = try {
         when (sample) {
             is SupportedFormatSample.DataString -> isOpenApiStr(sample.sampleData)
-            is SupportedFormatSample.File -> isOpenApi(sample.sampleFile)
+            is SupportedFormatSample.DataFile -> isOpenApi(sample.sampleFile)
             is SupportedFormatSample.PathString -> isOpenApi(sample.samplePath)
-            is SupportedFormatSample.URL -> isOpenApi(sample.sampleUrl)
+            is SupportedFormatSample.DataUrl -> isOpenApi(sample.sampleUrl)
         }
     } catch (_: Exception) {
         false
