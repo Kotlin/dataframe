@@ -27,6 +27,8 @@ public fun <T> DataRow<T>.concat(vararg rows: DataRow<T>): DataFrame<T> = (listO
 
 public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + frames)
 
+public infix fun <T> DataFrame<T>.concat(frame: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + frame)
+
 @JvmName("concatT")
 public fun <T> DataFrame<T>.concat(rows: Iterable<DataRow<T>>): DataFrame<T> = (rows() + rows).concat()
 

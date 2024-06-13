@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.Update.UpdateOperationArg
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -309,6 +311,8 @@ private interface CommonDropNullsFunctionDoc
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropDslParam]
  */
+@Refine
+@Interpretable("DropNulls0")
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
     return if (whereAllNull) drop { row -> cols.all { col -> col[row] == null } }

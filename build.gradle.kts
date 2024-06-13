@@ -52,11 +52,11 @@ dependencies {
     api(project(":dataframe-jdbc"))
 }
 
-private enum class Version : Comparable<Version> {
+enum class Version : Comparable<Version> {
     SNAPSHOT, DEV, ALPHA, BETA, RC, STABLE;
 }
 
-private fun String.findVersion(): Version {
+fun String.findVersion(): Version {
     val version = this.lowercase()
     return when {
         "snapshot" in version -> Version.SNAPSHOT

@@ -8,6 +8,7 @@ includeBuild("generator")
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 include("plugins:expressions-converter")
+include("plugins:kotlin-dataframe")
 include("tests")
 include("dataframe-arrow")
 include("dataframe-openapi")
@@ -35,3 +36,8 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+}
+include("dataframe-excel")
+include("core")

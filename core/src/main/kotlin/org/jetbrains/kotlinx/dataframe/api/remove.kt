@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import kotlin.reflect.KProperty
@@ -11,6 +13,8 @@ import kotlin.reflect.KProperty
 
 // region remove
 
+@Refine
+@Interpretable("Remove0")
 public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T> =
     removeImpl(allowMissingColumns = true, columns = columns).df
 
