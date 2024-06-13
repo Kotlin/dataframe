@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.io
+package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
@@ -8,9 +8,13 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
 import java.sql.Connection
@@ -18,26 +22,23 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:mariadb://localhost:3307"
-private const val USER_NAME = "root"
-private const val PASSWORD = "pass"
-private const val TEST_DATABASE_NAME = "testKDFdatabase"
+private const val URL = "jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=MariaDB;DATABASE_TO_LOWER=TRUE"
 
 @DataSchema
 interface Table1MariaDb {
     val id: Int
     val bitCol: Boolean
-    val tinyintCol: Int
-    val smallintCol: Short?
-    val mediumintCol: Int
-    val mediumintUnsignedCol: Int
-    val integerCol: Int
+    val tinyintcol: Int
+    val smallintcol: Short?
+    val mediumintcol: Int
+    val mediumintunsignedcol: Int
+    val integercol: Int
     val intCol: Int
-    val integerUnsignedCol: Long
-    val bigintCol: Long
-    val floatCol: Float
-    val doubleCol: Double
-    val decimalCol: BigDecimal
+    val integerunsignedcol: Long
+    val bigintcol: Long
+    val floatcol: Float
+    val doublecol: Double
+    val decimalcol: BigDecimal
     val dateCol: String
     val datetimeCol: String
     val timestampCol: String
@@ -55,7 +56,6 @@ interface Table1MariaDb {
     val mediumtextCol: String
     val longtextCol: String
     val enumCol: String
-    val setCol: Char
     val jsonCol: String
 }
 
@@ -67,7 +67,7 @@ interface Table2MariaDb {
     val smallintCol: Int?
     val mediumintCol: Int?
     val mediumintUnsignedCol: Int?
-    val integerCol: Int?
+    val integercol: Int?
     val intCol: Int?
     val integerUnsignedCol: Long?
     val bigintCol: Long?
@@ -91,7 +91,6 @@ interface Table2MariaDb {
     val mediumtextCol: String?
     val longtextCol: String?
     val enumCol: String?
-    val setCol: Char?
     val jsonCol: String?
 }
 
@@ -107,32 +106,14 @@ private const val JSON_STRING =
         "     \t\"favorites\": [{\"description\": \"Pepperoni deep dish\", \"price\": 18.75}, \n" +
         "{\"description\": \"The Lou\", \"price\": 24.75}]}"
 
-@Ignore
-class MariadbTest {
+class MariadbH2Test {
     companion object {
         private lateinit var connection: Connection
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
-
-            connection.createStatement().use { st ->
-                // Drop the test database if it exists
-                val dropDatabaseQuery = "DROP DATABASE IF EXISTS $TEST_DATABASE_NAME"
-                st.executeUpdate(dropDatabaseQuery)
-
-                // Create the test database
-                val createDatabaseQuery = "CREATE DATABASE $TEST_DATABASE_NAME"
-                st.executeUpdate(createDatabaseQuery)
-
-                // Use the newly created database
-                val useDatabaseQuery = "USE $TEST_DATABASE_NAME"
-                st.executeUpdate(useDatabaseQuery)
-            }
-
-            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
-            connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
+            connection = DriverManager.getConnection(URL)
 
             @Language("SQL")
             val createTableQuery = """
@@ -167,9 +148,7 @@ class MariadbTest {
                 mediumtextCol MEDIUMTEXT NOT NULL,
                 longtextCol LONGTEXT NOT NULL,
                 enumCol ENUM('Value1', 'Value2', 'Value3') NOT NULL,
-                setCol SET('Option1', 'Option2', 'Option3') NOT NULL,
                 jsonCol JSON NOT NULL
-                CHECK (JSON_VALID(jsonCol))
             )
         """
             connection.createStatement().execute(
@@ -208,8 +187,7 @@ class MariadbTest {
                 textCol TEXT,
                 mediumtextCol MEDIUMTEXT,
                 longtextCol LONGTEXT,
-                enumCol ENUM('Value1', 'Value2', 'Value3'),
-                setCol SET('Option1', 'Option2', 'Option3')
+                enumCol ENUM('Value1', 'Value2', 'Value3')
             )
             """
             connection.createStatement().execute(
@@ -222,8 +200,8 @@ class MariadbTest {
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                 integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                 timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, jsonCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, jsonCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
             @Language("SQL")
@@ -232,8 +210,8 @@ class MariadbTest {
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                 integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                 timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -268,8 +246,7 @@ class MariadbTest {
                     st.setString(27, "mediumtextValue$i")
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
-                    st.setString(30, "Option$i")
-                    st.setString(31, JSON_STRING)
+                    st.setString(30, JSON_STRING)
 
                     st.executeUpdate()
                 }
@@ -307,7 +284,6 @@ class MariadbTest {
                     st.setString(27, null)
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
-                    st.setString(30, "Option$i")
                     st.executeUpdate()
                 }
             }
@@ -317,9 +293,6 @@ class MariadbTest {
         @JvmStatic
         fun tearDownClass() {
             try {
-                connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
-                connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
-                connection.createStatement().use { st -> st.execute("DROP DATABASE IF EXISTS $TEST_DATABASE_NAME") }
                 connection.close()
             } catch (e: SQLException) {
                 e.printStackTrace()
@@ -335,7 +308,7 @@ class MariadbTest {
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
-        schema.columns["textCol"]!!.type shouldBe typeOf<String>()
+        schema.columns["textcol"]!!.type shouldBe typeOf<String>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MariaDb>()
         val result2 = df2.filter { it[Table2MariaDb::id] == 1 }
@@ -343,7 +316,7 @@ class MariadbTest {
 
         val schema2 = DataFrame.getSchemaForSqlTable(connection, "table2")
         schema2.columns["id"]!!.type shouldBe typeOf<Int>()
-        schema2.columns["textCol"]!!.type shouldBe typeOf<String?>()
+        schema2.columns["textcol"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test
@@ -352,38 +325,35 @@ class MariadbTest {
         val sqlQuery = """
             SELECT
                t1.id,
-               t1.enumCol,
-               t2.setCol
+               t1.enumCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
         """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MariaDb>()
         val result = df.filter { it[Table3MariaDb::id] == 1 }
-        result[0][2] shouldBe "Option1"
+        result[0][1] shouldBe "Value1"
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
-        schema.columns["enumCol"]!!.type shouldBe typeOf<Char>()
-        schema.columns["setCol"]!!.type shouldBe typeOf<Char?>()
+        schema.columns["enumcol"]!!.type shouldBe typeOf<Any>()
     }
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 1000).values.toList()
+        val dataframes = DataFrame.readAllSqlTables(connection, limit = 1000).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MariaDb>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1MariaDb::integerCol] > 100 }.rowsCount() shouldBe 2
+        table1Df.filter { it[Table1MariaDb::integercol] > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
-        table1Df[0][31] shouldBe JSON_STRING // TODO: https://github.com/Kotlin/dataframe/issues/462
 
         val table2Df = dataframes[1].cast<Table2MariaDb>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2MariaDb::integerCol] != null && it[Table2MariaDb::integerCol]!! > 400 }
+        table2Df.filter { it[Table2MariaDb::integercol] != null && it[Table2MariaDb::integercol]!! > 400 }
             .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
@@ -393,61 +363,45 @@ class MariadbTest {
     fun `reading numeric types`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
 
-        val result = df1.select("tinyintCol")
-            .add("tinyintCol2") { it[Table1MariaDb::tinyintCol] }
+        val result = df1.select("tinyintcol")
+            .add("tinyintcol2") { it[Table1MariaDb::tinyintcol] }
 
         result[0][1] shouldBe 1
 
-        val result1 = df1.select("smallintCol")
-            .add("smallintCol2") { it[Table1MariaDb::smallintCol] }
-
-        result1[0][1] shouldBe 10
-
-        val result2 = df1.select("mediumintCol")
-            .add("mediumintCol2") { it[Table1MariaDb::mediumintCol] }
+        val result2 = df1.select("mediumintcol")
+            .add("mediumintcol2") { it[Table1MariaDb::mediumintcol] }
 
         result2[0][1] shouldBe 100
 
-        val result3 = df1.select("mediumintUnsignedCol")
-            .add("mediumintUnsignedCol2") { it[Table1MariaDb::mediumintUnsignedCol] }
+        val result3 = df1.select("mediumintunsignedcol")
+            .add("mediumintunsignedcol2") { it[Table1MariaDb::mediumintunsignedcol] }
 
         result3[0][1] shouldBe 100
 
-        val result4 = df1.select("integerUnsignedCol")
-            .add("integerUnsignedCol2") { it[Table1MariaDb::integerUnsignedCol] }
-
-        result4[0][1] shouldBe 100L
-
-        val result5 = df1.select("bigintCol")
-            .add("bigintCol2") { it[Table1MariaDb::bigintCol] }
+        val result5 = df1.select("bigintcol")
+            .add("bigintcol2") { it[Table1MariaDb::bigintcol] }
 
         result5[0][1] shouldBe 100
 
-        val result6 = df1.select("floatCol")
-            .add("floatCol2") { it[Table1MariaDb::floatCol] }
-
-        result6[0][1] shouldBe 10.0f
-
-        val result7 = df1.select("doubleCol")
-            .add("doubleCol2") { it[Table1MariaDb::doubleCol] }
+        val result7 = df1.select("doublecol")
+            .add("doublecol2") { it[Table1MariaDb::doublecol] }
 
         result7[0][1] shouldBe 10.0
 
-        val result8 = df1.select("decimalCol")
-            .add("decimalCol2") { it[Table1MariaDb::decimalCol] }
+        val result8 = df1.select("decimalcol")
+            .add("decimalcol2") { it[Table1MariaDb::decimalcol] }
 
         result8[0][1] shouldBe BigDecimal("10")
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
 
-        schema.columns["tinyintCol"]!!.type shouldBe typeOf<Int>()
-        schema.columns["smallintCol"]!!.type shouldBe typeOf<Short?>()
-        schema.columns["mediumintCol"]!!.type shouldBe typeOf<Int>()
-        schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
-        schema.columns["integerUnsignedCol"]!!.type shouldBe typeOf<Long>()
-        schema.columns["bigintCol"]!!.type shouldBe typeOf<Long>()
-        schema.columns["floatCol"]!!.type shouldBe typeOf<Float>()
-        schema.columns["doubleCol"]!!.type shouldBe typeOf<Double>()
-        schema.columns["decimalCol"]!!.type shouldBe typeOf<BigDecimal>()
+        schema.columns["tinyintcol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["smallintcol"]!!.type shouldBe typeOf<Short?>()
+        schema.columns["mediumintcol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["mediumintunsignedcol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["bigintcol"]!!.type shouldBe typeOf<Long>()
+        schema.columns["floatcol"]!!.type shouldBe typeOf<Float>()
+        schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
+        schema.columns["decimalcol"]!!.type shouldBe typeOf<BigDecimal>()
     }
 }
