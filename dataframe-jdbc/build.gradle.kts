@@ -28,7 +28,7 @@ dependencies {
     testImplementation(libs.mssql)
     testImplementation(libs.junit)
     testImplementation(libs.sl4j)
-    testImplementation("org.locationtech.jts:jts-core:1.18.1")
+    testImplementation(libs.jts)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }

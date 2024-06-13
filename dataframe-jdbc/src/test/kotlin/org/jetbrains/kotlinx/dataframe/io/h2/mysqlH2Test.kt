@@ -8,7 +8,11 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -18,7 +22,8 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE"
+// NOTE: the names of testing databases should be different to avoid collisions and should not contain the system names itself
+private const val URL = "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_LOWER=TRUE"
 
 @DataSchema
 interface Table1MySql {
@@ -335,7 +340,7 @@ class MySqlH2Test {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MySql>()
 

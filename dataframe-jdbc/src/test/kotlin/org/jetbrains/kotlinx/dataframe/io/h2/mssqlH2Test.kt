@@ -4,9 +4,17 @@ import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.db.MsSql
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readResultSet
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -15,10 +23,11 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
+private const val URL = "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
 
 @DataSchema
 interface Table1MSSSQL {
@@ -56,7 +65,7 @@ interface Table1MSSSQL {
     val geographyColumn: String
 }
 
-class MSSQLTest {
+class MSSQLH2Test {
     companion object {
         private lateinit var connection: Connection
 
@@ -228,7 +237,7 @@ class MSSQLTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, limit = 4)
+        val dataframes = DataFrame.readAllSqlTables(connection, limit = 4).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MSSSQL>()
 

@@ -12,7 +12,9 @@ import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVariance
-import kotlin.reflect.KVariance.*
+import kotlin.reflect.KVariance.IN
+import kotlin.reflect.KVariance.INVARIANT
+import kotlin.reflect.KVariance.OUT
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.createType
@@ -462,6 +464,9 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
         }
     }
 }
+
+internal val KType.isNothing: Boolean
+    get() = classifier == Nothing::class
 
 internal fun nothingType(nullable: Boolean): KType =
     if (nullable) {

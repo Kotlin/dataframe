@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
@@ -192,7 +191,7 @@ class SqliteTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
         val customerDf = dataframes[0].cast<CustomerSQLite>()
 

@@ -184,8 +184,9 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * If [column\] does not exist, {@get [ColumnDoesNotExistArg]}.
      * {@include [LineBreak]}
-     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector] to be used
-     * in the Plain DSL, and on [column groups][ColumnGroup] and a [ColumnFilter] on [ColumnSets][ColumnSet].
+     * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector]
+     * in the Plain DSL and on [column groups][ColumnGroup].
+     * On [ColumnSets][ColumnSet] it requires a [ColumnFilter] instead.
      *
      * ### Check out: [Grammar]
      *

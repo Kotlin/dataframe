@@ -7,10 +7,22 @@ import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readResultSet
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -21,7 +33,7 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
+private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
 @DataSchema
 interface Customer {
@@ -600,7 +612,11 @@ class JdbcTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection)
+        val dataFrameMap = DataFrame.readAllSqlTables(connection)
+        dataFrameMap.containsKey("Customer") shouldBe true
+        dataFrameMap.containsKey("Sale") shouldBe true
+
+        val dataframes = dataFrameMap.values.toList()
 
         val customerDf = dataframes[0].cast<Customer>()
 
@@ -614,7 +630,7 @@ class JdbcTest {
         saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataframes1 = DataFrame.readAllSqlTables(connection, limit = 1)
+        val dataframes1 = DataFrame.readAllSqlTables(connection, limit = 1).values.toList()
 
         val customerDf1 = dataframes1[0].cast<Customer>()
 
@@ -628,7 +644,11 @@ class JdbcTest {
         saleDf1.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataSchemas = DataFrame.getSchemaForAllSqlTables(connection)
+        val dataFrameSchemaMap = DataFrame.getSchemaForAllSqlTables(connection)
+        dataFrameSchemaMap.containsKey("Customer") shouldBe true
+        dataFrameSchemaMap.containsKey("Sale") shouldBe true
+
+        val dataSchemas = dataFrameSchemaMap.values.toList()
 
         val customerDataSchema = dataSchemas[0]
         customerDataSchema.columns.size shouldBe 3
@@ -640,7 +660,7 @@ class JdbcTest {
         saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
 
         val dbConfig = DatabaseConfiguration(url = URL)
-        val dataframes2 = DataFrame.readAllSqlTables(dbConfig)
+        val dataframes2 = DataFrame.readAllSqlTables(dbConfig).values.toList()
 
         val customerDf2 = dataframes2[0].cast<Customer>()
 
@@ -654,7 +674,7 @@ class JdbcTest {
         saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1)
+        val dataframes3 = DataFrame.readAllSqlTables(dbConfig, limit = 1).values.toList()
 
         val customerDf3 = dataframes3[0].cast<Customer>()
 
@@ -668,7 +688,7 @@ class JdbcTest {
         saleDf3.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 1
         (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
 
-        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig)
+        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig).values.toList()
 
         val customerDataSchema1 = dataSchemas1[0]
         customerDataSchema1.columns.size shouldBe 3

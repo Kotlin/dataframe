@@ -8,7 +8,11 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
@@ -102,6 +106,7 @@ interface Table3MySql {
     val setCol: Char?
 }
 
+@Ignore
 class MySqlTest {
     companion object {
         private lateinit var connection: Connection
@@ -370,7 +375,7 @@ class MySqlTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection)
+        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MySql>()
 
