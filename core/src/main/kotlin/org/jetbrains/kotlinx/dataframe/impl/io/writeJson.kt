@@ -299,9 +299,11 @@ internal fun encodeFrame(frame: AnyFrame): JsonArray {
     val arraysAreFrames = arrayColumn?.kind() == ColumnKind.Frame
 
     val data = frame.indices().map { rowIndex ->
-        valueColumn?.get(rowIndex) ?: arrayColumn?.get(rowIndex)?.let {
-            if (arraysAreFrames) encodeFrame(it as AnyFrame) else null
-        } ?: encodeRow(frame, rowIndex)
+        when {
+            valueColumn != null -> valueColumn[rowIndex]
+            arrayColumn != null -> arrayColumn[rowIndex]?.let { if (arraysAreFrames) encodeFrame(it as AnyFrame) else null }
+            else -> encodeRow(frame, rowIndex)
+        }
     }
 
     return buildJsonArray { addAll(data.map { convert(it) }) }

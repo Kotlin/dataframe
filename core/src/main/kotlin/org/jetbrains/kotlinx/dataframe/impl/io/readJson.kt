@@ -13,7 +13,6 @@ import kotlinx.serialization.json.floatOrNull
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.long
 import kotlinx.serialization.json.longOrNull
 import org.jetbrains.kotlinx.dataframe.AnyCol
@@ -201,6 +200,8 @@ internal fun fromJsonListAnyColumns(
                         )
                     }
 
+                    is JsonNull -> collector.add(null)
+
                     is JsonPrimitive -> {
                         when {
                             v.content == "NaN" -> {
@@ -214,7 +215,6 @@ internal fun fromJsonListAnyColumns(
                             v.longOrNull != null -> collector.add(v.long)
                             v.doubleOrNull != null -> collector.add(v.double)
                             v.floatOrNull != null -> collector.add(v.float)
-                            v.jsonPrimitive is JsonNull -> collector.add(null)
                         }
                     }
 
@@ -513,6 +513,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             when (v) {
                                 is JsonObject -> collector.add(null)
                                 is JsonArray -> collector.add(null)
+                                is JsonNull -> collector.add(null)
                                 is JsonPrimitive -> {
                                     when {
                                         v.content == "NaN" -> {
@@ -526,8 +527,6 @@ internal fun fromJsonListArrayAndValueColumns(
                                         v.longOrNull != null -> collector.add(v.long)
                                         v.doubleOrNull != null -> collector.add(v.double)
                                         v.floatOrNull != null -> collector.add(v.float)
-                                        v is JsonNull -> collector.add(null)
-                                        else -> collector.add(v)
                                     }
                                 }
 
