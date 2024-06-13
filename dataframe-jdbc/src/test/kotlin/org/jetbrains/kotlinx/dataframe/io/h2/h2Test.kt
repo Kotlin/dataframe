@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
 import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.intellij.lang.annotations.Language
@@ -789,5 +790,13 @@ class JdbcTest {
         // end testing `readResultSet` method
 
         connection.createStatement().execute("DROP TABLE TestTable1")
+    }
+
+    @Test
+    fun `check require throws exception when specifying H2 database with H2 dialect`() {
+        val exception = shouldThrowExactly<IllegalArgumentException> {
+            H2(H2())
+        }
+        exception.message shouldBe "H2 database could not be specified with H2 dialect!"
     }
 }
