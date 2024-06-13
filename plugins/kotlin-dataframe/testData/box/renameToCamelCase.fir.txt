@@ -1,0 +1,124 @@
+FILE: renameToCamelCase.kt
+    public abstract interface Name : R|kotlin/Any| {
+        public abstract val another_name: R|kotlin/Int|
+            public get(): R|kotlin/Int|
+
+        public abstract val another_name2: R|kotlin/Int|
+            public get(): R|kotlin/Int|
+
+    }
+    public abstract interface Group : R|kotlin/Any| {
+        public abstract val test_name: R|org/jetbrains/kotlinx/dataframe/DataFrame<Name>|
+            public get(): R|org/jetbrains/kotlinx/dataframe/DataFrame<Name>|
+
+    }
+    public abstract interface Test : R|kotlin/Any| {
+        public abstract val some_group: R|org/jetbrains/kotlinx/dataframe/DataRow<Group>|
+            public get(): R|org/jetbrains/kotlinx/dataframe/DataRow<Group>|
+
+    }
+    public final fun box(): R|kotlin/String| {
+        lval nestedDf: R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/Test_94>| = R|org/jetbrains/kotlinx/dataframe/api/dataFrameOf|(vararg(String(test_name))).R|org/jetbrains/kotlinx/dataframe/api/DataFrameBuilder.invoke|(vararg(R|org/jetbrains/kotlinx/dataframe/api/dataFrameOf|(vararg(String(another_name), String(another_name2))).R|org/jetbrains/kotlinx/dataframe/api/DataFrameBuilder.invoke|(vararg(Int(1), Int(2), Int(1), Int(2))))).R|org/jetbrains/kotlinx/dataframe/api/group|<R|kotlin/Any?|, R|kotlin/Any?|>(<L> = group@fun R|org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl<kotlin/Any?>|.<anonymous>(it: R|@R|kotlin/ParameterName|(name = String(it))  org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl<kotlin/Any?>|): R|org/jetbrains/kotlinx/dataframe/columns/ColumnsResolver<kotlin/Any?>| <inline=NoInline>  {
+            ^ (this@R|special/anonymous|, this@R|special/anonymous|).R|SubstitutionOverride<org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl.all: R|org/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet<*>|>|()
+        }
+        ).R|org/jetbrains/kotlinx/dataframe/api/into|<R|kotlin/Any?|, R|kotlin/Any?|>(String(some_group)).R|org/jetbrains/kotlinx/dataframe/api/cast|<R|Test|>(Boolean(false)).R|kotlin/let|<R|org/jetbrains/kotlinx/dataframe/DataFrame<Test>|, R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/Test_94>|>(<L> = fun <anonymous>(it: R|org/jetbrains/kotlinx/dataframe/DataFrame<Test>|): R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/Test_94>| <inline=Inline, kind=EXACTLY_ONCE>  {
+            local abstract class Test_94I : R|kotlin/Any| {
+                @R|org/jetbrains/kotlinx/dataframe/annotations/Order|(order = Int(0)) public abstract val someGroup: R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/SomeGroup_371>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/SomeGroup_371>|
+
+                public constructor(): R|<local>/Test_94I|
+
+            }
+
+            local final class Scope0 : R|kotlin/Any| {
+                public final val R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/Test_94I>|.someGroup: R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/SomeGroup_371>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/SomeGroup_371>|
+
+                public final val R|org/jetbrains/kotlinx/dataframe/ColumnsContainer<<local>/Test_94I>|.someGroup: R|org/jetbrains/kotlinx/dataframe/columns/ColumnGroup<<local>/SomeGroup_371>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/columns/ColumnGroup<<local>/SomeGroup_371>|
+
+                public constructor(): R|<local>/Scope0|
+
+            }
+
+            local abstract class SomeGroup_371 : R|kotlin/Any| {
+                @R|org/jetbrains/kotlinx/dataframe/annotations/Order|(order = Int(0)) public abstract val testName: R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>|
+
+                public constructor(): R|<local>/SomeGroup_371|
+
+            }
+
+            local final class Scope1 : R|kotlin/Any| {
+                public final val R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/SomeGroup_371>|.testName: R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>|
+
+                public final val R|org/jetbrains/kotlinx/dataframe/ColumnsContainer<<local>/SomeGroup_371>|.testName: R|org/jetbrains/kotlinx/dataframe/DataColumn<org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/DataColumn<org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>>|
+
+                public constructor(): R|<local>/Scope1|
+
+            }
+
+            local abstract class TestName_371 : R|kotlin/Any| {
+                @R|org/jetbrains/kotlinx/dataframe/annotations/Order|(order = Int(1)) public abstract val anotherName2: R|kotlin/Int|
+                    public get(): R|kotlin/Int|
+
+                @R|org/jetbrains/kotlinx/dataframe/annotations/Order|(order = Int(0)) public abstract val anotherName: R|kotlin/Int|
+                    public get(): R|kotlin/Int|
+
+                public constructor(): R|<local>/TestName_371|
+
+            }
+
+            local final class Scope2 : R|kotlin/Any| {
+                public final val R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/TestName_371>|.anotherName2: R|kotlin/Int|
+                    public get(): R|kotlin/Int|
+
+                public final val R|org/jetbrains/kotlinx/dataframe/ColumnsContainer<<local>/TestName_371>|.anotherName2: R|org/jetbrains/kotlinx/dataframe/DataColumn<kotlin/Int>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/DataColumn<kotlin/Int>|
+
+                public final val R|org/jetbrains/kotlinx/dataframe/DataRow<<local>/TestName_371>|.anotherName: R|kotlin/Int|
+                    public get(): R|kotlin/Int|
+
+                public final val R|org/jetbrains/kotlinx/dataframe/ColumnsContainer<<local>/TestName_371>|.anotherName: R|org/jetbrains/kotlinx/dataframe/DataColumn<kotlin/Int>|
+                    public get(): R|org/jetbrains/kotlinx/dataframe/DataColumn<kotlin/Int>|
+
+                public constructor(): R|<local>/Scope2|
+
+            }
+
+            local abstract class Test_94 : R|<local>/Test_94I| {
+                public abstract var scope0: R|<local>/Scope0|
+                    public get(): R|<local>/Scope0|
+                    public set(value: R|<local>/Scope0|): R|kotlin/Unit|
+
+                public abstract var scope2: R|<local>/Scope2|
+                    public get(): R|<local>/Scope2|
+                    public set(value: R|<local>/Scope2|): R|kotlin/Unit|
+
+                public abstract var scope1: R|<local>/Scope1|
+                    public get(): R|<local>/Scope1|
+                    public set(value: R|<local>/Scope1|): R|kotlin/Unit|
+
+                public constructor(): R|<local>/Test_94|
+
+            }
+
+            ^ R|<local>/it|.R|org/jetbrains/kotlinx/dataframe/api/renameToCamelCase|<R|Test|>()
+        }
+        )
+        when () {
+            !=((this@R|/box|, (this@R|/box|, (this@R|/box|, R|<local>/nestedDf|).R|<local>/Scope0.someGroup|).R|<local>/Scope1.testName|.R|org/jetbrains/kotlinx/dataframe/api/first|<R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>|>()).R|<local>/Scope2.anotherName|.R|org/jetbrains/kotlinx/dataframe/api/first|<R|kotlin/Int|>(), Int(1)) ->  {
+                ^box String(not OK)
+            }
+        }
+
+        when () {
+            !=((this@R|/box|, (this@R|/box|, (this@R|/box|, R|<local>/nestedDf|).R|<local>/Scope0.someGroup|).R|<local>/Scope1.testName|.R|org/jetbrains/kotlinx/dataframe/api/first|<R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/TestName_371>|>()).R|<local>/Scope2.anotherName2|.R|org/jetbrains/kotlinx/dataframe/api/first|<R|kotlin/Int|>(), Int(2)) ->  {
+                ^box String(not OK)
+            }
+        }
+
+        ^box String(OK)
+    }

@@ -6,9 +6,21 @@
 package org.jetbrains.kotlinx.dataframe.plugin
 
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.declarations.findArgumentByName
+import org.jetbrains.kotlin.fir.expressions.FirClassReferenceExpression
+import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
+import org.jetbrains.kotlin.fir.expressions.FirGetClassCall
+import org.jetbrains.kotlin.fir.expressions.FirLiteralExpression
+import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
+import org.jetbrains.kotlin.fir.references.FirResolvedNamedReference
+import org.jetbrains.kotlin.fir.resolve.fqName
+import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
+import org.jetbrains.kotlin.fir.types.classId
+import org.jetbrains.kotlin.fir.types.coneType
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Interpreter
-import org.jetbrains.kotlinx.dataframe.plugin.utils.Names.INTERPRETABLE_FQNAME
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Add
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddWithDsl
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.And0
@@ -45,8 +57,10 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadJsonStr
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Remove0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Rename
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameInto
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameToCamelCase
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Select0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.To0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameFrom
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under2
@@ -54,20 +68,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under3
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under4
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Ungroup0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.With0
-import org.jetbrains.kotlin.fir.declarations.findArgumentByName
-import org.jetbrains.kotlin.fir.expressions.FirClassReferenceExpression
-import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
-import org.jetbrains.kotlin.fir.expressions.FirGetClassCall
-import org.jetbrains.kotlin.fir.expressions.FirLiteralExpression
-import org.jetbrains.kotlin.fir.expressions.FirResolvedQualifier
-import org.jetbrains.kotlin.fir.references.FirResolvedNamedReference
-import org.jetbrains.kotlin.fir.resolve.fqName
-import org.jetbrains.kotlin.fir.symbols.impl.FirCallableSymbol
-import org.jetbrains.kotlin.fir.types.classId
-import org.jetbrains.kotlin.fir.types.coneType
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameFrom
+import org.jetbrains.kotlinx.dataframe.plugin.utils.Names.INTERPRETABLE_FQNAME
 
 internal fun FirFunctionCall.loadInterpreter(session: FirSession): Interpreter<*>? {
     val symbol =
@@ -93,7 +94,9 @@ internal fun FirFunctionCall.interpreterName(session: FirSession): String? {
         }
 }
 
-internal val KotlinTypeFacade.loadInterpreter: FirFunctionCall.() -> Interpreter<*>? get() = { this.loadInterpreter(session) }
+internal val KotlinTypeFacade.loadInterpreter: FirFunctionCall.() -> Interpreter<*>? get() = {
+    this.loadInterpreter(session)
+}
 
 internal val FirGetClassCall.classId: ClassId?
     get() {
@@ -105,16 +108,18 @@ internal val FirGetClassCall.classId: ClassId?
     }
 
 internal inline fun <reified T> ClassId.load(): T {
-    val constructor = Class.forName(asFqNameString())
-        .constructors
-        .firstOrNull { constructor -> constructor.parameterCount == 0 }
-        ?: error("Interpreter $this must have an empty constructor")
+    val constructor =
+        Class
+            .forName(asFqNameString())
+            .constructors
+            .firstOrNull { constructor -> constructor.parameterCount == 0 }
+            ?: error("Interpreter $this must have an empty constructor")
 
     return constructor.newInstance() as T
 }
 
-internal inline fun <reified T> String.load(): T {
-    return when (this) {
+internal inline fun <reified T> String.load(): T =
+    when (this) {
         "Add" -> Add()
         "From" -> From()
         "Into" -> Into()
@@ -161,6 +166,6 @@ internal inline fun <reified T> String.load(): T {
         "ReadDelimStr" -> ReadDelimStr()
         "GroupByToDataFrame" -> GroupByToDataFrame()
         "ToDataFrameFrom0" -> ToDataFrameFrom()
+        "RenameToCamelCase" -> RenameToCamelCase()
         else -> error("$this")
     } as T
-}
