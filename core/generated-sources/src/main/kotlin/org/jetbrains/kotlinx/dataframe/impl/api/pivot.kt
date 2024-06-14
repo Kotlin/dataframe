@@ -100,17 +100,21 @@ internal fun <T, R> aggregatePivot(
             val hasResult = result != null && result != Unit
 
             fun NamedValue.apply(path: ColumnPath) =
-                copy(path = path, value = this.value ?: default ?: globalDefault, default = default ?: globalDefault)
+                copy(
+                    path = path,
+                    value = this.value ?: default ?: globalDefault,
+                    default = default ?: globalDefault,
+                )
 
             val values = builder.values
             when {
                 values.size == 1 && values[0].path.isEmpty() -> aggregator.yield(values[0].apply(path))
                 values.isEmpty() -> aggregator.yield(
-                    path,
-                    if (hasResult) result else globalDefault,
-                    null,
-                    globalDefault,
-                    true
+                    path = path,
+                    value = if (hasResult) result else globalDefault,
+                    type = null,
+                    default = globalDefault,
+                    guessType = true,
                 )
 
                 else -> {
