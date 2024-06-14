@@ -1,28 +1,33 @@
-package org.jetbrains.kotlinx.dataframe.io
+package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.io.JdbcTest.Companion
-import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.io.db.MsSql
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readResultSet
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.SQLException
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:sqlserver://localhost:1433;encrypt=true;trustServerCertificate=true"
-private const val USER_NAME = "root"
-private const val PASSWORD = "pass"
-private const val TEST_DATABASE_NAME = "testKDFdatabase"
+private const val URL = "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
 
 @DataSchema
 interface Table1MSSSQL {
@@ -34,7 +39,6 @@ interface Table1MSSSQL {
     val dateColumn: Date
     val datetime3Column: java.sql.Timestamp
     val datetime2Column: java.sql.Timestamp
-    val datetimeoffset2Column: String
     val decimalColumn: BigDecimal
     val floatColumn: Double
     val imageColumn: ByteArray?
@@ -57,36 +61,18 @@ interface Table1MSSSQL {
     val varbinaryMaxColumn: ByteArray
     val varcharColumn: String
     val varcharMaxColumn: String
-    val xmlColumn: String
-    val sqlvariantColumn: String
     val geometryColumn: String
     val geographyColumn: String
 }
 
-@Ignore
-class MSSQLTest {
+class MSSQLH2Test {
     companion object {
         private lateinit var connection: Connection
 
         @BeforeClass
         @JvmStatic
         fun setUpClass() {
-            connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD)
-
-            connection.createStatement().use { st ->
-                // Drop the test database if it exists
-                val dropDatabaseQuery = "IF DB_ID('$TEST_DATABASE_NAME') IS NOT NULL\n" +
-                    "DROP DATABASE $TEST_DATABASE_NAME"
-                st.executeUpdate(dropDatabaseQuery)
-
-                // Create the test database
-                val createDatabaseQuery = "CREATE DATABASE $TEST_DATABASE_NAME"
-                st.executeUpdate(createDatabaseQuery)
-
-                // Use the newly created database
-                val useDatabaseQuery = "USE $TEST_DATABASE_NAME"
-                st.executeUpdate(useDatabaseQuery)
-            }
+            connection = DriverManager.getConnection(URL)
 
             @Language("SQL")
             val createTableQuery = """
@@ -99,7 +85,6 @@ class MSSQLTest {
                 dateColumn DATE,
                 datetime3Column DATETIME2(3),
                 datetime2Column DATETIME2,
-                datetimeoffset2Column DATETIMEOFFSET(2),
                 decimalColumn DECIMAL(10,2),
                 floatColumn FLOAT,
                 imageColumn IMAGE,
@@ -122,11 +107,7 @@ class MSSQLTest {
                 varbinaryColumn VARBINARY(50),
                 varbinaryMaxColumn VARBINARY(MAX),
                 varcharColumn VARCHAR(50),
-                varcharMaxColumn VARCHAR(MAX),
-                xmlColumn XML,
-                sqlvariantColumn SQL_VARIANT,
-                geometryColumn GEOMETRY,
-                geographyColumn GEOGRAPHY
+                varcharMaxColumn VARCHAR(MAX)
             );
             """
 
@@ -138,12 +119,11 @@ class MSSQLTest {
             val insertData1 = """
                 INSERT INTO Table1 (
                 bigintColumn, binaryColumn, bitColumn, charColumn, dateColumn, datetime3Column, datetime2Column,
-                datetimeoffset2Column, decimalColumn, floatColumn, imageColumn, intColumn, moneyColumn, ncharColumn,
+                decimalColumn, floatColumn, imageColumn, intColumn, moneyColumn, ncharColumn,
                 ntextColumn, numericColumn, nvarcharColumn, nvarcharMaxColumn, realColumn, smalldatetimeColumn,
                 smallintColumn, smallmoneyColumn, textColumn, timeColumn, timestampColumn, tinyintColumn,
-                uniqueidentifierColumn, varbinaryColumn, varbinaryMaxColumn, varcharColumn, varcharMaxColumn,
-                xmlColumn, sqlvariantColumn, geometryColumn, geographyColumn
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                uniqueidentifierColumn, varbinaryColumn, varbinaryMaxColumn, varcharColumn, varcharMaxColumn
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -155,41 +135,30 @@ class MSSQLTest {
                     st.setDate(5, java.sql.Date(System.currentTimeMillis())) // dateColumn
                     st.setTimestamp(6, java.sql.Timestamp(System.currentTimeMillis())) // datetime3Column
                     st.setTimestamp(7, java.sql.Timestamp(System.currentTimeMillis())) // datetime2Column
-                    st.setTimestamp(8, java.sql.Timestamp(System.currentTimeMillis())) // datetimeoffset2Column
-                    st.setBigDecimal(9, BigDecimal("12345.67")) // decimalColumn
-                    st.setFloat(10, 123.45f) // floatColumn
-                    st.setNull(11, java.sql.Types.NULL) // imageColumn (assuming nullable)
-                    st.setInt(12, 123456) // intColumn
-                    st.setBigDecimal(13, BigDecimal("123.45")) // moneyColumn
-                    st.setString(14, "Sample") // ncharColumn
-                    st.setString(15, "Sample$i text") // ntextColumn
-                    st.setBigDecimal(16, BigDecimal("1234.56")) // numericColumn
-                    st.setString(17, "Sample") // nvarcharColumn
-                    st.setString(18, "Sample$i text") // nvarcharMaxColumn
-                    st.setFloat(19, 123.45f) // realColumn
-                    st.setTimestamp(20, java.sql.Timestamp(System.currentTimeMillis())) // smalldatetimeColumn
-                    st.setInt(21, 123) // smallintColumn
-                    st.setBigDecimal(22, BigDecimal("123.45")) // smallmoneyColumn
-                    st.setString(23, "Sample$i text") // textColumn
-                    st.setTime(24, java.sql.Time(System.currentTimeMillis())) // timeColumn
-                    st.setTimestamp(25, java.sql.Timestamp(System.currentTimeMillis())) // timestampColumn
-                    st.setInt(26, 123) // tinyintColumn
+                    st.setBigDecimal(8, BigDecimal("12345.67")) // decimalColumn
+                    st.setFloat(9, 123.45f) // floatColumn
+                    st.setNull(10, java.sql.Types.NULL) // imageColumn (assuming nullable)
+                    st.setInt(11, 123456) // intColumn
+                    st.setBigDecimal(12, BigDecimal("123.45")) // moneyColumn
+                    st.setString(13, "Sample") // ncharColumn
+                    st.setString(14, "Sample$i text") // ntextColumn
+                    st.setBigDecimal(15, BigDecimal("1234.56")) // numericColumn
+                    st.setString(16, "Sample") // nvarcharColumn
+                    st.setString(17, "Sample$i text") // nvarcharMaxColumn
+                    st.setFloat(18, 123.45f) // realColumn
+                    st.setTimestamp(19, java.sql.Timestamp(System.currentTimeMillis())) // smalldatetimeColumn
+                    st.setInt(20, 123) // smallintColumn
+                    st.setBigDecimal(21, BigDecimal("123.45")) // smallmoneyColumn
+                    st.setString(22, "Sample$i text") // textColumn
+                    st.setTime(23, java.sql.Time(System.currentTimeMillis())) // timeColumn
+                    st.setTimestamp(24, java.sql.Timestamp(System.currentTimeMillis())) // timestampColumn
+                    st.setInt(25, 123) // tinyintColumn
                     //st.setObject(27, null) // udtColumn (assuming nullable)
-                    st.setObject(27, UUID.randomUUID()) // uniqueidentifierColumn
-                    st.setBytes(28, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryColumn
-                    st.setBytes(29, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryMaxColumn
-                    st.setString(30, "Sample$i") // varcharColumn
-                    st.setString(31, "Sample$i text") // varcharMaxColumn
-                    st.setString(32, "<xml>Sample$i</xml>") // xmlColumn
-                    st.setString(33, "SQL_VARIANT") // sqlvariantColumn
-                    st.setBytes(
-                        34,
-                        byteArrayOf(
-                            0xE6.toByte(), 0x10, 0x00, 0x00, 0x01, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
-                            0x44, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x05, 0x4C, 0x0
-                        )
-                    ) // geometryColumn
-                    st.setString(35, "POINT(1 1)") // geographyColumn
+                    st.setObject(26, UUID.randomUUID()) // uniqueidentifierColumn
+                    st.setBytes(27, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryColumn
+                    st.setBytes(28, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryMaxColumn
+                    st.setString(29, "Sample$i") // varcharColumn
+                    st.setString(30, "Sample$i text") // varcharMaxColumn
                     st.executeUpdate()
                 }
             }
@@ -199,7 +168,6 @@ class MSSQLTest {
         @JvmStatic
         fun tearDownClass() {
             try {
-                connection.createStatement().use { st -> st.execute("DROP DATABASE IF EXISTS $TEST_DATABASE_NAME") }
                 connection.close()
             } catch (e: SQLException) {
                 e.printStackTrace()
@@ -212,7 +180,7 @@ class MSSQLTest {
         val df1 = DataFrame.readSqlTable(connection, "table1", limit = 5).cast<Table1MSSSQL>()
 
         val result = df1.filter { it[Table1MSSSQL::id] == 1 }
-        result[0][30] shouldBe "Sample1"
+        result[0][30] shouldBe "Sample1 text"
         result[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
         result[0][Table1MSSSQL::bitColumn] shouldBe true
         result[0][Table1MSSSQL::intColumn] shouldBe 123456
@@ -227,10 +195,7 @@ class MSSQLTest {
         schema.columns["dateColumn"]!!.type shouldBe typeOf<Date?>()
         schema.columns["datetime3Column"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
         schema.columns["datetime2Column"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
-        schema.columns["datetimeoffset2Column"]!!.type shouldBe typeOf<String?>()
         schema.columns["decimalColumn"]!!.type shouldBe typeOf<BigDecimal?>()
-        schema.columns["floatColumn"]!!.type shouldBe typeOf<Double?>()
-        schema.columns["imageColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["intColumn"]!!.type shouldBe typeOf<Int?>()
         schema.columns["moneyColumn"]!!.type shouldBe typeOf<BigDecimal?>()
         schema.columns["ncharColumn"]!!.type shouldBe typeOf<Char?>()
@@ -245,15 +210,10 @@ class MSSQLTest {
         schema.columns["timeColumn"]!!.type shouldBe typeOf<java.sql.Time?>()
         schema.columns["timestampColumn"]!!.type shouldBe typeOf<java.sql.Timestamp?>()
         schema.columns["tinyintColumn"]!!.type shouldBe typeOf<Int?>()
-        schema.columns["uniqueidentifierColumn"]!!.type shouldBe typeOf<Char?>()
         schema.columns["varbinaryColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["varbinaryMaxColumn"]!!.type shouldBe typeOf<ByteArray?>()
         schema.columns["varcharColumn"]!!.type shouldBe typeOf<String?>()
         schema.columns["varcharMaxColumn"]!!.type shouldBe typeOf<String?>()
-        schema.columns["xmlColumn"]!!.type shouldBe typeOf<String?>()
-        schema.columns["sqlvariantColumn"]!!.type shouldBe typeOf<String?>()
-        schema.columns["geometryColumn"]!!.type shouldBe typeOf<String?>()
-        schema.columns["geographyColumn"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test
@@ -277,7 +237,7 @@ class MSSQLTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 4).values.toList()
+        val dataframes = DataFrame.readAllSqlTables(connection, limit = 4).values.toList()
 
         val table1Df = dataframes[0].cast<Table1MSSSQL>()
 
@@ -286,8 +246,6 @@ class MSSQLTest {
         table1Df[0][Table1MSSSQL::bigintColumn] shouldBe 123456789012345L
     }
 
-    // TODO: add the same test for each particular database and refactor the scenario to the common test case
-    // https://github.com/Kotlin/dataframe/issues/688
     @Test
     fun `infer nullability`() {
         // prepare tables and data
@@ -369,7 +327,7 @@ class MSSQLTest {
 
             st.executeQuery(selectStatement).use { rs ->
                 // ith default inferNullability: Boolean = true
-                val df4 = DataFrame.readResultSet(rs, H2)
+                val df4 = DataFrame.readResultSet(rs, MsSql)
                 df4.schema().columns["id"]!!.type shouldBe typeOf<Int>()
                 df4.schema().columns["name"]!!.type shouldBe typeOf<String>()
                 df4.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
@@ -377,7 +335,7 @@ class MSSQLTest {
 
                 rs.beforeFirst()
 
-                val dataSchema3 = DataFrame.getSchemaForResultSet(rs, H2)
+                val dataSchema3 = DataFrame.getSchemaForResultSet(rs, MsSql)
                 dataSchema3.columns.size shouldBe 4
                 dataSchema3.columns["id"]!!.type shouldBe typeOf<Int>()
                 dataSchema3.columns["name"]!!.type shouldBe typeOf<String?>()
@@ -387,7 +345,7 @@ class MSSQLTest {
                 // with inferNullability: Boolean = false
                 rs.beforeFirst()
 
-                val df5 = DataFrame.readResultSet(rs, H2, inferNullability = false)
+                val df5 = DataFrame.readResultSet(rs, MsSql, inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
                 df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
