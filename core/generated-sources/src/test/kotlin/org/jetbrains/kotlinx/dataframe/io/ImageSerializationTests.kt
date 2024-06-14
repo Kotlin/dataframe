@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
@@ -35,7 +37,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
             return
         }
 
-        val decodedImages = decodeImagesFromJson(json, images.size, encodingOptions!!)
+        val decodedImages = decodeImagesFromJson(json, images.size, encodingOptions)
 
         for ((decodedImage, original) in decodedImages.zip(images)) {
             val expectedImage = resizeIfNeeded(original, encodingOptions)
@@ -67,8 +69,8 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
 
     private fun checkImagesEncodedAsToString(json: JsonObject, numImgs: Int) {
         for (i in 0..<numImgs) {
-            val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[i] as JsonObject
-            val img = row["imgs"] as String
+            val row = json[KOTLIN_DATAFRAME]!!.jsonArray[i].jsonObject
+            val img = row["imgs"]?.jsonPrimitive?.content
 
             img shouldContain "BufferedImage"
         }
@@ -81,8 +83,8 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
     ): List<BufferedImage> {
         val result = mutableListOf<BufferedImage>()
         for (i in 0..<imgsNum) {
-            val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[i] as JsonObject
-            val imgString = row["imgs"] as String
+            val row = json[KOTLIN_DATAFRAME]!!.jsonArray[i].jsonObject
+            val imgString = row["imgs"]!!.jsonPrimitive.content
 
             val bytes = decodeBase64Image(imgString, encodingOptions)
             val decodedImage = createImageFromBytes(bytes)
@@ -156,7 +158,8 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         private val DEFAULT = Base64ImageEncodingOptions()
         private val GZIP_ON_RESIZE_OFF = Base64ImageEncodingOptions(options = GZIP_ON)
         private val GZIP_OFF_RESIZE_OFF = Base64ImageEncodingOptions(options = ALL_OFF)
-        private val GZIP_ON_RESIZE_TO_700 = Base64ImageEncodingOptions(imageSizeLimit = 700, options = GZIP_ON or LIMIT_SIZE_ON)
+        private val GZIP_ON_RESIZE_TO_700 =
+            Base64ImageEncodingOptions(imageSizeLimit = 700, options = GZIP_ON or LIMIT_SIZE_ON)
         private val DISABLED = null
 
         @JvmStatic
