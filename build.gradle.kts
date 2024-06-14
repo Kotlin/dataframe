@@ -1,4 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -124,6 +125,8 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
+kotlin.jvmToolchain(11)
+
 allprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
@@ -160,6 +163,9 @@ allprojects {
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set kotlinter config on :${this.name}")
         }
+
+        // set the java toolchain version to 11 for all subprojects for CI stability
+        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(11)
     }
 }
 
