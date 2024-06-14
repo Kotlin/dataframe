@@ -67,7 +67,9 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
-    implementation(libs.klaxon)
+    implementation(libs.serialization.core)
+    implementation(libs.serialization.json)
+
     implementation(libs.fuel)
 
     api(libs.kotlin.datetimeJvm)

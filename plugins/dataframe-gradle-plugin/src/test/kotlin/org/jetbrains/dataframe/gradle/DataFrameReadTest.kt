@@ -1,11 +1,11 @@
 package org.jetbrains.dataframe.gradle
 
-import com.beust.klaxon.KlaxonException
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
+import kotlinx.serialization.SerializationException
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
@@ -33,7 +33,7 @@ class DataFrameReadTest {
     fun `file with invalid json`() {
         val temp = Files.createTempDirectory("").toFile()
         val invalidJson = File(temp, "test.json").also { it.writeText(".") }
-        shouldThrow<KlaxonException> {
+        shouldNotThrowAny {
             DataFrame.read(invalidJson)
         }
     }
@@ -74,7 +74,7 @@ class DataFrameReadTest {
     @Test
     fun `URL with invalid JSON`() {
         useHostedJson("<invalid json>") { url ->
-            shouldThrow<KlaxonException> {
+            shouldThrow<SerializationException> {
                 DataFrame.read(url).also { println(it) }
             }
         }

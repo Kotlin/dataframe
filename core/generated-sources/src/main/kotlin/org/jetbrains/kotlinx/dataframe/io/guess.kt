@@ -208,21 +208,15 @@ internal fun DataFrame.Companion.read(
     formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>(),
 ): ReadAnyFrame {
     if (format != null) return format to format.readDataFrame(stream, header = header)
-    val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
-    try {
-        val readLimit = 10000
-        input.mark(readLimit)
-
+    stream.use { input ->
+        val byteArray = input.readBytes() // read 8192 bytes
         formats.sortedBy { it.testOrder }.forEach {
             try {
-                input.reset()
-                return it to it.readDataFrame(input, header = header)
-            } catch (e: Exception) {
+                return it to it.readDataFrame(byteArray.inputStream(), header = header)
+            } catch (_: Exception) {
             }
         }
         throw IllegalArgumentException("Unknown stream format; Tried $formats")
-    } finally {
-        input.doClose()
     }
 }
 

@@ -15,7 +15,7 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(serialization)
+        alias(serialization) apply false
         alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
@@ -71,8 +71,6 @@ fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    // 5.6 requires Java 11
-    libs.klaxon.get().name,
     // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
     libs.plugins.kover.get().pluginId,
     // TODO Updating requires major changes all across the project, https://github.com/Kotlin/dataframe/issues/364

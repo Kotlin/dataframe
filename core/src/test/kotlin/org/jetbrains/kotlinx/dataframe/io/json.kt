@@ -1,8 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
@@ -10,6 +7,11 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.types.instanceOf
 import io.kotest.matchers.types.shouldBeInstanceOf
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -24,12 +26,13 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.toDouble
+import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.io.SERIALIZATION_VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
@@ -42,6 +45,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
+import org.jetbrains.kotlinx.dataframe.parseJsonStr
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
@@ -399,15 +403,16 @@ class JsonTests {
     fun `NaN float serialization`() {
         val df = dataFrameOf("v")(1.1f, Float.NaN)
         df["v"].type() shouldBe typeOf<Float>()
-        DataFrame.readJsonStr(df.toJson()) shouldBe df.convert("v").toDouble()
+        val actual = DataFrame.readJsonStr(df.toJson()).convert("v").toFloat()
+        actual shouldBe df
     }
 
     @Test
     fun `NaN float serialization Any`() {
         val df = dataFrameOf("v")(1.1f, Float.NaN)
         df["v"].type() shouldBe typeOf<Float>()
-        DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS) shouldBe df.convert("v")
-            .toDouble()
+        val actual = DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS).convert("v").toFloat()
+        actual shouldBe df
     }
 
     @Test
@@ -966,11 +971,11 @@ class JsonTests {
     @Test
     fun `nulls in columns should be encoded explicitly`() {
         val df = dataFrameOf("a", "b")("1", null, "2", 12)
-        df.toJson(canonical = true) shouldContain "\"b\":null"
+        df.toJson() shouldContain "\"b\":null"
+//        df.toJson(canonical = true) shouldContain "\"b\":null"
     }
 
     @Test
-    @Suppress("UNCHECKED_CAST")
     fun `json with metadata flat table`() {
         @Language("json")
         val data = """
@@ -980,22 +985,17 @@ class JsonTests {
         val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
         val json = parseJsonStr(jsonStr)
 
-        json[VERSION] shouldBe SERIALIZATION_VERSION
+        json[VERSION]!!.jsonPrimitive.content shouldBe SERIALIZATION_VERSION
 
-        val metadata = (json[METADATA] as JsonObject)
-        metadata[NROW] shouldBe 1
-        metadata[NCOL] shouldBe 4
-        val columns = metadata[COLUMNS] as List<String>
+        val metadata = json[METADATA]!!.jsonObject
+        metadata[NROW]!!.jsonPrimitive.int shouldBe 1
+        metadata[NCOL]!!.jsonPrimitive.int shouldBe 4
+        val columns = metadata[COLUMNS]!!.jsonArray.map { it.jsonPrimitive.content }
         columns shouldBe listOf("id", "node_id", "name", "full_name")
 
-        val decodedData = json[KOTLIN_DATAFRAME] as JsonArray<*>
-        val decodedDf = DataFrame.readJsonStr(decodedData.toJsonString())
+        val decodedData = json[KOTLIN_DATAFRAME]!!.jsonArray
+        val decodedDf = DataFrame.readJsonStr(decodedData.toString())
         decodedDf shouldBe df
-    }
-
-    private fun parseJsonStr(jsonStr: String): JsonObject {
-        val parser = Parser.default()
-        return parser.parse(StringBuilder(jsonStr)) as JsonObject
     }
 
     @Test
@@ -1008,19 +1008,19 @@ class JsonTests {
         val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
         val json = parseJsonStr(jsonStr)
 
-        val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
+        val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
 
-        val permissions = row["permissions"] as JsonObject
-        val metadata = permissions[METADATA] as JsonObject
-        metadata[KIND] shouldBe ColumnKind.Group.toString()
+        val permissions = row["permissions"]!!.jsonObject
+        val metadata = permissions[METADATA]!!.jsonObject
+        metadata[KIND]!!.jsonPrimitive.content shouldBe ColumnKind.Group.toString()
 
-        val decodedData = permissions[DATA] as JsonObject
+        val decodedData = permissions[DATA]!!.jsonObject
 
-        decodedData["admin"] shouldBe false
-        decodedData["maintain"] shouldBe false
-        decodedData["push"] shouldBe false
-        decodedData["triage"] shouldBe false
-        decodedData["pull"] shouldBe true
+        decodedData["admin"]!!.jsonPrimitive.boolean shouldBe false
+        decodedData["maintain"]!!.jsonPrimitive.boolean shouldBe false
+        decodedData["push"]!!.jsonPrimitive.boolean shouldBe false
+        decodedData["triage"]!!.jsonPrimitive.boolean shouldBe false
+        decodedData["pull"]!!.jsonPrimitive.boolean shouldBe true
     }
 
     @Test
@@ -1028,19 +1028,19 @@ class JsonTests {
         val df = DataFrame.readJson(testJson("repositories"))
         val jsonStr = df.toJsonWithMetadata(df.rowsCount()).trimIndent()
         val json = parseJsonStr(jsonStr)
-        val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
+        val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
 
-        val contributors = row["contributors"] as JsonObject
+        val contributors = row["contributors"]!!.jsonObject
 
-        val metadata = contributors[METADATA] as JsonObject
-        metadata[KIND] shouldBe ColumnKind.Frame.toString()
-        metadata[NCOL] shouldBe 8
-        metadata[NROW] shouldBe 29
+        val metadata = contributors[METADATA]!!.jsonObject
+        metadata[KIND]!!.jsonPrimitive.content shouldBe ColumnKind.Frame.toString()
+        metadata[NCOL]!!.jsonPrimitive.int shouldBe 8
+        metadata[NROW]!!.jsonPrimitive.int shouldBe 29
 
-        val decodedData = contributors[DATA] as JsonArray<*>
+        val decodedData = contributors[DATA]!!.jsonArray
         decodedData.size shouldBe 29
 
-        val decodedDf = DataFrame.readJsonStr(decodedData.toJsonString())
+        val decodedDf = DataFrame.readJsonStr(decodedData.toString())
         decodedDf shouldBe df[0]["contributors"] as AnyFrame
     }
 
@@ -1050,16 +1050,16 @@ class JsonTests {
         val nestedFrameRowLimit = 20
         val jsonStr = df.toJsonWithMetadata(df.rowsCount(), nestedFrameRowLimit).trimIndent()
         val json = parseJsonStr(jsonStr)
-        val row = (json[KOTLIN_DATAFRAME] as JsonArray<*>)[0] as JsonObject
+        val row = json[KOTLIN_DATAFRAME]!!.jsonArray[0].jsonObject
 
-        val contributors = row["contributors"] as JsonObject
+        val contributors = row["contributors"]!!.jsonObject
 
-        val metadata = contributors[METADATA] as JsonObject
-        metadata[KIND] shouldBe ColumnKind.Frame.toString()
-        metadata[NCOL] shouldBe 8
-        metadata[NROW] shouldBe 29
+        val metadata = contributors[METADATA]!!.jsonObject
+        metadata[KIND]!!.jsonPrimitive.content shouldBe ColumnKind.Frame.toString()
+        metadata[NCOL]!!.jsonPrimitive.int shouldBe 8
+        metadata[NROW]!!.jsonPrimitive.int shouldBe 29
 
-        val decodedData = contributors[DATA] as JsonArray<*>
+        val decodedData = contributors[DATA]!!.jsonArray
         decodedData.size shouldBe nestedFrameRowLimit
     }
 

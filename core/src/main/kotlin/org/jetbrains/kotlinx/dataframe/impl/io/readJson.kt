@@ -1,7 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.impl.io
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.float
+import kotlinx.serialization.json.floatOrNull
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.long
+import kotlinx.serialization.json.longOrNull
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -73,8 +86,8 @@ internal fun readJson(
     val df: AnyFrame = when (typeClashTactic) {
         ARRAY_AND_VALUE_COLUMNS -> {
             when (parsed) {
-                is JsonArray<*> -> fromJsonListArrayAndValueColumns(
-                    records = parsed.value,
+                is JsonArray -> fromJsonListArrayAndValueColumns(
+                    records = parsed,
                     header = header,
                     keyValuePaths = keyValuePaths,
                 )
@@ -88,8 +101,8 @@ internal fun readJson(
 
         ANY_COLUMNS -> {
             when (parsed) {
-                is JsonArray<*> -> fromJsonListAnyColumns(
-                    records = parsed.value,
+                is JsonArray -> fromJsonListAnyColumns(
+                    records = parsed,
                     header = header,
                     keyValuePaths = keyValuePaths,
                 )
@@ -126,18 +139,16 @@ internal fun fromJsonListAnyColumns(
 
     // list element type can be JsonObject, JsonArray or primitive
     val nameGenerator = ColumnNameGenerator()
-    records.forEach {
-        when (it) {
+    records.forEach { record ->
+        when (record) {
             is JsonObject -> {
                 hasObject = true
-                it.entries.forEach {
-                    nameGenerator.addIfAbsent(it.key)
-                }
+                record.entries.forEach { nameGenerator.addIfAbsent(it.key) }
             }
 
-            is JsonArray<*> -> hasArray = true
-            null -> Unit
-            else -> hasPrimitive = true
+            is JsonArray -> hasArray = true
+            is JsonNull, null -> Unit
+            is JsonPrimitive -> hasPrimitive = true
         }
     }
 
@@ -177,7 +188,7 @@ internal fun fromJsonListAnyColumns(
                         )
                     }
 
-                    is JsonArray<*> -> {
+                    is JsonArray -> {
                         val parsed = fromJsonListAnyColumns(
                             records = v,
                             keyValuePaths = keyValuePaths,
@@ -189,9 +200,22 @@ internal fun fromJsonListAnyColumns(
                         )
                     }
 
-                    "NaN" -> {
-                        nanIndices.add(i)
-                        collector.add(null)
+                    is JsonNull -> collector.add(null)
+
+                    is JsonPrimitive -> {
+                        when {
+                            v.content == "NaN" -> {
+                                nanIndices.add(i)
+                                collector.add(null)
+                            }
+
+                            v.isString -> collector.add(v.content)
+                            v.booleanOrNull != null -> collector.add(v.boolean)
+                            v.intOrNull != null -> collector.add(v.int)
+                            v.longOrNull != null -> collector.add(v.long)
+                            v.doubleOrNull != null -> collector.add(v.double)
+                            v.floatOrNull != null -> collector.add(v.float)
+                        }
                     }
 
                     else -> collector.add(v)
@@ -227,8 +251,8 @@ internal fun fromJsonListAnyColumns(
             records.forEach {
                 startIndices.add(values.size)
                 when (it) {
-                    is JsonArray<*> -> values.addAll(it.value)
-                    null -> Unit
+                    is JsonArray -> values.addAll(it)
+                    is JsonNull, null -> Unit
                     else -> error("Expected JsonArray, got $it")
                 }
             }
@@ -242,10 +266,10 @@ internal fun fromJsonListAnyColumns(
                 parsed.isSingleUnnamedColumn() -> {
                     val col = (parsed.getColumn(0) as UnnamedColumn).col
                     val elementType = col.type
-                    val values = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
+                    val columnValues = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
                     DataColumn.createValueColumn(
                         name = arrayColumnName,
-                        values = values,
+                        values = columnValues,
                         type = List::class.createType(listOf(KTypeProjection.invariant(elementType))),
                     )
                 }
@@ -263,10 +287,10 @@ internal fun fromJsonListAnyColumns(
         colType == AnyColType.OBJECTS && isKeyValue -> {
             // collect the value types to make sure Value columns with lists and other values aren't all turned into lists
             val valueTypes = mutableSetOf<KType>()
-            val dataFrames = records.map {
-                when (it) {
+            val dataFrames = records.map { record ->
+                when (record) {
                     is JsonObject -> {
-                        val map = it.map.mapValues { (key, value) ->
+                        val map = record.mapValues { (key, value) ->
                             val parsed = fromJsonListAnyColumns(
                                 records = listOf(value),
                                 keyValuePaths = keyValuePaths,
@@ -288,8 +312,8 @@ internal fun fromJsonListAnyColumns(
                         )
                     }
 
-                    null -> DataFrame.emptyOf<AnyKeyValueProperty>()
-                    else -> error("Expected JsonObject, got $it")
+                    is JsonNull, null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+                    else -> error("Expected JsonObject, got $record")
                 }
             }
 
@@ -328,7 +352,7 @@ internal fun fromJsonListAnyColumns(
                 records.forEach {
                     when (it) {
                         is JsonObject -> values.add(it[colName])
-                        null -> values.add(null)
+                        is JsonNull, null -> values.add(null)
                         else -> error("Expected JsonObject, got $it")
                     }
                 }
@@ -401,18 +425,18 @@ internal fun fromJsonListArrayAndValueColumns(
     // { "array": [], "value": 123, "a": null, "b": null }
 
     val nameGenerator = ColumnNameGenerator()
-    records.forEach {
-        when (it) {
-            is JsonObject -> it.entries.forEach {
+    records.forEach { record ->
+        when (record) {
+            is JsonObject -> record.entries.forEach {
                 nameGenerator.addIfAbsent(it.key)
             }
 
-            is JsonArray<*> -> hasArray = true
-            null -> Unit
-            else -> hasPrimitive = true
+            is JsonArray -> hasArray = true
+            is JsonNull, null -> Unit
+            is JsonPrimitive -> hasPrimitive = true
         }
     }
-    if (records.all { it == null }) hasPrimitive = true
+    if (records.all { it == null || it is JsonNull }) hasPrimitive = true
 
     // Add a value column to the collected names if needed
     val valueColumn = if (hasPrimitive || records.isEmpty()) {
@@ -433,10 +457,10 @@ internal fun fromJsonListArrayAndValueColumns(
     val columns: List<AnyCol> = when {
         // instead of using the names, generate a single key/value frame column
         isKeyValue -> {
-            val dataFrames = records.map {
-                when (it) {
+            val dataFrames = records.map { record ->
+                when (record) {
                     is JsonObject -> {
-                        val map = it.map.mapValues { (key, value) ->
+                        val map = record.mapValues { (key, value) ->
                             val parsed = fromJsonListArrayAndValueColumns(
                                 records = listOf(value),
                                 keyValuePaths = keyValuePaths,
@@ -459,8 +483,8 @@ internal fun fromJsonListArrayAndValueColumns(
                         )
                     }
 
-                    null -> DataFrame.emptyOf<AnyKeyValueProperty>()
-                    else -> error("Expected JsonObject, got $it")
+                    is JsonNull, null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+                    else -> error("Expected JsonObject, got $record")
                 }
             }
 
@@ -488,10 +512,22 @@ internal fun fromJsonListArrayAndValueColumns(
                         records.forEachIndexed { i, v ->
                             when (v) {
                                 is JsonObject -> collector.add(null)
-                                is JsonArray<*> -> collector.add(null)
-                                "NaN" -> {
-                                    nanIndices.add(i)
-                                    collector.add(null)
+                                is JsonArray -> collector.add(null)
+                                is JsonNull -> collector.add(null)
+                                is JsonPrimitive -> {
+                                    when {
+                                        v.content == "NaN" -> {
+                                            nanIndices.add(i)
+                                            collector.add(null)
+                                        }
+
+                                        v.isString -> collector.add(v.content)
+                                        v.booleanOrNull != null -> collector.add(v.boolean)
+                                        v.intOrNull != null -> collector.add(v.int)
+                                        v.longOrNull != null -> collector.add(v.long)
+                                        v.doubleOrNull != null -> collector.add(v.double)
+                                        v.floatOrNull != null -> collector.add(v.float)
+                                    }
                                 }
 
                                 else -> collector.add(v)
@@ -526,7 +562,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         val startIndices = ArrayList<Int>()
                         records.forEach {
                             startIndices.add(values.size)
-                            if (it is JsonArray<*>) values.addAll(it.value)
+                            if (it is JsonArray) values.addAll(it.jsonArray)
                         }
                         val parsed = fromJsonListArrayAndValueColumns(
                             records = values,
@@ -538,10 +574,11 @@ internal fun fromJsonListArrayAndValueColumns(
                             parsed.isSingleUnnamedColumn() -> {
                                 val col = (parsed.getColumn(0) as UnnamedColumn).col
                                 val elementType = col.type
-                                val values = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
+                                val columnValues =
+                                    col.values.asList().splitByIndices(startIndices.asSequence()).toList()
                                 DataColumn.createValueColumn(
                                     name = colName,
-                                    values = values,
+                                    values = columnValues,
                                     type = List::class.createType(listOf(KTypeProjection.invariant(elementType))),
                                 )
                             }

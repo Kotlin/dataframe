@@ -26,7 +26,7 @@ kover = "0.6.1"
 
 commonsCsv = "1.10.0"
 commonsCompress = "1.26.0"
-klaxon = "5.5" # 5.6 requires Java 11
+serialization = "1.7.0"
 fuel = "2.3.1"
 poi = "5.2.5"
 mariadb = "3.3.2"
@@ -72,7 +72,10 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", vers
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
-klaxon = { group = "com.beust", name = "klaxon", version.ref = "klaxon" }
+# Serialization
+serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
+serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+
 fuel = { group = "com.github.kittinunf.fuel", name = "fuel", version.ref = "fuel" }
 poi = { group = "org.apache.poi", name = "poi", version.ref = "poi" }
 mariadb = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
