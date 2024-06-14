@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.InfixName
 import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.Name
@@ -210,6 +211,7 @@ public interface AndColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] that contains all the columns from the [ColumnsResolvers][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver] on the left
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
+    @Interpretable("And0")
     public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
 
     /** ## And Operator

@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
+import org.jetbrains.kotlinx.dataframe.annotations.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -40,12 +41,14 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
+@Interpretable("Convert0")
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> =
     Convert(this, columns)
 
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> =
     convert { columns.toColumnSet() }
 
+@Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
@@ -67,6 +70,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
 ): DataFrame<T> =
     convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@Interpretable("Convert6")
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
@@ -81,28 +85,37 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(crossinline expressio
         else expression(this, it)
     }
 
+@HasSchema(schemaArg = 0)
 public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
+    @Interpretable("To0")
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 }
 
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
+public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
+    df.replace(columns).with { columnConverter(df, it) }
+
+@Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
     noinline rowConverter: RowValueExpression<T, C, R>,
 ): DataFrame<T> =
     withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
+@Refine
+@Interpretable("With0")
+public inline fun <T, C, reified R> Convert<T, C>.with(
+    noinline rowConverter: RowValueExpression<T, C, R>
+): DataFrame<T> = with(Infer.Nulls, rowConverter)
+
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     infer: Infer = Infer.Nulls,
     noinline expression: RowColumnExpression<T, C, R>,
 ): DataFrame<T> =
     convertRowColumnImpl(typeOf<R>(), infer, expression)
-
-public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
-    df.replace(columns).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 

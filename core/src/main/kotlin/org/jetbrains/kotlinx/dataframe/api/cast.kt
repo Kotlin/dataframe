@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Check
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -22,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import kotlin.reflect.typeOf
 
+@Check
 public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 
 public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(

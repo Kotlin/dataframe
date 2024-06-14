@@ -142,13 +142,13 @@ class ExtensionsGenerator(
         appendLine()
     }
 
-    private fun getFileName(dataSchema: KSClassDeclaration) =
+    private fun getFileName(dataSchema: KSClassDeclaration, suffix: String = "Extensions") =
         if (dataSchema.isTopLevel) {
             val simpleName = dataSchema.simpleName.asString()
-            "$simpleName${'$'}Extensions"
+            "$simpleName${'$'}$suffix"
         } else {
             val fqName = dataSchema.getQualifiedNameOrThrow()
-            "${fqName}${'$'}Extensions"
+            "${fqName}${'$'}$suffix"
         }
 
     private val KSDeclaration.isTopLevel get() = parentDeclaration == null
