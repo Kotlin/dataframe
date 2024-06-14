@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar.ColumnGroupName
@@ -166,6 +168,8 @@ private interface CommonSelectDocs
  *  
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
+@Refine
+@Interpretable("Select0")
 public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> =
     get(columns).toDataFrame().cast()
 

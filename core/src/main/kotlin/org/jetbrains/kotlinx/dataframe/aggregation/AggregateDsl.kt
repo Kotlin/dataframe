@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -12,6 +13,7 @@ import kotlin.reflect.typeOf
 
 public abstract class AggregateDsl<out T> : DataFrame<T>, ColumnSelectionDsl<T> {
 
+    @Interpretable("GroupByInto")
     public inline infix fun <reified R> R.into(name: String): NamedValue = internal().yield(pathOf(name), this, typeOf<R>())
 
     public inline infix fun <reified R> R.into(column: ColumnAccessor<R>): NamedValue = internal().yield(pathOf(column.name()), this, typeOf<R>())

@@ -7,8 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.io.db.DbType
-import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
+import org.jetbrains.kotlinx.dataframe.io.db.*
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.math.BigDecimal
@@ -138,7 +137,7 @@ public fun DataFrame.Companion.readSqlTable(
     inferNullability: Boolean = true,
 ): AnyFrame {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val selectAllQuery = if (limit > 0) dbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
     else "SELECT * FROM $tableName"
@@ -203,8 +202,7 @@ public fun DataFrame.Companion.readSqlQuery(
             "Also it should not contain any separators like `;`."
     }
 
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val internalSqlQuery = if (limit > 0) dbType.sqlQueryLimit(sqlQuery, limit) else sqlQuery
 
@@ -283,8 +281,7 @@ public fun DataFrame.Companion.readResultSet(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
 ): AnyFrame {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     return readResultSet(resultSet, dbType, limit, inferNullability)
 }
@@ -329,8 +326,7 @@ public fun DataFrame.Companion.readAllSqlTables(
     inferNullability: Boolean = true,
 ): Map<String, AnyFrame> {
     val metaData = connection.metaData
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     // exclude a system and other tables without data, but it looks like it is supported badly for many databases
     val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
@@ -390,8 +386,7 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     connection: Connection,
     tableName: String
 ): DataFrameSchema {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val sqlQuery = "SELECT * FROM $tableName"
     val selectFirstRowQuery = dbType.sqlQueryLimit(sqlQuery, limit = 1)
@@ -432,8 +427,7 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
  * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     connection.createStatement().use { st ->
         st.executeQuery(sqlQuery).use { rs ->
@@ -468,8 +462,7 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
 public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, connection: Connection): DataFrameSchema {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val tableColumns = getTableColumnsMetadata(resultSet)
     return buildSchemaByTableColumns(tableColumns, dbType)
@@ -495,8 +488,7 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfig
  */
 public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): Map<String, DataFrameSchema> {
     val metaData = connection.metaData
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val tableTypes = arrayOf("TABLE")
     // exclude a system and other tables without data

@@ -4,9 +4,8 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KType
-import kotlin.reflect.full.createType
 
 /**
  * Represents the MSSQL database type.

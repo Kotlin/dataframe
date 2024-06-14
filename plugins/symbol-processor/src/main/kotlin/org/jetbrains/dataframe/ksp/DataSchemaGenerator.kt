@@ -170,6 +170,7 @@ class DataSchemaGenerator(
             val url = importStatement.dataSource.pathRepresentation
 
             // Force classloading
+            // TODO: probably will not work for the H2
             Class.forName(driverClassNameFromUrl(url))
 
             var userName = importStatement.jdbcOptions.user

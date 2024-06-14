@@ -48,14 +48,10 @@ internal class GroupByImpl<T, G>(
     override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
         df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>
 
-    override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
-
     override fun toString() = df.toString()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
         keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
-
-    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).cast<G>()
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
         val indices = (0 until df.nrow).filter {
@@ -87,7 +83,11 @@ internal fun <T, G, R> aggregateGroupBy(
             val result = body(builder, builder)
             if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) builder.yield(
                 NamedValue.create(
-                    pathOf(defaultAggregateName), result, null, null, true
+                    path = pathOf(defaultAggregateName),
+                    value = result,
+                    type = null,
+                    defaultValue = null,
+                    guessType = true,
                 )
             )
             builder.compute()

@@ -1,15 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import io.kotest.assertions.throwables.shouldNotThrow
-import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
@@ -99,9 +102,9 @@ class RenderingTests : JupyterReplTestCase() {
 
         assertDataFrameDimensions(json, 30, 1)
 
-        val rows = json.array<JsonArray<*>>(KOTLIN_DATAFRAME)!!
-        rows.getObj(0).int("id") shouldBe 21
-        rows.getObj(rows.lastIndex).int("id") shouldBe 50
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
+        rows.getObj(0)["id"]?.jsonPrimitive?.int shouldBe 21
+        rows.getObj(rows.lastIndex)["id"]?.jsonPrimitive?.int shouldBe 50
     }
 
     /**
@@ -116,16 +119,15 @@ class RenderingTests : JupyterReplTestCase() {
     }
 
     private fun assertDataFrameDimensions(json: JsonObject, expectedRows: Int, expectedColumns: Int) {
-        json.obj(METADATA)!!.int("nrow") shouldBe expectedRows
-        json.obj(METADATA)!!.int("ncol") shouldBe expectedColumns
+        json[METADATA]!!.jsonObject["nrow"]!!.jsonPrimitive.int shouldBe expectedRows
+        json[METADATA]!!.jsonObject["ncol"]!!.jsonPrimitive.int shouldBe expectedColumns
     }
 
     private fun parseDataframeJson(result: MimeTypedResult): JsonObject {
-        val parser = Parser.default()
-        return parser.parse(StringBuilder(result["application/kotlindataframe+json"]!!)) as JsonObject
+        return Json.decodeFromString<JsonObject>(result["application/kotlindataframe+json"]!!)
     }
 
-    private fun JsonArray<*>.getObj(index: Int) = this[index] as JsonObject
+    private fun JsonArray.getObj(index: Int) = this[index].jsonObject
 
     @Test
     fun `test kotlin notebook plugin utils sort by one column asc`() {
@@ -143,10 +145,10 @@ class RenderingTests : JupyterReplTestCase() {
 
     @Suppress("UNCHECKED_CAST")
     private fun assertSortedById(json: JsonObject, desc: Boolean) {
-        val rows = json[KOTLIN_DATAFRAME] as JsonArray<JsonObject>
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray as List<JsonObject>
         var previousId = if (desc) 101 else 0
-        rows.forEach { row ->
-            val currentId = row.int("id")!!
+        rows.forEach { row: JsonObject ->
+            val currentId = row["id"]!!.jsonPrimitive.int
             if (desc) currentId shouldBeLessThan previousId else currentId shouldBeGreaterThan previousId
             previousId = currentId
         }
@@ -182,25 +184,25 @@ class RenderingTests : JupyterReplTestCase() {
 
         assertDataFrameDimensions(json, 100, 2)
 
-        val rows = json[KOTLIN_DATAFRAME] as JsonArray<JsonObject>
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray as List<JsonObject>
         assertSortedByCategory(rows)
         assertSortedById(rows)
     }
 
-    private fun assertSortedByCategory(rows: JsonArray<JsonObject>) {
+    private fun assertSortedByCategory(rows: List<JsonObject>) {
         rows.forEachIndexed { i, row ->
-            val currentCategory = row.string("category")
+            val currentCategory = row["category"]!!.jsonPrimitive.content
             if (i < 50) currentCategory shouldBe "odd"
             else currentCategory shouldBe "even"
         }
     }
 
-    private fun assertSortedById(rows: JsonArray<JsonObject>) {
+    private fun assertSortedById(rows: List<JsonObject>) {
         var previousCategory = "odd"
         var previousId = 0
         for (row in rows) {
-            val currentCategory = row.string("category")!!
-            val currentId = row.int("id")!!
+            val currentCategory = row["category"]!!.jsonPrimitive.content
+            val currentId = row["id"]!!.jsonPrimitive.int
 
             if (previousCategory == "odd" && currentCategory == "even") {
                 previousId shouldBeGreaterThan currentId
@@ -226,7 +228,6 @@ class RenderingTests : JupyterReplTestCase() {
                 df.group(col1, col2).into("group")            
             """.trimIndent()
         )
-        val jsonOutput = json.toJsonString(prettyPrint = true)
         val expectedOutput = """
             {
               "${'$'}version": "2.1.0",
@@ -360,7 +361,7 @@ class RenderingTests : JupyterReplTestCase() {
               }]
             }
         """.trimIndent()
-        jsonOutput shouldBe expectedOutput
+        json shouldBe Json.parseToJsonElement(expectedOutput)
     }
 
     @Test
@@ -375,9 +376,9 @@ class RenderingTests : JupyterReplTestCase() {
 
         assertDataFrameDimensions(json, 2, 2)
 
-        val rows = json.array<JsonArray<*>>(KOTLIN_DATAFRAME)!!
-        (rows.getObj(0).obj("group1")!![DATA] as JsonArray<*>).size shouldBe 10
-        (rows.getObj(1).obj("group1")!![DATA] as JsonArray<*>).size shouldBe 10
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
+        rows.getObj(0)["group1"]!!.jsonObject[DATA]!!.jsonArray.size shouldBe 10
+        rows.getObj(1)["group1"]!!.jsonObject[DATA]!!.jsonArray.size shouldBe 10
     }
 
     // Regression KTNB-424

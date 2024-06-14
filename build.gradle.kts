@@ -1,4 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -14,7 +15,7 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(serialization)
+        alias(serialization) apply false
         alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
@@ -52,11 +53,11 @@ dependencies {
     api(project(":dataframe-jdbc"))
 }
 
-private enum class Version : Comparable<Version> {
+enum class Version : Comparable<Version> {
     SNAPSHOT, DEV, ALPHA, BETA, RC, STABLE;
 }
 
-private fun String.findVersion(): Version {
+fun String.findVersion(): Version {
     val version = this.lowercase()
     return when {
         "snapshot" in version -> Version.SNAPSHOT
@@ -70,8 +71,6 @@ private fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    // 5.6 requires Java 11
-    libs.klaxon.get().name,
     // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
     libs.plugins.kover.get().pluginId,
     // TODO Updating requires major changes all across the project, https://github.com/Kotlin/dataframe/issues/364
@@ -124,6 +123,8 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
+kotlin.jvmToolchain(11)
+
 allprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
@@ -160,6 +161,9 @@ allprojects {
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set kotlinter config on :${this.name}")
         }
+
+        // set the java toolchain version to 11 for all subprojects for CI stability
+        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(11)
     }
 }
 

@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -11,6 +13,8 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import kotlin.reflect.KProperty
 
+@Refine
+@Interpretable("Join0")
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
     type: JoinType = JoinType.Inner,
@@ -95,6 +99,7 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
     public val right: DataFrame<B>
 
+    @Interpretable("Match0")
     public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
 
     public infix fun <C> String.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(toColumnOf(), other)

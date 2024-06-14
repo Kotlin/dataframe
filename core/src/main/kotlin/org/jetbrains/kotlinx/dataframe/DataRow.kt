@@ -43,6 +43,17 @@ public interface DataRow<out T> {
         return value as AnyRow
     }
 
+    public fun getFrameColumn(columnName: String): AnyFrame {
+        val value = get(columnName)
+        if (value == null) {
+            val kind = df()[columnName].kind()
+            if (kind != ColumnKind.Frame) {
+                error("Cannot cast null value of a $kind to a ${DataFrame::class}")
+            }
+        }
+        return value as AnyFrame
+    }
+
     public fun getOrNull(name: String): Any?
     public fun <R> getValueOrNull(column: ColumnReference<R>): R?
 
