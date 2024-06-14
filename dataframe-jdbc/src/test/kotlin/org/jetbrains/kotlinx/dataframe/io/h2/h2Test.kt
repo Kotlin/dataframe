@@ -1,13 +1,28 @@
-package org.jetbrains.kotlinx.dataframe.io
+package org.jetbrains.kotlinx.dataframe.io.h2
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
 import org.h2.jdbc.JdbcSQLSyntaxErrorException
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
 import org.jetbrains.kotlinx.dataframe.io.db.H2
+import org.jetbrains.kotlinx.dataframe.io.db.MySql
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readResultSet
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -18,7 +33,7 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
+private const val URL = "jdbc:h2:mem:test5;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false"
 
 @DataSchema
 interface Customer {
@@ -350,7 +365,7 @@ class JdbcTest {
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                val df = DataFrame.readResultSet(rs, H2).cast<Customer>()
+                val df = DataFrame.readResultSet(rs, H2(MySql)).cast<Customer>()
 
                 df.rowsCount() shouldBe 4
                 df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
@@ -358,7 +373,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val df1 = DataFrame.readResultSet(rs, H2, 1).cast<Customer>()
+                val df1 = DataFrame.readResultSet(rs, H2(MySql), 1).cast<Customer>()
 
                 df1.rowsCount() shouldBe 1
                 df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -366,7 +381,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val dataSchema = DataFrame.getSchemaForResultSet(rs, H2)
+                val dataSchema = DataFrame.getSchemaForResultSet(rs, H2(MySql))
                 dataSchema.columns.size shouldBe 3
                 dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
@@ -406,7 +421,7 @@ class JdbcTest {
                 for (i in 1..10) {
                     rs.beforeFirst()
 
-                    val df1 = DataFrame.readResultSet(rs, H2, 2).cast<Customer>()
+                    val df1 = DataFrame.readResultSet(rs, H2(MySql), 2).cast<Customer>()
 
                     df1.rowsCount() shouldBe 2
                     df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -767,7 +782,7 @@ class JdbcTest {
 
             st.executeQuery(selectStatement).use { rs ->
                 // ith default inferNullability: Boolean = true
-                val df4 = DataFrame.readResultSet(rs, H2)
+                val df4 = DataFrame.readResultSet(rs, H2(MySql))
                 df4.schema().columns["id"]!!.type shouldBe typeOf<Int>()
                 df4.schema().columns["name"]!!.type shouldBe typeOf<String>()
                 df4.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
@@ -775,7 +790,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val dataSchema3 = DataFrame.getSchemaForResultSet(rs, H2)
+                val dataSchema3 = DataFrame.getSchemaForResultSet(rs, H2(MySql))
                 dataSchema3.columns.size shouldBe 4
                 dataSchema3.columns["id"]!!.type shouldBe typeOf<Int>()
                 dataSchema3.columns["name"]!!.type shouldBe typeOf<String?>()
@@ -785,7 +800,7 @@ class JdbcTest {
                 // with inferNullability: Boolean = false
                 rs.beforeFirst()
 
-                val df5 = DataFrame.readResultSet(rs, H2, inferNullability = false)
+                val df5 = DataFrame.readResultSet(rs, H2(MySql), inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
                 df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
@@ -795,5 +810,13 @@ class JdbcTest {
         // end testing `readResultSet` method
 
         connection.createStatement().execute("DROP TABLE TestTable1")
+    }
+
+    @Test
+    fun `check require throws exception when specifying H2 database with H2 dialect`() {
+        val exception = shouldThrowExactly<IllegalArgumentException> {
+            H2(H2())
+        }
+        exception.message shouldBe "H2 database could not be specified with H2 dialect!"
     }
 }

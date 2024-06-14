@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.io
+package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
@@ -8,6 +8,11 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Ignore
@@ -18,17 +23,17 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:mysql://localhost:3306"
+private const val URL = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
 
 @DataSchema
-interface Table1MySql {
+interface Table1MariaDb {
     val id: Int
     val bitCol: Boolean
     val tinyintCol: Int
-    val smallintCol: Int
+    val smallintCol: Short?
     val mediumintCol: Int
     val mediumintUnsignedCol: Int
     val integerCol: Int
@@ -56,10 +61,11 @@ interface Table1MySql {
     val longtextCol: String
     val enumCol: String
     val setCol: Char
+    val jsonCol: String
 }
 
 @DataSchema
-interface Table2MySql {
+interface Table2MariaDb {
     val id: Int
     val bitCol: Boolean?
     val tinyintCol: Int?
@@ -95,14 +101,19 @@ interface Table2MySql {
 }
 
 @DataSchema
-interface Table3MySql {
+interface Table3MariaDb {
     val id: Int
     val enumCol: String
     val setCol: Char?
 }
 
+private const val JSON_STRING =
+    "{\"details\": {\"foodType\": \"Pizza\", \"menu\": \"https://www.loumalnatis.com/our-menu\"}, \n" +
+        "     \t\"favorites\": [{\"description\": \"Pepperoni deep dish\", \"price\": 18.75}, \n" +
+        "{\"description\": \"The Lou\", \"price\": 24.75}]}"
+
 @Ignore
-class MySqlTest {
+class MariadbTest {
     companion object {
         private lateinit var connection: Connection
 
@@ -134,7 +145,7 @@ class MySqlTest {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 bitCol BIT NOT NULL,
                 tinyintCol TINYINT NOT NULL,
-                smallintCol SMALLINT NOT NULL,
+                smallintCol SMALLINT,
                 mediumintCol MEDIUMINT NOT NULL,
                 mediumintUnsignedCol MEDIUMINT UNSIGNED NOT NULL,
                 integerCol INTEGER NOT NULL,
@@ -162,12 +173,10 @@ class MySqlTest {
                 longtextCol LONGTEXT NOT NULL,
                 enumCol ENUM('Value1', 'Value2', 'Value3') NOT NULL,
                 setCol SET('Option1', 'Option2', 'Option3') NOT NULL,
-                location GEOMETRY,
-                data JSON
-                CHECK (JSON_VALID(data))
+                jsonCol JSON NOT NULL
+                CHECK (JSON_VALID(jsonCol))
             )
-            """
-
+        """
             connection.createStatement().execute(
                 createTableQuery.trimIndent()
             )
@@ -205,13 +214,9 @@ class MySqlTest {
                 mediumtextCol MEDIUMTEXT,
                 longtextCol LONGTEXT,
                 enumCol ENUM('Value1', 'Value2', 'Value3'),
-                setCol SET('Option1', 'Option2', 'Option3'),
-                location GEOMETRY,
-                data JSON
-                CHECK (JSON_VALID(data))
+                setCol SET('Option1', 'Option2', 'Option3')
             )
             """
-
             connection.createStatement().execute(
                 createTableQuery2.trimIndent()
             )
@@ -222,8 +227,8 @@ class MySqlTest {
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                 integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                 timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
+                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, jsonCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
             @Language("SQL")
@@ -232,8 +237,8 @@ class MySqlTest {
                 bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
                 integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
                 timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
+                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
@@ -269,7 +274,8 @@ class MySqlTest {
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
-                    st.setString(31, "{\"key\": \"value\"}")
+                    st.setString(31, JSON_STRING)
+
                     st.executeUpdate()
                 }
             }
@@ -307,7 +313,6 @@ class MySqlTest {
                     st.setString(28, "longtextValue$i")
                     st.setString(29, "Value$i")
                     st.setString(30, "Option$i")
-                    st.setString(31, "{\"key\": \"value\"}")
                     st.executeUpdate()
                 }
             }
@@ -329,16 +334,16 @@ class MySqlTest {
 
     @Test
     fun `basic test for reading sql tables`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
-        val result = df1.filter { it[Table1MySql::id] == 1 }
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
+        val result = df1.filter { it[Table1MariaDb::id] == 1 }
         result[0][26] shouldBe "textValue1"
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
 
-        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
-        val result2 = df2.filter { it[Table2MySql::id] == 1 }
+        val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MariaDb>()
+        val result2 = df2.filter { it[Table2MariaDb::id] == 1 }
         result2[0][26] shouldBe null
 
         val schema2 = DataFrame.getSchemaForSqlTable(connection, "table2")
@@ -358,8 +363,8 @@ class MySqlTest {
             JOIN table2 t2 ON t1.id = t2.id
         """.trimIndent()
 
-        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>()
-        val result = df.filter { it[Table3MySql::id] == 1 }
+        val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MariaDb>()
+        val result = df.filter { it[Table3MariaDb::id] == 1 }
         result[0][2] shouldBe "Option1"
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
@@ -370,19 +375,20 @@ class MySqlTest {
 
     @Test
     fun `read from all tables`() {
-        val dataframes = DataFrame.readAllSqlTables(connection).values.toList()
+        val dataframes = DataFrame.readAllSqlTables(connection, TEST_DATABASE_NAME, 1000).values.toList()
 
-        val table1Df = dataframes[0].cast<Table1MySql>()
+        val table1Df = dataframes[0].cast<Table1MariaDb>()
 
         table1Df.rowsCount() shouldBe 3
-        table1Df.filter { it[Table1MySql::integerCol] > 100 }.rowsCount() shouldBe 2
+        table1Df.filter { it[Table1MariaDb::integerCol] > 100 }.rowsCount() shouldBe 2
         table1Df[0][11] shouldBe 10.0
         table1Df[0][26] shouldBe "textValue1"
+        table1Df[0][31] shouldBe JSON_STRING // TODO: https://github.com/Kotlin/dataframe/issues/462
 
-        val table2Df = dataframes[1].cast<Table2MySql>()
+        val table2Df = dataframes[1].cast<Table2MariaDb>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2MySql::integerCol] != null && it[Table2MySql::integerCol]!! > 400 }
+        table2Df.filter { it[Table2MariaDb::integerCol] != null && it[Table2MariaDb::integerCol]!! > 400 }
             .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
@@ -390,56 +396,57 @@ class MySqlTest {
 
     @Test
     fun `reading numeric types`() {
-        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
+        val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
 
-        val result = df1.select("tinyintCol").add("tinyintCol2") { it[Table1MySql::tinyintCol] }
+        val result = df1.select("tinyintCol")
+            .add("tinyintCol2") { it[Table1MariaDb::tinyintCol] }
 
-        result[0][1] shouldBe 1.toByte()
+        result[0][1] shouldBe 1
 
         val result1 = df1.select("smallintCol")
-            .add("smallintCol2") { it[Table1MySql::smallintCol] }
+            .add("smallintCol2") { it[Table1MariaDb::smallintCol] }
 
-        result1[0][1] shouldBe 10.toShort()
+        result1[0][1] shouldBe 10
 
         val result2 = df1.select("mediumintCol")
-            .add("mediumintCol2") { it[Table1MySql::mediumintCol] }
+            .add("mediumintCol2") { it[Table1MariaDb::mediumintCol] }
 
         result2[0][1] shouldBe 100
 
         val result3 = df1.select("mediumintUnsignedCol")
-            .add("mediumintUnsignedCol2") { it[Table1MySql::mediumintUnsignedCol] }
+            .add("mediumintUnsignedCol2") { it[Table1MariaDb::mediumintUnsignedCol] }
 
         result3[0][1] shouldBe 100
 
         val result4 = df1.select("integerUnsignedCol")
-            .add("integerUnsignedCol2") { it[Table1MySql::integerUnsignedCol] }
+            .add("integerUnsignedCol2") { it[Table1MariaDb::integerUnsignedCol] }
 
         result4[0][1] shouldBe 100L
 
         val result5 = df1.select("bigintCol")
-            .add("bigintCol2") { it[Table1MySql::bigintCol] }
+            .add("bigintCol2") { it[Table1MariaDb::bigintCol] }
 
         result5[0][1] shouldBe 100
 
         val result6 = df1.select("floatCol")
-            .add("floatCol2") { it[Table1MySql::floatCol] }
+            .add("floatCol2") { it[Table1MariaDb::floatCol] }
 
         result6[0][1] shouldBe 10.0f
 
         val result7 = df1.select("doubleCol")
-            .add("doubleCol2") { it[Table1MySql::doubleCol] }
+            .add("doubleCol2") { it[Table1MariaDb::doubleCol] }
 
         result7[0][1] shouldBe 10.0
 
         val result8 = df1.select("decimalCol")
-            .add("decimalCol2") { it[Table1MySql::decimalCol] }
+            .add("decimalCol2") { it[Table1MariaDb::decimalCol] }
 
         result8[0][1] shouldBe BigDecimal("10")
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
 
         schema.columns["tinyintCol"]!!.type shouldBe typeOf<Int>()
-        schema.columns["smallintCol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["smallintCol"]!!.type shouldBe typeOf<Short?>()
         schema.columns["mediumintCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["mediumintUnsignedCol"]!!.type shouldBe typeOf<Int>()
         schema.columns["integerUnsignedCol"]!!.type shouldBe typeOf<Long>()
@@ -447,10 +454,5 @@ class MySqlTest {
         schema.columns["floatCol"]!!.type shouldBe typeOf<Float>()
         schema.columns["doubleCol"]!!.type shouldBe typeOf<Double>()
         schema.columns["decimalCol"]!!.type shouldBe typeOf<BigDecimal>()
-        // TODO: all unsigned types
-        // TODO: new mapping system based on class names
-        // validation after mapping in getObject
-        // getObject(i+1, type) catch getObject catch getString
-        // add direct mapping to getString and other methods
     }
 }

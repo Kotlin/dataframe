@@ -8,14 +8,13 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.junit.AfterClass
 import org.junit.BeforeClass
-import org.junit.Ignore
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import kotlin.reflect.typeOf
 
-private const val DATABASE_URL = "jdbc:sqlite:"
+private const val DATABASE_URL = "jdbc:sqlite::memory:"
 
 @DataSchema
 interface CustomerSQLite {
@@ -48,7 +47,6 @@ interface CustomerOrderSQLite {
     val orderDetails: ByteArray?
 }
 
-@Ignore
 class SqliteTest {
     companion object {
         private lateinit var connection: Connection
