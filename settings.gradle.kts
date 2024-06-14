@@ -41,3 +41,7 @@ plugins {
 }
 include("dataframe-excel")
 include("core")
+
+if (JavaVersion.current() != JavaVersion.VERSION_11) {
+    throw GradleException("Building this version of the Kotlin DataFrame project can only be done with Java 11.")
+}
