@@ -67,6 +67,9 @@ import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDefault
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDsl
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameFrom
 
 internal fun FirFunctionCall.loadInterpreter(session: FirSession): Interpreter<*>? {
@@ -161,6 +164,9 @@ internal inline fun <reified T> String.load(): T {
         "ReadDelimStr" -> ReadDelimStr()
         "GroupByToDataFrame" -> GroupByToDataFrame()
         "ToDataFrameFrom0" -> ToDataFrameFrom()
+        "toDataFrameDsl" -> ToDataFrameDsl()
+        "toDataFrame" -> ToDataFrame()
+        "toDataFrameDefault" -> ToDataFrameDefault()
         else -> error("$this")
     } as T
 }
