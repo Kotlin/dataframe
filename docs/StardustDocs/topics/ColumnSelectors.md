@@ -25,17 +25,17 @@ df.move { name.firstName and name.lastName }.after { city }
 
 **Definitions**
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"/>
+<dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"/>
 
 <tabs>
     <tab title="Directly in the DSL">
-        <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html"/>
+        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html"/>
 </tab>
     <tab title="On a Column Set">
-        <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"/>
+        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"/>
 </tab>
     <tab title="On a Column Group">
-        <dataFrame src="org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"/>
+        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"/>
 </tab>
 </tabs>
 

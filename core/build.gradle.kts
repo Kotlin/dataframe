@@ -140,7 +140,8 @@ val clearSamplesOutputs by tasks.creating {
 
     doFirst {
         delete {
-            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets")).exclude("**/manual/**")
+            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets"))
+                .exclude("**/manual/**", "**/kdocs/**")
             delete(generatedSnippets)
         }
     }
@@ -188,7 +189,7 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
     exportAsHtml {
-        dir = file("../docs/StardustDocs/snippets")
+        dir = file("../docs/StardustDocs/snippets/kdocs")
     }
     task {
         group = "KDocs"
