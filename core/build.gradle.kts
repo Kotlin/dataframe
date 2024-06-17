@@ -6,7 +6,6 @@ import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
-import xyz.ronella.gradle.plugin.simple.git.OSType
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
@@ -141,7 +140,8 @@ val clearSamplesOutputs by tasks.creating {
 
     doFirst {
         delete {
-            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets")).exclude("**/manual/**")
+            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets"))
+                .exclude("**/manual/**", "**/kdocs/**")
             delete(generatedSnippets)
         }
     }
@@ -170,41 +170,9 @@ tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
 }
 
-// This task installs the pre-commit hook to the local machine the first time the project is built
-// The pre-commit hook contains the command to run processKDocsMain before each commit
-val installGitPreCommitHook by tasks.creating(Copy::class) {
-    doNotTrackState(/* reasonNotToTrackState = */ "Fails on TeamCity otherwise.")
-
-    val gitHooksDir = File(rootProject.rootDir, ".git/hooks")
-    if (gitHooksDir.exists()) {
-        from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
-        into(gitHooksDir)
-        fileMode = 755
-
-        // Workaround for https://github.com/Kotlin/dataframe/issues/612
-        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) doLast {
-            exec {
-                workingDir(gitHooksDir)
-                commandLine("chmod", "755", "pre-commit")
-            }
-        }
-    } else {
-        logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
-    }
-}
-tasks.named("assemble") {
-    dependsOn(installGitPreCommitHook)
-}
-
 // region docPreprocessor
 
-// This task is used to add all generated sources (from processKDocsMain) to git
 val generatedSourcesFolderName = "generated-sources"
-val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
-    directory.set(file("."))
-    command.set("add")
-    args.set(listOf("-A", generatedSourcesFolderName))
-}
 
 // Backup the kotlin source files location
 val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
@@ -221,14 +189,10 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
     exportAsHtml {
-        dir = file("../docs/StardustDocs/snippets")
+        dir = file("../docs/StardustDocs/snippets/kdocs")
     }
     task {
         group = "KDocs"
-        doLast {
-            // ensure generated sources are added to git
-            addGeneratedSourcesToGit.executeCommand()
-        }
     }
 }
 
