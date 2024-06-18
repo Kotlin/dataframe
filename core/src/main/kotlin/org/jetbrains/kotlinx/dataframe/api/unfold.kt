@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.unfoldImpl
 import kotlin.reflect.KProperty
@@ -18,6 +20,8 @@ public inline fun <reified T> DataColumn<T>.unfold(noinline body: CreateDataFram
 public inline fun <T, reified C> ReplaceClause<T, C>.unfold(vararg props: KProperty<*>, maxDepth: Int = 0): DataFrame<T> =
     with { it.unfold(props = props, maxDepth) }
 
+@Refine
+@Interpretable("ReplaceUnfold1")
 public inline fun <T, reified C> ReplaceClause<T, C>.unfold(noinline body: CreateDataFrameDsl<C>.() -> Unit): DataFrame<T> =
     with { it.unfoldImpl(skipPrimitive = false, body) }
 

@@ -67,6 +67,8 @@ import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Replace0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReplaceUnfold1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDefault
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDsl
@@ -167,6 +169,8 @@ internal inline fun <reified T> String.load(): T {
         "toDataFrameDsl" -> ToDataFrameDsl()
         "toDataFrame" -> ToDataFrame()
         "toDataFrameDefault" -> ToDataFrameDefault()
+        "Replace0" -> Replace0()
+        "ReplaceUnfold1" -> ReplaceUnfold1()
         else -> error("$this")
     } as T
 }

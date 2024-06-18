@@ -65,7 +65,15 @@ class ToDataFrameDsl : AbstractSchemaModificationInterpreter() {
     val Arguments.body by dsl()
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val dsl = CreateDataFrameDslImplApproximation()
-        body(dsl, mapOf("explicitReceiver" to Interpreter.Success(receiver)))
+        val receiver = receiver ?: return PluginDataFrameSchema(emptyList())
+        val arg = receiver.resolvedType.typeArguments.firstOrNull() ?: return PluginDataFrameSchema(emptyList())
+        when {
+            arg.isStarProjection -> PluginDataFrameSchema(emptyList())
+            else -> {
+                val classLike = arg.type as? ConeClassLikeType ?: return PluginDataFrameSchema(emptyList())
+                body(dsl, mapOf(Properties0.classExtraArgument to Interpreter.Success(classLike)))
+            }
+        }
         return PluginDataFrameSchema(dsl.columns)
     }
 }
@@ -90,15 +98,19 @@ class ToDataFrameDefault : AbstractSchemaModificationInterpreter() {
 private const val DEFAULT_MAX_DEPTH = 0
 
 class Properties0 : AbstractInterpreter<Unit>() {
+    companion object {
+        const val classExtraArgument = "explicitReceiver"
+    }
+
     val Arguments.dsl: CreateDataFrameDslImplApproximation by arg()
-    val Arguments.explicitReceiver: FirExpression? by arg()
+    val Arguments.coneKotlinType: ConeKotlinType by arg(name = name(classExtraArgument))
     val Arguments.maxDepth: Int by arg()
     val Arguments.body by dsl()
 
     override fun Arguments.interpret() {
         dsl.configuration.maxDepth = maxDepth
         body(dsl.configuration.traverseConfiguration, emptyMap())
-        val schema = toDataFrame(dsl.configuration.maxDepth, explicitReceiver, dsl.configuration.traverseConfiguration)
+        val schema = toDataFrame(dsl.configuration.maxDepth, coneKotlinType, dsl.configuration.traverseConfiguration)
         dsl.columns.addAll(schema.columns())
     }
 }
@@ -154,7 +166,7 @@ class Exclude1 : AbstractInterpreter<Unit>() {
 @OptIn(SymbolInternals::class)
 internal fun KotlinTypeFacade.toDataFrame(
     maxDepth: Int,
-    explicitReceiver: FirExpression?,
+    classLikeType: ConeKotlinType,
     traverseConfiguration: TraverseConfiguration
 ): PluginDataFrameSchema {
     fun ConeKotlinType.isValueType() =
@@ -269,14 +281,21 @@ internal fun KotlinTypeFacade.toDataFrame(
             }
     }
 
+    return PluginDataFrameSchema(convert(classLikeType, 0))
+}
+
+internal fun KotlinTypeFacade.toDataFrame(
+    maxDepth: Int,
+    explicitReceiver: FirExpression?,
+    traverseConfiguration: TraverseConfiguration
+): PluginDataFrameSchema {
     val receiver = explicitReceiver ?: return PluginDataFrameSchema(emptyList())
     val arg = receiver.resolvedType.typeArguments.firstOrNull() ?: return PluginDataFrameSchema(emptyList())
     return when {
         arg.isStarProjection -> PluginDataFrameSchema(emptyList())
         else -> {
             val classLike = arg.type as? ConeClassLikeType ?: return PluginDataFrameSchema(emptyList())
-            val columns = convert(classLike, 0)
-            PluginDataFrameSchema(columns)
+            return toDataFrame(maxDepth, classLike, traverseConfiguration)
         }
     }
 }
