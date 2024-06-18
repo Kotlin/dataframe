@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.junit.Test
 
 class MoveTests {
-
     val columnNames = listOf("q", "a.b", "b.c", "w", "a.c.d", "e.f", "b.d", "r")
     val columns = columnNames.map { emptyList<Int>().toColumn(it) }
     val df = columns.toDataFrame()
@@ -28,17 +27,20 @@ class MoveTests {
 
     @Test
     fun `select all atAnyDepth`() {
-        val selected = grouped
-            .getColumnsWithPaths { colGroups().colsAtAnyDepth { !it.isColumnGroup() } }
-            .map { it.path.joinToString(".") }
+        val selected =
+            grouped
+                .getColumnsWithPaths { colGroups().colsAtAnyDepth { !it.isColumnGroup() } }
+                .map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }
 
     @Test
     fun `batch ungrouping`() {
-        val ungrouped = grouped.move {
-            colsAtAnyDepth { it.depth() > 0 && !it.isColumnGroup() }
-        }.into { pathOf(it.path.joinToString(".")) }
+        val ungrouped =
+            grouped
+                .move {
+                    colsAtAnyDepth { it.depth() > 0 && !it.isColumnGroup() }
+                }.into { pathOf(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
 
@@ -69,18 +71,20 @@ class MoveTests {
 
     @Test
     fun `select recursively`() {
-        val selected = grouped.select {
-            it["a"].asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() }
-        }
+        val selected =
+            grouped.select {
+                it["a"].asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() }
+            }
         selected.columnNames() shouldBe listOf("b", "d")
     }
 
     @Test
     fun `columnsWithPath in selector`() {
         val selected = grouped.getColumnsWithPaths { it["a"] }
-        val actual = grouped.getColumnsWithPaths {
-            selected.map { it.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }.toColumnSet()
-        }
+        val actual =
+            grouped.getColumnsWithPaths {
+                selected.map { it.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }.toColumnSet()
+            }
         actual.map { it.path.joinToString(".") } shouldBe listOf("a.b", "a.c.d")
     }
 

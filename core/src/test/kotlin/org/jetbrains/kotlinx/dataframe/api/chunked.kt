@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.junit.Test
 
 class ChunkedTests {
-
     @Test
     fun chunkedColumnGroup() {
         val a by columnOf(listOf(1, 2, 3).toColumn("b"), listOf(4, 5, 6).toColumn("c"))

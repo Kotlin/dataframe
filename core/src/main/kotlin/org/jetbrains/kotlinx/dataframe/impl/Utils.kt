@@ -33,43 +33,47 @@ import kotlin.reflect.typeOf
 internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> =
     if (this == null) other else { it: T -> this(it) && other(it) }
 
-internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
-    object : Iterator<T> {
+internal fun <T> T.toIterable(getNext: (T) -> T?) =
+    Iterable<T> {
+        object : Iterator<T> {
+            var current: T? = null
+            var beforeStart = true
+            var next: T? = null
 
-        var current: T? = null
-        var beforeStart = true
-        var next: T? = null
+            override fun hasNext(): Boolean {
+                if (beforeStart) return true
+                if (next == null) next = getNext(current!!)
+                return next != null
+            }
 
-        override fun hasNext(): Boolean {
-            if (beforeStart) return true
-            if (next == null) next = getNext(current!!)
-            return next != null
-        }
-
-        override fun next(): T {
-            if (beforeStart) {
-                current = this@toIterable
-                beforeStart = false
+            override fun next(): T {
+                if (beforeStart) {
+                    current = this@toIterable
+                    beforeStart = false
+                    return current!!
+                }
+                current = next ?: getNext(current!!)
+                next = null
                 return current!!
             }
-            current = next ?: getNext(current!!)
-            next = null
-            return current!!
         }
     }
-}
 
 internal fun <T> List<T>.removeAt(index: Int) = subList(0, index) + subList(index + 1, size)
 
 internal inline fun <reified T : Any> Int.cast() = convert(this, T::class)
 
-internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T = when (tartypeOf) {
-    Double::class -> src.toDouble() as T
-    Long::class -> src.toLong() as T
-    Float::class -> src.toFloat() as T
-    BigDecimal::class -> src.toBigDecimal() as T
-    else -> throw NotImplementedError("Casting int to $tartypeOf is not supported")
-}
+internal fun <T : Any> convert(
+    src: Int,
+    tartypeOf: KClass<T>,
+): T =
+    when (tartypeOf) {
+        Double::class -> src.toDouble() as T
+        Long::class -> src.toLong() as T
+        Float::class -> src.toFloat() as T
+        BigDecimal::class -> src.toBigDecimal() as T
+        else -> throw NotImplementedError("Casting int to $tartypeOf is not supported")
+    }
 
 internal fun BooleanArray.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
@@ -106,10 +110,11 @@ internal fun <T> Iterable<T>.rollingHash(): Int {
     return hash
 }
 
-public fun <T> Iterable<T>.asList(): List<T> = when (this) {
-    is List<T> -> this
-    else -> this.toList()
-}
+public fun <T> Iterable<T>.asList(): List<T> =
+    when (this) {
+        is List<T> -> this
+        else -> this.toList()
+    }
 
 @PublishedApi
 internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
@@ -118,27 +123,31 @@ internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
 internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
 
 @PublishedApi
-internal fun <T : Number> KClass<T>.zero(): T = when (this) {
-    Int::class -> 0 as T
-    Byte::class -> 0.toByte() as T
-    Short::class -> 0.toShort() as T
-    Long::class -> 0.toLong() as T
-    Double::class -> 0.toDouble() as T
-    Float::class -> 0.toFloat() as T
-    BigDecimal::class -> BigDecimal.ZERO as T
-    BigInteger::class -> BigInteger.ZERO as T
-    Number::class -> 0 as T
-    else -> TODO()
-}
+internal fun <T : Number> KClass<T>.zero(): T =
+    when (this) {
+        Int::class -> 0 as T
+        Byte::class -> 0.toByte() as T
+        Short::class -> 0.toShort() as T
+        Long::class -> 0.toLong() as T
+        Double::class -> 0.toDouble() as T
+        Float::class -> 0.toFloat() as T
+        BigDecimal::class -> BigDecimal.ZERO as T
+        BigInteger::class -> BigInteger.ZERO as T
+        Number::class -> 0 as T
+        else -> TODO()
+    }
 
-internal fun <T> catchSilent(body: () -> T): T? = try {
-    body()
-} catch (_: Throwable) {
-    null
-}
+internal fun <T> catchSilent(body: () -> T): T? =
+    try {
+        body()
+    } catch (_: Throwable) {
+        null
+    }
 
-internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
-    commonParents(this).createType(nullable, upperBound)
+internal fun Iterable<KClass<*>>.commonType(
+    nullable: Boolean,
+    upperBound: KType? = null,
+) = commonParents(this).createType(nullable, upperBound)
 
 /**
  * Returns the common supertype of the given types.
@@ -158,40 +167,44 @@ internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
 
         else -> {
             // common parent class of all KTypes
-            val kClass = commonParent(distinct.map { it!!.jvmErasure })
-                ?: return typeOf<Any>().withNullability(nullable)
+            val kClass =
+                commonParent(distinct.map { it!!.jvmErasure })
+                    ?: return typeOf<Any>().withNullability(nullable)
 
             // all KTypes projected to the common parent class with filled-in generic type parameters (no <T>, but <UpperBound>)
-            val projections = distinct
-                .map { it!!.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
+            val projections =
+                distinct
+                    .map { it!!.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
             require(projections.all { it.jvmErasure == kClass })
 
             // make new type arguments for the common parent class
-            val arguments = List(kClass.typeParameters.size) { i ->
-                val typeParameter = kClass.typeParameters[i]
-                val projectionTypes = projections
-                    .map { it.arguments[i].type }
-                    .filterNot { it in distinct } // avoid infinite recursion
+            val arguments =
+                List(kClass.typeParameters.size) { i ->
+                    val typeParameter = kClass.typeParameters[i]
+                    val projectionTypes =
+                        projections
+                            .map { it.arguments[i].type }
+                            .filterNot { it in distinct } // avoid infinite recursion
 
-                when {
-                    projectionTypes.isEmpty() && typeParameter.variance == KVariance.IN -> {
-                        if (useStar) {
-                            KTypeProjection.STAR
-                        } else {
-                            KTypeProjection.invariant(nothingType(false))
+                    when {
+                        projectionTypes.isEmpty() && typeParameter.variance == KVariance.IN -> {
+                            if (useStar) {
+                                KTypeProjection.STAR
+                            } else {
+                                KTypeProjection.invariant(nothingType(false))
+                            }
                         }
-                    }
 
-                    else -> {
-                        val commonType = projectionTypes.commonType(useStar)
-                        if (commonType == typeOf<Any?>() && useStar) {
-                            KTypeProjection.STAR
-                        } else {
-                            KTypeProjection(typeParameter.variance, commonType)
+                        else -> {
+                            val commonType = projectionTypes.commonType(useStar)
+                            if (commonType == typeOf<Any?>() && useStar) {
+                                KTypeProjection.STAR
+                            } else {
+                                KTypeProjection(typeParameter.variance, commonType)
+                            }
                         }
                     }
                 }
-            }
             kClass.createType(arguments, nullable)
         }
     }
@@ -260,46 +273,75 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
     return maxIndex
 }
 
-internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType = if (this == Nothing::class) {
-    nothingType(nullable) // would be Void otherwise
-} else {
-    this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
-}
+internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
+    if (this == Nothing::class) {
+        nothingType(nullable) // would be Void otherwise
+    } else {
+        this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+    }
 
 internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
 
 @PublishedApi
-internal fun headPlusArray(head: Byte, cols: ByteArray): ByteArray = byteArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Byte,
+    cols: ByteArray,
+): ByteArray = byteArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Short, cols: ShortArray): ShortArray = shortArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Short,
+    cols: ShortArray,
+): ShortArray = shortArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Int, cols: IntArray): IntArray = intArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Int,
+    cols: IntArray,
+): IntArray = intArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Long, cols: LongArray): LongArray = longArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Long,
+    cols: LongArray,
+): LongArray = longArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Float, cols: FloatArray): FloatArray = floatArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Float,
+    cols: FloatArray,
+): FloatArray = floatArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Double, cols: DoubleArray): DoubleArray = doubleArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Double,
+    cols: DoubleArray,
+): DoubleArray = doubleArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Boolean, cols: BooleanArray): BooleanArray = booleanArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Boolean,
+    cols: BooleanArray,
+): BooleanArray = booleanArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(head: Char, cols: CharArray): CharArray = charArrayOf(head) + cols
+internal fun headPlusArray(
+    head: Char,
+    cols: CharArray,
+): CharArray = charArrayOf(head) + cols
 
 @PublishedApi
-internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
-    (listOf(head) + cols.toList()).toTypedArray()
+internal inline fun <reified C> headPlusArray(
+    head: C,
+    cols: Array<out C>,
+): Array<C> = (listOf(head) + cols.toList()).toTypedArray()
 
 @PublishedApi
-internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iterable<C> =
-    (listOf(head) + cols.asIterable())
+internal inline fun <reified C> headPlusIterable(
+    head: C,
+    cols: Iterable<C>,
+): Iterable<C> = (listOf(head) + cols.asIterable())
 
 internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<DataFrame<T>> =
     (startIndices + nrow).zipWithNext {
@@ -322,8 +364,14 @@ internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<L
     }
 
 internal fun <T> T.asNullable() = this as T?
+
 internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
-internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
+
+internal fun <T : Comparable<T>> T.between(
+    left: T,
+    right: T,
+    includeBoundaries: Boolean = true,
+): Boolean =
     if (includeBoundaries) {
         this in left..right
     } else {
@@ -338,24 +386,26 @@ internal val CAMEL_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
 
 public fun String.toCamelCaseByDelimiters(delimiters: Regex): String = split(delimiters).joinToCamelCaseString()
 
-internal fun String.toSnakeCase(): String = if ("[A-Z_]+".toRegex().matches(this)) {
-    this
-} else {
-    CAMEL_REGEX
-        .replace(this) { "_${it.value}" }
-        .replace(" ", "_")
-        .lowercase()
-}
+internal fun String.toSnakeCase(): String =
+    if ("[A-Z_]+".toRegex().matches(this)) {
+        this
+    } else {
+        CAMEL_REGEX
+            .replace(this) { "_${it.value}" }
+            .replace(" ", "_")
+            .lowercase()
+    }
 
-internal fun List<String>.joinToCamelCaseString(): String = joinToString(separator = "") {
-    it.replaceFirstChar { it.uppercaseChar() }
-}
-    .replaceFirstChar { it.lowercaseChar() }
+internal fun List<String>.joinToCamelCaseString(): String =
+    joinToString(separator = "") {
+        it.replaceFirstChar { it.uppercaseChar() }
+    }.replaceFirstChar { it.lowercaseChar() }
 
 /** @include [KCallable.isGetterLike] */
-internal fun KFunction<*>.isGetterLike(): Boolean = (name.startsWith("get") || name.startsWith("is")) &&
-    valueParameters.isEmpty() &&
-    typeParameters.isEmpty()
+internal fun KFunction<*>.isGetterLike(): Boolean =
+    (name.startsWith("get") || name.startsWith("is")) &&
+        valueParameters.isEmpty() &&
+        typeParameters.isEmpty()
 
 /** @include [KCallable.isGetterLike] */
 internal fun KProperty<*>.isGetterLike(): Boolean = true
@@ -366,20 +416,22 @@ internal fun KProperty<*>.isGetterLike(): Boolean = true
  * A callable is considered getter-like if it is either a property getter,
  * or it's a function with no (type) parameters that starts with "get"/"is".
  */
-internal fun KCallable<*>.isGetterLike(): Boolean = when (this) {
-    is KProperty<*> -> isGetterLike()
-    is KFunction<*> -> isGetterLike()
-    else -> false
-}
+internal fun KCallable<*>.isGetterLike(): Boolean =
+    when (this) {
+        is KProperty<*> -> isGetterLike()
+        is KFunction<*> -> isGetterLike()
+        else -> false
+    }
 
 /** @include [KCallable.columnName] */
 @PublishedApi
 internal val KFunction<*>.columnName: String
-    get() = findAnnotation<ColumnName>()?.name
-        ?: name
-            .removePrefix("get")
-            .removePrefix("is")
-            .replaceFirstChar { it.lowercase() }
+    get() =
+        findAnnotation<ColumnName>()?.name
+            ?: name
+                .removePrefix("get")
+                .removePrefix("is")
+                .replaceFirstChar { it.lowercase() }
 
 /** @include [KCallable.columnName] */
 @PublishedApi
@@ -393,8 +445,9 @@ internal val KProperty<*>.columnName: String
  */
 @PublishedApi
 internal val KCallable<*>.columnName: String
-    get() = when (this) {
-        is KFunction<*> -> columnName
-        is KProperty<*> -> columnName
-        else -> findAnnotation<ColumnName>()?.name ?: name
-    }
+    get() =
+        when (this) {
+            is KFunction<*> -> columnName
+            is KProperty<*> -> columnName
+            else -> findAnnotation<ColumnName>()?.name ?: name
+        }

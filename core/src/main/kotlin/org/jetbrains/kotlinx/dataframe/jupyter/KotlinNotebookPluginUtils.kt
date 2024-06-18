@@ -47,7 +47,11 @@ public object KotlinNotebookPluginUtils {
      * Returns a subset of rows from the given dataframe for rendering.
      * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
      */
-    public fun getRowsSubsetForRendering(dataFrameLike: Any?, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
+    public fun getRowsSubsetForRendering(
+        dataFrameLike: Any?,
+        startIdx: Int,
+        endIdx: Int,
+    ): DisableRowsLimitWrapper =
         when (dataFrameLike) {
             null -> throw IllegalArgumentException("Dataframe is null")
             else -> getRowsSubsetForRendering(convertToDataFrame(dataFrameLike), startIdx, endIdx)
@@ -57,8 +61,11 @@ public object KotlinNotebookPluginUtils {
      * Returns a subset of rows from the given dataframe for rendering.
      * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
      */
-    public fun getRowsSubsetForRendering(df: AnyFrame, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
-        DisableRowsLimitWrapper(df[startIdx..<endIdx])
+    public fun getRowsSubsetForRendering(
+        df: AnyFrame,
+        startIdx: Int,
+        endIdx: Int,
+    ): DisableRowsLimitWrapper = DisableRowsLimitWrapper(df[startIdx..<endIdx])
 
     /**
      * Sorts a dataframe-like object by multiple columns.
@@ -72,7 +79,11 @@ public object KotlinNotebookPluginUtils {
      *
      * @return The sorted dataframe.
      */
-    public fun sortByColumns(dataFrameLike: Any?, columnPaths: List<List<String>>, desc: List<Boolean>): AnyFrame =
+    public fun sortByColumns(
+        dataFrameLike: Any?,
+        columnPaths: List<List<String>>,
+        desc: List<Boolean>,
+    ): AnyFrame =
         when (dataFrameLike) {
             null -> throw IllegalArgumentException("Dataframe is null")
             else -> sortByColumns(convertToDataFrame(dataFrameLike), columnPaths, desc)
@@ -87,18 +98,24 @@ public object KotlinNotebookPluginUtils {
      *        The size of this list must be equal to the size of the columnPaths list.
      * @return The sorted data frame.
      */
-    public fun sortByColumns(df: AnyFrame, columnPaths: List<List<String>>, isDesc: List<Boolean>): AnyFrame =
+    public fun sortByColumns(
+        df: AnyFrame,
+        columnPaths: List<List<String>>,
+        isDesc: List<Boolean>,
+    ): AnyFrame =
         df.sortBy {
             require(columnPaths.all { it.isNotEmpty() })
             require(columnPaths.size == isDesc.size)
 
-            val sortKeys = columnPaths.map { path ->
-                ColumnPath(path)
-            }
+            val sortKeys =
+                columnPaths.map { path ->
+                    ColumnPath(path)
+                }
 
-            (sortKeys zip isDesc).map { (key, desc) ->
-                if (desc) key.desc() else key
-            }.toColumnSet()
+            (sortKeys zip isDesc)
+                .map { (key, desc) ->
+                    if (desc) key.desc() else key
+                }.toColumnSet()
         }
 
     /**
@@ -106,68 +123,72 @@ public object KotlinNotebookPluginUtils {
      * If [dataframeLike] is already [AnyFrame] then it is returned as is.
      * If it's not possible to convert [dataframeLike] to [AnyFrame] then [IllegalArgumentException] is thrown.
      */
-    public fun convertToDataFrame(dataframeLike: Any): AnyFrame = when (dataframeLike) {
-        is Pivot<*> -> dataframeLike.frames().toDataFrame()
+    public fun convertToDataFrame(dataframeLike: Any): AnyFrame =
+        when (dataframeLike) {
+            is Pivot<*> -> dataframeLike.frames().toDataFrame()
 
-        is ReducedGroupBy<*, *> -> dataframeLike.values()
+            is ReducedGroupBy<*, *> -> dataframeLike.values()
 
-        is ReducedPivot<*> -> dataframeLike.values().toDataFrame()
+            is ReducedPivot<*> -> dataframeLike.values().toDataFrame()
 
-        is PivotGroupBy<*> -> dataframeLike.frames()
+            is PivotGroupBy<*> -> dataframeLike.frames()
 
-        is ReducedPivotGroupBy<*> -> dataframeLike.values()
+            is ReducedPivotGroupBy<*> -> dataframeLike.values()
 
-        is SplitWithTransform<*, *, *> -> dataframeLike.into()
+            is SplitWithTransform<*, *, *> -> dataframeLike.into()
 
-        is Split<*, *> -> dataframeLike.toDataFrame()
+            is Split<*, *> -> dataframeLike.toDataFrame()
 
-        is Merge<*, *, *> -> dataframeLike.into(
-            generateRandomVariationOfColumnName(
-                "merged",
-                dataframeLike.df.columnNames(),
-            ),
-        )
+            is Merge<*, *, *> ->
+                dataframeLike.into(
+                    generateRandomVariationOfColumnName(
+                        "merged",
+                        dataframeLike.df.columnNames(),
+                    ),
+                )
 
-        is Gather<*, *, *, *> -> dataframeLike.into(
-            generateRandomVariationOfColumnName("key", dataframeLike.df.columnNames()),
-            generateRandomVariationOfColumnName("value", dataframeLike.df.columnNames()),
-        )
+            is Gather<*, *, *, *> ->
+                dataframeLike.into(
+                    generateRandomVariationOfColumnName("key", dataframeLike.df.columnNames()),
+                    generateRandomVariationOfColumnName("value", dataframeLike.df.columnNames()),
+                )
 
-        is Update<*, *> -> dataframeLike.df
+            is Update<*, *> -> dataframeLike.df
 
-        is Convert<*, *> -> dataframeLike.df
+            is Convert<*, *> -> dataframeLike.df
 
-        is FormattedFrame<*> -> dataframeLike.df
+            is FormattedFrame<*> -> dataframeLike.df
 
-        is AnyCol -> dataFrameOf(dataframeLike)
+            is AnyCol -> dataFrameOf(dataframeLike)
 
-        is AnyRow -> dataframeLike.toDataFrame()
+            is AnyRow -> dataframeLike.toDataFrame()
 
-        is GroupBy<*, *> -> dataframeLike.toDataFrame()
+            is GroupBy<*, *> -> dataframeLike.toDataFrame()
 
-        is AnyFrame -> dataframeLike
+            is AnyFrame -> dataframeLike
 
-        is DisableRowsLimitWrapper -> dataframeLike.value
+            is DisableRowsLimitWrapper -> dataframeLike.value
 
-        is MoveClause<*, *> -> dataframeLike.df
+            is MoveClause<*, *> -> dataframeLike.df
 
-        is RenameClause<*, *> -> dataframeLike.df
+            is RenameClause<*, *> -> dataframeLike.df
 
-        is ReplaceClause<*, *> -> dataframeLike.df
+            is ReplaceClause<*, *> -> dataframeLike.df
 
-        is GroupClause<*, *> -> dataframeLike.into(
-            generateRandomVariationOfColumnName(
-                "untitled",
-                dataframeLike.df.columnNames(),
-            ),
-        )
+            is GroupClause<*, *> ->
+                dataframeLike.into(
+                    generateRandomVariationOfColumnName(
+                        "untitled",
+                        dataframeLike.df.columnNames(),
+                    ),
+                )
 
-        is InsertClause<*> -> dataframeLike.at(0)
+            is InsertClause<*> -> dataframeLike.at(0)
 
-        is FormatClause<*, *> -> dataframeLike.df
+            is FormatClause<*, *> -> dataframeLike.df
 
-        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
-    }
+            else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
+        }
 
     /**
      * Generates a random variation of a column name that is unique among the provided used names.

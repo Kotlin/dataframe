@@ -33,7 +33,9 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .src
+            .get()
             .shouldBe(project.file("build/generated/dataframe/main1/kotlin/"))
     }
 
@@ -68,7 +70,9 @@ class TaskSourceSetPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .src
+            .get()
             .shouldBe(project.file("build/generated/dataframe/main/kotlin/"))
     }
 
@@ -89,7 +93,9 @@ class TaskSourceSetPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .src
+            .get()
             .shouldBe(project.file("build/generated/dataframe/main1/kotlin/"))
     }
 
@@ -131,7 +137,9 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .dataSchema
+            .get()
             .shouldBe(project.file("src/main/kotlin/org/example/my/321.Generated.kt"))
     }
 

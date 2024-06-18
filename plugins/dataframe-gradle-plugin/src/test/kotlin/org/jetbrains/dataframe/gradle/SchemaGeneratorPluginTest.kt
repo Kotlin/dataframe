@@ -81,25 +81,25 @@ internal class SchemaGeneratorPluginTest {
         buildFile.writeText(
             // language=groovy
             """
-                import java.net.URL
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
-                    id "org.jetbrains.kotlinx.dataframe"
-                }
+            import java.net.URL
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
-                repositories {
-                    mavenCentral() 
+            plugins {
+                id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
+                id "org.jetbrains.kotlinx.dataframe"
+            }
+            
+            repositories {
+                mavenCentral() 
+            }
+            
+            dataframes {
+                schema {
+                    data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    name = "Test"
+                    packageName = "org.test"
                 }
-    
-                dataframes {
-                    schema {
-                        data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
-                        name = "Test"
-                        packageName = "org.test"
-                    }
-                }
+            }
             """.trimIndent(),
         )
         val result = gradleRunner(buildDir, ":generateDataFrameTest").build()
@@ -113,26 +113,26 @@ internal class SchemaGeneratorPluginTest {
         buildFile.writeText(
             // language=groovy
             """
-                import java.net.URL
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
-                    id "org.jetbrains.kotlinx.dataframe"
-                }
+            import java.net.URL
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
-                repositories {
-                    mavenCentral() 
+            plugins {
+                id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
+                id "org.jetbrains.kotlinx.dataframe"
+            }
+            
+            repositories {
+                mavenCentral() 
+            }
+            
+            dataframes {
+                schema {
+                    data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    name = "Test"
+                    packageName = "org.test"
+                    withNormalizationBy('-_\t ')
                 }
-    
-                dataframes {
-                    schema {
-                        data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
-                        name = "Test"
-                        packageName = "org.test"
-                        withNormalizationBy('-_\t ')
-                    }
-                }
+            }
             """.trimIndent(),
         )
         val result = gradleRunner(buildDir, ":generateDataFrameTest").build()
@@ -403,7 +403,9 @@ internal class SchemaGeneratorPluginTest {
         }
         project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .dataSchema
+            .get()
             .shouldBe(
                 project.file("build/generated/dataframe/main1/kotlin/org/example/test/dataframe/321.Generated.kt"),
             )

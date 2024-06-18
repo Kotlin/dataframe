@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
  * @see [TransformableSingleColumn]
  */
 public sealed interface ColumnsResolver<out C> {
-
     /**
      * Resolves this [ColumnsResolver] as a [List]<[ColumnWithPath]<[C]>>.
      * In many cases this function [transforms][ColumnsResolver.transform] a parent [ColumnsResolver] to reach
@@ -35,7 +34,6 @@ public class ColumnResolutionContext internal constructor(
     internal val df: DataFrame<*>,
     internal val unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
 ) {
-
     public val allowMissingColumns: Boolean = unresolvedColumnsPolicy != UnresolvedColumnsPolicy.Fail
 }
 

@@ -32,11 +32,12 @@ public abstract class AbstractMarker(typeParameters: List<String>, typeArguments
     override val typeParameters: String = typeParameters.join()
     override val typeArguments: String = typeArguments.join()
 
-    private fun List<String>.join() = if (isEmpty()) {
-        ""
-    } else {
-        joinToString(", ", "<", ">")
-    }
+    private fun List<String>.join() =
+        if (isEmpty()) {
+            ""
+        } else {
+            joinToString(", ", "<", ">")
+        }
 }
 
 public open class Marker(
@@ -48,7 +49,6 @@ public open class Marker(
     typeParameters: List<String>,
     typeArguments: List<String>,
 ) : AbstractMarker(typeParameters, typeArguments) {
-
     public val shortName: String
         get() = name.substringAfterLast(".")
 
@@ -104,15 +104,16 @@ public open class Marker(
             visibility: MarkerVisibility,
             klass: KClass<*>,
         ): Marker {
-            val typeParameters = klass.typeParameters.map {
-                buildString {
-                    append(it.name)
-                    if (it.upperBounds.isNotEmpty()) {
-                        append(" : ")
-                        append(it.upperBounds.joinToString(",") { it.toString() })
+            val typeParameters =
+                klass.typeParameters.map {
+                    buildString {
+                        append(it.name)
+                        if (it.upperBounds.isNotEmpty()) {
+                            append(" : ")
+                            append(it.upperBounds.joinToString(",") { it.toString() })
+                        }
                     }
                 }
-            }
             val typeArguments = klass.typeParameters.map { it.name }
             return Marker(name, isOpen, fields, superMarkers, visibility, typeParameters, typeArguments)
         }

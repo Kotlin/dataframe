@@ -7,13 +7,11 @@ import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class AndTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `and 2`() {
         val ageSelector: ColumnsSelector<Person, Int> = { age }
         listOf(
             df.select { cols(age, name) },
-
             df.select { age and name },
             df.select { age and "name" },
             df.select { age and Person::name },
@@ -30,7 +28,6 @@ class AndTests : ColumnsSelectionDslTests() {
             df.select { age and { pathOf("name") } },
             df.select { age and { cols(name) } },
             df.select { age.and { name } },
-
             df.select { "age" and name },
             df.select { "age" and "name" },
             df.select { "age" and Person::name },
@@ -47,7 +44,6 @@ class AndTests : ColumnsSelectionDslTests() {
             df.select { "age" and { pathOf("name") } },
             df.select { "age" and { cols(name) } },
             df.select { "age".and { name } },
-
             df.select { Person::age and name },
             df.select { Person::age and "name" },
             df.select { Person::age and Person::name },
@@ -64,7 +60,6 @@ class AndTests : ColumnsSelectionDslTests() {
             df.select { Person::age and { pathOf("name") } },
             df.select { Person::age and { cols(name) } },
             df.select { Person::age.and { name } },
-
             df.select { pathOf("age") and name },
             df.select { pathOf("age") and "name" },
             df.select { pathOf("age") and Person::name },
@@ -81,7 +76,6 @@ class AndTests : ColumnsSelectionDslTests() {
             df.select { pathOf("age") and { pathOf("name") } },
             df.select { pathOf("age") and { cols(name) } },
             df.select { pathOf("age").and { name } },
-
             df.select { ageSelector() and name },
             df.select { ageSelector() and name },
             df.select { ageSelector() and "name" },

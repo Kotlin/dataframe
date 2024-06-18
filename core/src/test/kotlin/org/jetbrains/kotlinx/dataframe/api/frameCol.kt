@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class FrameColTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `frameCol exceptions`() {
         shouldThrow<IllegalArgumentException> {
@@ -29,17 +28,12 @@ class FrameColTests : ColumnsSelectionDslTests() {
     fun `frameCol at top-level`() {
         listOf(
             dfWithFrames.select { frameCol },
-
             dfWithFrames.select { frameCol(frameCol) },
-
             dfWithFrames.select { frameCol("frameCol") },
             dfWithFrames.select { frameCol<Person>("frameCol") },
-
             dfWithFrames.select { frameCol(pathOf("frameCol")) },
             dfWithFrames.select { frameCol<Person>(pathOf("frameCol")) },
-
             dfWithFrames.select { frameCol(PersonWithFrame::frameCol) },
-
             dfWithFrames.select { frameCols().frameCol(0) },
             dfWithFrames.select { all().frameCol(5) },
             dfWithFrames.select { frameCol(5) },
@@ -52,7 +46,6 @@ class FrameColTests : ColumnsSelectionDslTests() {
         val frameColAccessor = frameCol
         listOf(
             dfWithFrames.select { name[frameCol] },
-
             // reference
             dfWithFrames.select { name.frameCol(frameColAccessor) },
             dfWithFrames.select { colGroup("name").frameCol(frameColAccessor) },
@@ -60,7 +53,6 @@ class FrameColTests : ColumnsSelectionDslTests() {
             dfWithFrames.select { NonDataSchemaPerson::name.frameCol(frameColAccessor) },
             dfWithFrames.select { Person::name.frameCol(frameColAccessor) },
             dfWithFrames.select { pathOf("name").frameCol(frameColAccessor) },
-
             // name
             dfWithFrames.select { name.frameCol("frameCol") },
             dfWithFrames.select { name.frameCol<Person>("frameCol") },
@@ -74,7 +66,6 @@ class FrameColTests : ColumnsSelectionDslTests() {
             dfWithFrames.select { Person::name.frameCol<Person>("frameCol") },
             dfWithFrames.select { pathOf("name").frameCol("frameCol") },
             dfWithFrames.select { pathOf("name").frameCol<Person>("frameCol") },
-
             // path
             dfWithFrames.select { name.frameCol(pathOf("frameCol")) },
             dfWithFrames.select { name.frameCol<Person>(pathOf("frameCol")) },
@@ -88,12 +79,10 @@ class FrameColTests : ColumnsSelectionDslTests() {
             dfWithFrames.select { Person::name.frameCol<Person>(pathOf("frameCol")) },
             dfWithFrames.select { pathOf("name").frameCol(pathOf("frameCol")) },
             dfWithFrames.select { pathOf("name").frameCol<Person>(pathOf("frameCol")) },
-
             dfWithFrames.select { frameCol("name"["frameCol"]) },
             dfWithFrames.select { frameCol<Person>("name"["frameCol"]) },
             dfWithFrames.select { asSingleColumn().frameCol("name"["frameCol"]) },
             dfWithFrames.select { asSingleColumn().frameCol<Person>("name"["frameCol"]) },
-
             // property
             dfWithFrames.select { name.frameCol(PersonWithFrame::frameCol) },
             dfWithFrames.select { colGroup("name").frameCol(PersonWithFrame::frameCol) },
@@ -101,7 +90,6 @@ class FrameColTests : ColumnsSelectionDslTests() {
             dfWithFrames.select { NonDataSchemaPerson::name.frameCol(PersonWithFrame::frameCol) },
             dfWithFrames.select { Person::name.frameCol(PersonWithFrame::frameCol) },
             dfWithFrames.select { pathOf("name").frameCol(PersonWithFrame::frameCol) },
-
             // index
             dfWithFrames.select { name.frameCol(2) },
             dfWithFrames.select { name.frameCol<Person>(2) },

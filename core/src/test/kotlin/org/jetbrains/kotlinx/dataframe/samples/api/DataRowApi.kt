@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class DataRowApi : TestBase() {
-
     @Test
     @TransformDataFrameExpressions
     fun expressions() {

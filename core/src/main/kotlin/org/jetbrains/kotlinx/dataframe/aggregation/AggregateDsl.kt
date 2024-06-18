@@ -13,7 +13,6 @@ import kotlin.reflect.typeOf
 public abstract class AggregateDsl<out T> :
     DataFrame<T>,
     ColumnSelectionDsl<T> {
-
     public inline infix fun <reified R> R.into(name: String): NamedValue =
         internal().yield(pathOf(name), this, typeOf<R>())
 
@@ -23,8 +22,9 @@ public abstract class AggregateDsl<out T> :
     public inline infix fun <reified R> R.into(column: KProperty<R>): NamedValue =
         internal().yield(pathOf(column.columnName), this, typeOf<R>())
 
-    public infix fun <R> R.default(defaultValue: R): Any = when (this) {
-        is NamedValue -> this.also { it.default = defaultValue }
-        else -> ValueWithDefault(this, defaultValue)
-    }
+    public infix fun <R> R.default(defaultValue: R): Any =
+        when (this) {
+            is NamedValue -> this.also { it.default = defaultValue }
+            else -> ValueWithDefault(this, defaultValue)
+        }
 }

@@ -8,7 +8,10 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import java.io.File
 
-fun useHostedFile(file: File, f: (url: String) -> Unit) {
+fun useHostedFile(
+    file: File,
+    f: (url: String) -> Unit,
+) {
     // duplicated in gradle/EmbeddedServerRunners.kt
     val port = 14771
     val server = embeddedServer(Netty, port = port) {

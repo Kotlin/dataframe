@@ -43,7 +43,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface AllExceptColumnsSelectionDsl {
-
     /**
      * ## (All) (Cols) Except Grammar
      *
@@ -85,7 +84,6 @@ public interface AllExceptColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`allExcept`**][ColumnsSelectionDsl.allExcept] */
         public interface PlainDslName
 
@@ -176,11 +174,10 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      */
     private interface CommonExceptDocs {
-
-        /* Example argument */
+        // Example argument
         interface ExampleArg
 
-        /* Parameter argument  */
+        // Parameter argument
         interface ParamArg
     }
 
@@ -195,11 +192,10 @@ public interface AllExceptColumnsSelectionDsl {
      * }
      */
     private interface ColumnSetInfixDocs {
-
-        /* argument */
+        // argument
         interface ArgumentArg1
 
-        /* argument */
+        // argument
         interface ArgumentArg2
     }
 
@@ -212,11 +208,10 @@ public interface AllExceptColumnsSelectionDsl {
      * }
      */
     private interface ColumnSetVarargDocs {
-
-        /* argument */
+        // argument
         interface ArgumentArg1
 
-        /* argument */
+        // argument
         interface ArgumentArg2
     }
 
@@ -313,11 +308,10 @@ public interface AllExceptColumnsSelectionDsl {
      *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ArgumentArg2]}` \}`
      */
     private interface ColumnsSelectionDslDocs {
-
-        /* argument */
+        // argument
         interface ArgumentArg1
 
-        /* argument */
+        // argument
         interface ArgumentArg2
     }
 
@@ -384,20 +378,19 @@ public interface AllExceptColumnsSelectionDsl {
      *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [ReceiverArg2]}</code>[allColsExcept][{@get [ReceiverType]}.allColsExcept]<code>{@get [ArgumentArg2]}</code>` \}`
      */
     private interface ColumnGroupDocs {
-
-        /* receiver */
+        // receiver
         interface ReceiverArg1
 
-        /* receiver */
+        // receiver
         interface ReceiverArg2
 
-        /* type */
+        // type
         interface ReceiverType
 
-        /* argument */
+        // argument
         interface ArgumentArg1
 
-        /* argument */
+        // argument
         interface ArgumentArg2
 
         /**
@@ -1131,11 +1124,12 @@ public interface AllExceptColumnsSelectionDsl {
  * @return The new ColumnSet with the remaining columns.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnSet<C> = createColumnSet { context ->
-    val resolvedCols = this.resolve(context)
-    val resolvedColsToExcept = other.resolve(context)
-    resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
-} as ColumnSet<C>
+internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnSet<C> =
+    createColumnSet { context ->
+        val resolvedCols = this.resolve(context)
+        val resolvedColsToExcept = other.resolve(context)
+        resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
+    } as ColumnSet<C>
 
 /**
  * Returns a new ColumnSet that contains all columns from inside the receiver column group
@@ -1157,15 +1151,20 @@ internal fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolv
 @Suppress("UNCHECKED_CAST")
 internal fun <C> SingleColumn<DataRow<C>>.exceptExperimentalInternal(
     other: ColumnsResolver<*>,
-): SingleColumn<DataRow<C>> = this.ensureIsColumnGroup().transformSingle { singleCol ->
-    val columnsToExcept = singleCol.asColumnGroup()
-        .getColumnsWithPaths { other }
-        .map { it.changePath(singleCol.path + it.path) }
+): SingleColumn<DataRow<C>> =
+    this
+        .ensureIsColumnGroup()
+        .transformSingle { singleCol ->
+            val columnsToExcept =
+                singleCol
+                    .asColumnGroup()
+                    .getColumnsWithPaths { other }
+                    .map { it.changePath(singleCol.path + it.path) }
 
-    val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
+            val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
 
-    newCols as List<ColumnWithPath<DataRow<*>>>
-}.singleInternal() as SingleColumn<DataRow<C>>
+            newCols as List<ColumnWithPath<DataRow<*>>>
+        }.singleInternal() as SingleColumn<DataRow<C>>
 
 /**
  * Functions annotated with this annotation are experimental and will be removed or renamed in the future.

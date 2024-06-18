@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class ColsOfKindTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `colsOfKind exceptions`() {
         shouldThrow<IllegalArgumentException> {
@@ -31,14 +30,12 @@ class ColsOfKindTests : ColumnsSelectionDslTests() {
 
         listOf(
             df.select { cols(age, city, weight, isHappy) },
-
             df.select { all().colsOfKind(Value) },
             df.select { colsOfKind(Value) },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { age },
-
             df.select { age }.select { colsOfKind(Value) },
             df.select { age }.select { colsOfKind(Value, Value) },
             df.select { age }.select { colsOfKind(Value).all() },
@@ -56,7 +53,6 @@ class ColsOfKindTests : ColumnsSelectionDslTests() {
     fun `colsOfKind at lower level`() {
         listOf(
             df.select { name.firstName and name.lastName },
-
             df.select { name.colsOfKind(Value) { "Name" in it.name() } },
             df.select { name.colsOf<String>().colsOfKind(Value) { "Name" in it.name() } },
             df.select { "name".colsOfKind(Value) { "Name" in it.name() } },

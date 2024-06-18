@@ -45,7 +45,10 @@ public fun AnyFrame.writeArrowIPC(stream: OutputStream) {
  * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
  * If file exists, it can be recreated or expanded.
  */
-public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
+public fun AnyFrame.writeArrowIPC(
+    file: File,
+    append: Boolean = true,
+) {
     this.arrowWriter().use { writer ->
         writer.writeArrowIPC(file, append)
     }
@@ -54,9 +57,10 @@ public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
 /**
  * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
  */
-public fun AnyFrame.saveArrowIPCToByteArray(): ByteArray = this.arrowWriter().use { writer ->
-    writer.saveArrowIPCToByteArray()
-}
+public fun AnyFrame.saveArrowIPCToByteArray(): ByteArray =
+    this.arrowWriter().use { writer ->
+        writer.saveArrowIPCToByteArray()
+    }
 
 // Feather saving block with default parameters
 
@@ -91,6 +95,7 @@ public fun AnyFrame.writeArrowFeather(file: File) {
 /**
  * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new [ByteArray]
  */
-public fun AnyFrame.saveArrowFeatherToByteArray(): ByteArray = this.arrowWriter().use { writer ->
-    writer.saveArrowFeatherToByteArray()
-}
+public fun AnyFrame.saveArrowFeatherToByteArray(): ByteArray =
+    this.arrowWriter().use { writer ->
+        writer.saveArrowFeatherToByteArray()
+    }

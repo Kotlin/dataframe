@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.junit.Test
 
 class ColumnPathTests : TestBase() {
-
     @Test
     fun `should trim overlapping start of first list from the end of second list`() {
         val parent = pathOf("something", "name", "firstName")

@@ -9,10 +9,15 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 internal interface ReplCodeGenerator {
+    fun process(
+        df: AnyFrame,
+        property: KProperty<*>? = null,
+    ): CodeWithConverter
 
-    fun process(df: AnyFrame, property: KProperty<*>? = null): CodeWithConverter
-
-    fun process(row: AnyRow, property: KProperty<*>? = null): CodeWithConverter
+    fun process(
+        row: AnyRow,
+        property: KProperty<*>? = null,
+    ): CodeWithConverter
 
     fun process(markerClass: KClass<*>): Code
 

@@ -32,11 +32,12 @@ public fun <T> DataColumn<T>.valueCounts(
 ): DataFrame<ValueCount> {
     var grouped = toList().groupBy { it }.map { it.key to it.value.size }
     if (sort) {
-        grouped = if (ascending) {
-            grouped.sortedBy { it.second }
-        } else {
-            grouped.sortedByDescending { it.second }
-        }
+        grouped =
+            if (ascending) {
+                grouped.sortedBy { it.second }
+            } else {
+                grouped.sortedByDescending { it.second }
+            }
     }
     if (dropNA) grouped = grouped.filter { !it.first.isNA }
     val nulls = if (dropNA) false else hasNulls()
@@ -62,7 +63,12 @@ public fun <T> DataFrame<T>.valueCounts(
 
     val rows by columnGroup()
     val countName = nameGenerator().addUnique(resultColumn)
-    return df.asColumnGroup(rows).asDataColumn().valueCounts(sort, ascending, dropNA, countName).ungroup(rows).cast()
+    return df
+        .asColumnGroup(rows)
+        .asDataColumn()
+        .valueCounts(sort, ascending, dropNA, countName)
+        .ungroup(rows)
+        .cast()
 }
 
 public fun <T> DataFrame<T>.valueCounts(

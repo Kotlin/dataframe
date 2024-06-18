@@ -37,8 +37,9 @@ internal const val COL_SELECT_DSL_ALL_UP_TO_REPLACE = "this.allUpTo(column)"
 internal const val COL_SELECT_DSL_ALL_COLS_UP_TO = "Use `allColsUpTo()` instead. $MESSAGE_0_14"
 internal const val COL_SELECT_DSL_ALL_COLS_UP_TO_REPLACE = "this.allColsUpTo(column)"
 
-internal const val COL_SELECT_DSL_AT_ANY_DEPTH = "This postfix notation is now deprecated. " +
-    "Use `colsAtAnyDepth().YOUR_OPERATION` instead (NOTE: ReplaceWith is incorrect). $MESSAGE_0_14"
+internal const val COL_SELECT_DSL_AT_ANY_DEPTH =
+    "This postfix notation is now deprecated. " +
+        "Use `colsAtAnyDepth().YOUR_OPERATION` instead (NOTE: ReplaceWith is incorrect). $MESSAGE_0_14"
 
 // TODO https://youtrack.jetbrains.com/issue/KTIJ-27052/ReplaceWith-Deprecated-this-after-call-bug
 internal const val COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE = "this"
@@ -51,12 +52,12 @@ internal const val COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE = "this.cols(predi
 
 internal const val TOP_MESSAGE = "top is deprecated, use simplify() instead. $MESSAGE_0_14"
 
-internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET = "This function is deprecated. " +
-    "Use `.toColumnSet()[]` instead. $MESSAGE_0_14"
+internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET =
+    "This function is deprecated. Use `.toColumnSet()[]` instead. $MESSAGE_0_14"
 internal const val COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE = "this.toColumnSet()[range]"
 
-internal const val COL_SELECT_DSL_SELECT_COLS = "Nested select is reserved for " +
-    "ColumnsSelector/ColumnsSelectionDsl behavior. Use myGroup.cols() to select columns by name from a ColumnGroup. $MESSAGE_0_14"
+internal const val COL_SELECT_DSL_SELECT_COLS =
+    "Nested select is reserved for ColumnsSelector/ColumnsSelectionDsl behavior. Use myGroup.cols() to select columns by name from a ColumnGroup. $MESSAGE_0_14"
 internal const val COL_SELECT_DSL_SELECT_COLS_REPLACE = "this.cols(*columns)"
 
 internal const val COL_SELECT_DSL_SINGLE_COL_EXCEPT = "This function is replaced with allColsExcept. $MESSAGE_0_14"
@@ -90,8 +91,9 @@ internal const val IDENTITY_FUNCTION = "This overload is an identity function an
 
 internal const val COL_REPLACE = "col"
 
-internal const val ALL_COLS_EXCEPT = "This overload is blocked to prevent issues with column accessors. " +
-    "Use the `{}` overload instead."
+internal const val ALL_COLS_EXCEPT =
+    "This overload is blocked to prevent issues with column accessors. " +
+        "Use the `{}` overload instead."
 internal const val ALL_COLS_REPLACE = "allColsExcept { other }"
 internal const val ALL_COLS_REPLACE_VARARG = "allColsExcept { others.toColumnSet() }"
 

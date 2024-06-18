@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class ConcatTests {
-
     @Test
     fun `different types`() {
         val a by columnOf(1, 2)

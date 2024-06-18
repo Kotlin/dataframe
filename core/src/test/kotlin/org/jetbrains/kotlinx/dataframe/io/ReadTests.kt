@@ -18,12 +18,12 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class ReadTests {
-
     @Test
     fun readJsonNulls() {
-        val data = """
+        val data =
+            """
             [{"a":null, "b":1},{"a":null, "b":2}]
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readJsonStr(data)
         df.ncol shouldBe 2
@@ -37,9 +37,10 @@ class ReadTests {
 
     @Test
     fun readFrameColumn() {
-        val data = """
+        val data =
+            """
             [{"a":[{"b":[]}]},{"a":[]},{"a":[{"b":[{"c":1}]}]}]
-        """.trimIndent()
+            """.trimIndent()
         val df = DataFrame.readJsonStr(data)
         df.nrow shouldBe 3
         val a = df["a"].asAnyFrameColumn()
@@ -55,9 +56,10 @@ class ReadTests {
 
     @Test
     fun readFrameColumnEmptySlice() {
-        val data = """
+        val data =
+            """
             [ [], [ {"a": [{"q":2},{"q":3}] } ] ]
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readJsonStr(data)
         df.nrow shouldBe 2
@@ -69,20 +71,22 @@ class ReadTests {
 
     @Test
     fun `read big decimal`() {
-        val data = """
+        val data =
+            """
             [[3452345234345, 7795.34000000], [12314123532, 7795.34000000]]
-        """.trimIndent()
+            """.trimIndent()
         val df = DataFrame.readJsonStr(data)
         println(df.getColumn("array").cast<List<Number>>()[0][1].javaClass)
     }
 
     @Test
     fun `array of arrays`() {
-        val data = """
+        val data =
+            """
             {
                 "values": [[1,2,3],[4,5,6],[7,8,9]]
             }
-        """.trimIndent()
+            """.trimIndent()
         val df = DataFrame.readJsonStr(data)
         val values by column<List<List<Int>>>()
         df[values][0][1][1] shouldBe 5
@@ -90,10 +94,11 @@ class ReadTests {
 
     @Test
     fun `read json with header`() {
-        val data = """
+        val data =
+            """
             [[1,2,3],
             [4,5,6]]
-        """.trimIndent()
+            """.trimIndent()
         val header = listOf("a", "b", "c")
         val df = DataFrame.readJsonStr(data, header)
         df.rowsCount() shouldBe 2

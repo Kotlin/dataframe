@@ -21,7 +21,6 @@ import kotlin.reflect.KType
 internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsContainer<*>) :
     MissingDataColumn<DataRow<T>>(),
     DataColumnGroup<T> {
-
     override fun getColumnOrNull(name: String) = MissingColumnGroup<Any?>(path + name, host)
 
     override fun getColumnOrNull(index: Int) = MissingColumnGroup<Any?>(path + "", host)
@@ -44,7 +43,10 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
 
     override fun kind() = super.kind()
 
-    override fun get(firstIndex: Int, vararg otherIndices: Int) = throw UnsupportedOperationException()
+    override fun get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ) = throw UnsupportedOperationException()
 
     override fun distinct() = throw UnsupportedOperationException()
 

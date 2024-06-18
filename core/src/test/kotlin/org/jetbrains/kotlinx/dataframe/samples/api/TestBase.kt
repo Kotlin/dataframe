@@ -22,7 +22,6 @@ import org.junit.After
 import org.junit.Before
 
 public open class TestBase {
-
     companion object {
         internal const val OUTPUTS = "DATAFRAME_SAVE_OUTPUTS"
     }
@@ -41,25 +40,64 @@ public open class TestBase {
         }
     }
 
-    val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-        "Alice", "Cooper", 15, "London", 54, true,
-        "Bob", "Dylan", 45, "Dubai", 87, true,
-        "Charlie", "Daniels", 20, "Moscow", null, false,
-        "Charlie", "Chaplin", 40, "Milan", null, true,
-        "Bob", "Marley", 30, "Tokyo", 68, true,
-        "Alice", "Wolf", 20, null, 55, false,
-        "Charlie", "Byrd", 30, "Moscow", 90, true,
-    ).group("firstName", "lastName").into("name").cast<Person>()
+    val df =
+        dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+            "Alice",
+            "Cooper",
+            15,
+            "London",
+            54,
+            true,
+            "Bob",
+            "Dylan",
+            45,
+            "Dubai",
+            87,
+            true,
+            "Charlie",
+            "Daniels",
+            20,
+            "Moscow",
+            null,
+            false,
+            "Charlie",
+            "Chaplin",
+            40,
+            "Milan",
+            null,
+            true,
+            "Bob",
+            "Marley",
+            30,
+            "Tokyo",
+            68,
+            true,
+            "Alice",
+            "Wolf",
+            20,
+            null,
+            55,
+            false,
+            "Charlie",
+            "Byrd",
+            30,
+            "Moscow",
+            90,
+            true,
+        ).group("firstName", "lastName").into("name").cast<Person>()
 
-    val dfGroup = df.convert { name.firstName }.to {
-        val firstName by it
-        val secondName by it.map<_, String?> { null }.asValueColumn()
-        val thirdName by it.map<_, String?> { null }.asValueColumn()
+    val dfGroup =
+        df
+            .convert { name.firstName }
+            .to {
+                val firstName by it
+                val secondName by it.map<_, String?> { null }.asValueColumn()
+                val thirdName by it.map<_, String?> { null }.asValueColumn()
 
-        dataFrameOf(firstName, secondName, thirdName)
-            .cast<FirstNames>(verify = true)
-            .asColumnGroup("firstName")
-    }.cast<Person2>(verify = true)
+                dataFrameOf(firstName, secondName, thirdName)
+                    .cast<FirstNames>(verify = true)
+                    .asColumnGroup("firstName")
+            }.cast<Person2>(verify = true)
 
     @DataSchema
     interface Name {

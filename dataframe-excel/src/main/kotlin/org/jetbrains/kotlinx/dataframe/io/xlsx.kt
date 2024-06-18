@@ -40,9 +40,15 @@ import java.util.Calendar
 import java.util.Date
 
 public class Excel : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
+    override fun readDataFrame(
+        stream: InputStream,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readExcel(stream)
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)
+    override fun readDataFrame(
+        file: File,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readExcel(file)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
 
@@ -68,7 +74,8 @@ private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
  */
 private fun setWorkbookTempDirectory() {
     val tempDir = try {
-        Files.createTempDirectory(READ_EXCEL_TEMP_FOLDER_PREFIX)
+        Files
+            .createTempDirectory(READ_EXCEL_TEMP_FOLDER_PREFIX)
             .toFile()
             .also { it.deleteOnExit() }
     } catch (e: Exception) {
@@ -257,62 +264,65 @@ private fun repairNameIfRequired(
     nameFromCell: String,
     columnNameCounters: MutableMap<String, Int>,
     nameRepairStrategy: NameRepairStrategy,
-): String = when (nameRepairStrategy) {
-    NameRepairStrategy.DO_NOTHING -> nameFromCell
+): String =
+    when (nameRepairStrategy) {
+        NameRepairStrategy.DO_NOTHING -> nameFromCell
 
-    NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) {
-        throw DuplicateColumnNamesException(
-            columnNameCounters.keys.toList(),
-        )
-    } else {
-        nameFromCell
-    }
-
-    NameRepairStrategy.MAKE_UNIQUE ->
-        if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
-            val emptyName = "Unknown column"
-            if (columnNameCounters.contains(emptyName)) {
-                "${emptyName}${columnNameCounters[emptyName]}"
-            } else {
-                emptyName
-            }
+        NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) {
+            throw DuplicateColumnNamesException(
+                columnNameCounters.keys.toList(),
+            )
         } else {
-            if (columnNameCounters.contains(nameFromCell)) {
-                "${nameFromCell}${columnNameCounters[nameFromCell]}"
-            } else {
-                nameFromCell
-            }
+            nameFromCell
         }
-}
+
+        NameRepairStrategy.MAKE_UNIQUE ->
+            if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
+                val emptyName = "Unknown column"
+                if (columnNameCounters.contains(emptyName)) {
+                    "${emptyName}${columnNameCounters[emptyName]}"
+                } else {
+                    emptyName
+                }
+            } else {
+                if (columnNameCounters.contains(nameFromCell)) {
+                    "${nameFromCell}${columnNameCounters[nameFromCell]}"
+                } else {
+                    nameFromCell
+                }
+            }
+    }
 
 private fun Cell?.cellValue(sheetName: String): Any? {
     if (this == null) return null
-    fun getValueFromType(type: CellType?): Any? = when (type) {
-        CellType._NONE -> error(
-            "Cell $address of sheet $sheetName has a CellType that should only be used internally. " +
-                "This is a bug, please report https://github.com/Kotlin/dataframe/issues",
-        )
 
-        CellType.NUMERIC -> {
-            val number = numericCellValue
-            when {
-                DateUtil.isCellDateFormatted(this) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
-                else -> number
+    fun getValueFromType(type: CellType?): Any? =
+        when (type) {
+            CellType._NONE -> error(
+                "Cell $address of sheet $sheetName has a CellType that should only be used internally. " +
+                    "This is a bug, please report https://github.com/Kotlin/dataframe/issues",
+            )
+
+            CellType.NUMERIC -> {
+                val number = numericCellValue
+                when {
+                    DateUtil.isCellDateFormatted(this) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
+                    else -> number
+                }
             }
+
+            CellType.STRING -> stringCellValue
+
+            CellType.FORMULA -> getValueFromType(cachedFormulaResultType)
+
+            CellType.BLANK -> stringCellValue
+
+            CellType.BOOLEAN -> booleanCellValue
+
+            CellType.ERROR -> errorCellValue
+
+            null -> null
         }
-
-        CellType.STRING -> stringCellValue
-
-        CellType.FORMULA -> getValueFromType(cachedFormulaResultType)
-
-        CellType.BLANK -> stringCellValue
-
-        CellType.BOOLEAN -> booleanCellValue
-
-        CellType.ERROR -> errorCellValue
-
-        null -> null
-    }
     return getValueFromType(cellType)
 }
 
@@ -444,62 +454,63 @@ public fun <T> DataFrame<T>.writeExcel(
     return sheet
 }
 
-private fun Cell.setCellValueByGuessedType(any: Any) = when (any) {
-    is AnyRow -> {
-        this.setCellValue(any.toJson())
-    }
+private fun Cell.setCellValueByGuessedType(any: Any) =
+    when (any) {
+        is AnyRow -> {
+            this.setCellValue(any.toJson())
+        }
 
-    is AnyFrame -> {
-        this.setCellValue(any.toJson())
-    }
+        is AnyFrame -> {
+            this.setCellValue(any.toJson())
+        }
 
-    is Number -> {
-        this.setCellValue(any.toDouble())
-    }
+        is Number -> {
+            this.setCellValue(any.toDouble())
+        }
 
-    is LocalDate -> {
-        this.setCellValue(any)
-    }
+        is LocalDate -> {
+            this.setCellValue(any)
+        }
 
-    is LocalDateTime -> {
-        this.setTime(any)
-    }
+        is LocalDateTime -> {
+            this.setTime(any)
+        }
 
-    is Boolean -> {
-        this.setCellValue(any)
-    }
+        is Boolean -> {
+            this.setCellValue(any)
+        }
 
-    is Calendar -> {
-        this.setDate(any.time)
-    }
+        is Calendar -> {
+            this.setDate(any.time)
+        }
 
-    is Date -> {
-        this.setDate(any)
-    }
+        is Date -> {
+            this.setDate(any)
+        }
 
-    is RichTextString -> {
-        this.setCellValue(any)
-    }
+        is RichTextString -> {
+            this.setCellValue(any)
+        }
 
-    is String -> {
-        this.setCellValue(any)
-    }
+        is String -> {
+            this.setCellValue(any)
+        }
 
-    is kotlinx.datetime.LocalDate -> {
-        this.setCellValue(any.toJavaLocalDate())
-    }
+        is kotlinx.datetime.LocalDate -> {
+            this.setCellValue(any.toJavaLocalDate())
+        }
 
-    is kotlinx.datetime.LocalDateTime -> {
-        this.setTime(any.toJavaLocalDateTime())
-    }
+        is kotlinx.datetime.LocalDateTime -> {
+            this.setTime(any.toJavaLocalDateTime())
+        }
 
-    // Another option would be to serialize everything else to string,
-    // but people can convert columns to string with any serialization framework they want
-    // so i think toString should do until more use cases arise.
-    else -> {
-        this.setCellValue(any.toString())
+        // Another option would be to serialize everything else to string,
+        // but people can convert columns to string with any serialization framework they want
+        // so i think toString should do until more use cases arise.
+        else -> {
+            this.setCellValue(any.toString())
+        }
     }
-}
 
 /**
  * Set LocalDateTime value correctly also if date have zero value in Excel.

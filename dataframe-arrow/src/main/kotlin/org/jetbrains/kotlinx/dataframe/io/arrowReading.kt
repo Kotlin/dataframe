@@ -17,11 +17,15 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 
 public class ArrowFeather : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
+    override fun readDataFrame(
+        stream: InputStream,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
+    override fun readDataFrame(
+        file: File,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "feather"
 
@@ -94,24 +98,26 @@ public fun DataFrame.Companion.readArrowIPC(
 public fun DataFrame.Companion.readArrowIPC(
     url: URL,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = when {
-    isFile(url) -> readArrowIPC(urlAsFile(url), nullability)
+): AnyFrame =
+    when {
+        isFile(url) -> readArrowIPC(urlAsFile(url), nullability)
 
-    isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it, nullability) }
+        isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it, nullability) }
 
-    else -> {
-        throw IllegalArgumentException("Invalid protocol for url $url")
+        else -> {
+            throw IllegalArgumentException("Invalid protocol for url $url")
+        }
     }
-}
 
 public fun DataFrame.Companion.readArrowIPC(
     path: String,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = if (isURL(path)) {
-    readArrowIPC(URL(path), nullability)
-} else {
-    readArrowIPC(File(path), nullability)
-}
+): AnyFrame =
+    if (isURL(path)) {
+        readArrowIPC(URL(path), nullability)
+    } else {
+        readArrowIPC(File(path), nullability)
+    }
 
 // Feather reading block
 
@@ -145,15 +151,16 @@ public fun DataFrame.Companion.readArrowFeather(
 public fun DataFrame.Companion.readArrowFeather(
     url: URL,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = when {
-    isFile(url) -> readArrowFeather(urlAsFile(url), nullability)
+): AnyFrame =
+    when {
+        isFile(url) -> readArrowFeather(urlAsFile(url), nullability)
 
-    isProtocolSupported(url) -> readArrowFeather(url.readBytes(), nullability)
+        isProtocolSupported(url) -> readArrowFeather(url.readBytes(), nullability)
 
-    else -> {
-        throw IllegalArgumentException("Invalid protocol for url $url")
+        else -> {
+            throw IllegalArgumentException("Invalid protocol for url $url")
+        }
     }
-}
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [path]
@@ -161,11 +168,12 @@ public fun DataFrame.Companion.readArrowFeather(
 public fun DataFrame.Companion.readArrowFeather(
     path: String,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = if (isURL(path)) {
-    readArrowFeather(URL(path), nullability)
-} else {
-    readArrowFeather(File(path), nullability)
-}
+): AnyFrame =
+    if (isURL(path)) {
+        readArrowFeather(URL(path), nullability)
+    } else {
+        readArrowFeather(File(path), nullability)
+    }
 
 /**
  * Read [Arrow any format](https://arrow.apache.org/docs/java/ipc.html#reading-writing-ipc-formats) data from existing [reader]

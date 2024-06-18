@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class TruncateTests : RenderingTestsBase() {
-
     @Test
     fun `truncate str`() {
         "123456789".truncate(5) shouldBe "12..."
@@ -101,15 +100,20 @@ class TruncateTests : RenderingTestsBase() {
         )
     }
 
-    private fun testTruncates(value: Any?, truncates: List<String>) {
+    private fun testTruncates(
+        value: Any?,
+        truncates: List<String>,
+    ) {
         val start = truncates[0].length
         val end = truncates.last().length
         val actual = (start..end).map { value.truncate(it) }
-        val expected = (start..end).map { len ->
-            truncates.indexOfFirst {
-                it.length > len
-            }.let { if (it == -1) truncates.last() else truncates[it - 1] }
-        }
+        val expected =
+            (start..end).map { len ->
+                truncates
+                    .indexOfFirst {
+                        it.length > len
+                    }.let { if (it == -1) truncates.last() else truncates[it - 1] }
+            }
         actual shouldBe expected
     }
 

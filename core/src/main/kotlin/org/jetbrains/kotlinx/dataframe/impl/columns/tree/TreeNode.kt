@@ -8,7 +8,6 @@ internal class TreeNode<T>(
     override var data: T,
     override val parent: TreeNode<T>? = null,
 ) : ReadonlyTreeNode<T> {
-
     companion object {
         fun <T> createRoot(data: T) = TreeNode<T>("", 0, data)
     }
@@ -36,14 +35,20 @@ internal class TreeNode<T>(
         return ColumnPath(path)
     }
 
-    fun addChild(childName: String, childData: T): TreeNode<T> {
+    fun addChild(
+        childName: String,
+        childData: T,
+    ): TreeNode<T> {
         val node = TreeNode(childName, depth + 1, childData, this)
         myChildren.add(node)
         childrenMap[childName] = node
         return node
     }
 
-    fun getOrPut(childName: String, createData: () -> T): TreeNode<T> {
+    fun getOrPut(
+        childName: String,
+        createData: () -> T,
+    ): TreeNode<T> {
         childrenMap[childName]?.let { return it }
         return addChild(childName, createData())
     }

@@ -9,8 +9,10 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, separator: String = "."): DataFrame<T> =
-    flatten(keepParentNameForColumns, separator) { all() }
+public fun <T> DataFrame<T>.flatten(
+    keepParentNameForColumns: Boolean = false,
+    separator: String = ".",
+): DataFrame<T> = flatten(keepParentNameForColumns, separator) { all() }
 
 public fun <T, C> DataFrame<T>.flatten(
     keepParentNameForColumns: Boolean = false,

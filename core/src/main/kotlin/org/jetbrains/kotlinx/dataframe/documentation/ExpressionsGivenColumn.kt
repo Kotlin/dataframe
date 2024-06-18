@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
  */
 @ExcludeFromSources
 internal interface ExpressionsGivenColumn {
-
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
@@ -25,7 +24,6 @@ internal interface ExpressionsGivenColumn {
 
     /** Provide a new value for every selected cell given its column using a [column expression][DfColumnExpression]. */
     interface ColumnExpression {
-
         /**
          * {@include [ColumnExpression]}
          *

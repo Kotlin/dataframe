@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.io.TableColumnMetadata
 import org.jetbrains.kotlinx.dataframe.io.TableMetadata
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.sql.ResultSet
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KType
 
 /**
@@ -40,15 +40,19 @@ public object MsSql : DbType("sqlserver") {
             catalogName.containsWithLowercase("tempdb")
     }
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata = TableMetadata(
-        tables.getString("table_name"),
-        tables.getString("table_schem"),
-        tables.getString("table_cat"),
-    )
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
+        TableMetadata(
+            tables.getString("table_name"),
+            tables.getString("table_schem"),
+            tables.getString("table_cat"),
+        )
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
-    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String {
+    public override fun sqlQueryLimit(
+        sqlQuery: String,
+        limit: Int,
+    ): String {
         sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)
         return sqlQuery
     }

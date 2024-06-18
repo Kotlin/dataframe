@@ -6,7 +6,6 @@ import org.junit.Test
 import java.io.InputStreamReader
 
 class ResourcesTest {
-
     @Test
     fun `resources available`() {
         val res = DataFrame::class.java.getResourceAsStream("/table.html")

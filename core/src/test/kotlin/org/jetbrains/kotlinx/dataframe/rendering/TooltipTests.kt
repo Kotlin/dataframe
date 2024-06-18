@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class TooltipTests : RenderingTestsBase() {
-
     @Test
     fun `long str`() {
         "12345678".tooltip(5) shouldBe "12345678"

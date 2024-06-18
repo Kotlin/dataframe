@@ -45,26 +45,28 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
         }
 
         if (valuesColumn != null) {
-            df = df.add(valuesColumn) { row ->
-                columnsToGather.map { col ->
-                    val value = col[row]
-                    if (valueTransform != null) {
-                        when {
-                            explode && value is List<*> -> (value as List<C>).map(valueTransform)
-                            else -> valueTransform(value)
+            df =
+                df.add(valuesColumn) { row ->
+                    columnsToGather.map { col ->
+                        val value = col[row]
+                        if (valueTransform != null) {
+                            when {
+                                explode && value is List<*> -> (value as List<C>).map(valueTransform)
+                                else -> valueTransform(value)
+                            }
+                        } else {
+                            value
                         }
-                    } else {
-                        value
                     }
                 }
-            }
         }
 
         // explode keys and values
-        df = when {
-            keysColumn != null && valuesColumn != null -> df.explode(keysColumn, valuesColumn)
-            else -> df.explode(keysColumn ?: valuesColumn!!)
-        }
+        df =
+            when {
+                keysColumn != null && valuesColumn != null -> df.explode(keysColumn, valuesColumn)
+                else -> df.explode(keysColumn ?: valuesColumn!!)
+            }
 
         // explode values in lists
         if (explode && valuesColumn != null) {
@@ -72,25 +74,26 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
         }
     } else {
         val nameAndValue = column<List<Pair<K, Any?>>>("nameAndValue")
-        df = df.add(nameAndValue) { row ->
-            columnsToGather.mapIndexedNotNull { colIndex, col ->
-                val value = col[row]
-                when {
-                    explode && value is List<*> -> {
-                        val filtered = (value as List<C>).filter { filter(it) }
-                        val transformed = valueTransform?.let { filtered.map(it) } ?: filtered
-                        keys[colIndex] to transformed
-                    }
+        df =
+            df.add(nameAndValue) { row ->
+                columnsToGather.mapIndexedNotNull { colIndex, col ->
+                    val value = col[row]
+                    when {
+                        explode && value is List<*> -> {
+                            val filtered = (value as List<C>).filter { filter(it) }
+                            val transformed = valueTransform?.let { filtered.map(it) } ?: filtered
+                            keys[colIndex] to transformed
+                        }
 
-                    filter(value) -> {
-                        val transformed = valueTransform?.invoke(value) ?: value
-                        keys[colIndex] to transformed
-                    }
+                        filter(value) -> {
+                            val transformed = valueTransform?.invoke(value) ?: value
+                            keys[colIndex] to transformed
+                        }
 
-                    else -> null
+                        else -> null
+                    }
                 }
             }
-        }
 
         df = df.explode { nameAndValue }
 
@@ -100,9 +103,11 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
 
         when {
             keysColumn != null && valuesColumn != null -> {
-                df = df.split { nameAndValuePairs }
-                    .into(keysColumn.name(), valuesColumn.name())
-                    .explode(valuesColumn)
+                df =
+                    df
+                        .split { nameAndValuePairs }
+                        .into(keysColumn.name(), valuesColumn.name())
+                        .explode(valuesColumn)
             }
 
             keysColumn != null -> {

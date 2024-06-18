@@ -14,11 +14,11 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class GatherTests {
-
     //region Data Source
 
     @Language("json")
-    val df = """
+    val df =
+        """
             [
                 {
                     "name": "abc",
@@ -52,8 +52,8 @@ class GatherTests {
                 }
             ]
         """.let {
-        DataFrame.readJsonStr(it)
-    }
+            DataFrame.readJsonStr(it)
+        }
 
     //endregion
 
@@ -96,22 +96,31 @@ class GatherTests {
     fun gather() {
         val mode by column<String>()
         val temp by column<String>()
-        val gathered = typed.gather { allExcept(name) }.cast<String>().into(mode, temp).ungroup(temp)
+        val gathered =
+            typed
+                .gather { allExcept(name) }
+                .cast<String>()
+                .into(mode, temp)
+                .ungroup(temp)
 
-        val expected = typed.groupBy { name }.updateGroups {
-            val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
-            val dataRows = cols.map { it[0] }
+        val expected =
+            typed
+                .groupBy { name }
+                .updateGroups {
+                    val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
+                    val dataRows = cols.map { it[0] }
 
-            val newDf = listOf(
-                name.withValues(List(cols.size) { name[0] }),
-                mode.withValues(cols.map { it.name() }),
-                dataRows.map { it.getValueOrNull<String>("c1") }.toColumn("c1"),
-                dataRows.map { it.getValueOrNull<String>("c2") }.toColumn("c2"),
-                dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3"),
-            ).toDataFrame()
+                    val newDf =
+                        listOf(
+                            name.withValues(List(cols.size) { name[0] }),
+                            mode.withValues(cols.map { it.name() }),
+                            dataRows.map { it.getValueOrNull<String>("c1") }.toColumn("c1"),
+                            dataRows.map { it.getValueOrNull<String>("c2") }.toColumn("c2"),
+                            dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3"),
+                        ).toDataFrame()
 
-            newDf
-        }.concat()
+                    newDf
+                }.concat()
 
         gathered shouldBe expected
     }
@@ -145,8 +154,10 @@ class GatherTests {
 
         val df = dataFrameOf(a, b)[0..0]
 
-        val gathered = df.gather { a and b }
-            .into("key", "value")
+        val gathered =
+            df
+                .gather { a and b }
+                .into("key", "value")
 
         gathered["value"].type() shouldBe typeOf<Int>()
     }
@@ -170,19 +181,22 @@ class GatherTests {
         val a by columnOf(1, 2)
         val b by columnOf(listOf(3, 4), listOf(5, 6))
 
-        val df = dataFrameOf(a, b).gather { a and b }
-            .explodeLists()
-            .cast<Int>()
-            .where { it % 2 == 1 }
-            .into("key", "value")
+        val df =
+            dataFrameOf(a, b)
+                .gather { a and b }
+                .explodeLists()
+                .cast<Int>()
+                .where { it % 2 == 1 }
+                .into("key", "value")
 
-        df shouldBe dataFrameOf("key", "value")(
-            "a",
-            1,
-            "b",
-            3,
-            "b",
-            5,
-        )
+        df shouldBe
+            dataFrameOf("key", "value")(
+                "a",
+                1,
+                "b",
+                3,
+                "b",
+                5,
+            )
     }
 }

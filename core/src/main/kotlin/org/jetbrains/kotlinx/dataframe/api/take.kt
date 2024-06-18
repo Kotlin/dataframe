@@ -21,11 +21,12 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> = when {
-    n == 0 -> get(emptyList())
-    n >= size -> this
-    else -> get(0 until n)
-}
+public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> =
+    when {
+        n == 0 -> get(emptyList())
+        n >= size -> this
+        else -> get(0 until n)
+    }
 
 public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n)
 
@@ -69,14 +70,12 @@ public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> =
  * See [Grammar] for all functions in this interface.
  */
 public interface TakeColumnsSelectionDsl {
-
     /**
      * @include [TakeAndDropColumnsSelectionDslGrammar]
      * @set [TakeAndDropColumnsSelectionDslGrammar.TitleArg] Take
      * @set [TakeAndDropColumnsSelectionDslGrammar.OperationArg] take
      */
     public interface Grammar {
-
         /** [**`take`**][ColumnsSelectionDsl.take]`(`[**`Last`**][ColumnsSelectionDsl.takeLast]`)` */
         public interface PlainDslName
 

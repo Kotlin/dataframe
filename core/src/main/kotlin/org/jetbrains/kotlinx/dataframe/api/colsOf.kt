@@ -29,7 +29,6 @@ import kotlin.reflect.typeOf
  * See [Grammar] for all functions in this interface.
  */
 public interface ColsOfColumnsSelectionDsl {
-
     /**
      * ## Cols Of Grammar
      *
@@ -78,7 +77,6 @@ public interface ColsOfColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**colsOf**][ColumnsSelectionDsl.colsOf] */
         public interface PlainDslName
 
@@ -124,7 +122,6 @@ public interface ColsOfColumnsSelectionDsl {
      * #### Examples for this overload:
      */
     private interface CommonColsOfDocs {
-
         /** @return A [ColumnSet] containing the columns of given type that were included by [filter\]. */
         interface Return
 
@@ -142,8 +139,10 @@ public interface ColsOfColumnsSelectionDsl {
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> String.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
-        columnGroup(this).colsOf(type, filter)
+    public fun <C> String.colsOf(
+        type: KType,
+        filter: ColumnFilter<C> = { true },
+    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
 
     /**
      * @include [CommonColsOfDocs]
@@ -155,8 +154,10 @@ public interface ColsOfColumnsSelectionDsl {
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> KProperty<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
-        columnGroup(this).colsOf(type, filter)
+    public fun <C> KProperty<*>.colsOf(
+        type: KType,
+        filter: ColumnFilter<C> = { true },
+    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
 
     /**
      * @include [CommonColsOfDocs]
@@ -168,8 +169,10 @@ public interface ColsOfColumnsSelectionDsl {
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
-    public fun <C> ColumnPath.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
-        columnGroup(this).colsOf(type, filter)
+    public fun <C> ColumnPath.colsOf(
+        type: KType,
+        filter: ColumnFilter<C> = { true },
+    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
 }
 
 /**
@@ -182,8 +185,10 @@ public interface ColsOfColumnsSelectionDsl {
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
-public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
-    colsOfInternal(type, filter)
+public fun <C> ColumnSet<*>.colsOf(
+    type: KType,
+    filter: ColumnFilter<C> = { true },
+): TransformableColumnSet<C> = colsOfInternal(type, filter)
 
 /**
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs]
@@ -262,7 +267,10 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
  * match the given [filter] and are the given [type].
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnsResolver<*>.colsOfInternal(type: KType, filter: ColumnFilter<C>): TransformableColumnSet<C> =
+internal fun <C> ColumnsResolver<*>.colsOfInternal(
+    type: KType,
+    filter: ColumnFilter<C>,
+): TransformableColumnSet<C> =
     colsInternal {
         it.isSubtypeOf(type) && filter(it.cast())
     } as TransformableColumnSet<C>

@@ -18,7 +18,6 @@ import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.hours
 
 class ConvertTests {
-
     @Test
     fun `convert nullable strings to time`() {
         val time by columnOf("11?22?33", null)

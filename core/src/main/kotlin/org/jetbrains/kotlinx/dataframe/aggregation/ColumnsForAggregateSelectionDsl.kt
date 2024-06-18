@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.ConfiguredAggregateColumn
 
 public interface ColumnsForAggregateSelectionDsl<out T> : ColumnsSelectionDsl<T> {
-
     public infix fun <C> ColumnSet<C>.default(defaultValue: C): ColumnSet<C> =
         ConfiguredAggregateColumn.withDefault(this, defaultValue)
 

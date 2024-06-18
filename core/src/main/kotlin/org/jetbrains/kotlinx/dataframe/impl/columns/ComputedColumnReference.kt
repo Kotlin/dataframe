@@ -14,11 +14,11 @@ internal class ComputedColumnReference<R>(
     val infer: Infer,
     val compute: RowExpression<Any?, R>,
 ) : ColumnReference<R> {
-
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<R> =
-        context.df.newColumn(type, name, infer) {
-            compute(it, it)
-        }.addPath()
+        context.df
+            .newColumn(type, name, infer) {
+                compute(it, it)
+            }.addPath()
 
     override fun name() = name
 

@@ -25,11 +25,12 @@ public object H2 : DbType("h2") {
         tableMetadata.name.lowercase(Locale.getDefault()).contains("sys_") ||
             tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("information_schema") ?: false
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata = TableMetadata(
-        tables.getString("TABLE_NAME"),
-        tables.getString("TABLE_SCHEM"),
-        tables.getString("TABLE_CAT"),
-    )
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
+        TableMetadata(
+            tables.getString("TABLE_NAME"),
+            tables.getString("TABLE_SCHEM"),
+            tables.getString("TABLE_CAT"),
+        )
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 }

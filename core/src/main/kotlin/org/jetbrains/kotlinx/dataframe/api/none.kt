@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
  * See [Grammar] for all functions in this interface.
  */
 public interface NoneColumnsSelectionDsl {
-
     /**
      * ## None Grammar
      *
@@ -29,7 +28,6 @@ public interface NoneColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
-
         /** [**`none`**][ColumnsSelectionDsl.none] */
         public interface PlainDslName
     }

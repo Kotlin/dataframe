@@ -51,93 +51,119 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
             columnsToUpdate.clear()
         }
     }
-    val result = collectedTypes.mapValues { (name, columnSchemas) ->
-        val columnKinds = columnSchemas.map { it.kind }.distinct()
-        val kind = columnKinds.first()
-        when {
-            columnKinds.size > 1 -> ColumnSchema.Value(typeOf<Any>().withNullability(columnSchemas.any { it.nullable }))
+    val result =
+        collectedTypes.mapValues { (name, columnSchemas) ->
+            val columnKinds = columnSchemas.map { it.kind }.distinct()
+            val kind = columnKinds.first()
+            when {
+                columnKinds.size > 1 ->
+                    ColumnSchema.Value(
+                        typeOf<Any>().withNullability(columnSchemas.any { it.nullable }),
+                    )
 
-            kind == ColumnKind.Value -> ColumnSchema.Value(
-                type = columnSchemas
-                    .map { (it as ColumnSchema.Value).type }
-                    .toSet()
-                    .commonType(),
-            )
+                kind == ColumnKind.Value ->
+                    ColumnSchema.Value(
+                        type =
+                            columnSchemas
+                                .map { (it as ColumnSchema.Value).type }
+                                .toSet()
+                                .commonType(),
+                    )
 
-            kind == ColumnKind.Frame -> ColumnSchema.Frame(
-                // intersect only not empty schemas
-                schema = columnSchemas
-                    .mapNotNull { (it as ColumnSchema.Frame).schema.takeIf { it.columns.isNotEmpty() } }
-                    .intersectSchemas(),
-                nullable = columnSchemas.any { it.nullable },
-                contentType = columnSchemas
-                    .mapNotNull { (it as ColumnSchema.Frame).contentType }
-                    .toSet()
-                    .commonType(),
-            )
+                kind == ColumnKind.Frame ->
+                    ColumnSchema.Frame(
+                        // intersect only not empty schemas
+                        schema =
+                            columnSchemas
+                                .mapNotNull { (it as ColumnSchema.Frame).schema.takeIf { it.columns.isNotEmpty() } }
+                                .intersectSchemas(),
+                        nullable = columnSchemas.any { it.nullable },
+                        contentType =
+                            columnSchemas
+                                .mapNotNull { (it as ColumnSchema.Frame).contentType }
+                                .toSet()
+                                .commonType(),
+                    )
 
-            kind == ColumnKind.Group -> ColumnSchema.Group(
-                schema = columnSchemas.map { (it as ColumnSchema.Group).schema }
-                    .intersectSchemas(),
-                contentType = columnSchemas
-                    .mapNotNull { (it as ColumnSchema.Group).contentType }
-                    .toSet()
-                    .commonType(),
-            )
+                kind == ColumnKind.Group ->
+                    ColumnSchema.Group(
+                        schema =
+                            columnSchemas
+                                .map { (it as ColumnSchema.Group).schema }
+                                .intersectSchemas(),
+                        contentType =
+                            columnSchemas
+                                .mapNotNull { (it as ColumnSchema.Group).contentType }
+                                .toSet()
+                                .commonType(),
+                    )
 
-            else -> throw RuntimeException()
+                else -> throw RuntimeException()
+            }
         }
-    }
     return DataFrameSchemaImpl(result)
 }
 
-internal fun AnyCol.extractSchema(): ColumnSchema = when (this) {
-    is ValueColumn<*> -> ColumnSchema.Value(type)
-    is ColumnGroup<*> -> ColumnSchema.Group(schema(), typeOf<Any?>())
-    is FrameColumn<*> -> ColumnSchema.Frame(schema.value, hasNulls, typeOf<Any?>())
-    else -> throw RuntimeException("Unknown column type: $this")
-}
+internal fun AnyCol.extractSchema(): ColumnSchema =
+    when (this) {
+        is ValueColumn<*> -> ColumnSchema.Value(type)
+        is ColumnGroup<*> -> ColumnSchema.Group(schema(), typeOf<Any?>())
+        is FrameColumn<*> -> ColumnSchema.Frame(schema.value, hasNulls, typeOf<Any?>())
+        else -> throw RuntimeException("Unknown column type: $this")
+    }
 
-internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) {
-    is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
-    is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
-    is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
-    else -> error("Unexpected ColumnSchema: $this")
-}
+internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol =
+    when (this) {
+        is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
+        is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
+        is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
+        else -> error("Unexpected ColumnSchema: $this")
+    }
 
 /** Create "empty" column, filled with either null or empty dataframes. */
-internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): AnyCol = when (this) {
-    is ColumnSchema.Value -> DataColumn.createValueColumn(
-        name = name,
-        values = List(numberOfRows) { null },
-        type = type,
-    )
+internal fun ColumnSchema.createEmptyColumn(
+    name: String,
+    numberOfRows: Int,
+): AnyCol =
+    when (this) {
+        is ColumnSchema.Value ->
+            DataColumn.createValueColumn(
+                name = name,
+                values = List(numberOfRows) { null },
+                type = type,
+            )
 
-    is ColumnSchema.Group -> DataColumn.createColumnGroup(
-        name = name,
-        df = schema.createEmptyDataFrame(numberOfRows),
-    ) as AnyCol
+        is ColumnSchema.Group ->
+            DataColumn.createColumnGroup(
+                name = name,
+                df = schema.createEmptyDataFrame(numberOfRows),
+            ) as AnyCol
 
-    is ColumnSchema.Frame -> DataColumn.createFrameColumn(
-        name = name,
-        groups = List(numberOfRows) { emptyDataFrame<Any?>() },
-        schema = lazyOf(schema),
-    )
+        is ColumnSchema.Frame ->
+            DataColumn.createFrameColumn(
+                name = name,
+                groups = List(numberOfRows) { emptyDataFrame<Any?>() },
+                schema = lazyOf(schema),
+            )
 
-    else -> error("Unexpected ColumnSchema: $this")
-}
+        else -> error("Unexpected ColumnSchema: $this")
+    }
 
-internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame = columns.map { (name, schema) ->
-    schema.createEmptyColumn(name)
-}.toDataFrame()
+internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
+    columns
+        .map { (name, schema) ->
+            schema.createEmptyColumn(name)
+        }.toDataFrame()
 
-internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame = if (columns.isEmpty()) {
-    DataFrame.empty(numberOfRows)
-} else {
-    columns.map { (name, schema) ->
-        schema.createEmptyColumn(name, numberOfRows)
-    }.toDataFrame()
-}
+internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
+    if (columns.isEmpty()) {
+        DataFrame.empty(numberOfRows)
+    } else {
+        columns
+            .map { (name, schema) ->
+                schema.createEmptyColumn(name, numberOfRows)
+            }.toDataFrame()
+    }
 
 @PublishedApi
 internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =

@@ -27,22 +27,28 @@ import kotlin.reflect.KProperty
  *
  * `df.add("columnName") { "someColumn"<Int>() + 15 }.groupBy("columnName")`
  */
-public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> =
-    groupByImpl(moveToTop, cols)
+public fun <T> DataFrame<T>.groupBy(
+    moveToTop: Boolean = true,
+    cols: ColumnsSelector<T, *>,
+): GroupBy<T, T> = groupByImpl(moveToTop, cols)
 
 public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
 
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumnSet() }
 
-public fun <T> DataFrame<T>.groupBy(vararg cols: AnyColumnReference, moveToTop: Boolean = true): GroupBy<T, T> =
-    groupBy(moveToTop) { cols.toColumnSet() }
+public fun <T> DataFrame<T>.groupBy(
+    vararg cols: AnyColumnReference,
+    moveToTop: Boolean = true,
+): GroupBy<T, T> = groupBy(moveToTop) { cols.toColumnSet() }
 
 // endregion
 
 // region Pivot
 
-public fun <T> Pivot<T>.groupBy(moveToTop: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
-    (this as PivotImpl<T>).toGroupedPivot(moveToTop, columns)
+public fun <T> Pivot<T>.groupBy(
+    moveToTop: Boolean = true,
+    columns: ColumnsSelector<T, *>,
+): PivotGroupBy<T> = (this as PivotImpl<T>).toGroupedPivot(moveToTop, columns)
 
 public fun <T> Pivot<T>.groupBy(vararg columns: AnyColumnReference): PivotGroupBy<T> = groupBy { columns.toColumnSet() }
 
@@ -63,7 +69,6 @@ public typealias GroupedRowSelector<T, G, R> = GroupedDataRow<T, G>.(GroupedData
 public typealias GroupedRowFilter<T, G> = GroupedRowSelector<T, G, Boolean>
 
 public interface GroupedDataRow<out T, out G> : DataRow<T> {
-
     public fun group(): DataFrame<G>
 }
 
@@ -72,7 +77,6 @@ public val <T, G> GroupedDataRow<T, G>.group: DataFrame<G> get() = group()
 public data class GroupWithKey<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 
 public interface GroupBy<out T, out G> : Grouped<G> {
-
     public val groups: FrameColumn<G>
 
     public val keys: DataFrame<T>
@@ -91,7 +95,6 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 }
 
 public interface Grouped<out T> : Aggregatable<T> {
-
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T>
 }
 

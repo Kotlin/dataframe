@@ -31,41 +31,61 @@ import org.junit.Test
 import kotlin.math.sqrt
 
 class DataRowTests : BaseTest() {
-
     @Test
     fun prevNext() {
-        typed.update { age }.with { prev()?.age }.age.drop(1) shouldBe typed.age.dropLast(1)
-        typed.update { age }.with { next()?.age }.age.dropLast(1) shouldBe typed.age.drop(1)
+        typed
+            .update { age }
+            .with { prev()?.age }
+            .age
+            .drop(1) shouldBe typed.age.dropLast(1)
+        typed
+            .update { age }
+            .with { next()?.age }
+            .age
+            .dropLast(1) shouldBe typed.age.drop(1)
     }
 
     @Test
     fun diff() {
-        typed.update { age }.with { diffOrNull { age } }.age.drop(1).values() shouldBe typed.age.values()
-            .zipWithNext { curr, next -> next - curr }
+        typed
+            .update { age }
+            .with { diffOrNull { age } }
+            .age
+            .drop(1)
+            .values() shouldBe
+            typed.age
+                .values()
+                .zipWithNext { curr, next -> next - curr }
     }
 
     @Test
     fun mean() {
-        typed.mapToColumn("mean") { rowMean() }.values() shouldBe typed.age.values()
-            .zip(typed.weight.values()) { a, b -> if (b != null) (a + b) / 2.0 else a }
+        typed.mapToColumn("mean") { rowMean() }.values() shouldBe
+            typed.age
+                .values()
+                .zip(typed.weight.values()) { a, b -> if (b != null) (a + b) / 2.0 else a }
     }
 
     @Test
     fun std() {
-        typed.mapToColumn("std") { rowStd(skipNA = true, ddof = 0) }.values() shouldBe typed.age.values()
-            .zip(typed.weight.values()) { a, b ->
-                if (b == null) {
-                    .0
-                } else {
-                    val mean = (a + b) / 2.0
-                    sqrt(((a - mean) * (a - mean) + (b - mean) * (b - mean)) / 2)
+        typed.mapToColumn("std") { rowStd(skipNA = true, ddof = 0) }.values() shouldBe
+            typed.age
+                .values()
+                .zip(typed.weight.values()) { a, b ->
+                    if (b == null) {
+                        .0
+                    } else {
+                        val mean = (a + b) / 2.0
+                        sqrt(((a - mean) * (a - mean) + (b - mean) * (b - mean)) / 2)
+                    }
                 }
-            }
     }
 
     @Test
     fun sum() {
-        typed.convert { weight }.toDouble()
+        typed
+            .convert { weight }
+            .toDouble()
             .mapToColumn("sum") {
                 rowSum()
             }.values() shouldBe typed.age.values().zip(typed.weight.values()) { a, b -> a + (b ?: 0).toDouble() }
@@ -73,26 +93,29 @@ class DataRowTests : BaseTest() {
 
     @Test
     fun namedValuesOf() {
-        typed.mapToColumn("vals") {
-            namedValuesOf<Int>().map { it.value }
-        }.values() shouldBe typed.merge { age and weight }.by { it.filterNotNull() }.intoList()
+        typed
+            .mapToColumn("vals") {
+                namedValuesOf<Int>().map { it.value }
+            }.values() shouldBe typed.merge { age and weight }.by { it.filterNotNull() }.intoList()
     }
 
     @Test
     fun valuesOf() {
-        typed.mapToColumn("vals") {
-            valuesOf<String>()
-        }.values() shouldBe typed.merge { name and city }.by { it.filterNotNull() }.intoList()
+        typed
+            .mapToColumn("vals") {
+                valuesOf<String>()
+            }.values() shouldBe typed.merge { name and city }.by { it.filterNotNull() }.intoList()
     }
 
     @Test
     fun namedValuesFilter() {
         typed.mapToColumn("vals") {
             namedValues().firstOrNull { it.value == null }?.name
-        } shouldBe typed.mapToColumn("vals") {
-            val firstNullIndex = values().indexOfFirst { it == null }
-            if (firstNullIndex == -1) null else columnNames()[firstNullIndex]
-        }
+        } shouldBe
+            typed.mapToColumn("vals") {
+                val firstNullIndex = values().indexOfFirst { it == null }
+                if (firstNullIndex == -1) null else columnNames()[firstNullIndex]
+            }
     }
 
     @Test

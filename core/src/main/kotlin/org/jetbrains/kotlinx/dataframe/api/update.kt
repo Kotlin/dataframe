@@ -99,8 +99,7 @@ public data class Update<T, C>(
      * for all the selecting options. {@set [Columns.SelectingColumnsArg] [Selecting Columns][UpdateSelectingOptions]}
      */
     public interface Columns {
-
-        /* Optional argument that can be set to redirect where the [Selecting Columns] link points to */
+        // Optional argument that can be set to redirect where the [Selecting Columns] link points to
         public interface SelectingColumnsArg
     }
 
@@ -205,7 +204,6 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  */
 @ExcludeFromSources
 private interface CommonUpdateAtFunctionDoc {
-
     /** The indices of the rows to update. Either a [Collection]<[Int]>, an [IntRange], or just `vararg` indices. */
     interface RowIndicesParam
 }
@@ -253,11 +251,13 @@ public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C
 @ExcludeFromSources
 private interface SeeAlsoPerRowCol
 
-/** ## Update Expression
+// doc processor plugin does not work with type aliases yet
+
+/**
+ * ## Update Expression
  * @see ExpressionsGivenRow.RowValueExpression.WithExample
  * @see ExpressionsGivenRow.AddDataRowNote
  */
-// doc processor plugin does not work with type aliases yet
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 /** ## With
@@ -332,9 +332,10 @@ private interface CommonUpdatePerColMapDoc
  * @param [values] The [Map]<[String], Value> to provide a new value for every selected cell.
  *   For each selected column, there must be a value in the map with the same name.
  */
-public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> = updateWithValuePerColumnImpl {
-    values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined")
-}
+public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> =
+    updateWithValuePerColumnImpl {
+        values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined")
+    }
 
 /**
  * {@include [CommonUpdatePerColMapDoc]}
@@ -461,7 +462,6 @@ public fun <T> DataFrame<T>.update(
  */
 @ExcludeFromSources
 private interface CommonSpecificWithDoc {
-
     /** Arg for the resulting value */
     private interface FirstArg
 

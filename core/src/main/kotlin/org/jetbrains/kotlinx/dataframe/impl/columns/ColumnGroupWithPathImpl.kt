@@ -12,17 +12,17 @@ internal class ColumnGroupWithPathImpl<T> internal constructor(
     override val path: ColumnPath,
 ) : ColumnGroupImpl<T>(column.name, column),
     ColumnWithPath<DataRow<T>> {
-
-    override fun rename(newName: String) = if (newName == name()) {
-        this
-    } else {
-        ColumnGroupWithPathImpl(
-            column.rename(
-                newName,
-            ),
-            path.dropLast(1) + newName,
-        )
-    }
+    override fun rename(newName: String) =
+        if (newName == name()) {
+            this
+        } else {
+            ColumnGroupWithPathImpl(
+                column.rename(
+                    newName,
+                ),
+                path.dropLast(1) + newName,
+            )
+        }
 
     override val data: DataColumn<DataRow<T>>
         get() = column as DataColumn<DataRow<T>>

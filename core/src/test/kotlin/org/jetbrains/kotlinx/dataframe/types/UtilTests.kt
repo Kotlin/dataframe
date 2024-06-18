@@ -19,7 +19,6 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 class UtilTests {
-
     @OptIn(ExperimentalUnsignedTypes::class)
     @Test
     fun `isArray tests`() {
@@ -218,9 +217,13 @@ class UtilTests {
     }
 
     interface UpperBound
+
     interface TypeWithUpperbound1<T : UpperBound>
+
     interface TestType1<T : UpperBound> : TypeWithUpperbound1<T>
+
     interface TestTypeIn1<in T> : Comparable<T>
+
     interface TestType2<S : UpperBound> : TestTypeIn1<TestType1<S>>
 
     @Test

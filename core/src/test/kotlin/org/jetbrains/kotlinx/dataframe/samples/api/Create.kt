@@ -32,7 +32,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class Create : TestBase() {
-
     @Test
     @TransformDataFrameExpressions
     fun createValueByColumnOf() {
@@ -238,14 +237,15 @@ class Create : TestBase() {
     fun createDataFrameOf() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
-        val df = dataFrameOf("name", "age")(
-            "Alice",
-            15,
-            "Bob",
-            20,
-            "Charlie",
-            100,
-        )
+        val df =
+            dataFrameOf("name", "age")(
+                "Alice",
+                15,
+                "Bob",
+                20,
+                "Charlie",
+                100,
+            )
         // SampleEnd
     }
 
@@ -254,10 +254,11 @@ class Create : TestBase() {
     fun createDataFrameOfPairs() {
         // SampleStart
         // DataFrame with 2 columns and 3 rows
-        val df = dataFrameOf(
-            "name" to listOf("Alice", "Bob", "Charlie"),
-            "age" to listOf(15, 20, 100),
-        )
+        val df =
+            dataFrameOf(
+                "name" to listOf("Alice", "Bob", "Charlie"),
+                "age" to listOf(15, 20, 100),
+            )
         // SampleEnd
     }
 
@@ -337,14 +338,15 @@ class Create : TestBase() {
     fun createDataFrameFromNamesAndValues() {
         // SampleStart
         val names = listOf("name", "age")
-        val values = listOf(
-            "Alice",
-            15,
-            "Bob",
-            20,
-            "Charlie",
-            22,
-        )
+        val values =
+            listOf(
+                "Alice",
+                15,
+                "Bob",
+                20,
+                "Charlie",
+                22,
+            )
         val df = dataFrameOf(names, values)
         // SampleEnd
         df.columnNames() shouldBe listOf("name", "age")
@@ -385,13 +387,16 @@ class Create : TestBase() {
     fun readDataFrameFromDeepObject() {
         // SampleStart
         data class Name(val firstName: String, val lastName: String)
+
         data class Score(val subject: String, val value: Int)
+
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
 
-        val students = listOf(
-            Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
-            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
-        )
+        val students =
+            listOf(
+                Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+                Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
+            )
 
         val df = students.toDataFrame(maxDepth = 1)
         // SampleEnd
@@ -406,31 +411,35 @@ class Create : TestBase() {
     @TransformDataFrameExpressions
     fun readDataFrameFromDeepObjectWithExclude() {
         data class Name(val firstName: String, val lastName: String)
+
         data class Score(val subject: String, val value: Int)
+
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
 
-        val students = listOf(
-            Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
-            Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
-        )
+        val students =
+            listOf(
+                Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+                Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
+            )
 
         // SampleStart
-        val df = students.toDataFrame {
-            // add column
-            "year of birth" from { 2021 - it.age }
+        val df =
+            students.toDataFrame {
+                // add column
+                "year of birth" from { 2021 - it.age }
 
-            // scan all properties
-            properties(maxDepth = 1) {
-                exclude(Score::subject) // `subject` property will be skipped from object graph traversal
-                preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
-            }
+                // scan all properties
+                properties(maxDepth = 1) {
+                    exclude(Score::subject) // `subject` property will be skipped from object graph traversal
+                    preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
+                }
 
-            // add column group
-            "summary" {
-                "max score" from { it.scores.maxOf { it.value } }
-                "min score" from { it.scores.minOf { it.value } }
+                // add column group
+                "summary" {
+                    "max score" from { it.scores.maxOf { it.value } }
+                    "min score" from { it.scores.minOf { it.value } }
+                }
             }
-        }
         // SampleEnd
         df.columnsCount() shouldBe 5
         df.rowsCount() shouldBe 2

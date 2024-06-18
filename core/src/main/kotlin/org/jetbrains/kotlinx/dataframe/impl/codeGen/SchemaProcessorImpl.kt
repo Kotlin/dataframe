@@ -14,22 +14,26 @@ internal class SchemaProcessorImpl(
     override val namePrefix: String,
     private val fieldNameNormalizer: (String) -> String = { it },
 ) : SchemaProcessor {
-
     private val registeredMarkers = existingMarkers.toMutableList()
 
     private val usedMarkerNames = existingMarkers.map { it.shortName }.toMutableSet()
 
     override val generatedMarkers = mutableListOf<Marker>()
 
-    private fun DataFrameSchema.getAllSuperMarkers() = registeredMarkers
-        .filter { it.isOpen && it.schema.compare(this).isSuperOrEqual() }
+    private fun DataFrameSchema.getAllSuperMarkers() =
+        registeredMarkers
+            .filter { it.isOpen && it.schema.compare(this).isSuperOrEqual() }
 
     private fun List<Marker>.onlyLeafs(): List<Marker> {
         val skip = flatMap { it.allSuperMarkers.keys }.toSet()
         return filter { !skip.contains(it.name) }
     }
 
-    private fun generateValidFieldName(columnName: String, index: Int, usedNames: Collection<String>): ValidFieldName {
+    private fun generateValidFieldName(
+        columnName: String,
+        index: Int,
+        usedNames: Collection<String>,
+    ): ValidFieldName {
         var result = ValidFieldName.of(columnName)
         result = ValidFieldName.of(fieldNameNormalizer(result.unquoted))
         if (result.unquoted.isEmpty()) result = ValidFieldName.of("_$index")
@@ -38,9 +42,10 @@ internal class SchemaProcessorImpl(
         while (usedNames.contains(result.quotedIfNeeded)) {
             result =
                 if (result.needsQuote) {
-                    baseName + ValidFieldName.of(
-                        " ($attempt)",
-                    )
+                    baseName +
+                        ValidFieldName.of(
+                            " ($attempt)",
+                        )
                 } else {
                     baseName + ValidFieldName.of("$attempt")
                 }
@@ -66,18 +71,20 @@ internal class SchemaProcessorImpl(
         val usedFieldNames =
             requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
 
-        fun getFieldType(columnSchema: ColumnSchema): FieldType = when (columnSchema) {
-            is ColumnSchema.Value -> FieldType.ValueFieldType(columnSchema.type.toString())
+        fun getFieldType(columnSchema: ColumnSchema): FieldType =
+            when (columnSchema) {
+                is ColumnSchema.Value -> FieldType.ValueFieldType(columnSchema.type.toString())
 
-            is ColumnSchema.Group -> FieldType.GroupFieldType(process(columnSchema.schema, false, visibility).name)
+                is ColumnSchema.Group -> FieldType.GroupFieldType(process(columnSchema.schema, false, visibility).name)
 
-            is ColumnSchema.Frame -> FieldType.FrameFieldType(
-                process(columnSchema.schema, false, visibility).name,
-                columnSchema.nullable,
-            )
+                is ColumnSchema.Frame ->
+                    FieldType.FrameFieldType(
+                        process(columnSchema.schema, false, visibility).name,
+                        columnSchema.nullable,
+                    )
 
-            else -> throw NotImplementedError()
-        }
+                else -> throw NotImplementedError()
+            }
 
         return schema.columns.asIterable().sortedBy { it.key }.flatMapIndexed { index, column ->
             val (columnName, columnSchema) = column
@@ -85,24 +92,27 @@ internal class SchemaProcessorImpl(
             // find all fields that were already generated for this column name in base interfaces
             val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }
 
-            val fieldsToOverride = superFields
-                .filter { it.columnSchema != columnSchema }
-                .map { it.fieldName }
-                .distinctBy { it.unquoted }
+            val fieldsToOverride =
+                superFields
+                    .filter { it.columnSchema != columnSchema }
+                    .map { it.fieldName }
+                    .distinctBy { it.unquoted }
 
-            val newFields = when {
-                fieldsToOverride.isNotEmpty() -> fieldsToOverride.map {
-                    GeneratedField(it, columnName, true, columnSchema, fieldType)
+            val newFields =
+                when {
+                    fieldsToOverride.isNotEmpty() ->
+                        fieldsToOverride.map {
+                            GeneratedField(it, columnName, true, columnSchema, fieldType)
+                        }
+
+                    superFields.isNotEmpty() -> emptyList()
+
+                    else -> {
+                        val fieldName = generateValidFieldName(columnName, index, usedFieldNames)
+                        usedFieldNames.add(fieldName.quotedIfNeeded)
+                        listOf(GeneratedField(fieldName, columnName, false, columnSchema, fieldType))
+                    }
                 }
-
-                superFields.isNotEmpty() -> emptyList()
-
-                else -> {
-                    val fieldName = generateValidFieldName(columnName, index, usedFieldNames)
-                    usedFieldNames.add(fieldName.quotedIfNeeded)
-                    listOf(GeneratedField(fieldName, columnName, false, columnSchema, fieldType))
-                }
-            }
             newFields
         }
     }
@@ -115,46 +125,53 @@ internal class SchemaProcessorImpl(
         visibility: MarkerVisibility,
     ): Marker {
         val baseMarkers = mutableListOf<Marker>()
-        val fields = if (withBaseInterfaces) {
-            baseMarkers += scheme.getRequiredMarkers().onlyLeafs()
+        val fields =
+            if (withBaseInterfaces) {
+                baseMarkers += scheme.getRequiredMarkers().onlyLeafs()
 
-            val columnNames = scheme.columns.keys
-            val superColumns = baseMarkers.flatMap { it.allFields.map { it.columnName } }.toSet()
+                val columnNames = scheme.columns.keys
+                val superColumns = baseMarkers.flatMap { it.allFields.map { it.columnName } }.toSet()
 
-            val newColumns = (columnNames - superColumns).toMutableSet()
+                val newColumns = (columnNames - superColumns).toMutableSet()
 
-            if (newColumns.isNotEmpty()) {
-                val availableMarkers = scheme.getAllSuperMarkers().toMutableList()
-                availableMarkers -= baseMarkers.toSet()
+                if (newColumns.isNotEmpty()) {
+                    val availableMarkers = scheme.getAllSuperMarkers().toMutableList()
+                    availableMarkers -= baseMarkers.toSet()
 
-                while (newColumns.size > 0) {
-                    val bestMarker = availableMarkers
-                        .map { marker -> marker to newColumns.count { marker.containsColumn(it) } }
-                        .maxByOrNull { it.second }
-                    if (bestMarker != null && bestMarker.second > 0) {
-                        newColumns.removeAll(bestMarker.first.columnNames.toSet())
-                        baseMarkers += bestMarker.first
-                        availableMarkers -= bestMarker.first
-                    } else {
-                        break
+                    while (newColumns.size > 0) {
+                        val bestMarker =
+                            availableMarkers
+                                .map { marker -> marker to newColumns.count { marker.containsColumn(it) } }
+                                .maxByOrNull { it.second }
+                        if (bestMarker != null && bestMarker.second > 0) {
+                            newColumns.removeAll(bestMarker.first.columnNames.toSet())
+                            baseMarkers += bestMarker.first
+                            availableMarkers -= bestMarker.first
+                        } else {
+                            break
+                        }
                     }
                 }
+                generateFields(scheme, visibility, baseMarkers)
+            } else {
+                generateFields(scheme, visibility)
             }
-            generateFields(scheme, visibility, baseMarkers)
-        } else {
-            generateFields(scheme, visibility)
-        }
         return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
     }
 
     private fun DataFrameSchema.getRequiredMarkers() = registeredMarkers.filterRequiredForSchema(this)
 
-    override fun process(schema: DataFrameSchema, isOpen: Boolean, visibility: MarkerVisibility): Marker {
+    override fun process(
+        schema: DataFrameSchema,
+        isOpen: Boolean,
+        visibility: MarkerVisibility,
+    ): Marker {
         val markerName: String
         val required = schema.getRequiredMarkers()
-        val existingMarker = registeredMarkers.firstOrNull {
-            (!isOpen || it.isOpen) && it.schema == schema && it.implementsAll(required)
-        }
+        val existingMarker =
+            registeredMarkers.firstOrNull {
+                (!isOpen || it.isOpen) && it.schema == schema && it.implementsAll(required)
+            }
         if (existingMarker != null) {
             return existingMarker
         } else {

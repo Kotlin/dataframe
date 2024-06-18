@@ -16,12 +16,12 @@ import org.junit.Test
 
 @Ignore
 class ApiLevels {
-
     @Test
     @TransformDataFrameExpressions
     fun strings() {
         // SampleStart
-        DataFrame.read("titanic.csv")
+        DataFrame
+            .read("titanic.csv")
             .add("lastName") { "name"<String>().split(",").last() }
             .dropNulls("age")
             .filter {
@@ -54,7 +54,8 @@ class ApiLevels {
         val lastName by column<String>()
         // SampleStart
 
-        DataFrame.read("titanic.csv")
+        DataFrame
+            .read("titanic.csv")
             .add(lastName) { name().split(",").last() }
             .dropNulls { age }
             .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
@@ -71,7 +72,8 @@ class ApiLevels {
         val name by column<String>()
         val lastName by column<String>()
 
-        DataFrame.read("titanic.csv")
+        DataFrame
+            .read("titanic.csv")
             .add(lastName) { name().split(",").last() }
             .dropNulls { age }
             .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
@@ -82,17 +84,23 @@ class ApiLevels {
     @TransformDataFrameExpressions
     fun kproperties1() {
         // SampleStart
-        data class Passenger(val survived: Boolean, val home: String, val age: Int, val lastName: String)
+        data class Passenger(
+            val survived: Boolean,
+            val home: String,
+            val age: Int,
+            val lastName: String,
+        )
 
-        val passengers = DataFrame.read("titanic.csv")
-            .add(Passenger::lastName) { "name"<String>().split(",").last() }
-            .dropNulls(Passenger::age)
-            .filter {
-                it[Passenger::survived] &&
-                    it[Passenger::home].endsWith("NY") &&
-                    it[Passenger::age] in 10..20
-            }
-            .toListOf<Passenger>()
+        val passengers =
+            DataFrame
+                .read("titanic.csv")
+                .add(Passenger::lastName) { "name"<String>().split(",").last() }
+                .dropNulls(Passenger::age)
+                .filter {
+                    it[Passenger::survived] &&
+                        it[Passenger::home].endsWith("NY") &&
+                        it[Passenger::age] in 10..20
+                }.toListOf<Passenger>()
         // SampleEnd
     }
 
@@ -106,9 +114,11 @@ class ApiLevels {
             val name: String,
         )
 
-        val passengers = DataFrame.read("titanic.csv")
-            .filter { it[Passenger::city].endsWith("NY") }
-            .toListOf<Passenger>()
+        val passengers =
+            DataFrame
+                .read("titanic.csv")
+                .filter { it[Passenger::city].endsWith("NY") }
+                .toListOf<Passenger>()
         // SampleEnd
     }
 
@@ -125,7 +135,8 @@ class ApiLevels {
     fun extensionProperties2() {
         val df = DataFrame.read("titanic.csv").cast<TitanicPassenger>()
         // SampleStart
-        df.add("lastName") { name.split(",").last() }
+        df
+            .add("lastName") { name.split(",").last() }
             .dropNulls { age }
             .filter { survived && home.endsWith("NY") && age in 10..20 }
         // SampleEnd

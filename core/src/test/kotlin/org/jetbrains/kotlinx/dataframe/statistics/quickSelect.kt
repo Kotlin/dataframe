@@ -7,7 +7,6 @@ import org.junit.Test
 import kotlin.random.Random
 
 class QuickSelectTests {
-
     @Test
     fun empty() {
         shouldThrow<IndexOutOfBoundsException> {

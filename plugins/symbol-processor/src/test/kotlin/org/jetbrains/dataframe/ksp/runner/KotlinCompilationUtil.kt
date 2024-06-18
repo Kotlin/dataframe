@@ -92,14 +92,16 @@ internal object KotlinCompilationUtil {
                 break
             }
             check(currentClassloader is URLClassLoader) {
-                """Classpath for compilation could not be extracted
+                """
+                Classpath for compilation could not be extracted
                 since $currentClassloader is not an instance of URLClassloader
                 """.trimIndent()
             }
             // We only know how to extract classpaths from URLClassloaders.
             currentClassloader.urLs.forEach { url ->
                 check(url.protocol == "file") {
-                    """Given classloader consists of classpaths which are unsupported for
+                    """
+                    Given classloader consists of classpaths which are unsupported for
                     compilation.
                     """.trimIndent()
                 }

@@ -70,7 +70,11 @@ internal class ArrowWriterImpl(
 
     private val allocator = RootAllocator()
 
-    private fun allocateVector(vector: FieldVector, size: Int, totalBytes: Long? = null) {
+    private fun allocateVector(
+        vector: FieldVector,
+        size: Int,
+        totalBytes: Long? = null,
+    ) {
         when (vector) {
             is FixedWidthVector -> vector.allocateNew(size)
             is VariableWidthVector -> totalBytes?.let { vector.allocateNew(it, size) } ?: vector.allocateNew(size)
@@ -92,7 +96,10 @@ internal class ArrowWriterImpl(
         }
     }
 
-    private fun infillWithNulls(vector: FieldVector, size: Int) {
+    private fun infillWithNulls(
+        vector: FieldVector,
+        size: Int,
+    ) {
         when (vector) {
             is BaseFixedWidthVector -> for (i in 0 until size) {
                 vector.setNull(i)
@@ -107,7 +114,10 @@ internal class ArrowWriterImpl(
         vector.valueCount = size
     }
 
-    private fun convertColumnToTarget(column: AnyCol?, targetFieldType: ArrowType): AnyCol? {
+    private fun convertColumnToTarget(
+        column: AnyCol?,
+        targetFieldType: ArrowType,
+    ): AnyCol? {
         if (column == null) return null
         return when (targetFieldType) {
             ArrowType.Utf8() -> column.map { it?.toString() }
@@ -126,8 +136,10 @@ internal class ArrowWriterImpl(
 
             is ArrowType.Decimal -> column.convertToBigDecimal()
 
-            ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToDouble()
-                .convertToFloat()
+            ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) ->
+                column
+                    .convertToDouble()
+                    .convertToFloat()
 
             // Use [convertToDouble] as locale logic step
             ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE) -> column.convertToDouble()
@@ -146,109 +158,146 @@ internal class ArrowWriterImpl(
         }
     }
 
-    private fun infillVector(vector: FieldVector, column: AnyCol) {
+    private fun infillVector(
+        vector: FieldVector,
+        column: AnyCol,
+    ) {
         when (vector) {
-            is VarCharVector -> column.convertToString()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, Text(value)) }
-                        ?: vector.setNull(i)
-                }
+            is VarCharVector ->
+                column
+                    .convertToString()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, Text(value)) }
+                            ?: vector.setNull(i)
+                    }
 
-            is LargeVarCharVector -> column.convertToString()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, Text(value)) }
-                        ?: vector.setNull(i)
-                }
+            is LargeVarCharVector ->
+                column
+                    .convertToString()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, Text(value)) }
+                            ?: vector.setNull(i)
+                    }
 
-            is BitVector -> column.convertToBoolean()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value.compareTo(false)) }
-                        ?: vector.setNull(i)
-                }
+            is BitVector ->
+                column
+                    .convertToBoolean()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value.compareTo(false)) }
+                            ?: vector.setNull(i)
+                    }
 
-            is TinyIntVector -> column.convertToInt()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is TinyIntVector ->
+                column
+                    .convertToInt()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is SmallIntVector -> column.convertToInt()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is SmallIntVector ->
+                column
+                    .convertToInt()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is IntVector -> column.convertToInt()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is IntVector ->
+                column
+                    .convertToInt()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is BigIntVector -> column.convertToLong()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is BigIntVector ->
+                column
+                    .convertToLong()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is DecimalVector -> column.convertToBigDecimal()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is DecimalVector ->
+                column
+                    .convertToBigDecimal()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is Decimal256Vector -> column.convertToBigDecimal()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is Decimal256Vector ->
+                column
+                    .convertToBigDecimal()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is Float8Vector -> column.convertToDouble()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is Float8Vector ->
+                column
+                    .convertToDouble()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is Float4Vector -> column.convertToFloat()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value) }
-                        ?: vector.setNull(i)
-                }
+            is Float4Vector ->
+                column
+                    .convertToFloat()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value) }
+                            ?: vector.setNull(i)
+                    }
 
-            is DateDayVector -> column.convertToLocalDate()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value.toJavaLocalDate().toEpochDay().toInt()) }
-                        ?: vector.setNull(i)
-                }
+            is DateDayVector ->
+                column
+                    .convertToLocalDate()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value.toJavaLocalDate().toEpochDay().toInt()) }
+                            ?: vector.setNull(i)
+                    }
 
-            is DateMilliVector -> column.convertToLocalDateTime()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()) }
-                        ?: vector.setNull(i)
-                }
+            is DateMilliVector ->
+                column
+                    .convertToLocalDateTime()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()) }
+                            ?: vector.setNull(i)
+                    }
 
-            is TimeNanoVector -> column.convertToLocalTime()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value.toNanoOfDay()) }
-                        ?: vector.setNull(i)
-                }
+            is TimeNanoVector ->
+                column
+                    .convertToLocalTime()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value.toNanoOfDay()) }
+                            ?: vector.setNull(i)
+                    }
 
-            is TimeMicroVector -> column.convertToLocalTime()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, value.toNanoOfDay() / 1000) }
-                        ?: vector.setNull(i)
-                }
+            is TimeMicroVector ->
+                column
+                    .convertToLocalTime()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, value.toNanoOfDay() / 1000) }
+                            ?: vector.setNull(i)
+                    }
 
-            is TimeMilliVector -> column.convertToLocalTime()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()) }
-                        ?: vector.setNull(i)
-                }
+            is TimeMilliVector ->
+                column
+                    .convertToLocalTime()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()) }
+                            ?: vector.setNull(i)
+                    }
 
-            is TimeSecVector -> column.convertToLocalTime()
-                .forEachIndexed { i, value ->
-                    value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()) }
-                        ?: vector.setNull(i)
-                }
+            is TimeSecVector ->
+                column
+                    .convertToLocalTime()
+                    .forEachIndexed { i, value ->
+                        value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()) }
+                            ?: vector.setNull(i)
+                    }
 
             else -> {
                 // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector, DurationVector, StructVector) and may be others (ListVector, FixedSizeListVector etc)
@@ -344,10 +393,11 @@ internal class ArrowWriterImpl(
         return vector
     }
 
-    private fun List<AnyCol>.toVectors(): List<FieldVector> = this.map {
-        val field = it.toArrowField(mismatchSubscriber)
-        allocateVectorAndInfill(field, it, true, true)
-    }
+    private fun List<AnyCol>.toVectors(): List<FieldVector> =
+        this.map {
+            val field = it.toArrowField(mismatchSubscriber)
+            allocateVectorAndInfill(field, it, true, true)
+        }
 
     override fun allocateVectorSchemaRoot(): VectorSchemaRoot {
         val mainVectors = LinkedHashMap<String, FieldVector>()

@@ -68,10 +68,12 @@ internal val newDataSchemas = mutableListOf<KClass<*>>()
 
 internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
     JupyterIntegration() {
-
     val version = options["v"]
 
-    private fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
+    private fun KotlinKernelHost.execute(
+        codeWithConverter: CodeWithConverter,
+        argument: String,
+    ): VariableName? {
         val code = codeWithConverter.with(argument)
         return if (code.isNotBlank()) {
             val result = execute(code)
@@ -105,9 +107,10 @@ internal class Integration(private val notebook: Notebook, private val options: 
         ) {
             is CodeGenerationReadResult.Success -> {
                 val readDfMethod = codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
-                val code = readDfMethod.additionalImports.joinToString("\n") +
-                    "\n" +
-                    codeGenResult.code
+                val code =
+                    readDfMethod.additionalImports.joinToString("\n") +
+                        "\n" +
+                        codeGenResult.code
 
                 execute(code)
                 execute("""DISPLAY("Data schema successfully imported as ${property.name}: $name")""")
@@ -128,49 +131,53 @@ internal class Integration(private val notebook: Notebook, private val options: 
         df: AnyFrame,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = execute(
-        codeWithConverter = codeGen.process(df, property),
-        property = property,
-        type = DataFrame::class.createStarProjectedType(false),
-
-    )
+    ): VariableName? =
+        execute(
+            codeWithConverter = codeGen.process(df, property),
+            property = property,
+            type = DataFrame::class.createStarProjectedType(false),
+        )
 
     private fun KotlinKernelHost.updateAnyRowVariable(
         row: AnyRow,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = execute(
-        codeWithConverter = codeGen.process(row, property),
-        property = property,
-        type = DataRow::class.createStarProjectedType(false),
-    )
+    ): VariableName? =
+        execute(
+            codeWithConverter = codeGen.process(row, property),
+            property = property,
+            type = DataRow::class.createStarProjectedType(false),
+        )
 
     private fun KotlinKernelHost.updateColumnGroupVariable(
         col: ColumnGroup<*>,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = execute(
-        codeWithConverter = codeGen.process(col.asDataFrame(), property),
-        property = property,
-        type = ColumnGroup::class.createStarProjectedType(false),
-    )
+    ): VariableName? =
+        execute(
+            codeWithConverter = codeGen.process(col.asDataFrame(), property),
+            property = property,
+            type = ColumnGroup::class.createStarProjectedType(false),
+        )
 
     private fun KotlinKernelHost.updateAnyColVariable(
         col: AnyCol,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = if (col.isColumnGroup()) {
-        val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
-            CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
+    ): VariableName? =
+        if (col.isColumnGroup()) {
+            val codeWithConverter =
+                codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
+                    CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
+                }
+            execute(
+                codeWithConverter = codeWithConverter,
+                property = property,
+                type = DataColumn::class.createStarProjectedType(false),
+            )
+        } else {
+            null
         }
-        execute(
-            codeWithConverter = codeWithConverter,
-            property = property,
-            type = DataColumn::class.createStarProjectedType(false),
-        )
-    } else {
-        null
-    }
 
     override fun Builder.onLoaded() {
         if (version != null) {
@@ -184,7 +191,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
         try {
             setMinimalKernelVersion(MIN_KERNEL_VERSION)
-        } catch (_: NoSuchMethodError) { // will be thrown when a version < 0.11.0.198
+        } catch (_: NoSuchMethodError) {
+            // will be thrown when a version < 0.11.0.198
             throw IllegalStateException(
                 getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType),
             )
@@ -289,28 +297,38 @@ internal class Integration(private val notebook: Notebook, private val options: 
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
         import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
 
-        addTypeConverter(object : FieldHandler {
-            override val execution = FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->
-                when (instance) {
-                    is AnyCol -> updateAnyColVariable(instance, property, codeGen)
-                    is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
-                    is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
-                    is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
-                    is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
-                    else -> error("${instance::class} should not be handled by Dataframe field handler")
-                }
-            }
-            override fun accepts(value: Any?, property: KProperty<*>): Boolean = value is AnyCol ||
-                value is ColumnGroup<*> ||
-                value is AnyRow ||
-                value is AnyFrame ||
-                value is ImportDataSchema
-        })
+        addTypeConverter(
+            object : FieldHandler {
+                override val execution =
+                    FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->
+                        when (instance) {
+                            is AnyCol -> updateAnyColVariable(instance, property, codeGen)
+                            is ColumnGroup<*> -> updateColumnGroupVariable(instance, property, codeGen)
+                            is AnyRow -> updateAnyRowVariable(instance, property, codeGen)
+                            is AnyFrame -> updateAnyFrameVariable(instance, property, codeGen)
+                            is ImportDataSchema -> updateImportDataSchemaVariable(instance, property)
+                            else -> error("${instance::class} should not be handled by Dataframe field handler")
+                        }
+                    }
+
+                override fun accepts(
+                    value: Any?,
+                    property: KProperty<*>,
+                ): Boolean =
+                    value is AnyCol ||
+                        value is ColumnGroup<*> ||
+                        value is AnyRow ||
+                        value is AnyFrame ||
+                        value is ImportDataSchema
+            },
+        )
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
-            val code = classes.joinToString("\n") {
-                codeGen.process(it)
-            }.trim()
+            val code =
+                classes
+                    .joinToString("\n") {
+                        codeGen.process(it)
+                    }.trim()
 
             if (code.isNotEmpty()) {
                 execute(code)
@@ -326,9 +344,10 @@ internal class Integration(private val notebook: Notebook, private val options: 
             }
         }
 
-        val internalTypes = listOf(
-            ColumnReference::class,
-        ).map { it.createStarProjectedType(true) }
+        val internalTypes =
+            listOf(
+                ColumnReference::class,
+            ).map { it.createStarProjectedType(true) }
 
         markVariableInternal { property ->
             // TODO: add more conditions to include all generated properties and other internal stuff

@@ -21,10 +21,11 @@ public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
 
 public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
 
-public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> = distinct {
-    val set = columns.toColumnSet()
-    set
-}
+public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
+    distinct {
+        val set = columns.toColumnSet()
+        set
+    }
 
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumnSet() }
 
@@ -55,7 +56,6 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
  * See [Grammar] for all functions in this interface.
  */
 public interface DistinctColumnsSelectionDsl {
-
     /**
      * ## Distinct Grammar
      *
@@ -72,7 +72,6 @@ public interface DistinctColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
-
         /** __`.`__[**`distinct`**][ColumnsSelectionDsl.distinct] */
         public interface ColumnSetName
     }

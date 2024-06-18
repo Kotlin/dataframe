@@ -25,7 +25,6 @@ public enum class InterfaceGenerationMode {
 public data class CodeGenResult(val code: CodeWithConverter, val newMarkers: List<Marker>)
 
 public interface CodeGenerator : ExtensionsCodeGenerator {
-
     public fun generate(
         schema: DataFrameSchema,
         name: String,
@@ -46,11 +45,12 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
     ): CodeWithConverter
 
     public companion object {
-        public fun create(useFqNames: Boolean = true): CodeGenerator = if (useFqNames) {
-            CodeGeneratorImpl(FullyQualifiedNames)
-        } else {
-            CodeGeneratorImpl(ShortNames)
-        }
+        public fun create(useFqNames: Boolean = true): CodeGenerator =
+            if (useFqNames) {
+                CodeGeneratorImpl(FullyQualifiedNames)
+            } else {
+                CodeGeneratorImpl(ShortNames)
+            }
     }
 }
 
@@ -59,11 +59,12 @@ internal fun CodeGenerator.generate(
     markerClass: KClass<*>,
     interfaceMode: InterfaceGenerationMode,
     extensionProperties: Boolean,
-): CodeWithConverter = generate(
-    MarkersExtractor.get(markerClass),
-    interfaceMode,
-    extensionProperties,
-)
+): CodeWithConverter =
+    generate(
+        MarkersExtractor.get(markerClass),
+        interfaceMode,
+        extensionProperties,
+    )
 
 public inline fun <reified T> CodeGenerator.generate(
     interfaceMode: InterfaceGenerationMode,

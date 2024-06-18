@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
 
 class FlattenTests {
-
     @Test
     fun `flatten names`() {
         val df = dataFrameOf("a", "b", "c")(1, 2, 3)
@@ -53,8 +52,12 @@ class FlattenTests {
     @Test
     fun `flatten nested`() {
         val df = dataFrameOf("a", "b", "c", "d")(1, 2, 3, 4)
-        val grouped = df.group("a", "b").into("e")
-            .group("e", "c").into("f")
+        val grouped =
+            df
+                .group("a", "b")
+                .into("e")
+                .group("e", "c")
+                .into("f")
 
         grouped.flatten() shouldBe df
         val flattened = grouped.flatten { "f"["e"] }
@@ -67,9 +70,14 @@ class FlattenTests {
     @Test
     fun `flatten with parent name conflict`() {
         val df = dataFrameOf("a", "b", "c", "d")(1, 2, 3, 4)
-        val grouped = df.group("a", "b").into("e")
-            .group("e", "c").into("f")
-            .rename { "f"["e"] }.into("a")
+        val grouped =
+            df
+                .group("a", "b")
+                .into("e")
+                .group("e", "c")
+                .into("f")
+                .rename { "f"["e"] }
+                .into("a")
         val flattened = grouped.flatten { "f"["a"] }
         flattened.getColumnGroup("f").columnNames() shouldBe listOf("a", "b", "c")
         flattened.ungroup("f") shouldBe df
@@ -77,21 +85,59 @@ class FlattenTests {
 
     @Test
     fun `flatten the aggregation and check column names`() {
-        val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
-            "Alice", "Cooper", 15, "London", 54, true,
-            "Bob", "Dylan", 45, "Dubai", 87, true,
-            "Charlie", "Daniels", 20, "Moscow", 35, false,
-            "Charlie", "Chaplin", 40, "Milan", 41, true,
-            "Bob", "Marley", 30, "Tokyo", 68, true,
-            "Alice", "Wolf", 20, "Milan", 55, false,
-            "Charlie", "Byrd", 30, "Moscow", 90, true,
-        ).cast<Person>()
+        val df =
+            dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+                "Alice",
+                "Cooper",
+                15,
+                "London",
+                54,
+                true,
+                "Bob",
+                "Dylan",
+                45,
+                "Dubai",
+                87,
+                true,
+                "Charlie",
+                "Daniels",
+                20,
+                "Moscow",
+                35,
+                false,
+                "Charlie",
+                "Chaplin",
+                40,
+                "Milan",
+                41,
+                true,
+                "Bob",
+                "Marley",
+                30,
+                "Tokyo",
+                68,
+                true,
+                "Alice",
+                "Wolf",
+                20,
+                "Milan",
+                55,
+                false,
+                "Charlie",
+                "Byrd",
+                30,
+                "Moscow",
+                90,
+                true,
+            ).cast<Person>()
 
-        val aggregate = df.groupBy("city")
-            .aggregate {
-                mean() into "mean"
-                std() into "std"
-            }
+        val aggregate =
+            df
+                .groupBy("city")
+                .aggregate {
+                    mean() into "mean"
+                    std() into "std"
+                }
 
         aggregate
             .flatten(keepParentNameForColumns = true)
@@ -99,13 +145,14 @@ class FlattenTests {
 
         aggregate
             .flatten(keepParentNameForColumns = true, separator = "_happy_separator_")
-            .columnNames() shouldBe listOf(
-            "city",
-            "mean_happy_separator_age",
-            "mean_happy_separator_weight",
-            "std_happy_separator_age",
-            "std_happy_separator_weight",
-        )
+            .columnNames() shouldBe
+            listOf(
+                "city",
+                "mean_happy_separator_age",
+                "mean_happy_separator_weight",
+                "std_happy_separator_age",
+                "std_happy_separator_weight",
+            )
     }
 
     @DataSchema

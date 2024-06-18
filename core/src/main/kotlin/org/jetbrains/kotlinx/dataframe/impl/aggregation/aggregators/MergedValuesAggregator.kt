@@ -10,7 +10,6 @@ internal class MergedValuesAggregator<C : Any, R>(
     val aggregateWithType: (Iterable<C?>, KType) -> R?,
     override val preservesType: Boolean,
 ) : AggregatorBase<C, R>(name, aggregateWithType) {
-
     override fun aggregate(columns: Iterable<DataColumn<C?>>): R? {
         val commonType = columns.map { it.type() }.commonType()
         val allValues = columns.flatMap { it.values() }
@@ -19,14 +18,15 @@ internal class MergedValuesAggregator<C : Any, R>(
 
     fun aggregateMixed(values: Iterable<C?>): R? {
         var hasNulls = false
-        val classes = values.mapNotNull {
-            if (it == null) {
-                hasNulls = true
-                null
-            } else {
-                it.javaClass.kotlin
+        val classes =
+            values.mapNotNull {
+                if (it == null) {
+                    hasNulls = true
+                    null
+                } else {
+                    it.javaClass.kotlin
+                }
             }
-        }
         return aggregateWithType(values, classes.commonType(hasNulls))
     }
 
@@ -36,7 +36,9 @@ internal class MergedValuesAggregator<C : Any, R>(
     ) : AggregatorProvider<C, R> {
         override fun create(name: String) = MergedValuesAggregator(name, aggregateWithType, preservesType)
 
-        override operator fun getValue(obj: Any?, property: KProperty<*>): MergedValuesAggregator<C, R> =
-            create(property.name)
+        override operator fun getValue(
+            obj: Any?,
+            property: KProperty<*>,
+        ): MergedValuesAggregator<C, R> = create(property.name)
     }
 }

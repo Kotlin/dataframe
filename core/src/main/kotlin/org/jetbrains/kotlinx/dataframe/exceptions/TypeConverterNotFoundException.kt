@@ -8,8 +8,8 @@ public class TypeConverterNotFoundException(
     public val to: KType,
     public val column: ColumnPath?,
 ) : IllegalArgumentException() {
-
     override val message: String
-        get() = "Type converter from $from to $to is not found" +
-            (column?.let { " for column '${it.joinToString()}'" } ?: "")
+        get() =
+            "Type converter from $from to $to is not found" +
+                (column?.let { " for column '${it.joinToString()}'" } ?: "")
 }

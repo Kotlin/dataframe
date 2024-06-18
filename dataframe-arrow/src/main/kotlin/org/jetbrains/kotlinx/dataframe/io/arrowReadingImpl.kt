@@ -85,137 +85,162 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
 private fun BitVector.values(range: IntRange): List<Boolean?> = range.map { getObject(it) }
 
 private fun UInt1Vector.values(range: IntRange): List<Short?> = range.map { getObjectNoOverflow(it) }
+
 private fun UInt2Vector.values(range: IntRange): List<Int?> = range.map { getObject(it)?.code }
+
 private fun UInt4Vector.values(range: IntRange): List<Long?> = range.map { getObjectNoOverflow(it) }
+
 private fun UInt8Vector.values(range: IntRange): List<BigInteger?> = range.map { getObjectNoOverflow(it) }
 
 private fun TinyIntVector.values(range: IntRange): List<Byte?> = range.map { getObject(it) }
+
 private fun SmallIntVector.values(range: IntRange): List<Short?> = range.map { getObject(it) }
+
 private fun IntVector.values(range: IntRange): List<Int?> = range.map { getObject(it) }
+
 private fun BigIntVector.values(range: IntRange): List<Long?> = range.map { getObject(it) }
 
 private fun DecimalVector.values(range: IntRange): List<BigDecimal?> = range.map { getObject(it) }
+
 private fun Decimal256Vector.values(range: IntRange): List<BigDecimal?> = range.map { getObject(it) }
 
 private fun Float4Vector.values(range: IntRange): List<Float?> = range.map { getObject(it) }
+
 private fun Float8Vector.values(range: IntRange): List<Double?> = range.map { getObject(it) }
 
 private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it) }
-private fun DateDayVector.values(range: IntRange): List<LocalDate?> = range.map {
-    if (getObject(it) == null) {
-        null
-    } else {
-        DateUtility.getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
-            .toLocalDate()
+
+private fun DateDayVector.values(range: IntRange): List<LocalDate?> =
+    range.map {
+        if (getObject(it) == null) {
+            null
+        } else {
+            DateUtility
+                .getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
+                .toLocalDate()
+        }
     }
-}
 
 private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map { getObject(it) }
 
-private fun TimeNanoVector.values(range: IntRange): List<LocalTime?> = range.mapIndexed { i, it ->
-    if (isNull(i)) {
-        null
-    } else {
-        LocalTime.ofNanoOfDay(get(it))
+private fun TimeNanoVector.values(range: IntRange): List<LocalTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            LocalTime.ofNanoOfDay(get(it))
+        }
     }
-}
 
-private fun TimeMicroVector.values(range: IntRange): List<LocalTime?> = range.mapIndexed { i, it ->
-    if (isNull(i)) {
-        null
-    } else {
-        LocalTime.ofNanoOfDay(getObject(it) * 1000)
+private fun TimeMicroVector.values(range: IntRange): List<LocalTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            LocalTime.ofNanoOfDay(getObject(it) * 1000)
+        }
     }
-}
 
-private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> = range.mapIndexed { i, it ->
-    if (isNull(i)) {
-        null
-    } else {
-        LocalTime.ofNanoOfDay(get(it).toLong() * 1000_000)
+private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            LocalTime.ofNanoOfDay(get(it).toLong() * 1000_000)
+        }
     }
-}
 
 private fun TimeSecVector.values(range: IntRange): List<LocalTime?> =
     range.map { getObject(it)?.let { LocalTime.ofSecondOfDay(it.toLong()) } }
 
-private fun TimeStampNanoVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
-    if (isNull(i)) {
-        null
-    } else {
+private fun TimeStampNanoVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            getObject(it)
+        }
+    }
+
+private fun TimeStampMicroVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            getObject(it)
+        }
+    }
+
+private fun TimeStampMilliVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            getObject(it)
+        }
+    }
+
+private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            getObject(it)
+        }
+    }
+
+private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> =
+    range.map {
         getObject(it)
     }
-}
 
-private fun TimeStampMicroVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
-    if (isNull(i)) {
-        null
-    } else {
-        getObject(it)
+private fun NullVector.values(range: IntRange): List<Nothing?> =
+    range.map {
+        getObject(it) as Nothing?
     }
-}
 
-private fun TimeStampMilliVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
-    if (isNull(i)) {
-        null
-    } else {
-        getObject(it)
+private fun VarCharVector.values(range: IntRange): List<String?> =
+    range.map {
+        if (isNull(it)) {
+            null
+        } else {
+            String(get(it))
+        }
     }
-}
 
-private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> = range.mapIndexed { i, it ->
-    if (isNull(i)) {
-        null
-    } else {
-        getObject(it)
+private fun VarBinaryVector.values(range: IntRange): List<ByteArray?> =
+    range.map {
+        if (isNull(it)) {
+            null
+        } else {
+            get(it)
+        }
     }
-}
 
-private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = range.map {
-    getObject(it)
-}
-
-private fun NullVector.values(range: IntRange): List<Nothing?> = range.map {
-    getObject(it) as Nothing?
-}
-
-private fun VarCharVector.values(range: IntRange): List<String?> = range.map {
-    if (isNull(it)) {
-        null
-    } else {
-        String(get(it))
+private fun LargeVarBinaryVector.values(range: IntRange): List<ByteArray?> =
+    range.map {
+        if (isNull(it)) {
+            null
+        } else {
+            get(it)
+        }
     }
-}
 
-private fun VarBinaryVector.values(range: IntRange): List<ByteArray?> = range.map {
-    if (isNull(it)) {
-        null
-    } else {
-        get(it)
+private fun LargeVarCharVector.values(range: IntRange): List<String?> =
+    range.map {
+        if (isNull(it)) {
+            null
+        } else {
+            String(get(it))
+        }
     }
-}
 
-private fun LargeVarBinaryVector.values(range: IntRange): List<ByteArray?> = range.map {
-    if (isNull(it)) {
-        null
+internal fun nothingType(nullable: Boolean): KType =
+    if (nullable) {
+        typeOf<List<Nothing?>>()
     } else {
-        get(it)
-    }
-}
-
-private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.map {
-    if (isNull(it)) {
-        null
-    } else {
-        String(get(it))
-    }
-}
-
-internal fun nothingType(nullable: Boolean): KType = if (nullable) {
-    typeOf<List<Nothing?>>()
-} else {
-    typeOf<List<Nothing>>()
-}.arguments.first().type!!
+        typeOf<List<Nothing>>()
+    }.arguments.first().type!!
 
 private inline fun <reified T> List<T?>.withTypeNullable(
     expectedNulls: Boolean,
@@ -234,7 +259,11 @@ private fun List<Nothing?>.withTypeNullable(
     return this to nothingType(nullable)
 }
 
-private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
+private fun readField(
+    root: VectorSchemaRoot,
+    field: Field,
+    nullability: NullabilityOptions,
+): AnyBaseCol {
     try {
         val range = 0 until root.rowCount
         val (list, type) = when (val vector = root.getVector(field)) {

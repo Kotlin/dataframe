@@ -26,7 +26,6 @@ import kotlin.reflect.KProperty
 public interface ColumnGroup<out T> :
     BaseColumn<DataRow<T>>,
     DataFrame<T> {
-
     /**
      * Gets the rows at given indices.
      *
@@ -45,7 +44,10 @@ public interface ColumnGroup<out T> :
      *
      * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
      */
-    override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T>
+    override fun get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): ColumnGroup<T>
 
     /**
      * Gets the rows at given range of indices.
@@ -56,6 +58,8 @@ public interface ColumnGroup<out T> :
 
     override fun rename(newName: String): ColumnGroup<T>
 
-    override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnGroup<T> =
-        super.getValue(thisRef, property) as ColumnGroup<T>
+    override operator fun getValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+    ): ColumnGroup<T> = super.getValue(thisRef, property) as ColumnGroup<T>
 }

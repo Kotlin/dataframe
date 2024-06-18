@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
 internal open class DataRowImpl<T>(private val index: Int, private val df: DataFrame<T>) : DataRow<T> {
-
     override fun df() = df
 
     override operator fun get(name: String): Any? {
@@ -57,6 +56,8 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 }
 
 internal val <T> DataRow<T>.owner: DataFrame<T> get() = df()
-internal fun AnyRow.namedValues(): Sequence<NamedValue> = owner.columns().asSequence().map {
-    NamedValue.create(it.shortPath(), it[index], it.type(), it.defaultValue(), guessType = false)
-}
+
+internal fun AnyRow.namedValues(): Sequence<NamedValue> =
+    owner.columns().asSequence().map {
+        NamedValue.create(it.shortPath(), it[index], it.type(), it.defaultValue(), guessType = false)
+    }

@@ -14,19 +14,23 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
         "Invalid number of arguments. Multiple of $ncol is expected, but actual was: ${values.size}"
     }
     val newRows = values.size / ncol
-    return columns().mapIndexed { colIndex, col ->
-        val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
-        col.updateWith(col.values + newValues)
-    }.toDataFrame().cast()
+    return columns()
+        .mapIndexed { colIndex, col ->
+            val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
+            col.updateWith(col.values + newValues)
+        }.toDataFrame()
+        .cast()
 }
 
 public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
     require(numberOfRows >= 0)
     if (numberOfRows == 0) return this
     if (ncol == 0) return DataFrame.empty(nrow + numberOfRows).cast()
-    return columns().map { col ->
-        col.updateWith(col.values + arrayOfNulls(numberOfRows))
-    }.toDataFrame().cast()
+    return columns()
+        .map { col ->
+            col.updateWith(col.values + arrayOfNulls(numberOfRows))
+        }.toDataFrame()
+        .cast()
 }
 
 // endregion

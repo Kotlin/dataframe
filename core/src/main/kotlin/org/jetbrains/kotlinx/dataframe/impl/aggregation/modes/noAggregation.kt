@@ -8,7 +8,10 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.internal
 
 @PublishedApi
-internal fun <T, R> Grouped<T>.aggregateValue(resultName: String, body: AggregateBody<T, R>): DataFrame<T> =
+internal fun <T, R> Grouped<T>.aggregateValue(
+    resultName: String,
+    body: AggregateBody<T, R>,
+): DataFrame<T> =
     aggregateInternal {
         val value = body.internal()(this)
         yield(pathOf(resultName), value)

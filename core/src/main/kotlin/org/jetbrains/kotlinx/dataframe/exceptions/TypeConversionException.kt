@@ -9,8 +9,8 @@ public open class TypeConversionException(
     public val to: KType,
     public val column: ColumnPath?,
 ) : RuntimeException() {
-
     override val message: String
-        get() = "Failed to convert '$value' from $from to $to" +
-            (column?.let { " in column '${it.joinToString()}'" } ?: "")
+        get() =
+            "Failed to convert '$value' from $from to $to" +
+                (column?.let { " in column '${it.joinToString()}'" } ?: "")
 }

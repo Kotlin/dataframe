@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class ConstructorsTests {
-
     @Test
     fun `untitled column naming`() {
         val builder = DynamicDataFrameBuilder()

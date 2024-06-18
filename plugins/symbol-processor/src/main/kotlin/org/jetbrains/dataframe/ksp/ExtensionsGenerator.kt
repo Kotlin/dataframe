@@ -53,18 +53,19 @@ class ExtensionsGenerator(
         val type: KSTypeReference,
     ) : KSAnnotated by declaration
 
-    private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? = when {
-        isClassOrInterface() && effectivelyPublicOrInternal() -> {
-            DataSchemaDeclaration(
-                origin = this,
-                properties = getAllProperties()
-                    .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
-                    .toList(),
-            )
-        }
+    private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? =
+        when {
+            isClassOrInterface() && effectivelyPublicOrInternal() -> {
+                DataSchemaDeclaration(
+                    origin = this,
+                    properties = getAllProperties()
+                        .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
+                        .toList(),
+                )
+            }
 
-        else -> null
-    }
+            else -> null
+        }
 
     private fun KSClassDeclaration.isClassOrInterface() =
         classKind == ClassKind.INTERFACE || classKind == ClassKind.CLASS
@@ -104,7 +105,11 @@ class ExtensionsGenerator(
 
     private val KSDeclaration.nameString get() = (qualifiedName ?: simpleName).asString()
 
-    fun generateExtensions(file: KSFile, dataSchema: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
+    fun generateExtensions(
+        file: KSFile,
+        dataSchema: KSClassDeclaration,
+        properties: List<KSAnnotatedWithType>,
+    ) {
         val packageName = file.packageName.asString()
         val fileName = getFileName(dataSchema)
         val generatedFile = codeGenerator.createNewFile(Dependencies(false, file), packageName, fileName)
@@ -140,13 +145,14 @@ class ExtensionsGenerator(
         appendLine()
     }
 
-    private fun getFileName(dataSchema: KSClassDeclaration) = if (dataSchema.isTopLevel) {
-        val simpleName = dataSchema.simpleName.asString()
-        "$simpleName${'$'}Extensions"
-    } else {
-        val fqName = dataSchema.getQualifiedNameOrThrow()
-        "${fqName}${'$'}Extensions"
-    }
+    private fun getFileName(dataSchema: KSClassDeclaration) =
+        if (dataSchema.isTopLevel) {
+            val simpleName = dataSchema.simpleName.asString()
+            "$simpleName${'$'}Extensions"
+        } else {
+            val fqName = dataSchema.getQualifiedNameOrThrow()
+            "${fqName}${'$'}Extensions"
+        }
 
     private val KSDeclaration.isTopLevel get() = parentDeclaration == null
 
@@ -192,14 +198,20 @@ class ExtensionsGenerator(
         }
     }
 
-    private fun typeMismatchError(property: KSAnnotatedWithType, arg: KSValueArgument): Nothing {
+    private fun typeMismatchError(
+        property: KSAnnotatedWithType,
+        arg: KSValueArgument,
+    ): Nothing {
         error(
             "Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, " +
                 "but got ${arg.value}",
         )
     }
 
-    private fun argumentMismatchError(property: KSAnnotatedWithType, args: List<KSValueArgument>): Nothing {
+    private fun argumentMismatchError(
+        property: KSAnnotatedWithType,
+        args: List<KSValueArgument>,
+    ): Nothing {
         error(
             "Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, " +
                 "but got $args",

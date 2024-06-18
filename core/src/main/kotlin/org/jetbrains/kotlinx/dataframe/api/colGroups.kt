@@ -31,7 +31,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface ColGroupsColumnsSelectionDsl {
-
     /**
      * ## Column Groups Grammar
      *
@@ -57,7 +56,6 @@ public interface ColGroupsColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`colGroups`**][ColumnsSelectionDsl.colGroups] */
         public interface PlainDslName
 
@@ -99,7 +97,6 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.valueCols\]
      */
     private interface CommonColGroupsDocs {
-
         /** Example argument */
         interface ExampleArg
     }

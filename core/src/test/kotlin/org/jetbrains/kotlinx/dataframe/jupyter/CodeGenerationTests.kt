@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.jupyter.api.Code
 import org.junit.Test
 
 class CodeGenerationTests : DataFrameJupyterTest() {
-
     private fun Code.checkCompilation() {
         lines().forEach {
             execRendered(it)
@@ -15,7 +14,8 @@ class CodeGenerationTests : DataFrameJupyterTest() {
     @Test
     fun `Type erased dataframe`() {
         @Language("kts")
-        val a = """
+        val a =
+            """
             fun create(): Any? = dataFrameOf("a")(1)
             val df = create()
             df.a
@@ -25,7 +25,8 @@ class CodeGenerationTests : DataFrameJupyterTest() {
     @Test
     fun `nullable dataframe`() {
         @Language("kts")
-        val a = """
+        val a =
+            """
             fun create(): AnyFrame? = dataFrameOf("a")(1)
             val df = create()
             df.a
@@ -35,7 +36,8 @@ class CodeGenerationTests : DataFrameJupyterTest() {
     @Test
     fun `nullable columnGroup`() {
         @Language("kts")
-        val a = """
+        val a =
+            """
             fun create(): AnyCol? = dataFrameOf("a")(1).asColumnGroup().asDataColumn()
             val col = create()
             col.a
@@ -45,7 +47,8 @@ class CodeGenerationTests : DataFrameJupyterTest() {
     @Test
     fun `nullable dataRow`() {
         @Language("kts")
-        val a = """
+        val a =
+            """
             fun create(): AnyRow? = dataFrameOf("a")(1).single()
             val row = create()
             row.a

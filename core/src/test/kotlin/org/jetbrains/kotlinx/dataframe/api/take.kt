@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class TakeTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `take and takeLast`() {
         listOf(

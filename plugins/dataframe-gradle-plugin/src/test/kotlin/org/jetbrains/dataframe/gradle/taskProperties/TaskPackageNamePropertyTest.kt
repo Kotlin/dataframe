@@ -29,7 +29,7 @@ class TaskPackageNamePropertyTest {
             project.tasks.getByName(
                 "generateDataFrame321",
             ) as GenerateDataSchemaTask
-            ).packageName.get() shouldBe "org.example.test"
+        ).packageName.get() shouldBe "org.example.test"
     }
 
     @Test
@@ -50,7 +50,7 @@ class TaskPackageNamePropertyTest {
             project.tasks.getByName(
                 "generateDataFrame321",
             ) as GenerateDataSchemaTask
-            ).packageName.get() shouldBe "org.example.my"
+        ).packageName.get() shouldBe "org.example.my"
     }
 
     @Test
@@ -70,7 +70,7 @@ class TaskPackageNamePropertyTest {
             project.tasks.findByName(
                 "generateDataFrame321",
             ) as GenerateDataSchemaTask
-            ).packageName.get() shouldBe "org.example.my"
+        ).packageName.get() shouldBe "org.example.my"
     }
 
     @Test
@@ -90,7 +90,7 @@ class TaskPackageNamePropertyTest {
             project.tasks.findByName(
                 "generateDataFrame321",
             ) as GenerateDataSchemaTask
-            ).packageName.get() shouldBe "org.example.my"
+        ).packageName.get() shouldBe "org.example.my"
     }
 
     @Test
@@ -125,7 +125,7 @@ class TaskPackageNamePropertyTest {
             project.tasks.getByName(
                 "generateDataFrame321",
             ) as GenerateDataSchemaTask
-            ).packageName.get() shouldBe "org.test.dataframe"
+        ).packageName.get() shouldBe "org.test.dataframe"
     }
 
     @Test
@@ -149,7 +149,7 @@ class TaskPackageNamePropertyTest {
             project.tasks.getByName(
                 "generateDataFrame321",
             ) as GenerateDataSchemaTask
-            ).packageName.get() shouldBe "org.test.dataframe"
+        ).packageName.get() shouldBe "org.test.dataframe"
     }
 
     @Test
@@ -169,6 +169,6 @@ class TaskPackageNamePropertyTest {
             project.tasks.getByName(
                 "generateDataFrame321",
             ) as GenerateDataSchemaTask
-            ).packageName.get() shouldBe "org.dataframe"
+        ).packageName.get() shouldBe "org.dataframe"
     }
 }

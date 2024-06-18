@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
  * See [Grammar] for all functions in this interface.
  */
 public interface ExprColumnsSelectionDsl {
-
     /**
      * ## Expr Grammar
      *
@@ -37,7 +36,6 @@ public interface ExprColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
-
         /** [**`expr`**][ColumnsSelectionDsl.expr] */
         public interface PlainDslName
     }

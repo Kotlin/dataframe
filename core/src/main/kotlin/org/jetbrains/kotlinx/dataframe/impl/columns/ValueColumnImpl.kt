@@ -16,7 +16,6 @@ internal open class ValueColumnImpl<T>(
     distinct: Lazy<Set<T>>? = null,
 ) : DataColumnImpl<T>(values, name, type, distinct),
     ValueColumn<T> {
-
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 
     override fun rename(newName: String) = ValueColumnImpl(values, newName, type, defaultValue, distinct)
@@ -25,18 +24,22 @@ internal open class ValueColumnImpl<T>(
 
     override fun addParent(parent: ColumnGroup<*>): DataColumn<T> = ValueColumnWithParent(parent, this)
 
-    override fun createWithValues(values: List<T>, hasNulls: Boolean?): ValueColumn<T> {
+    override fun createWithValues(
+        values: List<T>,
+        hasNulls: Boolean?,
+    ): ValueColumn<T> {
         val nulls = hasNulls ?: values.any { it == null }
         return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }
 
     override fun get(indices: Iterable<Int>): ValueColumn<T> {
         var nullable = false
-        val newValues = indices.map {
-            val value = values[it]
-            if (value == null) nullable = true
-            value
-        }
+        val newValues =
+            indices.map {
+                val value = values[it]
+                if (value == null) nullable = true
+                value
+            }
         return createWithValues(newValues, nullable)
     }
 
@@ -53,7 +56,6 @@ internal open class ValueColumnImpl<T>(
 internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
     ValueColumn<T> by source,
     ForceResolvedColumn<T> {
-
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
 
     override fun resolveSingle(context: ColumnResolutionContext) =

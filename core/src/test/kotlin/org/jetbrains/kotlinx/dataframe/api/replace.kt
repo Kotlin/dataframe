@@ -5,7 +5,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class ReplaceTests {
-
     @Test
     fun `replace named`() {
         val df = dataFrameOf("a")(1)

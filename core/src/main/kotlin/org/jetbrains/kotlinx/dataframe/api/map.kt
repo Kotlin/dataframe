@@ -35,7 +35,11 @@ public inline fun <T, reified R> DataColumn<T>.map(
     return DataColumn.create(name(), newValues, typeOf<R>(), infer)
 }
 
-public fun <T, R> DataColumn<T>.map(type: KType, infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
+public fun <T, R> DataColumn<T>.map(
+    type: KType,
+    infer: Infer = Infer.Nulls,
+    transform: (T) -> R,
+): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
     return DataColumn.create(name(), values, type, infer).cast()
 }

@@ -37,9 +37,10 @@ internal fun <T, C, R> Aggregator<*, R>.aggregateOfDelegated(
     frame: Grouped<T>,
     name: String?,
     body: AggregateBody<T, C>,
-): DataFrame<T> = frame.aggregateValue(name ?: this.name) {
-    body(this, this)
-}
+): DataFrame<T> =
+    frame.aggregateValue(name ?: this.name) {
+        body(this, this)
+    }
 
 @PublishedApi
 internal inline fun <T, reified C, R> Aggregator<*, R>.of(
@@ -48,8 +49,10 @@ internal inline fun <T, reified C, R> Aggregator<*, R>.of(
 ): R? = aggregateOf(data as DataFrame<T>, expression)
 
 @PublishedApi
-internal inline fun <C, reified V, R> Aggregator<V, R>.of(data: DataColumn<C>, crossinline expression: (C) -> V): R? =
-    aggregateOf(data.values()) { expression(it) } // TODO: inline
+internal inline fun <C, reified V, R> Aggregator<V, R>.of(
+    data: DataColumn<C>,
+    crossinline expression: (C) -> V,
+): R? = aggregateOf(data.values()) { expression(it) } // TODO: inline
 
 @PublishedApi
 internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
@@ -82,6 +85,7 @@ internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
 internal inline fun <T, reified C, R> PivotGroupBy<T>.aggregateOf(
     crossinline expression: RowExpression<T, C>,
     aggregator: Aggregator<C, R>,
-): DataFrame<T> = aggregate {
-    internal().yield(emptyPath(), aggregator.aggregateOf(this, expression))
-}
+): DataFrame<T> =
+    aggregate {
+        internal().yield(emptyPath(), aggregator.aggregateOf(this, expression))
+    }

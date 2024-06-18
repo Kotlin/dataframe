@@ -39,22 +39,25 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
 
     val df = convertToDataFrame(value)
 
-    val limit = if (applyRowsLimit) {
-        reifiedDisplayConfiguration.rowsLimit ?: df.nrow
-    } else {
-        df.nrow
-    }
+    val limit =
+        if (applyRowsLimit) {
+            reifiedDisplayConfiguration.rowsLimit ?: df.nrow
+        } else {
+            df.nrow
+        }
 
-    val html = DataFrameHtmlData.tableDefinitions(
-        includeJs = reifiedDisplayConfiguration.isolatedOutputs,
-        includeCss = true,
-    ).plus(
-        df.toHTML(
-            // is added later to make sure it's put outside of potential iFrames
-            configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
-            cellRenderer = contextRenderer,
-        ) { footer },
-    ).toJupyterHtmlData()
+    val html =
+        DataFrameHtmlData
+            .tableDefinitions(
+                includeJs = reifiedDisplayConfiguration.isolatedOutputs,
+                includeCss = true,
+            ).plus(
+                df.toHTML(
+                    // is added later to make sure it's put outside of potential iFrames
+                    configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
+                    cellRenderer = contextRenderer,
+                ) { footer },
+            ).toJupyterHtmlData()
 
     // Generates a static version of the table which can be displayed in GitHub previews etc.
     val staticHtml = df.toStaticHtml(reifiedDisplayConfiguration, DefaultCellRenderer).toJupyterHtmlData()
@@ -62,29 +65,30 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
         val ideBuildNumber = KotlinNotebookPluginUtils.getKotlinNotebookIDEBuildNumber()
 
-        val jsonEncodedDf = when {
-            !ideBuildNumber.supportsDynamicNestedTables() -> {
-                json {
-                    obj(
-                        "nrow" to df.size.nrow,
-                        "ncol" to df.size.ncol,
-                        "columns" to df.columnNames(),
-                        "kotlin_dataframe" to encodeFrame(df.take(limit)),
+        val jsonEncodedDf =
+            when {
+                !ideBuildNumber.supportsDynamicNestedTables() -> {
+                    json {
+                        obj(
+                            "nrow" to df.size.nrow,
+                            "ncol" to df.size.ncol,
+                            "columns" to df.columnNames(),
+                            "kotlin_dataframe" to encodeFrame(df.take(limit)),
+                        )
+                    }.toJsonString()
+                }
+
+                else -> {
+                    val imageEncodingOptions =
+                        if (ideBuildNumber.supportsImageViewer()) Base64ImageEncodingOptions() else null
+
+                    df.toJsonWithMetadata(
+                        limit,
+                        reifiedDisplayConfiguration.rowsLimit,
+                        imageEncodingOptions = imageEncodingOptions,
                     )
-                }.toJsonString()
+                }
             }
-
-            else -> {
-                val imageEncodingOptions =
-                    if (ideBuildNumber.supportsImageViewer()) Base64ImageEncodingOptions() else null
-
-                df.toJsonWithMetadata(
-                    limit,
-                    reifiedDisplayConfiguration.rowsLimit,
-                    imageEncodingOptions = imageEncodingOptions,
-                )
-            }
-        }
 
         notebook.renderAsIFrameAsNeeded(html, staticHtml, jsonEncodedDf)
     } else {
@@ -103,12 +107,13 @@ internal fun Notebook.renderAsIFrameAsNeeded(
     staticData: HtmlData,
     jsonEncodedDf: String,
 ): MimeTypedResult {
-    val textHtml = if (jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
-        data.generateIframePlaneText(currentColorScheme) +
-            staticData.toString(currentColorScheme)
-    } else {
-        (data + staticData).toString(currentColorScheme)
-    }
+    val textHtml =
+        if (jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
+            data.generateIframePlaneText(currentColorScheme) +
+                staticData.toString(currentColorScheme)
+        } else {
+            (data + staticData).toString(currentColorScheme)
+        }
 
     return mimeResult(
         "text/html" to textHtml,

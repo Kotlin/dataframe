@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.jupyter.api.VariableName
  * @param converter Optional converter for the [Marker], such as a [org.jetbrains.kotlinx.dataframe.api.cast], often used for Jupyter.
  */
 public data class CodeWithConverter(val declarations: Code, val converter: (VariableName) -> Code = EmptyConverter) {
-
     public companion object {
         public const val EMPTY_DECLARATIONS: Code = ""
         public val EmptyConverter: (VariableName) -> Code = { it }
@@ -21,9 +20,10 @@ public data class CodeWithConverter(val declarations: Code, val converter: (Vari
 
     val hasConverter: Boolean get() = converter("it").trim() != "it"
 
-    public fun with(name: VariableName): Code = when {
-        !hasConverter -> declarations
-        !hasDeclarations -> converter(name)
-        else -> declarations + "\n" + converter(name)
-    }
+    public fun with(name: VariableName): Code =
+        when {
+            !hasConverter -> declarations
+            !hasDeclarations -> converter(name)
+            else -> declarations + "\n" + converter(name)
+        }
 }

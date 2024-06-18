@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortDesc
 import org.junit.Test
 
 class DataColumnTests : BaseTest() {
-
     @Test
     fun `sort column`() {
         typed.age.sort() shouldBe typed.sortBy { age }.age

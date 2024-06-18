@@ -52,10 +52,11 @@ public fun ColumnPath.toFrameColumnAccessor(): ColumnAccessor<AnyFrame> = Column
 
 // region ColumnReference
 
-public fun <T> ColumnReference<T>.toColumnAccessor(): ColumnAccessor<T> = when (this) {
-    is ColumnAccessor<T> -> this
-    else -> ColumnAccessorImpl(path())
-}
+public fun <T> ColumnReference<T>.toColumnAccessor(): ColumnAccessor<T> =
+    when (this) {
+        is ColumnAccessor<T> -> this
+        else -> ColumnAccessorImpl(path())
+    }
 
 // endregion
 
@@ -97,11 +98,12 @@ public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
 
 public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
-public fun AnyCol.setNullable(nullable: Boolean): AnyCol = if (nullable) {
-    this.castToNullable()
-} else {
-    this.castToNotNullable()
-}
+public fun AnyCol.setNullable(nullable: Boolean): AnyCol =
+    if (nullable) {
+        this.castToNullable()
+    } else {
+        this.castToNotNullable()
+    }
 
 // region to array
 
@@ -229,7 +231,6 @@ public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): V
  * Used in [add], [insert], [convert], [map], [merge], [split] and other [DataFrame] operations
  */
 public enum class Infer {
-
     /**
      * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type].
      */
@@ -282,7 +283,10 @@ public class NullabilityException : Exception()
  * @return if column should be marked nullable for current [NullabilityOptions] value with actual [data] and [expectedNulls] per some schema/signature.
  * @throws [NullabilityException] for [NullabilityOptions.Checking] if [expectedNulls] is false and [data] contains nulls.
  */
-public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {
+public fun NullabilityOptions.applyNullability(
+    data: List<Any?>,
+    expectedNulls: Boolean,
+): Boolean {
     val hasNulls = data.anyNull()
     return when (this) {
         NullabilityOptions.Infer -> hasNulls
@@ -300,12 +304,16 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
     }
 }
 
-public inline fun <reified T> Iterable<T>.toColumn(name: String = "", infer: Infer = Infer.Nulls): DataColumn<T> = (
-    if (infer == Infer.Type) {
-        DataColumn.createWithTypeInference(name, asList())
-    } else {
-        DataColumn.create(name, asList(), typeOf<T>(), infer)
-    }
+public inline fun <reified T> Iterable<T>.toColumn(
+    name: String = "",
+    infer: Infer = Infer.Nulls,
+): DataColumn<T> =
+    (
+        if (infer == Infer.Type) {
+            DataColumn.createWithTypeInference(name, asList())
+        } else {
+            DataColumn.create(name, asList(), typeOf<T>(), infer)
+        }
     ).forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
@@ -332,10 +340,11 @@ public fun <T> Iterable<AnyBaseCol>.toColumnGroupOf(name: String): ColumnGroup<T
 
 public fun AnyFrame.toMap(): Map<String, List<Any?>> = columns().associateBy({ it.name }, { it.toList() })
 
-public fun <T> DataFrame<T>.asColumnGroup(name: String = ""): ColumnGroup<T> = when (this) {
-    is ColumnGroup<T> -> rename(name)
-    else -> DataColumn.createColumnGroup(name, this)
-}
+public fun <T> DataFrame<T>.asColumnGroup(name: String = ""): ColumnGroup<T> =
+    when (this) {
+        is ColumnGroup<T> -> rename(name)
+        else -> DataColumn.createColumnGroup(name, this)
+    }
 
 public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = asColumnGroup(column.name)
 

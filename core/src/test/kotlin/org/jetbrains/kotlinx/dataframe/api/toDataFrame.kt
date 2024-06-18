@@ -14,7 +14,6 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 class CreateDataFrameTests {
-
     @Test
     fun `visibility test`() {
         class Data {
@@ -45,13 +44,14 @@ class CreateDataFrameTests {
     @Test
     fun `create frame column`() {
         val df = dataFrameOf("a")(1)
-        val res = listOf(1, 2).toDataFrame {
-            "a" from { it }
-            "b" from { df }
-            "c" from { df[0] }
-            "d" from { if (it == 1) it else null }
-            "e" from { if (true) it else null }
-        }
+        val res =
+            listOf(1, 2).toDataFrame {
+                "a" from { it }
+                "b" from { df }
+                "c" from { df[0] }
+                "d" from { if (it == 1) it else null }
+                "e" from { if (true) it else null }
+            }
         res["a"].kind shouldBe ColumnKind.Value
         res["a"].type() shouldBe typeOf<Int>()
         res["b"].kind shouldBe ColumnKind.Frame
@@ -63,10 +63,11 @@ class CreateDataFrameTests {
     @Test
     fun `create column with infer type`() {
         val data: List<Any> = listOf(1, 2, 3)
-        val res = data.toDataFrame {
-            "e" from inferType { it }
-            expr(infer = Infer.Type) { it } into "d"
-        }
+        val res =
+            data.toDataFrame {
+                "e" from inferType { it }
+                expr(infer = Infer.Type) { it } into "d"
+            }
 
         res["e"].type() shouldBe typeOf<Int>()
         res["e"].kind() shouldBe ColumnKind.Value
@@ -89,17 +90,24 @@ class CreateDataFrameTests {
     data class A(val v: Int)
 
     @DataSchema
-    data class B(val str: String, val frame: DataFrame<A>, val row: DataRow<A>, val list: List<A>, val a: A)
+    data class B(
+        val str: String,
+        val frame: DataFrame<A>,
+        val row: DataRow<A>,
+        val list: List<A>,
+        val a: A,
+    )
 
     @Test
     fun `preserve properties test`() {
         val d1 = listOf(A(2), A(3)).toDataFrame()
         val d2 = listOf(A(4), A(5)).toDataFrame()
 
-        val data = listOf(
-            B("q", d1, d1[0], emptyList(), A(7)),
-            B("w", d2, d2[1], listOf(A(6)), A(8)),
-        )
+        val data =
+            listOf(
+                B("q", d1, d1[0], emptyList(), A(7)),
+                B("w", d2, d2[1], listOf(A(6)), A(8)),
+            )
 
         val df = data.toDataFrame()
 
@@ -114,10 +122,11 @@ class CreateDataFrameTests {
         df.list[1].v[0] shouldBe 6
         df.a[0].v shouldBe 7
 
-        val df2 = data.toDataFrame {
-            preserve(B::row)
-            properties { preserve(DataFrame::class) }
-        }
+        val df2 =
+            data.toDataFrame {
+                preserve(B::row)
+                properties { preserve(DataFrame::class) }
+            }
         df2.frame.kind shouldBe ColumnKind.Value
         df2.frame.type shouldBe typeOf<DataFrame<A>>()
         df2["row"].kind shouldBe ColumnKind.Value
@@ -130,7 +139,12 @@ class CreateDataFrameTests {
 
     @Test
     fun `don't convert value types`() {
-        data class Entry(val a: Int, val b: String, val c: Boolean, val e: DummyEnum)
+        data class Entry(
+            val a: Int,
+            val b: String,
+            val c: Boolean,
+            val e: DummyEnum,
+        )
 
         val df = listOf(Entry(1, "s", true, DummyEnum.A)).toDataFrame(maxDepth = 100)
         df.columns().forEach {
@@ -141,6 +155,7 @@ class CreateDataFrameTests {
     @Test
     fun `convert type with no properties`() {
         class Child
+
         class Entry(val a: Int, val child: Child)
 
         val df = listOf(Entry(1, Child())).toDataFrame(maxDepth = 100)
@@ -195,6 +210,7 @@ class CreateDataFrameTests {
     @Test
     fun treatErasedGenericAsAny() {
         class IncompatibleVersionErrorData<T>(val expected: T, val actual: T)
+
         class DeserializedContainerSource(val incompatibility: IncompatibleVersionErrorData<*>)
 
         val functions = listOf(DeserializedContainerSource(IncompatibleVersionErrorData(1, 2)))
@@ -241,12 +257,13 @@ class CreateDataFrameTests {
         listOf("Byte", "Short", "Int", "Long", "String", "Char", "Boolean", "UByte", "UShort", "UInt", "ULong")
             .forEach { type ->
                 val typeParameter = type.first()
-                val func = """
+                val func =
+                    """
                     @JvmName("toDataFrame$type")
                     public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
                         ValueProperty<$typeParameter>::value from { it }
                     }.cast()
-                """.trimIndent()
+                    """.trimIndent()
                 println(func)
                 println()
             }
@@ -294,7 +311,10 @@ class CreateDataFrameTests {
         result shouldBe null
     }
 
-    fun call(kProperty0: KProperty<*>, obj: Any) = kProperty0.call(obj)
+    fun call(
+        kProperty0: KProperty<*>,
+        obj: Any,
+    ) = kProperty0.call(obj)
 
     @Test
     fun testKPropertyCallLibrary() {
@@ -313,7 +333,6 @@ class CreateDataFrameTests {
     }
 
     class KotlinPojo {
-
         private var a: Int = 0
         private var b: String = ""
 
@@ -323,11 +342,13 @@ class CreateDataFrameTests {
         }
 
         fun getA(): Int = a
+
         fun setA(a: Int) {
             this.a = a
         }
 
         fun getB(): String = b
+
         fun setB(b: String) {
             this.b = b
         }
@@ -383,14 +404,16 @@ class CreateDataFrameTests {
 
     @Test
     fun `arrays in to DF`() {
-        val df = listOf(
-            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null)),
-        ).toDataFrame(maxDepth = Int.MAX_VALUE)
+        val df =
+            listOf(
+                Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null)),
+            ).toDataFrame(maxDepth = Int.MAX_VALUE)
 
-        df.schema() shouldBe dataFrameOf(
-            DataColumn.createValueColumn("a", listOf(intArrayOf(1, 2)), typeOf<IntArray>()),
-            DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
-            DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
-        ).schema()
+        df.schema() shouldBe
+            dataFrameOf(
+                DataColumn.createValueColumn("a", listOf(intArrayOf(1, 2)), typeOf<IntArray>()),
+                DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
+                DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
+            ).schema()
     }
 }

@@ -24,18 +24,22 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> = indices.filter {
-    predicate(get(it))
-}.let { get(it) }
+public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
+    indices
+        .filter {
+            predicate(get(it))
+        }.let { get(it) }
 
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> = indices.filter {
-    val row = get(it)
-    predicate(row, row)
-}.let { get(it) }
+public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
+    indices
+        .filter {
+            val row = get(it)
+            predicate(row, row)
+        }.let { get(it) }
 
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
     getRows(getColumn(column).toList().getTrueIndices())
@@ -59,7 +63,6 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
  * See [Grammar] for all functions in this interface.
  */
 public interface FilterColumnsSelectionDsl {
-
     /**
      * ## Filter [ColumnSet] Grammar
      *
@@ -79,7 +82,6 @@ public interface FilterColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
-
         /** __`.`__[**`filter`**][ColumnsSelectionDsl.filter] */
         public interface ColumnSetName
     }

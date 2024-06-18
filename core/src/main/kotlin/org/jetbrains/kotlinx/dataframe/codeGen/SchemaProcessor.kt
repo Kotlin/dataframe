@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.SchemaProcessorImpl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 internal interface SchemaProcessor {
-
     val generatedMarkers: List<Marker>
 
     val namePrefix: String

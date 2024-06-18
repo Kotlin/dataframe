@@ -88,7 +88,6 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T>
  * to access new (added or updated) column value in preceding row.
  */
 public interface AddDataRow<out T> : DataRow<T> {
-
     /**
      * Returns a new value that was already computed for some preceding row during current [add] or [update] column operation.
      *
@@ -153,10 +152,10 @@ public inline fun <reified R, T> DataFrame<T>.add(
 
 // region Create and add several columns
 
-public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) :
-    ColumnsContainer<T> by df,
+public class AddDsl<T>(
+    @PublishedApi internal val df: DataFrame<T>,
+) : ColumnsContainer<T> by df,
     ColumnSelectionDsl<T> {
-
     // TODO: support adding column into path
     internal val columns = mutableListOf<AnyCol>()
 
@@ -189,18 +188,30 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) :
         add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
+
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
+
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
+
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
+
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
 
     public operator fun String.invoke(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
+
     public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
-    public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
-    public fun group(name: String, body: AddDsl<T>.() -> Unit) {
+    public fun group(
+        column: AnyColumnGroupAccessor,
+        body: AddDsl<T>.() -> Unit,
+    ): Unit = group(column.name(), body)
+
+    public fun group(
+        name: String,
+        body: AddDsl<T>.() -> Unit,
+    ) {
         val dsl = AddDsl(df)
         body(dsl)
         add(dsl.columns.toColumnGroup(name))
@@ -209,6 +220,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) :
     public fun group(body: AddDsl<T>.() -> Unit): AddGroup<T> = AddGroup(body)
 
     public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
+
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 

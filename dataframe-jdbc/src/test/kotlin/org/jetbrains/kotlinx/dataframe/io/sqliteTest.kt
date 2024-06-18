@@ -91,7 +91,8 @@ class SqliteTest {
             val profilePicture = "SampleProfilePictureData".toByteArray()
             val orderDetails = "OrderDetailsData".toByteArray()
 
-            connection.prepareStatement("INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)")
+            connection
+                .prepareStatement("INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)")
                 .use {
                     it.setString(1, "John Doe")
                     it.setInt(2, 30)
@@ -100,7 +101,8 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement("INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)")
+            connection
+                .prepareStatement("INSERT INTO Customers (name, age, salary, profilePicture) VALUES (?, ?, ?, ?)")
                 .use {
                     it.setString(1, null)
                     it.setInt(2, 40)
@@ -109,10 +111,10 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement(
-                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
-            )
-                .use {
+            connection
+                .prepareStatement(
+                    "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
+                ).use {
                     it.setString(1, null)
                     it.setString(2, "2023-07-21")
                     it.setDouble(3, 150.75)
@@ -120,10 +122,10 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement(
-                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
-            )
-                .use {
+            connection
+                .prepareStatement(
+                    "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
+                ).use {
                     it.setString(1, "John Doe")
                     it.setString(2, "2023-08-21")
                     it.setDouble(3, 250.75)

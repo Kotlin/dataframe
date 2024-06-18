@@ -45,7 +45,6 @@ import kotlin.reflect.full.withNullability
 internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: List<*>) :
     DataRowImpl<T>(index, owner),
     AddDataRow<T> {
-
     override fun <C> AnyRow.newValue() = container[index] as C
 }
 
@@ -59,25 +58,28 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
     val (nullable, values) = computeValues(df, expression)
     return when (infer) {
-        Infer.Nulls -> DataColumn.create(
-            name = name,
-            values = values,
-            type = type.withNullability(nullable).replaceGenericTypeParametersWithUpperbound(),
-            infer = Infer.None,
-        )
+        Infer.Nulls ->
+            DataColumn.create(
+                name = name,
+                values = values,
+                type = type.withNullability(nullable).replaceGenericTypeParametersWithUpperbound(),
+                infer = Infer.None,
+            )
 
-        Infer.Type -> DataColumn.createWithTypeInference(
-            name = name,
-            values = values,
-            nullable = nullable,
-        )
+        Infer.Type ->
+            DataColumn.createWithTypeInference(
+                name = name,
+                values = values,
+                nullable = nullable,
+            )
 
-        Infer.None -> DataColumn.create(
-            name = name,
-            values = values,
-            type = type.replaceGenericTypeParametersWithUpperbound(),
-            infer = Infer.None,
-        )
+        Infer.None ->
+            DataColumn.create(
+                name = name,
+                values = values,
+                type = type.replaceGenericTypeParametersWithUpperbound(),
+                infer = Infer.None,
+            )
     }
 }
 
@@ -90,7 +92,10 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
     return guessColumnType(name, values)
 }
 
-internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
+internal fun <T, R> computeValues(
+    df: DataFrame<T>,
+    expression: AddExpression<T, R>,
+): Pair<Boolean, List<R>> {
     var nullable = false
     val list = ArrayList<R>(df.nrow)
     df.indices().forEach {
@@ -104,29 +109,39 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> =
+internal fun <T> createColumn(
+    values: Iterable<T>,
+    suggestedType: KType,
+    guessType: Boolean = false,
+): DataColumn<T> =
     when {
         // values is a non-empty list of AnyRows
         values.any() && values.all { it is AnyRow } ->
-            DataColumn.createColumnGroup(
-                name = "",
-                df = (values as Iterable<AnyRow>).toDataFrame(),
-            ).asDataColumn().cast()
+            DataColumn
+                .createColumnGroup(
+                    name = "",
+                    df = (values as Iterable<AnyRow>).toDataFrame(),
+                ).asDataColumn()
+                .cast()
 
         // values is a non-empty list of DataColumns
         values.any() && values.all { it is AnyCol } ->
-            DataColumn.createColumnGroup(
-                name = "",
-                df = (values as Iterable<AnyCol>).toDataFrame(),
-            ).asDataColumn().cast()
+            DataColumn
+                .createColumnGroup(
+                    name = "",
+                    df = (values as Iterable<AnyCol>).toDataFrame(),
+                ).asDataColumn()
+                .cast()
 
         // values is a non-empty list of DataFrames and nulls
         // (but not just nulls; we cannot assume that should create a FrameColumn)
         values.any() && values.all { it is AnyFrame? } && !values.all { it == null } ->
-            DataColumn.createFrameColumn(
-                name = "",
-                groups = values.map { it as? AnyFrame ?: DataFrame.empty() },
-            ).asDataColumn().cast()
+            DataColumn
+                .createFrameColumn(
+                    name = "",
+                    groups = values.map { it as? AnyFrame ?: DataFrame.empty() },
+                ).asDataColumn()
+                .cast()
 
         guessType ->
             guessColumnType(
@@ -150,9 +165,10 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
 
 internal fun <C> createColumnSet(
     resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
-): ColumnSet<C> = object : ColumnSet<C> {
-    override fun resolve(context: ColumnResolutionContext) = resolver(context)
-}
+): ColumnSet<C> =
+    object : ColumnSet<C> {
+        override fun resolve(context: ColumnResolutionContext) = resolver(context)
+    }
 
 internal fun <C> createTransformableColumnSet(
     resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
@@ -160,14 +176,15 @@ internal fun <C> createTransformableColumnSet(
         context: ColumnResolutionContext,
         transformer: ColumnsResolverTransformer,
     ) -> List<ColumnWithPath<C>>,
-): TransformableColumnSet<C> = object : TransformableColumnSet<C> {
-    override fun resolve(context: ColumnResolutionContext) = resolver(context)
+): TransformableColumnSet<C> =
+    object : TransformableColumnSet<C> {
+        override fun resolve(context: ColumnResolutionContext) = resolver(context)
 
-    override fun transformResolve(
-        context: ColumnResolutionContext,
-        transformer: ColumnsResolverTransformer,
-    ): List<ColumnWithPath<C>> = transformResolve(context, transformer)
-}
+        override fun transformResolve(
+            context: ColumnResolutionContext,
+            transformer: ColumnsResolverTransformer,
+        ): List<ColumnWithPath<C>> = transformResolve(context, transformer)
+    }
 
 // region toColumnSet
 
@@ -175,25 +192,29 @@ internal fun <C> createTransformableColumnSet(
 
 internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.toColumnSet(
     createReceiver: (ColumnResolutionContext) -> T,
-): ColumnSet<C> = createColumnSet {
-    val receiver = createReceiver(it)
-    val columnSet = this(receiver, receiver)
-    columnSet.resolve(receiver, it.unresolvedColumnsPolicy)
-}
+): ColumnSet<C> =
+    createColumnSet {
+        val receiver = createReceiver(it)
+        val columnSet = this(receiver, receiver)
+        columnSet.resolve(receiver, it.unresolvedColumnsPolicy)
+    }
 
 @JvmName("toColumnSetForPivot")
-internal fun <T, C> PivotColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {
-    object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
-}
+internal fun <T, C> PivotColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
+    toColumnSet {
+        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
+    }
 
 @JvmName("toColumnSetForSort")
-internal fun <T, C> SortColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {
-    object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), SortDsl<T> {}
-}
+internal fun <T, C> SortColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
+    toColumnSet {
+        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), SortDsl<T> {}
+    }
 
-internal fun <T, C> ColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> = toColumnSet {
-    object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> {}
-}
+internal fun <T, C> ColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
+    toColumnSet {
+        object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> {}
+    }
 
 // endregion
 
@@ -211,7 +232,10 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
 
 // endregion
 
-internal fun <T> guessColumnType(name: String, values: List<T>) = guessColumnType(name, values, null)
+internal fun <T> guessColumnType(
+    name: String,
+    values: List<T>,
+) = guessColumnType(name, values, null)
 
 @PublishedApi
 internal fun <T> guessColumnType(
@@ -223,15 +247,16 @@ internal fun <T> guessColumnType(
     nullable: Boolean? = null,
 ): DataColumn<T> {
     val detectType = suggestedType == null || suggestedTypeIsUpperBound
-    val type = if (detectType) {
-        guessValueType(
-            values = values.asSequence(),
-            upperBound = suggestedType,
-            listifyValues = false,
-        )
-    } else {
-        suggestedType!!
-    }
+    val type =
+        if (detectType) {
+            guessValueType(
+                values = values.asSequence(),
+                upperBound = suggestedType,
+                listifyValues = false,
+            )
+        } else {
+            suggestedType!!
+        }
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
@@ -240,44 +265,47 @@ internal fun <T> guessColumnType(
         }
 
         DataFrame::class -> {
-            val frames = values.map {
-                when (it) {
-                    null -> DataFrame.empty()
-                    is AnyFrame -> it
-                    is AnyRow -> it.toDataFrame()
-                    is List<*> -> (it as List<AnyRow>).toDataFrame()
-                    else -> throw IllegalStateException()
+            val frames =
+                values.map {
+                    when (it) {
+                        null -> DataFrame.empty()
+                        is AnyFrame -> it
+                        is AnyRow -> it.toDataFrame()
+                        is List<*> -> (it as List<AnyRow>).toDataFrame()
+                        else -> throw IllegalStateException()
+                    }
                 }
-            }
             DataColumn.createFrameColumn(name, frames).asDataColumn().cast()
         }
 
         List::class -> {
             val nullable = type.isMarkedNullable
             var isListOfRows: Boolean? = null
-            val lists = values.map {
-                when (it) {
-                    null -> if (nullable) null else emptyList()
+            val lists =
+                values.map {
+                    when (it) {
+                        null -> if (nullable) null else emptyList()
 
-                    is List<*> -> {
-                        if (isListOfRows != false && it.isNotEmpty()) isListOfRows = it.all { it is AnyRow }
-                        it
-                    }
+                        is List<*> -> {
+                            if (isListOfRows != false && it.isNotEmpty()) isListOfRows = it.all { it is AnyRow }
+                            it
+                        }
 
-                    else -> { // if !detectType and suggestedType is a list, we wrap the values in lists
-                        if (isListOfRows != false) isListOfRows = it is AnyRow
-                        listOf(it)
+                        else -> { // if !detectType and suggestedType is a list, we wrap the values in lists
+                            if (isListOfRows != false) isListOfRows = it is AnyRow
+                            listOf(it)
+                        }
                     }
                 }
-            }
             if (isListOfRows == true) {
-                val frames = lists.map {
-                    if (it == null) {
-                        DataFrame.empty()
-                    } else {
-                        (it as List<AnyRow>).concat()
+                val frames =
+                    lists.map {
+                        if (it == null) {
+                            DataFrame.empty()
+                        } else {
+                            (it as List<AnyRow>).concat()
+                        }
                     }
-                }
                 DataColumn.createFrameColumn(name, frames).cast()
             } else {
                 DataColumn.createValueColumn(name, lists, type, defaultValue = defaultValue).cast()

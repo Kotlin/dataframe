@@ -32,9 +32,9 @@ import kotlin.reflect.KType
 public interface DataFrame<out T> :
     Aggregatable<T>,
     ColumnsContainer<T> {
-
     public companion object {
         public val Empty: AnyFrame = DataFrameImpl<Unit>(emptyList(), 0)
+
         public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else DataFrameImpl<Unit>(emptyList(), nrow)
 
         /**
@@ -84,19 +84,27 @@ public interface DataFrame<out T> :
     // region get rows
 
     public operator fun get(index: Int): DataRow<T>
-    public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
-    public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
-    public operator fun get(first: IntRange, vararg ranges: IntRange): DataFrame<T> =
-        getRows(headPlusArray(first, ranges).asSequence().flatMap { it.asSequence() }.asIterable())
 
-    public operator fun get(firstIndex: Int, vararg otherIndices: Int): DataFrame<T> =
-        get(headPlusIterable(firstIndex, otherIndices.asIterable()))
+    public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
+
+    public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
+
+    public operator fun get(
+        first: IntRange,
+        vararg ranges: IntRange,
+    ): DataFrame<T> = getRows(headPlusArray(first, ranges).asSequence().flatMap { it.asSequence() }.asIterable())
+
+    public operator fun get(
+        firstIndex: Int,
+        vararg otherIndices: Int,
+    ): DataFrame<T> = get(headPlusIterable(firstIndex, otherIndices.asIterable()))
 
     // endregion
 
     // region plus columns
 
     public operator fun plus(col: AnyBaseCol): DataFrame<T> = add(col)
+
     public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
 
     // endregion
@@ -109,11 +117,15 @@ public interface DataFrame<out T> :
  */
 public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = this.get(columns)
 
-public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
-    select { (listOf(first) + other).toColumnSet() }
+public operator fun <T> DataFrame<T>.get(
+    first: AnyColumnReference,
+    vararg other: AnyColumnReference,
+): DataFrame<T> = select { (listOf(first) + other).toColumnSet() }
 
-public operator fun <T> DataFrame<T>.get(first: String, vararg other: String): DataFrame<T> =
-    select { (listOf(first) + other).toColumnSet() }
+public operator fun <T> DataFrame<T>.get(
+    first: String,
+    vararg other: String,
+): DataFrame<T> = select { (listOf(first) + other).toColumnSet() }
 
 public operator fun <T> DataFrame<T>.get(columnRange: ClosedRange<String>): DataFrame<T> =
     select { columnRange.start..columnRange.endInclusive }

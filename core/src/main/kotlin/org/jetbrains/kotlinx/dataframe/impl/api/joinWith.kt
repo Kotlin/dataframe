@@ -91,9 +91,11 @@ internal fun <A, B> DataFrame<A>.joinWithImpl(
         }
     }
 
-    val df: DataFrame<*> = outputData.mapIndexed { index, values ->
-        DataColumn.createWithTypeInference(generator.names[index], values)
-    }.toDataFrame()
+    val df: DataFrame<*> =
+        outputData
+            .mapIndexed { index, values ->
+                DataColumn.createWithTypeInference(generator.names[index], values)
+            }.toDataFrame()
 
     return df.cast()
 }

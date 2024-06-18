@@ -41,7 +41,6 @@ internal class GroupByImpl<T, G>(
     internal val keyColumnsInGroups: ColumnsSelector<G, *>,
 ) : GroupBy<T, G>,
     AggregatableInternal<G> {
-
     override val keys by lazy { df - groups }
 
     override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
@@ -51,9 +50,10 @@ internal class GroupByImpl<T, G>(
         if (groupedColumnName == null || groupedColumnName == groups.name()) {
             df
         } else {
-            df.rename(
-                groups,
-            ).into(groupedColumnName)
+            df
+                .rename(
+                    groups,
+                ).into(groupedColumnName)
         }
 
     override fun toString() = df.toString()
@@ -61,15 +61,17 @@ internal class GroupByImpl<T, G>(
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> =
         keyColumnsInGroups.toColumnSet().let { groupCols -> { all().except(groupCols) } }
 
-    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), {
-        groups
-    }, removeColumns = true, body).cast<G>()
+    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) =
+        aggregateGroupBy(toDataFrame(), {
+            groups
+        }, removeColumns = true, body).cast<G>()
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
-        val indices = (0 until df.nrow).filter {
-            val row = GroupedDataRowImpl(df.get(it), groups)
-            predicate(row, row)
-        }
+        val indices =
+            (0 until df.nrow).filter {
+                val row = GroupedDataRowImpl(df.get(it), groups)
+                predicate(row, row)
+            }
         return df[indices].asGroupBy(groups)
     }
 }
@@ -88,35 +90,38 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val hasKeyColumns = removed.df.ncol > 0
 
-    val groupedFrame = column.values.map {
-        if (it == null) {
-            null
-        } else {
-            val builder = GroupByReceiverImpl(it, hasKeyColumns)
-            val result = body(builder, builder)
-            if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) {
-                builder.yield(
-                    NamedValue.create(
-                        pathOf(defaultAggregateName),
-                        result,
-                        null,
-                        null,
-                        true,
-                    ),
-                )
-            }
-            builder.compute()
-        }
-    }.concat()
+    val groupedFrame =
+        column.values
+            .map {
+                if (it == null) {
+                    null
+                } else {
+                    val builder = GroupByReceiverImpl(it, hasKeyColumns)
+                    val result = body(builder, builder)
+                    if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) {
+                        builder.yield(
+                            NamedValue.create(
+                                pathOf(defaultAggregateName),
+                                result,
+                                null,
+                                null,
+                                true,
+                            ),
+                        )
+                    }
+                    builder.compute()
+                }
+            }.concat()
 
     val removedNode = removed.removedColumns.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)
 
     if (!removeColumns) removedNode.data.wasRemoved = false
 
-    val columnsToInsert = groupedFrame.getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }.map {
-        ColumnToInsert(insertPath + it.path, it, removedNode)
-    }
+    val columnsToInsert =
+        groupedFrame.getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }.map {
+            ColumnToInsert(insertPath + it.path, it, removedNode)
+        }
     val src = if (removeColumns) removed.df else df
     return src.insertImpl(columnsToInsert)
 }

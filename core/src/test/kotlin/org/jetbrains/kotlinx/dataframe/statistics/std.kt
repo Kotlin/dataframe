@@ -9,7 +9,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class StdTests {
-
     @Test
     fun `std one column`() {
         val value by columnOf(1, 2, 3)

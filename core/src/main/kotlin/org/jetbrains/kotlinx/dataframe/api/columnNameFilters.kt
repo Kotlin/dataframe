@@ -22,7 +22,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface ColumnNameFiltersColumnsSelectionDsl {
-
     /**
      * ## (Cols) Name (Contains / StartsWith / EndsWith) Grammar
      *
@@ -58,7 +57,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`nameContains`**][ColumnsSelectionDsl.nameContains] */
         public interface PlainDslNameContains
 
@@ -115,14 +113,13 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      */
     @ExcludeFromSources
     private interface CommonNameContainsDocs {
-
-        /* Example to give */
+        // Example to give
         interface ExampleArg
 
-        /* [text\] or [regex\] */
+        // [text\] or [regex\]
         interface ArgumentArg
 
-        /* Optional extra params. */
+        // Optional extra params.
         interface ExtraParamsArg
     }
 
@@ -177,8 +174,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameContains][String.colsNameContains]`("my") }`
      */
-    public fun String.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
-        columnGroup(this).colsNameContains(text, ignoreCase)
+    public fun String.colsNameContains(
+        text: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * @include [NameContainsTextDocs]
@@ -299,23 +298,22 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      */
     @ExcludeFromSources
     private interface CommonNameStartsEndsDocs {
-
-        /* "Starts" or "Ends" */
+        // "Starts" or "Ends"
         interface CapitalTitleArg
 
-        /* "starting" or "ending" */
+        // "starting" or "ending"
         interface NounArg
 
-        /* "startsWith" or "endsWith" */
+        // "startsWith" or "endsWith"
         interface OperationNameArg
 
-        /* "nameStartsWith" or "nameEndsWith" */
+        // "nameStartsWith" or "nameEndsWith"
         interface NameOperationNameArg
 
-        /* "colsNameStartsWith" or "colsNameEndsWith" */
+        // "colsNameStartsWith" or "colsNameEndsWith"
         interface ColsNameOperationNameArg
 
-        /* [prefix\] or [suffix\] */
+        // [prefix\] or [suffix\]
         interface ArgumentArg
 
         interface ExampleArg
@@ -485,8 +483,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameEndsWith][String.colsNameEndsWith]`("-order") }`
      */
-    public fun String.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
-        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+    public fun String.colsNameEndsWith(
+        suffix: CharSequence,
+        ignoreCase: Boolean = false,
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * @include [CommonNameEndsWithDocs]

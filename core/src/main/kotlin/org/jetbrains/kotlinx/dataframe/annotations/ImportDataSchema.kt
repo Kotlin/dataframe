@@ -69,10 +69,8 @@ public annotation class JdbcOptions(
 )
 
 public annotation class JsonOptions(
-
     /** Allows the choice of how to handle type clashes when reading a JSON file. */
     public val typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
-
     /**
      * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
      *     will be created.

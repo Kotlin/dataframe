@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class DoubleTests {
-
     @Test
     fun `filter not null with nans`() {
         val age by columnOf(2.3, Double.NaN, 1.0, "asd", 3, 'a')

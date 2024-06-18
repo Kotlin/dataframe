@@ -11,12 +11,16 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.nrow
 
-internal fun valueToList(value: Any?, splitStrings: Boolean = true): List<Any?> = when (value) {
-    null -> emptyList()
-    is List<*> -> value
-    is AnyFrame -> value.rows().toList()
-    else -> if (splitStrings) value.toString().split(",").map { it.trim() } else listOf(value)
-}
+internal fun valueToList(
+    value: Any?,
+    splitStrings: Boolean = true,
+): List<Any?> =
+    when (value) {
+        null -> emptyList()
+        is List<*> -> value
+        is AnyFrame -> value.rows().toList()
+        else -> if (splitStrings) value.toString().split(",").map { it.trim() } else listOf(value)
+    }
 
 internal fun <T, C, R> splitImpl(
     clause: SplitWithTransform<T, C, R>,
@@ -78,12 +82,16 @@ internal fun generateUnusedName(
 ): String {
     // check if column with this name already exists in the df in the same position in the hierarchy,
     // or we already have a column with this name in the list of columns to be inserted to the same position in the hierarchy
-    fun isUsed(name: String) = df.getColumnOrNull(
-        insertPath + name,
-    ) != null ||
-        columnsToBeInserted.any { it.insertionPath == insertPath + name }
+    fun isUsed(name: String) =
+        df.getColumnOrNull(
+            insertPath + name,
+        ) != null ||
+            columnsToBeInserted.any { it.insertionPath == insertPath + name }
 
-    fun generateNameVariationByTryingNumericSuffixes(original: String? = null, startSuffix: Int): String {
+    fun generateNameVariationByTryingNumericSuffixes(
+        original: String? = null,
+        startSuffix: Int,
+    ): String {
         var k = startSuffix
         var name = original ?: "split$k"
         while (isUsed(name)) {

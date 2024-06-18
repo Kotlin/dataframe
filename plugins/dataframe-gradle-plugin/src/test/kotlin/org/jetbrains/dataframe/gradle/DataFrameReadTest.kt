@@ -98,7 +98,8 @@ class DataFrameReadTest {
 
     @Test
     fun `jdbcSample is valid jdbc`() {
-        DriverManager.getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false")
+        DriverManager
+            .getConnection("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=MySQL;DATABASE_TO_UPPER=false")
             .use { connection ->
                 // Create table Customer
                 connection.createStatement().execute(

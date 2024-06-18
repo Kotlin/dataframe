@@ -17,10 +17,12 @@ internal data class PivotInAggregateImpl<T>(
     val default: Any? = null,
 ) : PivotGroupBy<T>,
     AggregatableInternal<T> {
-
     override fun default(value: Any?) = copy(default = value)
 
-    override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<T> {
+    override fun <R> aggregate(
+        separate: Boolean,
+        body: AggregateBody<T, R>,
+    ): DataFrame<T> {
         require(aggregator is GroupByReceiverImpl<T>)
 
         val childAggregator = aggregator.child()

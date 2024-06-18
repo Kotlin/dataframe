@@ -28,7 +28,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface ColsOfKindColumnsSelectionDsl {
-
     /**
      * ## Cols Of Kind Grammar
      *
@@ -56,7 +55,6 @@ public interface ColsOfKindColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`colsOfKind`**][ColumnsSelectionDsl.colGroups] */
         public interface PlainDslName
 
@@ -100,7 +98,6 @@ public interface ColsOfKindColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonColsOfKindDocs {
-
         /** Example argument */
         interface ExampleArg
     }
@@ -119,10 +116,11 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = columnsOfKindInternal(
-        kinds = headPlusArray(kind, others).toSet(),
-        filter = filter,
-    )
+    ): TransformableColumnSet<*> =
+        columnsOfKindInternal(
+            kinds = headPlusArray(kind, others).toSet(),
+            filter = filter,
+        )
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -134,10 +132,12 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = asSingleColumn().columnsOfKindInternal(
-        kinds = headPlusArray(kind, others).toSet(),
-        filter = filter,
-    )
+    ): TransformableColumnSet<*> =
+        asSingleColumn()
+            .columnsOfKindInternal(
+                kinds = headPlusArray(kind, others).toSet(),
+                filter = filter,
+            )
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -149,10 +149,11 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().columnsOfKindInternal(
-        kinds = headPlusArray(kind, others).toSet(),
-        filter = filter,
-    )
+    ): TransformableColumnSet<*> =
+        this.ensureIsColumnGroup().columnsOfKindInternal(
+            kinds = headPlusArray(kind, others).toSet(),
+            filter = filter,
+        )
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -202,8 +203,9 @@ public interface ColsOfKindColumnsSelectionDsl {
 internal fun ColumnsResolver<*>.columnsOfKindInternal(
     kinds: Set<ColumnKind>,
     filter: ColumnFilter<*>,
-): TransformableColumnSet<*> = colsInternal {
-    it.kind() in kinds && filter(it)
-}
+): TransformableColumnSet<*> =
+    colsInternal {
+        it.kind() in kinds && filter(it)
+    }
 
 // endregion

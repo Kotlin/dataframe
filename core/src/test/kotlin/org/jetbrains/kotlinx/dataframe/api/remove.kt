@@ -5,9 +5,9 @@ import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.junit.Test
 
 class RemoveTests {
-
     val df = dataFrameOf("a", "b")(1, 2)
     val b by column<Int>()
+
     data class C(val b: Int)
 
     @Test

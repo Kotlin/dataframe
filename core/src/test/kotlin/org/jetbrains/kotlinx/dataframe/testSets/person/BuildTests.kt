@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class BuildTests {
-
     data class Person(val name: String, val age: Int)
 
     val persons = listOf(Person("Alice", 15), Person("Bob", 20))

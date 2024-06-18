@@ -8,12 +8,12 @@ import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class ColTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `col on renamed column`() {
-        df.select {
-            colGroup("name").named("name1").col("firstName")
-        }.alsoDebug()
+        df
+            .select {
+                colGroup("name").named("name1").col("firstName")
+            }.alsoDebug()
     }
 
     @Test
@@ -37,18 +37,13 @@ class ColTests : ColumnsSelectionDslTests() {
         val ageAccessor = column<Int>("age")
         listOf(
             df.select { age },
-
             @Suppress("DEPRECATION")
             df.select { col(ageAccessor) },
-
             df.select { col("age") },
             df.select { col<Int>("age") },
-
             df.select { col(pathOf("age")) },
             df.select { col<Int>(pathOf("age")) },
-
             df.select { col(Person::age) },
-
             df.select { all().col(1) },
             df.select { all()[1] },
             df.select { col(1) },
@@ -61,7 +56,6 @@ class ColTests : ColumnsSelectionDslTests() {
         val firstNameAccessor = column<String>("firstName")
         listOf(
             df.select { name.firstName },
-
             // reference
             df.select { name.col(firstNameAccessor) },
             df.select { colGroup("name").col(firstNameAccessor) },
@@ -69,7 +63,6 @@ class ColTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.col(firstNameAccessor) },
             df.select { Person::name.col(firstNameAccessor) },
             df.select { pathOf("name").col(firstNameAccessor) },
-
             // name
             df.select { name.col("firstName") },
             df.select { name.col<String>("firstName") },
@@ -83,7 +76,6 @@ class ColTests : ColumnsSelectionDslTests() {
             df.select { Person::name.col<String>("firstName") },
             df.select { pathOf("name").col("firstName") },
             df.select { pathOf("name").col<String>("firstName") },
-
             // path
             df.select { name.col(pathOf("firstName")) },
             df.select { name.col<String>(pathOf("firstName")) },
@@ -97,12 +89,10 @@ class ColTests : ColumnsSelectionDslTests() {
             df.select { Person::name.col<String>(pathOf("firstName")) },
             df.select { pathOf("name").col(pathOf("firstName")) },
             df.select { pathOf("name").col<String>(pathOf("firstName")) },
-
             df.select { col("name"["firstName"]) },
             df.select { col<String>("name"["firstName"]) },
             df.select { asSingleColumn().col("name"["firstName"]) },
             df.select { asSingleColumn().col<String>("name"["firstName"]) },
-
             // property
             df.select { name.col(Name::firstName) },
             df.select { colGroup("name").col(Name::firstName) },
@@ -110,7 +100,6 @@ class ColTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.col(Name::firstName) },
             df.select { Person::name.col(Name::firstName) },
             df.select { pathOf("name").col(Name::firstName) },
-
             // index
             df.select { name.col(0) },
             df.select { name.col<String>(0) },

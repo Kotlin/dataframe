@@ -47,32 +47,38 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
 
             val removed = group.removeImpl(false) { names.toColumnSet() }
 
-            val mapped = removed.removedColumns
-                .sortedBy { group.getColumnIndex(it.name) }
-                .mapIndexed { i, treeNode ->
-                    val column = treeNode.data.column!!.cast<C>()
-                    ColumnInfo(treeNode, column, expression(column, column), i)
-                }
+            val mapped =
+                removed.removedColumns
+                    .sortedBy { group.getColumnIndex(it.name) }
+                    .mapIndexed { i, treeNode ->
+                        val column = treeNode.data.column!!.cast<C>()
+                        ColumnInfo(treeNode, column, expression(column, column), i)
+                    }
 
             val sorted = if (desc) mapped.sortedByDescending { it.value } else mapped.sortedBy { it.value }
 
-            val toInsert = sorted.mapIndexed { i, c ->
-                val src = mapped[i]
-                val path = src.treeNode.pathFromRoot().rename(c.column.name())
-                var column = c.column
-                if (inFrameColumns && column.isFrameColumn()) {
-                    column = column.asAnyFrameColumn().map(typeOf<AnyFrame>()) {
-                        it.cast<T>().reorder(columns).reorderImpl(desc, expression)
-                    }.cast()
+            val toInsert =
+                sorted.mapIndexed { i, c ->
+                    val src = mapped[i]
+                    val path = src.treeNode.pathFromRoot().rename(c.column.name())
+                    var column = c.column
+                    if (inFrameColumns && column.isFrameColumn()) {
+                        column =
+                            column
+                                .asAnyFrameColumn()
+                                .map(typeOf<AnyFrame>()) {
+                                    it.cast<T>().reorder(columns).reorderImpl(desc, expression)
+                                }.cast()
+                    }
+                    ColumnToInsert(path, column, src.treeNode)
                 }
-                ColumnToInsert(path, column, src.treeNode)
-            }
             val newGroup = removed.df.insertImpl(toInsert)
-            df = if (parentPath.isEmpty()) {
-                newGroup.cast()
-            } else {
-                df.replace(parentPath).with { newGroup.asColumnGroup(it.name()) }
-            }
+            df =
+                if (parentPath.isEmpty()) {
+                    newGroup.cast()
+                } else {
+                    df.replace(parentPath).with { newGroup.asColumnGroup(it.name()) }
+                }
         }
     return df
 }

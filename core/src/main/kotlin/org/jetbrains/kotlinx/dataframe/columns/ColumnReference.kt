@@ -19,9 +19,10 @@ import kotlin.reflect.KProperty
  * @param C Expected [type][DataColumn.type] of values in the column
  */
 public interface ColumnReference<out C> : SingleColumn<C> {
-
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnReference<C> =
-        renamedReference(property.columnName)
+    public operator fun getValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+    ): ColumnReference<C> = renamedReference(property.columnName)
 
     public fun name(): String
 
@@ -33,9 +34,10 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     public fun getValueOrNull(row: AnyRow): C? = resolveFor(row.df())?.get(row.index())
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? = context.df
-        .getColumn<C>(path(), context.unresolvedColumnsPolicy)
-        ?.addPath(path())
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
+        context.df
+            .getColumn<C>(path(), context.unresolvedColumnsPolicy)
+            ?.addPath(path())
 }
 
 internal fun <C> ColumnReference<C>.renamedReference(newName: String): ColumnReference<C> =

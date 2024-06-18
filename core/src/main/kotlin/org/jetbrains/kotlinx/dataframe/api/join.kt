@@ -28,48 +28,60 @@ public fun <A, B> DataFrame<A>.innerJoin(
     selector: JoinColumnsSelector<A, B>? = null,
 ): DataFrame<A> = join(other, JoinType.Inner, selector = selector)
 
-public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    innerJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.innerJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = innerJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
 ): DataFrame<A> = join(other, JoinType.Left, selector = selector)
 
-public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    leftJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.leftJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = leftJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
 ): DataFrame<A> = join(other, JoinType.Right, selector = selector)
 
-public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    rightJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.rightJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = rightJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
 ): DataFrame<A> = join(other, JoinType.Full, selector = selector)
 
-public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    fullJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.fullJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = fullJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
 ): DataFrame<A> = joinImpl(other, JoinType.Inner, addNewColumns = false, selector = selector)
 
-public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    filterJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.filterJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = filterJoin(other) { columns.toColumnSet() }
 
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
 ): DataFrame<A> = joinImpl(other, JoinType.Exclude, addNewColumns = false, selector = selector)
 
-public fun <A, B> DataFrame<A>.excludeJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
-    excludeJoin(other) { columns.toColumnSet() }
+public fun <A, B> DataFrame<A>.excludeJoin(
+    other: DataFrame<B>,
+    vararg columns: String,
+): DataFrame<A> = excludeJoin(other) { columns.toColumnSet() }
 
 public fun <T> Iterable<DataFrame<T>>.joinOrNull(
     joinType: JoinType = JoinType.Inner,
@@ -78,7 +90,6 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
     fold<DataFrame<T>, DataFrame<T>?>(null) { joined, new -> joined?.join(new, joinType, selector = selector) ?: new }
 
 public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
-
     public val right: DataFrame<B>
 
     public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
@@ -101,7 +112,6 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 }
 
 public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : ColumnSet<C> {
-
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
         throw UnsupportedOperationException()
 }
@@ -118,13 +128,15 @@ public enum class JoinType {
 }
 
 internal val JoinType.addNewColumns: Boolean
-    get() = when (this) {
-        JoinType.Filter, JoinType.Exclude -> false
-        JoinType.Left, JoinType.Right, JoinType.Inner, JoinType.Full -> true
-    }
+    get() =
+        when (this) {
+            JoinType.Filter, JoinType.Exclude -> false
+            JoinType.Left, JoinType.Right, JoinType.Inner, JoinType.Full -> true
+        }
 
 public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.Right || this == JoinType.Full
 
-public val JoinType.allowRightNulls: Boolean get() = this == JoinType.Left ||
-    this == JoinType.Full ||
-    this == JoinType.Exclude
+public val JoinType.allowRightNulls: Boolean get() =
+    this == JoinType.Left ||
+        this == JoinType.Full ||
+        this == JoinType.Exclude

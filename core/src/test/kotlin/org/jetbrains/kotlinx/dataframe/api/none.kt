@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class NoneTests : ColumnsSelectionDslTests() {
-
     @Test
     fun none() {
         df.select { none() }.let {

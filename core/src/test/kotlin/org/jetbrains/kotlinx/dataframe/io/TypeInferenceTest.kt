@@ -6,7 +6,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class TypeInferenceTest {
-
     open class A
 
     private class B : A()

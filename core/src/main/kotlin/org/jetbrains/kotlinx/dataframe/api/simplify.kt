@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.util.TOP_MESSAGE
  * See [Grammar] for all functions in this interface.
  */
 public interface SimplifyColumnsSelectionDsl {
-
     /**
      * ## Simplify [ColumnSet] Grammar
      *
@@ -38,7 +37,6 @@ public interface SimplifyColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
-
         /** __`.`__[**`simplify`**][ColumnsSelectionDsl.simplify] */
         public interface ColumnSetName
     }

@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.thirdName
 import org.junit.Test
 
 class ColsInGroupsTests : ColumnsSelectionDslTests() {
-
     @Test
     fun exceptions() {
         shouldThrow<IllegalArgumentException> {
@@ -27,7 +26,6 @@ class ColsInGroupsTests : ColumnsSelectionDslTests() {
     fun `cols in groups`() {
         listOf(
             df.select { name { firstName and lastName } },
-
             df.select { colsInGroups() },
             df.select { all().colsInGroups() },
             df.select { colGroups().colsInGroups() },
@@ -35,7 +33,6 @@ class ColsInGroupsTests : ColumnsSelectionDslTests() {
 
         listOf(
             df.select { name.firstName },
-
             df.select { colsInGroups { "first" in it.name } },
             df.select { all().colsInGroups { "first" in it.name } },
             df.select { colGroups().colsInGroups { "first" in it.name } },
@@ -43,7 +40,6 @@ class ColsInGroupsTests : ColumnsSelectionDslTests() {
 
         listOf(
             dfGroup.select { name.firstName { cols(firstName, secondName, thirdName) } },
-
             dfGroup.select { name.colsInGroups() },
             dfGroup.select { "name".colsInGroups() },
             dfGroup.select { Person2::name.colsInGroups() },
@@ -52,7 +48,6 @@ class ColsInGroupsTests : ColumnsSelectionDslTests() {
 
         listOf(
             dfGroup.select { name.firstName.firstName },
-
             dfGroup.select { name.colsInGroups { "first" in it.name } },
             dfGroup.select { "name".colsInGroups { "first" in it.name } },
             dfGroup.select { Person2::name.colsInGroups { "first" in it.name } },

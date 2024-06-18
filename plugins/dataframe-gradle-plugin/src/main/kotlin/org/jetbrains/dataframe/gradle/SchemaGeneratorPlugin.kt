@@ -19,7 +19,7 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
+import java.util.Locale
 
 class SchemaGeneratorPlugin : Plugin<Project> {
 
@@ -30,8 +30,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val appliedPlugin = KOTLIN_EXTENSIONS
                 .mapNotNull {
                     target.extensions.findByType(it.extensionClass)?.let { ext -> AppliedPlugin(ext, it) }
-                }
-                .firstOrNull()
+                }.firstOrNull()
 
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
@@ -60,6 +59,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         schema: Schema,
     ): Task {
         val interfaceName = getInterfaceName(schema)
+
         fun propertyError(property: String): Nothing {
             error(
                 "No supported Kotlin plugin was found. Please apply one or specify property $property " +
@@ -163,7 +163,10 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val extensionClass: Class<T>,
         val defaultSourceSet: String,
     ) {
-        fun getKotlinRoot(sourceDirectories: FileCollection, sourceSetName: String): File {
+        fun getKotlinRoot(
+            sourceDirectories: FileCollection,
+            sourceSetName: String,
+        ): File {
             fun sourceSet(lang: String) = Paths.get("src", sourceSetName, lang)
             val ktSet = sourceSet("kotlin")
             val javaSet = sourceSet("java")
@@ -184,17 +187,18 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         }
     }
 
-    private fun fileName(data: Any?): String? = when (data) {
-        is String -> extractFileName(data)
+    private fun fileName(data: Any?): String? =
+        when (data) {
+            is String -> extractFileName(data)
 
-        is URL -> extractFileName(data)
+            is URL -> extractFileName(data)
 
-        is File -> extractFileName(data)
+            is File -> extractFileName(data)
 
-        else -> throw IllegalArgumentException(
-            "data for schema must be File, URL or String, but was ${data?.javaClass ?: ""}($data)",
-        )
-    }
+            else -> throw IllegalArgumentException(
+                "data for schema must be File, URL or String, but was ${data?.javaClass ?: ""}($data)",
+            )
+        }
 
     private fun extractPackageName(fqName: String): String? {
         val packageName = fqName

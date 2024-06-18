@@ -29,29 +29,45 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
-internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
-    { left.columnNames().intersect(right.columnNames().toSet()).map { it.toColumnAccessor() }.let { ColumnsList(it) } }
+internal fun <A, B> defaultJoinColumns(
+    left: DataFrame<A>,
+    right: DataFrame<B>,
+): JoinColumnsSelector<A, B> =
+    {
+        left
+            .columnNames()
+            .intersect(right.columnNames().toSet())
+            .map { it.toColumnAccessor() }
+            .let { ColumnsList(it) }
+    }
 
-internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnsSelector<T, T> = {
-    dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
-        set?.intersect(names.toSet()) ?: names.toSet()
-    }.orEmpty().map { it.toColumnAccessor() }.let { ColumnsList(it) }
-}
+internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnsSelector<T, T> =
+    {
+        dataFrames
+            .map { it.columnNames() }
+            .fold<List<String>, Set<String>?>(null) { set, names ->
+                set?.intersect(names.toSet()) ?: names.toSet()
+            }.orEmpty()
+            .map { it.toColumnAccessor() }
+            .let { ColumnsList(it) }
+    }
 
-internal fun <C> ColumnsResolver<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
-    is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
-    is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
-    is ColumnMatch -> listOf(this)
-    else -> throw Exception()
-}
+internal fun <C> ColumnsResolver<C>.extractJoinColumns(): List<ColumnMatch<C>> =
+    when (this) {
+        is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
+        is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
+        is ColumnMatch -> listOf(this)
+        else -> throw Exception()
+    }
 
 internal fun <A, B> DataFrame<A>.getColumns(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>,
 ): List<ColumnMatch<Any?>> {
-    val receiver = object : DataFrameReceiver<A>(this, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
-        override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
-    }
+    val receiver =
+        object : DataFrameReceiver<A>(this, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
+            override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
+        }
     val columns = selector(receiver, this)
     return columns.extractJoinColumns()
 }
@@ -78,9 +94,10 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
             val leftColumns = getColumnsWithPaths { leftCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }
-            val rightColumns = other.getColumnsWithPaths {
-                rightCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() }
-            }
+            val rightColumns =
+                other.getColumnsWithPaths {
+                    rightCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() }
+                }
 
             val leftPrefixLength = leftCol.path.size
             val rightPrefixLength = rightCol.path.size
@@ -109,29 +126,35 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     }
 
     // compute left to right column path mappings
-    val pathMapping = allLeftJoinColumns.mapIndexed { colNumber, leftCol ->
-        leftCol.path to allRightJoinColumns[colNumber].path
-    }.toMap()
+    val pathMapping =
+        allLeftJoinColumns
+            .mapIndexed { colNumber, leftCol ->
+                leftCol.path to allRightJoinColumns[colNumber].path
+            }.toMap()
 
     // compute pairs of join key to row index from right data frame
-    val rightJoinKeyToIndex = other.indices()
-        .map { index -> allRightJoinColumns.map { it.data[index] } to index }
+    val rightJoinKeyToIndex =
+        other
+            .indices()
+            .map { index -> allRightJoinColumns.map { it.data[index] } to index }
 
     // group row indices by key from right data frame
-    val groupedRight = when (joinType) {
-        JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList<Int>() }
-        else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
-    }
+    val groupedRight =
+        when (joinType) {
+            JoinType.Exclude -> rightJoinKeyToIndex.associate { it.first to emptyList<Int>() }
+            else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
+        }
 
     var outputRowsCount = 0
 
     // for every row index from left data frame compute a list of matched indices from right data frame
-    val leftToRightMapping = indices.map { leftIndex ->
-        val leftKey = allLeftJoinColumns.map { it.data[leftIndex] }
-        val rightIndices = groupedRight[leftKey]
-        outputRowsCount += rightIndices?.size ?: if (joinType.allowRightNulls) 1 else 0
-        rightIndices
-    }
+    val leftToRightMapping =
+        indices.map { leftIndex ->
+            val leftKey = allLeftJoinColumns.map { it.data[leftIndex] }
+            val rightIndices = groupedRight[leftKey]
+            outputRowsCount += rightIndices?.size ?: if (joinType.allowRightNulls) 1 else 0
+            rightIndices
+        }
 
     // for every row index in right data frame store a flag indicating whether this row was matched by some row in left data frame
     val rightMatched = BooleanArray(other.nrow) { false }
@@ -228,29 +251,36 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         }
     }
 
-    val columns = outputData.mapIndexed { columnIndex, columnValues ->
-        val srcColumn =
-            if (columnIndex <
-                leftColumnsCount
-            ) {
-                leftColumns[columnIndex]
-            } else {
-                newRightColumns[columnIndex - leftColumnsCount]
-            }
-        val hasNulls = hasNulls[columnIndex]
-        val newColumn = when (srcColumn.kind) {
-            ColumnKind.Value -> DataColumn.createValueColumn(
-                srcColumn.name,
-                columnValues.asList(),
-                srcColumn.type.withNullability(hasNulls),
-            )
+    val columns =
+        outputData.mapIndexed { columnIndex, columnValues ->
+            val srcColumn =
+                if (columnIndex <
+                    leftColumnsCount
+                ) {
+                    leftColumns[columnIndex]
+                } else {
+                    newRightColumns[columnIndex - leftColumnsCount]
+                }
+            val hasNulls = hasNulls[columnIndex]
+            val newColumn =
+                when (srcColumn.kind) {
+                    ColumnKind.Value ->
+                        DataColumn.createValueColumn(
+                            srcColumn.name,
+                            columnValues.asList(),
+                            srcColumn.type.withNullability(hasNulls),
+                        )
 
-            ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame>)
+                    ColumnKind.Frame ->
+                        DataColumn.createFrameColumn(
+                            srcColumn.name,
+                            columnValues.asList() as List<AnyFrame>,
+                        )
 
-            ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
+                    ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
+                }
+            srcColumn.path to newColumn
         }
-        srcColumn.path to newColumn
-    }
 
     return columns.toDataFrameFromPairs()
 }

@@ -10,15 +10,15 @@ internal class FrameColumnWithPathImpl<T> internal constructor(
     override val path: ColumnPath,
 ) : ColumnWithPath<DataFrame<T>>,
     FrameColumn<T> by data {
-
-    override fun rename(newName: String) = if (newName == name()) {
-        this
-    } else {
-        FrameColumnWithPathImpl(
-            data.rename(newName),
-            path.dropLast(1) + newName,
-        )
-    }
+    override fun rename(newName: String) =
+        if (newName == name()) {
+            this
+        } else {
+            FrameColumnWithPathImpl(
+                data.rename(newName),
+                path.dropLast(1) + newName,
+            )
+        }
 
     override fun path() = path
 }

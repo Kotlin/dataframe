@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.api.expr
  * `expr {}` behaves like a mapping statement, iterating over the object it's called on.
  */
 internal interface ColumnExpression {
-
     /**
      * ## Column Expression
      * Create a temporary new column by defining an expression to fill up each row.

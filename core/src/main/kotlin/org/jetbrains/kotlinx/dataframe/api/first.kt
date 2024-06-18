@@ -90,7 +90,6 @@ public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroup
  * See [Grammar] for all functions in this interface.
  */
 public interface FirstColumnsSelectionDsl {
-
     /**
      * ## First (Col) Grammar
      *
@@ -116,7 +115,6 @@ public interface FirstColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`first`**][ColumnsSelectionDsl.first] */
         public interface PlainDslName
 
@@ -156,7 +154,6 @@ public interface FirstColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.last\]
      */
     private interface CommonFirstDocs {
-
         /** Examples key */
         interface Examples
     }

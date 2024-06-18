@@ -12,12 +12,12 @@ fun main() {
         // <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDfs.html"/>
         .groupBy {
             it.nameWithoutExtension.substringBefore("_")
-        }
-        .mapValues { (name, files) ->
+        }.mapValues { (name, files) ->
             val target = File("../docs/StardustDocs/snippets")
-            val original = files
-                .firstOrNull { it.nameWithoutExtension.contains("properties") }
-                ?: files.first()
+            val original =
+                files
+                    .firstOrNull { it.nameWithoutExtension.contains("properties") }
+                    ?: files.first()
             original.copyTo(File(target, "$name.html"), overwrite = true)
         }
 }

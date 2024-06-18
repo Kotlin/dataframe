@@ -7,7 +7,6 @@ import java.math.BigDecimal
 import kotlin.math.sqrt
 
 public data class BasicStats(val count: Int, val mean: Double, val variance: Double) {
-
     public fun std(ddof: Int): Double {
         if (count <= ddof) return Double.NaN
         return sqrt(variance / (count - ddof))

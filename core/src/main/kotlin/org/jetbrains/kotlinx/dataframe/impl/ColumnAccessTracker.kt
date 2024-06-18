@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.impl
 import kotlin.concurrent.getOrSet
 
 internal class ColumnAccessTracker {
-
     var isEnabled = false
 
     val accessedColumns = mutableSetOf<String>()
@@ -21,7 +20,6 @@ internal class ColumnAccessTracker {
     }
 
     companion object {
-
         fun registerColumnAccess(name: String) = get().registerAccess(name)
 
         fun get() = columnAccessTracker.getOrSet { ColumnAccessTracker() }

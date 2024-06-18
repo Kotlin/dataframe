@@ -30,5 +30,7 @@ internal fun <T, C> DataFrame<T>.getAggregateColumns(
     }
 }
 
-internal fun <T, C> AggregateInternalDsl<T>.getPath(col: AggregateColumnDescriptor<C>, isSingle: Boolean) =
-    col.newPath ?: if (isSingle) pathForSingleColumn(col.data) else col.data.shortPath()
+internal fun <T, C> AggregateInternalDsl<T>.getPath(
+    col: AggregateColumnDescriptor<C>,
+    isSingle: Boolean,
+) = col.newPath ?: if (isSingle) pathForSingleColumn(col.data) else col.data.shortPath()

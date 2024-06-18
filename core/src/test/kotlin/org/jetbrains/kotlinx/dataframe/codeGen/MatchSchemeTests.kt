@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
 
 class MatchSchemeTests {
-
     @DataSchema(isOpen = false)
     interface Snippet {
         val position: Int
@@ -39,7 +38,8 @@ class MatchSchemeTests {
         val pageInfo: DataRow<PageInfo>
     }
 
-    val json = """
+    val json =
+        """
         {
             "kind": "qq",
             "pageInfo": {
@@ -67,7 +67,7 @@ class MatchSchemeTests {
                 }
             ]
         }
-    """.trimIndent()
+        """.trimIndent()
 
     val df = DataFrame.readJsonStr(json)
 

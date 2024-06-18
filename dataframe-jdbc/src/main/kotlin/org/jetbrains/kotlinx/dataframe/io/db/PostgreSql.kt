@@ -32,11 +32,12 @@ public object PostgreSql : DbType("postgresql") {
         tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_") ||
             tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata = TableMetadata(
-        tables.getString("table_name"),
-        tables.getString("table_schem"),
-        tables.getString("table_cat"),
-    )
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
+        TableMetadata(
+            tables.getString("table_name"),
+            tables.getString("table_schem"),
+            tables.getString("table_cat"),
+        )
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         // because of https://github.com/pgjdbc/pgjdbc/issues/425

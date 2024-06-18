@@ -15,15 +15,15 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 internal interface DataCollector<T> {
-
     public fun add(value: T)
+
     public val data: List<T?>
     public val hasNulls: Boolean
+
     public fun toColumn(name: String): DataColumn<T>
 }
 
 internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<T> {
-
     override var hasNulls = false
 
     override val data = ArrayList<T?>(initCapacity)
@@ -36,7 +36,10 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
         data.add(value)
     }
 
-    protected fun createColumn(name: String, type: KType): DataColumn<T> {
+    protected fun createColumn(
+        name: String,
+        type: KType,
+    ): DataColumn<T> {
         val classifier = type.classifier as KClass<*>
         if (classifier.isSubclassOf(DataFrame::class) && !hasNulls) {
             return DataColumn.createFrameColumn(name, data as List<AnyFrame>) as DataColumn<T>
@@ -53,7 +56,6 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val typeOf: (KCla
     DataCollectorBase<Any?>(
         initCapacity,
     ) {
-
     override fun toColumn(name: String) = guessColumnType(name, values)
 }
 
@@ -61,7 +63,6 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
     DataCollectorBase<T?>(
         initCapacity,
     ) {
-
     internal val kclass = type.jvmErasure
 
     override fun add(value: T?) {
@@ -77,12 +78,17 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
     override fun toColumn(name: String) = createColumn(name, type)
 }
 
-internal fun createDataCollector(initCapacity: Int = 0) = createDataCollector(initCapacity) {
-    it.createStarProjectedType(false)
-}
+internal fun createDataCollector(initCapacity: Int = 0) =
+    createDataCollector(initCapacity) {
+        it.createStarProjectedType(false)
+    }
 
-internal fun createDataCollector(initCapacity: Int = 0, typeOf: (KClass<*>) -> KType) =
-    ColumnDataCollector(initCapacity, typeOf)
+internal fun createDataCollector(
+    initCapacity: Int = 0,
+    typeOf: (KClass<*>) -> KType,
+) = ColumnDataCollector(initCapacity, typeOf)
 
-internal fun <T> createDataCollector(initCapacity: Int = 0, type: KType) =
-    TypedColumnDataCollector<T>(initCapacity, type)
+internal fun <T> createDataCollector(
+    initCapacity: Int = 0,
+    type: KType,
+) = TypedColumnDataCollector<T>(initCapacity, type)

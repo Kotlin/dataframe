@@ -60,14 +60,17 @@ public class ConverterScope(public val fromType: KType, public val toSchema: Col
  * ```
  */
 public interface ConvertSchemaDsl<in T> {
-
     /**
      * Defines how to convert [from]: [A] to [to]: [B].
      *
      * Note: In most cases using `convert<Type>().with { }` is more convenient, however
      * if you only have [KType], this method can be used.
      */
-    public fun <A, B> convert(from: KType, to: KType, converter: (A) -> B)
+    public fun <A, B> convert(
+        from: KType,
+        to: KType,
+        converter: (A) -> B,
+    )
 
     /**
      * Advanced version of [convert].

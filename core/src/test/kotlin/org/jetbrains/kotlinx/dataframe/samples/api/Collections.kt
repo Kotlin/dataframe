@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class Collections {
-
     @Test
     @TransformDataFrameExpressions
     fun listInterop1() {
@@ -73,10 +72,13 @@ class Collections {
     @TransformDataFrameExpressions
     fun listInterop5() {
         // SampleStart
-        val df = dataFrameOf("name", "lastName", "age")("John", "Doe", 21)
-            .group("name", "lastName").into("fullName")
+        val df =
+            dataFrameOf("name", "lastName", "age")("John", "Doe", 21)
+                .group("name", "lastName")
+                .into("fullName")
 
         data class FullName(val name: String, val lastName: String)
+
         data class Person(val fullName: FullName, val age: Int)
 
         val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]

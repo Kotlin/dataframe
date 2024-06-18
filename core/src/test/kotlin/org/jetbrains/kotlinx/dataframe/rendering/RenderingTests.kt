@@ -39,7 +39,6 @@ import java.text.DecimalFormatSymbols
 import kotlin.reflect.typeOf
 
 class RenderingTests : TestBase() {
-
     @Test
     fun `render row with unicode values as table`() {
         val value = "Шёл Шива по шоссе, сокрушая сущее.\r\nА на встречу Саша шла, круглое сосущая"
@@ -94,7 +93,12 @@ class RenderingTests : TestBase() {
     @Test
     fun `empty row with nested empty row`() {
         val df = dataFrameOf("a", "b", "c")(null, null, null)
-        val grouped = df.group("a", "b").into("d").group("c", "d").into("e")[0]
+        val grouped =
+            df
+                .group("a", "b")
+                .into("d")
+                .group("c", "d")
+                .into("e")[0]
 
         val formatted = formatter.format(grouped, DefaultCellRenderer, DisplayConfiguration())
         Jsoup.parse(formatted).text() shouldBe "{ }"
@@ -120,9 +124,12 @@ class RenderingTests : TestBase() {
 
     @Test
     fun `render successfully 2`() {
-        val df = dataFrameOf("name", "parent", "type")("Boston (MA)", "123wazxdPag5", "Campus")
-            .move("parent").into { "parent"["id"] }
-            .group { all() }.into("Campus")
+        val df =
+            dataFrameOf("name", "parent", "type")("Boston (MA)", "123wazxdPag5", "Campus")
+                .move("parent")
+                .into { "parent"["id"] }
+                .group { all() }
+                .into("Campus")
         df.toHTML().print()
     }
 
@@ -145,7 +152,8 @@ class RenderingTests : TestBase() {
 
         val body = actualHtml.body.lines().joinToString("") { it.trimStart() }
 
-        body shouldContain """
+        body shouldContain
+            """
             <thead>
             <tr>
             <th class="bottomBorder" style="text-align:left">a</th>
@@ -159,7 +167,7 @@ class RenderingTests : TestBase() {
             </tr>
             </tbody>
             </table>
-        """.trimIndent().replace("\n", "")
+            """.trimIndent().replace("\n", "")
     }
 
     @Test
@@ -175,19 +183,21 @@ class RenderingTests : TestBase() {
         dfGroup.name.maxWidth() shouldBe 4
         dfGroup.name.firstName.maxWidth() shouldBe 3
         dfGroup.name.lastName.maxWidth() shouldBe 1
-        dfGroup.name.firstName.secondName.maxWidth() shouldBe 1
+        dfGroup.name.firstName.secondName
+            .maxWidth() shouldBe 1
     }
 
     @Test
     fun `render array types correctly`() {
-        val df = dataFrameOf(
-            columnOf(1, null).named("a"),
-            columnOf(intArrayOf(1), intArrayOf(2)).named("b"),
-            // TODO https://github.com/Kotlin/dataframe/issues/679
-            // columnOf(arrayOf(1), arrayOf(2)).named("d"),
-            DataColumn.createValueColumn("c", listOf(arrayOf(1), arrayOf(2))),
-            columnOf(arrayOf(1, null), arrayOf(2, null)).named("d"),
-        )
+        val df =
+            dataFrameOf(
+                columnOf(1, null).named("a"),
+                columnOf(intArrayOf(1), intArrayOf(2)).named("b"),
+                // TODO https://github.com/Kotlin/dataframe/issues/679
+                // columnOf(arrayOf(1), arrayOf(2)).named("d"),
+                DataColumn.createValueColumn("c", listOf(arrayOf(1), arrayOf(2))),
+                columnOf(arrayOf(1, null), arrayOf(2, null)).named("d"),
+            )
 
         val schema = df.schema()
         val rendered = schema.toString()

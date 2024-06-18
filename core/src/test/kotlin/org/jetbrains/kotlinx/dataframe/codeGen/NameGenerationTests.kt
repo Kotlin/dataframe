@@ -11,23 +11,25 @@ import org.jetbrains.kotlinx.dataframe.api.schema
 import org.junit.Test
 
 class NameGenerationTests {
-
     val df = dataFrameOf("first column", "second_column", "____")(3, 5, 7)
 
     @Test
     fun `interface generation`() {
         val codeGen = CodeGenerator.create()
-        val code = codeGen.generate(
-            schema = df.schema(),
-            name = "DataType",
-            fields = true,
-            extensionProperties = false,
-            isOpen = false,
-            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            knownMarkers = emptyList(),
-        ).code
+        val code =
+            codeGen
+                .generate(
+                    schema = df.schema(),
+                    name = "DataType",
+                    fields = true,
+                    extensionProperties = false,
+                    isOpen = false,
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    knownMarkers = emptyList(),
+                ).code
 
-        val expected = """
+        val expected =
+            """
             @DataSchema(isOpen = false)
             interface DataType {
                 @ColumnName("____")
@@ -36,7 +38,7 @@ class NameGenerationTests {
                 val `first column`: kotlin.Int
                 val second_column: kotlin.Int
             }
-        """.trimIndent()
+            """.trimIndent()
 
         code.declarations shouldBe expected
     }

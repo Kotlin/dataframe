@@ -14,7 +14,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class AnimalsTests {
-
     val animal by columnOf("cat", "cat", "snake", "dog", "dog", "cat", "snake", "cat", "dog", "dog")
     val age by columnOf(2.5, 3.0, 0.5, Double.NaN, 5.0, 2.0, 4.5, Double.NaN, 7.0, 3.0)
     val visits by columnOf(1, 3, 2, 3, 2, 3, 1, 1, 2, 1)
@@ -38,7 +37,12 @@ class AnimalsTests {
 
     @Test
     fun `mean of empty`() {
-        val cleared = df.update { age }.with { Double.NaN }.update { visits }.withNull()
+        val cleared =
+            df
+                .update { age }
+                .with { Double.NaN }
+                .update { visits }
+                .withNull()
         val mean = cleared.mean()
         mean[age] shouldBe Double.NaN
         (mean[visits.name()] as Double).isNaN() shouldBe true

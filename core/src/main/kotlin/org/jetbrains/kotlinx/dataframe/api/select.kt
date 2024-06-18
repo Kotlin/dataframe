@@ -37,7 +37,6 @@ import kotlin.reflect.KProperty
  * For more information: {@include [DocumentationUrls.Select]}
  */
 internal interface Select {
-
     /**
      * {@comment Version of [SelectingColumns] with correctly filled in examples}
      * @include [SelectingColumns] {@include [SetSelectOperationArg]}
@@ -86,13 +85,13 @@ public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFram
 
 // region ColumnsSelectionDsl
 // NOTE: invoke overloads are inside ColumnsSelectionDsl.kt due to conflicts
+
 /**
  * ## Select {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
  */
 public interface SelectColumnsSelectionDsl {
-
     /**
      * ## Select from [ColumnGroup] Grammar
      * {@include [DslGrammarTemplate]}
@@ -114,7 +113,6 @@ public interface SelectColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnSetPart]}
      */
     public interface Grammar {
-
         /** __`.`__[**`select`**][ColumnsSelectionDsl.select] */
         public interface ColumnGroupName
     }
@@ -158,7 +156,6 @@ public interface SelectColumnsSelectionDsl {
      * @see [SingleColumn.except\]
      */
     private interface CommonSelectDocs {
-
         interface ExampleArg
     }
 
@@ -244,7 +241,8 @@ internal fun <C, R> SingleColumn<DataRow<C>>.selectInternal(selector: ColumnsSel
                 "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
             }
 
-            col.asColumnGroup()
+            col
+                .asColumnGroup()
                 .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
                 .map { it.changePath(col.path + it.path) }
         } ?: emptyList()

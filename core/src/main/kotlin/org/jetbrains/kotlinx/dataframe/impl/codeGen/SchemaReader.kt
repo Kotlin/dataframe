@@ -22,13 +22,14 @@ import java.net.URL
 public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<SupportedFormat>) -> DfReadResult
     get() = { url, formats ->
         try {
-            val (format, df) = url.openStream().use {
-                DataFrame.read(
-                    stream = it,
-                    format = guessFormat(url, formats) as? SupportedDataFrameFormat?,
-                    formats = formats.filterIsInstance<SupportedDataFrameFormat>(),
-                )
-            }
+            val (format, df) =
+                url.openStream().use {
+                    DataFrame.read(
+                        stream = it,
+                        format = guessFormat(url, formats) as? SupportedDataFrameFormat?,
+                        formats = formats.filterIsInstance<SupportedDataFrameFormat>(),
+                    )
+                }
             DfReadResult.Success(df, format)
         } catch (e: Throwable) {
             DfReadResult.Error(e)
@@ -36,7 +37,6 @@ public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<Support
     }
 
 public sealed interface DfReadResult {
-
     public class Success(private val df: AnyFrame, public val format: SupportedDataFrameFormat) : DfReadResult {
         public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod =
             format.createDefaultReadMethod(pathRepresentation)
@@ -60,15 +60,16 @@ public val CodeGenerator.Companion.urlCodeGenReader: (
 ) -> CodeGenerationReadResult
     get() = { url, name, formats, generateHelperCompanionObject ->
         try {
-            val (format, code) = url.openStream().use {
-                readCodeForGeneration(
-                    stream = it,
-                    name = name,
-                    format = guessFormat(url, formats) as? SupportedCodeGenerationFormat?,
-                    generateHelperCompanionObject = generateHelperCompanionObject,
-                    formats = formats.filterIsInstance<SupportedCodeGenerationFormat>(),
-                )
-            }
+            val (format, code) =
+                url.openStream().use {
+                    readCodeForGeneration(
+                        stream = it,
+                        name = name,
+                        format = guessFormat(url, formats) as? SupportedCodeGenerationFormat?,
+                        generateHelperCompanionObject = generateHelperCompanionObject,
+                        formats = formats.filterIsInstance<SupportedCodeGenerationFormat>(),
+                    )
+                }
             CodeGenerationReadResult.Success(code, format)
         } catch (e: Throwable) {
             CodeGenerationReadResult.Error(e)
@@ -76,7 +77,6 @@ public val CodeGenerator.Companion.urlCodeGenReader: (
     }
 
 public sealed interface CodeGenerationReadResult {
-
     public class Success(public val code: Code, public val format: SupportedCodeGenerationFormat) :
         CodeGenerationReadResult {
         public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod =

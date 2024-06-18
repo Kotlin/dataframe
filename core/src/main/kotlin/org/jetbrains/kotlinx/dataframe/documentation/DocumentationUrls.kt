@@ -2,13 +2,11 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 @ExcludeFromSources
 internal interface DocumentationUrls {
-
     /** https://kotlin.github.io/dataframe */
     interface Url
 
     /** [See Access APIs on the documentation website.]({@include [Url]}/apilevels.html) */
     interface AccessApis {
-
         /** [See String API on the documentation website.]({@include [Url]}/stringapi.html) */
         interface StringApi
 
@@ -35,7 +33,6 @@ internal interface DocumentationUrls {
 
     /** [See `drop` on the documentation website.]({@include [Url]}/drop.html) */
     interface Drop {
-
         /** [See `dropNulls` on the documentation website.]({@include [Url]}/drop.html#dropnulls) */
         interface DropNulls
 
@@ -60,7 +57,6 @@ internal interface DocumentationUrls {
 
     /** [See `NaN` and `NA` on the documentation website.]({@include [Url]}/nanAndNa.html) */
     interface NanAndNa {
-
         /** [See `NaN` on the documentation website.]({@include [Url]}/nanAndNa.html#nan) */
         interface NaN
 

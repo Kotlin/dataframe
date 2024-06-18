@@ -14,13 +14,17 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-public fun <T, C> DataFrame<T>.values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C> =
-    valuesImpl(byRow, columns)
+public fun <T, C> DataFrame<T>.values(
+    byRow: Boolean = false,
+    columns: ColumnsSelector<T, C>,
+): Sequence<C> = valuesImpl(byRow, columns)
 
 public fun <T> DataFrame<T>.values(byRows: Boolean = false): Sequence<Any?> = values(byRows) { all() }
 
-public fun <T, C> DataFrame<T>.valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> =
-    values(byRow, columns).filterNotNull()
+public fun <T, C> DataFrame<T>.valuesNotNull(
+    byRow: Boolean = false,
+    columns: ColumnsSelector<T, C?>,
+): Sequence<C> = values(byRow, columns).filterNotNull()
 
 public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
@@ -46,8 +50,10 @@ public fun <T> Grouped<T>.values(
     columns: ColumnsForAggregateSelector<T, *>,
 ): DataFrame<T> = aggregate { internal().columnValues(columns, true, dropNA, distinct) }
 
-public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> =
-    values(dropNA, distinct, remainingColumnsSelector())
+public fun <T> Grouped<T>.values(
+    dropNA: Boolean = false,
+    distinct: Boolean = false,
+): DataFrame<T> = values(dropNA, distinct, remainingColumnsSelector())
 
 // endregion
 
@@ -102,9 +108,10 @@ public fun <T> Pivot<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     separate: Boolean = false,
-): DataRow<T> = delegate {
-    values(dropNA, distinct, separate)
-}
+): DataRow<T> =
+    delegate {
+        values(dropNA, distinct, separate)
+    }
 
 // endregion
 
@@ -113,14 +120,20 @@ public fun <T> Pivot<T>.values(
 public fun <T> ReducedPivot<T>.values(separate: Boolean = false): DataRow<T> =
     pivot.delegate { reduce(reducer).values(separate = separate) }
 
-public fun <T> ReducedPivot<T>.values(vararg columns: AnyColumnReference, separate: Boolean = false): DataRow<T> =
-    values(separate) { columns.toColumnSet() }
+public fun <T> ReducedPivot<T>.values(
+    vararg columns: AnyColumnReference,
+    separate: Boolean = false,
+): DataRow<T> = values(separate) { columns.toColumnSet() }
 
-public fun <T> ReducedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<T> =
-    values(separate) { columns.toColumnSet() }
+public fun <T> ReducedPivot<T>.values(
+    vararg columns: String,
+    separate: Boolean = false,
+): DataRow<T> = values(separate) { columns.toColumnSet() }
 
-public fun <T> ReducedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<T> =
-    values(separate) { columns.toColumnSet() }
+public fun <T> ReducedPivot<T>.values(
+    vararg columns: KProperty<*>,
+    separate: Boolean = false,
+): DataRow<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivot<T>.values(
     separate: Boolean = false,
@@ -177,11 +190,15 @@ public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,
 ): DataFrame<T> = values(separate) { columns.toColumnSet() }
 
-public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> =
-    values(separate) { columns.toColumnSet() }
+public fun <T> ReducedPivotGroupBy<T>.values(
+    vararg columns: String,
+    separate: Boolean = false,
+): DataFrame<T> = values(separate) { columns.toColumnSet() }
 
-public fun <T> ReducedPivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> =
-    values(separate) { columns.toColumnSet() }
+public fun <T> ReducedPivotGroupBy<T>.values(
+    vararg columns: KProperty<*>,
+    separate: Boolean = false,
+): DataFrame<T> = values(separate) { columns.toColumnSet() }
 
 public fun <T> ReducedPivotGroupBy<T>.values(
     separate: Boolean = false,

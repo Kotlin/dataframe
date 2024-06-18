@@ -276,7 +276,8 @@ class PostgresTest {
     @Test
     fun `read from sql query`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT
                 t1.id,
                 t1.bigintCol,
@@ -284,7 +285,7 @@ class PostgresTest {
                 t2.textCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
         val result = df.filter { it[ViewTable::id] == 1 }
@@ -310,7 +311,8 @@ class PostgresTest {
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }
+        table2Df
+            .filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }
             .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
     }

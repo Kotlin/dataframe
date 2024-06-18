@@ -46,7 +46,6 @@ internal interface SelectingColumnsLink
  * {@include [KProperties.WithExample]}
  */
 internal interface SelectingColumns {
-
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
@@ -54,6 +53,7 @@ internal interface SelectingColumns {
     interface OperationArg
 
     // Using <code>` notation to not create double `` when including
+
     /** {@set [OperationArg] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 
@@ -78,7 +78,6 @@ internal interface SelectingColumns {
      * @include [DocumentationUrls.ColumnSelectors]
      */
     interface Dsl {
-
         /**
          * {@include [Dsl]}
          *
@@ -118,7 +117,6 @@ internal interface SelectingColumns {
      * @include [DocumentationUrls.ColumnSelectors]
      */
     interface DslSingle {
-
         /**
          * {@include [DslSingle]}
          *
@@ -142,7 +140,6 @@ internal interface SelectingColumns {
      * ({@include [AccessApi.StringApiLink]}).
      */
     interface ColumnNames {
-
         /**
          * {@include [ColumnNames]}
          *
@@ -162,7 +159,6 @@ internal interface SelectingColumns {
      * ({@include [AccessApi.ColumnAccessorsApiLink]}).
      */
     interface ColumnAccessors {
-
         /**
          * {@include [ColumnAccessors]}
          *
@@ -183,7 +179,6 @@ internal interface SelectingColumns {
 
     /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
     interface KProperties {
-
         /**
          * {@include [KProperties]}
          *

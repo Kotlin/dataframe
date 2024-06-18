@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class ReverseTests {
-
     @Test
     fun dataframe() {
         val df = dataFrameOf("a", "b")(1, 2, 3, 4)

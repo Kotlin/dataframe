@@ -90,7 +90,6 @@ public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupB
  * See [Grammar] for all functions in this interface.
  */
 public interface LastColumnsSelectionDsl {
-
     /**
      * ## Last (Col) Grammar
      *
@@ -116,7 +115,6 @@ public interface LastColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`last`**][ColumnsSelectionDsl.last] */
         public interface PlainDslName
 
@@ -155,7 +153,6 @@ public interface LastColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.first\]
      */
     private interface CommonLastDocs {
-
         /** Examples key */
         interface Examples
     }

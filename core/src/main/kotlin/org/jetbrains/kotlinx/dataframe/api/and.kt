@@ -26,7 +26,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface AndColumnsSelectionDsl {
-
     /**
      * ## And Operator Grammar
      *
@@ -56,7 +55,6 @@ public interface AndColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`and`**][ColumnsSelectionDsl.and] */
         public interface InfixName
 
@@ -96,7 +94,6 @@ public interface AndColumnsSelectionDsl {
      *   and right side of the [and] operator.
      */
     private interface CommonAndDocs {
-
         interface ExampleArg
     }
 
@@ -109,7 +106,6 @@ public interface AndColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code>{@get [ColumnsResolverAndDocs.Argument]}</code>` }`
      */
     private interface ColumnsResolverAndDocs {
-
         interface Argument
     }
 
@@ -136,7 +132,6 @@ public interface AndColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code>{@get [StringAndDocs.Argument]}</code>` }`
      */
     private interface StringAndDocs {
-
         interface Argument
     }
 
@@ -163,7 +158,6 @@ public interface AndColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code>{@get [KPropertyAndDocs.Argument]}</code>` }`
      */
     private interface KPropertyAndDocs {
-
         interface Argument
     }
 

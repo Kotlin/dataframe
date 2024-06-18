@@ -29,41 +29,51 @@ public class JSON(
     private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
     private val keyValuePaths: List<JsonPath> = emptyList(),
 ) : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJson(
-        stream = stream,
-        header = header,
-        typeClashTactic = typeClashTactic,
-        keyValuePaths = keyValuePaths,
-    )
+    override fun readDataFrame(
+        stream: InputStream,
+        header: List<String>,
+    ): AnyFrame =
+        DataFrame.readJson(
+            stream = stream,
+            header = header,
+            typeClashTactic = typeClashTactic,
+            keyValuePaths = keyValuePaths,
+        )
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJson(
-        file = file,
-        header = header,
-        typeClashTactic = typeClashTactic,
-        keyValuePaths = keyValuePaths,
-    )
+    override fun readDataFrame(
+        file: File,
+        header: List<String>,
+    ): AnyFrame =
+        DataFrame.readJson(
+            file = file,
+            header = header,
+            typeClashTactic = typeClashTactic,
+            keyValuePaths = keyValuePaths,
+        )
 
     override fun acceptsExtension(ext: String): Boolean = ext == "json"
+
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
     override val testOrder: Int = 10_000
 
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod = DefaultReadJsonMethod(
-        path = pathRepresentation,
-        arguments = MethodArguments()
-            .add(
-                "keyValuePaths",
-                typeOf<List<JsonPath>>(),
-                "listOf(${keyValuePaths.joinToString {
-                    "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
-                }})",
-            )
-            .add(
-                "typeClashTactic",
-                typeOf<TypeClashTactic>(),
-                "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
-            ),
-    )
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
+        DefaultReadJsonMethod(
+            path = pathRepresentation,
+            arguments =
+                MethodArguments()
+                    .add(
+                        "keyValuePaths",
+                        typeOf<List<JsonPath>>(),
+                        "listOf(${keyValuePaths.joinToString {
+                            "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
+                        }})",
+                    ).add(
+                        "typeClashTactic",
+                        typeOf<TypeClashTactic>(),
+                        "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
+                    ),
+        )
 
     /**
      * Allows the choice of how to handle type clashes when reading a JSON file.
@@ -259,9 +269,13 @@ public fun DataRow.Companion.readJsonStr(
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
 ): AnyRow = DataFrame.readJsonStr(text, header, keyValuePaths, typeClashTactic).single()
 
-public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String = json {
-    encodeFrame(this@toJson)
-}.toJsonString(prettyPrint, canonical)
+public fun AnyFrame.toJson(
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+): String =
+    json {
+        encodeFrame(this@toJson)
+    }.toJsonString(prettyPrint, canonical)
 
 /**
  * Converts the DataFrame to a JSON string representation with additional metadata about serialized data.
@@ -283,9 +297,10 @@ public fun AnyFrame.toJsonWithMetadata(
     prettyPrint: Boolean = false,
     canonical: Boolean = false,
     imageEncodingOptions: Base64ImageEncodingOptions? = null,
-): String = json {
-    encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
-}.toJsonString(prettyPrint, canonical)
+): String =
+    json {
+        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
+    }.toJsonString(prettyPrint, canonical)
 
 internal const val DEFAULT_IMG_SIZE = 600
 
@@ -312,29 +327,56 @@ public class Base64ImageEncodingOptions(
     }
 }
 
-public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String = json {
-    encodeRow(df(), index())
-}?.toJsonString(prettyPrint, canonical) ?: ""
+public fun AnyRow.toJson(
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+): String =
+    json {
+        encodeRow(df(), index())
+    }?.toJsonString(prettyPrint, canonical) ?: ""
 
-public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
+public fun AnyFrame.writeJson(
+    file: File,
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+) {
     file.writeText(toJson(prettyPrint, canonical))
 }
 
-public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false): Unit =
-    writeJson(File(path), prettyPrint, canonical)
+public fun AnyFrame.writeJson(
+    path: String,
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+): Unit = writeJson(File(path), prettyPrint, canonical)
 
-public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
+public fun AnyFrame.writeJson(
+    writer: Appendable,
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+) {
     writer.append(toJson(prettyPrint, canonical))
 }
 
-public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
+public fun AnyRow.writeJson(
+    file: File,
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+) {
     file.writeText(toJson(prettyPrint, canonical))
 }
 
-public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false) {
+public fun AnyRow.writeJson(
+    path: String,
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+) {
     writeJson(File(path), prettyPrint, canonical)
 }
 
-public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
+public fun AnyRow.writeJson(
+    writer: Appendable,
+    prettyPrint: Boolean = false,
+    canonical: Boolean = false,
+) {
     writer.append(toJson(prettyPrint, canonical))
 }

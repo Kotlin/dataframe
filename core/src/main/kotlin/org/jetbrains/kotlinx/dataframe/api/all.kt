@@ -92,7 +92,6 @@ public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all {
  * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
 public interface AllColumnsSelectionDsl<out _UNUSED> {
-
     /**
      * ## Grammar of All Flavors of All (Cols):
      *
@@ -128,7 +127,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * }
      */
     public interface Grammar {
-
         /** [**`all`**][ColumnsSelectionDsl.all] */
         public interface PlainDslName
 
@@ -213,14 +211,13 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface CommonAllSubsetDocs {
-
-        /* The title of the function, a.k.a. "All (Cols) After" */
+        // The title of the function, a.k.a. "All (Cols) After"
         interface TitleArg
 
-        /* The exact name of the function, a.k.a. "allAfter" */
+        // The exact name of the function, a.k.a. "allAfter"
         interface FunctionArg
 
-        /* The exact name of the function, a.k.a. "allColsAfter" */
+        // The exact name of the function, a.k.a. "allColsAfter"
         interface FunctionColsArg
 
         /*
@@ -234,7 +231,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
          */
         interface ColumnDoesNotExistArg
 
-        /* Example argument */
+        // Example argument
         interface ExampleArg
     }
 
@@ -275,7 +272,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface CommonAllDocs {
-
         /** Example argument */
         interface Examples
     }
@@ -356,7 +352,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnSetAllAfterDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -389,7 +384,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllAfterDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -419,7 +413,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface SingleColumnAllAfterDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -464,7 +457,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface StringAllAfterDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -492,7 +484,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface KPropertyAllAfterDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -524,7 +515,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnPathAllAfterDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -570,7 +560,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnSetAllFromDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -602,7 +591,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllFromDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -632,7 +620,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface SingleColumnAllFromDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -677,7 +664,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface StringAllFromDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -705,7 +691,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface KPropertyAllFromDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -737,7 +722,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnPathAllFromDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -782,7 +766,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnSetAllBeforeDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -815,7 +798,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllBeforeDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -846,7 +828,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface SingleColumnAllBeforeDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -888,7 +869,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface StringAllBeforeDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -917,7 +897,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface KPropertyAllBeforeDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -949,7 +928,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnPathAllBeforeDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -995,7 +973,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnSetAllUpToDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -1027,7 +1004,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnsSelectionDslAllUpToDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -1057,7 +1033,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface SingleColumnAllUpToDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -1102,7 +1077,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface StringAllUpToDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -1130,7 +1104,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface KPropertyAllUpToDocs {
-
         /** Example argument to use */
         interface Arg
     }
@@ -1162,7 +1135,6 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      */
     @ExcludeFromSources
     private interface ColumnPathAllUpToDocs {
-
         /** Example argument to use */
         interface Arg
     }

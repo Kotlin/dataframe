@@ -17,27 +17,37 @@ internal fun <T, C> DataFrame<T>.flattenImpl(
     keepParentNameForColumns: Boolean = false,
     separator: String = ".",
 ): DataFrame<T> {
-    val rootColumns = getColumnsWithPaths {
-        columns.toColumnSet().filter { it.isColumnGroup() }.simplify()
-    }
+    val rootColumns =
+        getColumnsWithPaths {
+            columns.toColumnSet().filter { it.isColumnGroup() }.simplify()
+        }
     val rootPrefixes = rootColumns.map { it.path }.toSet()
-    val nameGenerators = rootPrefixes.map { it.dropLast() }.distinct().associateWith { path ->
-        val usedNames = get(
-            path,
-        ).asColumnGroup().columns().filter { path + it.name() !in rootPrefixes }.map { it.name() }
-        ColumnNameGenerator(usedNames)
-    }
+    val nameGenerators =
+        rootPrefixes.map { it.dropLast() }.distinct().associateWith { path ->
+            val usedNames =
+                get(
+                    path,
+                ).asColumnGroup().columns().filter { path + it.name() !in rootPrefixes }.map { it.name() }
+            ColumnNameGenerator(usedNames)
+        }
 
     fun getRootPrefix(path: ColumnPath) =
         (1 until path.size).asSequence().map { path.take(it) }.first { rootPrefixes.contains(it) }
 
-    val result = move { rootPrefixes.toColumnSet().colsAtAnyDepth { !it.isColumnGroup() } }
-        .into {
-            val targetPath = getRootPrefix(it.path).dropLast(1)
-            val nameGen = nameGenerators[targetPath]!!
-            val preferredName = if (keepParentNameForColumns) "${it.parentName}${separator}${it.name()}" else it.name()
-            val name = nameGen.addUnique(preferredName)
-            targetPath + name
-        }
+    val result =
+        move { rootPrefixes.toColumnSet().colsAtAnyDepth { !it.isColumnGroup() } }
+            .into {
+                val targetPath = getRootPrefix(it.path).dropLast(1)
+                val nameGen = nameGenerators[targetPath]!!
+                val preferredName =
+                    if (keepParentNameForColumns) {
+                        "${it.parentName}${separator}${it.name()}"
+                    } else {
+                        it
+                            .name()
+                    }
+                val name = nameGen.addUnique(preferredName)
+                targetPath + name
+            }
     return result
 }

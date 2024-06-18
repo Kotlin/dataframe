@@ -20,10 +20,12 @@ public data class NamedValue private constructor(
             type: KType?,
             defaultValue: Any?,
             guessType: Boolean = false,
-        ): NamedValue = when (value) {
-            is ValueWithDefault<*> -> create(path, value.value, type, value.default, guessType)
-            else -> NamedValue(path, value, type, defaultValue, guessType)
-        }
+        ): NamedValue =
+            when (value) {
+                is ValueWithDefault<*> -> create(path, value.value, type, value.default, guessType)
+                else -> NamedValue(path, value, type, defaultValue, guessType)
+            }
+
         internal fun aggregator(builder: AggregateGroupedDsl<*>): NamedValue =
             NamedValue(emptyPath(), builder, null, null, false)
     }

@@ -36,8 +36,10 @@ public fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().count {
 public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
     aggregateValue(resultName) { count() default 0 }
 
-public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>): DataFrame<T> =
-    aggregateValue(resultName) { count(predicate) default 0 }
+public fun <T> Grouped<T>.count(
+    resultName: String = "count",
+    predicate: RowFilter<T>,
+): DataFrame<T> = aggregateValue(resultName) { count(predicate) default 0 }
 
 // endregion
 

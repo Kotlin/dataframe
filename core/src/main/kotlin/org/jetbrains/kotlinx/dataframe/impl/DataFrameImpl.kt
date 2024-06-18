@@ -32,7 +32,6 @@ internal const val UNNAMED_COLUMN_PREFIX = "untitled"
 internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
     DataFrame<T>,
     AggregatableInternal<T> {
-
     private val columnsMap: Map<String, Int>
 
     protected val columns: List<AnyCol>
@@ -62,17 +61,18 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
         // generate unique names for unnamed columns
         if (hasUnnamedColumns) {
             val nameGenerator = ColumnNameGenerator(cols.map { it.name })
-            columns = cols.mapIndexed { i, col ->
-                val name = col.name
-                if (name.isEmpty()) {
-                    val uniqueName = nameGenerator.addUnique(UNNAMED_COLUMN_PREFIX)
-                    val renamed = col.rename(uniqueName)
-                    columnsMap[uniqueName] = i
-                    renamed
-                } else {
-                    col
+            columns =
+                cols.mapIndexed { i, col ->
+                    val name = col.name
+                    if (name.isEmpty()) {
+                        val uniqueName = nameGenerator.addUnique(UNNAMED_COLUMN_PREFIX)
+                        val renamed = col.rename(uniqueName)
+                        columnsMap[uniqueName] = i
+                        renamed
+                    } else {
+                        col
+                    }
                 }
-            }
         } else {
             columns = cols
         }
@@ -120,30 +120,39 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
 
     override fun getColumnOrNull(index: Int) = if (index >= 0 && index < columns.size) columns[index] else null
 
-    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>? = getColumnsImpl(
-        UnresolvedColumnsPolicy.Skip,
-        column,
-    ).singleOrNull()
+    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>? =
+        getColumnsImpl(
+            UnresolvedColumnsPolicy.Skip,
+            column,
+        ).singleOrNull()
 
     override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? =
         column.resolveSingle(this, UnresolvedColumnsPolicy.Skip)?.data
+
     override fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>? = getColumnOrNull(column.toColumnAccessor())
 
-    override fun getColumnOrNull(path: ColumnPath): AnyCol? = when (path.size) {
-        0 -> asColumnGroup().asDataColumn()
+    override fun getColumnOrNull(path: ColumnPath): AnyCol? =
+        when (path.size) {
+            0 -> asColumnGroup().asDataColumn()
 
-        1 -> getColumnOrNull(path[0])
+            1 -> getColumnOrNull(path[0])
 
-        else -> path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.getColumnOrNull(name) as? AnyFrame? }
-            ?.getColumnOrNull(path.last())
-    }
+            else ->
+                path
+                    .dropLast(1)
+                    .fold(this as AnyFrame?) { df, name -> df?.getColumnOrNull(name) as? AnyFrame? }
+                    ?.getColumnOrNull(path.last())
+        }
 
     override fun containsColumn(name: String): Boolean = columnsMap.containsKey(name)
 
     override fun containsColumn(path: ColumnPath): Boolean = getColumnOrNull(path) != null
 }
 
-internal fun <T, C> DataFrame<T>.valuesImpl(byRow: Boolean, columns: ColumnsSelector<T, C>): Sequence<C> {
+internal fun <T, C> DataFrame<T>.valuesImpl(
+    byRow: Boolean,
+    columns: ColumnsSelector<T, C>,
+): Sequence<C> {
     val cols = get(columns)
     return if (byRow) {
         sequence {

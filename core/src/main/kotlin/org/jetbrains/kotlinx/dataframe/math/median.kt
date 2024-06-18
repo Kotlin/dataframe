@@ -6,6 +6,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 public inline fun <reified T : Comparable<T>> Iterable<T>.medianOrNull(): T? = median(typeOf<T>())
+
 public inline fun <reified T : Comparable<T>> Iterable<T>.median(): T = medianOrNull()!!
 
 @PublishedApi
@@ -24,11 +25,12 @@ internal inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType)
 
         Byte::class -> ((list.quickSelect(index - 1) as Byte + list.quickSelect(index) as Byte) / 2).toByte() as T
 
-        BigDecimal::class -> (
+        BigDecimal::class ->
             (
-                list.quickSelect(
-                    index - 1,
-                ) as BigDecimal + list.quickSelect(index) as BigDecimal
+                (
+                    list.quickSelect(
+                        index - 1,
+                    ) as BigDecimal + list.quickSelect(index) as BigDecimal
                 ) / BigDecimal(2)
             ) as T
 

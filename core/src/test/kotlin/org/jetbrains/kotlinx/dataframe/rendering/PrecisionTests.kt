@@ -11,7 +11,6 @@ import org.junit.Test
 import java.text.DecimalFormatSymbols
 
 class PrecisionTests {
-
     @Test
     fun precision() {
         columnOf(1.2, 3.2).scale() shouldBe 1

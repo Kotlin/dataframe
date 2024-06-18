@@ -31,7 +31,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface ColsAtAnyDepthColumnsSelectionDsl {
-
     // region atAnyDepth
 
     /**
@@ -57,7 +56,6 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`colsAtAnyDepth`**][ColumnsSelectionDsl.colsAtAnyDepth] */
         public interface PlainDslName
 
@@ -116,7 +114,6 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.simplify\]
      */
     private interface CommonAtAnyDepthDocs {
-
         /** Example argument */
         interface Examples
     }

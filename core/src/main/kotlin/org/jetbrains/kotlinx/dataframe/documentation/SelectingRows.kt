@@ -28,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.index
  * A Row Condition is similar to a {@include [RowExpressionsLink]} but expects a [Boolean] as result.
  */
 internal interface SelectingRows {
-
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
@@ -49,7 +48,6 @@ internal interface SelectingRows {
 
     /** Filter or find rows to operate on using a [row filter][RowFilter]. */
     interface EntireRowCondition {
-
         /**
          * {@include [EntireRowCondition]}
          *
@@ -70,7 +68,6 @@ internal interface SelectingRows {
      * [row value filter][RowValueFilter].
      */
     interface RowValueCondition {
-
         /**
          * {@include [RowValueCondition]}
          *

@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.schema.CompareResult
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
-
     override fun compare(other: DataFrameSchema): CompareResult {
         require(other is DataFrameSchemaImpl)
         if (this === other) return CompareResult.Equals
@@ -44,7 +43,11 @@ internal fun DataFrameSchemaImpl.render(): String {
     return sb.toString()
 }
 
-internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, indentSequence: String): String {
+internal fun Map<String, ColumnSchema>.render(
+    indent: Int,
+    sb: StringBuilder,
+    indentSequence: String,
+): String {
     entries.forEachIndexed { i, (name, columnSchema) ->
         sb.append(indentSequence.repeat(indent))
         sb.append("$name:")

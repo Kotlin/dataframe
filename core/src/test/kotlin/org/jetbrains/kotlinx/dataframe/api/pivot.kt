@@ -5,7 +5,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class PivotTests {
-
     val a by columnOf(0, 1, 1)
     val b by columnOf("q", "q", "w")
     val c by columnOf('x', 'y', 'z')
@@ -35,10 +34,11 @@ class PivotTests {
 
     @Test
     fun `pivot aggregate with default`() {
-        val pivoted = df.pivot(b, inward = false).groupBy(a).aggregate {
-            get(c).first() default '-' into "first"
-            get(c).last() into "last" default '?'
-        }
+        val pivoted =
+            df.pivot(b, inward = false).groupBy(a).aggregate {
+                get(c).first() default '-' into "first"
+                get(c).last() into "last" default '?'
+            }
         pivoted.columnsCount() shouldBe 3
         pivoted.rowsCount() shouldBe 2
         val cols = pivoted.getColumns { allExcept(a).colsAtAnyDepth { !it.isColumnGroup() } }
@@ -52,17 +52,18 @@ class PivotTests {
 
     @Test
     fun `pivot groupBy inward by default`() {
-        val df = dataFrameOf(
-            "a",
-            "b",
-        )(
-            2,
-            "a",
-            4,
-            "b",
-            3,
-            "c",
-        )
+        val df =
+            dataFrameOf(
+                "a",
+                "b",
+            )(
+                2,
+                "a",
+                4,
+                "b",
+                3,
+                "c",
+            )
         val pivoted = df.pivot("b").groupBy("a").matches()
         pivoted.columnNames() shouldBe listOf("a", "b")
         pivoted.getColumnGroup("b").columnNames() shouldBe listOf("a", "b", "c")
@@ -83,14 +84,15 @@ class PivotTests {
     fun `pivot in aggregate`() {
         val df = dataFrameOf("a" to listOf(1, 2, 2), "b" to listOf("q", "w", "q"))
 
-        val expected = dataFrameOf("a", "q", "w")(
-            1,
-            1,
-            0,
-            2,
-            1,
-            1,
-        ).group("q", "w").into("b")
+        val expected =
+            dataFrameOf("a", "q", "w")(
+                1,
+                1,
+                0,
+                2,
+                1,
+                1,
+            ).group("q", "w").into("b")
 
         df.groupBy("a").aggregate {
             pivot("b").count()
@@ -103,25 +105,27 @@ class PivotTests {
 
     @Test
     fun `pivot two in aggregate`() {
-        val df = dataFrameOf(
-            "a" to listOf(1, 2, 2),
-            "b" to listOf("q", "w", "q"),
-            "c" to listOf("w", "q", "w"),
-        )
+        val df =
+            dataFrameOf(
+                "a" to listOf(1, 2, 2),
+                "b" to listOf("q", "w", "q"),
+                "c" to listOf("w", "q", "w"),
+            )
 
-        val expected = dataFrameOf(
-            columnOf(1, 2) named "a",
-            columnOf(
+        val expected =
+            dataFrameOf(
+                columnOf(1, 2) named "a",
                 columnOf(
-                    columnOf(1, 1) named "q",
-                    columnOf(0, 1) named "w",
-                ) named "b",
-                columnOf(
-                    columnOf(1, 1) named "w",
-                    columnOf(0, 1) named "q",
-                ) named "c",
-            ) named "d",
-        )
+                    columnOf(
+                        columnOf(1, 1) named "q",
+                        columnOf(0, 1) named "w",
+                    ) named "b",
+                    columnOf(
+                        columnOf(1, 1) named "w",
+                        columnOf(0, 1) named "q",
+                    ) named "c",
+                ) named "d",
+            )
 
         df.groupBy("a").aggregate {
             pivot("b", "c").count() into "d"
@@ -130,12 +134,25 @@ class PivotTests {
 
     @Test
     fun `pivot minBy values`() {
-        val df = dataFrameOf("a", "b", "c", "d")(
-            1, 2, 3, 5,
-            1, 0, 2, 4,
-            2, 1, 3, 2,
-            2, 5, 5, 3,
-        )
+        val df =
+            dataFrameOf("a", "b", "c", "d")(
+                1,
+                2,
+                3,
+                5,
+                1,
+                0,
+                2,
+                4,
+                2,
+                1,
+                3,
+                2,
+                2,
+                5,
+                5,
+                3,
+            )
         df.pivot("a").minBy("b").values("c", "d", separate = true) shouldBe
             dataFrameOf("c1", "c2", "d1", "d2")(
                 2,
@@ -147,36 +164,54 @@ class PivotTests {
 
     @Test
     fun `pivot groupBy last with`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            1, 0, 2,
-            2, 1, 3,
-            2, 1, 5,
-        )
-        df.pivot("a", inward = false)
+        val df =
+            dataFrameOf("a", "b", "c")(
+                1,
+                2,
+                3,
+                1,
+                0,
+                2,
+                2,
+                1,
+                3,
+                2,
+                1,
+                5,
+            )
+        df
+            .pivot("a", inward = false)
             .groupBy("b")
             .default(-1)
             .last()
             .with { "c"<Int>() } shouldBe
             dataFrameOf("b", "1", "2")(
-                2, 3, -1,
-                0, 2, -1,
-                1, -1, 5,
+                2,
+                3,
+                -1,
+                0,
+                2,
+                -1,
+                1,
+                -1,
+                5,
             )
     }
 
     @Test
     fun `pivot then in aggregate`() {
-        val df = dataFrameOf(
-            "category1" to List(12) { it % 3 },
-            "category2" to List(12) { "category2_${it % 2}" },
-            "category3" to List(12) { "category3_${it % 5}" },
-            "value" to List(12) { it },
-        )
+        val df =
+            dataFrameOf(
+                "category1" to List(12) { it % 3 },
+                "category2" to List(12) { "category2_${it % 2}" },
+                "category3" to List(12) { "category3_${it % 5}" },
+                "value" to List(12) { it },
+            )
 
-        val df1 = df.groupBy("category1").aggregate {
-            pivot { "category2" then "category3" }.count()
-        }
+        val df1 =
+            df.groupBy("category1").aggregate {
+                pivot { "category2" then "category3" }.count()
+            }
         df1 shouldBe df.pivot { "category2" then "category3" }.groupBy("category1").count()
     }
 }

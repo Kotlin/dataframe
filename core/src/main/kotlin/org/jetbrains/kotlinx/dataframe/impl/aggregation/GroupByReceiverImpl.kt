@@ -23,7 +23,6 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
     AggregateInternalDsl<T>,
     AggregatableInternal<T> by df as AggregatableInternal<T>,
     DataFrame<T> by df {
-
     private val values = mutableListOf<NamedValue>()
 
     internal fun child(): GroupByReceiverImpl<T> {
@@ -49,7 +48,12 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                 }
 
                 is ColumnGroup<*> -> {
-                    val frameType = it.value.type().arguments.singleOrNull()?.type
+                    val frameType =
+                        it.value
+                            .type()
+                            .arguments
+                            .singleOrNull()
+                            ?.type
                     allValues.add(
                         NamedValue.create(
                             it.path,
@@ -81,8 +85,12 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
 
     override fun pathForSingleColumn(column: AnyCol) = column.shortPath()
 
-    override fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?) =
-        yield(path, value, type, default, false)
+    override fun <R> yield(
+        path: ColumnPath,
+        value: R,
+        type: KType?,
+        default: R?,
+    ) = yield(path, value, type, default, false)
 
     override fun yield(value: NamedValue): NamedValue {
         when (value.value) {
@@ -91,9 +99,10 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                 val dropFirstNameInPath =
                     pivot.inward == true &&
                         value.path.isNotEmpty() &&
-                        pivot.aggregator.values.distinctBy {
-                            it.path.firstOrNull()
-                        }.count() == 1
+                        pivot.aggregator.values
+                            .distinctBy {
+                                it.path.firstOrNull()
+                            }.count() == 1
                 pivot.aggregator.values.forEach {
                     val targetPath =
                         if (dropFirstNameInPath && it.path.size > 0) {

@@ -8,17 +8,17 @@ import org.junit.Ignore
 import org.junit.Test
 
 class JoinTests {
-
     @Ignore
     @Test
     fun `left join frame column`() {
         val df1 = dataFrameOf("a")(1, 2)
-        val df2 = dataFrameOf("a", "b")(
-            1,
-            dataFrameOf("c")(3),
-            4,
-            dataFrameOf("c")(5),
-        )
+        val df2 =
+            dataFrameOf("a", "b")(
+                1,
+                dataFrameOf("c")(3),
+                4,
+                dataFrameOf("c")(5),
+            )
         val df = df1.leftJoin(df2)
 
         df.rowsCount() shouldBe 2

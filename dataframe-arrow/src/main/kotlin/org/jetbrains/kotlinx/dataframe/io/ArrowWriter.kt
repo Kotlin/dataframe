@@ -92,7 +92,10 @@ public interface ArrowWriter : AutoCloseable {
      * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
      * If file exists, it can be recreated or expanded.
      */
-    public fun writeArrowIPC(file: File, append: Boolean = true) {
+    public fun writeArrowIPC(
+        file: File,
+        append: Boolean = true,
+    ) {
         writeArrowIPC(FileOutputStream(file, append))
     }
 

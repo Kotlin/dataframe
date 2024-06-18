@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class AllTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `all exceptions`() {
         shouldThrow<IllegalArgumentException> {
@@ -47,7 +46,6 @@ class AllTests : ColumnsSelectionDslTests() {
     fun all() {
         listOf(
             df.select { cols(name, age, city, weight, isHappy) },
-
             df.select { all() },
             df.select { all().all() },
             df.select { cols().all() },
@@ -56,7 +54,6 @@ class AllTests : ColumnsSelectionDslTests() {
 
         listOf(
             df.select { name.firstName and name.lastName },
-
             df.select { name.allCols() },
             df.select { name.allCols().all() },
         ).shouldAllBeEqual()
@@ -66,14 +63,12 @@ class AllTests : ColumnsSelectionDslTests() {
     fun `all subset top-level`() {
         listOf(
             df.select { name and age },
-
             df.select { allBefore { city } },
             df.select { allBefore { first { it.name.startsWith("c") } } },
             df.select { allBefore(city) },
             df.select { allBefore("city") },
             df.select { allBefore(Person::city) },
             df.select { allBefore(pathOf("city")) },
-
             df.select { allUpTo { age } },
             df.select { allUpTo { first { it.name.startsWith("a") } } },
             df.select { allUpTo(age) },
@@ -84,14 +79,12 @@ class AllTests : ColumnsSelectionDslTests() {
 
         listOf(
             df.select { weight and isHappy },
-
             df.select { allAfter { city } },
             df.select { allAfter { first { it.name.startsWith("c") } } },
             df.select { allAfter(city) },
             df.select { allAfter("city") },
             df.select { allAfter(Person::city) },
             df.select { allAfter(pathOf("city")) },
-
             df.select { allFrom { weight } },
             df.select { allFrom { first { it.name.startsWith("w") } } },
             df.select { allFrom(weight) },
@@ -107,7 +100,6 @@ class AllTests : ColumnsSelectionDslTests() {
         val weightAccessor = column<Int?>("weight")
         listOf(
             df.select { weight and isHappy },
-
             df.select { cols().allAfter { "city" in it.name } },
             df.select { cols().allAfter { it.data == cityAccessor() } },
             df.select { cols().allAfter { it.data == city } },
@@ -116,7 +108,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { cols().allAfter("city") },
             df.select { cols().allAfter(Person::city) },
             df.select { cols().allAfter(pathOf("city")) },
-
             df.select { cols().allFrom { "weight" in it.name } },
             df.select { cols().allFrom { it.data == weightAccessor() } },
             df.select { cols().allFrom { it.data == weight } },
@@ -130,7 +121,6 @@ class AllTests : ColumnsSelectionDslTests() {
         val ageAccessor = column<Int>("age")
         listOf(
             df.select { name and age },
-
             df.select { cols().allBefore { "city" in it.name } },
             df.select { cols().allBefore { it.data == cityAccessor() } },
             df.select { cols().allBefore { it.data == city } },
@@ -139,7 +129,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { cols().allBefore("city") },
             df.select { cols().allBefore(Person::city) },
             df.select { cols().allBefore(pathOf("city")) },
-
             df.select { cols().allUpTo { "age" in it.name } },
             df.select { cols().allUpTo { it.data == ageAccessor() } },
             df.select { cols().allUpTo { it.data == age } },
@@ -165,7 +154,6 @@ class AllTests : ColumnsSelectionDslTests() {
 
         listOf(
             df.select { name.lastName },
-
             df.select { name.allColsAfter { firstName } },
             df.select { name.allColsAfter { firstNameAccessor } },
             df.select { name.allColsAfter(name.firstName) },
@@ -174,7 +162,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { name.allColsAfter(Name::firstName) },
             df.select { name.allColsAfter(pathOf("firstName")) },
             df.select { name.allColsAfter(pathOf("name", "firstName")) },
-
             df.select { "name".allColsAfter { firstNameAccessor } },
             df.select { "name".allColsAfter(name.firstName) },
             df.select { "name".allColsAfter(firstNameAccessor) },
@@ -182,7 +169,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsAfter(Name::firstName) },
             df.select { "name".allColsAfter(pathOf("firstName")) },
             df.select { "name".allColsAfter(pathOf("name", "firstName")) },
-
             // df.select { Person::name.allColsAfter { firstName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsAfter { firstNameAccessor } },
             df.select { Person::name.allColsAfter(name.firstName) },
@@ -191,7 +177,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsAfter(Name::firstName) },
             df.select { Person::name.allColsAfter(pathOf("firstName")) },
             df.select { Person::name.allColsAfter(pathOf("name", "firstName")) },
-
             df.select { NonDataSchemaPerson::name.allColsAfter { firstName } },
             df.select { NonDataSchemaPerson::name.allColsAfter { firstNameAccessor } },
             df.select { NonDataSchemaPerson::name.allColsAfter(name.firstName) },
@@ -200,7 +185,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.allColsAfter(Name::firstName) },
             df.select { NonDataSchemaPerson::name.allColsAfter(pathOf("firstName")) },
             df.select { NonDataSchemaPerson::name.allColsAfter(pathOf("name", "firstName")) },
-
             df.select { pathOf("name").allColsAfter { firstNameAccessor } },
             df.select { pathOf("name").allColsAfter(name.firstName) },
             df.select { pathOf("name").allColsAfter(firstNameAccessor) },
@@ -208,7 +192,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { pathOf("name").allColsAfter(Name::firstName) },
             df.select { pathOf("name").allColsAfter(pathOf("firstName")) },
             df.select { pathOf("name").allColsAfter(pathOf("name", "firstName")) },
-
             df.select { name.allColsFrom { lastName } },
             df.select { name.allColsFrom { lastNameAccessor } },
             df.select { name.allColsFrom(name.lastName) },
@@ -217,7 +200,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { name.allColsFrom(Name::lastName) },
             df.select { name.allColsFrom(pathOf("lastName")) },
             df.select { name.allColsFrom(pathOf("name", "lastName")) },
-
             df.select { "name".allColsFrom { lastNameAccessor } },
             df.select { "name".allColsFrom(name.lastName) },
             df.select { "name".allColsFrom(lastNameAccessor) },
@@ -225,7 +207,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsFrom(Name::lastName) },
             df.select { "name".allColsFrom(pathOf("lastName")) },
             df.select { "name".allColsFrom(pathOf("name", "lastName")) },
-
 //            df.select { Person::name.allColsFrom { lastName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsFrom { lastNameAccessor } },
             df.select { Person::name.allColsFrom(name.lastName) },
@@ -234,7 +215,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsFrom(Name::lastName) },
             df.select { Person::name.allColsFrom(pathOf("lastName")) },
             df.select { Person::name.allColsFrom(pathOf("name", "lastName")) },
-
             df.select { NonDataSchemaPerson::name.allColsFrom { lastName } },
             df.select { NonDataSchemaPerson::name.allColsFrom { lastNameAccessor } },
             df.select { NonDataSchemaPerson::name.allColsFrom(name.lastName) },
@@ -243,7 +223,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.allColsFrom(Name::lastName) },
             df.select { NonDataSchemaPerson::name.allColsFrom(pathOf("lastName")) },
             df.select { NonDataSchemaPerson::name.allColsFrom(pathOf("name", "lastName")) },
-
             df.select { pathOf("name").allColsFrom { lastNameAccessor } },
             df.select { pathOf("name").allColsFrom(name.lastName) },
             df.select { pathOf("name").allColsFrom(lastNameAccessor) },
@@ -262,7 +241,6 @@ class AllTests : ColumnsSelectionDslTests() {
 
         listOf(
             df.select { name.firstName },
-
             df.select { name.allColsBefore { lastName } },
             df.select { name.allColsBefore { lastNameAccessor } },
             df.select { name.allColsBefore(name.lastName) }, // full path
@@ -271,7 +249,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { name.allColsBefore(Name::lastName) },
             df.select { name.allColsBefore(pathOf("lastName")) },
             df.select { name.allColsBefore(pathOf("name", "lastName")) }, // full path
-
             df.select { "name".allColsBefore { lastNameAccessor } },
             df.select { "name".allColsBefore(name.lastName) },
             df.select { "name".allColsBefore(lastNameAccessor) },
@@ -279,7 +256,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsBefore(Name::lastName) },
             df.select { "name".allColsBefore(pathOf("lastName")) },
             df.select { "name".allColsBefore(pathOf("name", "lastName")) },
-
 //            df.select { Person::name.allColsBefore { lastName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsBefore { lastNameAccessor } },
             df.select { Person::name.allColsBefore(name.lastName) },
@@ -288,7 +264,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsBefore(Name::lastName) },
             df.select { Person::name.allColsBefore(pathOf("lastName")) },
             df.select { Person::name.allColsBefore(pathOf("name", "lastName")) },
-
             df.select { NonDataSchemaPerson::name.allColsBefore { lastName } },
             df.select { NonDataSchemaPerson::name.allColsBefore { lastNameAccessor } },
             df.select { NonDataSchemaPerson::name.allColsBefore(name.lastName) },
@@ -297,7 +272,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.allColsBefore(Name::lastName) },
             df.select { NonDataSchemaPerson::name.allColsBefore(pathOf("lastName")) },
             df.select { NonDataSchemaPerson::name.allColsBefore(pathOf("name", "lastName")) },
-
             df.select { pathOf("name").allColsBefore { lastNameAccessor } },
             df.select { pathOf("name").allColsBefore(name.lastName) },
             df.select { pathOf("name").allColsBefore(lastNameAccessor) },
@@ -305,7 +279,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { pathOf("name").allColsBefore(Name::lastName) },
             df.select { pathOf("name").allColsBefore(pathOf("lastName")) },
             df.select { pathOf("name").allColsBefore(pathOf("name", "lastName")) },
-
             df.select { name.allColsUpTo { firstName } },
             df.select { name.allColsUpTo { firstNameAccessor } },
             df.select { name.allColsUpTo(name.firstName) },
@@ -314,7 +287,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { name.allColsUpTo(Name::firstName) },
             df.select { name.allColsUpTo(pathOf("firstName")) },
             df.select { name.allColsUpTo(pathOf("name", "firstName")) },
-
             df.select { "name".allColsUpTo { firstNameAccessor } },
             df.select { "name".allColsUpTo(name.firstName) },
             df.select { "name".allColsUpTo(firstNameAccessor) },
@@ -322,7 +294,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsUpTo(Name::firstName) },
             df.select { "name".allColsUpTo(pathOf("firstName")) },
             df.select { "name".allColsUpTo(pathOf("name", "firstName")) },
-
 //            df.select { Person::name.allColsUpTo { firstName } }, https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument
             df.select { Person::name.allColsUpTo { firstNameAccessor } },
             df.select { Person::name.allColsUpTo(name.firstName) },
@@ -331,7 +302,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsUpTo(Name::firstName) },
             df.select { Person::name.allColsUpTo(pathOf("firstName")) },
             df.select { Person::name.allColsUpTo(pathOf("name", "firstName")) },
-
             df.select { NonDataSchemaPerson::name.allColsUpTo { firstName } },
             df.select { NonDataSchemaPerson::name.allColsUpTo { firstNameAccessor } },
             df.select { NonDataSchemaPerson::name.allColsUpTo(name.firstName) },
@@ -340,7 +310,6 @@ class AllTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.allColsUpTo(Name::firstName) },
             df.select { NonDataSchemaPerson::name.allColsUpTo(pathOf("firstName")) },
             df.select { NonDataSchemaPerson::name.allColsUpTo(pathOf("name", "firstName")) },
-
             df.select { pathOf("name").allColsUpTo { firstNameAccessor } },
             df.select { pathOf("name").allColsUpTo(name.firstName) },
             df.select { pathOf("name").allColsUpTo(firstNameAccessor) },
@@ -357,7 +326,6 @@ class AllTests : ColumnsSelectionDslTests() {
         val thirdNameAccessor = column<String?>("thirdName")
         listOf(
             dfGroup.select { name.firstName { firstName and secondName } },
-
             dfGroup.select { name.firstName.allColsBefore { thirdName } },
             dfGroup.select { name.firstName.allColsBefore { thirdNameAccessor } },
             dfGroup.select { name.firstName.allColsBefore(name.firstName.thirdName) },
@@ -366,7 +334,6 @@ class AllTests : ColumnsSelectionDslTests() {
             dfGroup.select { name.firstName.allColsBefore(thirdNameAccessor) },
             dfGroup.select { name.firstName.allColsBefore(pathOf("thirdName")) },
             dfGroup.select { name.firstName.allColsBefore(pathOf("name", "firstName", "thirdName")) },
-
             dfGroup.select { name.firstName.allColsUpTo { secondName } },
             dfGroup.select { name.firstName.allColsUpTo { secondNameAccessor } },
             dfGroup.select { name.firstName.allColsUpTo(name.firstName.secondName) },
@@ -381,20 +348,20 @@ class AllTests : ColumnsSelectionDslTests() {
     @Test
     fun `ambiguous cases`() {
         @Language("json")
-        val json = """
+        val json =
+            """
             {
                  "a": {
                      "a": 1,
                      "b": 2
                  }
             }
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readJsonStr(json).alsoDebug()
 
         listOf(
             df.select { "a"["b"] }.alsoDebug(),
-
             df.select { "a".allColsAfter("a") },
             df.select { "a".allColsAfter("a"["a"]) },
         ).shouldAllBeEqual()

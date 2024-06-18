@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class DescribeTests {
-
     @Test
     fun `describe all nulls`() {
         val a by columnOf(1, null)

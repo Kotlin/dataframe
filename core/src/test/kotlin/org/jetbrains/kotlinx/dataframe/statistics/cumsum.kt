@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.junit.Test
 
 class CumsumTests {
-
     val col by columnOf(1, 2, null, 3, 4)
     val expected = listOf(1, 3, null, 6, 10)
     val expectedNoSkip = listOf(1, 3, null, null, null)
@@ -50,20 +49,31 @@ class CumsumTests {
 
     @Test
     fun `groupBy`() {
-        val df = dataFrameOf("str", "col")(
-            "a", 1,
-            "b", 2,
-            "c", null,
-            "a", 3,
-            "c", 4,
-        )
+        val df =
+            dataFrameOf("str", "col")(
+                "a",
+                1,
+                "b",
+                2,
+                "c",
+                null,
+                "a",
+                3,
+                "c",
+                4,
+            )
         df.groupBy("str").cumSum().concat() shouldBe
             dataFrameOf("str", "col")(
-                "a", 1,
-                "a", 4,
-                "b", 2,
-                "c", null,
-                "c", 4,
+                "a",
+                1,
+                "a",
+                4,
+                "b",
+                2,
+                "c",
+                null,
+                "c",
+                4,
             )
     }
 }

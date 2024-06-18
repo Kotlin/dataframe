@@ -11,7 +11,6 @@ import java.lang.ClassCastException
 import java.lang.IllegalArgumentException
 
 class GetTests {
-
     @Test
     fun `exceptions from empty dataframe`() {
         val empty = DataFrame.empty()
@@ -30,6 +29,7 @@ class GetTests {
     fun `get value from row`() {
         val a by column<Int>()
         val c by column<Int>()
+
         data class A(val a: Int, val b: Int, val c: Int)
 
         val df = dataFrameOf("a", "b")(1, 2)
@@ -60,12 +60,13 @@ class GetTests {
 
     @Test
     fun `create typed frame column accessor`() {
-        val df = dataFrameOf(
-            columnOf(
-                dataFrameOf("a")(1),
-                dataFrameOf("a", "b")(2, 3, 4, 5),
-            ).named("x"),
-        )
+        val df =
+            dataFrameOf(
+                columnOf(
+                    dataFrameOf("a")(1),
+                    dataFrameOf("a", "b")(2, 3, 4, 5),
+                ).named("x"),
+            )
         val x by frameColumn<Schema>()
         df[x][0].a[0] shouldBe 1
         df[1][x].a[1] shouldBe 4
@@ -73,9 +74,10 @@ class GetTests {
 
     @Test
     fun `create typed column group accessor`() {
-        val df = dataFrameOf(
-            dataFrameOf("a", "b")(1, 2, 3, 4).asColumnGroup("x"),
-        )
+        val df =
+            dataFrameOf(
+                dataFrameOf("a", "b")(1, 2, 3, 4).asColumnGroup("x"),
+            )
         val x by columnGroup<Schema>()
         df[x][0].a shouldBe 1
         df[1][x].a shouldBe 3
@@ -84,9 +86,10 @@ class GetTests {
     @Test
     fun `throw meaningful exception when traverse columns in DataRow`() {
         val df = dataFrameOf("a")(null)
-        val throwable = shouldThrowAny {
-            df[0].getColumnGroup("a")
-        }
+        val throwable =
+            shouldThrowAny {
+                df[0].getColumnGroup("a")
+            }
         throwable.message shouldContain "Cannot cast null value of a ValueColumn to"
     }
 }

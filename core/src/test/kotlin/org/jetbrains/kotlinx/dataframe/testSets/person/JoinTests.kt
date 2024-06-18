@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Test
 
 class JoinTests : BaseJoinTest() {
-
     @Test
     fun `inner join`() {
         val res = typed.innerJoin(typed2) { name and it.city.match(right.origin) }

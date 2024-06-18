@@ -34,7 +34,6 @@ import kotlin.reflect.KProperty
  * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
 public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
-
     /**
      * ## Col Group Grammar
      *
@@ -64,7 +63,6 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * }
      */
     public interface Grammar {
-
         /** [**`colGroup`**][ColumnsSelectionDsl.colGroup] */
         public interface PlainDslName
 
@@ -120,8 +118,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonColGroupDocs.Note]}
      */
     private interface CommonColGroupDocs {
-
-        /* Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]} */
+        // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
         interface ExampleArg
 
         /**
@@ -136,13 +133,13 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
          */
         interface DoubleExample
 
-        /* Receiver argument for the example(s) */
+        // Receiver argument for the example(s)
         interface ReceiverArg
 
-        /* Argument for the example(s) */
+        // Argument for the example(s)
         interface Arg
 
-        /* Optional note */
+        // Optional note
         interface Note
 
         /** @param [C\] The type of the column group. */
@@ -170,14 +167,17 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): SingleColumn<DataRow<C>> =
-        this.ensureIsColumnGroup().transformSingle {
-            val child = it.getCol(colGroup)
-                ?: throw IllegalStateException(
-                    "ColumnGroup '${colGroup.path()}' not found in column group '${it.path}'",
-                )
-            child.data.ensureIsColumnGroup()
-            listOf(child)
-        }.singleImpl()
+        this
+            .ensureIsColumnGroup()
+            .transformSingle {
+                val child =
+                    it.getCol(colGroup)
+                        ?: throw IllegalStateException(
+                            "ColumnGroup '${colGroup.path()}' not found in column group '${it.path}'",
+                        )
+                child.data.ensureIsColumnGroup()
+                listOf(child)
+            }.singleImpl()
 
     /**
      * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
@@ -240,12 +240,15 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<C>> =
-        this.ensureIsColumnGroup().transformSingle {
-            val child = it.getCol(name)?.cast<DataRow<C>>()
-                ?: throw IllegalStateException("Column group '$name' not found in column group '${it.path}'")
-            child.data.ensureIsColumnGroup()
-            listOf(child)
-        }.singleImpl()
+        this
+            .ensureIsColumnGroup()
+            .transformSingle {
+                val child =
+                    it.getCol(name)?.cast<DataRow<C>>()
+                        ?: throw IllegalStateException("Column group '$name' not found in column group '${it.path}'")
+                child.data.ensureIsColumnGroup()
+                listOf(child)
+            }.singleImpl()
 
     /**
      * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
@@ -340,10 +343,12 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<C>> =
-        this.ensureIsColumnGroup()
+        this
+            .ensureIsColumnGroup()
             .transformSingle {
-                val child = it.getCol(path)?.cast<DataRow<C>>()
-                    ?: throw IllegalStateException("Column group '$path' not found in column group '${it.path}'")
+                val child =
+                    it.getCol(path)?.cast<DataRow<C>>()
+                        ?: throw IllegalStateException("Column group '$path' not found in column group '${it.path}'")
                 child.data.ensureIsColumnGroup()
                 listOf(child)
             }.singleImpl()
@@ -557,11 +562,13 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
-    public fun <C> SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<C>> = this.ensureIsColumnGroup()
-        .allColumnsInternal()
-        .getAt(index)
-        .cast<DataRow<C>>()
-        .ensureIsColumnGroup()
+    public fun <C> SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<C>> =
+        this
+            .ensureIsColumnGroup()
+            .allColumnsInternal()
+            .getAt(index)
+            .cast<DataRow<C>>()
+            .ensureIsColumnGroup()
 
     /**
      * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}

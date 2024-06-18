@@ -20,11 +20,12 @@ public object Sqlite : DbType("sqlite") {
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean = tableMetadata.name.startsWith("sqlite_")
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata = TableMetadata(
-        tables.getString("TABLE_NAME"),
-        tables.getString("TABLE_SCHEM"),
-        tables.getString("TABLE_CAT"),
-    )
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
+        TableMetadata(
+            tables.getString("TABLE_NAME"),
+            tables.getString("TABLE_SCHEM"),
+            tables.getString("TABLE_CAT"),
+        )
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 }

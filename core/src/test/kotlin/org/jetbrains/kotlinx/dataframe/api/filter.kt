@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class FilterTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `filter`() {
         listOf(

@@ -24,12 +24,12 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.junit.Test
 
 class JoinWithTests : BaseJoinTest() {
-
     @Test
     fun `inner join`() {
-        val res = typed.joinWith(typed2) {
-            name == right.name && city == right.origin
-        }
+        val res =
+            typed.joinWith(typed2) {
+                name == right.name && city == right.origin
+            }
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 7
         res["age1"].hasNulls() shouldBe false
@@ -52,9 +52,10 @@ class JoinWithTests : BaseJoinTest() {
 
     @Test
     fun `right join`() {
-        val res = typed.rightJoinWith(typed2) {
-            name == right.name && city == right.origin
-        }
+        val res =
+            typed.rightJoinWith(typed2) {
+                name == right.name && city == right.origin
+            }
         res.columnsCount() shouldBe 8
         res.rowsCount() shouldBe 9
         res["age1"].hasNulls() shouldBe true
@@ -103,25 +104,27 @@ class JoinWithTests : BaseJoinTest() {
 
     @Test
     fun rightJoin() {
-        val df = dataFrameOf("a", "b")(
-            1,
-            "a",
-            2,
-            "b",
-            3,
-            "c",
-        )
+        val df =
+            dataFrameOf("a", "b")(
+                1,
+                "a",
+                2,
+                "b",
+                3,
+                "c",
+            )
 
-        val df1 = dataFrameOf("a", "c")(
-            5,
-            "V",
-            1,
-            "I",
-            2,
-            "II",
-            3,
-            "III",
-        )
+        val df1 =
+            dataFrameOf("a", "c")(
+                5,
+                "V",
+                1,
+                "I",
+                2,
+                "II",
+                3,
+                "III",
+            )
         df.append(4, "e").excludeJoin(df1).print()
     }
 

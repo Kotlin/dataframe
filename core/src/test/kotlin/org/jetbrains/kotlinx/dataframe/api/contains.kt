@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class ContainsTests {
-
     @Test
     fun `column contains`() {
         val col by columnOf(1, 3, 5)
@@ -46,6 +45,7 @@ class ContainsTests {
     fun `row contains key`() {
         val a by column<Int>()
         val b by column<Int>()
+
         data class A(val a: Int, val b: Int)
 
         val df = dataFrameOf("a")(1, 2)

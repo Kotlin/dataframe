@@ -42,49 +42,57 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         "import org.jetbrains.kotlinx.dataframe.io.${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}",
     )
 
-    override fun toDeclaration(marker: Marker, visibility: String): String {
+    override fun toDeclaration(
+        marker: Marker,
+        visibility: String,
+    ): String {
         val returnType = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(marker.shortName)))
 
         // convertTo: ConvertSchemaDsl<MyMarker>.() -> Unit = {}
-        val convertToParameter = ParameterSpec.builder(
-            name = "convertTo",
-            type = LambdaTypeName.get(
-                receiver = ConvertSchemaDsl::class
-                    .asClassName()
-                    .parameterizedBy(ClassName("", listOf(marker.shortName))),
-                parameters = emptyList(),
-                returnType = UNIT,
-            ),
-        )
-            .defaultValue("{}")
+        val convertToParameter = ParameterSpec
+            .builder(
+                name = "convertTo",
+                type = LambdaTypeName.get(
+                    receiver = ConvertSchemaDsl::class
+                        .asClassName()
+                        .parameterizedBy(ClassName("", listOf(marker.shortName))),
+                    parameters = emptyList(),
+                    returnType = UNIT,
+                ),
+            ).defaultValue("{}")
             .build()
 
-        fun getConvertMethod(): String = """
+        fun getConvertMethod(): String =
+            """
             return convertTo<${marker.shortName}> { 
                 ${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}() 
                 convertTo()
             }
-        """.trimIndent()
+            """.trimIndent()
 
-        fun getReadAndConvertMethod(readMethod: String): String = """
+        fun getReadAndConvertMethod(readMethod: String): String =
+            """
             return ${DataFrame::class.asClassName()}
                 .$readMethod${if (marker is OpenApiMarker.AdditionalPropertyInterface) "[\"$VALUE_COLUMN_NAME\"].first().let { it as DataFrame<*> }" else ""}
                 .convertTo${marker.shortName}()
-        """.trimIndent()
+            """.trimIndent()
 
-        val typeSpec = TypeSpec.companionObjectBuilder()
+        val typeSpec = TypeSpec
+            .companionObjectBuilder()
             .addFunction(
-                FunSpec.builder("convertTo${marker.shortName}")
+                FunSpec
+                    .builder("convertTo${marker.shortName}")
                     .receiver(DataFrame::class.asClassName().parameterizedBy(STAR))
                     .addParameter(convertToParameter)
                     .addCode(getConvertMethod())
                     .returns(returnType)
                     .build(),
-            )
-            .addProperty(
-                PropertySpec.Companion.builder(name = "keyValuePaths", type = typeOf<List<JsonPath>>().asTypeName())
+            ).addProperty(
+                PropertySpec.Companion
+                    .builder(name = "keyValuePaths", type = typeOf<List<JsonPath>>().asTypeName())
                     .getter(
-                        FunSpec.getterBuilder()
+                        FunSpec
+                            .getterBuilder()
                             .addCode(
                                 run {
                                     val additionalPropertyPaths = (marker as OpenApiMarker)
@@ -95,56 +103,49 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                                         "JsonPath(\"\"\"${it.path}\"\"\")"
                                     }})"
                                 },
-                            )
-                            .build(),
-                    )
-                    .build(),
-            )
-            .addFunction(
-                FunSpec.builder("readJson")
+                            ).build(),
+                    ).build(),
+            ).addFunction(
+                FunSpec
+                    .builder("readJson")
                     .returns(returnType)
                     .addParameter("url", URL::class)
                     .addCode(
                         getReadAndConvertMethod(
                             "readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)",
                         ),
-                    )
-                    .build(),
-            )
-            .addFunction(
-                FunSpec.builder("readJson")
+                    ).build(),
+            ).addFunction(
+                FunSpec
+                    .builder("readJson")
                     .returns(returnType)
                     .addParameter("path", String::class)
                     .addCode(
                         getReadAndConvertMethod(
                             "readJson(path, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)",
                         ),
-                    )
-                    .build(),
-            )
-            .addFunction(
-                FunSpec.builder("readJson")
+                    ).build(),
+            ).addFunction(
+                FunSpec
+                    .builder("readJson")
                     .returns(returnType)
                     .addParameter("stream", InputStream::class)
                     .addCode(
                         getReadAndConvertMethod(
                             "readJson(stream, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)",
                         ),
-                    )
-                    .build(),
-            )
-            .addFunction(
-                FunSpec.builder("readJsonStr")
+                    ).build(),
+            ).addFunction(
+                FunSpec
+                    .builder("readJsonStr")
                     .returns(returnType)
                     .addParameter("text", String::class)
                     .addCode(
                         getReadAndConvertMethod(
                             "readJsonStr(text, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)",
                         ),
-                    )
-                    .build(),
-            )
-            .build()
+                    ).build(),
+            ).build()
 
         return typeSpec.toString()
     }

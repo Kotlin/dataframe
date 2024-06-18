@@ -57,20 +57,27 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // move columns into group
     val grouped = df.move(selector).under { mergePath }
 
-    var res = grouped.convert { getColumnGroup(mergePath) }.withRowCellImpl(resultType, infer) {
-        val srcRow = df[index()]
-        var values = it.values() as List<C>
-        if (notNull) {
-            values = values.filter {
-                it != null && (it !is AnyRow || !it.isEmpty())
+    var res =
+        grouped.convert { getColumnGroup(mergePath) }.withRowCellImpl(resultType, infer) {
+            val srcRow = df[index()]
+            var values = it.values() as List<C>
+            if (notNull) {
+                values =
+                    values.filter {
+                        it != null && (it !is AnyRow || !it.isEmpty())
+                    }
             }
+            transform(srcRow, values)
         }
-        transform(srcRow, values)
-    }
     if (mergePath != path) {
         // target path existed before merge, but
         // it may have already been removed
-        res = res.removeImpl(allowMissingColumns = true) { path }.df.move(mergePath).into { path }
+        res =
+            res
+                .removeImpl(allowMissingColumns = true) { path }
+                .df
+                .move(mergePath)
+                .into { path }
     }
     return res
 }
@@ -83,22 +90,23 @@ public fun <T, C, R> Merge<T, C, R>.by(
     postfix: CharSequence = "",
     limit: Int = -1,
     truncated: CharSequence = "...",
-): Merge<T, C, String> = Merge(
-    df,
-    selector,
-    notNull,
-    transform = {
-        it.joinToString(
-            separator = separator,
-            prefix = prefix,
-            postfix = postfix,
-            limit = limit,
-            truncated = truncated,
-        )
-    },
-    typeOf<String>(),
-    Infer.Nulls,
-)
+): Merge<T, C, String> =
+    Merge(
+        df,
+        selector,
+        notNull,
+        transform = {
+            it.joinToString(
+                separator = separator,
+                prefix = prefix,
+                postfix = postfix,
+                limit = limit,
+                truncated = truncated,
+            )
+        },
+        typeOf<String>(),
+        Infer.Nulls,
+    )
 
 public inline fun <T, C, R, reified V> Merge<T, C, R>.by(
     infer: Infer = Infer.Nulls,

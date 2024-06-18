@@ -108,11 +108,10 @@ import org.junit.Ignore
 import org.junit.Test
 import java.net.URL
 import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.streams.toList
+import java.util.Locale
+import java.util.Random
 
 class Modify : TestBase() {
-
     @Test
     @TransformDataFrameExpressions
     fun update() {
@@ -206,7 +205,8 @@ class Modify : TestBase() {
     fun convertToEnum() {
         // SampleStart
         dataFrameOf("direction")("NORTH", "WEST")
-            .convert("direction").to<Direction>()
+            .convert("direction")
+            .to<Direction>()
         // SampleEnd
     }
 
@@ -260,20 +260,21 @@ class Modify : TestBase() {
         df.shuffle()
         // SampleEnd
 
-        PluginCallbackProxy.expressionsByStatement[0] = listOf(
-            PluginCallbackProxy.Expression(
-                source = "df",
-                containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
-                containingFunName = "shuffle",
-                df = df,
-            ),
-            PluginCallbackProxy.Expression(
-                source = "shuffle()",
-                containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
-                containingFunName = "shuffle",
-                df = df.getRows(df.indices.shuffled(Random(123))),
-            ),
-        )
+        PluginCallbackProxy.expressionsByStatement[0] =
+            listOf(
+                PluginCallbackProxy.Expression(
+                    source = "df",
+                    containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
+                    containingFunName = "shuffle",
+                    df = df,
+                ),
+                PluginCallbackProxy.Expression(
+                    source = "shuffle()",
+                    containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
+                    containingFunName = "shuffle",
+                    df = df.getRows(df.indices.shuffled(Random(123))),
+                ),
+            )
     }
 
     @Test
@@ -331,7 +332,8 @@ class Modify : TestBase() {
         // a|b|c -> a.b.c
         // a|d|e -> a.d.e
         dataFrameOf("a|b|c", "a|d|e")(0, 0)
-            .move { all() }.into { it.name().split("|").toPath() }
+            .move { all() }
+            .into { it.name().split("|").toPath() }
 
         // name.firstName -> firstName
         // name.lastName -> lastName
@@ -449,17 +451,21 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun reorderSome() {
         // SampleStart
-        val df = dataFrameOf("c", "d", "a", "b")(
-            3,
-            4,
-            1,
-            2,
-            1,
-            1,
-            1,
-            1,
-        )
-        df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
+        val df =
+            dataFrameOf("c", "d", "a", "b")(
+                3,
+                4,
+                1,
+                2,
+                1,
+                1,
+                1,
+                1,
+            )
+        df
+            .reorder("d", "b")
+            .cast<Int>()
+            .by { sum() } // [c, b, a, d]
             // SampleEnd
             .columnNames() shouldBe listOf("c", "b", "a", "d")
         // SampleEnd
@@ -469,9 +475,12 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun reorderInGroup() {
         // SampleStart
-        df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
+        df
+            .reorder { name }
+            .byName(desc = true) // [name.lastName, name.firstName]
             // SampleEnd
-            .name.columnNames() shouldBe listOf("lastName", "firstName")
+            .name
+            .columnNames() shouldBe listOf("lastName", "firstName")
     }
 
     @Test
@@ -532,8 +541,10 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun split1_properties() {
         // SampleStart
-        df.split { name.lastName }
-            .by { it.asIterable() }.default(' ')
+        df
+            .split { name.lastName }
+            .by { it.asIterable() }
+            .default(' ')
             .inward { "char$it" }
         // SampleEnd
     }
@@ -545,8 +556,10 @@ class Modify : TestBase() {
         val name by columnGroup()
         val lastName by name.column<String>()
 
-        df.split { lastName }
-            .by { it.asIterable() }.default(' ')
+        df
+            .split { lastName }
+            .by { it.asIterable() }
+            .default(' ')
             .inward { "char$it" }
         // SampleEnd
     }
@@ -555,8 +568,10 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun split1_strings() {
         // SampleStart
-        df.split { "name"["lastName"]<String>() }
-            .by { it.asIterable() }.default(' ')
+        df
+            .split { "name"["lastName"]<String>() }
+            .by { it.asIterable() }
+            .default(' ')
             .inward { "char$it" }
         // SampleEnd
     }
@@ -565,9 +580,11 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitRegex() {
         // SampleStart
-        val merged = df.merge { name.lastName and name.firstName }
-            .by { it[0] + " (" + it[1] + ")" }
-            .into("name")
+        val merged =
+            df
+                .merge { name.lastName and name.firstName }
+                .by { it[0] + " (" + it[1] + ")" }
+                .into("name")
         // SampleEnd
     }
 
@@ -579,7 +596,8 @@ class Modify : TestBase() {
         // SampleStart
         val name by column<String>()
 
-        merged.split { name }
+        merged
+            .split { name }
             .match("""(.*) \((.*)\)""")
             .inward("firstName", "lastName")
         // SampleEnd
@@ -589,22 +607,24 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun splitFrameColumn() {
         // SampleStart
-        val df1 = dataFrameOf("a", "b", "c")(
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-        )
-        val df2 = dataFrameOf("a", "b")(
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-        )
+        val df1 =
+            dataFrameOf("a", "b", "c")(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+            )
+        val df2 =
+            dataFrameOf("a", "b")(
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+            )
         val group by columnOf(df1, df2)
         val id by columnOf("x", "y")
         val df = dataFrameOf(id, group)
@@ -668,7 +688,8 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun mergeSameWith() {
         // SampleStart
-        df.merge { name.firstName and name.lastName }
+        df
+            .merge { name.firstName and name.lastName }
             .by { it[0] + " (" + it[1].uppercase() + ")" }
             .into("fullName")
         // SampleEnd
@@ -678,7 +699,8 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun mergeDifferentWith() {
         // SampleStart
-        df.merge { name.firstName and age and isHappy }
+        df
+            .merge { name.firstName and age and isHappy }
             .by { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
             .into("status")
         // SampleEnd
@@ -709,12 +731,13 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun explode_strings() {
         // SampleStart
-        val df = dataFrameOf("a", "b")(
-            1,
-            listOf(1, 2),
-            2,
-            listOf(3, 4),
-        )
+        val df =
+            dataFrameOf("a", "b")(
+                1,
+                listOf(1, 2),
+                2,
+                listOf(3, 4),
+            )
 
         df.explode("b")
         // SampleEnd
@@ -768,8 +791,11 @@ class Modify : TestBase() {
     fun gatherNames() {
         val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
-        pivoted.gather { "London".."Tokyo" }.cast<Int>()
-            .where { it > 0 }.keysInto("city")
+        pivoted
+            .gather { "London".."Tokyo" }
+            .cast<Int>()
+            .where { it > 0 }
+            .keysInto("city")
         // SampleEnd
     }
 
@@ -787,7 +813,8 @@ class Modify : TestBase() {
     fun gatherWithMapping() {
         val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
-        pivoted.gather { "London".."Tokyo" }
+        pivoted
+            .gather { "London".."Tokyo" }
             .cast<Int>()
             .where { it > 10 }
             .mapKeys { it.lowercase() }
@@ -848,7 +875,8 @@ class Modify : TestBase() {
         // SampleStart
         val a by columnOf(1, 2)
         val b by columnOf(3, 4)
-        a.concat(b)
+        a
+            .concat(b)
             // SampleEnd
             .shouldBe(columnOf(1, 2, 3, 4).named("a"))
     }
@@ -859,7 +887,8 @@ class Modify : TestBase() {
         // SampleStart
         val a by columnOf(1, 2)
         val b by columnOf(3, 4)
-        listOf(a, b).concat()
+        listOf(a, b)
+            .concat()
             // SampleEnd
             .shouldBe(columnOf(1, 2, 3, 4).named("a"))
     }
@@ -887,18 +916,20 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun concatFrameColumn() {
         // SampleStart
-        val x = dataFrameOf("a", "b")(
-            1,
-            2,
-            3,
-            4,
-        )
-        val y = dataFrameOf("b", "c")(
-            5,
-            6,
-            7,
-            8,
-        )
+        val x =
+            dataFrameOf("a", "b")(
+                1,
+                2,
+                3,
+                4,
+            )
+        val y =
+            dataFrameOf("b", "c")(
+                5,
+                6,
+                7,
+                8,
+            )
         val frameColumn by columnOf(x, y)
         frameColumn.concat()
         // SampleEnd
@@ -994,13 +1025,14 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun addCalculated_properties() {
         // SampleStart
-        val personWithCityInfo = df.add {
-            val cityInfo = city.map { queryCityInfo(it) }
-            "cityInfo" {
-                cityInfo.map { it.location } into CityInfo::location
-                cityInfo.map { it.population } into "population"
+        val personWithCityInfo =
+            df.add {
+                val cityInfo = city.map { queryCityInfo(it) }
+                "cityInfo" {
+                    cityInfo.map { it.location } into CityInfo::location
+                    cityInfo.map { it.population } into "population"
+                }
             }
-        }
         // SampleEnd
         personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
     }
@@ -1010,13 +1042,14 @@ class Modify : TestBase() {
     fun addCalculated_accessors() {
         // SampleStart
         val city by column<String?>()
-        val personWithCityInfo = df.add {
-            val cityInfo = city().map { queryCityInfo(it) }
-            "cityInfo" {
-                cityInfo.map { it.location } into CityInfo::location
-                cityInfo.map { it.population } into "population"
+        val personWithCityInfo =
+            df.add {
+                val cityInfo = city().map { queryCityInfo(it) }
+                "cityInfo" {
+                    cityInfo.map { it.location } into CityInfo::location
+                    cityInfo.map { it.population } into "population"
+                }
             }
-        }
         // SampleEnd
         personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
     }
@@ -1025,13 +1058,14 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun addCalculated_strings() {
         // SampleStart
-        val personWithCityInfo = df.add {
-            val cityInfo = "city"<String?>().map { queryCityInfo(it) }
-            "cityInfo" {
-                cityInfo.map { it.location } into CityInfo::location
-                cityInfo.map { it.population } into "population"
+        val personWithCityInfo =
+            df.add {
+                val cityInfo = "city"<String?>().map { queryCityInfo(it) }
+                "cityInfo" {
+                    cityInfo.map { it.location } into CityInfo::location
+                    cityInfo.map { it.population } into "population"
+                }
             }
-        }
         // SampleEnd
         personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
     }
@@ -1280,11 +1314,18 @@ class Modify : TestBase() {
     @Test
     fun multiCallOperations() {
         // SampleStart
-        df.update { age }.where { city == "Paris" }.with { it - 5 }
+        df
+            .update { age }
+            .where { city == "Paris" }
+            .with { it - 5 }
             .filter { isHappy && age > 100 }
-            .move { name.firstName and name.lastName }.after { isHappy }
-            .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
-            .rename { isHappy }.into("isOK")
+            .move { name.firstName and name.lastName }
+            .after { isHappy }
+            .merge { age and weight }
+            .by { "Age: ${it[0]}, weight: ${it[1]}" }
+            .into("info")
+            .rename { isHappy }
+            .into("isOK")
         // SampleEnd
     }
 
@@ -1334,15 +1375,17 @@ class Modify : TestBase() {
         fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
 
         // SampleStart
-        val interestingRepos = dataFrameOf("name", "url")(
-            "dataframe",
-            "/dataframe",
-            "kotlin",
-            "/kotlin",
-        )
+        val interestingRepos =
+            dataFrameOf("name", "url")(
+                "dataframe",
+                "/dataframe",
+                "kotlin",
+                "/kotlin",
+            )
 
-        val initialData = interestingRepos
-            .add("response") { downloadRepositoryInfo("url"<String>()) }
+        val initialData =
+            interestingRepos
+                .add("response") { downloadRepositoryInfo("url"<String>()) }
         // SampleEnd
     }
 
@@ -1353,15 +1396,17 @@ class Modify : TestBase() {
 
         fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
 
-        val interestingRepos = dataFrameOf("name", "url")(
-            "dataframe",
-            "/dataframe",
-            "kotlin",
-            "/kotlin",
-        )
+        val interestingRepos =
+            dataFrameOf("name", "url")(
+                "dataframe",
+                "/dataframe",
+                "kotlin",
+                "/kotlin",
+            )
 
-        val initialData = interestingRepos
-            .add("response") { downloadRepositoryInfo("url"()) }
+        val initialData =
+            interestingRepos
+                .add("response") { downloadRepositoryInfo("url"()) }
 
         // SampleStart
         val df = initialData.unfold("response")
@@ -1386,15 +1431,17 @@ class Modify : TestBase() {
 
         fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
 
-        val interestingRepos = dataFrameOf("name", "url")(
-            "dataframe",
-            "/dataframe",
-            "kotlin",
-            "/kotlin",
-        )
+        val interestingRepos =
+            dataFrameOf("name", "url")(
+                "dataframe",
+                "/dataframe",
+                "kotlin",
+                "/kotlin",
+            )
 
-        val initialData = interestingRepos
-            .add("response") { downloadRepositoryInfo("url"()) }
+        val initialData =
+            interestingRepos
+                .add("response") { downloadRepositoryInfo("url"()) }
 
         val df = initialData.unfold("response").cast<Df>()
 
@@ -1414,14 +1461,15 @@ class Modify : TestBase() {
         // SampleStart
         fun testResource(resourcePath: String): URL = UtilTests::class.java.classLoader.getResource(resourcePath)!!
 
-        val interestingRepos = dataFrameOf("name", "url", "contributors")(
-            "dataframe",
-            "/dataframe",
-            testResource("dataframeContributors.json"),
-            "kotlin",
-            "/kotlin",
-            testResource("kotlinContributors.json"),
-        )
+        val interestingRepos =
+            dataFrameOf("name", "url", "contributors")(
+                "dataframe",
+                "/dataframe",
+                testResource("dataframeContributors.json"),
+                "kotlin",
+                "/kotlin",
+                testResource("kotlinContributors.json"),
+            )
         // SampleEnd
     }
 
@@ -1429,23 +1477,25 @@ class Modify : TestBase() {
     @Test
     @TransformDataFrameExpressions
     fun customUnfoldRead() {
-        val interestingRepos = dataFrameOf("name", "url", "contributors")(
-            "dataframe",
-            "/dataframe",
-            testResource("dataframeContributors.json"),
-            "kotlin",
-            "/kotlin",
-            testResource("kotlinContributors.json"),
-        )
+        val interestingRepos =
+            dataFrameOf("name", "url", "contributors")(
+                "dataframe",
+                "/dataframe",
+                testResource("dataframeContributors.json"),
+                "kotlin",
+                "/kotlin",
+                testResource("kotlinContributors.json"),
+            )
 
         // SampleStart
         val contributors by column<URL>()
 
-        val df = interestingRepos
-            .replace { contributors }
-            .with {
-                it.mapNotNullValues { url -> DataFrame.readJsonStr(url.readText()) }
-            }
+        val df =
+            interestingRepos
+                .replace { contributors }
+                .with {
+                    it.mapNotNullValues { url -> DataFrame.readJsonStr(url.readText()) }
+                }
 
         df.asGroupBy("contributors").max("contributions")
         // SampleEnd

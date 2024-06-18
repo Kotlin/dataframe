@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
 class Join : TestBase() {
-
     private val other = df.add("year") { 2021 - age }.select { name and city and "year" }
 
     @Test
@@ -60,6 +59,7 @@ class Join : TestBase() {
     }
 
     class Right
+
     val DataFrame<Right>.fullName: ColumnGroup<Name> get() = getColumnGroup("fullName").cast()
 
     @Test

@@ -11,7 +11,6 @@ internal abstract class DataColumnImpl<T>(
     distinct: Lazy<Set<T>>? = null,
 ) : DataColumn<T>,
     DataColumnInternal<T> {
-
     protected val distinct = distinct ?: lazy { values.toSet() }
 
     override fun name() = name
@@ -41,5 +40,8 @@ internal abstract class DataColumnImpl<T>(
 
     override operator fun get(range: IntRange) = createWithValues(values.subList(range.first, range.last + 1))
 
-    protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
+    protected abstract fun createWithValues(
+        values: List<T>,
+        hasNulls: Boolean? = null,
+    ): DataColumn<T>
 }

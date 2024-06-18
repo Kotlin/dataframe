@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class ImplodeTests {
-
     @Test
     fun `implode into`() {
         val df = dataFrameOf("a" to listOf(1, 1), "b" to listOf(2, 3))

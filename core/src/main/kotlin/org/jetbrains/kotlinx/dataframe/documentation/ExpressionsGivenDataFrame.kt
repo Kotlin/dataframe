@@ -12,12 +12,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpress
  */
 @ExcludeFromSources
 internal interface ExpressionsGivenDataFrame {
-
     interface OperationArg
 
     /** Provide a new value for every selected data frame using a [dataframe expression][DfDataFrameExpression]. */
     interface DataFrameExpression {
-
         /**
          * @include [DataFrameExpression]
          *

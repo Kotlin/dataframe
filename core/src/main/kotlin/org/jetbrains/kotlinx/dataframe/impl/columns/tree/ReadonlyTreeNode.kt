@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns.tree
 
 internal interface ReadonlyTreeNode<out T> {
-
     val name: String
     val depth: Int
     val data: T

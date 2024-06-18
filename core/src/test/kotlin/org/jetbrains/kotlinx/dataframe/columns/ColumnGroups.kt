@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
 
 class ColumnGroupTests {
-
     @Test
     fun emptyColumnGroup() {
         val df = DataFrame.empty(2)

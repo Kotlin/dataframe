@@ -51,18 +51,22 @@ public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(
 public data class RGBColor(val r: Short, val g: Short, val b: Short)
 
 public interface CellAttributes {
-
     public fun attributes(): List<Pair<String, String>>
 }
 
-public infix fun CellAttributes?.and(other: CellAttributes?): CellAttributes? = when {
-    other == null -> this
-    this == null -> other
-    else -> MergedAttributes(listOf(this, other))
-}
+public infix fun CellAttributes?.and(other: CellAttributes?): CellAttributes? =
+    when {
+        other == null -> this
+        this == null -> other
+        else -> MergedAttributes(listOf(this, other))
+    }
 
 public object FormattingDSL {
-    public fun rgb(r: Short, g: Short, b: Short): RGBColor = RGBColor(r, g, b)
+    public fun rgb(
+        r: Short,
+        g: Short,
+        b: Short,
+    ): RGBColor = RGBColor(r, g, b)
 
     public val black: RGBColor = rgb(0, 0, 0)
 
@@ -80,15 +84,26 @@ public object FormattingDSL {
 
     public val lightGray: RGBColor = rgb(211, 211, 211)
 
-    public fun attr(name: String, value: String): CellAttributes = SingleAttribute(name, value)
+    public fun attr(
+        name: String,
+        value: String,
+    ): CellAttributes = SingleAttribute(name, value)
 
     public fun background(color: RGBColor): CellAttributes = attr("background-color", color.encode())
 
-    public fun background(r: Short, g: Short, b: Short): CellAttributes = background(RGBColor(r, g, b))
+    public fun background(
+        r: Short,
+        g: Short,
+        b: Short,
+    ): CellAttributes = background(RGBColor(r, g, b))
 
     public fun textColor(color: RGBColor): CellAttributes = attr("color", color.encode())
 
-    public fun textColor(r: Short, g: Short, b: Short): CellAttributes = textColor(RGBColor(r, g, b))
+    public fun textColor(
+        r: Short,
+        g: Short,
+        b: Short,
+    ): CellAttributes = textColor(RGBColor(r, g, b))
 
     public val italic: CellAttributes = attr("font-style", "italic")
 
@@ -96,12 +111,20 @@ public object FormattingDSL {
 
     public val underline: CellAttributes = attr("text-decoration", "underline")
 
-    public fun linearBg(value: Number, from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): CellAttributes =
+    public fun linearBg(
+        value: Number,
+        from: Pair<Number, RGBColor>,
+        to: Pair<Number, RGBColor>,
+    ): CellAttributes =
         background(
             linear(value, from, to),
         )
 
-    public fun linear(value: Number, from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): RGBColor {
+    public fun linear(
+        value: Number,
+        from: Pair<Number, RGBColor>,
+        to: Pair<Number, RGBColor>,
+    ): RGBColor {
         val a = from.first.toDouble()
         val b = to.first.toDouble()
         if (a < b) return linearGradient(value.toDouble(), a, from.second, b, to.second)
@@ -143,10 +166,11 @@ public typealias CellFormatter<V> = FormattingDSL.(V) -> CellAttributes?
 public fun <T, C : Number?> FormatClause<T, C>.linearBg(
     from: Pair<Number, RGBColor>,
     to: Pair<Number, RGBColor>,
-): FormattedFrame<T> = with {
-    if (it != null) {
-        background(linear(it, from, to))
-    } else {
-        null
+): FormattedFrame<T> =
+    with {
+        if (it != null) {
+            background(linear(it, from, to))
+        } else {
+            null
+        }
     }
-}

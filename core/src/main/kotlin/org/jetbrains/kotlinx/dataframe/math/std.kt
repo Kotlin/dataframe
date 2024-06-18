@@ -31,12 +31,16 @@ internal fun <T : Number> Iterable<T?>.std(
 }
 
 @JvmName("doubleStd")
-public fun Iterable<Double>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
+public fun Iterable<Double>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): Double = varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
 
 @JvmName("floatStd")
-public fun Iterable<Float>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
+public fun Iterable<Float>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): Double = varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
 
 @JvmName("intStd")
 public fun Iterable<Int>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)

@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class ValueColsTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `valueCols exceptions`() {
         shouldThrow<IllegalArgumentException> {
@@ -23,14 +22,12 @@ class ValueColsTests : ColumnsSelectionDslTests() {
     fun `valueCols at top-level`() {
         listOf(
             df.select { cols(age, city, weight, isHappy) },
-
             df.select { all().valueCols() },
             df.select { valueCols() },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { age },
-
             df.select { age }.select { all() },
             df.select { age }.select { valueCols() },
             df.select { age }.select { valueCols().all() },
@@ -48,7 +45,6 @@ class ValueColsTests : ColumnsSelectionDslTests() {
     fun `valueCols at lower level`() {
         listOf(
             df.select { name.firstName and name.lastName },
-
             df.select { name.valueCols { "Name" in it.name() } },
             df.select { name.colsOf<String>().valueCols { "Name" in it.name() } },
             df.select { "name".valueCols { "Name" in it.name() } },

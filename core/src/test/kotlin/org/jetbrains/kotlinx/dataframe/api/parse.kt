@@ -128,7 +128,8 @@ class ParseTests {
     fun `parse column group`() {
         val df = dataFrameOf("a", "b")("1", "2")
         df
-            .group("a", "b").into("c")
+            .group("a", "b")
+            .into("c")
             .parse("c")
             .ungroup("c") shouldBe dataFrameOf("a", "b")(1, 2)
     }

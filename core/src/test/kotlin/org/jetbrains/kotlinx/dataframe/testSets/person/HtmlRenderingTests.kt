@@ -15,7 +15,6 @@ import java.awt.Desktop
 import java.io.File
 
 class HtmlRenderingTests : BaseTest() {
-
     fun AnyFrame.browse() {
         val file = File("temp.html") // File.createTempFile("df_rendering", ".html")
         file.writeText(toStandaloneHTML().toString())

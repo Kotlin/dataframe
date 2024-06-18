@@ -47,13 +47,14 @@ public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<
     }
 }
 
-/* TODO: Issue #418: breaks if running on ColumnGroup and its child */
+// TODO: Issue #418: breaks if running on ColumnGroup and its child
 public fun <T, C> ReplaceClause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
-    val toInsert = removeResult.removedColumns.map {
-        @Suppress("UNCHECKED_CAST")
-        val newCol = transform(df, it.data.column as DataColumn<C>)
-        ColumnToInsert(it.pathFromRoot().dropLast(1) + newCol.name, newCol, it)
-    }
+    val toInsert =
+        removeResult.removedColumns.map {
+            @Suppress("UNCHECKED_CAST")
+            val newCol = transform(df, it.data.column as DataColumn<C>)
+            ColumnToInsert(it.pathFromRoot().dropLast(1) + newCol.name, newCol, it)
+        }
     return removeResult.df.insertImpl(toInsert)
 }

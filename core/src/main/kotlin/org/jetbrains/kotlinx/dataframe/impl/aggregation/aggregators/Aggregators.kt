@@ -9,15 +9,16 @@ import kotlin.reflect.KType
 
 @PublishedApi
 internal object Aggregators {
-
     private fun <C> preservesType(aggregate: Iterable<C>.(KType) -> C?) =
         TwoStepAggregator.Factory(aggregate, aggregate, true)
 
     private fun <C : Any, R> mergedValues(aggregate: Iterable<C?>.(KType) -> R?) =
         MergedValuesAggregator.Factory(aggregate, true)
 
-    private fun <C, R> changesType(aggregate1: Iterable<C>.(KType) -> R, aggregate2: Iterable<R>.(KType) -> R) =
-        TwoStepAggregator.Factory(aggregate1, aggregate2, false)
+    private fun <C, R> changesType(
+        aggregate1: Iterable<C>.(KType) -> R,
+        aggregate2: Iterable<R>.(KType) -> R,
+    ) = TwoStepAggregator.Factory(aggregate1, aggregate2, false)
 
     private fun extendsNumbers(aggregate: Iterable<Number>.(KType) -> Number?) = NumbersAggregator.Factory(aggregate)
 

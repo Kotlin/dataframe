@@ -15,7 +15,8 @@ public data class IFRAME(
         height: Int? = null,
     ) : this(src.toString(), border, width, height)
 
-    override fun toString(): String = """<iframe src="$src" frameborder=${if (border) 1 else 0 }${width?.let {
-        " width=$it"
-    } ?: ""}${height?.let { " height=$it" } ?: ""}/>"""
+    override fun toString(): String =
+        """<iframe src="$src" frameborder=${if (border) 1 else 0 }${width?.let {
+            " width=$it"
+        } ?: ""}${height?.let { " height=$it" } ?: ""}/>"""
 }

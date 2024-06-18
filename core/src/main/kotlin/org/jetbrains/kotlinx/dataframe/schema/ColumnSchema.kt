@@ -11,7 +11,6 @@ import kotlin.reflect.full.isSupertypeOf
 import kotlin.reflect.typeOf
 
 public abstract class ColumnSchema {
-
     /** Either [Value] or [Group] or [Frame]. */
     public abstract val kind: ColumnKind
 
@@ -39,12 +38,13 @@ public abstract class ColumnSchema {
         override val nullable: Boolean = type.isMarkedNullable
         override val contentType: KType? = null
 
-        public fun compare(other: Value): CompareResult = when {
-            type == other.type -> CompareResult.Equals
-            type.isSubtypeOf(other.type) -> CompareResult.IsDerived
-            type.isSupertypeOf(other.type) -> CompareResult.IsSuper
-            else -> CompareResult.None
-        }
+        public fun compare(other: Value): CompareResult =
+            when {
+                type == other.type -> CompareResult.Equals
+                type.isSubtypeOf(other.type) -> CompareResult.IsDerived
+                type.isSupertypeOf(other.type) -> CompareResult.IsSuper
+                else -> CompareResult.None
+            }
     }
 
     public class Group(public val schema: DataFrameSchema, override val contentType: KType?) : ColumnSchema() {

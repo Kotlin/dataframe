@@ -42,7 +42,6 @@ import org.junit.Test
 import java.time.format.DateTimeFormatter
 
 class JoinWith : TestBase() {
-
     @DataSchema
     interface Campaigns {
         val name: String
@@ -56,20 +55,35 @@ class JoinWith : TestBase() {
         val userId: Int
     }
 
-    private val campaigns = dataFrameOf("name", "startDate", "endDate")(
-        "Winter Sale", LocalDate(2023, 1, 1), LocalDate(2023, 1, 31),
-        "Spring Sale", LocalDate(2023, 4, 1), LocalDate(2023, 4, 30),
-        "Summer Sale", LocalDate(2023, 7, 1), LocalDate(2023, 7, 31),
-        "Autumn Sale", LocalDate(2023, 10, 1), LocalDate(2023, 10, 31),
-    ).cast<Campaigns>()
+    private val campaigns =
+        dataFrameOf("name", "startDate", "endDate")(
+            "Winter Sale",
+            LocalDate(2023, 1, 1),
+            LocalDate(2023, 1, 31),
+            "Spring Sale",
+            LocalDate(2023, 4, 1),
+            LocalDate(2023, 4, 30),
+            "Summer Sale",
+            LocalDate(2023, 7, 1),
+            LocalDate(2023, 7, 31),
+            "Autumn Sale",
+            LocalDate(2023, 10, 1),
+            LocalDate(2023, 10, 31),
+        ).cast<Campaigns>()
 
-    private val visits = dataFrameOf("date", "usedId")(
-        LocalDate(2023, 1, 10), 1,
-        LocalDate(2023, 1, 20), 2,
-        LocalDate(2023, 4, 15), 1,
-        LocalDate(2023, 5, 1), 3,
-        LocalDate(2023, 7, 10), 2,
-    ).cast<Visits>()
+    private val visits =
+        dataFrameOf("date", "usedId")(
+            LocalDate(2023, 1, 10),
+            1,
+            LocalDate(2023, 1, 20),
+            2,
+            LocalDate(2023, 4, 15),
+            1,
+            LocalDate(2023, 5, 1),
+            3,
+            LocalDate(2023, 7, 10),
+            2,
+        ).cast<Visits>()
 
     class ColoredValue<T>(val value: T, val backgroundColor: RGBColor, val textColor: RGBColor) {
         override fun equals(other: Any?): Boolean {
@@ -84,156 +98,206 @@ class JoinWith : TestBase() {
         override fun hashCode(): Int = value?.hashCode() ?: 0
     }
 
-    private val renderer = object : ChainedCellRenderer(DefaultCellRenderer) {
-        override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? =
-            if (value is ColoredValue<*>) {
-                if (value.value is LocalDate) {
-                    RenderedContent.text(
-                        DateTimeFormatter.ofPattern("dd MMMM yyyy").format(value.value.toJavaLocalDate()),
-                    )
-                } else {
-                    renderValueForHtml(value.value, configuration.cellContentLimit, configuration.decimalFormat)
-                }
-            } else {
-                null
-            }
-
-        override fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String? = null
-    }
-
-    private fun AnyFrame.unwrapColoredValues(): AnyFrame = convert {
-        colsAtAnyDepth().colsOf<ColoredValue<*>?>()
-    }.with(Infer.Type) { it?.value }
-
-    private fun <T> T.colored(background: RGBColor, text: RGBColor) = ColoredValue(this, background, text)
-    private fun <T> T.winter(background: RGBColor = RGBColor(179, 205, 224), text: RGBColor = RGBColor(0, 0, 51)) =
-        ColoredValue(this, background, text)
-    private fun <T> T.spring(background: RGBColor = RGBColor(204, 235, 197), text: RGBColor = RGBColor(0, 51, 0)) =
-        ColoredValue(this, background, text)
-    private fun <T> T.summer(background: RGBColor = RGBColor(176, 224, 230), text: RGBColor = RGBColor(25, 25, 112)) =
-        ColoredValue(this, background, text)
-    private fun <T> T.autumn(background: RGBColor = RGBColor(221, 160, 221), text: RGBColor = RGBColor(85, 26, 139)) =
-        ColoredValue(this, background, text)
-
-    private val coloredCampaigns = dataFrameOf("name", "startDate", "endDate")(
-        "Winter Sale".winter(), LocalDate(2023, 1, 1).winter(), LocalDate(2023, 1, 31).winter(),
-        "Spring Sale".spring(), LocalDate(2023, 4, 1).spring(), LocalDate(2023, 4, 30).spring(),
-        "Summer Sale".summer(), LocalDate(2023, 7, 1).summer(), LocalDate(2023, 7, 31).summer(),
-        "Autumn Sale".autumn(), LocalDate(2023, 10, 1).autumn(), LocalDate(2023, 10, 31).autumn(),
-    )
-
-    private val coloredVisits = dataFrameOf("date", "usedId")(
-        LocalDate(2023, 1, 10).winter(),	1.winter(),
-        LocalDate(2023, 1, 20).winter(),	2.winter(),
-        LocalDate(2023, 4, 15).spring(),	1.spring(),
-        LocalDate(
-            2023,
-            5,
-            1,
-        ).colored(FormattingDSL.white, FormattingDSL.black),
-        3.colored(FormattingDSL.white, FormattingDSL.black),
-        LocalDate(2023, 7, 10).summer(),	2.summer(),
-    )
-
-    private fun AnyFrame.toColoredHTML() = toHTML(
-        getFooter = { null },
-        cellRenderer = renderer,
-        configuration = SamplesDisplayConfiguration.copy(
-            cellFormatter = { row, col ->
-                val value = row[col]
+    private val renderer =
+        object : ChainedCellRenderer(DefaultCellRenderer) {
+            override fun maybeContent(
+                value: Any?,
+                configuration: DisplayConfiguration,
+            ): RenderedContent? =
                 if (value is ColoredValue<*>) {
-                    background(value.backgroundColor) and textColor(value.textColor)
+                    if (value.value is LocalDate) {
+                        RenderedContent.text(
+                            DateTimeFormatter.ofPattern("dd MMMM yyyy").format(value.value.toJavaLocalDate()),
+                        )
+                    } else {
+                        renderValueForHtml(value.value, configuration.cellContentLimit, configuration.decimalFormat)
+                    }
                 } else {
-                    background(white)
+                    null
                 }
-            },
-        ),
-    )
+
+            override fun maybeTooltip(
+                value: Any?,
+                configuration: DisplayConfiguration,
+            ): String? = null
+        }
+
+    private fun AnyFrame.unwrapColoredValues(): AnyFrame =
+        convert {
+            colsAtAnyDepth().colsOf<ColoredValue<*>?>()
+        }.with(Infer.Type) { it?.value }
+
+    private fun <T> T.colored(
+        background: RGBColor,
+        text: RGBColor,
+    ) = ColoredValue(this, background, text)
+
+    private fun <T> T.winter(
+        background: RGBColor = RGBColor(179, 205, 224),
+        text: RGBColor = RGBColor(0, 0, 51),
+    ) = ColoredValue(this, background, text)
+
+    private fun <T> T.spring(
+        background: RGBColor = RGBColor(204, 235, 197),
+        text: RGBColor = RGBColor(0, 51, 0),
+    ) = ColoredValue(this, background, text)
+
+    private fun <T> T.summer(
+        background: RGBColor = RGBColor(176, 224, 230),
+        text: RGBColor = RGBColor(25, 25, 112),
+    ) = ColoredValue(this, background, text)
+
+    private fun <T> T.autumn(
+        background: RGBColor = RGBColor(221, 160, 221),
+        text: RGBColor = RGBColor(85, 26, 139),
+    ) = ColoredValue(this, background, text)
+
+    private val coloredCampaigns =
+        dataFrameOf("name", "startDate", "endDate")(
+            "Winter Sale".winter(),
+            LocalDate(2023, 1, 1).winter(),
+            LocalDate(2023, 1, 31).winter(),
+            "Spring Sale".spring(),
+            LocalDate(2023, 4, 1).spring(),
+            LocalDate(2023, 4, 30).spring(),
+            "Summer Sale".summer(),
+            LocalDate(2023, 7, 1).summer(),
+            LocalDate(2023, 7, 31).summer(),
+            "Autumn Sale".autumn(),
+            LocalDate(2023, 10, 1).autumn(),
+            LocalDate(2023, 10, 31).autumn(),
+        )
+
+    private val coloredVisits =
+        dataFrameOf("date", "usedId")(
+            LocalDate(2023, 1, 10).winter(),
+            1.winter(),
+            LocalDate(2023, 1, 20).winter(),
+            2.winter(),
+            LocalDate(2023, 4, 15).spring(),
+            1.spring(),
+            LocalDate(
+                2023,
+                5,
+                1,
+            ).colored(FormattingDSL.white, FormattingDSL.black),
+            3.colored(FormattingDSL.white, FormattingDSL.black),
+            LocalDate(2023, 7, 10).summer(),
+            2.summer(),
+        )
+
+    private fun AnyFrame.toColoredHTML() =
+        toHTML(
+            getFooter = { null },
+            cellRenderer = renderer,
+            configuration =
+                SamplesDisplayConfiguration.copy(
+                    cellFormatter = { row, col ->
+                        val value = row[col]
+                        if (value is ColoredValue<*>) {
+                            background(value.backgroundColor) and textColor(value.textColor)
+                        } else {
+                            background(white)
+                        }
+                    },
+                ),
+        )
 
     private val joinExpression: JoinedDataRow<Any?, Any?>.(it: JoinedDataRow<Any?, Any?>) -> Boolean = {
         right[{ "date"<ColoredValue<LocalDate>>() }].value in
             "startDate"<ColoredValue<LocalDate>>().value.."endDate"<ColoredValue<LocalDate>>().value
     }
 
-    private fun DataFrameHtmlData.wrap(title: String): DataFrameHtmlData = copy(
-        body = """
-                    <div class="table-container">
-                        <b>$title</b>
-                        $body
-                    </div>
-        """.trimIndent(),
-    )
+    private fun DataFrameHtmlData.wrap(title: String): DataFrameHtmlData =
+        copy(
+            body =
+                """
+                <div class="table-container">
+                    <b>$title</b>
+                    $body
+                </div>
+                """.trimIndent(),
+        )
 
-    private fun DataFrameHtmlData.wrap(): DataFrameHtmlData = copy(
-        body = """
-                    <div class="table-container">
-                        $body
-                    </div>
-        """.trimIndent(),
-    )
+    private fun DataFrameHtmlData.wrap(): DataFrameHtmlData =
+        copy(
+            body =
+                """
+                <div class="table-container">
+                    $body
+                </div>
+                """.trimIndent(),
+        )
 
-    private fun snippetOutput(coloredResult: DataFrame<Any?>, result: DataFrame<Any?>) {
+    private fun snippetOutput(
+        coloredResult: DataFrame<Any?>,
+        result: DataFrame<Any?>,
+    ) {
         coloredCampaigns.unwrapColoredValues() shouldBe campaigns
         coloredVisits.unwrapColoredValues() shouldBe visits
         coloredResult.unwrapColoredValues() shouldBe result
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
-                .plus(coloredCampaigns.toColoredHTML().wrap("campaigns"))
-                .plus(coloredVisits.toColoredHTML().wrap("visits"))
-                .plus(coloredResult.toColoredHTML().wrap("result"))
-                .plus(
-                    DataFrameHtmlData(
-                        style = """
-                            body {
-                                display: flex;
-                                align-items: flex-start;
-                                overflow-x: auto;
-                                font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
-                                font-size: 14px;
-                            }
+            manualOutput =
+                DataFrameHtmlData
+                    .tableDefinitions()
+                    .plus(coloredCampaigns.toColoredHTML().wrap("campaigns"))
+                    .plus(coloredVisits.toColoredHTML().wrap("visits"))
+                    .plus(coloredResult.toColoredHTML().wrap("result"))
+                    .plus(
+                        DataFrameHtmlData(
+                            style =
+                                """
+                                body {
+                                    display: flex;
+                                    align-items: flex-start;
+                                    overflow-x: auto;
+                                    font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+                                    font-size: 14px;
+                                }
 
-                            :root {
-                                color: #19191C;
-                                background-color: #fff;
-                            }
-                            
-                            :root[theme="dark"] {
-                                background-color: #19191C;
-                                color: #FFFFFFCC
-                            }
-                            
-                            .table-container {
-                                margin-right: 20px; 
-                            }
-                            
-                            .table-container:not(:last-child) {
-                                margin-right: 20px; 
-                            }
-                            
-                            td {
-                                white-space: nowrap;
-                            }
-                        """.trimIndent(),
+                                :root {
+                                    color: #19191C;
+                                    background-color: #fff;
+                                }
+                                
+                                :root[theme="dark"] {
+                                    background-color: #19191C;
+                                    color: #FFFFFFCC
+                                }
+                                
+                                .table-container {
+                                    margin-right: 20px; 
+                                }
+                                
+                                .table-container:not(:last-child) {
+                                    margin-right: 20px; 
+                                }
+                                
+                                td {
+                                    white-space: nowrap;
+                                }
+                                """.trimIndent(),
+                        ),
                     ),
-                ),
         )
     }
 
     @TransformDataFrameExpressions
     @Test
     fun joinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
+        val result =
+            run {
+                // SampleStart
+                val date by column<LocalDate>()
+                val startDate by column<LocalDate>()
+                val endDate by column<LocalDate>()
 
-            campaigns.innerJoinWith(visits) {
-                right[date] in startDate()..endDate()
+                campaigns.innerJoinWith(visits) {
+                    right[date] in startDate()..endDate()
+                }
+                // SampleEnd
             }
-            // SampleEnd
-        }
         val coloredResult = coloredCampaigns.innerJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
@@ -241,17 +305,18 @@ class JoinWith : TestBase() {
     @TransformDataFrameExpressions
     @Test
     fun filterJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
+        val result =
+            run {
+                // SampleStart
+                val date by column<LocalDate>()
+                val startDate by column<LocalDate>()
+                val endDate by column<LocalDate>()
 
-            campaigns.filterJoinWith(visits) {
-                right[date] in startDate()..endDate()
+                campaigns.filterJoinWith(visits) {
+                    right[date] in startDate()..endDate()
+                }
+                // SampleEnd
             }
-            // SampleEnd
-        }
         val coloredResult = coloredCampaigns.filterJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
@@ -259,17 +324,18 @@ class JoinWith : TestBase() {
     @TransformDataFrameExpressions
     @Test
     fun leftJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
+        val result =
+            run {
+                // SampleStart
+                val date by column<LocalDate>()
+                val startDate by column<LocalDate>()
+                val endDate by column<LocalDate>()
 
-            campaigns.leftJoinWith(visits) {
-                right[date] in startDate()..endDate()
+                campaigns.leftJoinWith(visits) {
+                    right[date] in startDate()..endDate()
+                }
+                // SampleEnd
             }
-            // SampleEnd
-        }
         val coloredResult = coloredCampaigns.leftJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
@@ -277,17 +343,18 @@ class JoinWith : TestBase() {
     @TransformDataFrameExpressions
     @Test
     fun rightJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
+        val result =
+            run {
+                // SampleStart
+                val date by column<LocalDate>()
+                val startDate by column<LocalDate>()
+                val endDate by column<LocalDate>()
 
-            campaigns.rightJoinWith(visits) {
-                right[date] in startDate()..endDate()
+                campaigns.rightJoinWith(visits) {
+                    right[date] in startDate()..endDate()
+                }
+                // SampleEnd
             }
-            // SampleEnd
-        }
         val coloredResult = coloredCampaigns.rightJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
@@ -295,17 +362,18 @@ class JoinWith : TestBase() {
     @TransformDataFrameExpressions
     @Test
     fun fullJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
+        val result =
+            run {
+                // SampleStart
+                val date by column<LocalDate>()
+                val startDate by column<LocalDate>()
+                val endDate by column<LocalDate>()
 
-            campaigns.fullJoinWith(visits) {
-                right[date] in startDate()..endDate()
+                campaigns.fullJoinWith(visits) {
+                    right[date] in startDate()..endDate()
+                }
+                // SampleEnd
             }
-            // SampleEnd
-        }
         val coloredResult = coloredCampaigns.fullJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
@@ -313,17 +381,18 @@ class JoinWith : TestBase() {
     @TransformDataFrameExpressions
     @Test
     fun excludeJoinWith_accessors() {
-        val result = run {
-            // SampleStart
-            val date by column<LocalDate>()
-            val startDate by column<LocalDate>()
-            val endDate by column<LocalDate>()
+        val result =
+            run {
+                // SampleStart
+                val date by column<LocalDate>()
+                val startDate by column<LocalDate>()
+                val endDate by column<LocalDate>()
 
-            campaigns.excludeJoinWith(visits) {
-                right[date] in startDate()..endDate()
+                campaigns.excludeJoinWith(visits) {
+                    right[date] in startDate()..endDate()
+                }
+                // SampleEnd
             }
-            // SampleEnd
-        }
         val coloredResult = coloredCampaigns.excludeJoinWith(coloredVisits, joinExpression = joinExpression)
         snippetOutput(coloredResult, result)
     }
@@ -495,17 +564,31 @@ class JoinWith : TestBase() {
         snippetOutput(coloredResult, result)
     }
 
-    val df1 = dataFrameOf("index", "age", "name")(
-        1.spring(), 15.spring(), "BOB".spring(),
-        2.summer(), 19.summer(), "ALICE".summer(),
-        3.autumn(), 20.autumn(), "CHARLIE".autumn(),
-    )
+    val df1 =
+        dataFrameOf("index", "age", "name")(
+            1.spring(),
+            15.spring(),
+            "BOB".spring(),
+            2.summer(),
+            19.summer(),
+            "ALICE".summer(),
+            3.autumn(),
+            20.autumn(),
+            "CHARLIE".autumn(),
+        )
 
-    val df2 = dataFrameOf("index", "age", "name")(
-        1.spring(), 15.spring(), "Bob".spring(),
-        2.summer(), 19.summer(), "Alice".summer(),
-        4.winter(), 21.winter(), "John".winter(),
-    )
+    val df2 =
+        dataFrameOf("index", "age", "name")(
+            1.spring(),
+            15.spring(),
+            "Bob".spring(),
+            2.summer(),
+            19.summer(),
+            "Alice".summer(),
+            4.winter(),
+            21.winter(),
+            "John".winter(),
+        )
 
     @TransformDataFrameExpressions
     @Test
@@ -515,15 +598,16 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
-                .plus(
-                    DataFrameHtmlData()
-                        .plus(df1.toColoredHTML().wrap("df1"))
-                        .plus(df2.toColoredHTML().wrap("df2"))
-                        .plus(df1.innerJoin(df2, "index", "age").toColoredHTML().wrap("result"))
-                        .wrapRow(),
-                )
-                .plus(other),
+            manualOutput =
+                DataFrameHtmlData
+                    .tableDefinitions()
+                    .plus(
+                        DataFrameHtmlData()
+                            .plus(df1.toColoredHTML().wrap("df1"))
+                            .plus(df2.toColoredHTML().wrap("df2"))
+                            .plus(df1.innerJoin(df2, "index", "age").toColoredHTML().wrap("result"))
+                            .wrapRow(),
+                    ).plus(other),
         )
     }
 
@@ -535,18 +619,20 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
-                .plus(
-                    DataFrameHtmlData()
-                        .plus(df1.toColoredHTML().wrap("df1"))
-                        .plus(df2.toColoredHTML().wrap("df2"))
-                        .plus(
-                            df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML().wrap("result"),
-                        )
-                        .wrapRow(),
-                )
-                .plus(other),
+            manualOutput =
+                DataFrameHtmlData
+                    .tableDefinitions()
+                    .plus(
+                        DataFrameHtmlData()
+                            .plus(df1.toColoredHTML().wrap("df1"))
+                            .plus(df2.toColoredHTML().wrap("df2"))
+                            .plus(
+                                df1
+                                    .innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                    .toColoredHTML()
+                                    .wrap("result"),
+                            ).wrapRow(),
+                    ).plus(other),
         )
     }
 
@@ -559,28 +645,28 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
-                .plus(
-                    DataFrameHtmlData()
-                        .plus(df1.toColoredHTML().wrap("df1"))
-                        .plus(df2.toColoredHTML().wrap("df2"))
-                        .plus(
-                            df1.leftJoin(df2, "index", "age").toColoredHTML().wrap("result"),
-                        )
-                        .wrapRow(),
-                )
-                .plus(DataFrameHtmlData(body = "<br><br>"))
-                .plus(
-                    DataFrameHtmlData()
-                        .plus(df1.toColoredHTML().wrap())
-                        .plus(df2.toColoredHTML().wrap())
-                        .plus(
-                            df1.leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML().wrap(),
-                        )
-                        .wrapRow(),
-                )
-                .plus(other),
+            manualOutput =
+                DataFrameHtmlData
+                    .tableDefinitions()
+                    .plus(
+                        DataFrameHtmlData()
+                            .plus(df1.toColoredHTML().wrap("df1"))
+                            .plus(df2.toColoredHTML().wrap("df2"))
+                            .plus(
+                                df1.leftJoin(df2, "index", "age").toColoredHTML().wrap("result"),
+                            ).wrapRow(),
+                    ).plus(DataFrameHtmlData(body = "<br><br>"))
+                    .plus(
+                        DataFrameHtmlData()
+                            .plus(df1.toColoredHTML().wrap())
+                            .plus(df2.toColoredHTML().wrap())
+                            .plus(
+                                df1
+                                    .leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                    .toColoredHTML()
+                                    .wrap(),
+                            ).wrapRow(),
+                    ).plus(other),
         )
     }
 
@@ -593,69 +679,73 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
-                .plus(
-                    DataFrameHtmlData()
-                        .plus(df1.toColoredHTML().wrap("df1"))
-                        .plus(df2.toColoredHTML().wrap("df2"))
-                        .plus(
-                            df1.rightJoin(df2, "index", "age").toColoredHTML().wrap("result"),
-                        )
-                        .wrapRow(),
-                )
-                .plus(DataFrameHtmlData(body = "<br><br>"))
-                .plus(
-                    DataFrameHtmlData()
-                        .plus(df1.toColoredHTML().wrap())
-                        .plus(df2.toColoredHTML().wrap())
-                        .plus(
-                            df1.rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML().wrap(),
-                        )
-                        .wrapRow(),
-                )
-                .plus(other),
+            manualOutput =
+                DataFrameHtmlData
+                    .tableDefinitions()
+                    .plus(
+                        DataFrameHtmlData()
+                            .plus(df1.toColoredHTML().wrap("df1"))
+                            .plus(df2.toColoredHTML().wrap("df2"))
+                            .plus(
+                                df1.rightJoin(df2, "index", "age").toColoredHTML().wrap("result"),
+                            ).wrapRow(),
+                    ).plus(DataFrameHtmlData(body = "<br><br>"))
+                    .plus(
+                        DataFrameHtmlData()
+                            .plus(df1.toColoredHTML().wrap())
+                            .plus(df2.toColoredHTML().wrap())
+                            .plus(
+                                df1
+                                    .rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                    .toColoredHTML()
+                                    .wrap(),
+                            ).wrapRow(),
+                    ).plus(other),
         )
     }
 
-    private fun DataFrameHtmlData.wrapRow(): DataFrameHtmlData = copy(
-        body = """
-                    <div class="table-row">
-                        $body
-                    </div>
-        """.trimIndent(),
-    )
+    private fun DataFrameHtmlData.wrapRow(): DataFrameHtmlData =
+        copy(
+            body =
+                """
+                <div class="table-row">
+                    $body
+                </div>
+                """.trimIndent(),
+        )
 
-    private val other = DataFrameHtmlData(
-        style = """
-            body {
-                font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
-                font-size: 14px;
-            }
+    private val other =
+        DataFrameHtmlData(
+            style =
+                """
+                body {
+                    font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+                    font-size: 14px;
+                }
 
-            :root {
-                color: #19191C;
-                background-color: #fff;
-            }
-            
-            :root[theme="dark"] {
-                background-color: #19191C;
-                color: #FFFFFFCC
-            }
-            
-            .table-row {
-                display: flex;
-                align-items: flex-start;
-                overflow-x: auto;
-            }
-            
-            .table-container:not(:last-child) {
-                margin-right: 20px; 
-            }
-            
-            td {
-                white-space: nowrap;
-            }
-        """.trimIndent(),
-    )
+                :root {
+                    color: #19191C;
+                    background-color: #fff;
+                }
+                
+                :root[theme="dark"] {
+                    background-color: #19191C;
+                    color: #FFFFFFCC
+                }
+                
+                .table-row {
+                    display: flex;
+                    align-items: flex-start;
+                    overflow-x: auto;
+                }
+                
+                .table-container:not(:last-child) {
+                    margin-right: 20px; 
+                }
+                
+                td {
+                    white-space: nowrap;
+                }
+                """.trimIndent(),
+        )
 }

@@ -12,9 +12,16 @@ import java.io.InputStream
 public class Jdbc :
     SupportedCodeGenerationFormat,
     SupportedDataFrameFormat {
-    public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
+    public override fun readDataFrame(
+        stream: InputStream,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readJDBC(stream)
 
-    public override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJDBC(file)
+    public override fun readDataFrame(
+        file: File,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readJDBC(file)
+
     override fun readCodeForGeneration(
         stream: InputStream,
         name: String,
@@ -23,7 +30,11 @@ public class Jdbc :
         TODO("Not yet implemented")
     }
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code {
+    override fun readCodeForGeneration(
+        file: File,
+        name: String,
+        generateHelperCompanionObject: Boolean,
+    ): Code {
         TODO("Not yet implemented")
     }
 

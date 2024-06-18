@@ -52,6 +52,7 @@ object PluginCallbackProxy : PluginCallback {
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
     private var manualOutput: DataFrameHtmlData? = null
+
     fun overrideHtmlOutput(manualOutput: DataFrameHtmlData) {
         this.manualOutput = manualOutput
     }
@@ -90,24 +91,25 @@ object PluginCallbackProxy : PluginCallback {
                     statements.forEach { (index, expressions) ->
                         var details: DataFrameHtmlData = statementOutput(expressions)
 
-                        details = details.copy(
-                            body =
-                            """
-                            <details>
-                            <summary>${expressions.joinToString(".") { it.source }
-                                .also {
-                                    if (it.length > 95) {
-                                        TODO(
-                                            "expression is too long ${it.length}. better to split sample in multiple snippets",
-                                        )
-                                    }
-                                }
-                                .escapeHtmlForIFrame()}</summary>
-                            ${details.body}
-                            </details>
-                            <br>
-                            """.trimIndent(),
-                        )
+                        details =
+                            details.copy(
+                                body =
+                                    """
+                                    <details>
+                                    <summary>${expressions.joinToString(".") { it.source }
+                                        .also {
+                                            if (it.length > 95) {
+                                                TODO(
+                                                    "expression is too long ${it.length}. better to split sample in multiple snippets",
+                                                )
+                                            }
+                                        }
+                                        .escapeHtmlForIFrame()}</summary>
+                                    ${details.body}
+                                    </details>
+                                    <br>
+                                    """.trimIndent(),
+                            )
                         output += details
                     }
                 }
@@ -118,13 +120,15 @@ object PluginCallbackProxy : PluginCallback {
 
         val input = expressionsByStatement.values.first().first()
         val name = "${input.containingClassFqName}.${input.containingFunName}"
-        val destination = File("build/dataframes").also {
-            it.mkdirs()
-        }
+        val destination =
+            File("build/dataframes").also {
+                it.mkdirs()
+            }
         output.writeHTML(File(destination, "$name.html"))
-        val korro = File("build/korroOutputLines").also {
-            it.mkdirs()
-        }
+        val korro =
+            File("build/korroOutputLines").also {
+                it.mkdirs()
+            }
 
         val group = name.substringBefore("_")
         File(korro, group).writeText(
@@ -139,10 +143,11 @@ object PluginCallbackProxy : PluginCallback {
 
     private fun statementOutput(expressions: List<Expression>): DataFrameHtmlData {
         var data = DataFrameHtmlData()
-        val allow = setOf(
-            "toDataFrame",
-            "peek(dataFrameOf(col), dataFrameOf(col))",
-        )
+        val allow =
+            setOf(
+                "toDataFrame",
+                "peek(dataFrameOf(col), dataFrameOf(col))",
+            )
         if (expressions.isEmpty()) {
             error("No dataframe expressions in sample")
         }
@@ -158,40 +163,46 @@ object PluginCallbackProxy : PluginCallback {
                 when (i) {
                     0 -> {
                         val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
+                        val description =
+                            table.copy(
+                                body =
+                                    """
                                     <details>
                                     <summary>Input ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                            """.trimIndent(),
-                        )
+                                    """.trimIndent(),
+                            )
                         data += description
                     }
 
                     expressions.lastIndex -> {
                         val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
+                        val description =
+                            table.copy(
+                                body =
+                                    """
                                     <details>
                                     <summary>Output ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                            """.trimIndent(),
-                        )
+                                    """.trimIndent(),
+                            )
                         data += description
                     }
 
                     else -> {
                         val table = convertToHTML(expression.df)
-                        val description = table.copy(
-                            body = """
+                        val description =
+                            table.copy(
+                                body =
+                                    """
                                     <details>
                                     <summary>Step $i: ${convertToDescription(expression.df)}</summary>
                                      ${table.body}
                                     </details>
-                            """.trimIndent(),
-                        )
+                                    """.trimIndent(),
+                            )
                         data += description
                     }
                 }
@@ -224,6 +235,7 @@ object PluginCallbackProxy : PluginCallback {
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
     fun DataFrame<*>.toHTML() = toHTML(SamplesDisplayConfiguration, getFooter = WritersideFooter)
+
     fun FormattedFrame<*>.toHTML1() = toHTML(SamplesDisplayConfiguration)
 
     return when (dataframeLike) {
@@ -241,20 +253,22 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
 
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
 
-        is Update<*, *> -> dataframeLike.df.let {
-            var it = it.format(
-                dataframeLike.columns as ColumnsSelectionDsl<Any?>.(
-                    it: ColumnsSelectionDsl<Any?>,
-                ) -> ColumnsResolver<*>,
-            )
-            if (dataframeLike.filter != null) {
-                it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
-            }
-            it.with {
-                background(rgb(152, 251, 152))
-            }
-        }
-            .toHTML1()
+        is Update<*, *> ->
+            dataframeLike.df
+                .let {
+                    var it =
+                        it.format(
+                            dataframeLike.columns as ColumnsSelectionDsl<Any?>.(
+                                it: ColumnsSelectionDsl<Any?>,
+                            ) -> ColumnsResolver<*>,
+                        )
+                    if (dataframeLike.filter != null) {
+                        it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
+                    }
+                    it.with {
+                        background(rgb(152, 251, 152))
+                    }
+                }.toHTML1()
 
         is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
 
@@ -274,39 +288,41 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
     }
 }
 
-private fun convertToDescription(dataframeLike: Any): String = when (dataframeLike) {
-    is AnyFrame -> dataframeLike.let {
-        "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"
-    }
+private fun convertToDescription(dataframeLike: Any): String =
+    when (dataframeLike) {
+        is AnyFrame ->
+            dataframeLike.let {
+                "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"
+            }
 
-    is Pivot<*> -> "Pivot"
+        is Pivot<*> -> "Pivot"
 
-    is ReducedPivot<*> -> "ReducedPivot"
+        is ReducedPivot<*> -> "ReducedPivot"
 
-    is PivotGroupBy<*> -> "PivotGroupBy"
+        is PivotGroupBy<*> -> "PivotGroupBy"
 
-    is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
+        is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
 
-    is SplitWithTransform<*, *, *> -> "SplitWithTransform"
+        is SplitWithTransform<*, *, *> -> "SplitWithTransform"
 
-    is Split<*, *> -> "Split"
+        is Split<*, *> -> "Split"
 
-    is Merge<*, *, *> -> "Merge"
+        is Merge<*, *, *> -> "Merge"
 
-    is Gather<*, *, *, *> -> "Gather"
+        is Gather<*, *, *, *> -> "Gather"
 
-    is Update<*, *> -> "Update"
+        is Update<*, *> -> "Update"
 
-    is Convert<*, *> -> "Convert"
+        is Convert<*, *> -> "Convert"
 
-    is FormattedFrame<*> -> "FormattedFrame"
+        is FormattedFrame<*> -> "FormattedFrame"
 
-    is GroupBy<*, *> -> "GroupBy"
+        is GroupBy<*, *> -> "GroupBy"
 
-    is DataRow<*> -> "DataRow"
+        is DataRow<*> -> "DataRow"
 
-    else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
-}.escapeHtmlForIFrame()
+        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
+    }.escapeHtmlForIFrame()
 
 internal fun String.escapeHtmlForIFrame(): String {
     val str = this

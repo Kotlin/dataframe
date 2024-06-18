@@ -49,11 +49,12 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
     /**
      * Returns all ("children") columns in this column if it's a group, else it returns an empty list.
      */
-    public fun cols(): List<ColumnWithPath<Any?>> = if (isColumnGroup()) {
-        data.asColumnGroup().columns().map { it.addParentPath(path) }
-    } else {
-        emptyList()
-    }
+    public fun cols(): List<ColumnWithPath<Any?>> =
+        if (isColumnGroup()) {
+            data.asColumnGroup().columns().map { it.addParentPath(path) }
+        } else {
+            emptyList()
+        }
 
     override fun path(): ColumnPath = path
 

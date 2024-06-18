@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.junit.Test
 
 class FirstTests : ColumnsSelectionDslTests() {
-
     @Test
     fun `ColumnsSelectionDsl first`() {
         shouldThrow<IllegalArgumentException> {

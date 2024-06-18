@@ -15,15 +15,18 @@ internal class AggregatePivotDslImpl<T>(override val df: DataFrame<T>) :
     AggregateInternalDsl<T>,
     DataFrame<T> by df,
     AggregatableInternal<T> by df.internal() {
-
     internal val values = mutableListOf<NamedValue>()
 
     override fun yield(value: NamedValue) = value.also { values.add(it) }
 
     override fun pathForSingleColumn(column: AnyCol) = emptyPath()
 
-    override fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?) =
-        yield(path, value, type, default, true)
+    override fun <R> yield(
+        path: ColumnPath,
+        value: R,
+        type: KType?,
+        default: R?,
+    ) = yield(path, value, type, default, true)
 
     override val hasGroupingKeys: Boolean get() = false
 }

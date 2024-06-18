@@ -7,7 +7,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class AddTests {
-
     @Test
     fun `add with new`() {
         val x by columnOf(7, 2, 0, 3, 4, 2, 5, 0, 3, 4)

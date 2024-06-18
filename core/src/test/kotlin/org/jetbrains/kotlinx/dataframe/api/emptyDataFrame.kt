@@ -7,7 +7,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class EmptyDataFrameTests {
-
     @Test
     fun simple() {
         with(DataFrame.empty()) {

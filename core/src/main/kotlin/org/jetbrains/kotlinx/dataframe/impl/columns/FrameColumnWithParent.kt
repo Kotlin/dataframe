@@ -11,7 +11,6 @@ internal class FrameColumnWithParent<T>(override val parent: ColumnGroup<*>, ove
     ColumnWithParent<DataFrame<T>>,
     FrameColumn<T> by source,
     DataColumnInternal<DataFrame<T>> {
-
     override fun equals(other: Any?) = source.checkEquals(other)
 
     override fun hashCode() = source.hashCode()

@@ -9,7 +9,6 @@ internal class ValueColumnWithParent<T>(override val parent: ColumnGroup<*>, ove
     ColumnWithParent<T>,
     ValueColumn<T> by source,
     DataColumnInternal<T> {
-
     override fun equals(other: Any?) = source.checkEquals(other)
 
     override fun hashCode() = source.hashCode()

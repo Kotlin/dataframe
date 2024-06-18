@@ -27,14 +27,14 @@ import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
 class CsvTests {
-
     @Test
     fun readNulls() {
-        val src = """
+        val src =
+            """
             first,second
             2,,
             3,,
-        """.trimIndent()
+            """.trimIndent()
         val df = DataFrame.readDelimStr(src)
         df.nrow shouldBe 2
         df.ncol shouldBe 2
@@ -45,12 +45,13 @@ class CsvTests {
 
     @Test
     fun write() {
-        val df = dataFrameOf("col1", "col2")(
-            1,
-            null,
-            2,
-            null,
-        ).convert("col2").toStr()
+        val df =
+            dataFrameOf("col1", "col2")(
+                1,
+                null,
+                2,
+                null,
+            ).convert("col2").toStr()
 
         val str = StringWriter()
         df.writeCSV(str)
@@ -77,11 +78,12 @@ class CsvTests {
 
     @Test
     fun readCsvWithFrenchLocaleAndAlternativeDelimiter() {
-        val df = DataFrame.readCSV(
-            url = csvWithFrenchLocale,
-            delimiter = ';',
-            parserOptions = ParserOptions(locale = Locale.FRENCH),
-        )
+        val df =
+            DataFrame.readCSV(
+                url = csvWithFrenchLocale,
+                delimiter = ';',
+                parserOptions = ParserOptions(locale = Locale.FRENCH),
+            )
 
         df.ncol shouldBe 11
         df.nrow shouldBe 5
@@ -99,7 +101,11 @@ class CsvTests {
     fun readCsvWithFloats() {
         val df = DataFrame.readCSV(wineCsv, delimiter = ';')
         val schema = df.schema()
-        fun assertColumnType(columnName: String, kClass: KClass<*>) {
+
+        fun assertColumnType(
+            columnName: String,
+            kClass: KClass<*>,
+        ) {
             val col = schema.columns[columnName]
             col.shouldNotBeNull()
             col.type.classifier shouldBe kClass
@@ -117,7 +123,11 @@ class CsvTests {
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
             val df = DataFrame.readCSV(wineCsv, delimiter = ';')
             val schema = df.schema()
-            fun assertColumnType(columnName: String, kClass: KClass<*>) {
+
+            fun assertColumnType(
+                columnName: String,
+                kClass: KClass<*>,
+            ) {
                 val col = schema.columns[columnName]
                 col.shouldNotBeNull()
                 col.type.classifier shouldBe kClass
@@ -180,32 +190,43 @@ class CsvTests {
 
     @Test
     fun `if record has fewer columns than header then pad it with nulls`() {
-        val csvContent = """col1,col2,col3
+        val csvContent =
+            """
+            col1,col2,col3
             568,801,587
             780,588
-        """.trimIndent()
+            """.trimIndent()
 
-        val df = shouldNotThrowAny {
-            DataFrame.readDelimStr(csvContent)
-        }
+        val df =
+            shouldNotThrowAny {
+                DataFrame.readDelimStr(csvContent)
+            }
 
-        df shouldBe dataFrameOf("col1", "col2", "col3")(
-            568,
-            801,
-            587,
-            780,
-            588,
-            null,
-        )
+        df shouldBe
+            dataFrameOf("col1", "col2", "col3")(
+                568,
+                801,
+                587,
+                780,
+                588,
+                null,
+            )
     }
 
     @Test
     fun `write and read frame column`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1, 2, 3,
-            1, 3, 2,
-            2, 1, 3,
-        )
+        val df =
+            dataFrameOf("a", "b", "c")(
+                1,
+                2,
+                3,
+                1,
+                3,
+                2,
+                2,
+                1,
+                3,
+            )
         val grouped = df.groupBy("a").into("g")
         val str = grouped.toCsv()
         val res = DataFrame.readDelimStr(str)
@@ -214,14 +235,15 @@ class CsvTests {
 
     @Test
     fun `write and read column group`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1,
-            2,
-            3,
-            1,
-            3,
-            2,
-        )
+        val df =
+            dataFrameOf("a", "b", "c")(
+                1,
+                2,
+                3,
+                1,
+                3,
+                2,
+            )
         val grouped = df.group("b", "c").into("d")
         val str = grouped.toCsv()
         val res = DataFrame.readDelimStr(str)
@@ -243,14 +265,15 @@ class CsvTests {
 
     @Test
     fun `write csv without header produce correct file`() {
-        val df = dataFrameOf("a", "b", "c")(
-            1,
-            2,
-            3,
-            1,
-            3,
-            2,
-        )
+        val df =
+            dataFrameOf("a", "b", "c")(
+                1,
+                2,
+                3,
+                1,
+                3,
+                2,
+            )
         df.writeCSV(
             "src/test/resources/without_header.csv",
             CSVFormat.DEFAULT.withSkipHeaderRecord(),

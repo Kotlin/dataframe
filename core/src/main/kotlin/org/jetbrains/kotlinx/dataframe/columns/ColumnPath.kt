@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.impl.owner
 public data class ColumnPath(val path: List<String>) :
     List<String> by path,
     ColumnAccessor<Any?> {
-
     public constructor(name: String) : this(listOf(name))
 
     public fun drop(size: Int): ColumnPath = ColumnPath(path.drop(size))
@@ -103,7 +102,10 @@ internal fun ColumnPath.dropStartWrt(otherPath: ColumnPath): ColumnPath {
     return ColumnPath(first)
 }
 
-internal fun <T> dropOverlappingStartOfChild(parent: List<T>, child: List<T>): List<T> {
+internal fun <T> dropOverlappingStartOfChild(
+    parent: List<T>,
+    child: List<T>,
+): List<T> {
     var indexToRemoveTill = 0
     for (i in child.indices) {
         val subFirst = child.subList(0, i + 1)

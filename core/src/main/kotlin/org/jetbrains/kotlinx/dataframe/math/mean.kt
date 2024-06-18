@@ -6,10 +6,15 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 @PublishedApi
-internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double =
-    asSequence().mean(type, skipNA)
+internal fun <T : Number> Iterable<T>.mean(
+    type: KType,
+    skipNA: Boolean = skipNA_default,
+): Double = asSequence().mean(type, skipNA)
 
-internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
+internal fun <T : Number> Sequence<T>.mean(
+    type: KType,
+    skipNA: Boolean = skipNA_default,
+): Double {
     if (type.isMarkedNullable) {
         return filterNotNull().mean(type.withNullability(false), skipNA)
     }
@@ -77,61 +82,71 @@ public fun Iterable<Double>.mean(skipNA: Boolean = skipNA_default): Double = asS
 public fun Iterable<Float>.mean(skipNA: Boolean = skipNA_default): Double = asSequence().mean(skipNA)
 
 @JvmName("intMean")
-public fun Iterable<Int>.mean(): Double = if (this is Collection) {
-    if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
-} else {
-    var count = 0
-    val sum = sumOf {
-        count++
-        it.toDouble()
+public fun Iterable<Int>.mean(): Double =
+    if (this is Collection) {
+        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+    } else {
+        var count = 0
+        val sum =
+            sumOf {
+                count++
+                it.toDouble()
+            }
+        if (count > 0) sum / count else Double.NaN
     }
-    if (count > 0) sum / count else Double.NaN
-}
 
 @JvmName("shortMean")
-public fun Iterable<Short>.mean(): Double = if (this is Collection) {
-    if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
-} else {
-    var count = 0
-    val sum = sumOf {
-        count++
-        it.toDouble()
+public fun Iterable<Short>.mean(): Double =
+    if (this is Collection) {
+        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+    } else {
+        var count = 0
+        val sum =
+            sumOf {
+                count++
+                it.toDouble()
+            }
+        if (count > 0) sum / count else Double.NaN
     }
-    if (count > 0) sum / count else Double.NaN
-}
 
 @JvmName("byteMean")
-public fun Iterable<Byte>.mean(): Double = if (this is Collection) {
-    if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
-} else {
-    var count = 0
-    val sum = sumOf {
-        count++
-        it.toDouble()
+public fun Iterable<Byte>.mean(): Double =
+    if (this is Collection) {
+        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+    } else {
+        var count = 0
+        val sum =
+            sumOf {
+                count++
+                it.toDouble()
+            }
+        if (count > 0) sum / count else Double.NaN
     }
-    if (count > 0) sum / count else Double.NaN
-}
 
 @JvmName("longMean")
-public fun Iterable<Long>.mean(): Double = if (this is Collection) {
-    if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
-} else {
-    var count = 0
-    val sum = sumOf {
-        count++
-        it.toDouble()
+public fun Iterable<Long>.mean(): Double =
+    if (this is Collection) {
+        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+    } else {
+        var count = 0
+        val sum =
+            sumOf {
+                count++
+                it.toDouble()
+            }
+        if (count > 0) sum / count else Double.NaN
     }
-    if (count > 0) sum / count else Double.NaN
-}
 
 @JvmName("bigDecimalMean")
-public fun Iterable<BigDecimal>.mean(): Double = if (this is Collection) {
-    if (size > 0) sum().toDouble() / size else Double.NaN
-} else {
-    var count = 0
-    val sum = sumOf {
-        count++
-        it.toDouble()
+public fun Iterable<BigDecimal>.mean(): Double =
+    if (this is Collection) {
+        if (size > 0) sum().toDouble() / size else Double.NaN
+    } else {
+        var count = 0
+        val sum =
+            sumOf {
+                count++
+                it.toDouble()
+            }
+        if (count > 0) sum / count else Double.NaN
     }
-    if (count > 0) sum / count else Double.NaN
-}

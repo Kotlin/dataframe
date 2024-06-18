@@ -9,7 +9,6 @@ import kotlin.reflect.KProperty
  * @param T - type of values
  */
 public interface ValueColumn<out T> : DataColumn<T> {
-
     override fun kind(): ColumnKind = ColumnKind.Value
 
     override fun distinct(): ValueColumn<T>
@@ -18,8 +17,10 @@ public interface ValueColumn<out T> : DataColumn<T> {
 
     override fun rename(newName: String): ValueColumn<T>
 
-    override operator fun getValue(thisRef: Any?, property: KProperty<*>): ValueColumn<T> =
-        super.getValue(thisRef, property) as ValueColumn<T>
+    override operator fun getValue(
+        thisRef: Any?,
+        property: KProperty<*>,
+    ): ValueColumn<T> = super.getValue(thisRef, property) as ValueColumn<T>
 
     public override operator fun get(range: IntRange): ValueColumn<T>
 }

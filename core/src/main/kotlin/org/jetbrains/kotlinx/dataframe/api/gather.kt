@@ -14,14 +14,15 @@ import kotlin.reflect.typeOf
 
 // region gather
 
-public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> = Gather(
-    df = this,
-    columns = selector,
-    filter = null,
-    keyType = typeOf<String>(),
-    keyTransform = { it },
-    valueTransform = null,
-)
+public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> =
+    Gather(
+        df = this,
+        columns = selector,
+        filter = null,
+        keyType = typeOf<String>(),
+        keyTransform = { it },
+        valueTransform = null,
+    )
 
 public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> =
     gather { columns.toColumnSet() }
@@ -67,16 +68,20 @@ public data class Gather<T, C, K, R>(
 
 // region into
 
-public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: String, valueColumn: String): DataFrame<T> =
-    gatherImpl(keyColumn, valueColumn)
+public fun <T, C, K, R> Gather<T, C, K, R>.into(
+    keyColumn: String,
+    valueColumn: String,
+): DataFrame<T> = gatherImpl(keyColumn, valueColumn)
 
 public fun <T, C, K, R> Gather<T, C, K, R>.into(
     keyColumn: ColumnAccessor<K>,
     valueColumn: ColumnAccessor<R>,
 ): DataFrame<T> = into(keyColumn.name(), valueColumn.name)
 
-public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: KProperty<K>, valueColumn: KProperty<R>): DataFrame<T> =
-    into(keyColumn.columnName, valueColumn.columnName)
+public fun <T, C, K, R> Gather<T, C, K, R>.into(
+    keyColumn: KProperty<K>,
+    valueColumn: KProperty<R>,
+): DataFrame<T> = into(keyColumn.columnName, valueColumn.columnName)
 
 // endregion
 

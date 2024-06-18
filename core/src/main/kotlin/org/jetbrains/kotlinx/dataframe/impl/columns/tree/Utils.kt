@@ -18,11 +18,20 @@ internal tailrec fun <T> ReadonlyTreeNode<T>.getAncestor(depth: Int): ReadonlyTr
 
 internal fun <T> TreeNode<T?>.getOrPut(path: ColumnPath) = getOrPutEmpty(path, null)
 
-internal fun <T> TreeNode<T>.getOrPutEmpty(path: ColumnPath, emptyData: T): TreeNode<T> = getOrPut(path) { emptyData }
+internal fun <T> TreeNode<T>.getOrPutEmpty(
+    path: ColumnPath,
+    emptyData: T,
+): TreeNode<T> = getOrPut(path) { emptyData }
 
-internal fun <T> TreeNode<T?>.put(path: ColumnPath, data: T): TreeNode<T?> = getOrPut(path).also { it.data = data }
+internal fun <T> TreeNode<T?>.put(
+    path: ColumnPath,
+    data: T,
+): TreeNode<T?> = getOrPut(path).also { it.data = data }
 
-internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, createData: (ColumnPath) -> T): TreeNode<T> {
+internal fun <T> TreeNode<T>.getOrPut(
+    path: ColumnPath,
+    createData: (ColumnPath) -> T,
+): TreeNode<T> {
     var node = this
     path.indices.forEach {
         node = node.getOrPut(path[it]) { createData(path.take(it + 1)) }
@@ -35,14 +44,19 @@ internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, createData: (ColumnPath)
  * [yieldCondition]. This means that if a node satisfies [yieldCondition], its children are not traversed, regardless of
  * whether they satisfy [yieldCondition] or not.
  */
-internal fun <T> TreeNode<T>.topmostChildren(yieldCondition: (TreeNode<T>) -> Boolean): List<TreeNode<T>> = allChildren(
-    enterCondition = { !yieldCondition(it) },
-    yieldCondition = yieldCondition,
-)
+internal fun <T> TreeNode<T>.topmostChildren(yieldCondition: (TreeNode<T>) -> Boolean): List<TreeNode<T>> =
+    allChildren(
+        enterCondition = { !yieldCondition(it) },
+        yieldCondition = yieldCondition,
+    )
 
 internal fun <T> TreeNode<T>.topmostChildrenExcluding(excludeRoot: TreeNode<*>): List<TreeNode<T>> {
     val result = mutableListOf<TreeNode<T>>()
-    fun doDfs(node: TreeNode<T>, exclude: TreeNode<*>) {
+
+    fun doDfs(
+        node: TreeNode<T>,
+        exclude: TreeNode<*>,
+    ) {
         if (exclude.children.isNotEmpty()) {
             node.children.filter { !exclude.contains(it.name) }.forEach { result.add(it) }
             exclude.children.forEach {
@@ -85,7 +99,8 @@ internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPa
             val path = it.path
             if (it.data.isColumnGroup()) {
                 flattenRecursively(
-                    it.data.asColumnGroup()
+                    it.data
+                        .asColumnGroup()
                         .columns()
                         .map { it.addPath(path + it.name()) },
                 )
@@ -97,10 +112,17 @@ internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPa
 }
 
 internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(null) { it }
-internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (AnyCol) -> D): TreeNode<D> {
+
+internal fun <D> List<ColumnWithPath<*>>.collectTree(
+    emptyData: D,
+    createData: (AnyCol) -> D,
+): TreeNode<D> {
     val root = TreeNode.createRoot(emptyData)
 
-    fun collectColumns(col: AnyCol, parentNode: TreeNode<D>) {
+    fun collectColumns(
+        col: AnyCol,
+        parentNode: TreeNode<D>,
+    ) {
         val newNode = parentNode.getOrPut(col.name()) { createData(col) }
         if (col.isColumnGroup()) {
             col.asColumnGroup().columns().forEach {
@@ -128,7 +150,10 @@ internal fun <C> List<ColumnWithPath<C>>.shortenPaths(): List<ColumnWithPath<C>>
     // try to use just column name as column path
     val map = groupBy { it.path.takeLast(1) }.toMutableMap()
 
-    fun add(path: ColumnPath, column: ColumnWithPath<C>) {
+    fun add(
+        path: ColumnPath,
+        column: ColumnWithPath<C>,
+    ) {
         val list: MutableList<ColumnWithPath<C>> =
             (map.getOrPut(path) { mutableListOf() } as? MutableList<ColumnWithPath<C>>)
                 ?: let {

@@ -56,7 +56,6 @@ import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 
 class Access : TestBase() {
-
     @Test
     @TransformDataFrameExpressions
     fun getColumnByName_properties() {

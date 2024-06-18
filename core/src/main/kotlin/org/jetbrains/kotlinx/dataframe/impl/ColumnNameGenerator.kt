@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.impl
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 
 internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
-
     private val usedNames = columnNames.toMutableSet()
 
     private val colNames = columnNames.toMutableList()

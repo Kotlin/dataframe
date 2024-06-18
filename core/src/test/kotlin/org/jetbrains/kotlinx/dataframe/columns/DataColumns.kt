@@ -9,17 +9,19 @@ import java.net.URI
 class DataColumns {
     @Test
     fun `create column with platform type from Api`() {
-        val df1 = listOf(1, 2, 3).toDataFrame {
-            expr { URI.create("http://example.com") } into "text"
-        }
+        val df1 =
+            listOf(1, 2, 3).toDataFrame {
+                expr { URI.create("http://example.com") } into "text"
+            }
         df1["text"].type().toString() shouldBe "java.net.URI"
     }
 
     @Test
     fun `create column with nullable platform type from Api`() {
-        val df1 = listOf(1, 2, 3).toDataFrame {
-            expr { i -> URI.create("http://example.com").takeIf { i == 2 } } into "text"
-        }
+        val df1 =
+            listOf(1, 2, 3).toDataFrame {
+                expr { i -> URI.create("http://example.com").takeIf { i == 2 } } into "text"
+            }
         df1["text"].type().toString() shouldBe "java.net.URI?"
     }
 

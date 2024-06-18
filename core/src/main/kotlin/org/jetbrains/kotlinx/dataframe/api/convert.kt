@@ -33,7 +33,7 @@ import org.jetbrains.kotlinx.dataframe.path
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -72,13 +72,14 @@ public inline fun <T, reified R> DataFrame<T>.convert(
 
 public inline fun <T, C, reified R> Convert<T, C?>.notNull(
     crossinline expression: RowValueExpression<T, C, R>,
-): DataFrame<T> = with {
-    if (it == null) {
-        null
-    } else {
-        expression(this, it)
+): DataFrame<T> =
+    with {
+        if (it == null) {
+            null
+        } else {
+            expression(this, it)
+        }
     }
-}
 
 public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
@@ -104,9 +105,12 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 public fun AnyCol.convertTo(newType: KType): AnyCol {
-    val isTypesAreCorrect = this.type().withNullability(true)
-        .isSubtypeOf(typeOf<String?>()) &&
-        newType.withNullability(true) == typeOf<Double?>()
+    val isTypesAreCorrect =
+        this
+            .type()
+            .withNullability(true)
+            .isSubtypeOf(typeOf<String?>()) &&
+            newType.withNullability(true) == typeOf<Double?>()
 
     if (isTypesAreCorrect) {
         return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)
@@ -231,8 +235,10 @@ public fun <T, R : URL?> Convert<T, R>.toIFrame(
     height: Int? = null,
 ): DataFrame<T> = to { it.map { IFRAME(it.toString(), border, width, height) } }
 
-public fun <T, R : URL?> Convert<T, R>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
-    to { it.map { IMG(it.toString(), width, height) } }
+public fun <T, R : URL?> Convert<T, R>.toImg(
+    width: Int? = null,
+    height: Int? = null,
+): DataFrame<T> = to { it.map { IMG(it.toString(), width, height) } }
 
 // endregion
 
@@ -301,8 +307,10 @@ public fun <T, R : Long?> Convert<T, R>.toLocalDate(zone: TimeZone = defaultTime
 public fun <T, R : Int?> Convert<T, R>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalDate(zone) }
 
-public fun <T, R : String?> Convert<T, R>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDate(pattern, locale) }
+public fun <T, R : String?> Convert<T, R>.toLocalDate(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataFrame<T> = to { it.convertToLocalDate(pattern, locale) }
 
 public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = to { it.convertTo<LocalDate>() }
 
@@ -351,8 +359,10 @@ public fun <T, R : Long?> Convert<T, R>.toLocalTime(zone: TimeZone = defaultTime
 public fun <T, R : Int?> Convert<T, R>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalTime(zone) }
 
-public fun <T, R : String?> Convert<T, R>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalTime(pattern, locale) }
+public fun <T, R : String?> Convert<T, R>.toLocalTime(
+    pattern: String? = null,
+    locale: Locale? = null,
+): DataFrame<T> = to { it.convertToLocalTime(pattern, locale) }
 
 public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = to { it.convertTo<LocalTime>() }
 

@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 
 internal interface AggregatableInternal<out T> : Aggregatable<T> {
-
     fun remainingColumnsSelector(): ColumnsSelector<*, *>
 }
 

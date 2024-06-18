@@ -24,7 +24,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface WithoutNullsColumnsSelectionDsl {
-
     /**
      * ## (Cols) Without Nulls Grammar
      *
@@ -48,7 +47,6 @@ public interface WithoutNullsColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`withoutNulls`**][ColumnsSelectionDsl.withoutNulls] */
         public interface PlainDslName
 
@@ -84,7 +82,6 @@ public interface WithoutNullsColumnsSelectionDsl {
      * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
     private interface CommonWithoutNullsDocs {
-
         interface ExampleArg
     }
 

@@ -19,10 +19,15 @@ fun runGradleBuild(
     return Build(buildDir, gradleRunner(buildDir, task).build())
 }
 
-fun gradleRunner(buildDir: File, task: String): GradleRunner = GradleRunner.create()
-    .withProjectDir(buildDir)
-    .withPluginClasspath()
-    .withArguments(task, "--stacktrace", "--info")
-    .withDebug(true)
+fun gradleRunner(
+    buildDir: File,
+    task: String,
+): GradleRunner =
+    GradleRunner
+        .create()
+        .withProjectDir(buildDir)
+        .withPluginClasspath()
+        .withArguments(task, "--stacktrace", "--info")
+        .withDebug(true)
 
 data class Build(val buildDir: File, val buildResult: BuildResult)

@@ -56,7 +56,6 @@ import org.junit.Test
 import kotlin.math.ln
 
 class Analyze : TestBase() {
-
     @Test
     @TransformDataFrameExpressions
     fun basicInfo() {
@@ -791,9 +790,11 @@ class Analyze : TestBase() {
         df.groupBy { city }.count() // number of rows into column "count"
         // maximum length of firstName or lastName into column "max"
         df.groupBy { city }.max { name.firstName.length() and name.lastName.length() }
-        df.groupBy { city }
+        df
+            .groupBy { city }
             .medianFor { age and weight } // median age into column "age", median weight into column "weight"
-        df.groupBy { city }
+        df
+            .groupBy { city }
             .minFor {
                 (age into "min age") and (weight into "min weight")
             } // min age into column "min age", min weight into column "min weight"
@@ -817,11 +818,14 @@ class Analyze : TestBase() {
         df.groupBy { city }.max { age } // max age into column "age"
         df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
         df.groupBy { city }.count() // number of rows into column "count"
-        df.groupBy { city }
+        df
+            .groupBy { city }
             .max { firstName.length() and lastName.length() } // max length of firstName or lastName into column "max"
-        df.groupBy { city }
+        df
+            .groupBy { city }
             .medianFor { age and weight } // median age into column "age", median weight into column "weight"
-        df.groupBy { city }
+        df
+            .groupBy { city }
             .minFor {
                 (age into "min age") and (weight into "min weight")
             } // min age into column "min age", min weight into column "min weight"
@@ -841,9 +845,11 @@ class Analyze : TestBase() {
         df.groupBy("city").max {
             "name"["firstName"]<String>().length() and "name"["lastName"]<String>().length()
         } // maximum length of firstName or lastName into column "max"
-        df.groupBy("city")
+        df
+            .groupBy("city")
             .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
-        df.groupBy("city")
+        df
+            .groupBy("city")
             .minFor {
                 ("age"<Int>() into "min age") and ("weight"<Int?>() into "min weight")
             } // min age into column "min age", min weight into column "min weight"
@@ -1170,7 +1176,11 @@ class Analyze : TestBase() {
     fun pivotDefault_properties() {
         // SampleStart
         df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-        df.pivot { city }.groupBy { name }.default(0).min()
+        df
+            .pivot { city }
+            .groupBy { name }
+            .default(0)
+            .min()
         // SampleEnd
     }
 
@@ -1195,7 +1205,11 @@ class Analyze : TestBase() {
         val name by columnGroup()
 
         df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-        df.pivot { city }.groupBy { name }.default(0).min()
+        df
+            .pivot { city }
+            .groupBy { name }
+            .default(0)
+            .min()
         // SampleEnd
     }
 
@@ -1220,7 +1234,11 @@ class Analyze : TestBase() {
     fun pivotDefault_strings() {
         // SampleStart
         df.pivot("city").groupBy("name").aggregate { min("age") default 0 }
-        df.pivot("city").groupBy("name").default(0).min()
+        df
+            .pivot("city")
+            .groupBy("name")
+            .default(0)
+            .min()
         // SampleEnd
     }
 

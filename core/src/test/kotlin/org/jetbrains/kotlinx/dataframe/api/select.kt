@@ -36,15 +36,12 @@ class SelectTests : ColumnsSelectionDslTests() {
             df.select { it["name"].asColumnGroup { colsOf<String>() } },
             df.select { name { colsOf<String>() } },
             df.select { (it["name"].asColumnGroup()) { colsOf<String>() } },
-
             // TODO: remove warning due to [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
 //            df.select { Person::name.select { firstName and lastName } },
             df.select { NonDataSchemaPerson::name.select { firstName and lastName } },
-
             // TODO: remove warning due to [KT-64092](https://youtrack.jetbrains.com/issue/KT-64092/OVERLOADRESOLUTIONAMBIGUITY-caused-by-lambda-argument)
 //            df.select { Person::name { firstName and lastName } },
             df.select { NonDataSchemaPerson::name { firstName and lastName } },
-
             df.select { "name"<DataRow<Name>>().select { colsOf<String>() } },
             df.select { "name"<DataRow<Name>> { colsOf<String>() } },
             df.select { colGroup("name").select { colsOf<String>() } },

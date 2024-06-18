@@ -32,10 +32,11 @@ public fun AnyCol.isComparable(): Boolean = isSubtypeOf<Comparable<*>?>()
 @PublishedApi
 internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()
 
-internal fun KClass<*>.isPrimitive(): Boolean = isSubclassOf(
-    Number::class,
-) ||
-    this == String::class ||
-    this == Char::class ||
-    this == Array::class ||
-    isSubclassOf(Collection::class)
+internal fun KClass<*>.isPrimitive(): Boolean =
+    isSubclassOf(
+        Number::class,
+    ) ||
+        this == String::class ||
+        this == Char::class ||
+        this == Array::class ||
+        isSubclassOf(Collection::class)

@@ -134,19 +134,25 @@ public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnRefere
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> =
     minFor { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C>> Grouped<T>.min(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
-    Aggregators.min.aggregateAll(this, name, columns)
+public fun <T, C : Comparable<C>> Grouped<T>.min(
+    name: String? = null,
+    columns: ColumnsSelector<T, C?>,
+): DataFrame<T> = Aggregators.min.aggregateAll(this, name, columns)
 
-public fun <T> Grouped<T>.min(vararg columns: String, name: String? = null): DataFrame<T> =
-    min(name) { columns.toComparableColumns() }
+public fun <T> Grouped<T>.min(
+    vararg columns: String,
+    name: String? = null,
+): DataFrame<T> = min(name) { columns.toComparableColumns() }
 
 public fun <T, C : Comparable<C>> Grouped<T>.min(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
 ): DataFrame<T> = min(name) { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
-    min(name) { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> Grouped<T>.min(
+    vararg columns: KProperty<C?>,
+    name: String? = null,
+): DataFrame<T> = min(name) { columns.toColumnSet() }
 
 public fun <T, C : Comparable<C>> Grouped<T>.minOf(
     name: String? = null,
@@ -176,8 +182,10 @@ public fun <T, R : Comparable<R>> Pivot<T>.minFor(
     columns: ColumnsForAggregateSelector<T, R?>,
 ): DataRow<T> = delegate { minFor(separate, columns) }
 
-public fun <T> Pivot<T>.minFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
-    minFor(separate) { columns.toComparableColumns() }
+public fun <T> Pivot<T>.minFor(
+    vararg columns: String,
+    separate: Boolean = false,
+): DataRow<T> = minFor(separate) { columns.toComparableColumns() }
 
 public fun <T, R : Comparable<R>> Pivot<T>.minFor(
     vararg columns: ColumnReference<R?>,
@@ -226,8 +234,10 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     columns: ColumnsForAggregateSelector<T, R?>,
 ): DataFrame<T> = Aggregators.min.aggregateFor(this, separate, columns)
 
-public fun <T> PivotGroupBy<T>.minFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
-    minFor(separate) { columns.toComparableColumns() }
+public fun <T> PivotGroupBy<T>.minFor(
+    vararg columns: String,
+    separate: Boolean = false,
+): DataFrame<T> = minFor(separate) { columns.toComparableColumns() }
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     vararg columns: ColumnReference<R?>,

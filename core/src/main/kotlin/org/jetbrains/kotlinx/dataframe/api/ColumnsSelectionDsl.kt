@@ -46,14 +46,12 @@ public annotation class ColumnsSelectionDslMarker
 @ColumnsSelectionDslMarker
 public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     ColumnSelectionDsl<T>,
-
     // first {}, firstCol()
     FirstColumnsSelectionDsl,
     // last {}, lastCol()
     LastColumnsSelectionDsl,
     // single {}, singleCol()
     SingleColumnsSelectionDsl,
-
     // col(name), col(5), [5]
     ColColumnsSelectionDsl<T>,
     // valueCol(name), valueCol(5)
@@ -62,13 +60,10 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     FrameColColumnsSelectionDsl<T>,
     // colGroup(name), colGroup(5)
     ColGroupColumnsSelectionDsl<T>,
-
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5), [{}]
     ColsColumnsSelectionDsl<T>,
-
     // colA.."colB"
     ColumnRangeColumnsSelectionDsl,
-
     // valueCols {}, valueCols()
     ValueColsColumnsSelectionDsl,
     // frameCols {}, frameCols()
@@ -77,7 +72,6 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     ColGroupsColumnsSelectionDsl,
     // colsOfKind(Value, Frame) {}, colsOfKind(Value, Frame)
     ColsOfKindColumnsSelectionDsl,
-
     // all(Cols), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
     AllColumnsSelectionDsl<T>,
     // colsAtAnyDepth {}, colsAtAnyDepth()
@@ -88,12 +82,10 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     TakeColumnsSelectionDsl,
     // drop(5), dropLastCols(2), dropLastWhile {}, dropColsWhile {}
     DropColumnsSelectionDsl,
-
     // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
     SelectColumnsSelectionDsl,
     // except(), allExcept {}, allColsExcept {}
     AllExceptColumnsSelectionDsl,
-
     // nameContains(""), colsNameContains(""), nameStartsWith(""), childrenNameEndsWith("")
     ColumnNameFiltersColumnsSelectionDsl,
     // withoutNulls(), colsWithoutNulls()
@@ -114,7 +106,6 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     RenameColumnsSelectionDsl,
     // expr {}
     ExprColumnsSelectionDsl {
-
     /**
      * ## {@include [ColumnsSelectionDslLink]} Grammar
      *

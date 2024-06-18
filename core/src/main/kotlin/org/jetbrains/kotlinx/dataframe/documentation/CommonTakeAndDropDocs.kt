@@ -44,7 +44,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
  */
 @ExcludeFromSources
 internal interface CommonTakeAndDropDocs {
-
     /** Title, like "Take Last" */
     interface TitleArg
 

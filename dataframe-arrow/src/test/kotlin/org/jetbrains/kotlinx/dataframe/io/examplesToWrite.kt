@@ -97,7 +97,9 @@ val citiesExampleFrame = dataFrameOf(
  * field "settled" changed to datetime (date with millisecond precision);
  * field "page_in_wiki" removed, nullable field "film_in_youtube" added.
  */
-val citiesExampleSchema = """{
+val citiesExampleSchema =
+    """
+    {
   "fields" : [ {
     "name" : "name",
     "nullable" : false,
@@ -153,7 +155,7 @@ val citiesExampleSchema = """{
     "children" : [ ]
   } ]
 }
-""".trimIndent()
+    """.trimIndent()
 
 /**
  * String column (variable length vector) with size >1 MiB

@@ -16,37 +16,44 @@ public class OpenApi : SupportedCodeGenerationFormat {
         name: String,
         extensionProperties: Boolean = false,
         generateHelperCompanionObject: Boolean,
-    ): Code = readOpenApiAsString(
-        openApiAsString = text,
-        name = name,
-        extensionProperties = extensionProperties,
-        generateHelperCompanionObject = generateHelperCompanionObject,
-    )
+    ): Code =
+        readOpenApiAsString(
+            openApiAsString = text,
+            name = name,
+            extensionProperties = extensionProperties,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
     override fun readCodeForGeneration(
         stream: InputStream,
         name: String,
         generateHelperCompanionObject: Boolean,
-    ): Code = readOpenApiAsString(
-        openApiAsString = stream.bufferedReader().readText(),
-        name = name,
-        extensionProperties = false,
-        generateHelperCompanionObject = generateHelperCompanionObject,
-    )
+    ): Code =
+        readOpenApiAsString(
+            openApiAsString = stream.bufferedReader().readText(),
+            name = name,
+            extensionProperties = false,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
     public fun readCodeForGeneration(
         stream: InputStream,
         name: String,
         extensionProperties: Boolean,
         generateHelperCompanionObject: Boolean,
-    ): Code = readOpenApiAsString(
-        openApiAsString = stream.bufferedReader().readText(),
-        name = name,
-        extensionProperties = extensionProperties,
-        generateHelperCompanionObject = generateHelperCompanionObject,
-    )
+    ): Code =
+        readOpenApiAsString(
+            openApiAsString = stream.bufferedReader().readText(),
+            name = name,
+            extensionProperties = extensionProperties,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code =
+    override fun readCodeForGeneration(
+        file: File,
+        name: String,
+        generateHelperCompanionObject: Boolean,
+    ): Code =
         readOpenApiAsString(
             openApiAsString = file.readText(),
             name = name,
@@ -59,26 +66,28 @@ public class OpenApi : SupportedCodeGenerationFormat {
         name: String,
         extensionProperties: Boolean,
         generateHelperCompanionObject: Boolean,
-    ): Code = readOpenApiAsString(
-        openApiAsString = file.readText(),
-        name = name,
-        extensionProperties = extensionProperties,
-        generateHelperCompanionObject = generateHelperCompanionObject,
-    )
+    ): Code =
+        readOpenApiAsString(
+            openApiAsString = file.readText(),
+            name = name,
+            extensionProperties = extensionProperties,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
     override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
 
     // Needed for distinguishing between JSON and OpenAPI JSON
-    override fun acceptsSample(sample: SupportedFormatSample): Boolean = try {
-        when (sample) {
-            is SupportedFormatSample.DataString -> isOpenApiStr(sample.sampleData)
-            is SupportedFormatSample.File -> isOpenApi(sample.sampleFile)
-            is SupportedFormatSample.PathString -> isOpenApi(sample.samplePath)
-            is SupportedFormatSample.URL -> isOpenApi(sample.sampleUrl)
+    override fun acceptsSample(sample: SupportedFormatSample): Boolean =
+        try {
+            when (sample) {
+                is SupportedFormatSample.DataString -> isOpenApiStr(sample.sampleData)
+                is SupportedFormatSample.File -> isOpenApi(sample.sampleFile)
+                is SupportedFormatSample.PathString -> isOpenApi(sample.samplePath)
+                is SupportedFormatSample.URL -> isOpenApi(sample.sampleUrl)
+            }
+        } catch (_: Exception) {
+            false
         }
-    } catch (_: Exception) {
-        false
-    }
 
     override val testOrder: Int = 9_000
 

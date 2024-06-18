@@ -19,11 +19,12 @@ import kotlin.test.Test
 class DataFrameSymbolProcessorTest {
 
     companion object {
-        val imports = """
+        val imports =
+            """
             import org.jetbrains.kotlinx.dataframe.annotations.*
             import org.jetbrains.kotlinx.dataframe.columns.*
             import org.jetbrains.kotlinx.dataframe.* 
-        """.trimIndent()
+            """.trimIndent()
 
         const val GENERATED_FILE = "Hello${'$'}Extensions.kt"
     }
@@ -41,32 +42,32 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                class OuterClass
+                        class OuterClass
 
-                @DataSchema(isOpen = false)
-                interface `Hello Something` {
-                    val name: String
-                    val `test name`: NestedClass
-                    val nullableProperty: Int?
-                    val a: () -> Unit
-                    val d: List<List<*>>
-                    
-                    class NestedClass
-                }
+                        @DataSchema(isOpen = false)
+                        interface `Hello Something` {
+                            val name: String
+                            val `test name`: NestedClass
+                            val nullableProperty: Int?
+                            val a: () -> Unit
+                            val d: List<List<*>>
+                            
+                            class NestedClass
+                        }
 
-                val ColumnsContainer<`Hello Something`>.col1: DataColumn<String> get() = name
-                val ColumnsContainer<`Hello Something`>.col2: DataColumn<`Hello Something`.NestedClass> get() = `test name`
-                val ColumnsContainer<`Hello Something`>.col3: DataColumn<Int?> get() = nullableProperty
-                val ColumnsContainer<`Hello Something`>.col4: DataColumn<() -> Unit> get() = a
-                val ColumnsContainer<`Hello Something`>.col5: DataColumn<List<List<*>>> get() = d
-                
-                val DataRow<`Hello Something`>.row1: String get() = name
-                val DataRow<`Hello Something`>.row2: `Hello Something`.NestedClass get() = `test name`
-                val DataRow<`Hello Something`>.row3: Int? get() = nullableProperty
-                val DataRow<`Hello Something`>.row4: () -> Unit get() = a
-                val DataRow<`Hello Something`>.row5: List<List<*>> get() = d
+                        val ColumnsContainer<`Hello Something`>.col1: DataColumn<String> get() = name
+                        val ColumnsContainer<`Hello Something`>.col2: DataColumn<`Hello Something`.NestedClass> get() = `test name`
+                        val ColumnsContainer<`Hello Something`>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsContainer<`Hello Something`>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsContainer<`Hello Something`>.col5: DataColumn<List<List<*>>> get() = d
+                        
+                        val DataRow<`Hello Something`>.row1: String get() = name
+                        val DataRow<`Hello Something`>.row2: `Hello Something`.NestedClass get() = `test name`
+                        val DataRow<`Hello Something`>.row3: Int? get() = nullableProperty
+                        val DataRow<`Hello Something`>.row4: () -> Unit get() = a
+                        val DataRow<`Hello Something`>.row5: List<List<*>> get() = d
                         """.trimIndent(),
                     ),
                 ),
@@ -83,32 +84,32 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                class OuterClass
+                        class OuterClass
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val name: String
-                    val `test name`: NestedClass
-                    val nullableProperty: Int?
-                    val a: () -> Unit
-                    val d: List<List<*>>
-                    
-                    class NestedClass
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val name: String
+                            val `test name`: NestedClass
+                            val nullableProperty: Int?
+                            val a: () -> Unit
+                            val d: List<List<*>>
+                            
+                            class NestedClass
+                        }
 
-                val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
-                val ColumnsContainer<Hello>.col2: DataColumn<Hello.NestedClass> get() = `test name`
-                val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
-                val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
-                val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
-                
-                val DataRow<Hello>.row1: String get() = name
-                val DataRow<Hello>.row2: Hello.NestedClass get() = `test name`
-                val DataRow<Hello>.row3: Int? get() = nullableProperty
-                val DataRow<Hello>.row4: () -> Unit get() = a
-                val DataRow<Hello>.row5: List<List<*>> get() = d
+                        val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
+                        val ColumnsContainer<Hello>.col2: DataColumn<Hello.NestedClass> get() = `test name`
+                        val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                        
+                        val DataRow<Hello>.row1: String get() = name
+                        val DataRow<Hello>.row2: Hello.NestedClass get() = `test name`
+                        val DataRow<Hello>.row3: Int? get() = nullableProperty
+                        val DataRow<Hello>.row4: () -> Unit get() = a
+                        val DataRow<Hello>.row5: List<List<*>> get() = d
                         """.trimIndent(),
                     ),
                 ),
@@ -125,36 +126,36 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                class OuterClass
+                        class OuterClass
 
-                @DataSchema(isOpen = false)
-                data class Hello(
-                    val name: String,
-                    val `test name`: InnerClass,
-                    val nestedClass: Nested,
-                    val nullableProperty: Int?,
-                ) {
-                    val a: () -> Unit = TODO()
-                    val d: List<List<*>> = TODO() 
-                    inner class InnerClass
-                    class Nested
-                }
+                        @DataSchema(isOpen = false)
+                        data class Hello(
+                            val name: String,
+                            val `test name`: InnerClass,
+                            val nestedClass: Nested,
+                            val nullableProperty: Int?,
+                        ) {
+                            val a: () -> Unit = TODO()
+                            val d: List<List<*>> = TODO() 
+                            inner class InnerClass
+                            class Nested
+                        }
 
-                val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
-                val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
-                val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
-                val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
-                val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
-                val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
-                
-                val DataRow<Hello>.row1: String get() = name
-                val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
-                val DataRow<Hello>.row3: Int? get() = nullableProperty
-                val DataRow<Hello>.row4: () -> Unit get() = a
-                val DataRow<Hello>.row5: List<List<*>> get() = d
-                val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
+                        val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
+                        val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
+                        val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                        val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
+                        
+                        val DataRow<Hello>.row1: String get() = name
+                        val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
+                        val DataRow<Hello>.row3: Int? get() = nullableProperty
+                        val DataRow<Hello>.row4: () -> Unit get() = a
+                        val DataRow<Hello>.row5: List<List<*>> get() = d
+                        val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
                         """.trimIndent(),
                     ),
                 ),
@@ -171,37 +172,37 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                class OuterClass
+                        class OuterClass
 
-                @DataSchema(isOpen = false)
-                class Hello(
-                    val name: String,
-                    val `test name`: InnerClass,
-                    val nestedClass: Nested,
-                    val nullableProperty: Int?,
-                    justParameter: Int
-                ) {
-                    val a: () -> Unit = TODO()
-                    val d: List<List<*>> = TODO() 
-                    inner class InnerClass
-                    class Nested
-                }
+                        @DataSchema(isOpen = false)
+                        class Hello(
+                            val name: String,
+                            val `test name`: InnerClass,
+                            val nestedClass: Nested,
+                            val nullableProperty: Int?,
+                            justParameter: Int
+                        ) {
+                            val a: () -> Unit = TODO()
+                            val d: List<List<*>> = TODO() 
+                            inner class InnerClass
+                            class Nested
+                        }
 
-                val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
-                val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
-                val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
-                val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
-                val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
-                val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
-                
-                val DataRow<Hello>.row1: String get() = name
-                val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
-                val DataRow<Hello>.row3: Int? get() = nullableProperty
-                val DataRow<Hello>.row4: () -> Unit get() = a
-                val DataRow<Hello>.row5: List<List<*>> get() = d
-                val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
+                        val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
+                        val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
+                        val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                        val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
+                        
+                        val DataRow<Hello>.row1: String get() = name
+                        val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
+                        val DataRow<Hello>.row3: Int? get() = nullableProperty
+                        val DataRow<Hello>.row4: () -> Unit get() = a
+                        val DataRow<Hello>.row5: List<List<*>> get() = d
+                        val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
                         """.trimIndent(),
                     ),
                 ),
@@ -254,15 +255,15 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: () -> Unit?
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: () -> Unit?
+                        }
 
-                val ColumnsContainer<Hello>.test1: DataColumn<() -> Unit?> get() = a
-                val DataRow<Hello>.test2: () -> Unit? get() = a
+                        val ColumnsContainer<Hello>.test1: DataColumn<() -> Unit?> get() = a
+                        val DataRow<Hello>.test2: () -> Unit? get() = a
                         """.trimIndent(),
                     ),
                 ),
@@ -291,15 +292,15 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: suspend () -> Unit?
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: suspend () -> Unit?
+                        }
 
-                val ColumnsContainer<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
-                val DataRow<Hello>.test2: suspend () -> Unit? get() = a
+                        val ColumnsContainer<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
+                        val DataRow<Hello>.test2: suspend () -> Unit? get() = a
                         """.trimIndent(),
                     ),
                 ),
@@ -329,15 +330,15 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: (() -> String)?
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: (() -> String)?
+                        }
 
-                val ColumnsContainer<Hello>.test1: DataColumn<(() -> String)?> get() = a
-                val DataRow<Hello>.test2: (() -> String)? get() = a
+                        val ColumnsContainer<Hello>.test1: DataColumn<(() -> String)?> get() = a
+                        val DataRow<Hello>.test2: (() -> String)? get() = a
                         """.trimIndent(),
                     ),
                 ),
@@ -366,15 +367,15 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: (Int.() -> String)?
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: (Int.() -> String)?
+                        }
 
-                val ColumnsContainer<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
-                val DataRow<Hello>.test2: (Int.() -> String)? get() = a
+                        val ColumnsContainer<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
+                        val DataRow<Hello>.test2: (Int.() -> String)? get() = a
                         """.trimIndent(),
                     ),
                 ),
@@ -403,15 +404,15 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: (a: String) -> Unit
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: (a: String) -> Unit
+                        }
 
-                val ColumnsContainer<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
-                val DataRow<Hello>.test2: (a: String) -> Unit get() = a
+                        val ColumnsContainer<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
+                        val DataRow<Hello>.test2: (a: String) -> Unit get() = a
                         """.trimIndent(),
                     ),
                 ),
@@ -440,16 +441,16 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: Int
-                    val b get() = a
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: Int
+                            val b get() = a
+                        }
 
-                val ColumnsContainer<Hello>.test1: DataColumn<Int> get() = b
-                val DataRow<Hello>.test2: Int get() = b
+                        val ColumnsContainer<Hello>.test1: DataColumn<Int> get() = b
+                        val DataRow<Hello>.test2: Int get() = b
                         """.trimIndent(),
                     ),
                 ),
@@ -468,19 +469,19 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                class OuterClass
-                typealias A = OuterClass
+                        class OuterClass
+                        typealias A = OuterClass
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: A
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: A
+                        }
 
-                val ColumnsContainer<Hello>.col1: DataColumn<A> get() = a
-                val DataRow<Hello>.row1: A get() = a
-                
+                        val ColumnsContainer<Hello>.col1: DataColumn<A> get() = a
+                        val DataRow<Hello>.row1: A get() = a
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -499,19 +500,19 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema
-                interface A
+                        @DataSchema
+                        interface A
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: A
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: A
+                        }
 
-                val ColumnsContainer<Hello>.col1: ColumnGroup<A> get() = a
-                val DataRow<Hello>.row1: DataRow<A> get() = a
-                
+                        val ColumnsContainer<Hello>.col1: ColumnGroup<A> get() = a
+                        val DataRow<Hello>.row1: DataRow<A> get() = a
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -530,19 +531,19 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema
-                interface A
+                        @DataSchema
+                        interface A
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: List<A>
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: List<A>
+                        }
 
-                val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<A>> get() = a
-                val DataRow<Hello>.row1: DataFrame<A> get() = a
-                
+                        val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<A>> get() = a
+                        val DataRow<Hello>.row1: DataFrame<A> get() = a
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -561,16 +562,16 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    @ColumnName("test-name")
-                    val `test name`: Int
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            @ColumnName("test-name")
+                            val `test name`: Int
+                        }
 
-                val ColumnsContainer<Hello>.test2: DataColumn<Int> get() = `test name`
-                val DataRow<Hello>.test4: Int get() = `test name`
+                        val ColumnsContainer<Hello>.test2: DataColumn<Int> get() = `test name`
+                        val DataRow<Hello>.test4: Int get() = `test name`
                         """.trimIndent(),
                     ),
                 ),
@@ -592,17 +593,17 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: Int
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: Int
+                        }
 
-                val ColumnsContainer<Hello>.col1: DataColumn<Int> get() = a
-                val DataRow<Hello>.row1: Int get() = a
-                
+                        val ColumnsContainer<Hello>.col1: DataColumn<Int> get() = a
+                        val DataRow<Hello>.row1: Int get() = a
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -624,18 +625,18 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                interface Marker
+                        interface Marker
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: DataRow<Marker>
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: DataRow<Marker>
+                        }
 
-                val ColumnsContainer<Hello>.col1: ColumnGroup<Marker> get() = a
-                val DataRow<Hello>.row1: DataRow<Marker> get() = a
-                
+                        val ColumnsContainer<Hello>.col1: ColumnGroup<Marker> get() = a
+                        val DataRow<Hello>.row1: DataRow<Marker> get() = a
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -654,18 +655,18 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                $imports
+                        $imports
 
-                interface Marker
+                        interface Marker
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val a: DataFrame<Marker>
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val a: DataFrame<Marker>
+                        }
 
-                val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
-                val DataRow<Hello>.row1: DataFrame<Marker> get() = a
-                
+                        val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
+                        val DataRow<Hello>.row1: DataFrame<Marker> get() = a
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -682,17 +683,17 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Hello {
-                    val name: String
-                }
+                        @DataSchema(isOpen = false)
+                        interface Hello {
+                            val name: String
+                        }
 
-                val ColumnsContainer<Hello>.test1: DataColumn<String> get() = name
-                val DataRow<Hello>.test2: String get() = name
+                        val ColumnsContainer<Hello>.test1: DataColumn<String> get() = name
+                        val DataRow<Hello>.test2: String get() = name
                         """.trimIndent(),
                     ),
                 ),
@@ -709,17 +710,17 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Generic <T> {
-                    val field: T
-                }
+                        @DataSchema(isOpen = false)
+                        interface Generic <T> {
+                            val field: T
+                        }
 
-                val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-                val <T> DataRow<Generic<T>>.test2: T get() = field
+                        val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                        val <T> DataRow<Generic<T>>.test2: T get() = field
                         """.trimIndent(),
                     ),
                 ),
@@ -736,17 +737,17 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                @DataSchema(isOpen = false)
-                interface Generic <T : String> {
-                    val field: T
-                }
+                        @DataSchema(isOpen = false)
+                        interface Generic <T : String> {
+                            val field: T
+                        }
 
-                val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-                val <T : String> DataRow<Generic<T>>.test2: T get() = field
+                        val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                        val <T : String> DataRow<Generic<T>>.test2: T get() = field
                         """.trimIndent(),
                     ),
                 ),
@@ -763,19 +764,19 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                interface UpperBound 
+                        interface UpperBound 
 
-                @DataSchema(isOpen = false)
-                interface Generic <out T : UpperBound> {
-                    val field: T
-                }
+                        @DataSchema(isOpen = false)
+                        interface Generic <out T : UpperBound> {
+                            val field: T
+                        }
 
-                val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-                val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
+                        val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                        val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
                         """.trimIndent(),
                     ),
                 ),
@@ -792,21 +793,21 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                interface KeyValue<T> {
-                    val key: String
-                    val value: T
-                }
-                
-                @DataSchema
-                interface MySchema : KeyValue<Int>
+                        interface KeyValue<T> {
+                            val key: String
+                            val value: T
+                        }
+                        
+                        @DataSchema
+                        interface MySchema : KeyValue<Int>
 
 
-                val ColumnsContainer<MySchema>.test1: DataColumn<String> get() = key
-                val DataRow<MySchema>.test2: Int get() = value
+                        val ColumnsContainer<MySchema>.test1: DataColumn<String> get() = key
+                        val DataRow<MySchema>.test2: Int get() = value
                         """.trimIndent(),
                     ),
                 ),
@@ -823,16 +824,16 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
-                class A {
-                    @DataSchema(isOpen = false)
-                    interface Hello {
-                        val name: String
-                    }
-                }
-               
+                        $imports
+                        class A {
+                            @DataSchema(isOpen = false)
+                            interface Hello {
+                                val name: String
+                            }
+                        }
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -849,24 +850,24 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                         package org.example
 
-                $imports
-                class A {
-                    @DataSchema(isOpen = false)
-                    interface Hello {
-                        val name: String
-                    }
-                }
+                         $imports
+                         class A {
+                             @DataSchema(isOpen = false)
+                             interface Hello {
+                                 val name: String
+                             }
+                         }
 
-               class B {
-                    @DataSchema(isOpen = false)
-                    interface Hello {
-                        val name: String
-                    }
-                }
+                        class B {
+                             @DataSchema(isOpen = false)
+                             interface Hello {
+                                 val name: String
+                             }
+                         }
 
-               
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -884,14 +885,14 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                @DataSchema
-                internal interface Hello {
-                    val name: Int
-                }
+                        @DataSchema
+                        internal interface Hello {
+                            val name: Int
+                        }
                         """.trimIndent(),
                     ),
                 ),
@@ -913,14 +914,14 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                @DataSchema
-                public interface Hello {
-                    val name: Int
-                }
+                        @DataSchema
+                        public interface Hello {
+                            val name: Int
+                        }
                         """.trimIndent(),
                     ),
                 ),
@@ -942,14 +943,14 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
+                        $imports
 
-                @DataSchema
-                interface Hello {
-                    val name: Int
-                }
+                        @DataSchema
+                        interface Hello {
+                            val name: Int
+                        }
                         """.trimIndent(),
                     ),
                 ),
@@ -971,13 +972,13 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
-                   
-                @DataSchema
-                private class Hello(val name: Int)
-               
+                        $imports
+                           
+                        @DataSchema
+                        private class Hello(val name: Int)
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -994,17 +995,17 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
-                   
-                private class Outer {
-                    @DataSchema
-                    interface Hello {
-                        val name: Int
-                    }
-                }
-               
+                        $imports
+                           
+                        private class Outer {
+                            @DataSchema
+                            interface Hello {
+                                val name: Int
+                            }
+                        }
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -1021,19 +1022,19 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                package org.example
+                        package org.example
 
-                $imports
-                   
-                private class Outer {
-                    class Outer1 {
-                        @DataSchema
-                        interface Hello {
-                            val name: Int
+                        $imports
+                           
+                        private class Outer {
+                            class Outer1 {
+                                @DataSchema
+                                interface Hello {
+                                    val name: Int
+                                }
+                            }
                         }
-                    }
-                }
-               
+                        
                         """.trimIndent(),
                     ),
                 ),
@@ -1053,16 +1054,16 @@ class DataFrameSymbolProcessorTest {
                         SourceFile.kotlin(
                             "MySources.kt",
                             """
-                @file:ImportDataSchema(
-                    "Schema", 
-                    "$it",
-                    
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                            @file:ImportDataSchema(
+                                "Schema", 
+                                "$it",
+                                
+                            )
+                            package org.example
+                            import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
-                fun resolve() = Schema.readCSV()
+                            fun resolve() = Schema.readCSV()
                             """.trimIndent(),
                         ),
                     ),
@@ -1080,13 +1081,13 @@ class DataFrameSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                @file:ImportDataSchema(
-                    "Schema", 
-                    "123",
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                        @file:ImportDataSchema(
+                            "Schema", 
+                            "123",
+                        )
+                        package org.example
+                        import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                        import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
                         """.trimIndent(),
                     ),
                 ),
@@ -1104,14 +1105,14 @@ class DataFrameSymbolProcessorTest {
                         SourceFile.kotlin(
                             "MySources.kt",
                             """
-                @file:ImportDataSchema(
-                    "Schema", 
-                    "$it",
-                    normalizationDelimiters = []
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                            @file:ImportDataSchema(
+                                "Schema", 
+                                "$it",
+                                normalizationDelimiters = []
+                            )
+                            package org.example
+                            import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
                             """.trimIndent(),
                         ),
                     ),
@@ -1133,13 +1134,13 @@ class DataFrameSymbolProcessorTest {
                         SourceFile.kotlin(
                             "MySources.kt",
                             """
-                @file:ImportDataSchema(
-                    "Schema", 
-                    "$it",
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                            @file:ImportDataSchema(
+                                "Schema", 
+                                "$it",
+                            )
+                            package org.example
+                            import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
                             """.trimIndent(),
                         ),
                     ),
@@ -1155,171 +1156,178 @@ class DataFrameSymbolProcessorTest {
     private val petstoreYaml = File("../../dataframe-openapi/src/test/resources/petstore.yaml")
 
     @Test
-    fun `openApi yaml test`(): Unit = useHostedFile(petstoreYaml) {
-        val result = KspCompilationTestRunner.compile(
-            TestCompilationParameters(
-                sources = listOf(
-                    SourceFile.kotlin(
-                        "MySources.kt",
-                        """
-                @file:ImportDataSchema(
-                    "Petstore", 
-                    "$it",
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+    fun `openApi yaml test`(): Unit =
+        useHostedFile(petstoreYaml) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
+                            @file:ImportDataSchema(
+                                "Petstore", 
+                                "$it",
+                            )
+                            package org.example
+                            import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
-                fun resolved() {
-                    Petstore.Pet
-                    Petstore.Error
-                }
-                        """.trimIndent(),
+                            fun resolved() {
+                                Petstore.Pet
+                                Petstore.Error
+                            }
+                            """.trimIndent(),
+                        ),
                     ),
                 ),
-            ),
-        )
-        println(result.kspGeneratedFiles)
-        result.inspectLines("Petstore.Generated.kt") {
-            it.forAtLeastOne { it shouldContain "Pet" }
-            it.forAtLeastOne { it shouldContain "Error" }
+            )
+            println(result.kspGeneratedFiles)
+            result.inspectLines("Petstore.Generated.kt") {
+                it.forAtLeastOne { it shouldContain "Pet" }
+                it.forAtLeastOne { it shouldContain "Error" }
+            }
+            result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
+                it.forAtLeastOne { it shouldContain "tag" }
+                it.forAtLeastOne { it shouldContain "id" }
+            }
+            result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
+                it.forAtLeastOne { it shouldContain "message" }
+                it.forAtLeastOne { it shouldContain "code" }
+            }
         }
-        result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
-            it.forAtLeastOne { it shouldContain "tag" }
-            it.forAtLeastOne { it shouldContain "id" }
-        }
-        result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
-            it.forAtLeastOne { it shouldContain "message" }
-            it.forAtLeastOne { it shouldContain "code" }
-        }
-    }
 
     private val jetbrainsJson = File("../../data/jetbrains.json")
 
     @Test
-    fun `non openApi json test`(): Unit = useHostedFile(jetbrainsJson) {
-        val result = KspCompilationTestRunner.compile(
-            TestCompilationParameters(
-                sources = listOf(
-                    SourceFile.kotlin(
-                        "MySources.kt",
-                        """
-                @file:ImportDataSchema(
-                    "JetBrains", 
-                    "$it",
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+    fun `non openApi json test`(): Unit =
+        useHostedFile(jetbrainsJson) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
+                            @file:ImportDataSchema(
+                                "JetBrains", 
+                                "$it",
+                            )
+                            package org.example
+                            import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
-                fun resolved() {
-                    JetBrains
-                    JetBrains1
-                    JetBrains2
-                    JetBrains3
-                    JetBrains4
-                    JetBrains5
-                }
-                        """.trimIndent(),
+                            fun resolved() {
+                                JetBrains
+                                JetBrains1
+                                JetBrains2
+                                JetBrains3
+                                JetBrains4
+                                JetBrains5
+                            }
+                            """.trimIndent(),
+                        ),
                     ),
                 ),
-            ),
-        )
-        println(result.kspGeneratedFiles)
-        result.inspectLines("JetBrains.Generated.kt") {
-            (('1'..'5') + "").forEach { nr ->
-                it.forAtLeastOne {
-                    it shouldContain "JetBrains$nr"
+            )
+            println(result.kspGeneratedFiles)
+            result.inspectLines("JetBrains.Generated.kt") {
+                (('1'..'5') + "").forEach { nr ->
+                    it.forAtLeastOne {
+                        it shouldContain "JetBrains$nr"
+                    }
                 }
             }
         }
-    }
 
     private val apiGuruMetricsJson = File("../../dataframe-openapi/src/test/resources/apiGuruMetrics.json")
 
     @Test
-    fun `non openApi json test 2`(): Unit = useHostedFile(apiGuruMetricsJson) {
-        val result = KspCompilationTestRunner.compile(
-            TestCompilationParameters(
-                sources = listOf(
-                    SourceFile.kotlin(
-                        "MySources.kt",
-                        """
-                @file:ImportDataSchema(
-                    "MetricsNoKeyValue", 
-                    "$it",
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+    fun `non openApi json test 2`(): Unit =
+        useHostedFile(apiGuruMetricsJson) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
+                            @file:ImportDataSchema(
+                                "MetricsNoKeyValue", 
+                                "$it",
+                            )
+                            package org.example
+                            import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
-                fun resolved() {
-                    MetricsNoKeyValue
-                }
-                        """.trimIndent(),
+                            fun resolved() {
+                                MetricsNoKeyValue
+                            }
+                            """.trimIndent(),
+                        ),
                     ),
                 ),
-            ),
-        )
-        println(result.kspGeneratedFiles)
-        result.inspectLines("MetricsNoKeyValue.Generated.kt") {
+            )
+            println(result.kspGeneratedFiles)
+            result.inspectLines("MetricsNoKeyValue.Generated.kt") {
 //            (('1'..'5') + "").forEach { nr ->
 //                it.forAtLeastOne {
 //                    it shouldContain "JetBrains$nr"
 //                }
 //            }
+            }
         }
-    }
 
     private val petstoreJson = File("../../dataframe-openapi/src/test/resources/petstore.json")
 
     @Test
-    fun `openApi json test`(): Unit = useHostedFile(petstoreJson) {
-        val result = KspCompilationTestRunner.compile(
-            TestCompilationParameters(
-                sources = listOf(
-                    SourceFile.kotlin(
-                        "MySources.kt",
-                        """
-                @file:ImportDataSchema(
-                    path = "$it",
-                    name = "Petstore",
-                )
-                package org.example
-                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+    fun `openApi json test`(): Unit =
+        useHostedFile(petstoreJson) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
+                            @file:ImportDataSchema(
+                                path = "$it",
+                                name = "Petstore",
+                            )
+                            package org.example
+                            import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                            import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
-                fun resolved() {
-                    Petstore.Pet
-                    Petstore.Error
-                }
-                        """.trimIndent(),
+                            fun resolved() {
+                                Petstore.Pet
+                                Petstore.Error
+                            }
+                            """.trimIndent(),
+                        ),
                     ),
                 ),
-            ),
-        )
-        println(result.kspGeneratedFiles)
-        result.inspectLines("Petstore.Generated.kt") {
-            it.forAtLeastOne { it shouldContain "Pet" }
-            it.forAtLeastOne { it shouldContain "Error" }
-            it.forAtLeastOne { it shouldContain "readJson" }
-            it.forAtLeastOne { it shouldContain "readJsonStr" }
+            )
+            println(result.kspGeneratedFiles)
+            result.inspectLines("Petstore.Generated.kt") {
+                it.forAtLeastOne { it shouldContain "Pet" }
+                it.forAtLeastOne { it shouldContain "Error" }
+                it.forAtLeastOne { it shouldContain "readJson" }
+                it.forAtLeastOne { it shouldContain "readJsonStr" }
+            }
+            result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
+                it.forAtLeastOne { it shouldContain "tag" }
+                it.forAtLeastOne { it shouldContain "id" }
+            }
+            result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
+                it.forAtLeastOne { it shouldContain "message" }
+                it.forAtLeastOne { it shouldContain "code" }
+            }
         }
-        result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
-            it.forAtLeastOne { it shouldContain "tag" }
-            it.forAtLeastOne { it shouldContain "id" }
-        }
-        result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
-            it.forAtLeastOne { it shouldContain "message" }
-            it.forAtLeastOne { it shouldContain "code" }
-        }
-    }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
         inspectLines(GENERATED_FILE, f)
     }
 
-    private fun KotlinCompileTestingCompilationResult.inspectLines(filename: String, f: (List<String>) -> Unit) {
+    private fun KotlinCompileTestingCompilationResult.inspectLines(
+        filename: String,
+        f: (List<String>) -> Unit,
+    ) {
         kspGeneratedFiles.single { it.name == filename }.readLines().asClue(f)
     }
 }

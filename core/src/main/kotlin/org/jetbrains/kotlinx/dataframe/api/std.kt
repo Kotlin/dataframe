@@ -23,8 +23,10 @@ import kotlin.reflect.typeOf
 
 // region DataColumn
 
-public fun <T : Number> DataColumn<T?>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    Aggregators.std(skipNA, ddof).aggregate(this) ?: .0
+public fun <T : Number> DataColumn<T?>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): Double = Aggregators.std(skipNA, ddof).aggregate(this) ?: .0
 
 public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
     skipNA: Boolean = skipNA_default,
@@ -36,8 +38,10 @@ public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
 
 // region DataRow
 
-public fun AnyRow.rowStd(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA, ddof)
+public fun AnyRow.rowStd(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): Double = values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA, ddof)
 
 public inline fun <reified T : Number> AnyRow.rowStdOf(ddof: Int = ddof_default): Double =
     values().filterIsInstance<T>().std(
@@ -49,8 +53,10 @@ public inline fun <reified T : Number> AnyRow.rowStdOf(ddof: Int = ddof_default)
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> =
-    stdFor(skipNA, ddof, numberColumns())
+public fun <T> DataFrame<T>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): DataRow<T> = stdFor(skipNA, ddof, numberColumns())
 
 public fun <T> DataFrame<T>.stdFor(
     skipNA: Boolean = skipNA_default,
@@ -98,8 +104,10 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(
 
 // region GroupBy
 
-public fun <T> Grouped<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataFrame<T> =
-    stdFor(skipNA, ddof, numberColumns())
+public fun <T> Grouped<T>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): DataFrame<T> = stdFor(skipNA, ddof, numberColumns())
 
 public fun <T> Grouped<T>.stdFor(
     skipNA: Boolean = skipNA_default,

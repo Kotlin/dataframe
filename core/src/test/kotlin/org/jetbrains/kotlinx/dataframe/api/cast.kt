@@ -7,7 +7,6 @@ import org.junit.Test
 import java.lang.IllegalArgumentException
 
 class CastTests {
-
     @Test
     fun safeUnsafeCast() {
         @DataSchema

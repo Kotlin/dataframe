@@ -12,10 +12,15 @@ import java.net.URL
 import java.nio.charset.Charset
 
 public class TSV : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readTSV(stream, header = header)
+    override fun readDataFrame(
+        stream: InputStream,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readTSV(stream, header = header)
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)
+    override fun readDataFrame(
+        file: File,
+        header: List<String>,
+    ): AnyFrame = DataFrame.readTSV(file, header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
 
@@ -38,16 +43,22 @@ public fun DataFrame.Companion.readTSV(
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
     parserOptions: ParserOptions? = null,
-): DataFrame<*> = catchHttpResponse(asURL(fileOrUrl)) {
-    readDelim(
-        inStream = it, delimiter = TAB_CHAR,
-        header = header, isCompressed = isCompressed(fileOrUrl),
-        csvType = CSVType.TDF, colTypes = colTypes,
-        skipLines = skipLines, readLines = readLines,
-        duplicate = duplicate, charset = charset,
-        parserOptions = parserOptions,
-    )
-}
+): DataFrame<*> =
+    catchHttpResponse(asURL(fileOrUrl)) {
+        readDelim(
+            inStream = it,
+            delimiter = TAB_CHAR,
+            header = header,
+            isCompressed = isCompressed(fileOrUrl),
+            csvType = CSVType.TDF,
+            colTypes = colTypes,
+            skipLines = skipLines,
+            readLines = readLines,
+            duplicate = duplicate,
+            charset = charset,
+            parserOptions = parserOptions,
+        )
+    }
 
 public fun DataFrame.Companion.readTSV(
     file: File,
@@ -57,13 +68,19 @@ public fun DataFrame.Companion.readTSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-): DataFrame<*> = readDelim(
-    inStream = FileInputStream(file), delimiter = TAB_CHAR,
-    header = header, isCompressed = isCompressed(file),
-    csvType = CSVType.TDF, colTypes = colTypes,
-    skipLines = skipLines, readLines = readLines,
-    duplicate = duplicate, charset = charset,
-)
+): DataFrame<*> =
+    readDelim(
+        inStream = FileInputStream(file),
+        delimiter = TAB_CHAR,
+        header = header,
+        isCompressed = isCompressed(file),
+        csvType = CSVType.TDF,
+        colTypes = colTypes,
+        skipLines = skipLines,
+        readLines = readLines,
+        duplicate = duplicate,
+        charset = charset,
+    )
 
 public fun DataFrame.Companion.readTSV(
     url: URL,
@@ -74,14 +91,18 @@ public fun DataFrame.Companion.readTSV(
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
     parserOptions: ParserOptions? = null,
-): DataFrame<*> = readTSV(
-    stream = url.openStream(),
-    header = header, isCompressed = isCompressed(url),
-    colTypes = colTypes,
-    skipLines = skipLines, readLines = readLines,
-    duplicate = duplicate, charset = charset,
-    parserOptions = parserOptions,
-)
+): DataFrame<*> =
+    readTSV(
+        stream = url.openStream(),
+        header = header,
+        isCompressed = isCompressed(url),
+        colTypes = colTypes,
+        skipLines = skipLines,
+        readLines = readLines,
+        duplicate = duplicate,
+        charset = charset,
+        parserOptions = parserOptions,
+    )
 
 public fun DataFrame.Companion.readTSV(
     stream: InputStream,
@@ -93,11 +114,17 @@ public fun DataFrame.Companion.readTSV(
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
     parserOptions: ParserOptions? = null,
-): DataFrame<*> = readDelim(
-    inStream = stream, delimiter = TAB_CHAR,
-    header = header, isCompressed = isCompressed,
-    csvType = CSVType.TDF, colTypes = colTypes,
-    skipLines = skipLines, readLines = readLines,
-    duplicate = duplicate, charset = charset,
-    parserOptions = parserOptions,
-)
+): DataFrame<*> =
+    readDelim(
+        inStream = stream,
+        delimiter = TAB_CHAR,
+        header = header,
+        isCompressed = isCompressed,
+        csvType = CSVType.TDF,
+        colTypes = colTypes,
+        skipLines = skipLines,
+        readLines = readLines,
+        duplicate = duplicate,
+        charset = charset,
+        parserOptions = parserOptions,
+    )

@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.junit.Test
 
 class ReorderTests {
-
     @Test
     fun simple() {
         val df = dataFrameOf("b", "c", "a").fill(1, 0)
@@ -15,8 +14,11 @@ class ReorderTests {
 
     @Test
     fun nested() {
-        val df = dataFrameOf("b", "c", "a").fill(1, 0)
-            .group("c", "a").into("a")
+        val df =
+            dataFrameOf("b", "c", "a")
+                .fill(1, 0)
+                .group("c", "a")
+                .into("a")
 
         df.reorder { all() }.byName().columnNames() shouldBe listOf("a", "b")
 

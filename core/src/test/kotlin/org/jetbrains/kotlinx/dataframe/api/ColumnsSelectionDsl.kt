@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 
 open class ColumnsSelectionDslTests : TestBase() {
-
     @DataSchema
     interface PersonWithFrame : Person {
         val frameCol: DataFrame<Person>
@@ -16,16 +15,17 @@ open class ColumnsSelectionDslTests : TestBase() {
 
     protected val frameCol by frameColumn<Person>()
 
-    protected val dfWithFrames = df
-        .add {
-            expr { df } into frameCol
-        }
-        .convert { name }.to {
-            val firstName by it.asColumnGroup().firstName
-            val lastName by it.asColumnGroup().lastName
+    protected val dfWithFrames =
+        df
+            .add {
+                expr { df } into frameCol
+            }.convert { name }
+            .to {
+                val firstName by it.asColumnGroup().firstName
+                val lastName by it.asColumnGroup().lastName
 
-            val frameCol by it.map { df }.asFrameColumn()
+                val frameCol by it.map { df }.asFrameColumn()
 
-            dataFrameOf(firstName, lastName, frameCol).asColumnGroup("name")
-        }
+                dataFrameOf(firstName, lastName, frameCol).asColumnGroup("name")
+            }
 }

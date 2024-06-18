@@ -19,7 +19,6 @@ import org.junit.Test
 
 @Suppress("ktlint:standard:class-naming")
 class ReplCodeGenTests : BaseTest() {
-
     val dfName = (ColumnsContainer::class).simpleName!!
     val dfRowName = (DataRow::class).simpleName!!
     val dataCol = (DataColumn::class).simpleName!!
@@ -78,7 +77,8 @@ class ReplCodeGenTests : BaseTest() {
         val marker = ReplCodeGeneratorImpl.markerInterfacePrefix
         val markerFull = Test1._DataFrameType::class.qualifiedName!!
 
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface $marker {
                 val age: Int
@@ -95,7 +95,7 @@ class ReplCodeGenTests : BaseTest() {
             val $dfRowName<$marker>.name: $stringName @JvmName("${marker}_name") get() = this["name"] as $stringName
             val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
-        """.trimIndent()
+            """.trimIndent()
         code shouldBe expected
 
         val code2 = repl.process<Test1._DataFrameType>()
@@ -104,7 +104,8 @@ class ReplCodeGenTests : BaseTest() {
         val df3 = typed.filter { city != null }
         val code3 = repl.process(df3).declarations
         val marker3 = marker + "1"
-        val expected3 = """
+        val expected3 =
+            """
             @DataSchema
             interface $marker3 : $markerFull {
                 override val city: String
@@ -112,7 +113,7 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
             val $dfRowName<$marker3>.city: $stringName @JvmName("${marker3}_city") get() = this["city"] as $stringName
-        """.trimIndent()
+            """.trimIndent()
 
         code3 shouldBe expected3
 
@@ -122,7 +123,8 @@ class ReplCodeGenTests : BaseTest() {
         val df5 = typed.filter { weight != null }
         val code5 = repl.process(df5).declarations
         val marker5 = marker + "2"
-        val expected5 = """
+        val expected5 =
+            """
             @DataSchema
             interface $marker5 : $markerFull {
                 override val weight: Int
@@ -130,7 +132,7 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
             val $dfRowName<$marker5>.weight: $intName @JvmName("${marker5}_weight") get() = this["weight"] as $intName
-        """.trimIndent()
+            """.trimIndent()
         code5 shouldBe expected5
 
         val code6 = repl.process<Test1._DataFrameType2>()
@@ -145,11 +147,12 @@ class ReplCodeGenTests : BaseTest() {
         repl.process(typed.select { city and weight })
         repl.process<Test2._DataFrameType1>() shouldBe ""
 
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface ${Test2._DataFrameType2::class.simpleName!!} : ${Test2._DataFrameType::class.qualifiedName}, ${Test2._DataFrameType1::class.qualifiedName} { }
             
-        """.trimIndent()
+            """.trimIndent()
 
         val code = repl.process(typed).declarations.trimIndent()
         code shouldBe expected
@@ -166,7 +169,8 @@ class ReplCodeGenTests : BaseTest() {
         repl.process<Test1._DataFrameType1>() shouldBe ""
 
         val marker = Test2._DataFrameType2::class.simpleName!!
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface $marker : ${Test2._DataFrameType::class.qualifiedName} {
                 val city: String?
@@ -177,7 +181,7 @@ class ReplCodeGenTests : BaseTest() {
             val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
             val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
-        """.trimIndent()
+            """.trimIndent()
 
         val code = repl.process(typed).declarations.trimIndent()
         code shouldBe expected
@@ -204,7 +208,6 @@ class ReplCodeGenTests : BaseTest() {
     }
 
     object Test4 {
-
         @DataSchema
         interface A {
             val a: Int?

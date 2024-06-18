@@ -28,7 +28,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface ValueColsColumnsSelectionDsl {
-
     /**
      * ## Value Columns Grammar
      *
@@ -54,7 +53,6 @@ public interface ValueColsColumnsSelectionDsl {
      * }
      */
     public interface Grammar {
-
         /** [**`valueCols`**][ColumnsSelectionDsl.valueCols] */
         public interface PlainDslName
 
@@ -96,7 +94,6 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.cols\]
      */
     private interface CommonValueColsDocs {
-
         /** Example argument */
         interface ExampleArg
     }

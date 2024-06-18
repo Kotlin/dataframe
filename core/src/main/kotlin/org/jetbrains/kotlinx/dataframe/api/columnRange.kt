@@ -20,7 +20,6 @@ import kotlin.reflect.KProperty
  * See [Grammar] for all functions in this interface.
  */
 public interface ColumnRangeColumnsSelectionDsl {
-
     /**
      * ## Range of Columns Grammar
      *
@@ -36,7 +35,6 @@ public interface ColumnRangeColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnGroupPart]}
      */
     public interface Grammar {
-
         /** [**`..`**][ColumnsSelectionDsl.rangeTo] */
         public interface PlainDslName
     }
@@ -66,7 +64,6 @@ public interface ColumnRangeColumnsSelectionDsl {
      */
     @ExcludeFromSources
     private interface CommonRangeOfColumnsDocs {
-
         /** Examples key */
         interface Example
     }

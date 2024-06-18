@@ -32,7 +32,10 @@ class OpenApiTests : JupyterReplTestCase() {
         return code
     }
 
-    private fun execGeneratedCode(file: File, name: String) = execGeneratedCode(
+    private fun execGeneratedCode(
+        file: File,
+        name: String,
+    ) = execGeneratedCode(
         code = openApi.readCodeForGeneration(
             file = file,
             name = name,
@@ -41,7 +44,10 @@ class OpenApiTests : JupyterReplTestCase() {
         ),
     )
 
-    private fun execGeneratedCode(stream: InputStream, name: String) = execGeneratedCode(
+    private fun execGeneratedCode(
+        stream: InputStream,
+        name: String,
+    ) = execGeneratedCode(
         code = openApi.readCodeForGeneration(
             stream = stream,
             name = name,
@@ -50,7 +56,10 @@ class OpenApiTests : JupyterReplTestCase() {
         ),
     )
 
-    private fun execGeneratedCode(text: String, name: String) = execGeneratedCode(
+    private fun execGeneratedCode(
+        text: String,
+        name: String,
+    ) = execGeneratedCode(
         code = openApi.readCodeForGeneration(
             text = text,
             name = name,
@@ -1084,8 +1093,9 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kts")
         val df1 = execRaw(
-            """`${::`MLC Test 1`.name}`.LocationsWithPeople.readJsonStr($mlcLocationsWithPeopleDataTripleQuote)
-                    .also { it.print() }
+            """
+            `${::`MLC Test 1`.name}`.LocationsWithPeople.readJsonStr($mlcLocationsWithPeopleDataTripleQuote)
+            .also { it.print() }
             """.trimIndent(),
         ) as AnyFrame
 
@@ -1101,8 +1111,9 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kts")
         val df2 = execRaw(
-            """`${::`MLC Test 2`.name}`.PeopleWithLocation.readJsonStr($mlcPeopleWithLocationDataTripleQuote)
-                    .also { it.print() }
+            """
+            `${::`MLC Test 2`.name}`.PeopleWithLocation.readJsonStr($mlcPeopleWithLocationDataTripleQuote)
+            .also { it.print() }
             """.trimIndent(),
         ) as AnyFrame
 
@@ -1123,7 +1134,7 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val _1 = execRaw(
             """
-                val ApiGuru = importDataSchema(File("$filePath"))
+            val ApiGuru = importDataSchema(File("$filePath"))
             """.trimIndent(),
         )
 
@@ -1132,8 +1143,8 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val _2 = execRaw(
             """
-                val df = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
-                df
+            val df = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
+            df
             """.trimIndent(),
         ) as AnyFrame
 
@@ -1142,11 +1153,11 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val _3 = execRaw(
             """
-                df.filter {
-                  value.versions.value.any {
-                    (updated ?: added).year >= 2021
-                  }
-                }
+            df.filter {
+              value.versions.value.any {
+                (updated ?: added).year >= 2021
+              }
+            }
             """.trimIndent(),
         ) as AnyFrame
     }

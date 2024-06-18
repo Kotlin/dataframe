@@ -5,7 +5,6 @@ import kotlin.reflect.KType
 
 @PublishedApi
 internal interface Aggregator<C, R> {
-
     val name: String
 
     fun aggregate(column: DataColumn<C?>): R?
@@ -14,7 +13,10 @@ internal interface Aggregator<C, R> {
 
     fun aggregate(columns: Iterable<DataColumn<C?>>): R?
 
-    fun aggregate(values: Iterable<C>, type: KType): R?
+    fun aggregate(
+        values: Iterable<C>,
+        type: KType,
+    ): R?
 }
 
 @PublishedApi

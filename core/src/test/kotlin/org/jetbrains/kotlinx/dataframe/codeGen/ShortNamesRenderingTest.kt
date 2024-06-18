@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.TypeRenderingStrategy
 import org.junit.Test
 
 internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
-
     interface Marker
 
     @DataSchema

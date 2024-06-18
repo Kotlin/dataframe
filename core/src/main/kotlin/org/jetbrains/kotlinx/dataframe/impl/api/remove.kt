@@ -72,9 +72,13 @@ internal fun <T> DataFrame<T>.removeImpl(
 
     val newDf = dfs(columns(), colWithPaths, root) ?: DataFrame.empty(nrow)
 
-    val removedColumns = root.allRemovedColumns().map {
-        it.pathFromRoot() to it
-    }.sortedBy { originalOrder[it.first] }.map { it.second }
+    val removedColumns =
+        root
+            .allRemovedColumns()
+            .map {
+                it.pathFromRoot() to it
+            }.sortedBy { originalOrder[it.first] }
+            .map { it.second }
 
     return RemoveResult(newDf.cast(), removedColumns)
 }

@@ -35,7 +35,6 @@ import kotlin.reflect.KProperty
  * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
 public interface ValueColColumnsSelectionDsl<out _UNUSED> {
-
     /**
      * ## Value Col Grammar
      *
@@ -65,7 +64,6 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * }
      */
     public interface Grammar {
-
         /** [**`valueCol`**][ColumnsSelectionDsl.valueCol] */
         public interface PlainDslName
 
@@ -121,8 +119,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * {@set [CommonValueColDocs.Note]}
      */
     private interface CommonValueColDocs {
-
-        /* Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]} */
+        // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
         interface ExampleArg
 
         /**
@@ -137,13 +134,13 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
          */
         interface DoubleExample
 
-        /* Receiver argument for the example(s) */
+        // Receiver argument for the example(s)
         interface ReceiverArg
 
-        /* Argument for the example(s) */
+        // Argument for the example(s)
         interface Arg
 
-        /* Optional note */
+        // Optional note
         interface Note
 
         /** @param [C\] The type of the value column. */
@@ -170,14 +167,17 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
-        this.ensureIsColumnGroup().transformSingle {
-            val child = it.getCol(valueCol)
-                ?: throw IllegalStateException(
-                    "ValueColumn '${valueCol.path()}' not found in column group '${it.path}'",
-                )
-            child.data.ensureIsValueColumn()
-            listOf(child)
-        }.singleImpl()
+        this
+            .ensureIsColumnGroup()
+            .transformSingle {
+                val child =
+                    it.getCol(valueCol)
+                        ?: throw IllegalStateException(
+                            "ValueColumn '${valueCol.path()}' not found in column group '${it.path}'",
+                        )
+                child.data.ensureIsValueColumn()
+                listOf(child)
+            }.singleImpl()
 
     /**
      * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -240,12 +240,15 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<C> =
-        this.ensureIsColumnGroup().transformSingle {
-            val child = it.getCol(name)?.cast<C>()
-                ?: throw IllegalStateException("Value column '$name' not found in column group '${it.path}'")
-            child.data.ensureIsValueColumn()
-            listOf(child)
-        }.singleImpl()
+        this
+            .ensureIsColumnGroup()
+            .transformSingle {
+                val child =
+                    it.getCol(name)?.cast<C>()
+                        ?: throw IllegalStateException("Value column '$name' not found in column group '${it.path}'")
+                child.data.ensureIsValueColumn()
+                listOf(child)
+            }.singleImpl()
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -340,12 +343,15 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<C> =
-        this.ensureIsColumnGroup().transformSingle {
-            val child = it.getCol(path)?.cast<C>()
-                ?: throw IllegalStateException("Value column '$path' not found in column group '${it.path}'")
-            child.data.ensureIsValueColumn()
-            listOf(child)
-        }.singleImpl()
+        this
+            .ensureIsColumnGroup()
+            .transformSingle {
+                val child =
+                    it.getCol(path)?.cast<C>()
+                        ?: throw IllegalStateException("Value column '$path' not found in column group '${it.path}'")
+                child.data.ensureIsValueColumn()
+                listOf(child)
+            }.singleImpl()
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -495,11 +501,13 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> = this.ensureIsColumnGroup()
-        .allColumnsInternal()
-        .getAt(index)
-        .ensureIsValueColumn()
-        .cast()
+    public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> =
+        this
+            .ensureIsColumnGroup()
+            .allColumnsInternal()
+            .getAt(index)
+            .ensureIsValueColumn()
+            .cast()
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
@@ -548,17 +556,19 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
  * by adding a check to see it's a [ValueColumn] (so, a [SingleColumn]<*>)
  * and throwing an [IllegalArgumentException] if it's not.
  */
-internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> = onResolve { col: ColumnWithPath<*>? ->
-    require(col?.isValueColumn() != false) {
-        "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
+internal fun <C> SingleColumn<C>.ensureIsValueColumn(): SingleColumn<C> =
+    onResolve { col: ColumnWithPath<*>? ->
+        require(col?.isValueColumn() != false) {
+            "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
+        }
     }
-}
 
 /** @include [SingleColumn.ensureIsValueColumn] */
-internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> = onResolve { col: ColumnWithPath<*>? ->
-    require(col?.isValueColumn() != false) {
-        "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
+internal fun <C> ColumnAccessor<C>.ensureIsValueColumn(): ColumnAccessor<C> =
+    onResolve { col: ColumnWithPath<*>? ->
+        require(col?.isValueColumn() != false) {
+            "Column at ${col?.path} is not a ValueColumn, but a ${col?.kind()}."
+        }
     }
-}
 
 // endregion

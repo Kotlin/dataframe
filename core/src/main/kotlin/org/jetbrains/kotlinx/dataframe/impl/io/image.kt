@@ -20,11 +20,12 @@ internal fun BufferedImage.resizeKeepingAspectRatio(
     val aspectRatio = width.toDouble() / height.toDouble()
     val size = min(maxSize, max(width, height))
 
-    val (nWidth, nHeight) = if (width > height) {
-        Pair(size, (size / aspectRatio).toInt())
-    } else {
-        Pair((size * aspectRatio).toInt(), size)
-    }
+    val (nWidth, nHeight) =
+        if (width > height) {
+            Pair(size, (size / aspectRatio).toInt())
+        } else {
+            Pair((size * aspectRatio).toInt(), size)
+        }
 
     return resize(nWidth, nHeight, resultImageType, interpolation, renderingQuality, antialiasing, observer)
 }

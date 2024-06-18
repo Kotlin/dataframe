@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
  * @param T schema marker of contained dataframes. See [DataFrame] for details.
  */
 public interface FrameColumn<out T> : DataColumn<DataFrame<T>> {
-
     public val schema: Lazy<DataFrameSchema>
 
     override fun distinct(): FrameColumn<T>

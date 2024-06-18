@@ -16,7 +16,6 @@ import kotlin.reflect.KProperty
 internal interface ColumnSelectionDslLink
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
-
     /**
      * Retrieves the value of this [ColumnReference] or [-Accessor][ColumnAccessor] from
      * the [DataFrame].

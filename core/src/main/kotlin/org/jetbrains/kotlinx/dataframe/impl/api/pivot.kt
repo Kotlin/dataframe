@@ -33,7 +33,6 @@ internal class PivotChain<C>(val columns: List<PivotChainElement>, lastColumn: C
     ColumnWithPath<C> by lastColumn
 
 internal class PivotChainColumnSet<C>(val first: ColumnsResolver<C>, val second: ColumnsResolver<C>) : ColumnSet<C> {
-
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
         val firstCols = first.resolve(context)
         val secondCols = second.resolve(context)
@@ -54,18 +53,23 @@ internal class PivotChainColumnSet<C>(val first: ColumnsResolver<C>, val second:
 
 internal fun <T, C> DataFrame<T>.getPivotSequences(
     columns: PivotColumnsSelector<T, C>,
-): List<List<PivotChainElement>> = columns.toColumnSet().resolve(this, UnresolvedColumnsPolicy.Fail)
-    .map {
-        when (val col = it) {
-            is PivotChain<*> -> col.columns as List<PivotChainElement>
-            else -> listOf(PivotChainElement(it, false))
+): List<List<PivotChainElement>> =
+    columns
+        .toColumnSet()
+        .resolve(this, UnresolvedColumnsPolicy.Fail)
+        .map {
+            when (val col = it) {
+                is PivotChain<*> -> col.columns as List<PivotChainElement>
+                else -> listOf(PivotChainElement(it, false))
+            }
         }
-    }
 
 internal fun <T> DataFrame<T>.getPivotColumnPaths(columns: PivotColumnsSelector<T, *>): List<ColumnPath> =
-    getPivotSequences(columns).flatten().map {
-        it.column.path
-    }.distinct()
+    getPivotSequences(columns)
+        .flatten()
+        .map {
+            it.column.path
+        }.distinct()
 
 internal fun <T, R> aggregatePivot(
     aggregator: AggregateInternalDsl<T>,
@@ -76,11 +80,12 @@ internal fun <T, R> aggregatePivot(
     body: Selector<AggregateDsl<T>, R>,
 ) {
     val pivotSequences = aggregator.df.getPivotSequences(columns)
-    val effectiveInward = inward ?: if (aggregator.hasGroupingKeys) {
-        true
-    } else {
-        pivotSequences.distinctBy { it.first().column.path }.count() > 1
-    }
+    val effectiveInward =
+        inward ?: if (aggregator.hasGroupingKeys) {
+            true
+        } else {
+            pivotSequences.distinctBy { it.first().column.path }.count() > 1
+        }
     pivotSequences.forEach { pivotColumns ->
         aggregator.df.groupBy { pivotColumns.map { it.column }.toColumnSet() }.forEach { (key, group) ->
 
@@ -105,13 +110,14 @@ internal fun <T, R> aggregatePivot(
             when {
                 values.size == 1 && values[0].path.isEmpty() -> aggregator.yield(values[0].apply(path))
 
-                values.isEmpty() -> aggregator.yield(
-                    path,
-                    if (hasResult) result else globalDefault,
-                    null,
-                    globalDefault,
-                    true,
-                )
+                values.isEmpty() ->
+                    aggregator.yield(
+                        path,
+                        if (hasResult) result else globalDefault,
+                        null,
+                        globalDefault,
+                        true,
+                    )
 
                 else -> {
                     values.forEach {

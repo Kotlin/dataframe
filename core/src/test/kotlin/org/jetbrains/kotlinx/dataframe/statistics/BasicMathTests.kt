@@ -7,7 +7,6 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class BasicMathTests {
-
     @Test
     fun `type for column with mixed numbers`() {
         val col = columnOf(10, 10.0, null)

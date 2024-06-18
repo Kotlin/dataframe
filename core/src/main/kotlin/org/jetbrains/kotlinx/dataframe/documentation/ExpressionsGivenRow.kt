@@ -36,7 +36,6 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * A {@include [RowExpressionLink]} is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
  */
 internal interface ExpressionsGivenRow {
-
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
@@ -44,6 +43,7 @@ internal interface ExpressionsGivenRow {
     interface OperationArg
 
     // Using <code>` notation to not create double `` when including
+
     /** {@set [OperationArg] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 
@@ -57,7 +57,6 @@ internal interface ExpressionsGivenRow {
 
     /** Provide a new value for every selected cell given its row using a [row expression][DfRowExpression]. */
     interface RowExpression {
-
         /**
          * {@include [RowExpression]}
          *
@@ -78,7 +77,6 @@ internal interface ExpressionsGivenRow {
      * [row value expression][DfRowValueExpression].
      */
     interface RowValueExpression {
-
         /**
          * {@include [RowValueExpression]}
          *

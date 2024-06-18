@@ -14,7 +14,6 @@ internal class ConfiguredAggregateColumn<C> private constructor(
     private val newPath: ColumnPath? = null,
 ) : SingleColumn<C>,
     ColumnSet<C> {
-
     private fun ColumnWithPath<C>.toDescriptor(keepName: Boolean): AggregateColumnDescriptor<C> =
         when (val col = this) {
             is AggregateColumnDescriptor<C> -> {
@@ -22,11 +21,12 @@ internal class ConfiguredAggregateColumn<C> private constructor(
                 val currentDefault = this@ConfiguredAggregateColumn.default
                 val currentNewPath = this@ConfiguredAggregateColumn.newPath
 
-                val newPath = when {
-                    currentNewPath == null -> col.newPath
-                    keepName -> currentNewPath + (col.newPath ?: col.column.shortPath())
-                    else -> currentNewPath
-                }
+                val newPath =
+                    when {
+                        currentNewPath == null -> col.newPath
+                        keepName -> currentNewPath + (col.newPath ?: col.column.shortPath())
+                        else -> currentNewPath
+                    }
                 AggregateColumnDescriptor(
                     column = col.column,
                     default = currentDefault ?: col.default,
@@ -42,7 +42,10 @@ internal class ConfiguredAggregateColumn<C> private constructor(
                 )
         }
 
-    private fun resolve(context: ColumnResolutionContext, columns: ColumnsResolver<C>): List<ColumnWithPath<C>> {
+    private fun resolve(
+        context: ColumnResolutionContext,
+        columns: ColumnsResolver<C>,
+    ): List<ColumnWithPath<C>> {
         val resolved = columns.resolve(context)
         return if (resolved.size == 1) {
             listOf(resolved[0].toDescriptor(false))
@@ -59,25 +62,40 @@ internal class ConfiguredAggregateColumn<C> private constructor(
         resolve(context, columns).singleOrNull()
 
     companion object {
+        fun <C> withPath(
+            src: SingleColumn<C>,
+            newPath: ColumnPath,
+        ): SingleColumn<C> =
+            when (src) {
+                is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, src.default, newPath)
+                else -> ConfiguredAggregateColumn(src, null, newPath)
+            }
 
-        fun <C> withPath(src: SingleColumn<C>, newPath: ColumnPath): SingleColumn<C> = when (src) {
-            is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, src.default, newPath)
-            else -> ConfiguredAggregateColumn(src, null, newPath)
-        }
+        fun <C> withDefault(
+            src: SingleColumn<C>,
+            default: C?,
+        ): SingleColumn<C> =
+            when (src) {
+                is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, default, src.newPath)
+                else -> ConfiguredAggregateColumn(src, default, null)
+            }
 
-        fun <C> withDefault(src: SingleColumn<C>, default: C?): SingleColumn<C> = when (src) {
-            is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, default, src.newPath)
-            else -> ConfiguredAggregateColumn(src, default, null)
-        }
+        fun <C> withPath(
+            src: ColumnSet<C>,
+            newPath: ColumnPath,
+        ): ColumnSet<C> =
+            when (src) {
+                is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, src.default, newPath)
+                else -> ConfiguredAggregateColumn(src, null, newPath)
+            }
 
-        fun <C> withPath(src: ColumnSet<C>, newPath: ColumnPath): ColumnSet<C> = when (src) {
-            is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, src.default, newPath)
-            else -> ConfiguredAggregateColumn(src, null, newPath)
-        }
-
-        fun <C> withDefault(src: ColumnSet<C>, default: C?): ColumnSet<C> = when (src) {
-            is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, default, src.newPath)
-            else -> ConfiguredAggregateColumn(src, default, null)
-        }
+        fun <C> withDefault(
+            src: ColumnSet<C>,
+            default: C?,
+        ): ColumnSet<C> =
+            when (src) {
+                is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, default, src.newPath)
+                else -> ConfiguredAggregateColumn(src, default, null)
+            }
     }
 }

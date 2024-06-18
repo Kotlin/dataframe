@@ -49,15 +49,16 @@ public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsS
  * and converting the first char to lowercase.
  * Even [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
  */
-public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
-    // recursively rename all columns written with delimiters or starting with a capital to camel case
-    .rename {
-        colsAtAnyDepth { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }
-    }.toCamelCase()
-    // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
-    .update {
-        colsAtAnyDepth().colsOf<AnyFrame>()
-    }.with { it.renameToCamelCase() }
+public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> =
+    this
+        // recursively rename all columns written with delimiters or starting with a capital to camel case
+        .rename {
+            colsAtAnyDepth { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }
+        }.toCamelCase()
+        // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
+        .update {
+            colsAtAnyDepth().colsOf<AnyFrame>()
+        }.with { it.renameToCamelCase() }
 
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
@@ -76,11 +77,13 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  * Renames the selected columns to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
  * and converting the first char to lowercase.
  */
-public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into {
-    it.name()
-        .toCamelCaseByDelimiters(DELIMITERS_REGEX)
-        .replaceFirstChar { it.lowercaseChar() }
-}
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
+    into {
+        it
+            .name()
+            .toCamelCaseByDelimiters(DELIMITERS_REGEX)
+            .replaceFirstChar { it.lowercaseChar() }
+    }
 
 // endregion
 
@@ -113,7 +116,6 @@ public infix fun <T, C : ColumnReference<T>> C.named(name: ColumnAccessor<*>): C
  * See [Grammar] for all functions in this interface.
  */
 public interface RenameColumnsSelectionDsl {
-
     /**
      * ## Rename: `named` / `into` Grammar
      *
@@ -134,7 +136,6 @@ public interface RenameColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.ColumnSetPart]}
      */
     public interface Grammar {
-
         /** [**named**][ColumnsSelectionDsl.named] */
         public interface InfixNamedName
 
@@ -174,7 +175,6 @@ public interface RenameColumnsSelectionDsl {
      * @return A [ColumnReference] to the renamed column.
      */
     private interface CommonRenameDocs {
-
         interface ReceiverArg
 
         interface ReceiverTypeArg
@@ -184,6 +184,7 @@ public interface RenameColumnsSelectionDsl {
 
         /** "newName" or "nameOf" */
         interface ParamNameArg
+
         interface ParamArg
 
         interface ParamTypeArg

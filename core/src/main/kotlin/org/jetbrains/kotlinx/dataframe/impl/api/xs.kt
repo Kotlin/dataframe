@@ -37,7 +37,10 @@ internal fun <T, C> DataFrame<T>.xsImpl(
     }.removeImpl(allowMissingColumns, keyColumns).df
 }
 
-internal fun <T, G, C> GroupBy<T, G>.xsImpl(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): GroupBy<T, G> {
+internal fun <T, G, C> GroupBy<T, G>.xsImpl(
+    vararg keyValues: C,
+    keyColumns: ColumnsSelector<T, C>,
+): GroupBy<T, G> {
     val df = toDataFrame()
     val paths = df.getColumnPaths(UnresolvedColumnsPolicy.Create, keyColumns).toColumnSet()
     val d1 = df.xsImpl({ paths }, true, *keyValues).asGroupBy(groups)

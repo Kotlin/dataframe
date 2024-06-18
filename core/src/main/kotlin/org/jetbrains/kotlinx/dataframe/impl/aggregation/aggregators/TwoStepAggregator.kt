@@ -10,7 +10,6 @@ internal class TwoStepAggregator<C, R>(
     private val aggregateValues: (Iterable<R>, KType) -> R?,
     override val preservesType: Boolean,
 ) : AggregatorBase<C, R>(name, aggregateWithType) {
-
     override fun aggregate(columns: Iterable<DataColumn<C?>>): R? {
         val columnValues = columns.mapNotNull { aggregate(it) }
         val commonType = columnValues.map { it.javaClass.kotlin }.commonType(false)

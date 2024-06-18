@@ -24,14 +24,15 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 
 @Suppress("UNCHECKED_CAST", "RemoveExplicitTypeArguments")
-internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> = toDataFrame()
-    // sort the individual groups by the columns specified
-    .update { groups }
-    .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
-    // sort the groups by the columns specified (must be either be the keys column or "groups")
-    // will do nothing if the columns specified are not the keys column or "groups"
-    .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
-    .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
+internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> =
+    toDataFrame()
+        // sort the individual groups by the columns specified
+        .update { groups }
+        .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
+        // sort the groups by the columns specified (must be either be the keys column or "groups")
+        // will do nothing if the columns specified are not the keys column or "groups"
+        .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
+        .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
@@ -40,12 +41,14 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
     val sortColumns = getSortColumns(columns, unresolvedColumnsPolicy)
     if (sortColumns.isEmpty()) return this
 
-    val compChain = sortColumns.map {
-        when (it.direction) {
-            SortDirection.Asc -> it.column.createComparator(it.nullsLast)
-            SortDirection.Desc -> it.column.createComparator(it.nullsLast).reversed()
-        }
-    }.reduce { a, b -> a.then(b) }
+    val compChain =
+        sortColumns
+            .map {
+                when (it.direction) {
+                    SortDirection.Asc -> it.column.createComparator(it.nullsLast)
+                    SortDirection.Desc -> it.column.createComparator(it.nullsLast).reversed()
+                }
+            }.reduce { a, b -> a.then(b) }
 
     val permutation = (0 until nrow).sortedWith(compChain)
 
@@ -55,9 +58,10 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
 internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<Int> {
     assertIsComparable()
 
-    val valueComparator = Comparator<Any?> { left, right ->
-        (left as Comparable<Any?>).compareTo(right)
-    }
+    val valueComparator =
+        Comparator<Any?> { left, right ->
+            (left as Comparable<Any?>).compareTo(right)
+        }
 
     val comparatorWithNulls = if (nullsLast) nullsLast(valueComparator) else nullsFirst(valueComparator)
     return Comparator { left, right -> comparatorWithNulls.compare(get(left), get(right)) }
@@ -66,17 +70,20 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 internal fun <T, C> DataFrame<T>.getSortColumns(
     columns: SortColumnsSelector<T, C>,
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-): List<SortColumnDescriptor<*>> = columns.toColumnSet().resolve(this, unresolvedColumnsPolicy)
-    .filterNot {
-        it.data is MissingColumnGroup<*>
-    } // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
-    .map {
-        when (val col = it.data) {
-            is SortColumnDescriptor<*> -> col
-            is ValueColumn<*> -> SortColumnDescriptor(col)
-            else -> throw IllegalStateException("Can not use ${col.kind} as sort column")
+): List<SortColumnDescriptor<*>> =
+    columns
+        .toColumnSet()
+        .resolve(this, unresolvedColumnsPolicy)
+        .filterNot {
+            it.data is MissingColumnGroup<*>
+        } // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
+        .map {
+            when (val col = it.data) {
+                is SortColumnDescriptor<*> -> col
+                is ValueColumn<*> -> SortColumnDescriptor(col)
+                else -> throw IllegalStateException("Can not use ${col.kind} as sort column")
+            }
         }
-    }
 
 internal enum class SortFlag { Reversed, NullsLast }
 
@@ -116,7 +123,8 @@ internal class SortColumnDescriptor<C>(
 
 internal enum class SortDirection { Asc, Desc }
 
-internal fun SortDirection.reversed(): SortDirection = when (this) {
-    SortDirection.Asc -> SortDirection.Desc
-    SortDirection.Desc -> SortDirection.Asc
-}
+internal fun SortDirection.reversed(): SortDirection =
+    when (this) {
+        SortDirection.Asc -> SortDirection.Desc
+        SortDirection.Desc -> SortDirection.Asc
+    }
