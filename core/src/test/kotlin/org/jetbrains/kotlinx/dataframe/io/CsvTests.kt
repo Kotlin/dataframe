@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
 import java.io.File
 import java.io.StringWriter
+import java.net.URL
 import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
@@ -247,6 +248,14 @@ class CsvTests {
         producedFile.exists() shouldBe true
         producedFile.readText() shouldBe "1,2,3\r\n1,3,2\r\n"
         producedFile.delete()
+    }
+
+    @Test
+    fun `check integrity of example data`() {
+        val df = DataFrame.readCSV("../data/jetbrains_repositories.csv")
+        df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
+        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
+        df shouldBe DataFrame.readCSV("../data/jetbrains repositories.csv")
     }
 
     companion object {
