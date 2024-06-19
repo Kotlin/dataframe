@@ -118,7 +118,8 @@ public open class TestBase {
         val returnType: String
     }
 
-    val functions = DataFrame.readJsonStr("""
+    val functions = DataFrame.readJsonStr(
+        """
         [{
           "receiverType": "DataRow<*>",
           "name": "rowStd",
@@ -215,7 +216,8 @@ public open class TestBase {
           "parameters": [],
           "returnType": "List<T>"
         }]
-    """.trimIndent()).cast<Functions>(verify = true)
+        """.trimIndent()
+    ).cast<Functions>(verify = true)
 
     /**
      * Asserts that all elements of the iterable are equal to each other
