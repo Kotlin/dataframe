@@ -241,12 +241,22 @@ class CsvTests {
         )
         df.writeCSV(
             "src/test/resources/without_header.csv",
-            CSVFormat.DEFAULT.withSkipHeaderRecord(),
+            CSVFormat.DEFAULT.builder().setSkipHeaderRecord(true).build(),
         )
         val producedFile = File("src/test/resources/without_header.csv")
         producedFile.exists() shouldBe true
         producedFile.readText() shouldBe "1,2,3\r\n1,3,2\r\n"
         producedFile.delete()
+    }
+
+    @Test
+    fun `readDelimStr delimiter`() {
+        val tsv = """
+            a	b	c
+            1	2	3
+        """.trimIndent()
+        val df = DataFrame.readDelimStr(tsv, '\t')
+        df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
 
     companion object {
