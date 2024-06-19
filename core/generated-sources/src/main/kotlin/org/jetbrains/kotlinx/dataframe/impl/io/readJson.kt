@@ -215,6 +215,7 @@ internal fun fromJsonListAnyColumns(
                             v.longOrNull != null -> collector.add(v.long)
                             v.doubleOrNull != null -> collector.add(v.double)
                             v.floatOrNull != null -> collector.add(v.float)
+                            else -> error("Malformed JSON element ${v::class}: $v")
                         }
                     }
 
@@ -527,6 +528,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                         v.longOrNull != null -> collector.add(v.long)
                                         v.doubleOrNull != null -> collector.add(v.double)
                                         v.floatOrNull != null -> collector.add(v.float)
+                                        else -> error("Malformed JSON element ${v::class}: $v")
                                     }
                                 }
 
