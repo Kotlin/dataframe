@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.plugin.impl.api
 
+import org.jetbrains.kotlinx.dataframe.api.renameToCamelCase
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
@@ -11,12 +12,17 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.dataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.impl.processAsPluginDataFrame
 
 class RenameToCamelCase : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver: PluginDataFrameSchema by dataFrame()
 
-    override fun Arguments.interpret(): PluginDataFrameSchema =
-        PluginDataFrameSchema(receiver.columns().renameToCamelCase())
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        return receiver.processAsPluginDataFrame {
+            renameToCamelCase()
+        }
+//        return PluginDataFrameSchema(receiver.columns().renameToCamelCase())
+    }
 }
 
 private fun String.toCamelCase() =

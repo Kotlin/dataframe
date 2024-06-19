@@ -38,7 +38,8 @@ internal interface AccessApi {
      *
      * For example:
      * ```kotlin
-     * DataFrame.read("titanic.csv")
+     * DataFrame
+     *     .read("titanic.csv")
      *     .add("lastName") { "name"<String>().split(",").last() }
      *     .dropNulls("age")
      *     .filter {
@@ -68,7 +69,8 @@ internal interface AccessApi {
      * val name by column<String>()
      * val lastName by column<String>()
      *
-     * DataFrame.read("titanic.csv")
+     * DataFrame
+     *     .read("titanic.csv")
      *     .add(lastName) { name().split(",").last() }
      *     .dropNulls { age }
      *     .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
@@ -94,18 +96,19 @@ internal interface AccessApi {
      *     val survived: Boolean,
      *     val home: String,
      *     val age: Int,
-     *     val lastName: String
+     *     val lastName: String,
      * )
      *
-     * val passengers = DataFrame.read("titanic.csv")
-     *     .add(Passenger::lastName) { "name"<String>().split(",").last() }
-     *     .dropNulls(Passenger::age)
-     *     .filter {
-     *         it[Passenger::survived] &&
-     *             it[Passenger::home].endsWith("NY") &&
-     *             it[Passenger::age] in 10..20
-     *     }
-     *     .toListOf<Passenger>()
+     * val passengers =
+     *     DataFrame
+     *         .read("titanic.csv")
+     *         .add(Passenger::lastName) { "name"<String>().split(",").last() }
+     *         .dropNulls(Passenger::age)
+     *         .filter {
+     *             it[Passenger::survived] &&
+     *                 it[Passenger::home].endsWith("NY") &&
+     *                 it[Passenger::age] in 10..20
+     *         }.toListOf<Passenger>()
      * ```
      */
     interface KPropertiesApi
