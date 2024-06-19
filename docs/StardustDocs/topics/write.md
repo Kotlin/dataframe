@@ -21,7 +21,8 @@ df.writeCSV(file)
 <!---FUN writeCsvStr-->
 
 ```kotlin
-val csvStr = df.toCsv(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
+val format = CSVFormat.DEFAULT.builder().setDelimiter(';').setRecordSeparator(System.lineSeparator()).build()
+val csvStr = df.toCsv(format)
 ```
 
 <!---END-->
@@ -104,8 +105,10 @@ val wb = WorkbookFactory.create(true)
 
 // Create different sheets from different data frames in the workbook
 val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
-val happyPersonsSheet = df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
-val unhappyPersonsSheet = df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
+val happyPersonsSheet =
+    df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
+val unhappyPersonsSheet =
+    df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
 
 // Do anything you want by POI
 listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
@@ -125,9 +128,11 @@ Add new sheets without using Apache POI directly by using a parameter to keep us
 // Create a new Excel workbook with a single sheet called "allPersons", replacing the file if it already exists -> Current sheets: allPersons
 df.writeExcel(file, sheetName = "allPersons")
 // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons
-df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "happyPersons", keepFile = true)
+df.filter { person -> person.isHappy }.remove("isHappy")
+    .writeExcel(file, sheetName = "happyPersons", keepFile = true)
 // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons, unhappyPersons
-df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
+df.filter { person -> !person.isHappy }.remove("isHappy")
+    .writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
 ```
 
 <!---END-->
@@ -203,7 +208,7 @@ df.arrowWriter(
     // Specify mismatch subscriber
     mismatchSubscriber = writeMismatchMessage,
 
-).use { writer: ArrowWriter ->
+    ).use { writer: ArrowWriter ->
 
     // Save to any format and sink, like in the previous example
     writer.writeArrowFeather(file)

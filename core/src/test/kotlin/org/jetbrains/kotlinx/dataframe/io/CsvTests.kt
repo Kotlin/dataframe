@@ -242,7 +242,7 @@ class CsvTests {
         )
         df.writeCSV(
             "src/test/resources/without_header.csv",
-            CSVFormat.DEFAULT.withSkipHeaderRecord(),
+            CSVFormat.DEFAULT.builder().setSkipHeaderRecord(true).build(),
         )
         val producedFile = File("src/test/resources/without_header.csv")
         producedFile.exists() shouldBe true
@@ -256,6 +256,16 @@ class CsvTests {
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
         df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
         df shouldBe DataFrame.readCSV("../data/jetbrains repositories.csv")
+    }
+
+    @Test
+    fun `readDelimStr delimiter`() {
+        val tsv = """
+            a	b	c
+            1	2	3
+        """.trimIndent()
+        val df = DataFrame.readDelimStr(tsv, '\t')
+        df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
 
     companion object {
