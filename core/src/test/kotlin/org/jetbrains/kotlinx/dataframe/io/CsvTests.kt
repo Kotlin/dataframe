@@ -258,6 +258,16 @@ class CsvTests {
         df shouldBe DataFrame.readCSV("../data/jetbrains repositories.csv")
     }
 
+    @Test
+    fun `readDelimStr delimiter`() {
+        val tsv = """
+            a	b	c
+            1	2	3
+        """.trimIndent()
+        val df = DataFrame.readDelimStr(tsv, '\t')
+        df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
+    }
+
     companion object {
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")

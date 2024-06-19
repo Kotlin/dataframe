@@ -73,11 +73,15 @@ internal fun isCompressed(url: URL) = isCompressed(url.path)
 @Interpretable("ReadDelimStr")
 public fun DataFrame.Companion.readDelimStr(
     text: String,
+    delimiter: Char = ',',
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
 ): DataFrame<*> =
-    StringReader(text).use { readDelim(it, CSVType.DEFAULT.format.builder().setHeader().build(), colTypes, skipLines, readLines) }
+    StringReader(text).use {
+        val format = CSVType.DEFAULT.format.builder().setHeader().setDelimiter(delimiter).build()
+        readDelim(it, format, colTypes, skipLines, readLines)
+    }
 
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
