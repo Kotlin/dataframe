@@ -6,6 +6,7 @@ import kotlinx.datetime.toKotlinLocalDateTime
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
+import org.apache.poi.ss.usermodel.DataFormatter
 import org.apache.poi.ss.usermodel.DateUtil
 import org.apache.poi.ss.usermodel.RichTextString
 import org.apache.poi.ss.usermodel.Row
@@ -83,6 +84,8 @@ private fun setWorkbookTempDirectory() {
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param stringColumns range of columns to read as String regardless of a cell type.
+ * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
@@ -93,17 +96,22 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
+    stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(url.openStream())
-    return wb.use { readExcel(wb, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
+    return wb.use {
+        readExcel(wb, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy)
+    }
 }
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param stringColumns range of columns to read as String regardless of a cell type.
+ * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
@@ -114,17 +122,22 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
+    stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(file)
-    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
+    return wb.use {
+        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy)
+    }
 }
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param stringColumns range of columns to read as String regardless of a cell type.
+ * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
@@ -135,13 +148,17 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
+    stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, rowsCount, nameRepairStrategy)
+): AnyFrame =
+    readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param stringColumns range of columns to read as String regardless of a cell type.
+ * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
@@ -152,17 +169,23 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
+    stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(inputStream)
-    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount, nameRepairStrategy) }
+    return wb.use {
+        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy)
+    }
 }
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param formattingOptions range of columns to read as String regardless of a cell type.
+ * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
+ * See also [FormattingOptions.formatter] and [DataFormatter.formatCellValue].
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
@@ -173,18 +196,39 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
+    formattingOptions: FormattingOptions? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
         ?: wb.getSheetAt(0)
-    return readExcel(sheet, columns, skipRows, rowsCount, nameRepairStrategy)
+    return readExcel(sheet, columns, formattingOptions, skipRows, rowsCount, nameRepairStrategy)
+}
+
+/**
+ * @param range comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ */
+@JvmInline
+public value class StringColumns(public val range: String)
+
+public fun StringColumns.toFormattingOptions(formatter: DataFormatter = DataFormatter()): FormattingOptions =
+    FormattingOptions(range, formatter)
+
+/**
+ * @param range comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param formatter
+ */
+public class FormattingOptions(range: String, public val formatter: DataFormatter = DataFormatter()) {
+    public val columnIndices: Set<Int> = getColumnIndices(range).toSet()
 }
 
 /**
  * @param sheet sheet to read.
  * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param formattingOptions range of columns to read as String regardless of a cell's type.
+ * For example, by default numeric cell with value "3" will be parsed as Double with value being 3.0. With this option, it will be simply "3"
+ * See also [FormattingOptions.formatter] and [DataFormatter.formatCellValue].
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
@@ -193,19 +237,13 @@ public fun DataFrame.Companion.readExcel(
 public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
     columns: String? = null,
+    formattingOptions: FormattingOptions? = null,
     skipRows: Int = 0,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     val columnIndexes: Iterable<Int> = if (columns != null) {
-        columns.split(",").flatMap {
-            if (it.contains(":")) {
-                val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
-                start..end
-            } else {
-                listOf(CellReference.convertColStringToIndex(it))
-            }
-        }
+        getColumnIndices(columns)
     } else {
         val headerRow = checkNotNull(sheet.getRow(skipRows)) {
             "Row number ${skipRows + 1} (1-based index) is not defined on the sheet ${sheet.sheetName}"
@@ -235,15 +273,30 @@ public fun DataFrame.Companion.readExcel(
         val name = repairNameIfRequired(nameFromCell, columnNameCounters, nameRepairStrategy)
         columnNameCounters[nameFromCell] =
             columnNameCounters.getOrDefault(nameFromCell, 0) + 1 // increase the counter for specific column name
+        val getCellValue: (Cell?) -> Any? = when {
+            formattingOptions != null && index in formattingOptions.columnIndices -> { cell: Cell? ->
+                formattingOptions.formatter.formatCellValue(cell)
+            }
 
+            else -> { cell -> cell.cellValue(sheet.sheetName) }
+        }
         val values: List<Any?> = valueRowsRange.map {
             val row: Row? = sheet.getRow(it)
             val cell: Cell? = row?.getCell(index)
-            cell.cellValue(sheet.sheetName)
+            getCellValue(cell)
         }
         DataColumn.createWithTypeInference(name, values)
     }
     return dataFrameOf(columns)
+}
+
+private fun getColumnIndices(columns: String): List<Int> = columns.split(",").flatMap {
+    if (it.contains(":")) {
+        val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
+        start..end
+    } else {
+        listOf(CellReference.convertColStringToIndex(it))
+    }
 }
 
 /**
@@ -324,7 +377,7 @@ public fun <T> DataFrame<T>.writeExcel(
     keepFile: Boolean = false,
 ) {
     val factory =
-        if (keepFile){
+        if (keepFile) {
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook(file.inputStream())
                 WorkBookType.XLSX -> XSSFWorkbook(file.inputStream())
