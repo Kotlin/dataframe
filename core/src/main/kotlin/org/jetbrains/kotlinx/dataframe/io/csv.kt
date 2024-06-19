@@ -57,8 +57,8 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
 }
 
 public enum class CSVType(public val format: CSVFormat) {
-    DEFAULT(CSVFormat.DEFAULT.withAllowMissingColumnNames().withIgnoreSurroundingSpaces()),
-    TDF(CSVFormat.TDF.withAllowMissingColumnNames())
+    DEFAULT(CSVFormat.DEFAULT.builder().setAllowMissingColumnNames(true).setIgnoreSurroundingSpaces(true).build()),
+    TDF(CSVFormat.TDF.builder().setAllowMissingColumnNames(true).build())
 }
 
 private val defaultCharset = Charsets.UTF_8
@@ -77,7 +77,7 @@ public fun DataFrame.Companion.readDelimStr(
     skipLines: Int = 0,
     readLines: Int? = null,
 ): DataFrame<*> =
-    StringReader(text).use { readDelim(it, CSVType.DEFAULT.format.withHeader(), colTypes, skipLines, readLines) }
+    StringReader(text).use { readDelim(it, CSVType.DEFAULT.format.builder().setHeader().build(), colTypes, skipLines, readLines) }
 
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
@@ -212,7 +212,7 @@ public fun asURL(fileOrUrl: String): URL = (
     ).toURL()
 
 private fun getFormat(type: CSVType, delimiter: Char, header: List<String>, duplicate: Boolean): CSVFormat =
-    type.format.withDelimiter(delimiter).withHeader(*header.toTypedArray()).withAllowDuplicateHeaderNames(duplicate)
+    type.format.builder().setDelimiter(delimiter).setHeader(*header.toTypedArray()).setAllowMissingColumnNames(duplicate).build()
 
 public fun DataFrame.Companion.readDelim(
     inStream: InputStream,
@@ -268,7 +268,7 @@ public fun ColType.toType(): KClass<out Any> = when (this) {
 
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
-    format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
+    format: CSVFormat = CSVFormat.DEFAULT.builder().setHeader().build(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,

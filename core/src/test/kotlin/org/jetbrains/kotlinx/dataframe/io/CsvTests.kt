@@ -241,7 +241,7 @@ class CsvTests {
         )
         df.writeCSV(
             "src/test/resources/without_header.csv",
-            CSVFormat.DEFAULT.withSkipHeaderRecord(),
+            CSVFormat.DEFAULT.builder().setSkipHeaderRecord(true).build(),
         )
         val producedFile = File("src/test/resources/without_header.csv")
         producedFile.exists() shouldBe true
