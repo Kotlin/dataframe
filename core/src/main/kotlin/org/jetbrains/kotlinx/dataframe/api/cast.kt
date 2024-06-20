@@ -33,6 +33,13 @@ public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T
 ).cast()
 else cast()
 
+public inline fun <reified T> AnyFrame.castTo(
+    @Suppress("UNUSED_PARAMETER") df: DataFrame<T>,
+    verify: Boolean = true
+): DataFrame<T> {
+    return cast<T>(verify = verify)
+}
+
 public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
 
 public inline fun <reified T> AnyRow.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
