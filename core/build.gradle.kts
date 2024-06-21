@@ -175,8 +175,14 @@ tasks.withType<KorroTask> {
 val generatedSourcesFolderName = "generated-sources"
 
 // Backup the kotlin source files location
-val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
-val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sourceDirectories
+val kotlinMainSources = kotlin.sourceSets.main
+    .get()
+    .kotlin.sourceDirectories
+    .toList()
+val kotlinTestSources = kotlin.sourceSets.test
+    .get()
+    .kotlin.sourceDirectories
+    .toList()
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
@@ -193,6 +199,8 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     }
     task {
         group = "KDocs"
+        // making sure it always runs, so targets is set
+        outputs.upToDateWhen { false }
     }
 }
 
@@ -203,17 +211,25 @@ idea {
     }
 }
 
-// Modify all Jar tasks such that before running the Kotlin sources are set to
-// the target of processKdocMain and they are returned back to normal afterwards.
+// if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
 tasks.withType<Jar> {
-    dependsOn(processKDocsMain)
-    mustRunAfter(tasks.generateKeywordsSrc)
-    outputs.upToDateWhen { false }
+    mustRunAfter(tasks.generateKeywordsSrc, processKDocsMain)
+}
 
+// If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
+// the target of `processKdocMain`, and they are returned to normal afterward.
+// This is usually only done when publishing
+val changeJarTask by tasks.creating {
+    outputs.upToDateWhen { false }
     doFirst {
-        kotlin.sourceSets.main {
-            kotlin.setSrcDirs(
-                processKDocsMain.targets
+        tasks.withType<Jar> {
+            dependsOn(processKDocsMain)
+            doFirst {
+                val targets = processKDocsMain.targets
+                require(targets.toList().isNotEmpty()) {
+                    logger.error("`processKDocsMain.targets` was empty, did it run before this task?")
+                }
+                val srcDirs = targets
                     .filterNot {
                         pathOf("src", "test", "kotlin") in it.path ||
                             pathOf("src", "test", "java") in it.path
@@ -222,15 +238,32 @@ tasks.withType<Jar> {
                         kotlinMainSources.filter {
                             pathOf("build", "generated") in it.path
                         },
-                    ), // Include generated sources (which were excluded above)
-            )
+                    ) // Include generated sources (which were excluded above)
+
+                kotlin.sourceSets.main {
+                    kotlin.setSrcDirs(srcDirs)
+                }
+                logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
+            }
+
+            doLast {
+                kotlin.sourceSets.main {
+                    kotlin.setSrcDirs(kotlinMainSources)
+                }
+            }
         }
     }
+}
 
-    doLast {
-        kotlin.sourceSets.main {
-            kotlin.setSrcDirs(kotlinMainSources)
-        }
+// modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
+tasks.named { it.startsWith("publish") }.configureEach {
+    dependsOn(processKDocsMain, changeJarTask)
+}
+
+// Exclude the generated/processed sources from the IDE
+idea {
+    module {
+        excludeDirs.add(file(generatedSourcesFolderName))
     }
 }
 
