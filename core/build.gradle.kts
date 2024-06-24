@@ -5,8 +5,6 @@ import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_F
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jmailen.gradle.kotlinter.tasks.FormatTask
-import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.OSType
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
@@ -19,7 +17,8 @@ plugins {
         alias(korro)
         alias(keywordGenerator)
         alias(kover)
-        alias(kotlinter)
+//        alias(kotlinter)
+        alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
 
@@ -103,9 +102,9 @@ tasks.withType<KspTask> {
     }
 }
 
-tasks.named("lintKotlinSamples") {
-    onlyIf { false }
-}
+// tasks.named("lintKotlinSamples") {
+//    onlyIf { false }
+// }
 
 val clearTestResults by tasks.creating(Delete::class) {
     delete(layout.buildDirectory.dir("dataframes"))
@@ -129,7 +128,10 @@ val samplesTest = tasks.register<Test>("samplesTest") {
     ignoreFailures = true
 
     testClassesDirs = fileTree("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin")
-    classpath = files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+    classpath =
+        files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") +
+        configurations["samplesRuntimeClasspath"] +
+        sourceSets["main"].runtimeClasspath
 }
 
 val clearSamplesOutputs by tasks.creating {
@@ -169,7 +171,7 @@ tasks.withType<KorroTask> {
 // This task installs the pre-commit hook to the local machine the first time the project is built
 // The pre-commit hook contains the command to run processKDocsMain before each commit
 val installGitPreCommitHook by tasks.creating(Copy::class) {
-    doNotTrackState(/* reasonNotToTrackState = */ "Fails on TeamCity otherwise.")
+    doNotTrackState("Fails on TeamCity otherwise.")
 
     val gitHooksDir = File(rootProject.rootDir, ".git/hooks")
     if (gitHooksDir.exists()) {
@@ -178,10 +180,12 @@ val installGitPreCommitHook by tasks.creating(Copy::class) {
         fileMode = 755
 
         // Workaround for https://github.com/Kotlin/dataframe/issues/612
-        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) doLast {
-            exec {
-                workingDir(gitHooksDir)
-                commandLine("chmod", "755", "pre-commit")
+        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) {
+            doLast {
+                exec {
+                    workingDir(gitHooksDir)
+                    commandLine("chmod", "755", "pre-commit")
+                }
             }
         }
     } else {
@@ -202,14 +206,34 @@ val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
     args.set(listOf("-A", generatedSourcesFolderName))
 }
 
-val formatGeneratedSources by tasks.creating(FormatTask::class) {
-    group = "KDocs"
-    source(files(generatedSourcesFolderName))
-}
+// tasks
+//    .register("formatGeneratedSources", KtLintFormatTask::class.java, PatternSet())
+//    .configure {
+//        val rootProjectName = project.rootProject.name
+//        var parentProject: Project? = project.parent
+//        while (parentProject != null && parentProject.name != rootProjectName) {
+//            val parentProjectPath = parentProject.path
+//            parentProject.plugins.withId("org.jlleitschuh.gradle.ktlint") {
+//                mustRunAfter("$parentProjectPath:runKtlintCheckOverKotlinScripts")
+//            }
+//            parentProject = parentProject.parent
+//        }
+//
+// //        configureBaseCheckTask(pluginHolder) {
+// //            setSource(kotlinSourceDirectories)
+// //        }
+//
+//        group = "KDocs"
+//        source(files(generatedSourcesFolderName))
+//    }
 
 // Backup the kotlin source files location
-val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
-val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sourceDirectories
+val kotlinMainSources: FileCollection = kotlin.sourceSets.main
+    .get()
+    .kotlin.sourceDirectories
+val kotlinTestSources: FileCollection = kotlin.sourceSets.test
+    .get()
+    .kotlin.sourceDirectories
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
@@ -227,8 +251,39 @@ val processKDocsMain by creatingProcessDocTask(
             // ensure generated sources are added to git
             addGeneratedSourcesToGit.executeCommand()
         }
-        finalizedBy(formatGeneratedSources)
     }
+}
+
+// tasks.runKtlintFormatOverMainSourceSet {
+//    mustRunAfter(processKDocsMain)
+//    source(generatedSourcesFolderName)
+// }
+//
+tasks.runKtlintCheckOverMainSourceSet {
+    outputs.upToDateWhen { false }
+}
+
+val ktlintCheckGeneratedSources by tasks.creating {
+    group = "kdocs"
+    dependsOn(processKDocsMain)
+    doFirst {
+        tasks.runKtlintCheckOverMainSourceSet.configure {
+            mustRunAfter(processKDocsMain)
+            source(generatedSourcesFolderName)
+        }
+    }
+    finalizedBy(tasks.ktlintCheck)
+}
+val ktlintFormatGeneratedSources by tasks.creating {
+    group = "kdocs"
+    dependsOn(processKDocsMain)
+    doFirst {
+        tasks.runKtlintFormatOverMainSourceSet.configure {
+            mustRunAfter(processKDocsMain)
+            source(generatedSourcesFolderName)
+        }
+    }
+    finalizedBy(tasks.ktlintFormat)
 }
 
 // Exclude the generated/processed sources from the IDE
@@ -253,9 +308,11 @@ tasks.withType<Jar> {
                         pathOf("src", "test", "kotlin") in it.path ||
                             pathOf("src", "test", "java") in it.path
                     } // filter out test sources again
-                    .plus(kotlinMainSources.filter {
-                        pathOf("build", "generated") in it.path
-                    }) // Include generated sources (which were excluded above)
+                    .plus(
+                        kotlinMainSources.filter {
+                            pathOf("build", "generated") in it.path
+                        },
+                    ), // Include generated sources (which were excluded above)
             )
         }
     }
@@ -316,36 +373,33 @@ tasks.withType<KspTaskJvm> {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.formatKotlinMain {
+tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
 }
-
-tasks.formatKotlinTest {
+tasks.runKtlintFormatOverTestSourceSet {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspTestKotlin")
+}
+tasks.runKtlintCheckOverMainSourceSet {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
 }
 
-tasks.lintKotlinMain {
-    dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspKotlin")
-}
-
-tasks.lintKotlinTest {
-    dependsOn(tasks.generateKeywordsSrc)
-    dependsOn("kspTestKotlin")
-}
-
-tasks.withType<LintTask> {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
-}
+// tasks.withType<LintTask> {
+//    exclude("**/*keywords*/**")
+//    exclude {
+//        it.name.endsWith(".Generated.kt")
+//    }
+//    exclude {
+//        it.name.endsWith("\$Extensions.kt")
+//    }
+//    enabled = true
+// }
 
 kotlin {
     explicitApi()
@@ -368,8 +422,8 @@ tasks.test {
         excludes.set(
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
-                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
-            )
+                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
+            ),
         )
     }
 }

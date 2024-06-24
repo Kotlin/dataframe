@@ -8,10 +8,7 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 
-fun useHostedJson(
-    json: String,
-    f: (url: String) -> Unit,
-) {
+fun useHostedJson(json: String, f: (url: String) -> Unit) {
     // duplicated in ksp/EmbeddedServerRunners.kt
     val port = 14771
     val server = embeddedServer(Netty, port = port) {

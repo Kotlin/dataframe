@@ -63,10 +63,7 @@ internal fun <T> List<T>.removeAt(index: Int) = subList(0, index) + subList(inde
 
 internal inline fun <reified T : Any> Int.cast() = convert(this, T::class)
 
-internal fun <T : Any> convert(
-    src: Int,
-    tartypeOf: KClass<T>,
-): T =
+internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T =
     when (tartypeOf) {
         Double::class -> src.toDouble() as T
         Long::class -> src.toLong() as T
@@ -144,10 +141,8 @@ internal fun <T> catchSilent(body: () -> T): T? =
         null
     }
 
-internal fun Iterable<KClass<*>>.commonType(
-    nullable: Boolean,
-    upperBound: KType? = null,
-) = commonParents(this).createType(nullable, upperBound)
+internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
+    commonParents(this).createType(nullable, upperBound)
 
 /**
  * Returns the common supertype of the given types.
@@ -284,64 +279,36 @@ internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Byte,
-    cols: ByteArray,
-): ByteArray = byteArrayOf(head) + cols
+internal fun headPlusArray(head: Byte, cols: ByteArray): ByteArray = byteArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Short,
-    cols: ShortArray,
-): ShortArray = shortArrayOf(head) + cols
+internal fun headPlusArray(head: Short, cols: ShortArray): ShortArray = shortArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Int,
-    cols: IntArray,
-): IntArray = intArrayOf(head) + cols
+internal fun headPlusArray(head: Int, cols: IntArray): IntArray = intArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Long,
-    cols: LongArray,
-): LongArray = longArrayOf(head) + cols
+internal fun headPlusArray(head: Long, cols: LongArray): LongArray = longArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Float,
-    cols: FloatArray,
-): FloatArray = floatArrayOf(head) + cols
+internal fun headPlusArray(head: Float, cols: FloatArray): FloatArray = floatArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Double,
-    cols: DoubleArray,
-): DoubleArray = doubleArrayOf(head) + cols
+internal fun headPlusArray(head: Double, cols: DoubleArray): DoubleArray = doubleArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Boolean,
-    cols: BooleanArray,
-): BooleanArray = booleanArrayOf(head) + cols
+internal fun headPlusArray(head: Boolean, cols: BooleanArray): BooleanArray = booleanArrayOf(head) + cols
 
 @PublishedApi
-internal fun headPlusArray(
-    head: Char,
-    cols: CharArray,
-): CharArray = charArrayOf(head) + cols
+internal fun headPlusArray(head: Char, cols: CharArray): CharArray = charArrayOf(head) + cols
 
 @PublishedApi
-internal inline fun <reified C> headPlusArray(
-    head: C,
-    cols: Array<out C>,
-): Array<C> = (listOf(head) + cols.toList()).toTypedArray()
+internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
+    (listOf(head) + cols.toList()).toTypedArray()
 
 @PublishedApi
-internal inline fun <reified C> headPlusIterable(
-    head: C,
-    cols: Iterable<C>,
-): Iterable<C> = (listOf(head) + cols.asIterable())
+internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iterable<C> =
+    (listOf(head) + cols.asIterable())
 
 internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<DataFrame<T>> =
     (startIndices + nrow).zipWithNext {
@@ -367,11 +334,7 @@ internal fun <T> T.asNullable() = this as T?
 
 internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
 
-internal fun <T : Comparable<T>> T.between(
-    left: T,
-    right: T,
-    includeBoundaries: Boolean = true,
-): Boolean =
+internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
     if (includeBoundaries) {
         this in left..right
     } else {

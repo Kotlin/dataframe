@@ -54,10 +54,7 @@ private fun KType.isRecursiveListOfDataFrame(depth: Int = 0): Pair<Boolean, Int>
  * @param convertTo Optional [ConvertSchemaDsl] to use for the conversion.
  * @return Receiver with converted [DataFrame]s.
  */
-private fun Any?.convertRecursiveListOfDataFrame(
-    type: KType,
-    convertTo: ConvertSchemaDsl<*>.() -> Unit = {},
-): Any? =
+private fun Any?.convertRecursiveListOfDataFrame(type: KType, convertTo: ConvertSchemaDsl<*>.() -> Unit = {}): Any? =
     when (this) {
         is List<*> -> map { it?.convertRecursiveListOfDataFrame(type.arguments[0].type!!, convertTo) }
         is DataFrame<*> -> convertTo(schemaType = type.arguments[0].type!!, body = convertTo)

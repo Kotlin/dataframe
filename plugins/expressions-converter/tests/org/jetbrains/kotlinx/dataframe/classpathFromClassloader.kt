@@ -50,10 +50,7 @@ private val validJarCollectionFilesExtensions = setOf("jar", "war", "zip")
 
 class ClasspathExtractionException(message: String) : Exception(message)
 
-fun classpathFromClassloader(
-    currentClassLoader: ClassLoader,
-    unpackJarCollections: Boolean = false,
-): List<File>? {
+fun classpathFromClassloader(currentClassLoader: ClassLoader, unpackJarCollections: Boolean = false): List<File>? {
     val processedJars = hashSetOf<File>()
     val unpackJarCollectionsDir by lazy {
         File.createTempFile("unpackedJarCollections", null).canonicalFile.apply {
@@ -228,19 +225,14 @@ fun classpathFromClasspathProperty(): List<File>? =
         ?.dropLastWhile(String::isEmpty)
         ?.map(::File)
 
-fun classpathFromClass(
-    classLoader: ClassLoader,
-    klass: KClass<out Any>,
-): List<File>? = classpathFromFQN(classLoader, klass.qualifiedName!!)
+fun classpathFromClass(classLoader: ClassLoader, klass: KClass<out Any>): List<File>? =
+    classpathFromFQN(classLoader, klass.qualifiedName!!)
 
 fun classpathFromClass(klass: KClass<out Any>): List<File>? = classpathFromClass(klass.java.classLoader, klass)
 
 inline fun <reified T : Any> classpathFromClass(): List<File>? = classpathFromClass(T::class)
 
-fun classpathFromFQN(
-    classLoader: ClassLoader,
-    fqn: String,
-): List<File>? {
+fun classpathFromFQN(classLoader: ClassLoader, fqn: String): List<File>? {
     val clp = "${fqn.replace('.', '/')}.class"
     return classLoader
         .rawClassPathFromKeyResourcePath(clp)
@@ -480,11 +472,9 @@ object KotlinJars {
                 classLoader ?: Thread.currentThread().contextClassLoader,
             )?.takeIf(File::exists)
 
-    private fun getExplicitLib(
-        propertyName: String,
-        jarName: String,
-    ) = System.getProperty(propertyName)?.let(::File)?.takeIf(File::exists)
-        ?: explicitCompilerClasspath?.firstOrNull { it.matchMaybeVersionedFile(jarName) }?.takeIf(File::exists)
+    private fun getExplicitLib(propertyName: String, jarName: String) =
+        System.getProperty(propertyName)?.let(::File)?.takeIf(File::exists)
+            ?: explicitCompilerClasspath?.firstOrNull { it.matchMaybeVersionedFile(jarName) }?.takeIf(File::exists)
 
     val stdlibOrNull: File? by lazy {
         System.getProperty(KOTLIN_STDLIB_JAR_PROPERTY)?.let(::File)?.takeIf(File::exists)

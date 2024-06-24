@@ -58,8 +58,5 @@ public abstract class DbType(public val dbTypeInJdbcUrl: String) {
      * @param limit The maximum number of rows to retrieve from the query. Default is 1.
      * @return A new SQL query with the limit clause added.
      */
-    public open fun sqlQueryLimit(
-        sqlQuery: String,
-        limit: Int = 1,
-    ): String = "$sqlQuery LIMIT $limit"
+    public open fun sqlQueryLimit(sqlQuery: String, limit: Int = 1): String = "$sqlQuery LIMIT $limit"
 }

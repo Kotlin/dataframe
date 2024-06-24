@@ -57,11 +57,7 @@ internal fun interface ProduceAdditionalMarker {
      * @return the name of the produced marker. This name is guaranteed to be unique and might not be the same as the
      *   provided [validName].
      */
-    operator fun invoke(
-        validName: ValidFieldName,
-        marker: OpenApiMarker,
-        isTopLevelObject: Boolean,
-    ): String
+    operator fun invoke(validName: ValidFieldName, marker: OpenApiMarker, isTopLevelObject: Boolean): String
 
     companion object {
         /** No-op implementation. Passes through `validName`. */
@@ -83,10 +79,7 @@ internal fun interface RetrievableMarker {
      *
      * @return A [MarkerResult.OpenApiMarker] if successful, otherwise [MarkerResult.CannotFindRefMarker].
      */
-    operator fun invoke(
-        getRefMarker: GetRefMarker,
-        produceAdditionalMarker: ProduceAdditionalMarker,
-    ): MarkerResult
+    operator fun invoke(getRefMarker: GetRefMarker, produceAdditionalMarker: ProduceAdditionalMarker): MarkerResult
 }
 
 /** Either a [OpenApiTypeResult.UsingRef], [OpenApiTypeResult.CannotFindRefMarker], [OpenApiTypeResult.OpenApiType],

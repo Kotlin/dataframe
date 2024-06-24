@@ -3,7 +3,8 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
+//        alias(kotlinter)
         alias(jupyter.api)
     }
 }

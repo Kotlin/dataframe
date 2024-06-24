@@ -1,6 +1,7 @@
+@file:ExcludeFromSources
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
-@ExcludeFromSources
 internal interface DocumentationUrls {
     /** https://kotlin.github.io/dataframe */
     interface Url

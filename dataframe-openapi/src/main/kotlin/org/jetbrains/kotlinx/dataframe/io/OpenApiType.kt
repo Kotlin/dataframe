@@ -18,10 +18,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
     object String : OpenApiType("string") {
 
-        fun getType(
-            nullable: kotlin.Boolean,
-            format: OpenApiStringFormat?,
-        ): FieldType.ValueFieldType =
+        fun getType(nullable: kotlin.Boolean, format: OpenApiStringFormat?): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
                 typeFqName = when (format) {
                     OpenApiStringFormat.DATE -> if (nullable) typeOf<LocalDate?>() else typeOf<LocalDate>()
@@ -36,10 +33,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
     object Integer : OpenApiType("integer") {
 
-        fun getType(
-            nullable: kotlin.Boolean,
-            format: OpenApiIntegerFormat?,
-        ): FieldType.ValueFieldType =
+        fun getType(nullable: kotlin.Boolean, format: OpenApiIntegerFormat?): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
                 typeFqName = when (format) {
                     null, OpenApiIntegerFormat.INT32 -> if (nullable) typeOf<Int?>() else typeOf<Int>()
@@ -50,10 +44,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
     object Number : OpenApiType("number") {
 
-        fun getType(
-            nullable: kotlin.Boolean,
-            format: OpenApiNumberFormat?,
-        ): FieldType.ValueFieldType =
+        fun getType(nullable: kotlin.Boolean, format: OpenApiNumberFormat?): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
                 typeFqName = when (format) {
                     null, OpenApiNumberFormat.FLOAT -> if (nullable) typeOf<Float?>() else typeOf<Float>()
@@ -72,10 +63,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
     object Object : OpenApiType("object") {
 
-        fun getType(
-            nullable: kotlin.Boolean,
-            marker: OpenApiMarker,
-        ): FieldType =
+        fun getType(nullable: kotlin.Boolean, marker: OpenApiMarker): FieldType =
             FieldType.GroupFieldType(
                 markerName = marker.name.let {
                     if (nullable) it.toNullable() else it
@@ -96,19 +84,13 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
     object Array : OpenApiType("array") {
 
         /** used for list of primitives (read as List<MyPrimitive>) */
-        fun getTypeAsList(
-            nullableArray: kotlin.Boolean,
-            typeFqName: kotlin.String,
-        ): FieldType.ValueFieldType =
+        fun getTypeAsList(nullableArray: kotlin.Boolean, typeFqName: kotlin.String): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
                 typeFqName = "${List::class.qualifiedName!!}<$typeFqName>${if (nullableArray) "?" else ""}",
             )
 
         /** used for list of objects (read as DataFrame<MyMarker>) */
-        fun getTypeAsFrame(
-            nullable: kotlin.Boolean,
-            markerName: kotlin.String,
-        ): FieldType.FrameFieldType =
+        fun getTypeAsFrame(nullable: kotlin.Boolean, markerName: kotlin.String): FieldType.FrameFieldType =
             FieldType.FrameFieldType(
                 markerName = markerName.let { if (nullable) it.toNullable() else it },
                 nullable = false, // preferring DataFrame<Something?> over DataFrame<Something>?

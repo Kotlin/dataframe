@@ -49,11 +49,7 @@ public class OpenApi : SupportedCodeGenerationFormat {
             generateHelperCompanionObject = generateHelperCompanionObject,
         )
 
-    override fun readCodeForGeneration(
-        file: File,
-        name: String,
-        generateHelperCompanionObject: Boolean,
-    ): Code =
+    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code =
         readOpenApiAsString(
             openApiAsString = file.readText(),
             name = name,

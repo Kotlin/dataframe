@@ -1324,10 +1324,7 @@ class DataFrameSymbolProcessorTest {
         inspectLines(GENERATED_FILE, f)
     }
 
-    private fun KotlinCompileTestingCompilationResult.inspectLines(
-        filename: String,
-        f: (List<String>) -> Unit,
-    ) {
+    private fun KotlinCompileTestingCompilationResult.inspectLines(filename: String, f: (List<String>) -> Unit) {
         kspGeneratedFiles.single { it.name == filename }.readLines().asClue(f)
     }
 }

@@ -35,10 +35,7 @@ internal sealed class OpenApiMarker private constructor(
 
     abstract val additionalPropertyPaths: List<JsonPath>
 
-    abstract fun withName(
-        name: String,
-        prependTopInterfaceName: Boolean = true,
-    ): OpenApiMarker
+    abstract fun withName(name: String, prependTopInterfaceName: Boolean = true): OpenApiMarker
 
     abstract fun withVisibility(visibility: MarkerVisibility): OpenApiMarker
 
@@ -85,10 +82,7 @@ internal sealed class OpenApiMarker private constructor(
                 typeFqName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(
-            name: String,
-            prependTopInterfaceName: Boolean,
-        ): Enum =
+        override fun withName(name: String, prependTopInterfaceName: Boolean): Enum =
             Enum(
                 nullable = nullable,
                 fields = fields,
@@ -143,10 +137,7 @@ internal sealed class OpenApiMarker private constructor(
                 markerName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(
-            name: String,
-            prependTopInterfaceName: Boolean,
-        ): Interface =
+        override fun withName(name: String, prependTopInterfaceName: Boolean): Interface =
             Interface(
                 nullable = nullable,
                 fields = fields,
@@ -220,10 +211,7 @@ internal sealed class OpenApiMarker private constructor(
                 nullable = false,
             )
 
-        override fun withName(
-            name: String,
-            prependTopInterfaceName: Boolean,
-        ): AdditionalPropertyInterface =
+        override fun withName(name: String, prependTopInterfaceName: Boolean): AdditionalPropertyInterface =
             AdditionalPropertyInterface(
                 nullable = nullable,
                 valueType = valueType,
@@ -289,10 +277,7 @@ internal sealed class OpenApiMarker private constructor(
                 typeFqName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(
-            name: String,
-            prependTopInterfaceName: Boolean,
-        ): TypeAlias =
+        override fun withName(name: String, prependTopInterfaceName: Boolean): TypeAlias =
             TypeAlias(
                 nullable = nullable,
                 name = name,
@@ -349,10 +334,7 @@ internal sealed class OpenApiMarker private constructor(
                 markerName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(
-            name: String,
-            prependTopInterfaceName: Boolean,
-        ): MarkerAlias =
+        override fun withName(name: String, prependTopInterfaceName: Boolean): MarkerAlias =
             MarkerAlias(
                 superMarker = superMarker,
                 topInterfaceName = topInterfaceName,

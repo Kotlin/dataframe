@@ -5,8 +5,8 @@ kotlinJupyter = "0.12.0-139"
 
 # TODO Updating requires major changes all across the project
 # https://github.com/Kotlin/dataframe/issues/364
-ktlint = "4.3.0"
-#ktlint = "3.4.5"
+#ktlint = "4.4.0"
+ktlint = "12.1.1"
 
 # make sure to sync manually with :generator module
 kotlin = "2.0.0"
@@ -53,7 +53,7 @@ kotestAsserions = "5.5.4"
 
 jsoup = "1.17.2"
 arrow = "15.0.0"
-docProcessor = "0.3.8"
+docProcessor = "0.3.9"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
 plugin-publish = "1.2.1"
@@ -140,7 +140,6 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
 publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
 korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
-kotlinter = { id = "org.jmailen.kotlinter", version.ref = "ktlint" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }
@@ -150,3 +149,4 @@ kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

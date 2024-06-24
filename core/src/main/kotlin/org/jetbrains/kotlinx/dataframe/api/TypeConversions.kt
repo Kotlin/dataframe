@@ -283,10 +283,7 @@ public class NullabilityException : Exception()
  * @return if column should be marked nullable for current [NullabilityOptions] value with actual [data] and [expectedNulls] per some schema/signature.
  * @throws [NullabilityException] for [NullabilityOptions.Checking] if [expectedNulls] is false and [data] contains nulls.
  */
-public fun NullabilityOptions.applyNullability(
-    data: List<Any?>,
-    expectedNulls: Boolean,
-): Boolean {
+public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {
     val hasNulls = data.anyNull()
     return when (this) {
         NullabilityOptions.Infer -> hasNulls
@@ -304,10 +301,7 @@ public fun NullabilityOptions.applyNullability(
     }
 }
 
-public inline fun <reified T> Iterable<T>.toColumn(
-    name: String = "",
-    infer: Infer = Infer.Nulls,
-): DataColumn<T> =
+public inline fun <reified T> Iterable<T>.toColumn(name: String = "", infer: Infer = Infer.Nulls): DataColumn<T> =
     (
         if (infer == Infer.Type) {
             DataColumn.createWithTypeInference(name, asList())

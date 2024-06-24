@@ -17,15 +17,11 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 
 public class ArrowFeather : SupportedDataFrameFormat {
-    override fun readDataFrame(
-        stream: InputStream,
-        header: List<String>,
-    ): AnyFrame = DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
+        DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
 
-    override fun readDataFrame(
-        file: File,
-        header: List<String>,
-    ): AnyFrame = DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
+        DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "feather"
 

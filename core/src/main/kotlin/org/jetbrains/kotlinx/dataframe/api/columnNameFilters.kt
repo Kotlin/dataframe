@@ -174,10 +174,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameContains][String.colsNameContains]`("my") }`
      */
-    public fun String.colsNameContains(
-        text: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameContains(text, ignoreCase)
+    public fun String.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
+        columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * @include [NameContainsTextDocs]
@@ -483,10 +481,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameEndsWith][String.colsNameEndsWith]`("-order") }`
      */
-    public fun String.colsNameEndsWith(
-        suffix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+    public fun String.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
+        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * @include [CommonNameEndsWithDocs]

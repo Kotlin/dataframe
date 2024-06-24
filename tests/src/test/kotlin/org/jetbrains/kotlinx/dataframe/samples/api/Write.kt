@@ -23,6 +23,7 @@ import org.junit.Test
 import java.io.File
 import kotlin.io.path.deleteExisting
 
+@Suppress("ktlint:standard:no-consecutive-comments")
 class Write : TestBase() {
 
     @Test

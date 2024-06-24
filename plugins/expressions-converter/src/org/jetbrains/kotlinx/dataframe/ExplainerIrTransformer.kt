@@ -68,27 +68,20 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
         })
     }
 
-    override fun visitBlockBody(
-        body: IrBlockBody,
-        data: ContainingDeclarations,
-    ): IrBody {
+    override fun visitBlockBody(body: IrBlockBody, data: ContainingDeclarations): IrBody {
         @Suppress("ktlint")
         for (i in 0 until body.statements.size) {
             @Suppress("UNCHECKED_CAST")
-            (body.statements.set(i, (body.statements.get(i) as IrElementBase).transform(this, data.copy(statementIndex = i)) as IrStatement))
+            (body.statements.set(i, (body.statements.get(i) as org.jetbrains.kotlin.ir.IrElementBase)
+                .transform(this, data.copy(statementIndex = i)) as IrStatement))
         }
         return body
     }
 
-    override fun visitClass(
-        declaration: IrClass,
-        data: ContainingDeclarations,
-    ): IrStatement = super.visitClass(declaration, data.copy(clazz = declaration))
+    override fun visitClass(declaration: IrClass, data: ContainingDeclarations): IrStatement =
+        super.visitClass(declaration, data.copy(clazz = declaration))
 
-    override fun visitFunction(
-        declaration: IrFunction,
-        data: ContainingDeclarations,
-    ): IrStatement {
+    override fun visitFunction(declaration: IrFunction, data: ContainingDeclarations): IrStatement {
         val annotated = declaration.annotations.any {
             it.type.classFqName
                 ?.shortName()
@@ -102,28 +95,19 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
         }
     }
 
-    override fun visitElement(
-        element: IrElement,
-        data: ContainingDeclarations,
-    ): IrElement {
+    override fun visitElement(element: IrElement, data: ContainingDeclarations): IrElement {
         element.transformChildren(this, data)
         return element
     }
 
-    override fun visitField(
-        declaration: IrField,
-        data: ContainingDeclarations,
-    ): IrStatement {
+    override fun visitField(declaration: IrField, data: ContainingDeclarations): IrStatement {
         if (declaration.isLocal) {
             declaration.transformChildren(this, data)
         }
         return declaration
     }
 
-    override fun visitExpressionBody(
-        body: IrExpressionBody,
-        data: ContainingDeclarations,
-    ): IrBody = body
+    override fun visitExpressionBody(body: IrExpressionBody, data: ContainingDeclarations): IrBody = body
 
     val dataFrameLike = setOf(
         FqName("org.jetbrains.kotlinx.dataframe.api.Pivot"),
@@ -144,10 +128,7 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
 
     val explainerPackage = FqName("org.jetbrains.kotlinx.dataframe.explainer")
 
-    override fun visitGetValue(
-        expression: IrGetValue,
-        data: ContainingDeclarations,
-    ): IrExpression {
+    override fun visitGetValue(expression: IrGetValue, data: ContainingDeclarations): IrExpression {
         if (expression.startOffset < 0) return expression
         if (expression.type.classFqName in dataFrameLike) {
             return transformDataFrameExpression(expression, expression.symbol.owner.name, receiver = null, data)
@@ -156,10 +137,7 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
     }
 
     // also, what if expression type is not DataFrame, but Unit? and receiver expression is DataFrame at some point
-    override fun visitCall(
-        expression: IrCall,
-        data: ContainingDeclarations,
-    ): IrExpression {
+    override fun visitCall(expression: IrCall, data: ContainingDeclarations): IrExpression {
         if (expression.startOffset < 0) return expression
         if (expression.type.classFqName in dataFrameLike) {
             if (expression.symbol.owner.name == Name.identifier("component1")) return expression

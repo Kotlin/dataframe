@@ -42,10 +42,7 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         "import org.jetbrains.kotlinx.dataframe.io.${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}",
     )
 
-    override fun toDeclaration(
-        marker: Marker,
-        visibility: String,
-    ): String {
+    override fun toDeclaration(marker: Marker, visibility: String): String {
         val returnType = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(marker.shortName)))
 
         // convertTo: ConvertSchemaDsl<MyMarker>.() -> Unit = {}

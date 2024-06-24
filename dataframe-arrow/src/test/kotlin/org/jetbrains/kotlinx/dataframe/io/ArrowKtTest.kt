@@ -521,10 +521,7 @@ internal class ArrowKtTest {
         DataFrame.readArrowIPC(writeArrowTimestamp(dates, true)) shouldBe dataFrame
     }
 
-    private fun writeArrowTimestamp(
-        dates: List<LocalDateTime>,
-        streaming: Boolean = false,
-    ): ByteArray {
+    private fun writeArrowTimestamp(dates: List<LocalDateTime>, streaming: Boolean = false): ByteArray {
         RootAllocator().use { allocator ->
             val timeStampMilli = Field(
                 "ts_milli",

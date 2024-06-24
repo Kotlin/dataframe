@@ -49,10 +49,7 @@ internal fun generatedFieldOf(
     )
 
 /** Helper function to create a [GeneratedField] for enums. */
-internal fun generatedEnumFieldOf(
-    fieldName: ValidFieldName,
-    columnName: String,
-): GeneratedField =
+internal fun generatedEnumFieldOf(fieldName: ValidFieldName, columnName: String): GeneratedField =
     generatedFieldOf(
         fieldName = fieldName,
         columnName = columnName,

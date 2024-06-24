@@ -45,10 +45,7 @@ public fun AnyFrame.writeArrowIPC(stream: OutputStream) {
  * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
  * If file exists, it can be recreated or expanded.
  */
-public fun AnyFrame.writeArrowIPC(
-    file: File,
-    append: Boolean = true,
-) {
+public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
     this.arrowWriter().use { writer ->
         writer.writeArrowIPC(file, append)
     }

@@ -18,11 +18,7 @@ import kotlin.reflect.typeOf
  * Assert that we have got the same data that was originally saved on example creation.
  * Example generation project is currently located at https://github.com/Kopilov/arrow_example
  */
-internal fun assertEstimations(
-    exampleFrame: AnyFrame,
-    expectedNullable: Boolean,
-    hasNulls: Boolean,
-) {
+internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean, hasNulls: Boolean) {
     /**
      * In [exampleFrame] we get two concatenated batches. To assert the estimations, we should transform frame row number to batch row number
      */
@@ -33,11 +29,7 @@ internal fun assertEstimations(
 
     fun expectedNull(rowNumber: Int): Boolean = (rowNumber + 1) % 5 == 0
 
-    fun assertValueOrNull(
-        rowNumber: Int,
-        actual: Any?,
-        expected: Any,
-    ) {
+    fun assertValueOrNull(rowNumber: Int, actual: Any?, expected: Any) {
         if (hasNulls && expectedNull(rowNumber)) {
             actual shouldBe null
         } else {

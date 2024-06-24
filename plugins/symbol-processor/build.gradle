@@ -4,7 +4,8 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.publisher)
-    alias(libs.plugins.kotlinter)
+    alias(libs.plugins.ktlint)
+//    alias(libs.plugins.kotlinter)
 }
 
 repositories {

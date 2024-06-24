@@ -1,3 +1,5 @@
+@file:ExcludeFromSources
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -11,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
  * Expressing values using a "Column Expression" can occur exclusively in a
  * {@include [ColumnExpressionLink]}.
  */
-@ExcludeFromSources
 internal interface ExpressionsGivenColumn {
     /*
      * The key for a @set that will define the operation name for the examples below.

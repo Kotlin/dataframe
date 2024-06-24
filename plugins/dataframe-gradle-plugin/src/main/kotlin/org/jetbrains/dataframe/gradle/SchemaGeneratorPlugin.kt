@@ -163,10 +163,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val extensionClass: Class<T>,
         val defaultSourceSet: String,
     ) {
-        fun getKotlinRoot(
-            sourceDirectories: FileCollection,
-            sourceSetName: String,
-        ): File {
+        fun getKotlinRoot(sourceDirectories: FileCollection, sourceSetName: String): File {
             fun sourceSet(lang: String) = Paths.get("src", sourceSetName, lang)
             val ktSet = sourceSet("kotlin")
             val javaSet = sourceSet("java")

@@ -259,11 +259,7 @@ private fun List<Nothing?>.withTypeNullable(
     return this to nothingType(nullable)
 }
 
-private fun readField(
-    root: VectorSchemaRoot,
-    field: Field,
-    nullability: NullabilityOptions,
-): AnyBaseCol {
+private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
     try {
         val range = 0 until root.rowCount
         val (list, type) = when (val vector = root.getVector(field)) {

@@ -648,10 +648,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         testCompanionObject(TestData.jsonName, TestData.jsonSample)
     }
 
-    private fun testCompanionObject(
-        dataName: String,
-        dataSample: String,
-    ) {
+    private fun testCompanionObject(dataName: String, dataSample: String) {
         val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, dataName)
             dataFile.writeText(dataSample)

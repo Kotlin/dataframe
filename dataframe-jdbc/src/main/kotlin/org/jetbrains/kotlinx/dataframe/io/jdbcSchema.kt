@@ -21,10 +21,7 @@ public val CodeGenerator.Companion.databaseCodeGenReader: (
         }
     }
 
-public fun buildCodeForDB(
-    url: URL,
-    name: String,
-): Code {
+public fun buildCodeForDB(url: URL, name: String): Code {
     val annotationName = DataSchema::class.simpleName
     val visibility = "public "
     val propertyVisibility = "public "

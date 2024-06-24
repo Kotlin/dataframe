@@ -10,24 +10,8 @@ import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
-
-buildscript {
-    configurations.classpath {
-        resolutionStrategy {
-            force(
-                "com.pinterest.ktlint:ktlint-rule-engine:1.3.0",
-                "com.pinterest.ktlint:ktlint-rule-engine-core:1.3.0",
-                "com.pinterest.ktlint:ktlint-cli-reporter-core:1.3.0",
-                "com.pinterest.ktlint:ktlint-cli-reporter-checkstyle:1.3.0",
-                "com.pinterest.ktlint:ktlint-cli-reporter-json:1.3.0",
-                "com.pinterest.ktlint:ktlint-cli-reporter-html:1.3.0",
-                "com.pinterest.ktlint:ktlint-cli-reporter-plain:1.3.0",
-                "com.pinterest.ktlint:ktlint-cli-reporter-sarif:1.3.0",
-                "com.pinterest.ktlint:ktlint-ruleset-standard:1.3.0",
-            )
-        }
-    }
-}
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     with(libs.plugins) {
@@ -37,7 +21,8 @@ plugins {
         alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
-        alias(kotlinter)
+//        alias(kotlinter)
+        alias(ktlint)
         alias(korro) apply false
         alias(docProcessor) apply false
         alias(simpleGit) apply false
@@ -97,15 +82,21 @@ val dependencyUpdateExclusions = listOf(
     // 5.6 requires Java 11
     libs.klaxon.get().name,
     // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
-    libs.plugins.kover.get().pluginId,
+    libs.plugins.kover
+        .get()
+        .pluginId,
     // TODO Updating requires major changes all across the project, https://github.com/Kotlin/dataframe/issues/364
-    libs.plugins.kotlinter.get().pluginId,
+//    libs.plugins.kotlinter.get().pluginId,
     // TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
     libs.kotestAssertions.get().name,
     // Can't be updated to 7.4.0+ due to Java 8 compatibility
-    libs.android.gradle.api.get().group,
+    libs.android.gradle.api
+        .get()
+        .group,
     // TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
-    libs.plugins.korro.get().pluginId,
+    libs.plugins.korro
+        .get()
+        .pluginId,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
 )
@@ -125,14 +116,16 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     doLast {
         val outputFile = layout.buildDirectory
             .file("../$outputDir/$reportfileName.json")
-            .get().asFile
+            .get()
+            .asFile
         when (val outDatedDependencies = DataFrame.readJson(outputFile)["outdated"]["dependencies"][0]) {
             is AnyFrame -> {
-                val df = outDatedDependencies.select {
-                    cols("group", "name", "version") and {
-                        "available"["milestone"] named "newVersion"
-                    }
-                }.filter { "name"() !in dependencyUpdateExclusions && "group"() !in dependencyUpdateExclusions }
+                val df = outDatedDependencies
+                    .select {
+                        cols("group", "name", "version") and {
+                            "available"["milestone"] named "newVersion"
+                        }
+                    }.filter { "name"() !in dependencyUpdateExclusions && "group"() !in dependencyUpdateExclusions }
                 logger.warn("Outdated dependencies found:")
                 df.print(
                     rowsLimit = Int.MAX_VALUE,
@@ -148,6 +141,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
+val rootDir = projectDir
 allprojects {
     afterEvaluate {
         extensions.findByType(KotlinJvmProjectExtension::class)?.apply {
@@ -162,16 +156,45 @@ allprojects {
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
     }
 
-    // Attempts to configure kotlinter for each sub-project that uses the plugin
+//    // Attempts to configure kotlinter for each sub-project that uses the plugin
+//    afterEvaluate {
+//        try {
+//            kotlinter {
+//                failBuildWhenCannotAutoFormat = false
+//                ignoreFailures = false
+//                reporters = arrayOf("checkstyle", "plain")
+//            }
+//        } catch (_: UnknownDomainObjectException) {
+//            logger.warn("Could not set kotlinter config on :${this.name}")
+//        }
+//    }
     afterEvaluate {
         try {
-            kotlinter {
-                failBuildWhenCannotAutoFormat = false
-                ignoreFailures = false
-                reporters = arrayOf("checkstyle", "plain")
+            configure<KtlintExtension> {
+                version = "1.3.0"
+                debug = true
+                enableExperimentalRules = true
+                additionalEditorconfig.putAll(
+                    mapOf(
+                        "ij_kotlin_packages_to_use_import_on_demand" to "unset",
+                        "ktlint_code_style" to "ktlint_official",
+                        "ktlint_standard_filename" to "disabled",
+                        "ktlint_standard_no-empty-first-line-in-class-body" to "disabled",
+                        "ktlint_class_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than" to "4",
+                        "ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than" to
+                            "4",
+                        "ktlint_ignore_back_ticked_identifier" to "true",
+                        "ktlint_standard_multiline-expression-wrapping" to "disabled",
+                    ),
+                )
+
+                filter {
+                    exclude("*/build/**/*", "**/*keywords*/**", "**/*.Generated.kt", "**/*\$Extensions.kt")
+                    // exclude("*/generated-sources/**/*")
+                }
             }
-        } catch (_: UnknownDomainObjectException) {
-            logger.warn("Could not set kotlinter config on :${this.name}")
+        } catch (e: Exception) {
+            logger.warn("Could not set ktlint config on :${this.name}")
         }
     }
 }

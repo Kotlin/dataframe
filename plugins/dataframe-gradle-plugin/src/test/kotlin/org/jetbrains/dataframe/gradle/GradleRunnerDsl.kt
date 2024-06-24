@@ -19,10 +19,7 @@ fun runGradleBuild(
     return Build(buildDir, gradleRunner(buildDir, task).build())
 }
 
-fun gradleRunner(
-    buildDir: File,
-    task: String,
-): GradleRunner =
+fun gradleRunner(buildDir: File, task: String): GradleRunner =
     GradleRunner
         .create()
         .withProjectDir(buildDir)

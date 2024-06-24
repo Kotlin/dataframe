@@ -40,15 +40,9 @@ import java.util.Calendar
 import java.util.Date
 
 public class Excel : SupportedDataFrameFormat {
-    override fun readDataFrame(
-        stream: InputStream,
-        header: List<String>,
-    ): AnyFrame = DataFrame.readExcel(stream)
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
 
-    override fun readDataFrame(
-        file: File,
-        header: List<String>,
-    ): AnyFrame = DataFrame.readExcel(file)
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
 

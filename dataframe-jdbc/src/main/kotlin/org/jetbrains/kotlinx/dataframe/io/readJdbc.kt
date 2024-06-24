@@ -388,10 +388,7 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(
-    connection: Connection,
-    tableName: String,
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tableName: String): DataFrameSchema {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -434,10 +431,7 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(
-    connection: Connection,
-    sqlQuery: String,
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -458,10 +452,7 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForResultSet(
-    resultSet: ResultSet,
-    dbType: DbType,
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema {
     val tableColumns = getTableColumnsMetadata(resultSet)
     return buildSchemaByTableColumns(tableColumns, dbType)
 }
@@ -476,10 +467,7 @@ public fun DataFrame.Companion.getSchemaForResultSet(
  * @param [connection] the connection to the database (it's required to extract the database type).
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForResultSet(
-    resultSet: ResultSet,
-    connection: Connection,
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, connection: Connection): DataFrameSchema {
     val url = connection.metaData.url
     val dbType = extractDBTypeFromUrl(url)
 
@@ -549,10 +537,7 @@ private fun buildSchemaByTableColumns(
     )
 }
 
-private fun generateColumnSchemaValue(
-    dbType: DbType,
-    tableColumnMetadata: TableColumnMetadata,
-): ColumnSchema =
+private fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
     dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(
         makeCommonSqlToKTypeMapping(tableColumnMetadata),
     )
@@ -607,10 +592,7 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
  * @param originalName the original name of the column to be managed.
  * @return the modified column name that is free from duplication.
  */
-private fun manageColumnNameDuplication(
-    columnNameCounter: MutableMap<String, Int>,
-    originalName: String,
-): String {
+private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, Int>, originalName: String): String {
     var name = originalName
     val count = columnNameCounter[originalName]
 
@@ -717,10 +699,8 @@ private fun extractNewRowFromResultSetAndAddToData(
  *
  * @return The generated KType.
  */
-private fun generateKType(
-    dbType: DbType,
-    tableColumnMetadata: TableColumnMetadata,
-): KType = dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
+private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
+    dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
 
 /**
  * Creates a mapping between common SQL types and their corresponding KTypes.

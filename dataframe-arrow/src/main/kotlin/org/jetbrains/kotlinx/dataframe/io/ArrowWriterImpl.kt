@@ -70,11 +70,7 @@ internal class ArrowWriterImpl(
 
     private val allocator = RootAllocator()
 
-    private fun allocateVector(
-        vector: FieldVector,
-        size: Int,
-        totalBytes: Long? = null,
-    ) {
+    private fun allocateVector(vector: FieldVector, size: Int, totalBytes: Long? = null) {
         when (vector) {
             is FixedWidthVector -> vector.allocateNew(size)
             is VariableWidthVector -> totalBytes?.let { vector.allocateNew(it, size) } ?: vector.allocateNew(size)
@@ -96,10 +92,7 @@ internal class ArrowWriterImpl(
         }
     }
 
-    private fun infillWithNulls(
-        vector: FieldVector,
-        size: Int,
-    ) {
+    private fun infillWithNulls(vector: FieldVector, size: Int) {
         when (vector) {
             is BaseFixedWidthVector -> for (i in 0 until size) {
                 vector.setNull(i)
@@ -114,10 +107,7 @@ internal class ArrowWriterImpl(
         vector.valueCount = size
     }
 
-    private fun convertColumnToTarget(
-        column: AnyCol?,
-        targetFieldType: ArrowType,
-    ): AnyCol? {
+    private fun convertColumnToTarget(column: AnyCol?, targetFieldType: ArrowType): AnyCol? {
         if (column == null) return null
         return when (targetFieldType) {
             ArrowType.Utf8() -> column.map { it?.toString() }
@@ -158,10 +148,7 @@ internal class ArrowWriterImpl(
         }
     }
 
-    private fun infillVector(
-        vector: FieldVector,
-        column: AnyCol,
-    ) {
+    private fun infillVector(vector: FieldVector, column: AnyCol) {
         when (vector) {
             is VarCharVector ->
                 column

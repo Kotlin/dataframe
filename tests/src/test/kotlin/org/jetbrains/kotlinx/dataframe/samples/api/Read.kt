@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.testArrowFeather
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.typeOf
 
 class Read {

@@ -5,10 +5,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 
 class ExplainerIrGenerationExtension : IrGenerationExtension {
-    override fun generate(
-        moduleFragment: IrModuleFragment,
-        pluginContext: IrPluginContext,
-    ) {
+    override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         val lowering = ExplainerIrTransformer(pluginContext)
         for (file in moduleFragment.files) {
             lowering.lower(file)
