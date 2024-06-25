@@ -22,6 +22,7 @@ plugins {
         alias(kover)
 //        alias(kotlinter)
         alias(ktlint)
+        idea
         alias(korro) apply false
         alias(docProcessor) apply false
         alias(simpleGit) apply false
@@ -159,31 +160,17 @@ allprojects {
         try {
             configure<KtlintExtension> {
                 version = "1.3.0"
-                debug = true
-                enableExperimentalRules = true
-                additionalEditorconfig.putAll(
-                    mapOf(
-                        "ij_kotlin_packages_to_use_import_on_demand" to "unset",
-                        "ktlint_code_style" to "ktlint_official",
-                        "ktlint_standard_filename" to "disabled",
-                        "ktlint_standard_no-empty-first-line-in-class-body" to "disabled",
-                        "ktlint_class_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than" to "4",
-                        "ktlint_function_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than" to
-                            "4",
-                        "ktlint_ignore_back_ticked_identifier" to "true",
-                        "ktlint_standard_multiline-expression-wrapping" to "disabled",
-                    ),
-                )
-
-                filter {
-                    exclude("*/build/**/*", "**/*keywords*/**", "**/*.Generated.kt", "**/*\$Extensions.kt")
-                    // exclude("*/generated-sources/**/*")
-                }
+                // rules are set up through .editorconfig
             }
         } catch (e: Exception) {
             logger.warn("Could not set ktlint config on :${this.name}")
         }
     }
+}
+
+tasks.assemble {
+    // TODO we can decide wether we need this
+    dependsOn(tasks.addKtlintFormatGitPreCommitHook)
 }
 
 koverMerged {

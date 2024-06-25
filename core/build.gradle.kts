@@ -193,7 +193,7 @@ val installGitPreCommitHook by tasks.creating(Copy::class) {
     }
 }
 tasks.named("assemble") {
-    dependsOn(installGitPreCommitHook)
+    // dependsOn(installGitPreCommitHook)
 }
 
 // region docPreprocessor
@@ -237,6 +237,27 @@ val kotlinTestSources: FileCollection = kotlin.sourceSets.test
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
+tasks.runKtlintCheckOverMainSourceSet {
+    outputs.upToDateWhen { false }
+}
+
+val ktlintCheckGeneratedSources by tasks.creating {
+    doFirst {
+        tasks.runKtlintCheckOverMainSourceSet.configure {
+            source(generatedSourcesFolderName)
+        }
+    }
+    finalizedBy(tasks.ktlintCheck)
+}
+val ktlintFormatGeneratedSources by tasks.creating {
+    doFirst {
+        tasks.runKtlintFormatOverMainSourceSet.configure {
+            source(generatedSourcesFolderName)
+        }
+    }
+    finalizedBy(tasks.ktlintFormat)
+}
+
 // Task to generate the processed documentation
 val processKDocsMain by creatingProcessDocTask(
     sources = (kotlinMainSources + kotlinTestSources) // Include both test and main sources for cross-referencing
@@ -244,46 +265,11 @@ val processKDocsMain by creatingProcessDocTask(
 ) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
-
+    outputReadOnly = false
     task {
         group = "KDocs"
-        doLast {
-            // ensure generated sources are added to git
-            addGeneratedSourcesToGit.executeCommand()
-        }
+        finalizedBy(ktlintFormatGeneratedSources)
     }
-}
-
-// tasks.runKtlintFormatOverMainSourceSet {
-//    mustRunAfter(processKDocsMain)
-//    source(generatedSourcesFolderName)
-// }
-//
-tasks.runKtlintCheckOverMainSourceSet {
-    outputs.upToDateWhen { false }
-}
-
-val ktlintCheckGeneratedSources by tasks.creating {
-    group = "kdocs"
-    dependsOn(processKDocsMain)
-    doFirst {
-        tasks.runKtlintCheckOverMainSourceSet.configure {
-            mustRunAfter(processKDocsMain)
-            source(generatedSourcesFolderName)
-        }
-    }
-    finalizedBy(tasks.ktlintCheck)
-}
-val ktlintFormatGeneratedSources by tasks.creating {
-    group = "kdocs"
-    dependsOn(processKDocsMain)
-    doFirst {
-        tasks.runKtlintFormatOverMainSourceSet.configure {
-            mustRunAfter(processKDocsMain)
-            source(generatedSourcesFolderName)
-        }
-    }
-    finalizedBy(tasks.ktlintFormat)
 }
 
 // Exclude the generated/processed sources from the IDE
