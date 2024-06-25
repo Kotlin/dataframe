@@ -283,7 +283,7 @@ idea {
 // the target of processKdocMain and they are returned back to normal afterwards.
 tasks.withType<Jar> {
     dependsOn(processKDocsMain)
-    mustRunAfter(tasks.generateKeywordsSrc)
+    mustRunAfter(tasks.generateKeywordsSrc, ktlintFormatGeneratedSources)
     outputs.upToDateWhen { false }
 
     doFirst {

@@ -168,11 +168,6 @@ allprojects {
     }
 }
 
-tasks.assemble {
-    // TODO we can decide wether we need this
-    dependsOn(tasks.addKtlintFormatGitPreCommitHook)
-}
-
 koverMerged {
     enable()
     filters {
