@@ -50,7 +50,7 @@ kotestAsserions = "5.5.4"
 
 jsoup = "1.17.2"
 arrow = "15.0.0"
-docProcessor = "0.3.8"
+docProcessor = "0.3.10"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
 plugin-publish = "1.2.1"
