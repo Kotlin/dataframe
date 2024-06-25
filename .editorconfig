@@ -36,6 +36,3 @@ ktlint_standard_multiline-expression-wrapping = disabled
 
 [{*/build/**/*,**/*keywords*/**,**/*.Generated.kt,**/*$Extensions.kt}]
 ktlint = disabled
-
-# [*/generated-sources/**/*]
-# ktlint = disabled

@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     with(libs.plugins) {
@@ -156,18 +155,6 @@ allprojects {
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
     }
 
-//    // Attempts to configure kotlinter for each sub-project that uses the plugin
-//    afterEvaluate {
-//        try {
-//            kotlinter {
-//                failBuildWhenCannotAutoFormat = false
-//                ignoreFailures = false
-//                reporters = arrayOf("checkstyle", "plain")
-//            }
-//        } catch (_: UnknownDomainObjectException) {
-//            logger.warn("Could not set kotlinter config on :${this.name}")
-//        }
-//    }
     afterEvaluate {
         try {
             configure<KtlintExtension> {
