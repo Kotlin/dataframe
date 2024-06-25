@@ -5,7 +5,6 @@ import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_F
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
@@ -17,7 +16,7 @@ plugins {
         alias(korro)
         alias(keywordGenerator)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
 
@@ -103,7 +102,7 @@ tasks.withType<KspTask> {
     }
 }
 
-tasks.named("lintKotlinSamples") {
+tasks.named("runKtlintCheckOverSamplesSourceSet") {
     onlyIf { false }
 }
 
@@ -316,35 +315,24 @@ tasks.withType<KspTaskJvm> {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.formatKotlinMain {
+tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
 }
 
-tasks.formatKotlinTest {
+tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
 }
 
-tasks.lintKotlinMain {
+tasks.runKtlintCheckOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
 }
 
-tasks.lintKotlinTest {
+tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
-}
-
-tasks.withType<LintTask> {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
 }
 
 kotlin {
