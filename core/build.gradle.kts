@@ -171,30 +171,6 @@ tasks.withType<KorroTask> {
 
 // region docPreprocessor
 
-val ktlintCheckGeneratedSources by tasks.creating {
-    doFirst {
-        tasks.runKtlintCheckOverMainSourceSet.configure {
-            source(generatedSourcesFolderName)
-        }
-    }
-    finalizedBy(tasks.ktlintCheck)
-}
-
-tasks.runKtlintFormatOverMainSourceSet {
-    doFirst {
-        println("running runKtlintFormatOverMainSourceSet on ${source.files}")
-    }
-}
-
-val ktlintFormatGeneratedSources by tasks.creating {
-    doFirst {
-        tasks.runKtlintFormatOverMainSourceSet.configure {
-            source(generatedSourcesFolderName)
-        }
-    }
-    finalizedBy(tasks.ktlintFormat)
-}
-
 val generatedSourcesFolderName = "generated-sources"
 
 // Backup the kotlin source files location
@@ -213,30 +189,26 @@ fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
     .filterNot { pathOf("build", "generated") in it.path }
 
-// Raw processKDocsMain output; includes both generated main and -test sources
-// Should be the same as processKDocsMain.targets after running it
-val processKDocsMainRawOutputs
-    get() = processKDocsMainSources.map {
-        projectDir
-            .resolve(generatedSourcesFolderName)
-            .resolve(it.relativeTo(projectDir))
+// sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
+val generatedSources by kotlin.sourceSets.creating {
+    kotlin {
+        setSrcDirs(
+            listOf(
+                "build/generated/ksp/main/kotlin/",
+                "core/build/generatedSrc",
+                "$generatedSourcesFolderName/src/main/kotlin",
+                "$generatedSourcesFolderName/src/main/java",
+            ),
+        )
     }
-
-// processKDocsMain output files; can be used as source set to generate sources.jar (after running processKDocsMain).
-val processKDocsMainOutputs
-    get() = processKDocsMainRawOutputs.filterNot {
-        pathOf("src", "test", "kotlin") in it.path || pathOf("src", "test", "java") in it.path
-    } + kotlinMainSources.filter {
-        // Include generated sources (which were excluded above)
-        pathOf("build", "generated") in it.path
-    }
+}
 
 // Task to generate the processed documentation
 val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
 
-    // false, so ktlintFormatGeneratedSources can format the output
+    // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
     outputReadOnly = false
 
     exportAsHtml {
@@ -244,9 +216,7 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     }
     task {
         group = "KDocs"
-        // making sure it always runs, so targets is set
-        outputs.upToDateWhen { false }
-        finalizedBy(ktlintFormatGeneratedSources)
+        finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
     }
 }
 
@@ -257,11 +227,6 @@ idea {
     }
 }
 
-// if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
-tasks.withType<Jar> {
-    mustRunAfter(tasks.generateKeywordsSrc, processKDocsMain)
-}
-
 // If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
 // the target of `processKdocMain`, and they are returned to normal afterward.
 // This is usually only done when publishing
@@ -269,13 +234,16 @@ val changeJarTask by tasks.creating {
     outputs.upToDateWhen { false }
     doFirst {
         tasks.withType<Jar> {
-            dependsOn(processKDocsMain)
             doFirst {
-                require(processKDocsMainOutputs.toList().isNotEmpty()) {
-                    logger.error("`processKDocsMainOutputs` was empty, did `processKDocsMain` run before this task?")
+                require(
+                    generatedSources.kotlin.srcDirs
+                        .toList()
+                        .isNotEmpty(),
+                ) {
+                    logger.error("`processKDocsMain`'s outputs are empty, did `processKDocsMain` run before this task?")
                 }
                 kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(processKDocsMainOutputs)
+                    kotlin.setSrcDirs(generatedSources.kotlin.srcDirs)
                 }
                 logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
             }
@@ -287,6 +255,11 @@ val changeJarTask by tasks.creating {
             }
         }
     }
+}
+
+// if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
+tasks.withType<Jar> {
+    mustRunAfter(changeJarTask, tasks.generateKeywordsSrc, processKDocsMain)
 }
 
 // modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
@@ -360,6 +333,11 @@ tasks.runKtlintFormatOverTestSourceSet {
     dependsOn("kspTestKotlin")
 }
 
+tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+
 tasks.runKtlintCheckOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
@@ -368,6 +346,11 @@ tasks.runKtlintCheckOverMainSourceSet {
 tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
+}
+
+tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
 }
 
 kotlin {
