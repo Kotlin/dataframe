@@ -213,6 +213,24 @@ fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
     .filterNot { pathOf("build", "generated") in it.path }
 
+// Raw processKDocsMain output; includes both generated main and -test sources
+// Should be the same as processKDocsMain.targets after running it
+val processKDocsMainRawOutputs
+    get() = processKDocsMainSources.map {
+        projectDir
+            .resolve(generatedSourcesFolderName)
+            .resolve(it.relativeTo(projectDir))
+    }
+
+// processKDocsMain output files; can be used as source set to generate sources.jar (after running processKDocsMain).
+val processKDocsMainOutputs
+    get() = processKDocsMainRawOutputs.filterNot {
+        pathOf("src", "test", "kotlin") in it.path || pathOf("src", "test", "java") in it.path
+    } + kotlinMainSources.filter {
+        // Include generated sources (which were excluded above)
+        pathOf("build", "generated") in it.path
+    }
+
 // Task to generate the processed documentation
 val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
@@ -253,23 +271,11 @@ val changeJarTask by tasks.creating {
         tasks.withType<Jar> {
             dependsOn(processKDocsMain)
             doFirst {
-                val targets = processKDocsMain.targets
-                require(targets.toList().isNotEmpty()) {
-                    logger.error("`processKDocsMain.targets` was empty, did it run before this task?")
+                require(processKDocsMainOutputs.toList().isNotEmpty()) {
+                    logger.error("`processKDocsMainOutputs` was empty, did `processKDocsMain` run before this task?")
                 }
-                val srcDirs = targets
-                    .filterNot {
-                        pathOf("src", "test", "kotlin") in it.path ||
-                            pathOf("src", "test", "java") in it.path
-                    } // filter out test sources again
-                    .plus(
-                        kotlinMainSources.filter {
-                            pathOf("build", "generated") in it.path
-                        },
-                    ) // Include generated sources (which were excluded above)
-
                 kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(srcDirs)
+                    kotlin.setSrcDirs(processKDocsMainOutputs)
                 }
                 logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
             }
