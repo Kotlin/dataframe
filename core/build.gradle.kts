@@ -171,6 +171,30 @@ tasks.withType<KorroTask> {
 
 // region docPreprocessor
 
+val ktlintCheckGeneratedSources by tasks.creating {
+    doFirst {
+        tasks.runKtlintCheckOverMainSourceSet.configure {
+            source(generatedSourcesFolderName)
+        }
+    }
+    finalizedBy(tasks.ktlintCheck)
+}
+
+tasks.runKtlintFormatOverMainSourceSet {
+    doFirst {
+        println("running runKtlintFormatOverMainSourceSet on ${source.files}")
+    }
+}
+
+val ktlintFormatGeneratedSources by tasks.creating {
+    doFirst {
+        tasks.runKtlintFormatOverMainSourceSet.configure {
+            source(generatedSourcesFolderName)
+        }
+    }
+    finalizedBy(tasks.ktlintFormat)
+}
+
 val generatedSourcesFolderName = "generated-sources"
 
 // Backup the kotlin source files location
@@ -193,6 +217,10 @@ val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
 val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
+
+    // false, so ktlintFormatGeneratedSources can format the output
+    outputReadOnly = false
+
     exportAsHtml {
         dir = file("../docs/StardustDocs/snippets/kdocs")
     }
@@ -200,6 +228,7 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
         group = "KDocs"
         // making sure it always runs, so targets is set
         outputs.upToDateWhen { false }
+        finalizedBy(ktlintFormatGeneratedSources)
     }
 }
 
@@ -357,7 +386,7 @@ tasks.test {
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
                 "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
-            )
+            ),
         )
     }
 }
