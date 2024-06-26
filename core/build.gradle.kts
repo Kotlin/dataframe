@@ -5,7 +5,6 @@ import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_F
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jmailen.gradle.kotlinter.tasks.LintTask
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
@@ -17,7 +16,7 @@ plugins {
         alias(korro)
         alias(keywordGenerator)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
 
@@ -103,7 +102,7 @@ tasks.withType<KspTask> {
     }
 }
 
-tasks.named("lintKotlinSamples") {
+tasks.named("runKtlintCheckOverSamplesSourceSet") {
     onlyIf { false }
 }
 
@@ -190,17 +189,34 @@ fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
     .filterNot { pathOf("build", "generated") in it.path }
 
+// sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
+val generatedSources by kotlin.sourceSets.creating {
+    kotlin {
+        setSrcDirs(
+            listOf(
+                "build/generated/ksp/main/kotlin/",
+                "core/build/generatedSrc",
+                "$generatedSourcesFolderName/src/main/kotlin",
+                "$generatedSourcesFolderName/src/main/java",
+            ),
+        )
+    }
+}
+
 // Task to generate the processed documentation
 val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
+
+    // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
+    outputReadOnly = false
+
     exportAsHtml {
         dir = file("../docs/StardustDocs/snippets/kdocs")
     }
     task {
         group = "KDocs"
-        // making sure it always runs, so targets is set
-        outputs.upToDateWhen { false }
+        finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
     }
 }
 
@@ -225,23 +241,15 @@ val changeJarTask by tasks.creating {
         tasks.withType<Jar> {
             dependsOn(processKDocsMain)
             doFirst {
-                val targets = processKDocsMain.targets
-                require(targets.toList().isNotEmpty()) {
-                    logger.error("`processKDocsMain.targets` was empty, did it run before this task?")
+                require(
+                    generatedSources.kotlin.srcDirs
+                        .toList()
+                        .isNotEmpty(),
+                ) {
+                    logger.error("`processKDocsMain`'s outputs are empty, did `processKDocsMain` run before this task?")
                 }
-                val srcDirs = targets
-                    .filterNot {
-                        pathOf("src", "test", "kotlin") in it.path ||
-                            pathOf("src", "test", "java") in it.path
-                    } // filter out test sources again
-                    .plus(
-                        kotlinMainSources.filter {
-                            pathOf("build", "generated") in it.path
-                        },
-                    ) // Include generated sources (which were excluded above)
-
                 kotlin.sourceSets.main {
-                    kotlin.setSrcDirs(srcDirs)
+                    kotlin.setSrcDirs(generatedSources.kotlin.srcDirs)
                 }
                 logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
             }
@@ -316,35 +324,34 @@ tasks.withType<KspTaskJvm> {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.formatKotlinMain {
+tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
 }
 
-tasks.formatKotlinTest {
+tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
 }
 
-tasks.lintKotlinMain {
+tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
 }
 
-tasks.lintKotlinTest {
+tasks.runKtlintCheckOverMainSourceSet {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+
+tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
 }
 
-tasks.withType<LintTask> {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
+tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
 }
 
 kotlin {
@@ -369,7 +376,7 @@ tasks.test {
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
                 "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
-            )
+            ),
         )
     }
 }

@@ -4,7 +4,7 @@ plugins {
         alias(publisher)
         alias(serialization)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
         alias(jupyter.api)
     }
 }
