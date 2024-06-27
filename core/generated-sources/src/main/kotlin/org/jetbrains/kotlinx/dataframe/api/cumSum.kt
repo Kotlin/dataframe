@@ -14,20 +14,21 @@ import kotlin.reflect.typeOf
 
 // region DataColumn
 
-public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> = when (type()) {
-    typeOf<Double>() -> cast<Double>().cumSum(skipNA).cast()
-    typeOf<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
-    typeOf<Float>() -> cast<Float>().cumSum(skipNA).cast()
-    typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
-    typeOf<Int>() -> cast<Int>().cumSum().cast()
-    typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
-    typeOf<Long>() -> cast<Long>().cumSum().cast()
-    typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
-    typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
-    typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
-    typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
-    else -> error("Cumsum for type ${type()} is not supported")
-}
+public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> =
+    when (type()) {
+        typeOf<Double>() -> cast<Double>().cumSum(skipNA).cast()
+        typeOf<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
+        typeOf<Float>() -> cast<Float>().cumSum(skipNA).cast()
+        typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
+        typeOf<Int>() -> cast<Int>().cumSum().cast()
+        typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
+        typeOf<Long>() -> cast<Long>().cumSum().cast()
+        typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
+        typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
+        typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
+        typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
+        else -> error("Cumsum for type ${type()} is not supported")
+    }
 
 private val supportedClasses = setOf(Double::class, Float::class, Int::class, Long::class, BigDecimal::class)
 
@@ -52,9 +53,10 @@ public fun <T> DataFrame<T>.cumSum(
 public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) {
-    colsAtAnyDepth { !it.isColumnGroup() }
-}
+public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
+    cumSum(skipNA) {
+        colsAtAnyDepth { !it.isColumnGroup() }
+    }
 
 // endregion
 
@@ -63,8 +65,7 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
 public fun <T, G, C> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<G, C>,
-): GroupBy<T, G> =
-    updateGroups { cumSum(skipNA, columns) }
+): GroupBy<T, G> = updateGroups { cumSum(skipNA, columns) }
 
 public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) { columns.toColumnSet() }
@@ -79,8 +80,9 @@ public fun <T, G> GroupBy<T, G>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
 ): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
 
-public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> = cumSum(skipNA) {
-    colsAtAnyDepth { !it.isColumnGroup() }
-}
+public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
+    cumSum(skipNA) {
+        colsAtAnyDepth { !it.isColumnGroup() }
+    }
 
 // endregion

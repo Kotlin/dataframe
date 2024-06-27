@@ -6,6 +6,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 public inline fun <reified T : Comparable<T>> Iterable<T>.medianOrNull(): T? = median(typeOf<T>())
+
 public inline fun <reified T : Comparable<T>> Iterable<T>.median(): T = medianOrNull()!!
 
 @PublishedApi
@@ -17,10 +18,18 @@ internal inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType)
     if (index == 0 || size % 2 == 1) return list.quickSelect(index)
     return when (type.classifier) {
         Double::class -> ((list.quickSelect(index - 1) as Double + list.quickSelect(index) as Double) / 2.0) as T
+
         Int::class -> ((list.quickSelect(index - 1) as Int + list.quickSelect(index) as Int) / 2) as T
+
         Long::class -> ((list.quickSelect(index - 1) as Long + list.quickSelect(index) as Long) / 2L) as T
+
         Byte::class -> ((list.quickSelect(index - 1) as Byte + list.quickSelect(index) as Byte) / 2).toByte() as T
-        BigDecimal::class -> ((list.quickSelect(index - 1) as BigDecimal + list.quickSelect(index) as BigDecimal) / BigDecimal(2)) as T
+
+        BigDecimal::class -> (
+            (list.quickSelect(index - 1) as BigDecimal + list.quickSelect(index) as BigDecimal) /
+                BigDecimal(2)
+        ) as T
+
         else -> list.quickSelect(index - 1)
     }
 }
@@ -53,9 +62,11 @@ internal fun <T : Comparable<T>> List<T>.quickSelect(k: Int): T {
                 less = temp
                 temp = list
             }
+
             k < less.size + equal -> {
                 return x
             }
+
             else -> {
                 list = greater
                 greater = temp

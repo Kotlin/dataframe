@@ -57,10 +57,8 @@ private const val MIN_KERNEL_VERSION = "0.11.0.198"
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-internal class Integration(
-    private val notebook: Notebook,
-    private val options: MutableMap<String, String?>,
-) : JupyterIntegration() {
+internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
+    JupyterIntegration() {
 
     val version = options["v"]
 
@@ -70,8 +68,12 @@ internal class Integration(
             val result = execute(code)
             if (codeWithConverter.hasConverter) {
                 result.name
-            } else null
-        } else null
+            } else {
+                null
+            }
+        } else {
+            null
+        }
     }
 
     private fun KotlinKernelHost.execute(
@@ -105,7 +107,9 @@ internal class Integration(
             }
 
             is CodeGenerationReadResult.Error -> {
-                execute("""DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""")
+                execute(
+                    """DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""",
+                )
                 null
             }
         }
@@ -115,49 +119,52 @@ internal class Integration(
         df: AnyFrame,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = execute(
-        codeWithConverter = codeGen.process(df, property),
-        property = property,
-        type = DataFrame::class.createStarProjectedType(false),
-
-    )
+    ): VariableName? =
+        execute(
+            codeWithConverter = codeGen.process(df, property),
+            property = property,
+            type = DataFrame::class.createStarProjectedType(false),
+        )
 
     private fun KotlinKernelHost.updateAnyRowVariable(
         row: AnyRow,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = execute(
-        codeWithConverter = codeGen.process(row, property),
-        property = property,
-        type = DataRow::class.createStarProjectedType(false),
-    )
+    ): VariableName? =
+        execute(
+            codeWithConverter = codeGen.process(row, property),
+            property = property,
+            type = DataRow::class.createStarProjectedType(false),
+        )
 
     private fun KotlinKernelHost.updateColumnGroupVariable(
         col: ColumnGroup<*>,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = execute(
-        codeWithConverter = codeGen.process(col.asDataFrame(), property),
-        property = property,
-        type = ColumnGroup::class.createStarProjectedType(false),
-    )
+    ): VariableName? =
+        execute(
+            codeWithConverter = codeGen.process(col.asDataFrame(), property),
+            property = property,
+            type = ColumnGroup::class.createStarProjectedType(false),
+        )
 
     private fun KotlinKernelHost.updateAnyColVariable(
         col: AnyCol,
         property: KProperty<*>,
         codeGen: ReplCodeGenerator,
-    ): VariableName? = if (col.isColumnGroup()) {
-        val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
-            CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
+    ): VariableName? =
+        if (col.isColumnGroup()) {
+            val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
+                CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
+            }
+            execute(
+                codeWithConverter = codeWithConverter,
+                property = property,
+                type = DataColumn::class.createStarProjectedType(false),
+            )
+        } else {
+            null
         }
-        execute(
-            codeWithConverter = codeWithConverter,
-            property = property,
-            type = DataColumn::class.createStarProjectedType(false),
-        )
-    } else {
-        null
-    }
 
     override fun Builder.onLoaded() {
         if (version != null) {
@@ -171,9 +178,10 @@ internal class Integration(
 
         try {
             setMinimalKernelVersion(MIN_KERNEL_VERSION)
-        } catch (_: NoSuchMethodError) { // will be thrown when a version < 0.11.0.198
+        } catch (_: NoSuchMethodError) {
+            // will be thrown when a version < 0.11.0.198
             throw IllegalStateException(
-                getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType)
+                getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType),
             )
         }
         val codeGen = ReplCodeGenerator.create()
@@ -206,7 +214,7 @@ internal class Integration(
         with(JupyterHtmlRenderer(config.display, this)) {
             render<DisableRowsLimitWrapper>(
                 { "DataRow: index = ${it.value.rowsCount()}, columnsCount = ${it.value.columnsCount()}" },
-                applyRowsLimit = false
+                applyRowsLimit = false,
             )
 
             render<GroupClause<*, *>>({ "Group" })
@@ -230,13 +238,15 @@ internal class Integration(
                 { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
             )
             render<ColumnGroup<*>>(
-                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
+                {
+                    """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"""
+                },
             )
             render<AnyCol>(
                 { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
             )
             render<AnyFrame>(
-                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
+                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
             )
             render<FormattedFrame<*>>(
                 { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
@@ -285,19 +295,20 @@ internal class Integration(
                     else -> error("${instance::class} should not be handled by Dataframe field handler")
                 }
             }
-            override fun accepts(value: Any?, property: KProperty<*>): Boolean {
-                return value is AnyCol ||
+
+            override fun accepts(value: Any?, property: KProperty<*>): Boolean =
+                value is AnyCol ||
                     value is ColumnGroup<*> ||
                     value is AnyRow ||
                     value is AnyFrame ||
                     value is ImportDataSchema
-            }
         })
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
-            val code = classes.joinToString("\n") {
-                codeGen.process(it)
-            }.trim()
+            val code = classes
+                .joinToString("\n") {
+                    codeGen.process(it)
+                }.trim()
 
             if (code.isNotEmpty()) {
                 execute(code)

@@ -23,13 +23,13 @@ import kotlin.reflect.typeOf
 
 internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     desc: Boolean,
-    expression: ColumnExpression<C, V>
+    expression: ColumnExpression<C, V>,
 ): DataFrame<T> {
     data class ColumnInfo(
         val treeNode: TreeNode<ColumnPosition>,
         val column: DataColumn<C>,
         val value: V,
-        val index: Int
+        val index: Int,
     )
 
     val columnsWithPaths = df.getColumnsWithPaths(columns)
@@ -61,13 +61,22 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                 val path = src.treeNode.pathFromRoot().rename(c.column.name())
                 var column = c.column
                 if (inFrameColumns && column.isFrameColumn()) {
-                    column = column.asAnyFrameColumn().map(typeOf<AnyFrame>()) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }.cast()
+                    column =
+                        column
+                            .asAnyFrameColumn()
+                            .map(
+                                typeOf<AnyFrame>(),
+                            ) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }
+                            .cast()
                 }
                 ColumnToInsert(path, column, src.treeNode)
             }
             val newGroup = removed.df.insertImpl(toInsert)
-            df = if (parentPath.isEmpty()) newGroup.cast()
-            else df.replace(parentPath).with { newGroup.asColumnGroup(it.name()) }
+            df = if (parentPath.isEmpty()) {
+                newGroup.cast()
+            } else {
+                df.replace(parentPath).with { newGroup.asColumnGroup(it.name()) }
+            }
         }
     return df
 }

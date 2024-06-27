@@ -32,12 +32,15 @@ internal fun KType.projectTo(targetClass: KClass<*>): KType {
     val currentClass = classifier as? KClass<*>
     return when {
         targetClass.typeParameters.isEmpty() || currentClass == null -> targetClass.createStarProjectedType(
-            isMarkedNullable
+            isMarkedNullable,
         )
 
         currentClass == targetClass -> this
+
         targetClass.isSubclassOf(currentClass) -> projectDownTo(targetClass)
+
         targetClass.isSuperclassOf(currentClass) -> projectUpTo(targetClass)
+
         else -> targetClass.createStarProjectedType(isMarkedNullable)
     }
 }
@@ -124,13 +127,12 @@ internal fun KType.projectDownTo(subClass: KClass<*>): KType {
     return type
 }
 
-internal fun KType.replace(substitution: Map<KTypeParameter, KType?>): KType {
-    return when (val clazz = classifier) {
+internal fun KType.replace(substitution: Map<KTypeParameter, KType?>): KType =
+    when (val clazz = classifier) {
         is KTypeParameter -> substitution[clazz] ?: this
         is KClass<*> -> clazz.createType(arguments.map { KTypeProjection(it.variance, it.type?.replace(substitution)) })
         else -> this
     }
-}
 
 internal fun resolve(actualType: KType, declaredType: KType): Map<KTypeParameter, KType?> {
     val map = mutableMapOf<KTypeParameter, KType?>()
@@ -162,6 +164,7 @@ internal fun resolve(actualType: KType, declaredType: KType): Map<KTypeParameter
 
 internal val numberTypeExtensions: Map<Pair<KClass<*>, KClass<*>>, KClass<*>> by lazy {
     val map = mutableMapOf<Pair<KClass<*>, KClass<*>>, KClass<*>>()
+
     fun add(from: KClass<*>, to: KClass<*>) {
         map[from to to] = to
         map[to to from] = to
@@ -169,8 +172,9 @@ internal val numberTypeExtensions: Map<Pair<KClass<*>, KClass<*>>, KClass<*>> by
 
     val intTypes = listOf(Byte::class, Short::class, Int::class, Long::class)
     for (i in intTypes.indices) {
-        for (j in i + 1 until intTypes.size)
+        for (j in i + 1 until intTypes.size) {
             add(intTypes[i], intTypes[j])
+        }
         add(intTypes[i], Double::class)
     }
     add(Float::class, Double::class)
@@ -188,22 +192,32 @@ internal fun Iterable<KClass<*>>.commonNumberClass(): KClass<*> =
     fold(null as KClass<*>?, ::getCommonNumberType) ?: Number::class
 
 internal fun commonParent(classes: Iterable<KClass<*>>): KClass<*>? = commonParents(classes).withMostSuperclasses()
+
 internal fun commonParent(vararg classes: KClass<*>): KClass<*>? = commonParent(classes.toList())
+
 internal fun Iterable<KClass<*>>.withMostSuperclasses(): KClass<*>? = maxByOrNull { it.allSuperclasses.size }
+
 internal fun Iterable<KClass<*>>.createType(nullable: Boolean, upperBound: KType? = null): KType =
-    if (upperBound == null) (withMostSuperclasses() ?: Any::class).createStarProjectedType(nullable)
-    else {
+    if (upperBound == null) {
+        (withMostSuperclasses() ?: Any::class).createStarProjectedType(nullable)
+    } else {
         val upperClass = upperBound.classifier as KClass<*>
         val baseClass = filter { it.isSubclassOf(upperClass) }.withMostSuperclasses() ?: withMostSuperclasses()
-        if (baseClass == null) upperBound.withNullability(nullable)
-        else upperBound.projectTo(baseClass).withNullability(nullable)
+        if (baseClass == null) {
+            upperBound.withNullability(nullable)
+        } else {
+            upperBound.projectTo(baseClass).withNullability(nullable)
+        }
     }
 
 internal fun commonParents(vararg classes: KClass<*>): List<KClass<*>> = commonParents(classes.toList())
+
 internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
     when {
         !classes.any() -> emptyList()
+
         classes.all { it == Nothing::class } -> listOf(Nothing::class)
+
         else -> {
             classes
                 .distinct()
@@ -214,15 +228,21 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
                             listOf(it[0])
                         }
 
-                        else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
-                            // collect a set of all common superclasses from original classes
-                            val superclasses =
-                                (clazz.allSuperclasses + clazz).filter { it.visibility == KVisibility.PUBLIC }.toSet()
-                            set?.intersect(superclasses) ?: superclasses
-                        }!!.let {
-                            it - it.flatMap { it.superclasses }
-                                .toSet() // leave only 'leaf' classes, that are not super to some other class in a set
-                        }.toList()
+                        else ->
+                            it
+                                .fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                                    // collect a set of all common superclasses from original classes
+                                    val superclasses =
+                                        (clazz.allSuperclasses + clazz)
+                                            .filter { it.visibility == KVisibility.PUBLIC }
+                                            .toSet()
+                                    set?.intersect(superclasses) ?: superclasses
+                                }!!
+                                .let {
+                                    it - it
+                                        .flatMap { it.superclasses }
+                                        .toSet() // leave only 'leaf' classes, that are not super to some other class in a set
+                                }.toList()
                     }
                 }
         }
@@ -247,12 +267,18 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
     val nullable = distinct.any { it.isMarkedNullable }
     return when {
         distinct.isEmpty() -> typeOf<Any>().withNullability(nullable)
+
         distinct.size == 1 -> distinct.single()
+
         else -> {
-            val classes = distinct.map {
-                if (it == nothingType(false) || it == nothingType(true)) Nothing::class
-                else it.jvmErasure
-            }.distinct()
+            val classes = distinct
+                .map {
+                    if (it == nothingType(false) || it == nothingType(true)) {
+                        Nothing::class
+                    } else {
+                        it.jvmErasure
+                    }
+                }.distinct()
             when {
                 classes.size == 1 -> {
                     val typeProjections = classes.single().typeParameters.mapIndexed { index, parameter ->
@@ -265,18 +291,26 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
                         }
                     }
 
-                    if (classes.single() == Nothing::class) nothingType(distinct.any { it.isMarkedNullable })
-                    else classes[0].createType(typeProjections, distinct.any { it.isMarkedNullable })
+                    if (classes.single() == Nothing::class) {
+                        nothingType(distinct.any { it.isMarkedNullable })
+                    } else {
+                        classes[0].createType(typeProjections, distinct.any { it.isMarkedNullable })
+                    }
                 }
 
-                classes.any { it == List::class } && classes.all { it == List::class || !it.isSubclassOf(Collection::class) } -> {
+                classes.any { it == List::class } &&
+                    classes.all { it == List::class || !it.isSubclassOf(Collection::class) } -> {
                     val distinctNoNothing = distinct.filterNot {
                         it == nothingType(false) || it == nothingType(true)
                     }
-                    val listTypes = distinctNoNothing.map {
-                        if (it.classifier == List::class) it.arguments[0].type
-                        else it
-                    }.toMutableSet()
+                    val listTypes = distinctNoNothing
+                        .map {
+                            if (it.classifier == List::class) {
+                                it.arguments[0].type
+                            } else {
+                                it
+                            }
+                        }.toMutableSet()
                     val type = listTypes
                         .filterNotNull()
                         .commonTypeListifyValues()
@@ -334,19 +368,23 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
 
 internal fun KClass<*>.createTypeWithArgument(argument: KType? = null, nullable: Boolean = false): KType {
     require(typeParameters.size == 1)
-    return if (argument != null) createType(listOf(KTypeProjection.invariant(argument)), nullable)
-    else createStarProjectedType(nullable)
+    return if (argument != null) {
+        createType(listOf(KTypeProjection.invariant(argument)), nullable)
+    } else {
+        createStarProjectedType(nullable)
+    }
 }
 
 internal inline fun <reified T> createTypeWithArgument(typeArgument: KType? = null) =
     T::class.createTypeWithArgument(typeArgument)
 
 @PublishedApi
-internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KType = when (infer) {
-    Infer.Nulls -> type.withNullability(values.anyNull())
-    Infer.Type -> guessValueType(values.asSequence(), type)
-    Infer.None -> type
-}
+internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KType =
+    when (infer) {
+        Infer.Nulls -> type.withNullability(values.anyNull())
+        Infer.Type -> guessValueType(values.asSequence(), type)
+        Infer.None -> type
+    }
 
 /**
  * Returns the value type of the given [values] sequence.
@@ -372,22 +410,31 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
     values.forEach {
         when (it) {
             null -> hasNulls = true
+
             is AnyRow -> hasRows = true
+
             is AnyFrame -> hasFrames = true
+
             is List<*> -> {
                 hasList = true
                 if (it.isNotEmpty()) allListsAreEmpty = false
                 it.forEach {
-                    if (it == null) nullsInCollection = true
-                    else classesInCollection.add(it.javaClass.kotlin)
+                    if (it == null) {
+                        nullsInCollection = true
+                    } else {
+                        classesInCollection.add(it.javaClass.kotlin)
+                    }
                 }
             }
 
             is Collection<*> -> {
                 listifyValues = false // turn it off for when another collection is present
                 it.forEach {
-                    if (it == null) nullsInCollection = true
-                    else classesInCollection.add(it.javaClass.kotlin)
+                    if (it == null) {
+                        nullsInCollection = true
+                    } else {
+                        classesInCollection.add(it.javaClass.kotlin)
+                    }
                 }
                 collectionClasses.add(it.javaClass.kotlin)
             }
@@ -441,18 +488,19 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
                     classesInCollection.commonType(
                         nullable = nullsInCollection,
                         upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                    )
+                    ),
                 ).withNullability(hasNulls)
         }
 
         hasList && collectionClasses.isEmpty() && !hasFrames && !hasRows -> {
             val elementType = upperBound?.let { if (it.jvmErasure == List::class) it.arguments[0].type else null }
-            List::class.createTypeWithArgument(
-                classesInCollection.commonType(
-                    nullable = nullsInCollection,
-                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                )
-            ).withNullability(hasNulls && !listifyValues)
+            List::class
+                .createTypeWithArgument(
+                    classesInCollection.commonType(
+                        nullable = nullsInCollection,
+                        upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                    ),
+                ).withNullability(hasNulls && !listifyValues)
         }
 
         else -> {
@@ -485,7 +533,6 @@ private val primitiveArrayClasses = setOf(
     FloatArray::class,
     DoubleArray::class,
     CharArray::class,
-
     UByteArray::class,
     UShortArray::class,
     UIntArray::class,
@@ -562,12 +609,10 @@ internal fun Any.asArrayAsListOrNull(): List<*>? =
         is FloatArray -> asList()
         is DoubleArray -> asList()
         is CharArray -> asList()
-
         is UByteArray -> asList()
         is UShortArray -> asList()
         is UIntArray -> asList()
         is ULongArray -> asList()
-
         is Array<*> -> asList()
         else -> null
     }

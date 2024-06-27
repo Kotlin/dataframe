@@ -8,7 +8,7 @@ import kotlin.reflect.KType
 internal class MergedValuesAggregator<C : Any, R>(
     name: String,
     val aggregateWithType: (Iterable<C?>, KType) -> R?,
-    override val preservesType: Boolean
+    override val preservesType: Boolean,
 ) : AggregatorBase<C, R>(name, aggregateWithType) {
 
     override fun aggregate(columns: Iterable<DataColumn<C?>>): R? {
@@ -32,10 +32,11 @@ internal class MergedValuesAggregator<C : Any, R>(
 
     class Factory<C : Any, R>(
         private val aggregateWithType: (Iterable<C?>, KType) -> R?,
-        private val preservesType: Boolean
+        private val preservesType: Boolean,
     ) : AggregatorProvider<C, R> {
         override fun create(name: String) = MergedValuesAggregator(name, aggregateWithType, preservesType)
 
-        override operator fun getValue(obj: Any?, property: KProperty<*>): MergedValuesAggregator<C, R> = create(property.name)
+        override operator fun getValue(obj: Any?, property: KProperty<*>): MergedValuesAggregator<C, R> =
+            create(property.name)
     }
 }

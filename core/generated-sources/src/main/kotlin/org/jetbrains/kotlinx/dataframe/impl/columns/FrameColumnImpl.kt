@@ -17,13 +17,12 @@ internal open class FrameColumnImpl<T> constructor(
     name: String,
     values: List<DataFrame<T>>,
     columnSchema: Lazy<DataFrameSchema>? = null,
-    distinct: Lazy<Set<DataFrame<T>>>? = null
-) :
-    DataColumnImpl<DataFrame<T>>(
+    distinct: Lazy<Set<DataFrame<T>>>? = null,
+) : DataColumnImpl<DataFrame<T>>(
         values,
         name,
         DataFrame::class.createStarProjectedType(false),
-        distinct
+        distinct,
     ),
     FrameColumn<T> {
 
@@ -33,7 +32,8 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, this)
 
-    override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) = DataColumn.createFrameColumn(name, values)
+    override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) =
+        DataColumn.createFrameColumn(name, values)
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
 
@@ -45,18 +45,26 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun forceResolve() = ResolvingFrameColumn(this)
 
-    override fun get(indices: Iterable<Int>): FrameColumn<T> = DataColumn.createFrameColumn(name, indices.map { values[it] })
+    override fun get(indices: Iterable<Int>): FrameColumn<T> =
+        DataColumn.createFrameColumn(
+            name,
+            indices.map {
+                values[it]
+            },
+        )
 
-    override fun get(columnName: String) = throw UnsupportedOperationException("Can not get nested column '$columnName' from FrameColumn '$name'")
+    override fun get(columnName: String) =
+        throw UnsupportedOperationException("Can not get nested column '$columnName' from FrameColumn '$name'")
 }
 
-internal class ResolvingFrameColumn<T>(
-    override val source: FrameColumn<T>
-) : FrameColumn<T> by source, ForceResolvedColumn<DataFrame<T>> {
+internal class ResolvingFrameColumn<T>(override val source: FrameColumn<T>) :
+    FrameColumn<T> by source,
+    ForceResolvedColumn<DataFrame<T>> {
 
     override fun resolve(context: ColumnResolutionContext) = super<FrameColumn>.resolve(context)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataFrame<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
+    override fun resolveSingle(context: ColumnResolutionContext) =
+        context.df.getColumn<DataFrame<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
 
     override fun getValue(row: AnyRow) = super<FrameColumn>.getValue(row)
 
