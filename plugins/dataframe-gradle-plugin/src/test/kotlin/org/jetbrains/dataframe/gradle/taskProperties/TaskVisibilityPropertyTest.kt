@@ -28,7 +28,9 @@ class TaskVisibilityPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).schemaVisibility.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .schemaVisibility
+            .get()
             .shouldBe(DataSchemaVisibility.INTERNAL)
     }
 
@@ -49,7 +51,9 @@ class TaskVisibilityPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).schemaVisibility.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .schemaVisibility
+            .get()
             .shouldBe(DataSchemaVisibility.EXPLICIT_PUBLIC)
     }
 
@@ -72,7 +76,9 @@ class TaskVisibilityPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).schemaVisibility.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .schemaVisibility
+            .get()
             .shouldBe(DataSchemaVisibility.EXPLICIT_PUBLIC)
     }
 }

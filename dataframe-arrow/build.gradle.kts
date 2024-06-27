@@ -3,7 +3,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
     }
 }
 

@@ -22,11 +22,7 @@ class UpdateTests {
     }
 
     @DataSchema
-    data class Data(
-        override val a: Int,
-        override val b: String,
-        val c: Boolean,
-    ) : DataPart
+    data class Data(override val a: Int, override val b: String, val c: Boolean) : DataPart
 
     @Test
     fun `update asFrame`() {

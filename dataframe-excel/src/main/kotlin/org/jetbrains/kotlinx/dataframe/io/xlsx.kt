@@ -51,9 +51,8 @@ public class Excel : SupportedDataFrameFormat {
 
     override val testOrder: Int = 40000
 
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        return DefaultReadExcelMethod(pathRepresentation)
-    }
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
+        DefaultReadExcelMethod(pathRepresentation)
 }
 
 internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readExcel)
@@ -69,7 +68,8 @@ private const val readExcelTempFolderPrefix = "dataframe-excel"
  */
 private fun setWorkbookTempDirectory() {
     val tempDir = try {
-        Files.createTempDirectory(readExcelTempFolderPrefix)
+        Files
+            .createTempDirectory(readExcelTempFolderPrefix)
             .toFile()
             .also { it.deleteOnExit() }
     } catch (e: Exception) {
@@ -77,7 +77,7 @@ private fun setWorkbookTempDirectory() {
         return
     }
     TempFile.setTempFileCreationStrategy(
-        DefaultTempFileCreationStrategy(tempDir)
+        DefaultTempFileCreationStrategy(tempDir),
     )
 }
 
@@ -151,8 +151,7 @@ public fun DataFrame.Companion.readExcel(
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-): AnyFrame =
-    readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy)
+): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -290,14 +289,15 @@ public fun DataFrame.Companion.readExcel(
     return dataFrameOf(columns)
 }
 
-private fun getColumnIndices(columns: String): List<Int> = columns.split(",").flatMap {
-    if (it.contains(":")) {
-        val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
-        start..end
-    } else {
-        listOf(CellReference.convertColStringToIndex(it))
+private fun getColumnIndices(columns: String): List<Int> =
+    columns.split(",").flatMap {
+        if (it.contains(":")) {
+            val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
+            start..end
+        } else {
+            listOf(CellReference.convertColStringToIndex(it))
+        }
     }
-}
 
 /**
  * This is a universal function for name repairing
@@ -310,17 +310,25 @@ private fun repairNameIfRequired(
     nameFromCell: String,
     columnNameCounters: MutableMap<String, Int>,
     nameRepairStrategy: NameRepairStrategy,
-): String {
-    return when (nameRepairStrategy) {
+): String =
+    when (nameRepairStrategy) {
         NameRepairStrategy.DO_NOTHING -> nameFromCell
-        NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) throw DuplicateColumnNamesException(
-            columnNameCounters.keys.toList()
-        ) else nameFromCell
+
+        NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) {
+            throw DuplicateColumnNamesException(
+                columnNameCounters.keys.toList(),
+            )
+        } else {
+            nameFromCell
+        }
 
         NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
             val emptyName = "Unknown column"
-            if (columnNameCounters.contains(emptyName)) "${emptyName}${columnNameCounters[emptyName]}"
-            else emptyName
+            if (columnNameCounters.contains(emptyName)) {
+                "${emptyName}${columnNameCounters[emptyName]}"
+            } else {
+                emptyName
+            }
         } else {
             if (columnNameCounters.contains(nameFromCell)) {
                 "${nameFromCell}${columnNameCounters[nameFromCell]}"
@@ -329,27 +337,36 @@ private fun repairNameIfRequired(
             }
         }
     }
-}
 
 private fun Cell?.cellValue(sheetName: String): Any? {
     if (this == null) return null
-    fun getValueFromType(type: CellType?): Any? = when (type) {
-        CellType._NONE -> error("Cell $address of sheet $sheetName has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
-        CellType.NUMERIC -> {
-            val number = numericCellValue
-            when {
-                DateUtil.isCellDateFormatted(this) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
-                else -> number
-            }
-        }
 
-        CellType.STRING -> stringCellValue
-        CellType.FORMULA -> getValueFromType(cachedFormulaResultType)
-        CellType.BLANK -> stringCellValue
-        CellType.BOOLEAN -> booleanCellValue
-        CellType.ERROR -> errorCellValue
-        null -> null
-    }
+    fun getValueFromType(type: CellType?): Any? =
+        when (type) {
+            CellType._NONE -> error(
+                "Cell $address of sheet $sheetName has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues",
+            )
+
+            CellType.NUMERIC -> {
+                val number = numericCellValue
+                when {
+                    DateUtil.isCellDateFormatted(this) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
+                    else -> number
+                }
+            }
+
+            CellType.STRING -> stringCellValue
+
+            CellType.FORMULA -> getValueFromType(cachedFormulaResultType)
+
+            CellType.BLANK -> stringCellValue
+
+            CellType.BOOLEAN -> booleanCellValue
+
+            CellType.ERROR -> errorCellValue
+
+            null -> null
+        }
     return getValueFromType(cellType)
 }
 
@@ -360,12 +377,11 @@ public fun <T> DataFrame<T>.writeExcel(
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
     keepFile: Boolean = false,
-) {
-    return writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
-}
+): Unit = writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
 
 public enum class WorkBookType {
-    XLS, XLSX
+    XLS,
+    XLSX,
 }
 
 public fun <T> DataFrame<T>.writeExcel(
@@ -398,7 +414,7 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    factory: Workbook
+    factory: Workbook,
 ) {
     val wb: Workbook = factory
     writeExcel(wb, columnsSelector, sheetName, writeHeader)
@@ -482,8 +498,8 @@ public fun <T> DataFrame<T>.writeExcel(
     return sheet
 }
 
-private fun Cell.setCellValueByGuessedType(any: Any) {
-    return when (any) {
+private fun Cell.setCellValueByGuessedType(any: Any) =
+    when (any) {
         is AnyRow -> {
             this.setCellValue(any.toJson())
         }
@@ -531,6 +547,7 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
         is kotlinx.datetime.LocalDateTime -> {
             this.setTime(any.toJavaLocalDateTime())
         }
+
         // Another option would be to serialize everything else to string,
         // but people can convert columns to string with any serialization framework they want
         // so i think toString should do until more use cases arise.
@@ -538,7 +555,6 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
             this.setCellValue(any.toString())
         }
     }
-}
 
 /**
  * Set LocalDateTime value correctly also if date have zero value in Excel.

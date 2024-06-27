@@ -23,7 +23,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             fun <T> AnyFrame.addValue(value: T) = add("value") { listOf(value) }
             val df = dataFrameOf("a")(1).addValue(2)
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1 shouldBe Unit
 
@@ -40,7 +40,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             @DataSchema
             data class A(val a: Int)
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         @Language("kts")
@@ -48,7 +48,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = dataFrameOf("a", "b")(1, 2)
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         (res2 as AnyFrame).should { it.isNotEmpty() }
@@ -61,7 +61,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             @DataSchema
             class A(val a: Int)
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         @Language("kts")
@@ -69,7 +69,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = dataFrameOf("a", "b")(1, 2)
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         (res2 as AnyFrame).should { it.isNotEmpty() }
@@ -82,7 +82,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             @DataSchema
             open class A(val a: Int)
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         @Language("kts")
@@ -90,7 +90,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = dataFrameOf("a", "b")(1, 2)
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         (res2 as AnyFrame).should { it.isNotEmpty() }
@@ -103,7 +103,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             @DataSchema
             interface A { val a: Int }
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         @Language("kts")
@@ -111,7 +111,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = dataFrameOf("a", "b")(1, 2)
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         (res2 as AnyFrame).should { it.isNotEmpty() }
@@ -124,7 +124,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val names = (0..2).map { it.toString() }
             val df = dataFrameOf(names)(1, 2, 3)
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1 shouldBe Unit
 
@@ -140,13 +140,13 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = DataFrame.readDelimStr("[a], (b), {c}\n1, 2, 3")
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
 
         @Language("kts")
         val res2 = execRendered(
-            """listOf(df.`{a}`[0], df.`(b)`[0], df.`{c}`[0])"""
+            """listOf(df.`{a}`[0], df.`(b)`[0], df.`{c}`[0])""",
         )
         res2 shouldBe listOf(1, 2, 3)
     }
@@ -158,13 +158,13 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = DataFrame.readDelimStr("\${'$'}id\n1")
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
 
         @Language("kts")
         val res2 = execRendered(
-            "listOf(df.`\$id`[0])"
+            "listOf(df.`\$id`[0])",
         )
         res2 shouldBe listOf(1)
     }
@@ -176,14 +176,14 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = DataFrame.readDelimStr("Day`s\n1")
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
         println(res1.entries.joinToString())
 
         @Language("kts")
         val res2 = execRendered(
-            "listOf(df.`Day's`[0])"
+            "listOf(df.`Day's`[0])",
         )
         res2 shouldBe listOf(1)
     }
@@ -197,14 +197,14 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = DataFrame.readDelimStr("Test$forbiddenChar\n1")
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
         println(res1.entries.joinToString())
 
         @Language("kts")
         val res2 = execRendered(
-            "listOf(df.`Test `[0])"
+            "listOf(df.`Test `[0])",
         )
         res2 shouldBe listOf(1)
     }
@@ -218,14 +218,14 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """
             val df = DataFrame.readDelimStr("Test$forbiddenChar\n1")
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<MimeTypedResult>()
         println(res1.entries.joinToString())
 
         @Language("kts")
         val res2 = execRendered(
-            "listOf(df.`Test `[0])"
+            "listOf(df.`Test `[0])",
         )
         res2 shouldBe listOf(1)
     }
@@ -239,16 +239,16 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             interface Generic<T> {
                 val field: T
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<Unit>()
 
         @Language("kts")
         val res2 = execRendered(
             """
-                val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-                val <T> DataRow<Generic<T>>.test2: T get() = field
-            """.trimIndent()
+            val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+            val <T> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent(),
         )
         res2.shouldBeInstanceOf<Unit>()
     }
@@ -258,20 +258,20 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         @Language("kts")
         val res1 = execRendered(
             """
-                @DataSchema
-                interface Generic <T : String> {
-                    val field: T
-                }
-            """.trimIndent()
+            @DataSchema
+            interface Generic <T : String> {
+                val field: T
+            }
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<Unit>()
 
         @Language("kts")
         val res2 = execRendered(
             """
-                val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-                val <T : String> DataRow<Generic<T>>.test2: T get() = field
-            """.trimIndent()
+            val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+            val <T : String> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent(),
         )
         res2.shouldBeInstanceOf<Unit>()
     }
@@ -281,22 +281,22 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         @Language("kts")
         val res1 = execRendered(
             """
-                interface UpperBound
+            interface UpperBound
 
-                @DataSchema(isOpen = false)
-                interface Generic <out T : UpperBound> {
-                    val field: T
-                }
-            """.trimIndent()
+            @DataSchema(isOpen = false)
+            interface Generic <out T : UpperBound> {
+                val field: T
+            }
+            """.trimIndent(),
         )
         res1.shouldBeInstanceOf<Unit>()
 
         @Language("kts")
         val res2 = execRendered(
             """
-                val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-                val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
-            """.trimIndent()
+            val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+            val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent(),
         )
         res2.shouldBeInstanceOf<Unit>()
     }
@@ -304,14 +304,15 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `type converter does not conflict with other type converters`() {
         @Language("kts")
-        val anotherTypeConverter = """
+        val anotherTypeConverter =
+            """
             notebook.fieldsHandlersProcessor.register(
                 FieldHandlerFactory.createUpdateHandler<ByteArray>(TypeDetection.RUNTIME) { _, prop ->
                      execute(prop.name + ".toList()").name
                 },
                 ProcessingPriority.LOW
             )
-        """.trimIndent()
+            """.trimIndent()
         execEx(anotherTypeConverter)
         execEx("val x = ByteArray(1)")
         val res1 = execRaw("x")
@@ -341,7 +342,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
                 Event(tool3, State.Idle, 0),
                 Event(tool3, State.Productive, 25),
             ).toDataFrame()
-            """.trimIndent()
+            """.trimIndent(),
         )
         shouldNotThrowAny {
             @Language("kts")
@@ -350,7 +351,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
                 events.toolId
                 events.state
                 events.timestamp
-                """.trimIndent()
+                """.trimIndent(),
             )
         }
     }

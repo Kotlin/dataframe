@@ -24,6 +24,9 @@ class TaskCsvOptionsPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrameData") as GenerateDataSchemaTask).csvOptions.get().delimiter shouldBe tab
+        (project.tasks.getByName("generateDataFrameData") as GenerateDataSchemaTask)
+            .csvOptions
+            .get()
+            .delimiter shouldBe tab
     }
 }

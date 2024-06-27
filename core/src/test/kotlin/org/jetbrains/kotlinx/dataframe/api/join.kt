@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.junit.Ignore
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class JoinTests {
 
     @Ignore
@@ -15,7 +16,7 @@ class JoinTests {
         val df1 = dataFrameOf("a")(1, 2)
         val df2 = dataFrameOf("a", "b")(
             1, dataFrameOf("c")(3),
-            4, dataFrameOf("c")(5)
+            4, dataFrameOf("c")(5),
         )
         val df = df1.leftJoin(df2)
 

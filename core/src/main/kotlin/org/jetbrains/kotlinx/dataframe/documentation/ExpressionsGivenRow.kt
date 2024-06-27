@@ -35,6 +35,7 @@ internal interface ExpressionsGivenRow {
     interface OperationArg
 
     // Using <code>` notation to not create double `` when including
+
     /** {@set [OperationArg] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 

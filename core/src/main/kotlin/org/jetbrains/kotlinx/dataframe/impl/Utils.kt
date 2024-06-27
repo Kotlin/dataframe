@@ -33,55 +33,59 @@ import kotlin.reflect.typeOf
 internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> =
     if (this == null) other else { it: T -> this(it) && other(it) }
 
-internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
-    object : Iterator<T> {
+internal fun <T> T.toIterable(getNext: (T) -> T?) =
+    Iterable<T> {
+        object : Iterator<T> {
 
-        var current: T? = null
-        var beforeStart = true
-        var next: T? = null
+            var current: T? = null
+            var beforeStart = true
+            var next: T? = null
 
-        override fun hasNext(): Boolean {
-            if (beforeStart) return true
-            if (next == null) next = getNext(current!!)
-            return next != null
-        }
+            override fun hasNext(): Boolean {
+                if (beforeStart) return true
+                if (next == null) next = getNext(current!!)
+                return next != null
+            }
 
-        override fun next(): T {
-            if (beforeStart) {
-                current = this@toIterable
-                beforeStart = false
+            override fun next(): T {
+                if (beforeStart) {
+                    current = this@toIterable
+                    beforeStart = false
+                    return current!!
+                }
+                current = next ?: getNext(current!!)
+                next = null
                 return current!!
             }
-            current = next ?: getNext(current!!)
-            next = null
-            return current!!
         }
     }
-}
 
 internal fun <T> List<T>.removeAt(index: Int) = subList(0, index) + subList(index + 1, size)
 
 internal inline fun <reified T : Any> Int.cast() = convert(this, T::class)
 
-internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T = when (tartypeOf) {
-    Double::class -> src.toDouble() as T
-    Long::class -> src.toLong() as T
-    Float::class -> src.toFloat() as T
-    BigDecimal::class -> src.toBigDecimal() as T
-    else -> throw NotImplementedError("Casting int to $tartypeOf is not supported")
-}
+internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T =
+    when (tartypeOf) {
+        Double::class -> src.toDouble() as T
+        Long::class -> src.toLong() as T
+        Float::class -> src.toFloat() as T
+        BigDecimal::class -> src.toBigDecimal() as T
+        else -> throw NotImplementedError("Casting int to $tartypeOf is not supported")
+    }
 
 internal fun BooleanArray.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in indices)
+    for (i in indices) {
         if (this[i]) res.add(i)
+    }
     return res
 }
 
 internal fun List<Boolean>.getTrueIndices(): List<Int> {
     val res = ArrayList<Int>(size)
-    for (i in indices)
+    for (i in indices) {
         if (this[i]) res.add(i)
+    }
     return res
 }
 
@@ -98,15 +102,17 @@ internal fun <T> Iterable<T>.equalsByElement(other: Iterable<T>): Boolean {
 internal fun <T> Iterable<T>.rollingHash(): Int {
     val i = iterator()
     var hash = 0
-    while (i.hasNext())
+    while (i.hasNext()) {
         hash = 31 * hash + (i.next()?.hashCode() ?: 5)
+    }
     return hash
 }
 
-public fun <T> Iterable<T>.asList(): List<T> = when (this) {
-    is List<T> -> this
-    else -> this.toList()
-}
+public fun <T> Iterable<T>.asList(): List<T> =
+    when (this) {
+        is List<T> -> this
+        else -> this.toList()
+    }
 
 @PublishedApi
 internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
@@ -115,24 +121,26 @@ internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
 internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
 
 @PublishedApi
-internal fun <T : Number> KClass<T>.zero(): T = when (this) {
-    Int::class -> 0 as T
-    Byte::class -> 0.toByte() as T
-    Short::class -> 0.toShort() as T
-    Long::class -> 0.toLong() as T
-    Double::class -> 0.toDouble() as T
-    Float::class -> 0.toFloat() as T
-    BigDecimal::class -> BigDecimal.ZERO as T
-    BigInteger::class -> BigInteger.ZERO as T
-    Number::class -> 0 as T
-    else -> TODO()
-}
+internal fun <T : Number> KClass<T>.zero(): T =
+    when (this) {
+        Int::class -> 0 as T
+        Byte::class -> 0.toByte() as T
+        Short::class -> 0.toShort() as T
+        Long::class -> 0.toLong() as T
+        Double::class -> 0.toDouble() as T
+        Float::class -> 0.toFloat() as T
+        BigDecimal::class -> BigDecimal.ZERO as T
+        BigInteger::class -> BigInteger.ZERO as T
+        Number::class -> 0 as T
+        else -> TODO()
+    }
 
-internal fun <T> catchSilent(body: () -> T): T? = try {
-    body()
-} catch (_: Throwable) {
-    null
-}
+internal fun <T> catchSilent(body: () -> T): T? =
+    try {
+        body()
+    } catch (_: Throwable) {
+        null
+    }
 
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
     commonParents(this).createType(nullable, upperBound)
@@ -150,6 +158,7 @@ internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
     val nullable = distinct.any { it?.isMarkedNullable ?: true }
     return when {
         distinct.isEmpty() || distinct.contains(null) -> typeOf<Any>().withNullability(nullable)
+
         distinct.size == 1 -> distinct.single()!!
 
         else -> {
@@ -257,8 +266,11 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
 }
 
 internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
-    if (this == Nothing::class) nothingType(nullable) // would be Void otherwise
-    else this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+    if (this == Nothing::class) {
+        nothingType(nullable) // would be Void otherwise
+    } else {
+        this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+    }
 
 internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
@@ -295,26 +307,30 @@ internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Arra
 internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iterable<C> =
     (listOf(head) + cols.asIterable())
 
-internal fun <T> DataFrame<T>.splitByIndices(
-    startIndices: Sequence<Int>,
-): Sequence<DataFrame<T>> {
-    return (startIndices + nrow).zipWithNext { start, endExclusive ->
-        if (start == endExclusive) DataFrame.empty().cast()
-        else get(start until endExclusive)
+internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<DataFrame<T>> =
+    (startIndices + nrow).zipWithNext { start, endExclusive ->
+        if (start == endExclusive) {
+            DataFrame.empty().cast()
+        } else {
+            get(start until endExclusive)
+        }
     }
-}
 
-internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> {
-    return (startIndices + size).zipWithNext { start, endExclusive ->
+internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> =
+    (startIndices + size).zipWithNext { start, endExclusive ->
         subList(start, endExclusive)
     }
-}
 
 internal fun <T> T.asNullable() = this as T?
+
 internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
+
 internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
-    if (includeBoundaries) this in left..right
-    else this > left && this < right
+    if (includeBoundaries) {
+        this in left..right
+    } else {
+        this > left && this < right
+    }
 
 private const val DELIMITERS = "[_\\s]"
 public val DELIMITERS_REGEX: Regex = DELIMITERS.toRegex()
@@ -322,8 +338,7 @@ public val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
 
 internal val CAMEL_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
 
-public fun String.toCamelCaseByDelimiters(delimiters: Regex): String =
-    split(delimiters).joinToCamelCaseString()
+public fun String.toCamelCaseByDelimiters(delimiters: Regex): String = split(delimiters).joinToCamelCaseString()
 
 internal fun String.toSnakeCase(): String =
     if ("[A-Z_]+".toRegex().matches(this)) {
@@ -335,10 +350,10 @@ internal fun String.toSnakeCase(): String =
             .lowercase()
     }
 
-internal fun List<String>.joinToCamelCaseString(): String {
-    return joinToString(separator = "") { it.replaceFirstChar { it.uppercaseChar() } }
-        .replaceFirstChar { it.lowercaseChar() }
-}
+internal fun List<String>.joinToCamelCaseString(): String =
+    joinToString(separator = "") {
+        it.replaceFirstChar { it.uppercaseChar() }
+    }.replaceFirstChar { it.lowercaseChar() }
 
 /** @include [KCallable.isGetterLike] */
 internal fun KFunction<*>.isGetterLike(): Boolean =

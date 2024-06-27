@@ -11,8 +11,11 @@ import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 internal fun <T, R> DataColumn<T?>.mapNotNullValues(transform: (T) -> R): DataColumn<R?> {
     val collector = createDataCollector(size)
     values.forEach {
-        if (it == null) collector.add(null)
-        else collector.add(transform(it))
+        if (it == null) {
+            collector.add(null)
+        } else {
+            collector.add(transform(it))
+        }
     }
     return collector.toColumn(name).cast()
 }
