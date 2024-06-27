@@ -27,67 +27,71 @@ public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit 
         columnType.isSubtypeOf(typeOf<String?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Utf8(), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<Boolean?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Bool(), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<Byte?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Int(8, true), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<Short?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Int(16, true), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<Int?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Int(32, true), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<Long?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Int(64, true), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<Float?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<Double?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null),
-            emptyList()
+            emptyList(),
         )
 
-        columnType.isSubtypeOf(typeOf<LocalDate?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDate?>()) -> Field(
+        columnType.isSubtypeOf(
+            typeOf<LocalDate?>(),
+        ) ||
+            columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDate?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Date(DateUnit.DAY), null),
-            emptyList()
+            emptyList(),
         )
 
-        columnType.isSubtypeOf(typeOf<LocalDateTime?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDateTime?>()) -> Field(
+        columnType.isSubtypeOf(typeOf<LocalDateTime?>()) ||
+            columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDateTime?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null),
-            emptyList()
+            emptyList(),
         )
 
         columnType.isSubtypeOf(typeOf<LocalTime?>()) -> Field(
             column.name(),
             FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null),
-            emptyList()
+            emptyList(),
         )
 
         else -> {
@@ -101,7 +105,9 @@ public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit 
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
  */
-public fun List<AnyCol>.toArrowSchema(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Schema {
+public fun List<AnyCol>.toArrowSchema(
+    mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,
+): Schema {
     val fields = this.map { it.toArrowField(mismatchSubscriber) }
     return Schema(fields)
 }

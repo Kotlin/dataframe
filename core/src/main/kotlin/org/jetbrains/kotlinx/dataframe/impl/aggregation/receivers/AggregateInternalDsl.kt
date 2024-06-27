@@ -18,10 +18,20 @@ internal interface AggregateInternalDsl<out T> {
 
     fun yield(value: NamedValue): NamedValue
 
-    fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?, guessType: Boolean) =
-        yield(NamedValue.create(path, value, type, default, guessType))
+    fun <R> yield(
+        path: ColumnPath,
+        value: R,
+        type: KType?,
+        default: R?,
+        guessType: Boolean,
+    ) = yield(NamedValue.create(path, value, type, default, guessType))
 
-    fun <R> yield(path: ColumnPath, value: R, type: KType? = null, default: R? = null): NamedValue
+    fun <R> yield(
+        path: ColumnPath,
+        value: R,
+        type: KType? = null,
+        default: R? = null,
+    ): NamedValue
 
     fun pathForSingleColumn(column: AnyCol): ColumnPath
 }

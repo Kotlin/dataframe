@@ -128,7 +128,8 @@ class ParseTests {
     fun `parse column group`() {
         val df = dataFrameOf("a", "b")("1", "2")
         df
-            .group("a", "b").into("c")
+            .group("a", "b")
+            .into("c")
             .parse("c")
             .ungroup("c") shouldBe dataFrameOf("a", "b")(1, 2)
     }
@@ -143,6 +144,7 @@ class ParseTests {
 
     @Test
     fun `parse duration`() {
-        columnOf("1d 15m", "20h 35m 11s").parse() shouldBe columnOf(1.days + 15.minutes, 20.hours + 35.minutes + 11.seconds)
+        columnOf("1d 15m", "20h 35m 11s").parse() shouldBe
+            columnOf(1.days + 15.minutes, 20.hours + 35.minutes + 11.seconds)
     }
 }

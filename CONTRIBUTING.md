@@ -33,7 +33,8 @@ so do familiarize yourself with the following guidelines.
     * PR should be linked with the issue,
       excluding minor documentation changes, adding unit tests, and fixing typos.
 * If you make any code changes:
-    * Follow the [Kotlin Coding Conventions](https://kotlinlang.org/docs/reference/coding-conventions.html).
+    * Follow the [Kotlin Coding Conventions](https://kotlinlang.org/docs/reference/coding-conventions.html). 
+      [Ktlint](https://pinterest.github.io/ktlint/latest/) can help here.
     * [Build the project](#building) to ensure it all works and passes the tests.
 * If you fix a bug:
     * Write the test that reproduces the bug.
@@ -54,15 +55,18 @@ so do familiarize yourself with the following guidelines.
 0. The contributor builds the library locally and runs all unit tests via the Gradle task `dataframe:test`
    (see the ["Building"](#building) chapter).
 1. The contributor submits the PR if the local build is successful and the tests are green.
-2. The reviewer put his name in the "Reviewers" section of the proposed PR at the start of the review process.
-3. The reviewer leaves the comments or marks the PR with the abbreviation "LGTM" (Looks good to me).
+2. The reviewer puts their name in the "Reviewers" section of the proposed PR at the start of the review process.
+3. The reviewer leaves comments or marks the PR with the abbreviation "LGTM" (Looks good to me).
 4. The contributor answers the comments or fixes the proposed PR.
 5. The reviewer marks the PR with the word "LGTM."
-6. The maintainer could suggest merging the master branch to the PR branch a few times due to changes in the `master` branch.
-7. The maintainer runs TC builds (unit tests and examples as integration tests).
-8. TC writes the result (passed or not passed) to the PR checks at the bottom of the proposed PR.
-9. If it is possible, maintainers share the details of the failed build with the contributor.
-10. Maintainer merges the PR if all checks are successful and there is no conflict with the master branch.
+6. The maintainer could suggest merging the `master` branch to the PR branch a few times due to changes in the `master` branch.
+7. If the PR influences generated code/samples, a bot will inform about this in the PR comments.
+8. The maintainer runs TeamCity builds (unit tests and examples as integration tests).
+9. TeamCity writes the result (passed or not passed) to the PR checks at the bottom of the proposed PR.
+10. If it is possible, maintainers share the details of the failed build with the contributor.
+11. The maintainer merges the PR if all checks are successful and there is no conflict with the `master` branch.
+12. The maintainer closes the PR and the issue linked to it.
+13. If the PR influences generated code, a bot will auto-commit the newly generated code into the `master` branch.
 
 ## How to fix an existing issue
 
@@ -81,13 +85,22 @@ so do familiarize yourself with the following guidelines.
 
 ## Environment requirements
 
-JDK >= 11 referred to by the `JAVA_HOME` environment variable.
+* JDK >= 11 referred to by the `JAVA_HOME` environment variable.
+
+  * Note, any version above 11 should work in theory, but JDK 11 is the only version we test with,
+  so it is the recommended version.
+
+* We recommend using [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) as the IDE. This
+has the best support for Kotlin, compiler plugins, Gradle, and [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) of course.
+
+* We recommend using the [Ktlint plugin](https://plugins.jetbrains.com/plugin/15057-ktlint) for [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
+It is able to read the `.editorconfig` file and apply the same formatting rules as [Ktlint](https://pinterest.github.io/ktlint/latest/) in the CI.
 
 ## Building
 
 This library is built with Gradle.
 
-* Run `./gradlew build` to build. It also runs all the tests.
+* Run `./gradlew build` to build. It also runs all the tests and checks the linter.
 * Run `./gradlew <module>:test` to test the module you are looking at to speed
   things up during development.
 

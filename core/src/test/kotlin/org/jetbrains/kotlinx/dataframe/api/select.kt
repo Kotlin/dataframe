@@ -8,7 +8,10 @@ import org.junit.Test
 
 class SelectTests : ColumnsSelectionDslTests() {
 
-    @Suppress("CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION")
+    @Suppress(
+        "CANDIDATE_CHOSEN_USING_OVERLOAD_RESOLUTION_BY_LAMBDA_ANNOTATION",
+        "ktlint:standard:unnecessary-parentheses-before-trailing-lambda",
+    )
     @Test
     fun select() {
         // should not compile:
@@ -36,11 +39,8 @@ class SelectTests : ColumnsSelectionDslTests() {
             df.select { it["name"].asColumnGroup()() { colsOf<String>() } },
             df.select { name { colsOf<String>() } },
             df.select { (it["name"].asColumnGroup()) { colsOf<String>() } },
-
             df.select { NonDataSchemaPerson::name.select { firstName and lastName } },
-
             df.select { NonDataSchemaPerson::name { firstName and lastName } },
-
             df.select { "name"<DataRow<Name>>().select { colsOf<String>() } },
             df.select { "name"<DataRow<Name>>()() { colsOf<String>() } },
             df.select { colGroup("name").select { colsOf<String>() } },

@@ -19,6 +19,7 @@ public interface ColumnSet<out C> : ColumnsResolver<C>
 internal fun <C> ColumnsResolver<C>.asColumnSet(): ColumnSet<C> =
     when (this) {
         is ColumnSet<C> -> this
+
         else -> object : ColumnSet<C> {
             override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
                 this@asColumnSet.resolve(context)
@@ -33,5 +34,4 @@ internal fun <C> SingleColumn<C>.asColumnSet(): ColumnSet<C> =
         else -> object : ColumnSet<C>, SingleColumn<C> by this {}
     }
 
-internal fun <C> ColumnsSelectionDsl<C>.asColumnSet(): ColumnSet<DataRow<C>> =
-    asSingleColumn().asColumnSet()
+internal fun <C> ColumnsSelectionDsl<C>.asColumnSet(): ColumnSet<DataRow<C>> = asSingleColumn().asColumnSet()
