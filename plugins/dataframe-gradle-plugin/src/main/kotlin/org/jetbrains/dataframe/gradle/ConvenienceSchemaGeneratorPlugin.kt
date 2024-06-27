@@ -18,7 +18,9 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
             if (property.equals("true", ignoreCase = true) || property.equals("false", ignoreCase = true)) {
                 addKsp = property.toBoolean()
             } else {
-                target.logger.warn("Invalid value '$property' for '$name' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.")
+                target.logger.warn(
+                    "Invalid value '$property' for '$name' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.",
+                )
             }
         }
 
@@ -33,9 +35,13 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 val isMultiplatform =
                     when {
                         target.plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> false
+
                         target.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform") -> true
+
                         else -> {
-                            target.logger.warn("Kotlin plugin must be applied first so we know whether to use multiplatform configurations or not")
+                            target.logger.warn(
+                                "Kotlin plugin must be applied first so we know whether to use multiplatform configurations or not",
+                            )
                             false
                         }
                     }
@@ -43,20 +49,31 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 val testKspCfg = if (isMultiplatform) "kspJvmTest" else "kspTest"
                 try {
                     target.configurations.getByName(mainKspCfg).dependencies.add(
-                        target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                        target.dependencies.create(
+                            "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
+                        ),
                     )
                 } catch (e: UnknownConfigurationException) {
-                    target.logger.warn("Configuration '$mainKspCfg' not found. Please make sure the KSP plugin is applied.")
+                    target.logger.warn(
+                        "Configuration '$mainKspCfg' not found. Please make sure the KSP plugin is applied.",
+                    )
                 }
                 try {
                     target.configurations.getByName(testKspCfg).dependencies.add(
-                        target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                        target.dependencies.create(
+                            "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
+                        ),
                     )
                 } catch (e: UnknownConfigurationException) {
-                    target.logger.warn("Configuration '$testKspCfg' not found. Please make sure the KSP plugin is applied.")
+                    target.logger.warn(
+                        "Configuration '$testKspCfg' not found. Please make sure the KSP plugin is applied.",
+                    )
                 }
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
-                target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.projectDir.absolutePath)
+                target.extensions.getByType<KspExtension>().arg(
+                    "dataframe.resolutionDir",
+                    target.projectDir.absolutePath,
+                )
             }
         }
 
@@ -67,7 +84,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 "Plugin 'org.jetbrains.kotlinx.dataframe' comes bundled with its own version of KSP which is " +
                     "currently disabled as 'kotlin.dataframe.add.ksp' is set to 'false' in a 'properties' file. " +
                     "Either set 'kotlin.dataframe.add.ksp' to 'true' or add the plugin 'com.google.devtools.ksp' " +
-                    "manually."
+                    "manually.",
             )
         }
         target.plugins.apply(SchemaGeneratorPlugin::class.java)
@@ -77,7 +94,9 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
 @Suppress("unused")
 class DeprecatingSchemaGeneratorPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.logger.warn("DEPRECATION: Replace plugin id(\"org.jetbrains.kotlin.plugin.dataframe\") and kotlin(\"plugin.dataframe\") with id(\"org.jetbrains.kotlinx.dataframe\").")
+        target.logger.warn(
+            "DEPRECATION: Replace plugin id(\"org.jetbrains.kotlin.plugin.dataframe\") and kotlin(\"plugin.dataframe\") with id(\"org.jetbrains.kotlinx.dataframe\").",
+        )
         target.plugins.apply(ConvenienceSchemaGeneratorPlugin::class.java)
     }
 }

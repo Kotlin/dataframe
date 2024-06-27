@@ -14,7 +14,8 @@ internal open class ValueColumnImpl<T>(
     type: KType,
     val defaultValue: T? = null,
     distinct: Lazy<Set<T>>? = null,
-) : DataColumnImpl<T>(values, name, type, distinct), ValueColumn<T> {
+) : DataColumnImpl<T>(values, name, type, distinct),
+    ValueColumn<T> {
 
     override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
 
@@ -49,9 +50,9 @@ internal open class ValueColumnImpl<T>(
     override fun forceResolve() = ResolvingValueColumn(this)
 }
 
-internal class ResolvingValueColumn<T>(
-    override val source: ValueColumn<T>,
-) : ValueColumn<T> by source, ForceResolvedColumn<T> {
+internal class ResolvingValueColumn<T>(override val source: ValueColumn<T>) :
+    ValueColumn<T> by source,
+    ForceResolvedColumn<T> {
 
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
 

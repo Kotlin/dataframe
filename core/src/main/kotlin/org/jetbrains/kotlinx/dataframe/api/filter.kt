@@ -24,19 +24,21 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> = indices.filter {
-    predicate(get(it))
-}.let { get(it) }
+public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
+    indices
+        .filter { predicate(get(it)) }
+        .let { get(it) }
 
 // endregion
 
 // region DataFrame
 
 public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
-    indices.filter {
-        val row = get(it)
-        predicate(row, row)
-    }.let { get(it) }
+    indices
+        .filter {
+            val row = get(it)
+            predicate(row, row)
+        }.let { get(it) }
 
 public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFrame<T> =
     getRows(getColumn(column).toList().getTrueIndices())

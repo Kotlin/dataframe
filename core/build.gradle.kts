@@ -106,6 +106,10 @@ tasks.named("runKtlintCheckOverSamplesSourceSet") {
     onlyIf { false }
 }
 
+tasks.named("runKtlintFormatOverSamplesSourceSet") {
+    onlyIf { false }
+}
+
 val clearTestResults by tasks.creating(Delete::class) {
     delete(layout.buildDirectory.dir("dataframes"))
     delete(layout.buildDirectory.dir("korroOutputLines"))

@@ -118,7 +118,8 @@ class PlaylistJsonTest {
     @Test
     fun `deep update`() {
         val updated = item.convert { snippet.thumbnails.default.url }.with { IMG(it) }
-        updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.default.url
+            .type() shouldBe typeOf<IMG>()
     }
 
     @Test
@@ -130,8 +131,10 @@ class PlaylistJsonTest {
     @Test
     fun `deep batch update`() {
         val updated = item.convert { snippet.thumbnails.default.url and snippet.thumbnails.high.url }.with { IMG(it) }
-        updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
-        updated.snippet.thumbnails.high.url.type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.default.url
+            .type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.high.url
+            .type() shouldBe typeOf<IMG>()
     }
 
     @Test
@@ -139,11 +142,16 @@ class PlaylistJsonTest {
         val updated = item
             .convert { colsAtAnyDepth { it.name() == "url" } }
             .with { (it as? String)?.let { IMG(it) } }
-        updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
-        updated.snippet.thumbnails.maxres.url.type() shouldBe typeOf<IMG?>()
-        updated.snippet.thumbnails.standard.url.type() shouldBe typeOf<IMG?>()
-        updated.snippet.thumbnails.medium.url.type() shouldBe typeOf<IMG>()
-        updated.snippet.thumbnails.high.url.type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.default.url
+            .type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.maxres.url
+            .type() shouldBe typeOf<IMG?>()
+        updated.snippet.thumbnails.standard.url
+            .type() shouldBe typeOf<IMG?>()
+        updated.snippet.thumbnails.medium.url
+            .type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.high.url
+            .type() shouldBe typeOf<IMG>()
     }
 
     @Test
@@ -154,7 +162,10 @@ class PlaylistJsonTest {
 
     @Test
     fun `deep remove`() {
-        val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.channelId and etag }
+        val item2 = item.remove {
+            snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.channelId and
+                etag
+        }
         item2.columnsCount() shouldBe item.columnsCount() - 1
         item2.snippet.columnsCount() shouldBe item.snippet.columnsCount() - 1
         item2.snippet.thumbnails.columnsCount() shouldBe item.snippet.thumbnails.columnsCount() - 2
@@ -162,7 +173,11 @@ class PlaylistJsonTest {
 
     @Test
     fun `remove all from group`() {
-        val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.thumbnails.medium and snippet.thumbnails.high and snippet.thumbnails.standard }
+        val item2 = item.remove {
+            snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.thumbnails.medium and
+                snippet.thumbnails.high and
+                snippet.thumbnails.standard
+        }
         item2.snippet.columnsCount() shouldBe item.snippet.columnsCount() - 1
         item2.snippet.getColumnGroupOrNull("thumbnails") shouldBe null
     }
@@ -170,9 +185,13 @@ class PlaylistJsonTest {
     @Test
     fun `deep move with rename`() {
         val moved = item.move { snippet.thumbnails.default }.into { snippet.path() + "movedDefault" }
-        moved.snippet.thumbnails.columnNames() shouldBe item.snippet.thumbnails.remove { default }.columnNames()
+        moved.snippet.thumbnails.columnNames() shouldBe item.snippet.thumbnails
+            .remove { default }
+            .columnNames()
         moved.snippet.columnsCount() shouldBe item.snippet.columnsCount() + 1
-        (moved.snippet["movedDefault"] as ColumnGroup<*>).columnsCount() shouldBe item.snippet.thumbnails.default.columnsCount()
+        (moved.snippet["movedDefault"] as ColumnGroup<*>).columnsCount() shouldBe
+            item.snippet.thumbnails.default
+                .columnsCount()
     }
 
     @Test
@@ -186,10 +205,15 @@ class PlaylistJsonTest {
 
     @Test
     fun `select with rename`() {
-        val selected = item.select { snippet.thumbnails.default.url into "default" and (snippet.thumbnails.maxres.url named "maxres") }
+        val selected = item.select {
+            snippet.thumbnails.default.url into "default" and
+                (snippet.thumbnails.maxres.url named "maxres")
+        }
         selected.columnNames() shouldBe listOf("default", "maxres")
-        selected["default"].toList() shouldBe item.snippet.thumbnails.default.url.toList()
-        selected["maxres"].toList() shouldBe item.snippet.thumbnails.maxres.url.toList()
+        selected["default"].toList() shouldBe item.snippet.thumbnails.default.url
+            .toList()
+        selected["maxres"].toList() shouldBe item.snippet.thumbnails.maxres.url
+            .toList()
     }
 
     @Test

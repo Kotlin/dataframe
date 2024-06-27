@@ -10,7 +10,9 @@ public inline fun <reified T> DataFrame<T>.generateCode(
 ): String {
     val name = if (T::class.isAbstract) {
         T::class.simpleName!!
-    } else "DataEntry"
+    } else {
+        "DataEntry"
+    }
     return generateCode(name, fields, extensionProperties)
 }
 
@@ -21,23 +23,26 @@ public fun <T> DataFrame<T>.generateCode(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): String {
     val codeGen = CodeGenerator.create()
-    return codeGen.generate(
-        schema = schema(),
-        name = markerName,
-        fields = fields,
-        extensionProperties = extensionProperties,
-        isOpen = true,
-        visibility = visibility,
-    ).code.declarations
+    return codeGen
+        .generate(
+            schema = schema(),
+            name = markerName,
+            fields = fields,
+            extensionProperties = extensionProperties,
+            isOpen = true,
+            visibility = visibility,
+        ).code.declarations
 }
 
-public inline fun <reified T> DataFrame<T>.generateInterfaces(): String = generateCode(
-    fields = true,
-    extensionProperties = false
-)
+public inline fun <reified T> DataFrame<T>.generateInterfaces(): String =
+    generateCode(
+        fields = true,
+        extensionProperties = false,
+    )
 
-public fun <T> DataFrame<T>.generateInterfaces(markerName: String): String = generateCode(
-    markerName = markerName,
-    fields = true,
-    extensionProperties = false
-)
+public fun <T> DataFrame<T>.generateInterfaces(markerName: String): String =
+    generateCode(
+        markerName = markerName,
+        fields = true,
+        extensionProperties = false,
+    )

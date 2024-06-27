@@ -186,7 +186,9 @@ public interface SingleColumnsSelectionDsl {
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnsResolver<C>.singleInternal(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
+internal fun <C> ColumnsResolver<C>.singleInternal(
+    condition: ColumnFilter<C> = { true },
+): TransformableSingleColumn<C> =
     (allColumnsInternal() as TransformableColumnSet<C>)
         .transform { listOf(it.single(condition)) }
         .singleOrNullWithTransformerImpl()

@@ -7,10 +7,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import kotlin.reflect.KType
 
-internal class FrameColumnWithParent<T>(
-    override val parent: ColumnGroup<*>,
-    override val source: FrameColumn<T>
-) : ColumnWithParent<DataFrame<T>>, FrameColumn<T> by source, DataColumnInternal<DataFrame<T>> {
+internal class FrameColumnWithParent<T>(override val parent: ColumnGroup<*>, override val source: FrameColumn<T>) :
+    ColumnWithParent<DataFrame<T>>,
+    FrameColumn<T> by source,
+    DataColumnInternal<DataFrame<T>> {
 
     override fun equals(other: Any?) = source.checkEquals(other)
 
@@ -24,7 +24,8 @@ internal class FrameColumnWithParent<T>(
 
     override fun forceResolve() = ResolvingFrameColumn(this)
 
-    override fun changeType(type: KType) = FrameColumnWithParent(parent, source.internal().changeType(type).asFrameColumn())
+    override fun changeType(type: KType) =
+        FrameColumnWithParent(parent, source.internal().changeType(type).asFrameColumn())
 
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, source)
 
