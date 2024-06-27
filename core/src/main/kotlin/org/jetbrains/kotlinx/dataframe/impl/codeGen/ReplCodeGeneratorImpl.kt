@@ -78,11 +78,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
-    fun generate(
-        schema: DataFrameSchema,
-        name: String,
-        isOpen: Boolean,
-    ): CodeWithConverter {
+    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithConverter {
         val result = generator.generate(
             schema = schema,
             name = name,
@@ -111,9 +107,9 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             if (temp != null) {
                 val baseClasses = clazz.superclasses.filter { it != Any::class }
 
-                val baseClassNames = baseClasses.map {
-                    it.simpleName!!
-                }.sorted()
+                val baseClassNames = baseClasses
+                    .map { it.simpleName!! }
+                    .sorted()
 
                 val tempBaseClassNames = temp.superMarkers.map { it.value.shortName }.sorted()
 

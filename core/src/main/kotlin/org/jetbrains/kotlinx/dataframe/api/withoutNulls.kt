@@ -104,8 +104,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
      */
-    public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> =
-        asSingleColumn().colsWithoutNulls()
+    public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> = asSingleColumn().colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
@@ -122,8 +121,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsWithoutNulls][String.colsWithoutNulls]`() }`
      */
-    public fun String.colsWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).colsWithoutNulls()
+    public fun String.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
@@ -131,8 +129,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsWithoutNulls][KProperty.colsWithoutNulls]`() }`
      */
-    public fun KProperty<*>.colsWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).colsWithoutNulls()
+    public fun KProperty<*>.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
@@ -140,8 +137,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[colsWithoutNulls][ColumnPath.colsWithoutNulls]`() }`
      */
-    public fun ColumnPath.colsWithoutNulls(): ColumnSet<Any> =
-        columnGroup(this).colsWithoutNulls()
+    public fun ColumnPath.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 }
 
 // endregion

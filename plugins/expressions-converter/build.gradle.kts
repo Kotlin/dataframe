@@ -4,7 +4,7 @@ plugins {
         alias(kotlin.jvm)
         alias(shadow)
         alias(publisher)
-        alias(kotlinter)
+        alias(ktlint)
     }
 }
 
@@ -66,7 +66,8 @@ tasks.create<JavaExec>("generateTests") {
 
 fun Test.setLibraryProperty(propName: String, jarName: String) {
     val path = project.configurations
-        .testRuntimeClasspath.get()
+        .testRuntimeClasspath
+        .get()
         .files
         .find { """$jarName-\d.*jar""".toRegex().matches(it.name) }
         ?.absolutePath

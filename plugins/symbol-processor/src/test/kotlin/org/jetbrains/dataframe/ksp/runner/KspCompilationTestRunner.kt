@@ -26,7 +26,6 @@ internal object KspCompilationTestRunner {
     val compilationDir: File = Paths.get("build/test-compile").toAbsolutePath().toFile()
 
     fun compile(params: TestCompilationParameters): KotlinCompileTestingCompilationResult {
-        @Suppress("NAME_SHADOWING")
         // looks like this requires a kotlin source file
         // see: https://github.com/tschuchortdev/kotlin-compile-testing/issues/57
         val sources = params.sources + SourceFile.kotlin("placeholder.kt", "")
@@ -35,7 +34,7 @@ internal object KspCompilationTestRunner {
             sources = sources,
             outputStream = combinedOutputStream,
             classpaths = params.classpath,
-            tempDir = compilationDir
+            tempDir = compilationDir,
         )
         kspCompilation.kspArgs.putAll(params.options)
         kspCompilation.symbolProcessorProviders = listOf(DataFrameSymbolProcessorProvider())
@@ -47,7 +46,7 @@ internal object KspCompilationTestRunner {
                     successfulCompilation = false,
                     kspGeneratedFiles = emptyList(),
                     outputSourceDirs = emptyList(),
-                    rawOutput = combinedOutputStream.toString(Charsets.UTF_8)
+                    rawOutput = combinedOutputStream.toString(Charsets.UTF_8),
                 )
             }
         }
@@ -61,7 +60,7 @@ internal object KspCompilationTestRunner {
             sources = sources,
             outputStream = combinedOutputStream,
             classpaths = params.classpath,
-            tempDir = compilationDir
+            tempDir = compilationDir,
         )
         // build source files from generated code
         finalCompilation.sources += kspCompilation.kspJavaSourceDir.collectSourceFiles() +
@@ -74,9 +73,10 @@ internal object KspCompilationTestRunner {
             successfulCompilation = result.exitCode == KotlinCompilation.ExitCode.OK,
             outputSourceDirs = listOf(
                 kspCompilation.kspJavaSourceDir,
-                kspCompilation.kspKotlinSourceDir
+                kspCompilation.kspKotlinSourceDir,
             ),
-            kspGeneratedFiles = kspCompilation.kspJavaSourceDir.collectFiles() + kspCompilation.kspKotlinSourceDir.collectFiles(),
+            kspGeneratedFiles =
+                kspCompilation.kspJavaSourceDir.collectFiles() + kspCompilation.kspKotlinSourceDir.collectFiles(),
             rawOutput = combinedOutputStream.toString(Charsets.UTF_8),
         )
     }
@@ -89,17 +89,14 @@ internal object KspCompilationTestRunner {
     private val KotlinCompilation.kspKotlinSourceDir: File
         get() = kspSourcesDir.resolve("kotlin")
 
-    private fun File.collectSourceFiles(): List<SourceFile> {
-        return walkTopDown().filter {
-            it.isFile
-        }.map { file ->
-            SourceFile.fromPath(file)
-        }.toList()
-    }
+    private fun File.collectSourceFiles(): List<SourceFile> =
+        walkTopDown()
+            .filter { it.isFile }
+            .map { file -> SourceFile.fromPath(file) }
+            .toList()
 
-    private fun File.collectFiles(): List<File> {
-        return walkTopDown().filter {
-            it.isFile
-        }.toList()
-    }
+    private fun File.collectFiles(): List<File> =
+        walkTopDown()
+            .filter { it.isFile }
+            .toList()
 }

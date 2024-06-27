@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class ExplodeTests {
 
     @Test
@@ -22,10 +23,11 @@ class ExplodeTests {
     @Test
     fun `explode list and frame column`() {
         val exploded = dataFrameOf("a", "b", "c", "d")(1, listOf(2, 3), dataFrameOf("x", "y")(4, 5, 6, 7), listOf(8))
-            .explode().ungroup("c")
+            .explode()
+            .ungroup("c")
         exploded shouldBe dataFrameOf("a", "b", "x", "y", "d")(
             1, 2, 4, 5, 8,
-            1, 3, 6, 7, null
+            1, 3, 6, 7, null,
         )
     }
 
