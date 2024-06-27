@@ -30,23 +30,37 @@ import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
 internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
-    { left.columnNames().intersect(right.columnNames().toSet()).map { it.toColumnAccessor() }.let { ColumnsList(it) } }
+    {
+        left
+            .columnNames()
+            .intersect(right.columnNames().toSet())
+            .map { it.toColumnAccessor() }
+            .let { ColumnsList(it) }
+    }
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnsSelector<T, T> =
     {
-        dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
-            set?.intersect(names.toSet()) ?: names.toSet()
-        }.orEmpty().map { it.toColumnAccessor() }.let { ColumnsList(it) }
+        dataFrames
+            .map { it.columnNames() }
+            .fold<List<String>, Set<String>?>(null) { set, names ->
+                set?.intersect(names.toSet()) ?: names.toSet()
+            }.orEmpty()
+            .map { it.toColumnAccessor() }
+            .let { ColumnsList(it) }
     }
 
-internal fun <C> ColumnsResolver<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
-    is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
-    is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
-    is ColumnMatch -> listOf(this)
-    else -> throw Exception()
-}
+internal fun <C> ColumnsResolver<C>.extractJoinColumns(): List<ColumnMatch<C>> =
+    when (this) {
+        is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
+        is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
+        is ColumnMatch -> listOf(this)
+        else -> throw Exception()
+    }
 
-internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnsSelector<A, B>): List<ColumnMatch<Any?>> {
+internal fun <A, B> DataFrame<A>.getColumns(
+    other: DataFrame<B>,
+    selector: JoinColumnsSelector<A, B>,
+): List<ColumnMatch<Any?>> {
     val receiver = object : DataFrameReceiver<A>(this, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
         override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
     }
@@ -58,7 +72,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     other: DataFrame<B>,
     joinType: JoinType = JoinType.Inner,
     addNewColumns: Boolean = true,
-    selector: JoinColumnsSelector<A, B>?
+    selector: JoinColumnsSelector<A, B>?,
 ): DataFrame<A> {
     val joinColumns = getColumns(other, selector ?: defaultJoinColumns(this, other))
 
@@ -76,7 +90,9 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
             val leftColumns = getColumnsWithPaths { leftCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }
-            val rightColumns = other.getColumnsWithPaths { rightCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }
+            val rightColumns = other.getColumnsWithPaths {
+                rightCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() }
+            }
 
             val leftPrefixLength = leftCol.path.size
             val rightPrefixLength = rightCol.path.size
@@ -105,12 +121,14 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     }
 
     // compute left to right column path mappings
-    val pathMapping = allLeftJoinColumns.mapIndexed { colNumber, leftCol ->
-        leftCol.path to allRightJoinColumns[colNumber].path
-    }.toMap()
+    val pathMapping = allLeftJoinColumns
+        .mapIndexed { colNumber, leftCol ->
+            leftCol.path to allRightJoinColumns[colNumber].path
+        }.toMap()
 
     // compute pairs of join key to row index from right data frame
-    val rightJoinKeyToIndex = other.indices()
+    val rightJoinKeyToIndex = other
+        .indices()
         .map { index -> allRightJoinColumns.map { it.data[index] } to index }
 
     // group row indices by key from right data frame
@@ -153,8 +171,16 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     val rightJoinColumnPaths = allRightJoinColumns.associate { it.path to it.data }
 
     val newRightColumns =
-        if (addNewColumns) other.getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) } }
-        else emptyList()
+        if (addNewColumns) {
+            other.getColumnsWithPaths {
+                colsAtAnyDepth {
+                    !it.isColumnGroup() &&
+                        !rightJoinColumnPaths.contains(it.path)
+                }
+            }
+        } else {
+            emptyList()
+        }
 
     // for every column index from the left dataframe store matching column from the right dataframe
     val leftToRightColumns = leftColumns.map { rightJoinColumnPaths[pathMapping[it.path()]] }
@@ -215,12 +241,21 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     }
 
     val columns = outputData.mapIndexed { columnIndex, columnValues ->
-        val srcColumn =
-            if (columnIndex < leftColumnsCount) leftColumns[columnIndex] else newRightColumns[columnIndex - leftColumnsCount]
+        val srcColumn = if (columnIndex < leftColumnsCount) {
+            leftColumns[columnIndex]
+        } else {
+            newRightColumns[columnIndex - leftColumnsCount]
+        }
         val hasNulls = hasNulls[columnIndex]
         val newColumn = when (srcColumn.kind) {
-            ColumnKind.Value -> DataColumn.createValueColumn(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
+            ColumnKind.Value -> DataColumn.createValueColumn(
+                name = srcColumn.name,
+                values = columnValues.asList(),
+                type = srcColumn.type.withNullability(hasNulls),
+            )
+
             ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame>)
+
             ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
         }
         srcColumn.path to newColumn

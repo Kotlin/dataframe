@@ -57,6 +57,8 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 }
 
 internal val <T> DataRow<T>.owner: DataFrame<T> get() = df()
-internal fun AnyRow.namedValues(): Sequence<NamedValue> = owner.columns().asSequence().map {
-    NamedValue.create(it.shortPath(), it[index], it.type(), it.defaultValue(), guessType = false)
-}
+
+internal fun AnyRow.namedValues(): Sequence<NamedValue> =
+    owner.columns().asSequence().map {
+        NamedValue.create(it.shortPath(), it[index], it.type(), it.defaultValue(), guessType = false)
+    }

@@ -27,15 +27,17 @@ import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class CsvTests {
 
     @Test
     fun readNulls() {
-        val src = """
+        val src =
+            """
             first,second
             2,,
             3,,
-        """.trimIndent()
+            """.trimIndent()
         val df = DataFrame.readDelimStr(src)
         df.nrow shouldBe 2
         df.ncol shouldBe 2
@@ -47,10 +49,8 @@ class CsvTests {
     @Test
     fun write() {
         val df = dataFrameOf("col1", "col2")(
-            1,
-            null,
-            2,
-            null
+            1, null,
+            2, null,
         ).convert("col2").toStr()
 
         val str = StringWriter()
@@ -100,6 +100,7 @@ class CsvTests {
     fun readCsvWithFloats() {
         val df = DataFrame.readCSV(wineCsv, delimiter = ';')
         val schema = df.schema()
+
         fun assertColumnType(columnName: String, kClass: KClass<*>) {
             val col = schema.columns[columnName]
             col.shouldNotBeNull()
@@ -118,6 +119,7 @@ class CsvTests {
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
             val df = DataFrame.readCSV(wineCsv, delimiter = ';')
             val schema = df.schema()
+
             fun assertColumnType(columnName: String, kClass: KClass<*>) {
                 val col = schema.columns[columnName]
                 col.shouldNotBeNull()
@@ -181,10 +183,12 @@ class CsvTests {
 
     @Test
     fun `if record has fewer columns than header then pad it with nulls`() {
-        val csvContent = """col1,col2,col3
+        val csvContent =
+            """
+            col1,col2,col3
             568,801,587
             780,588
-        """.trimIndent()
+            """.trimIndent()
 
         val df = shouldNotThrowAny {
             DataFrame.readDelimStr(csvContent)
@@ -192,7 +196,7 @@ class CsvTests {
 
         df shouldBe dataFrameOf("col1", "col2", "col3")(
             568, 801, 587,
-            780, 588, null
+            780, 588, null,
         )
     }
 
@@ -242,7 +246,10 @@ class CsvTests {
         )
         df.writeCSV(
             "src/test/resources/without_header.csv",
-            CSVFormat.DEFAULT.builder().setSkipHeaderRecord(true).build(),
+            CSVFormat.DEFAULT
+                .builder()
+                .setSkipHeaderRecord(true)
+                .build(),
         )
         val producedFile = File("src/test/resources/without_header.csv")
         producedFile.exists() shouldBe true
@@ -254,16 +261,18 @@ class CsvTests {
     fun `check integrity of example data`() {
         val df = DataFrame.readCSV("../data/jetbrains_repositories.csv")
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
-        df.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
+        df.columnTypes() shouldBe
+            listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
         df shouldBe DataFrame.readCSV("../data/jetbrains repositories.csv")
     }
 
     @Test
     fun `readDelimStr delimiter`() {
-        val tsv = """
+        val tsv =
+            """
             a	b	c
             1	2	3
-        """.trimIndent()
+            """.trimIndent()
         val df = DataFrame.readDelimStr(tsv, '\t')
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }

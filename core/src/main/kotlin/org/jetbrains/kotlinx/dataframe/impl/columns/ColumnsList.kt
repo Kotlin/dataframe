@@ -7,6 +7,5 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 internal class ColumnsList<C>(val columns: List<ColumnsResolver<C>>) : ColumnSet<C> {
     constructor(vararg columns: ColumnsResolver<C>) : this(columns.toList())
 
-    override fun resolve(context: ColumnResolutionContext) =
-        columns.flatMap { it.resolve(context) }
+    override fun resolve(context: ColumnResolutionContext) = columns.flatMap { it.resolve(context) }
 }

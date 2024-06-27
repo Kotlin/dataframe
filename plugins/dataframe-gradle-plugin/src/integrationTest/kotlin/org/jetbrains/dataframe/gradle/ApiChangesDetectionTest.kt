@@ -15,15 +15,15 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
     fun `cast api`() {
         compiles {
             """
-                import ${DataFrame::class.qualifiedName!!}
-                import org.jetbrains.kotlinx.dataframe.api.cast 
-                
-                interface Marker
-                
-                fun DataFrame<*>.resolveApi() {
-                    cast<Marker>()
-                    cast<Marker>(true)
-                }
+            import ${DataFrame::class.qualifiedName!!}
+            import org.jetbrains.kotlinx.dataframe.api.cast 
+            
+            interface Marker
+            
+            fun DataFrame<*>.resolveApi() {
+                cast<Marker>()
+                cast<Marker>(true)
+            }
             """.trimIndent()
         }
     }
@@ -34,12 +34,12 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
     fun `read json api`() {
         compiles {
             """
-                import ${DataFrame::class.qualifiedName!!}
-                import org.jetbrains.kotlinx.dataframe.io.readJson
-                
-                fun DataFrame<*>.resolveApi(s: String) {
-                    DataFrame.readJson(s)
-                }
+            import ${DataFrame::class.qualifiedName!!}
+            import org.jetbrains.kotlinx.dataframe.io.readJson
+            
+            fun DataFrame<*>.resolveApi(s: String) {
+                DataFrame.readJson(s)
+            }
             """.trimIndent()
         }
     }
@@ -50,12 +50,12 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
     fun `read csv api`() {
         compiles {
             """
-                import ${DataFrame::class.qualifiedName!!}
-                import org.jetbrains.kotlinx.dataframe.io.readCSV
-                
-                fun DataFrame<*>.resolveApi(s: String, ch: Char) {
-                    DataFrame.readCSV(s, ch)
-                }
+            import ${DataFrame::class.qualifiedName!!}
+            import org.jetbrains.kotlinx.dataframe.io.readCSV
+            
+            fun DataFrame<*>.resolveApi(s: String, ch: Char) {
+                DataFrame.readCSV(s, ch)
+            }
             """.trimIndent()
         }
     }
@@ -66,19 +66,19 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
             val main = File(kotlin, "Main.kt")
             main.writeText(code())
             """
-                plugins {
-                    kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlinx.dataframe")
-                }
-                
-                dependencies {
-                    implementation(files("$dataframeJarPath"))
-                }
-                
-                repositories {
-                    mavenCentral()
-                    mavenLocal()
-                }
+            plugins {
+                kotlin("jvm") version "$kotlinVersion"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            dependencies {
+                implementation(files("$dataframeJarPath"))
+            }
+            
+            repositories {
+                mavenCentral()
+                mavenLocal()
+            }
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
