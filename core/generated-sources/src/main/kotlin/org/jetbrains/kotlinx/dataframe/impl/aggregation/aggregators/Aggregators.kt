@@ -22,8 +22,7 @@ internal object Aggregators {
     private fun <C, R> changesType(aggregate1: Iterable<C>.(KType) -> R, aggregate2: Iterable<R>.(KType) -> R) =
         TwoStepAggregator.Factory(aggregate1, aggregate2, false)
 
-    private fun extendsNumbers(aggregate: Iterable<Number>.(KType) -> Number?) =
-        NumbersAggregator.Factory(aggregate)
+    private fun extendsNumbers(aggregate: Iterable<Number>.(KType) -> Number?) = NumbersAggregator.Factory(aggregate)
 
     private fun <P, C, R> withOption(getAggregator: (P) -> AggregatorProvider<C, R>) =
         AggregatorOptionSwitch.Factory(getAggregator)

@@ -1,15 +1,33 @@
 package org.jetbrains.kotlinx.dataframe.puzzles
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.api.relative
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortByDesc
+import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 import kotlin.math.round
 import kotlin.random.Random
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class HardTests {
 
     @Test
@@ -39,13 +57,19 @@ class HardTests {
 
         val expected = dataFrameOf("index", "name")(0, "d", 2, "c", 3, "f")
 
-        df.add("index") { index() }
-            .gather { dropLast() }.into("name", "vals")
-            .sortByDesc { vals }.take(3)[index, name] shouldBe expected
+        df
+            .add("index") { index() }
+            .gather { dropLast() }
+            .into("name", "vals")
+            .sortByDesc { vals }
+            .take(3)[index, name] shouldBe expected
 
-        df.add("index") { index() }
-            .gather { dropLast() }.into("name", "vals")
-            .sortByDesc("vals").take(3)["index", "name"] shouldBe expected
+        df
+            .add("index") { index() }
+            .gather { dropLast() }
+            .into("name", "vals")
+            .sortByDesc("vals")
+            .take(3)["index", "name"] shouldBe expected
     }
 
     @Test
@@ -73,20 +97,26 @@ class HardTests {
             -2, "B", 21.0,
             -1, "A", 16.0,
             -19, "B", 21.0,
-            23, "A", 23.0
+            23, "A", 23.0,
         )
 
-        val means = df.filter { vals >= 0 }
-            .groupBy { grps }.mean()
-            .pivot { grps }.values { vals }
+        val means = df
+            .filter { vals >= 0 }
+            .groupBy { grps }
+            .mean()
+            .pivot { grps }
+            .values { vals }
 
         df.add("patched_values") {
             if (vals() < 0) means[grps()] as Double else vals().toDouble()
         } shouldBe expected
 
-        val meansStr = df.filter { "vals"<Int>() >= 0 }
-            .groupBy("grps").mean()
-            .pivot("grps").values("vals")
+        val meansStr = df
+            .filter { "vals"<Int>() >= 0 }
+            .groupBy("grps")
+            .mean()
+            .pivot("grps")
+            .values("vals")
 
         df.add("patched_values") {
             if ("vals"<Int>() < 0) meansStr["grps"<String>()] as Double else "vals"<Int>().toDouble()
@@ -114,8 +144,10 @@ class HardTests {
             "b", 8.0, 4.0,
         )
 
-        df.add("id") { index() }
-            .groupBy { groups }.add("res") {
+        df
+            .add("id") { index() }
+            .groupBy { groups }
+            .add("res") {
                 round(relative(-2..0)[value].filter { !it.isNaN() }.mean())
             }.concat()
             .sortBy("id")

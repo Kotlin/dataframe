@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-unused-imports")
+
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlin.backend.common.FileLoweringPass
@@ -5,6 +7,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.IrElementBase
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin

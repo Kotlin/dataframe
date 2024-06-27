@@ -3,9 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
@@ -17,14 +15,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessorsLink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesLink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslLink
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingleLink
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KPropertiesLink
 import kotlin.reflect.KProperty
 
 /** [Selecting Columns][SelectingColumns] */
@@ -107,6 +100,7 @@ internal interface SelectingColumns {
     interface OperationArg
 
     // Using <code>` notation to not create double `` when including
+
     interface SetDefaultOperationArg
 
     /**

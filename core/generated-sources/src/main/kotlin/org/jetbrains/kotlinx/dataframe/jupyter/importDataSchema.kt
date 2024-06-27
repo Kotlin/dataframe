@@ -10,11 +10,14 @@ public class ImportDataSchema(public val url: URL) {
 }
 
 public fun importDataSchema(url: URL): ImportDataSchema = ImportDataSchema(url)
+
 public fun importDataSchema(path: String): ImportDataSchema = ImportDataSchema(path)
+
 public fun importDataSchema(file: File): ImportDataSchema = ImportDataSchema(file)
 
 @Language("kts")
-internal val importDataSchema = """
+internal val importDataSchema =
+    """
     /** Import the type-only data schema from [url]. */
     fun importDataSchema(url: URL, name: String) {
         val formats = listOf(
@@ -43,4 +46,4 @@ internal val importDataSchema = """
 
     /** Import the type-only data schema from [file]. */
     fun importDataSchema(file: File, name: String): Unit = importDataSchema(file.toURI().toURL(), name)
-""".trimIndent()
+    """.trimIndent()

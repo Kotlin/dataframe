@@ -17,10 +17,9 @@ open class ColumnsSelectionDslTests : TestBase() {
     protected val frameCol by frameColumn<Person>()
 
     protected val dfWithFrames = df
-        .add {
-            expr { df } into frameCol
-        }
-        .convert { name }.to {
+        .add { expr { df } into frameCol }
+        .convert { name }
+        .to {
             val firstName by it.asColumnGroup().firstName
             val lastName by it.asColumnGroup().lastName
 

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
@@ -114,6 +116,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.streams.toList
 
+@Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
 class Modify : TestBase() {
 
     @Test
@@ -198,7 +201,10 @@ class Modify : TestBase() {
     }
 
     enum class Direction {
-        NORTH, SOUTH, WEST, EAST
+        NORTH,
+        SOUTH,
+        WEST,
+        EAST,
     }
 
     @Test
@@ -265,14 +271,14 @@ class Modify : TestBase() {
                 source = "df",
                 containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
                 containingFunName = "shuffle",
-                df = df
+                df = df,
             ),
             PluginCallbackProxy.Expression(
                 source = "shuffle()",
                 containingClassFqName = "org.jetbrains.kotlinx.dataframe.samples.api.Modify",
                 containingFunName = "shuffle",
-                df = df.getRows(df.indices.shuffled(Random(123)))
-            )
+                df = df.getRows(df.indices.shuffled(Random(123))),
+            ),
         )
     }
 
@@ -451,7 +457,7 @@ class Modify : TestBase() {
         // SampleStart
         val df = dataFrameOf("c", "d", "a", "b")(
             3, 4, 1, 2,
-            1, 1, 1, 1
+            1, 1, 1, 1,
         )
         df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
             // SampleEnd
@@ -585,12 +591,12 @@ class Modify : TestBase() {
         // SampleStart
         val df1 = dataFrameOf("a", "b", "c")(
             1, 2, 3,
-            4, 5, 6
+            4, 5, 6,
         )
         val df2 = dataFrameOf("a", "b")(
             5, 6,
             7, 8,
-            9, 10
+            9, 10,
         )
         val group by columnOf(df1, df2)
         val id by columnOf("x", "y")
@@ -698,7 +704,7 @@ class Modify : TestBase() {
         // SampleStart
         val df = dataFrameOf("a", "b")(
             1, listOf(1, 2),
-            2, listOf(3, 4)
+            2, listOf(3, 4),
         )
 
         df.explode("b")
@@ -733,7 +739,7 @@ class Modify : TestBase() {
         // SampleStart
         val col by columnOf(
             dataFrameOf("a", "b")(1, 2, 3, 4),
-            dataFrameOf("a", "b")(5, 6, 7, 8)
+            dataFrameOf("a", "b")(5, 6, 7, 8),
         )
 
         col.explode()
@@ -874,11 +880,11 @@ class Modify : TestBase() {
         // SampleStart
         val x = dataFrameOf("a", "b")(
             1, 2,
-            3, 4
+            3, 4,
         )
         val y = dataFrameOf("b", "c")(
             5, 6,
-            7, 8
+            7, 8,
         )
         val frameColumn by columnOf(x, y)
         frameColumn.concat()
@@ -922,6 +928,7 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    @Suppress("ktlint:standard:multiline-if-else", "ktlint:standard:if-else-wrapping")
     @Test
     @TransformDataFrameExpressions
     fun addRecurrent() {
@@ -956,9 +963,7 @@ class Modify : TestBase() {
 
     private class CityInfo(val city: String?, val population: Int, val location: String)
 
-    private fun queryCityInfo(city: String?): CityInfo {
-        return CityInfo(city, city?.length ?: 0, "35.5 32.2")
-    }
+    private fun queryCityInfo(city: String?): CityInfo = CityInfo(city, city?.length ?: 0, "35.5 32.2")
 
     @Test
     @TransformDataFrameExpressions
@@ -966,9 +971,7 @@ class Modify : TestBase() {
         // SampleStart
         class CityInfo(val city: String?, val population: Int, val location: String)
 
-        fun queryCityInfo(city: String?): CityInfo {
-            return CityInfo(city, city?.length ?: 0, "35.5 32.2")
-        }
+        fun queryCityInfo(city: String?): CityInfo = CityInfo(city, city?.length ?: 0, "35.5 32.2")
         // SampleEnd
     }
 
@@ -1258,8 +1261,8 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
-    @Test
     // @TransformDataFrameExpressions
+    @Test
     fun multiCallOperations() {
         // SampleStart
         df.update { age }.where { city == "Paris" }.with { it - 5 }
@@ -1422,7 +1425,7 @@ class Modify : TestBase() {
             """|        name        url contributions
                | 0 dataframe /dataframe           111
                | 1    kotlin    /kotlin           180
-               |""".trimMargin()
+            """.trimMargin()
     }
 
     @DataSchema
