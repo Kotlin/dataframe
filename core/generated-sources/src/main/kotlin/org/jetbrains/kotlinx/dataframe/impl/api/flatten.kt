@@ -22,7 +22,11 @@ internal fun <T, C> DataFrame<T>.flattenImpl(
     }
     val rootPrefixes = rootColumns.map { it.path }.toSet()
     val nameGenerators = rootPrefixes.map { it.dropLast() }.distinct().associateWith { path ->
-        val usedNames = get(path).asColumnGroup().columns().filter { path + it.name() !in rootPrefixes }.map { it.name() }
+        val usedNames = get(path)
+            .asColumnGroup()
+            .columns()
+            .filter { path + it.name() !in rootPrefixes }
+            .map { it.name() }
         ColumnNameGenerator(usedNames)
     }
 

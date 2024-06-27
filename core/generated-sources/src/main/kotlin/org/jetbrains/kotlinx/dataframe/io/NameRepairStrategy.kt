@@ -12,5 +12,5 @@ public enum class NameRepairStrategy {
     CHECK_UNIQUE,
 
     /** Check the uniqueness of the column names and repair it. */
-    MAKE_UNIQUE
+    MAKE_UNIQUE,
 }
