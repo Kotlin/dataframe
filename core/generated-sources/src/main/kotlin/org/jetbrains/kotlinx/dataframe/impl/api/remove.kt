@@ -19,8 +19,15 @@ import org.jetbrains.kotlinx.dataframe.nrow
 
 internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>)
 
-internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, columns: ColumnsSelector<T, *>): RemoveResult<T> {
-    val colWithPaths = getColumnsWithPaths(if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, columns)
+internal fun <T> DataFrame<T>.removeImpl(
+    allowMissingColumns: Boolean = false,
+    columns: ColumnsSelector<T, *>,
+): RemoveResult<T> {
+    val colWithPaths =
+        getColumnsWithPaths(
+            if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail,
+            columns,
+        )
     val colPaths = colWithPaths.map { it.path }
     val originalOrder = colPaths.mapIndexed { index, path -> path to index }.toMap()
 
@@ -28,7 +35,11 @@ internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, c
 
     if (colPaths.isEmpty()) return RemoveResult(this, emptyList())
 
-    fun dfs(cols: Iterable<AnyBaseCol>, removePaths: List<ColumnWithPath<*>>, node: TreeNode<ColumnPosition>): AnyFrame? {
+    fun dfs(
+        cols: Iterable<AnyBaseCol>,
+        removePaths: List<ColumnWithPath<*>>,
+        node: TreeNode<ColumnPosition>,
+    ): AnyFrame? {
         if (removePaths.isEmpty()) return null
 
         val depth = node.depth
@@ -51,7 +62,9 @@ internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, c
                     val removedChild = toRemove.single { it.path.size == depth + 1 }
                     node.data.column = removedChild.data
                 }
-            } else newCols.add(column)
+            } else {
+                newCols.add(column)
+            }
         }
         if (newCols.isEmpty()) return null
         return newCols.toDataFrame()
@@ -59,7 +72,12 @@ internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, c
 
     val newDf = dfs(columns(), colWithPaths, root) ?: DataFrame.empty(nrow)
 
-    val removedColumns = root.allRemovedColumns().map { it.pathFromRoot() to it }.sortedBy { originalOrder[it.first] }.map { it.second }
+    val removedColumns = root
+        .allRemovedColumns()
+        .map {
+            it.pathFromRoot() to it
+        }.sortedBy { originalOrder[it.first] }
+        .map { it.second }
 
     return RemoveResult(newDf.cast(), removedColumns)
 }

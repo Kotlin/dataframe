@@ -10,7 +10,14 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int = if (predicate == null) size() else values().count(predicate)
+public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int =
+    if (predicate ==
+        null
+    ) {
+        size()
+    } else {
+        values().count(predicate)
+    }
 
 // endregion
 

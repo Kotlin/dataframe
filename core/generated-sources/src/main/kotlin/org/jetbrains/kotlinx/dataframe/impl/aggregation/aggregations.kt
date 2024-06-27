@@ -40,9 +40,10 @@ internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
 }
 
 @JvmName("toColumnSetForAggregate")
-internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> = toColumnSet {
-    object : DataFrameReceiver<T>(it.df.cast(), UnresolvedColumnsPolicy.Fail), ColumnsForAggregateSelectionDsl<T> {}
-}
+internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> =
+    toColumnSet {
+        object : DataFrameReceiver<T>(it.df.cast(), UnresolvedColumnsPolicy.Fail), ColumnsForAggregateSelectionDsl<T> {}
+    }
 
 @PublishedApi
 internal fun <T> AggregateDsl<T>.internal(): AggregateInternalDsl<T> = this as AggregateInternalDsl<T>
@@ -61,14 +62,25 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
         val effectiveDropNA = if (dropNA) col.canHaveNA else false
         // TODO: use Set for distinct values
         val values = when {
-            effectiveDropNA && distinct -> col.asSequence().filter { !it.isNA }.distinct().toList()
+            effectiveDropNA && distinct ->
+                col
+                    .asSequence()
+                    .filter { !it.isNA }
+                    .distinct()
+                    .toList()
+
             effectiveDropNA && !distinct -> col.values.filter { !it.isNA }
+
             distinct -> col.values().distinct()
+
             else -> col.toList()
         }
 
-        if (forceYieldLists) yield(path, values, getListType(col.type), col.default)
-        else yieldOneOrMany(path, values, col.type, col.default)
+        if (forceYieldLists) {
+            yield(path, values, getListType(col.type), col.default)
+        } else {
+            yieldOneOrMany(path, values, col.type, col.default)
+        }
     }
 }
 
@@ -90,8 +102,11 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
 internal fun <T, V> AggregateInternalDsl<T>.withExpr(type: KType, path: ColumnPath, expression: RowExpression<T, V>) {
     val values = df.rows().map {
         val value = expression(it, it)
-        if (value is AnyColumnReference) it[value]
-        else value
+        if (value is AnyColumnReference) {
+            it[value]
+        } else {
+            value
+        }
     }
     yieldOneOrMany(path, values, type)
 }

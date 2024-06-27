@@ -14,8 +14,9 @@ internal data class PivotInAggregateImpl<T>(
     val aggregator: AggregateGroupedDsl<T>,
     val columns: PivotColumnsSelector<T, *>,
     val inward: Boolean?,
-    val default: Any? = null
-) : PivotGroupBy<T>, AggregatableInternal<T> {
+    val default: Any? = null,
+) : PivotGroupBy<T>,
+    AggregatableInternal<T> {
 
     override fun default(value: Any?) = copy(default = value)
 

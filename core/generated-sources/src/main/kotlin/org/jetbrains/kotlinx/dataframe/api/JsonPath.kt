@@ -13,7 +13,9 @@ import java.io.Serializable
  * `$[1]` will match `$[*]`
  */
 @JvmInline
-public value class JsonPath(@Language("jsonpath") public val path: String = "$") : Serializable {
+public value class JsonPath(
+    @Language("jsonpath") public val path: String = "$",
+) : Serializable {
 
     public fun append(name: String): JsonPath = JsonPath("$path[\"$name\"]")
 
@@ -23,35 +25,45 @@ public value class JsonPath(@Language("jsonpath") public val path: String = "$")
 
     public fun appendArrayWithWildcard(): JsonPath = JsonPath("$path[*]")
 
-    public fun replaceLastWildcardWithIndex(index: Int): JsonPath = JsonPath(
-        path.toCharArray().let { chars ->
-            val lastStarIndex = chars.lastIndexOf('*')
-            chars.flatMapIndexed { i, c ->
-                if (i == lastStarIndex) index.toString().toCharArray().toList()
-                else listOf(c)
-            }.joinToString("")
-        }
-    )
+    public fun replaceLastWildcardWithIndex(index: Int): JsonPath =
+        JsonPath(
+            path.toCharArray().let { chars ->
+                val lastStarIndex = chars.lastIndexOf('*')
+                chars
+                    .flatMapIndexed { i, c ->
+                        if (i == lastStarIndex) {
+                            index.toString().toCharArray().toList()
+                        } else {
+                            listOf(c)
+                        }
+                    }.joinToString("")
+            },
+        )
 
-    public fun prepend(name: String): JsonPath = JsonPath(
-        "\$[\"$name\"]" + path.removePrefix("$")
-    )
+    public fun prepend(name: String): JsonPath =
+        JsonPath(
+            "\$[\"$name\"]" + path.removePrefix("$"),
+        )
 
-    public fun prependWildcard(): JsonPath = JsonPath(
-        "\$[*]" + path.removePrefix("$")
-    )
+    public fun prependWildcard(): JsonPath =
+        JsonPath(
+            "\$[*]" + path.removePrefix("$"),
+        )
 
-    public fun prependArrayWithIndex(index: Int): JsonPath = JsonPath(
-        "\$[$index]" + path.removePrefix("$")
-    )
+    public fun prependArrayWithIndex(index: Int): JsonPath =
+        JsonPath(
+            "\$[$index]" + path.removePrefix("$"),
+        )
 
-    public fun prependArrayWithWildcard(): JsonPath = JsonPath(
-        "\$[*]" + path.removePrefix("$")
-    )
+    public fun prependArrayWithWildcard(): JsonPath =
+        JsonPath(
+            "\$[*]" + path.removePrefix("$"),
+        )
 
-    public fun erasedIndices(): JsonPath = JsonPath(
-        path.replace("""\[[0-9]+]""".toRegex(), "[*]")
-    )
+    public fun erasedIndices(): JsonPath =
+        JsonPath(
+            path.replace("""\[[0-9]+]""".toRegex(), "[*]"),
+        )
 
     private fun splitPath() = path.split("[", "]").filter { it.isNotBlank() }
 
@@ -61,9 +73,12 @@ public value class JsonPath(@Language("jsonpath") public val path: String = "$")
                 val path = splitPath()
                 val otherPath = other.splitPath()
 
-                if (path.size != otherPath.size) false
-                else path.zip(otherPath).all { (p, o) ->
-                    p == o || p == "*" || o == "*"
+                if (path.size != otherPath.size) {
+                    false
+                } else {
+                    path.zip(otherPath).all { (p, o) ->
+                        p == o || p == "*" || o == "*"
+                    }
                 }
             }
 }

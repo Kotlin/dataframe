@@ -75,8 +75,9 @@ public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<R>): Dat
 public fun <T> ColumnsContainer<T>.getColumn(path: ColumnPath): AnyCol =
     getColumnOrNull(path) ?: throw IllegalArgumentException("Column not found: '$path'")
 
-public fun <T> ColumnsContainer<T>.getColumn(index: Int): AnyCol = getColumnOrNull(index)
-    ?: throw IllegalArgumentException("Column index is out of bounds: $index. Columns count = $ncol")
+public fun <T> ColumnsContainer<T>.getColumn(index: Int): AnyCol =
+    getColumnOrNull(index)
+        ?: throw IllegalArgumentException("Column index is out of bounds: $index. Columns count = $ncol")
 
 public fun <T, C> ColumnsContainer<T>.getColumn(selector: ColumnSelector<T, C>): DataColumn<C> = get(selector)
 
@@ -121,32 +122,34 @@ public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean 
 
 // region rows
 
-public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
-    override fun iterator() =
-        object : Iterator<DataRow<T>> {
-            var nextRow = 0
+public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> =
+    object : Iterable<DataRow<T>> {
+        override fun iterator() =
+            object : Iterator<DataRow<T>> {
+                var nextRow = 0
 
-            override fun hasNext(): Boolean = nextRow < nrow
+                override fun hasNext(): Boolean = nextRow < nrow
 
-            override fun next(): DataRow<T> {
-                require(nextRow < nrow)
-                return get(nextRow++)
+                override fun next(): DataRow<T> {
+                    require(nextRow < nrow)
+                    return get(nextRow++)
+                }
             }
-        }
-}
+    }
 
-public fun <T> DataFrame<T>.rowsReversed(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
-    override fun iterator() =
-        object : Iterator<DataRow<T>> {
-            var nextRow = nrow - 1
+public fun <T> DataFrame<T>.rowsReversed(): Iterable<DataRow<T>> =
+    object : Iterable<DataRow<T>> {
+        override fun iterator() =
+            object : Iterator<DataRow<T>> {
+                var nextRow = nrow - 1
 
-            override fun hasNext(): Boolean = nextRow >= 0
+                override fun hasNext(): Boolean = nextRow >= 0
 
-            override fun next(): DataRow<T> {
-                require(nextRow >= 0)
-                return get(nextRow--)
+                override fun next(): DataRow<T> {
+                    require(nextRow >= 0)
+                    return get(nextRow--)
+                }
             }
-        }
-}
+    }
 
 // endregion

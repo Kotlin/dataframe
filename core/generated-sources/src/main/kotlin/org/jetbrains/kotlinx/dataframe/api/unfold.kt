@@ -14,11 +14,15 @@ import kotlin.reflect.KProperty
 public inline fun <reified T> DataColumn<T>.unfold(): AnyCol =
     when (kind()) {
         ColumnKind.Group, ColumnKind.Frame -> this
+
         else -> when {
             isPrimitive() -> this
-            else -> values().createDataFrameImpl(typeClass) {
-                (this as CreateDataFrameDsl<T>).properties()
-            }.asColumnGroup(name()).asDataColumn()
+
+            else -> values()
+                .createDataFrameImpl(typeClass) {
+                    (this as CreateDataFrameDsl<T>).properties()
+                }.asColumnGroup(name())
+                .asDataColumn()
         }
     }
 
