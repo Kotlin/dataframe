@@ -37,13 +37,9 @@ public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<Support
 
 public sealed interface DfReadResult {
 
-    public class Success(
-        private val df: AnyFrame,
-        public val format: SupportedDataFrameFormat,
-    ) : DfReadResult {
-        public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod {
-            return format.createDefaultReadMethod(pathRepresentation)
-        }
+    public class Success(private val df: AnyFrame, public val format: SupportedDataFrameFormat) : DfReadResult {
+        public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod =
+            format.createDefaultReadMethod(pathRepresentation)
 
         public val schema: DataFrameSchema = df.schema()
     }
@@ -81,13 +77,10 @@ public val CodeGenerator.Companion.urlCodeGenReader: (
 
 public sealed interface CodeGenerationReadResult {
 
-    public class Success(
-        public val code: Code,
-        public val format: SupportedCodeGenerationFormat,
-    ) : CodeGenerationReadResult {
-        public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod {
-            return format.createDefaultReadMethod(pathRepresentation)
-        }
+    public class Success(public val code: Code, public val format: SupportedCodeGenerationFormat) :
+        CodeGenerationReadResult {
+        public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod =
+            format.createDefaultReadMethod(pathRepresentation)
     }
 
     public class Error(public val reason: Throwable) : CodeGenerationReadResult

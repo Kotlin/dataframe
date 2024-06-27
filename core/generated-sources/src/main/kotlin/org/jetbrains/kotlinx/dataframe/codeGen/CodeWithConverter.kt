@@ -21,9 +21,10 @@ public data class CodeWithConverter(val declarations: Code, val converter: (Vari
 
     val hasConverter: Boolean get() = converter("it").trim() != "it"
 
-    public fun with(name: VariableName): Code = when {
-        !hasConverter -> declarations
-        !hasDeclarations -> converter(name)
-        else -> declarations + "\n" + converter(name)
-    }
+    public fun with(name: VariableName): Code =
+        when {
+            !hasConverter -> declarations
+            !hasDeclarations -> converter(name)
+            else -> declarations + "\n" + converter(name)
+        }
 }

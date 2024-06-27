@@ -4,12 +4,9 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.indices
@@ -21,10 +18,11 @@ public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
 
 public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
 
-public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> = distinct {
-    val set = columns.toColumnSet()
-    set
-}
+public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
+    distinct {
+        val set = columns.toColumnSet()
+        set
+    }
 
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumnSet() }
 
@@ -74,7 +72,7 @@ public interface DistinctColumnsSelectionDsl {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
