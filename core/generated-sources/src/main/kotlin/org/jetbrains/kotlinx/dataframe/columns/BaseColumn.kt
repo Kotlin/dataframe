@@ -19,7 +19,9 @@ import kotlin.reflect.KType
  *
  * @param T type of values contained in column.
  */
-public interface BaseColumn<out T> : ColumnReference<T>, GenericColumn {
+public interface BaseColumn<out T> :
+    ColumnReference<T>,
+    GenericColumn {
 
     // region info
 
@@ -48,12 +50,14 @@ public interface BaseColumn<out T> : ColumnReference<T>, GenericColumn {
      *
      * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
      */
-    public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
-        headPlusIterable(
-            firstIndex,
-            otherIndices.asIterable()
+    public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> =
+        get(
+            headPlusIterable(
+                firstIndex,
+                otherIndices.asIterable(),
+            ),
         )
-    )
+
     public operator fun get(row: AnyRow): T = get(row.index())
 
     /**
@@ -92,7 +96,8 @@ public interface BaseColumn<out T> : ColumnReference<T>, GenericColumn {
 
     override fun rename(newName: String): BaseColumn<T>
 
-    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
+    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> =
+        (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()

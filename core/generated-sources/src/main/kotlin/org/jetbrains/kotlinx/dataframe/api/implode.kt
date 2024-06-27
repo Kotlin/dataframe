@@ -10,8 +10,7 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> =
-    implode(dropNA) { all() }[0]
+public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> = implode(dropNA) { all() }[0]
 
 public fun <T, C> DataFrame<T>.implode(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
     implodeImpl(dropNA, columns)

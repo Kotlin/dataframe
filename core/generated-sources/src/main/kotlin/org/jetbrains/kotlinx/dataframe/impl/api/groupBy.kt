@@ -15,7 +15,9 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 
-internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) : GroupedDataRow<T, G>, DataRow<T> by row {
+internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) :
+    GroupedDataRow<T, G>,
+    DataRow<T> by row {
 
     override fun group() = frameCol[row.index()]
 }
@@ -23,15 +25,21 @@ internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val
 internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSelector<T, *>): GroupBy<T, T> {
     val nameGenerator = nameGenerator(GroupBy.groupedColumnAccessor.name())
     var keyColumns = getColumnsWithPaths(columns)
-    if (!moveToTop) keyColumns = keyColumns.map {
-        val currentName = it.name()
-        val uniqueName = nameGenerator.addUnique(currentName)
-        if (uniqueName != currentName) it.rename(uniqueName)
-        else it
+    if (!moveToTop) {
+        keyColumns = keyColumns.map {
+            val currentName = it.name()
+            val uniqueName = nameGenerator.addUnique(currentName)
+            if (uniqueName != currentName) {
+                it.rename(uniqueName)
+            } else {
+                it
+            }
+        }
     }
     val groups = indices()
         .map { index -> keyColumns.map { it[index] } to index }
-        .groupBy({ it.first }) { it.second }.toList()
+        .groupBy({ it.first }) { it.second }
+        .toList()
 
     val keyIndices = groups.map { it.second[0] }
 

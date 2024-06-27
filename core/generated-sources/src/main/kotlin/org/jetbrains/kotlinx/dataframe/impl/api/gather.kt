@@ -53,7 +53,9 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
                             explode && value is List<*> -> (value as List<C>).map(valueTransform)
                             else -> valueTransform(value)
                         }
-                    } else value
+                    } else {
+                        value
+                    }
                 }
             }
         }
@@ -79,10 +81,12 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
                         val transformed = valueTransform?.let { filtered.map(it) } ?: filtered
                         keys[colIndex] to transformed
                     }
+
                     filter(value) -> {
                         val transformed = valueTransform?.invoke(value) ?: value
                         keys[colIndex] to transformed
                     }
+
                     else -> null
                 }
             }
@@ -96,13 +100,16 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
 
         when {
             keysColumn != null && valuesColumn != null -> {
-                df = df.split { nameAndValuePairs }
+                df = df
+                    .split { nameAndValuePairs }
                     .into(keysColumn.name(), valuesColumn.name())
                     .explode(valuesColumn)
             }
+
             keysColumn != null -> {
                 df = df.replace { nameAndValuePairs }.with { it.map { it.first } named keysColumn.name() }
             }
+
             valuesColumn != null -> {
                 df = df.replace { nameAndValuePairs }.with { it.map { it.second } named valuesColumn.name() }
             }
