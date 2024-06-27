@@ -28,5 +28,18 @@ public annotation class Import
 @Target(AnnotationTarget.PROPERTY)
 public annotation class Order(val order: Int)
 
+/**
+ * For internal use
+ * Compiler plugin materializes schemas as classes.
+ * These classes have two kinds of properties:
+ * 1. Scope properties that only serve as a reference for internal property resolution
+ * 2. Schema properties that reflect dataframe structure
+ * Scope properties need
+ * to be excluded in IDE plugin and in [org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor.get]
+ * This annotation serves to distinguish between the two where needed
+ */
+@Target(AnnotationTarget.PROPERTY)
+public annotation class ScopeProperty
+
 @Target(AnnotationTarget.FUNCTION)
 internal annotation class Check
