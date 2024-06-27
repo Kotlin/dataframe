@@ -19,25 +19,27 @@ internal fun <T, R : Number> Iterable<T>.sumOf(type: KType, selector: (T) -> R?)
 }
 
 @PublishedApi
-internal fun <T : Number> Iterable<T>.sum(type: KType): T = when (type.classifier) {
-    Double::class -> (this as Iterable<Double>).sum() as T
-    Float::class -> (this as Iterable<Float>).sum() as T
-    Int::class, Short::class, Byte::class -> (this as Iterable<Int>).sum() as T
-    Long::class -> (this as Iterable<Long>).sum() as T
-    BigDecimal::class -> (this as Iterable<BigDecimal>).sum() as T
-    else -> throw IllegalArgumentException("Sum is not supported for $type")
-}
+internal fun <T : Number> Iterable<T>.sum(type: KType): T =
+    when (type.classifier) {
+        Double::class -> (this as Iterable<Double>).sum() as T
+        Float::class -> (this as Iterable<Float>).sum() as T
+        Int::class, Short::class, Byte::class -> (this as Iterable<Int>).sum() as T
+        Long::class -> (this as Iterable<Long>).sum() as T
+        BigDecimal::class -> (this as Iterable<BigDecimal>).sum() as T
+        else -> throw IllegalArgumentException("Sum is not supported for $type")
+    }
 
 @JvmName("sumNullableT")
 @PublishedApi
-internal fun <T : Number> Iterable<T?>.sum(type: KType): T = when (type.classifier) {
-    Double::class -> (this as Iterable<Double?>).asSequence().filterNotNull().sum() as T
-    Float::class -> (this as Iterable<Float?>).asSequence().filterNotNull().sum() as T
-    Int::class, Short::class, Byte::class -> (this as Iterable<Int?>).asSequence().filterNotNull().sum() as T
-    Long::class -> (this as Iterable<Long?>).asSequence().filterNotNull().sum() as T
-    BigDecimal::class -> (this as Iterable<BigDecimal?>).asSequence().filterNotNull().sum() as T
-    else -> TODO()
-}
+internal fun <T : Number> Iterable<T?>.sum(type: KType): T =
+    when (type.classifier) {
+        Double::class -> (this as Iterable<Double?>).asSequence().filterNotNull().sum() as T
+        Float::class -> (this as Iterable<Float?>).asSequence().filterNotNull().sum() as T
+        Int::class, Short::class, Byte::class -> (this as Iterable<Int?>).asSequence().filterNotNull().sum() as T
+        Long::class -> (this as Iterable<Long?>).asSequence().filterNotNull().sum() as T
+        BigDecimal::class -> (this as Iterable<BigDecimal?>).asSequence().filterNotNull().sum() as T
+        else -> TODO()
+    }
 
 @PublishedApi
 internal fun Iterable<BigDecimal>.sum(): BigDecimal {
