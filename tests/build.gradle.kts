@@ -1,11 +1,10 @@
-import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     java
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(korro)
-        alias(kotlinter)
+        alias(ktlint)
         alias(kover)
 
         alias(dataframe)
@@ -72,31 +71,20 @@ korro {
     }
 }
 
-tasks.formatKotlinMain {
+tasks.runKtlintFormatOverMainSourceSet {
     dependsOn("kspKotlin")
 }
 
-tasks.formatKotlinTest {
+tasks.runKtlintFormatOverTestSourceSet {
     dependsOn("kspTestKotlin")
 }
 
-tasks.lintKotlinMain {
+tasks.runKtlintCheckOverMainSourceSet {
     dependsOn("kspKotlin")
 }
 
-tasks.lintKotlinTest {
+tasks.runKtlintCheckOverTestSourceSet {
     dependsOn("kspTestKotlin")
-}
-
-tasks.withType<LintTask> {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
 }
 
 tasks.test {
