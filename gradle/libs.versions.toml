@@ -2,9 +2,7 @@
 ksp = "1.9.23-1.0.20"
 kotlinJupyter = "0.12.0-139"
 
-# TODO Updating requires major changes all across the project
-# https://github.com/Kotlin/dataframe/issues/364
-ktlint = "3.4.5"
+ktlint = "12.1.1"
 
 # make sure to sync manually with :generator module
 kotlin = "1.9.22"
@@ -17,7 +15,7 @@ libsPublisher = "1.8.10-dev-43"
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
 dataframe = "0.13.1"
 
-# TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
+# TODO 0.1.6 breaks kotlinter (which is no longer in use), https://github.com/Kotlin/dataframe/issues/598
 korro = "0.1.5"
 
 # TODO Requires more work to be updated to 0.7.0+
@@ -141,7 +139,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
 publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
 korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
-kotlinter = { id = "org.jmailen.kotlinter", version.ref = "ktlint" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }

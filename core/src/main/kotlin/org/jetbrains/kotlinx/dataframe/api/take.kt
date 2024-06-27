@@ -21,11 +21,12 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> = when {
-    n == 0 -> get(emptyList())
-    n >= size -> this
-    else -> get(0 until n)
-}
+public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> =
+    when {
+        n == 0 -> get(emptyList())
+        n >= size -> this
+        else -> get(0 until n)
+    }
 
 public fun <T> DataColumn<T>.takeLast(n: Int = 1): DataColumn<T> = drop(size - n)
 
@@ -123,8 +124,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[take][ColumnsSelectionDsl.take]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.take(n: Int): ColumnSet<*> =
-        this.asSingleColumn().takeCols(n)
+    public fun ColumnsSelectionDsl<*>.take(n: Int): ColumnSet<*> = this.asSingleColumn().takeCols(n)
 
     /**
      * @include [CommonTakeFirstDocs]
@@ -190,8 +190,7 @@ public interface TakeColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[takeLast][ColumnsSelectionDsl.takeLast]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> =
-        asSingleColumn().takeLastCols(n)
+    public fun ColumnsSelectionDsl<*>.takeLast(n: Int = 1): ColumnSet<*> = asSingleColumn().takeLastCols(n)
 
     /**
      * @include [CommonTakeLastDocs]

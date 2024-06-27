@@ -25,8 +25,7 @@ internal class AggregatedPivot<T>(
     private val df: DataFrame<T>,
     val inward: Boolean?,
     internal var aggregator: GroupByReceiverImpl<T>,
-) :
-    DataFrame<T> by df
+) : DataFrame<T> by df
 
 internal data class PivotChainElement(val column: ColumnWithPath<Any?>, val includeColumnName: Boolean)
 
@@ -55,21 +54,19 @@ internal class PivotChainColumnSet<C>(val first: ColumnsResolver<C>, val second:
 
 internal fun <T, C> DataFrame<T>.getPivotSequences(
     columns: PivotColumnsSelector<T, C>,
-): List<List<PivotChainElement>> {
-    return columns.toColumnSet().resolve(this, UnresolvedColumnsPolicy.Fail)
+): List<List<PivotChainElement>> =
+    columns
+        .toColumnSet()
+        .resolve(this, UnresolvedColumnsPolicy.Fail)
         .map {
             when (val col = it) {
                 is PivotChain<*> -> col.columns as List<PivotChainElement>
                 else -> listOf(PivotChainElement(it, false))
             }
         }
-}
 
-internal fun <T> DataFrame<T>.getPivotColumnPaths(
-    columns: PivotColumnsSelector<T, *>,
-): List<ColumnPath> {
-    return getPivotSequences(columns).flatten().map { it.column.path }.distinct()
-}
+internal fun <T> DataFrame<T>.getPivotColumnPaths(columns: PivotColumnsSelector<T, *>): List<ColumnPath> =
+    getPivotSequences(columns).flatten().map { it.column.path }.distinct()
 
 internal fun <T, R> aggregatePivot(
     aggregator: AggregateInternalDsl<T>,
@@ -90,8 +87,11 @@ internal fun <T, R> aggregatePivot(
 
             val pathNames = mutableListOf<String>()
             key.values().forEachIndexed { i, v ->
-                if (i == 0 && effectiveInward) pathNames.addAll(pivotColumns[i].column.path)
-                else if (pivotColumns[i].includeColumnName) pathNames.add(pivotColumns[i].column.name)
+                if (i == 0 && effectiveInward) {
+                    pathNames.addAll(pivotColumns[i].column.path)
+                } else if (pivotColumns[i].includeColumnName) {
+                    pathNames.add(pivotColumns[i].column.name)
+                }
                 pathNames.add(v.toString())
             }
             val path = pathNames.toPath()
@@ -109,6 +109,7 @@ internal fun <T, R> aggregatePivot(
             val values = builder.values
             when {
                 values.size == 1 && values[0].path.isEmpty() -> aggregator.yield(values[0].apply(path))
+
                 values.isEmpty() -> aggregator.yield(
                     path = path,
                     value = if (hasResult) result else globalDefault,
