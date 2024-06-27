@@ -9,8 +9,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.duplicateRowsImpl
 
 public fun <T> DataFrame<T>.duplicate(n: Int): FrameColumn<T> = List(n) { this }.toFrameColumn()
 
-public fun <T> DataFrame<T>.duplicateRows(n: Int): DataFrame<T> =
-    duplicateRowsImpl(n)
+public fun <T> DataFrame<T>.duplicateRows(n: Int): DataFrame<T> = duplicateRowsImpl(n)
 
 public fun <T> DataFrame<T>.duplicateRows(n: Int, filter: RowFilter<T>): DataFrame<T> =
     duplicateRowsImpl(n, rows().filter { filter(it, it) }.map { it.index() })

@@ -20,8 +20,11 @@ public fun Iterable<Double>.varianceAndMean(skipNA: Boolean = skipNA_default): B
     var sum = .0
     for (element in this) {
         if (element.isNaN()) {
-            if (skipNA) continue
-            else return null
+            if (skipNA) {
+                continue
+            } else {
+                return null
+            }
         }
         sum += element
         count++
@@ -42,8 +45,11 @@ public fun Iterable<Float>.varianceAndMean(skipNA: Boolean = skipNA_default): Ba
     var sum = .0
     for (element in this) {
         if (element.isNaN()) {
-            if (skipNA) continue
-            else return null
+            if (skipNA) {
+                continue
+            } else {
+                return null
+            }
         }
         sum += element
         count++

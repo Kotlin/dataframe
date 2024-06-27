@@ -142,8 +142,7 @@ public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> =
-    Aggregators.mean(skipNA).aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.mean(skipNA).aggregateOf(this, name, expression)
 
 // endregion
 
@@ -179,14 +178,12 @@ public fun <T, C : Number> Pivot<T>.meanFor(
 public fun <T, R : Number> Pivot<T>.mean(
     skipNA: Boolean = skipNA_default,
     columns: ColumnsSelector<T, R?>,
-): DataRow<T> =
-    delegate { mean(skipNA, columns) }
+): DataRow<T> = delegate { mean(skipNA, columns) }
 
 public inline fun <T, reified R : Number> Pivot<T>.meanOf(
     skipNA: Boolean = skipNA_default,
     crossinline expression: RowExpression<T, R?>,
-): DataRow<T> =
-    delegate { meanOf(skipNA, expression) }
+): DataRow<T> = delegate { meanOf(skipNA, expression) }
 
 // endregion
 
@@ -222,8 +219,7 @@ public fun <T, C : Number> PivotGroupBy<T>.meanFor(
 public fun <T, R : Number> PivotGroupBy<T>.mean(
     skipNA: Boolean = skipNA_default,
     columns: ColumnsSelector<T, R?>,
-): DataFrame<T> =
-    Aggregators.mean(skipNA).aggregateAll(this, columns)
+): DataFrame<T> = Aggregators.mean(skipNA).aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> =
     mean(skipNA) { columns.toColumnsSetOf() }
@@ -241,7 +237,6 @@ public fun <T, R : Number> PivotGroupBy<T>.mean(
 public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
     skipNA: Boolean = skipNA_default,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> =
-    Aggregators.mean(skipNA).aggregateOf(this, expression)
+): DataFrame<T> = Aggregators.mean(skipNA).aggregateOf(this, expression)
 
 // endregion
