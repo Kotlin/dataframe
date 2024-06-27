@@ -33,10 +33,10 @@ public class ArrowFeather : SupportedDataFrameFormat {
         DefaultReadArrowMethod(pathRepresentation)
 }
 
-private const val readArrowFeather = "readArrowFeather"
+private const val READ_ARROW_FEATHER = "readArrowFeather"
 
 private class DefaultReadArrowMethod(path: String?) :
-    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readArrowFeather)
+    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_ARROW_FEATHER)
 
 internal object Allocator {
     val ROOT by lazy {

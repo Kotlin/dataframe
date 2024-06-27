@@ -43,6 +43,7 @@ class NameGenerationTests {
         code.declarations shouldBe expected
     }
 
+    @Suppress("ktlint:standard:property-naming")
     @DataSchema
     interface DataRecord {
         @ColumnName("first column")

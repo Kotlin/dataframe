@@ -7,7 +7,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.io.db.*
+import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.math.BigDecimal
@@ -667,7 +668,8 @@ private fun extractNewRowFromResultSetAndAddToData(
                 rs.getObject(i + 1)
             } catch (_: Throwable) {
                 val kType = kotlinTypesForSqlColumns[i]!!
-                if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1) // TODO: expand for all the types like in generateKType function
+                // TODO: expand for all the types like in generateKType function
+                if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1)
             },
         )
     }

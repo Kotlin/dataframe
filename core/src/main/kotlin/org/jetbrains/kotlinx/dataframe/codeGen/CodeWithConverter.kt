@@ -9,12 +9,12 @@ import org.jetbrains.kotlinx.jupyter.api.VariableName
  * @param declarations The generated code.
  * @param converter Optional converter for the [Marker], such as a [org.jetbrains.kotlinx.dataframe.api.cast], often used for Jupyter.
  */
-public data class CodeWithConverter(val declarations: Code, val converter: (VariableName) -> Code = EmptyConverter) {
+public data class CodeWithConverter(val declarations: Code, val converter: (VariableName) -> Code = EMPTY_CONVERTER) {
 
     public companion object {
-        public const val EmptyDeclarations: Code = ""
-        public val EmptyConverter: (VariableName) -> Code = { it }
-        public val Empty: CodeWithConverter = CodeWithConverter(EmptyDeclarations, EmptyConverter)
+        public const val EMPTY_DECLARATIONS: Code = ""
+        public val EMPTY_CONVERTER: (VariableName) -> Code = { it }
+        public val EMPTY: CodeWithConverter = CodeWithConverter(EMPTY_DECLARATIONS, EMPTY_CONVERTER)
     }
 
     val hasDeclarations: Boolean get() = declarations.isNotBlank()

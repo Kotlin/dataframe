@@ -223,9 +223,8 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
                 .filterNot { it == Nothing::class } // Nothing is a subtype of everything
                 .let {
                     when {
-                        it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> { // if there is only one class - return it
-                            listOf(it[0])
-                        }
+                        // if there is only one class - return it
+                        it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> listOf(it[0])
 
                         else ->
                             it
@@ -238,9 +237,8 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
                                     set?.intersect(superclasses) ?: superclasses
                                 }!!
                                 .let {
-                                    it - it
-                                        .flatMap { it.superclasses }
-                                        .toSet() // leave only 'leaf' classes, that are not super to some other class in a set
+                                    // leave only 'leaf' classes, that are not super to some other class in a set
+                                    it - it.flatMap { it.superclasses }.toSet()
                                 }.toList()
                     }
                 }
@@ -453,7 +451,8 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
                 if (listifyValues) {
                     val typeInLists = classesInCollection.commonType(
                         nullable = nullsInCollection || allListsAreEmpty,
-                        upperBound = nothingType(nullable = false), // for when the list is empty, make it Nothing instead of Any?
+                        // for when the list is empty, make it Nothing instead of Any?
+                        upperBound = nothingType(nullable = false),
                     )
                     val typeOfOthers = classes.commonType(nullable = nullsInCollection, upperBound = upperBound)
                     val commonType = listOf(typeInLists, typeOfOthers).commonTypeListifyValues()

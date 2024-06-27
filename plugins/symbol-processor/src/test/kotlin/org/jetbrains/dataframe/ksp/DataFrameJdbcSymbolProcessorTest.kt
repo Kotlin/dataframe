@@ -30,7 +30,7 @@ class DataFrameJdbcSymbolProcessorTest {
             import org.jetbrains.kotlinx.dataframe.* 
             """.trimIndent()
 
-        const val generatedFile = "HelloJdbc${'$'}Extensions.kt"
+        const val GENERATED_FILE = "HelloJdbc${'$'}Extensions.kt"
 
         @JvmStatic
         @BeforeClass
@@ -270,7 +270,7 @@ class DataFrameJdbcSymbolProcessorTest {
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
-        inspectLines(generatedFile, f)
+        inspectLines(GENERATED_FILE, f)
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(filename: String, f: (List<String>) -> Unit) {

@@ -26,7 +26,7 @@ class DataFrameSymbolProcessorTest {
             import org.jetbrains.kotlinx.dataframe.* 
             """.trimIndent()
 
-        const val generatedFile = "Hello${'$'}Extensions.kt"
+        const val GENERATED_FILE = "Hello${'$'}Extensions.kt"
     }
 
     @Before
@@ -456,7 +456,7 @@ class DataFrameSymbolProcessorTest {
                 ),
             ),
         )
-        result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
+        result.kspGeneratedFiles.find { it.name == GENERATED_FILE }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
     }
@@ -487,7 +487,7 @@ class DataFrameSymbolProcessorTest {
                 ),
             ),
         )
-        result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
+        result.kspGeneratedFiles.find { it.name == GENERATED_FILE }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
     }
@@ -518,7 +518,7 @@ class DataFrameSymbolProcessorTest {
                 ),
             ),
         )
-        result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
+        result.kspGeneratedFiles.find { it.name == GENERATED_FILE }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
     }
@@ -549,7 +549,7 @@ class DataFrameSymbolProcessorTest {
                 ),
             ),
         )
-        result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
+        result.kspGeneratedFiles.find { it.name == GENERATED_FILE }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
     }
@@ -642,7 +642,7 @@ class DataFrameSymbolProcessorTest {
                 ),
             ),
         )
-        result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
+        result.kspGeneratedFiles.find { it.name == GENERATED_FILE }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
     }
@@ -1321,7 +1321,7 @@ class DataFrameSymbolProcessorTest {
         }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
-        inspectLines(generatedFile, f)
+        inspectLines(GENERATED_FILE, f)
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(filename: String, f: (List<String>) -> Unit) {

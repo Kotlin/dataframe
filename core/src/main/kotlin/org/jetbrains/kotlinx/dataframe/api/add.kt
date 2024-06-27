@@ -24,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import kotlin.reflect.KProperty
 
-/**
+/*
  * `add` operation adds new columns to DataFrame.
  */
 

@@ -116,8 +116,8 @@ public class JSON(
     }
 }
 
-internal const val arrayColumnName: String = "array"
-internal const val valueColumnName: String = "value"
+internal const val ARRAY_COLUMN_NAME: String = "array"
+internal const val VALUE_COLUMN_NAME: String = "value"
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataFrame].

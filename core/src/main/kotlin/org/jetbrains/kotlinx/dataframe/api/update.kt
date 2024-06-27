@@ -253,11 +253,11 @@ public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C
 @ExcludeFromSources
 private interface SeeAlsoPerRowCol
 
-/** ## Update Expression
+/**
+ * ## Update Expression
  * @see ExpressionsGivenRow.RowValueExpression.WithExample
  * @see ExpressionsGivenRow.AddDataRowNote
  */
-// doc processor plugin does not work with type aliases yet
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 /** ## With

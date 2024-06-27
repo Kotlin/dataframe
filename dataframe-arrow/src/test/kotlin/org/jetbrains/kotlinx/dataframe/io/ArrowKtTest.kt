@@ -288,9 +288,12 @@ internal class ArrowKtTest {
             citiesDeserialized["is_capital"] shouldBe citiesExampleFrame["is_capital"]
             citiesDeserialized["population"] shouldBe citiesExampleFrame["population"]
             citiesDeserialized["area"] shouldBe citiesExampleFrame["area"]
-            citiesDeserialized["settled"].type() shouldBe typeOf<LocalDate>() // cities["settled"].type() refers to FlexibleTypeImpl(LocalDate..LocalDate?) and does not match typeOf<LocalDate>()
+            // cities["settled"].type() refers to FlexibleTypeImpl(LocalDate..LocalDate?)
+            // and does not match typeOf<LocalDate>()
+            citiesDeserialized["settled"].type() shouldBe typeOf<LocalDate>()
             citiesDeserialized["settled"].values() shouldBe citiesExampleFrame["settled"].values()
-            citiesDeserialized["page_in_wiki"].type() shouldBe typeOf<String>() // cities["page_in_wiki"].type() is URI, not supported by Arrow directly
+            // cities["page_in_wiki"].type() is URI, not supported by Arrow directly
+            citiesDeserialized["page_in_wiki"].type() shouldBe typeOf<String>()
             citiesDeserialized["page_in_wiki"].values() shouldBe
                 citiesExampleFrame["page_in_wiki"].values().map { it.toString() }
         }

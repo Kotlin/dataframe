@@ -383,20 +383,19 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    // TODO: test is broken
-        /*
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
-        e: file://test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
-         */
+    /*  TODO: test is broken
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:30:22 Unresolved reference: age
+     */
     @Test
     @Ignore
     fun `preprocessor imports schema from database`() {

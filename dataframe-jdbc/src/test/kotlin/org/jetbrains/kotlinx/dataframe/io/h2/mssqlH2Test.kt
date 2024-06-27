@@ -27,7 +27,8 @@ import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
+private const val URL =
+    "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
 
 @DataSchema
 interface Table1MSSSQL {
@@ -296,7 +297,9 @@ class MSSQLH2Test {
         // with inferNullability: Boolean = false
         val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
         df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+        // this column changed a type because it doesn't contain nulls
+        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -324,7 +327,8 @@ class MSSQLH2Test {
 
         // with inferNullability: Boolean = false
         val df3 = DataFrame.readSqlQuery(connection, sqlQuery, inferNullability = false)
-        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+        // this column changed a type because it doesn't contain nulls
+        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -358,7 +362,9 @@ class MSSQLH2Test {
 
                 val df5 = DataFrame.readResultSet(rs, MsSql, inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+                // this column changed a type because it doesn't contain nulls
+                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["age"]!!.type shouldBe typeOf<Int>()
             }

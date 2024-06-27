@@ -27,7 +27,7 @@ public class TSV : SupportedDataFrameFormat {
         DefaultReadTsvMethod(pathRepresentation)
 }
 
-private const val tabChar = '\t'
+private const val TAB_CHAR = '\t'
 
 public fun DataFrame.Companion.readTSV(
     fileOrUrl: String,
@@ -42,7 +42,7 @@ public fun DataFrame.Companion.readTSV(
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
             it,
-            tabChar,
+            TAB_CHAR,
             header,
             isCompressed(fileOrUrl),
             CSVType.TDF,
@@ -66,7 +66,7 @@ public fun DataFrame.Companion.readTSV(
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file),
-        tabChar,
+        TAB_CHAR,
         header,
         isCompressed(file),
         CSVType.TDF,
@@ -112,7 +112,7 @@ public fun DataFrame.Companion.readTSV(
 ): DataFrame<*> =
     readDelim(
         stream,
-        tabChar,
+        TAB_CHAR,
         header,
         isCompressed,
         CSVType.TDF,

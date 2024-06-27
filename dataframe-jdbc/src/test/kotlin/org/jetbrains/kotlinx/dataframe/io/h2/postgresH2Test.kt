@@ -23,7 +23,8 @@ import java.sql.SQLException
 import java.util.UUID
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:test3;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
+private const val URL =
+    "jdbc:h2:mem:test3;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
 
 @DataSchema
 interface Table1 {

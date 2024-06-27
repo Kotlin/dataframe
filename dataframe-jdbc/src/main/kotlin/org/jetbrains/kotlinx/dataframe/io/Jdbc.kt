@@ -46,6 +46,6 @@ private fun DataFrame.Companion.readJDBC(stream: InputStream): DataFrame<*> {
     TODO("Not yet implemented")
 }
 
-internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readJDBC)
+internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_JDBC)
 
-private const val readJDBC = "readJDBC"
+private const val READ_JDBC = "readJDBC"

@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.gradle
 
 import org.junit.Before
-import java.util.*
+import java.util.Properties
 
 abstract class AbstractDataFramePluginIntegrationTest {
     protected val kotlinVersion = TestData.kotlinVersion

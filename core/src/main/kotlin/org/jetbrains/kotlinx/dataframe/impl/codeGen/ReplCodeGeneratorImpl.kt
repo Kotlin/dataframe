@@ -66,7 +66,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                         // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
-                            return CodeWithConverter.Empty
+                            return CodeWithConverter.EMPTY
                         }
                         // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
                         targetSchema = columnSchema

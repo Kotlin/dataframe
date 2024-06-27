@@ -1,3 +1,5 @@
+@file:ExcludeFromSources
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
@@ -46,7 +48,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropWhileDocs.
  * @param [predicate\] The [ColumnFilter] to control which columns to {@get [NounArg]}.
  * @return A [ColumnSet] containing the {@get [FirstOrLastArg]} columns adhering to the [predicate\].
  */
-@ExcludeFromSources
 internal interface CommonTakeAndDropWhileDocs {
 
     /** Title, like "Take Last" */
