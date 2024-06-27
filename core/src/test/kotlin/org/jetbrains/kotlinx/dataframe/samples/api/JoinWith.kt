@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
@@ -41,6 +43,7 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.junit.Test
 import java.time.format.DateTimeFormatter
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class JoinWith : TestBase() {
 
     @DataSchema
@@ -81,38 +84,44 @@ class JoinWith : TestBase() {
             return value == other.value
         }
 
-        override fun hashCode(): Int {
-            return value?.hashCode() ?: 0
-        }
+        override fun hashCode(): Int = value?.hashCode() ?: 0
     }
 
     private val renderer = object : ChainedCellRenderer(DefaultCellRenderer) {
-        override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? {
-            return if (value is ColoredValue<*>) {
+        override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? =
+            if (value is ColoredValue<*>) {
                 if (value.value is LocalDate) {
-                    RenderedContent.text(DateTimeFormatter.ofPattern("dd MMMM yyyy").format(value.value.toJavaLocalDate()))
+                    RenderedContent.text(
+                        DateTimeFormatter.ofPattern("dd MMMM yyyy").format(value.value.toJavaLocalDate()),
+                    )
                 } else {
                     renderValueForHtml(value.value, configuration.cellContentLimit, configuration.decimalFormat)
                 }
             } else {
                 null
             }
-        }
 
-        override fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String? {
-            return null
-        }
+        override fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String? = null
     }
 
-    private fun AnyFrame.unwrapColoredValues(): AnyFrame {
-        return convert { colsAtAnyDepth().colsOf<ColoredValue<*>?>() }.with(Infer.Type) { it?.value }
-    }
+    private fun AnyFrame.unwrapColoredValues(): AnyFrame =
+        convert {
+            colsAtAnyDepth().colsOf<ColoredValue<*>?>()
+        }.with(Infer.Type) { it?.value }
 
     private fun <T> T.colored(background: RGBColor, text: RGBColor) = ColoredValue(this, background, text)
-    private fun <T> T.winter(background: RGBColor = RGBColor(179, 205, 224), text: RGBColor = RGBColor(0, 0, 51)) = ColoredValue(this, background, text)
-    private fun <T> T.spring(background: RGBColor = RGBColor(204, 235, 197), text: RGBColor = RGBColor(0, 51, 0)) = ColoredValue(this, background, text)
-    private fun <T> T.summer(background: RGBColor = RGBColor(176, 224, 230), text: RGBColor = RGBColor(25, 25, 112)) = ColoredValue(this, background, text)
-    private fun <T> T.autumn(background: RGBColor = RGBColor(221, 160, 221), text: RGBColor = RGBColor(85, 26, 139)) = ColoredValue(this, background, text)
+
+    private fun <T> T.winter(background: RGBColor = RGBColor(179, 205, 224), text: RGBColor = RGBColor(0, 0, 51)) =
+        ColoredValue(this, background, text)
+
+    private fun <T> T.spring(background: RGBColor = RGBColor(204, 235, 197), text: RGBColor = RGBColor(0, 51, 0)) =
+        ColoredValue(this, background, text)
+
+    private fun <T> T.summer(background: RGBColor = RGBColor(176, 224, 230), text: RGBColor = RGBColor(25, 25, 112)) =
+        ColoredValue(this, background, text)
+
+    private fun <T> T.autumn(background: RGBColor = RGBColor(221, 160, 221), text: RGBColor = RGBColor(85, 26, 139)) =
+        ColoredValue(this, background, text)
 
     private val coloredCampaigns = dataFrameOf("name", "startDate", "endDate")(
         "Winter Sale".winter(), LocalDate(2023, 1, 1).winter(), LocalDate(2023, 1, 31).winter(),
@@ -121,54 +130,56 @@ class JoinWith : TestBase() {
         "Autumn Sale".autumn(), LocalDate(2023, 10, 1).autumn(), LocalDate(2023, 10, 31).autumn(),
     )
 
+    @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:max-line-length")
     private val coloredVisits = dataFrameOf("date", "usedId")(
-        LocalDate(2023, 1, 10).winter(),	1.winter(),
-        LocalDate(2023, 1, 20).winter(),	2.winter(),
-        LocalDate(2023, 4, 15).spring(),	1.spring(),
+        LocalDate(2023, 1, 10).winter(), 1.winter(),
+        LocalDate(2023, 1, 20).winter(), 2.winter(),
+        LocalDate(2023, 4, 15).spring(), 1.spring(),
         LocalDate(2023, 5, 1).colored(FormattingDSL.white, FormattingDSL.black), 3.colored(FormattingDSL.white, FormattingDSL.black),
-        LocalDate(2023, 7, 10).summer(),	2.summer(),
+        LocalDate(2023, 7, 10).summer(), 2.summer(),
     )
 
-    private fun AnyFrame.toColoredHTML() = toHTML(
-        getFooter = { null },
-        cellRenderer = renderer,
-        configuration = SamplesDisplayConfiguration.copy(
-            cellFormatter = { row, col ->
-                val value = row[col]
-                if (value is ColoredValue<*>) {
-                    background(value.backgroundColor) and textColor(value.textColor)
-                } else {
-                    background(white)
-                }
-            }
+    private fun AnyFrame.toColoredHTML() =
+        toHTML(
+            getFooter = { null },
+            cellRenderer = renderer,
+            configuration = SamplesDisplayConfiguration.copy(
+                cellFormatter = { row, col ->
+                    val value = row[col]
+                    if (value is ColoredValue<*>) {
+                        background(value.backgroundColor) and textColor(value.textColor)
+                    } else {
+                        background(white)
+                    }
+                },
+            ),
         )
-    )
 
     private val joinExpression: JoinedDataRow<Any?, Any?>.(it: JoinedDataRow<Any?, Any?>) -> Boolean = {
         right[{ "date"<ColoredValue<LocalDate>>() }].value in
             "startDate"<ColoredValue<LocalDate>>().value.."endDate"<ColoredValue<LocalDate>>().value
     }
 
-    private fun DataFrameHtmlData.wrap(title: String): DataFrameHtmlData {
-        return copy(
-            body = """
-                    <div class="table-container">
-                        <b>$title</b>
-                        $body
-                    </div>
-            """.trimIndent()
+    private fun DataFrameHtmlData.wrap(title: String): DataFrameHtmlData =
+        copy(
+            body =
+                """
+                <div class="table-container">
+                    <b>$title</b>
+                    $body
+                </div>
+                """.trimIndent(),
         )
-    }
 
-    private fun DataFrameHtmlData.wrap(): DataFrameHtmlData {
-        return copy(
-            body = """
-                    <div class="table-container">
-                        $body
-                    </div>
-            """.trimIndent()
+    private fun DataFrameHtmlData.wrap(): DataFrameHtmlData =
+        copy(
+            body =
+                """
+                <div class="table-container">
+                    $body
+                </div>
+                """.trimIndent(),
         )
-    }
 
     private fun snippetOutput(coloredResult: DataFrame<Any?>, result: DataFrame<Any?>) {
         coloredCampaigns.unwrapColoredValues() shouldBe campaigns
@@ -176,13 +187,15 @@ class JoinWith : TestBase() {
         coloredResult.unwrapColoredValues() shouldBe result
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
+            manualOutput = DataFrameHtmlData
+                .tableDefinitions()
                 .plus(coloredCampaigns.toColoredHTML().wrap("campaigns"))
                 .plus(coloredVisits.toColoredHTML().wrap("visits"))
                 .plus(coloredResult.toColoredHTML().wrap("result"))
                 .plus(
                     DataFrameHtmlData(
-                        style = """
+                        style =
+                            """
                             body {
                                 display: flex;
                                 align-items: flex-start;
@@ -212,9 +225,9 @@ class JoinWith : TestBase() {
                             td {
                                 white-space: nowrap;
                             }
-                        """.trimIndent()
-                    )
-                )
+                            """.trimIndent(),
+                    ),
+                ),
         )
     }
 
@@ -496,13 +509,13 @@ class JoinWith : TestBase() {
     val df1 = dataFrameOf("index", "age", "name")(
         1.spring(), 15.spring(), "BOB".spring(),
         2.summer(), 19.summer(), "ALICE".summer(),
-        3.autumn(), 20.autumn(), "CHARLIE".autumn()
+        3.autumn(), 20.autumn(), "CHARLIE".autumn(),
     )
 
     val df2 = dataFrameOf("index", "age", "name")(
         1.spring(), 15.spring(), "Bob".spring(),
         2.summer(), 19.summer(), "Alice".summer(),
-        4.winter(), 21.winter(), "John".winter()
+        4.winter(), 21.winter(), "John".winter(),
     )
 
     @TransformDataFrameExpressions
@@ -513,15 +526,15 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
+            manualOutput = DataFrameHtmlData
+                .tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
                         .plus(df1.innerJoin(df2, "index", "age").toColoredHTML().wrap("result"))
-                        .wrapRow()
-                )
-                .plus(other)
+                        .wrapRow(),
+                ).plus(other),
         )
     }
 
@@ -533,18 +546,19 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
+            manualOutput = DataFrameHtmlData
+                .tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
                         .plus(
-                            df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML().wrap("result")
-                        )
-                        .wrapRow()
-                )
-                .plus(other)
+                            df1
+                                .innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML()
+                                .wrap("result"),
+                        ).wrapRow(),
+                ).plus(other),
         )
     }
 
@@ -557,28 +571,27 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
+            manualOutput = DataFrameHtmlData
+                .tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
                         .plus(
-                            df1.leftJoin(df2, "index", "age").toColoredHTML().wrap("result")
-                        )
-                        .wrapRow()
-                )
-                .plus(DataFrameHtmlData(body = "<br><br>"))
+                            df1.leftJoin(df2, "index", "age").toColoredHTML().wrap("result"),
+                        ).wrapRow(),
+                ).plus(DataFrameHtmlData(body = "<br><br>"))
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap())
                         .plus(df2.toColoredHTML().wrap())
                         .plus(
-                            df1.leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML().wrap()
-                        )
-                        .wrapRow()
-                )
-                .plus(other)
+                            df1
+                                .leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML()
+                                .wrap(),
+                        ).wrapRow(),
+                ).plus(other),
         )
     }
 
@@ -591,43 +604,43 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData.tableDefinitions()
+            manualOutput = DataFrameHtmlData
+                .tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
                         .plus(
-                            df1.rightJoin(df2, "index", "age").toColoredHTML().wrap("result")
-                        )
-                        .wrapRow()
-                )
-                .plus(DataFrameHtmlData(body = "<br><br>"))
+                            df1.rightJoin(df2, "index", "age").toColoredHTML().wrap("result"),
+                        ).wrapRow(),
+                ).plus(DataFrameHtmlData(body = "<br><br>"))
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap())
                         .plus(df2.toColoredHTML().wrap())
                         .plus(
-                            df1.rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML().wrap()
-                        )
-                        .wrapRow()
-                )
-                .plus(other)
+                            df1
+                                .rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML()
+                                .wrap(),
+                        ).wrapRow(),
+                ).plus(other),
         )
     }
 
-    private fun DataFrameHtmlData.wrapRow(): DataFrameHtmlData {
-        return copy(
-            body = """
-                    <div class="table-row">
-                        $body
-                    </div>
-            """.trimIndent()
+    private fun DataFrameHtmlData.wrapRow(): DataFrameHtmlData =
+        copy(
+            body =
+                """
+                <div class="table-row">
+                    $body
+                </div>
+                """.trimIndent(),
         )
-    }
 
     private val other = DataFrameHtmlData(
-        style = """
+        style =
+            """
             body {
                 font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
                 font-size: 14px;
@@ -656,6 +669,6 @@ class JoinWith : TestBase() {
             td {
                 white-space: nowrap;
             }
-        """.trimIndent()
+            """.trimIndent(),
     )
 }
