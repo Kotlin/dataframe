@@ -12,9 +12,11 @@ public fun NameNormalizer.Companion.from(normalizationDelimiters: Set<Char>): Na
     return NameNormalizer {
         when {
             normalizationDelimiters.isEmpty() -> it
+
             it matches delimitedStringRegex -> {
                 it.lowercase(Locale.getDefault()).toCamelCaseByDelimiters(delimitersSet.toRegex())
             }
+
             else -> it
         }
     }

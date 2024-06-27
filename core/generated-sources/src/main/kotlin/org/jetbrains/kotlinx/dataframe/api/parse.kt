@@ -43,21 +43,23 @@ public data class ParserOptions(
     val locale: Locale? = null,
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
-    val nullStrings: Set<String>? = null
+    val nullStrings: Set<String>? = null,
 ) {
-    internal fun getDateTimeFormatter(): DateTimeFormatter? = when {
-        dateTimeFormatter != null -> dateTimeFormatter
-        dateTimePattern != null && locale != null -> DateTimeFormatter.ofPattern(dateTimePattern, locale)
-        dateTimePattern != null -> DateTimeFormatter.ofPattern(dateTimePattern)
-        else -> null
-    }
+    internal fun getDateTimeFormatter(): DateTimeFormatter? =
+        when {
+            dateTimeFormatter != null -> dateTimeFormatter
+            dateTimePattern != null && locale != null -> DateTimeFormatter.ofPattern(dateTimePattern, locale)
+            dateTimePattern != null -> DateTimeFormatter.ofPattern(dateTimePattern)
+            else -> null
+        }
 }
 
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> = parse(options) {
-    colsAtAnyDepth { !it.isColumnGroup() }
-}
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
+    parse(options) {
+        colsAtAnyDepth { !it.isColumnGroup() }
+    }
 
 public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> =
     tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
