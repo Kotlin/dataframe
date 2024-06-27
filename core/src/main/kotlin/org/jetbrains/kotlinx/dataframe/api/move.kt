@@ -138,8 +138,7 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
-// TODO: implement 'before'
-/*
+/* TODO: implement 'before'
 fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
 fun <T, C> MoveColsClause<T, C>.before(column: Column) = before { column }
 fun <T, C> MoveColsClause<T, C>.before(column: KProperty<*>) = before { column.toColumnDef() }

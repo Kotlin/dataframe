@@ -36,8 +36,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
-import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
-import org.jetbrains.kotlinx.dataframe.io.valueColumnName
+import org.jetbrains.kotlinx.dataframe.io.ARRAY_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.io.VALUE_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -249,11 +249,12 @@ internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     val allColumns = columns()
 
     return allColumns
-        .filter { it.name.startsWith(valueColumnName) }
+        .filter { it.name.startsWith(VALUE_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
         ?.let { valueCol ->
-            if (valueCol.kind() != ColumnKind.Value) { // check that value in this column is not null only when other values are null
+            // check that value in this column is not null only when other values are null
+            if (valueCol.kind() != ColumnKind.Value) {
                 null
             } else {
                 // check that value in this column is not null only when other values are null
@@ -289,7 +290,7 @@ internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
     val allColumns = columns()
 
     return columns()
-        .filter { it.name.startsWith(arrayColumnName) }
+        .filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
         ?.let { arrayCol ->

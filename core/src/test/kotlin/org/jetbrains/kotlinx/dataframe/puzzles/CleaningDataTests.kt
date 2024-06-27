@@ -1,10 +1,22 @@
 package org.jetbrains.kotlinx.dataframe.puzzles
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.default
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.next
+import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.api.split
+import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toInt
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.where
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 

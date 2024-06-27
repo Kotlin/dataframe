@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.exceptions
 
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import kotlin.reflect.*
 import kotlin.reflect.KType
 
 public class TypeConverterNotFoundException(

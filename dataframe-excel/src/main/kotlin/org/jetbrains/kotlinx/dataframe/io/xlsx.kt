@@ -55,10 +55,11 @@ public class Excel : SupportedDataFrameFormat {
         DefaultReadExcelMethod(pathRepresentation)
 }
 
-internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readExcel)
+internal class DefaultReadExcelMethod(path: String?) :
+    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_EXCEL)
 
-private const val readExcel = "readExcel"
-private const val readExcelTempFolderPrefix = "dataframe-excel"
+private const val READ_EXCEL = "readExcel"
+private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
 
 /**
  * To prevent [Issue #402](https://github.com/Kotlin/dataframe/issues/402):
@@ -69,7 +70,7 @@ private const val readExcelTempFolderPrefix = "dataframe-excel"
 private fun setWorkbookTempDirectory() {
     val tempDir = try {
         Files
-            .createTempDirectory(readExcelTempFolderPrefix)
+            .createTempDirectory(READ_EXCEL_TEMP_FOLDER_PREFIX)
             .toFile()
             .also { it.deleteOnExit() }
     } catch (e: Exception) {
@@ -322,7 +323,8 @@ private fun repairNameIfRequired(
             nameFromCell
         }
 
-        NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) { // probably it's never empty because of filling empty column names earlier
+        // probably it's never empty because of filling empty column names earlier
+        NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) {
             val emptyName = "Unknown column"
             if (columnNameCounters.contains(emptyName)) {
                 "${emptyName}${columnNameCounters[emptyName]}"

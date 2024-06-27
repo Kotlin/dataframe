@@ -37,7 +37,8 @@ import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.file.Path
-import java.util.*
+import java.util.LinkedList
+import java.util.Random
 import kotlin.io.path.writeText
 import kotlin.math.ceil
 
@@ -642,11 +643,11 @@ public value class RendererDecimalFormat private constructor(internal val format
 
         public fun of(format: String): RendererDecimalFormat = RendererDecimalFormat(format)
 
-        internal val DEFAULT: RendererDecimalFormat = fromPrecision(defaultPrecision)
+        internal val DEFAULT: RendererDecimalFormat = fromPrecision(DEFAULT_PRECISION)
     }
 }
 
-internal const val defaultPrecision = 6
+internal const val DEFAULT_PRECISION = 6
 
 private fun flagFromEnv(envName: String): Boolean = System.getenv(envName)?.toBooleanStrictOrNull() ?: false
 

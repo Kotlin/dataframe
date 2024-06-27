@@ -5,7 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.UnknownConfigurationException
 import org.gradle.kotlin.dsl.getByType
-import java.util.*
+import java.util.Properties
 
 @Suppress("unused")
 class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {

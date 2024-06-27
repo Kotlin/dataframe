@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers

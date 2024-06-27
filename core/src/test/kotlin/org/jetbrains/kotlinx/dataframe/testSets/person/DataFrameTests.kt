@@ -345,8 +345,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `incorrect column nullability`() {
-        val col =
-            column<Int>().named("weight") // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
+        // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
+        val col = column<Int>().named("weight")
 
         shouldThrow<NullPointerException> {
             println(df[2][col])

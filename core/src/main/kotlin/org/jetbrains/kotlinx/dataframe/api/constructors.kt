@@ -24,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
-import org.jetbrains.kotlinx.dataframe.impl.unnamedColumnPrefix
+import org.jetbrains.kotlinx.dataframe.impl.UNNAMED_COLUMN_PREFIX
 import org.jetbrains.kotlinx.dataframe.size
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -410,7 +410,7 @@ public class DynamicDataFrameBuilder {
 
     public fun add(col: AnyCol): String {
         val uniqueName = if (col.name().isEmpty()) {
-            generator.addUnique(unnamedColumnPrefix)
+            generator.addUnique(UNNAMED_COLUMN_PREFIX)
         } else {
             generator.addUnique(col.name())
         }
