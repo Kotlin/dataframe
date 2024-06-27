@@ -25,17 +25,14 @@ public object MariaDb : DbType("mariadb") {
         return null
     }
 
-    override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return MySql.isSystemTable(tableMetadata)
-    }
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean = MySql.isSystemTable(tableMetadata)
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
-        return TableMetadata(
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
+        TableMetadata(
             tables.getString("table_name"),
             tables.getString("table_schem"),
-            tables.getString("table_cat")
+            tables.getString("table_cat"),
         )
-    }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         if (tableColumnMetadata.sqlTypeName == "SMALLINT") {

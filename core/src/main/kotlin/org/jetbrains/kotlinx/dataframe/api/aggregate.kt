@@ -11,12 +11,16 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregateGroupBy
 
 // region Pivot
 
-public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> = delegate { aggregate(separate, body) }
+public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> =
+    delegate {
+        aggregate(separate, body)
+    }
 
 // endregion
 
 @Refine
 @Interpretable("Aggregate")
-public fun <T, R> Grouped<T>.aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T> {
-    return aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), { groups.cast() }, removeColumns = true, body).cast<T>()
-}
+public fun <T, R> Grouped<T>.aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T> =
+    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), {
+        groups.cast()
+    }, removeColumns = true, body).cast<T>()

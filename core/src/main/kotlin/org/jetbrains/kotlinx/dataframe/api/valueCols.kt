@@ -122,8 +122,9 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun ColumnsSelectionDsl<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
-        asSingleColumn().valueColumnsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.valueCols(
+        filter: Predicate<ValueColumn<*>> = { true },
+    ): TransformableColumnSet<*> = asSingleColumn().valueColumnsInternal(filter)
 
     /**
      * @include [CommonValueColsDocs]
@@ -133,8 +134,9 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
-    public fun SingleColumn<DataRow<*>>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().valueColumnsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.valueCols(
+        filter: Predicate<ValueColumn<*>> = { true },
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().valueColumnsInternal(filter)
 
     /**
      * @include [CommonValueColsDocs]

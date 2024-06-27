@@ -31,10 +31,13 @@ import kotlin.reflect.KType
  * @param T Schema marker. It identifies column schema and is used to generate schema-specific extension properties for typed data access. It is covariant, so `DataFrame<A>` is assignable to variable of type `DataFrame<B>` if `A` is a subtype of `B`.
  */
 @HasSchema(schemaArg = 0)
-public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
+public interface DataFrame<out T> :
+    Aggregatable<T>,
+    ColumnsContainer<T> {
 
     public companion object {
         public val Empty: AnyFrame = DataFrameImpl<Unit>(emptyList(), 0)
+
         public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else DataFrameImpl<Unit>(emptyList(), nrow)
 
         /**
@@ -84,8 +87,11 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     // region get rows
 
     public operator fun get(index: Int): DataRow<T>
+
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
+
     public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
+
     public operator fun get(first: IntRange, vararg ranges: IntRange): DataFrame<T> =
         getRows(headPlusArray(first, ranges).asSequence().flatMap { it.asSequence() }.asIterable())
 
@@ -97,6 +103,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     // region plus columns
 
     public operator fun plus(col: AnyBaseCol): DataFrame<T> = add(col)
+
     public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
 
     // endregion
@@ -107,8 +114,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 /**
  * Returns a list of columns selected by [columns], a [ColumnsSelectionDsl].
  */
-public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
-    this.get(columns)
+public operator fun <T, C> DataFrame<T>.get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = this.get(columns)
 
 public operator fun <T> DataFrame<T>.get(first: AnyColumnReference, vararg other: AnyColumnReference): DataFrame<T> =
     select { (listOf(first) + other).toColumnSet() }

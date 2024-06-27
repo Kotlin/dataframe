@@ -21,6 +21,7 @@ internal interface ColumnWithParent<out C> : ColumnReference<C> {
         val parentDef = parent
         val (targetDf, pathPrefix) = when (parentDef) {
             null -> context.df to emptyPath()
+
             else -> {
                 val parentCol = parentDef.resolveSingle(context) ?: return null
                 val group = parentCol.data.asColumnGroup()

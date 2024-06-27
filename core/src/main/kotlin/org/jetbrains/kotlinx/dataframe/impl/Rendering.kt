@@ -20,15 +20,18 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-internal fun String.truncate(limit: Int): RenderedContent = if (limit in 1 until length) {
-    if (limit < 4) RenderedContent.truncatedText("...", this)
-    else RenderedContent.truncatedText(substring(0, (limit - 3).coerceAtLeast(1)) + "...", this)
-} else {
-    RenderedContent.text(this)
-}
+internal fun String.truncate(limit: Int): RenderedContent =
+    if (limit in 1 until length) {
+        if (limit < 4) {
+            RenderedContent.truncatedText("...", this)
+        } else {
+            RenderedContent.truncatedText(substring(0, (limit - 3).coerceAtLeast(1)) + "...", this)
+        }
+    } else {
+        RenderedContent.text(this)
+    }
 
-internal fun renderSchema(df: AnyFrame): String =
-    df.columns().joinToString { "${it.name()}:${renderType(it)}" }
+internal fun renderSchema(df: AnyFrame): String = df.columns().joinToString { "${it.name()}:${renderType(it)}" }
 
 internal fun renderSchema(schema: DataFrameSchema): String =
     schema.columns.map { "${it.key}:${renderType(it.value)}" }.joinToString()
@@ -101,6 +104,7 @@ internal fun renderType(type: KType?): String {
 internal fun renderType(column: AnyCol) =
     when (column.kind()) {
         ColumnKind.Value -> renderType(column.type)
+
         ColumnKind.Frame -> {
             val table = column.asAnyFrameColumn()
             "[${renderSchema(table.schema.value)}]"
@@ -112,8 +116,9 @@ internal fun renderType(column: AnyCol) =
         }
     }
 
-internal fun AnyCol.renderShort() = when (kind()) {
-    ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
-    ColumnKind.Frame -> "FrameColumn: $size entries"
-    ColumnKind.Group -> "ColumnGroup ${asColumnGroup().asDataFrame().size}}"
-}
+internal fun AnyCol.renderShort() =
+    when (kind()) {
+        ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
+        ColumnKind.Frame -> "FrameColumn: $size entries"
+        ColumnKind.Group -> "ColumnGroup ${asColumnGroup().asDataFrame().size}}"
+    }

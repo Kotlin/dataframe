@@ -12,7 +12,6 @@ class WithoutNullsTests : ColumnsSelectionDslTests() {
     fun `top level`() {
         listOf(
             df.select { name and age and isHappy },
-
             df.select { withoutNulls() },
             df.select { all().withoutNulls() },
         ).shouldAllBeEqual()
@@ -22,7 +21,6 @@ class WithoutNullsTests : ColumnsSelectionDslTests() {
     fun `lower level`() {
         listOf(
             dfGroup.select { name.firstName.firstName },
-
             dfGroup.select { name.firstName.colsWithoutNulls() },
             dfGroup.select { "name"["firstName"].colsWithoutNulls() },
             dfGroup.select { name { "firstName".colsWithoutNulls() } },

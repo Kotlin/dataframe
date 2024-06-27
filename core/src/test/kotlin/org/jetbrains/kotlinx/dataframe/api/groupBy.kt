@@ -5,12 +5,13 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.junit.Test
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class GroupByTests {
 
     @Test
     fun `groupBy values with nulls`() {
         val df = dataFrameOf(
-            "a", "b"
+            "a", "b",
         )(
             1, 1,
             1, null,
@@ -20,7 +21,7 @@ class GroupByTests {
 
         df.groupBy("a").values { "b" into "c" } shouldBe
             dataFrameOf(
-                "a", "c"
+                "a", "c",
             )(
                 1, listOf(1, null),
                 2, listOf(null),
@@ -29,7 +30,7 @@ class GroupByTests {
 
         df.groupBy("a").values(dropNA = true) { "b" into "c" } shouldBe
             dataFrameOf(
-                "a", "c"
+                "a", "c",
             )(
                 1, listOf(1),
                 2, emptyList<Int>(),
@@ -40,19 +41,25 @@ class GroupByTests {
     @Test
     fun `aggregate FrameColumns into new column`() {
         val df = dataFrameOf(
-            "a", "b", "c"
+            "a", "b", "c",
         )(
             1, 2, 3,
             4, 5, 6,
         )
         val grouped = df.groupBy("a", "b").into("d")
 
-        grouped.groupBy("a").aggregate {
-            getColumn("d") into "e"
-        }["e"].type() shouldBe typeOf<List<AnyFrame>>()
+        grouped
+            .groupBy("a")
+            .aggregate {
+                getColumn("d") into "e"
+            }["e"]
+            .type() shouldBe typeOf<List<AnyFrame>>()
 
-        grouped.groupBy("a").aggregate {
-            getFrameColumn("d") into "e"
-        }["e"].type() shouldBe typeOf<List<AnyFrame>>()
+        grouped
+            .groupBy("a")
+            .aggregate {
+                getFrameColumn("d") into "e"
+            }["e"]
+            .type() shouldBe typeOf<List<AnyFrame>>()
     }
 }

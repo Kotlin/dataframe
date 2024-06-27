@@ -27,7 +27,8 @@ import java.util.Date
 import java.util.UUID
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
+private const val URL =
+    "jdbc:h2:mem:testmssql;DB_CLOSE_DELAY=-1;MODE=MSSQLServer;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE"
 
 @DataSchema
 interface Table1MSSSQL {
@@ -112,11 +113,12 @@ class MSSQLH2Test {
             """
 
             connection.createStatement().execute(
-                createTableQuery.trimIndent()
+                createTableQuery.trimIndent(),
             )
 
             @Language("SQL")
-            val insertData1 = """
+            val insertData1 =
+                """
                 INSERT INTO Table1 (
                 bigintColumn, binaryColumn, bitColumn, charColumn, dateColumn, datetime3Column, datetime2Column,
                 decimalColumn, floatColumn, imageColumn, intColumn, moneyColumn, ncharColumn,
@@ -124,7 +126,7 @@ class MSSQLH2Test {
                 smallintColumn, smallmoneyColumn, textColumn, timeColumn, timestampColumn, tinyintColumn,
                 uniqueidentifierColumn, varbinaryColumn, varbinaryMaxColumn, varcharColumn, varcharMaxColumn
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """.trimIndent()
+                """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
                 for (i in 1..5) {
@@ -153,7 +155,7 @@ class MSSQLH2Test {
                     st.setTime(23, java.sql.Time(System.currentTimeMillis())) // timeColumn
                     st.setTimestamp(24, java.sql.Timestamp(System.currentTimeMillis())) // timestampColumn
                     st.setInt(25, 123) // tinyintColumn
-                    //st.setObject(27, null) // udtColumn (assuming nullable)
+                    // st.setObject(27, null) // udtColumn (assuming nullable)
                     st.setObject(26, UUID.randomUUID()) // uniqueidentifierColumn
                     st.setBytes(27, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryColumn
                     st.setBytes(28, byteArrayOf(0x01, 0x23, 0x45, 0x67, 0x67, 0x67, 0x67, 0x67)) // varbinaryMaxColumn
@@ -219,12 +221,13 @@ class MSSQLH2Test {
     @Test
     fun `read from sql query`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT
             Table1.id,
             Table1.bigintColumn
             FROM Table1
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery, limit = 3).cast<Table1MSSSQL>()
         val result = df.filter { it[Table1MSSSQL::id] == 1 }
@@ -261,10 +264,18 @@ class MSSQLH2Test {
 
         connection.createStatement().execute(createTestTable1Query)
 
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)",
+        )
 
         // start testing `readSqlTable` method
 
@@ -286,7 +297,9 @@ class MSSQLH2Test {
         // with inferNullability: Boolean = false
         val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
         df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+        // this column changed a type because it doesn't contain nulls
+        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -296,9 +309,10 @@ class MSSQLH2Test {
 
         // ith default inferNullability: Boolean = true
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT name, surname, age FROM TestTable1
-        """.trimIndent()
+            """.trimIndent()
 
         val df2 = DataFrame.readSqlQuery(connection, sqlQuery)
         df2.schema().columns["name"]!!.type shouldBe typeOf<String>()
@@ -313,7 +327,8 @@ class MSSQLH2Test {
 
         // with inferNullability: Boolean = false
         val df3 = DataFrame.readSqlQuery(connection, sqlQuery, inferNullability = false)
-        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+        // this column changed a type because it doesn't contain nulls
+        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -347,7 +362,9 @@ class MSSQLH2Test {
 
                 val df5 = DataFrame.readResultSet(rs, MsSql, inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+                // this column changed a type because it doesn't contain nulls
+                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["age"]!!.type shouldBe typeOf<Int>()
             }

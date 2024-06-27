@@ -28,18 +28,16 @@ public object PostgreSql : DbType("postgresql") {
         return null
     }
 
-    override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
-        return tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_") ||
+    override fun isSystemTable(tableMetadata: TableMetadata): Boolean =
+        tableMetadata.name.lowercase(Locale.getDefault()).contains("pg_") ||
             tableMetadata.schemaName?.lowercase(Locale.getDefault())?.contains("pg_catalog.") ?: false
-    }
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
-        return TableMetadata(
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
+        TableMetadata(
             tables.getString("table_name"),
             tables.getString("table_schem"),
-            tables.getString("table_cat")
+            tables.getString("table_cat"),
         )
-    }
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
         // because of https://github.com/pgjdbc/pgjdbc/issues/425

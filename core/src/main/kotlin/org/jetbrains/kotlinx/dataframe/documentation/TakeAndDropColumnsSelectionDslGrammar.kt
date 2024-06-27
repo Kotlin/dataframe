@@ -37,10 +37,10 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 @ExcludeFromSources
 internal interface TakeAndDropColumnsSelectionDslGrammar {
 
-    /* Like "Take"/"Drop" */
+    // Like "Take"/"Drop"
     interface TitleArg
 
-    /* Operation, like "take"/"drop" */
+    // Operation, like "take"/"drop"
     interface OperationArg
 
     /** [**\`{@get [OperationArg]}\`**][ColumnsSelectionDsl.{@get [OperationArg]}]`(`[**`Last`**][ColumnsSelectionDsl.{@get [OperationArg]}Last]`)` */

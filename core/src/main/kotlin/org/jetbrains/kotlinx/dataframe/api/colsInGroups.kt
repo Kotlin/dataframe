@@ -186,7 +186,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     @Deprecated(
         COL_SELECT_DSL_CHILDREN_SINGLE_COL,
         ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR
+        level = DeprecationLevel.ERROR,
     )
     public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         ensureIsColumnGroup().colsInternal(predicate)
@@ -194,7 +194,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     @Deprecated(
         COL_SELECT_DSL_CHILDREN_SINGLE_COL,
         ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR
+        level = DeprecationLevel.ERROR,
     )
     public fun String.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
@@ -202,7 +202,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     @Deprecated(
         COL_SELECT_DSL_CHILDREN_SINGLE_COL,
         ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR
+        level = DeprecationLevel.ERROR,
     )
     public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
@@ -210,7 +210,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     @Deprecated(
         COL_SELECT_DSL_CHILDREN_SINGLE_COL,
         ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR
+        level = DeprecationLevel.ERROR,
     )
     public fun ColumnPath.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)

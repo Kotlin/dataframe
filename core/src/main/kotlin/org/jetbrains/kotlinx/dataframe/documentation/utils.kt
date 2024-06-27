@@ -46,8 +46,19 @@ internal interface QuadrupleIndent
  * **NOTE: DO NOT RENAME!**
  */
 @Target(
-    CLASS, ANNOTATION_CLASS, PROPERTY, FIELD, LOCAL_VARIABLE, VALUE_PARAMETER,
-    CONSTRUCTOR, FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER, TYPE, TYPEALIAS, FILE,
+    CLASS,
+    ANNOTATION_CLASS,
+    PROPERTY,
+    FIELD,
+    LOCAL_VARIABLE,
+    VALUE_PARAMETER,
+    CONSTRUCTOR,
+    FUNCTION,
+    PROPERTY_GETTER,
+    PROPERTY_SETTER,
+    TYPE,
+    TYPEALIAS,
+    FILE,
 )
 internal annotation class ExcludeFromSources
 
@@ -66,7 +77,18 @@ internal annotation class ExcludeFromSources
  *  needed or would break.
  */
 @Target(
-    CLASS, ANNOTATION_CLASS, PROPERTY, FIELD, LOCAL_VARIABLE, VALUE_PARAMETER,
-    CONSTRUCTOR, FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER, TYPE, TYPEALIAS, FILE,
+    CLASS,
+    ANNOTATION_CLASS,
+    PROPERTY,
+    FIELD,
+    LOCAL_VARIABLE,
+    VALUE_PARAMETER,
+    CONSTRUCTOR,
+    FUNCTION,
+    PROPERTY_GETTER,
+    PROPERTY_SETTER,
+    TYPE,
+    TYPEALIAS,
+    FILE,
 )
 internal annotation class ExportAsHtml(val theme: Boolean = true, val stripReferences: Boolean = true)

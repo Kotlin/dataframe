@@ -123,9 +123,7 @@ class Schema(
 }
 
 // Without Serializable GradleRunner tests fail
-data class CsvOptionsDsl(
-    var delimiter: Char = ',',
-) : Serializable
+data class CsvOptionsDsl(var delimiter: Char = ',') : Serializable
 
 data class JsonOptionsDsl(
     var typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
@@ -144,5 +142,5 @@ data class JdbcOptionsDsl(
     var user: String = "",
     var password: String = "",
     var tableName: String = "",
-    var sqlQuery: String = ""
+    var sqlQuery: String = "",
 ) : Serializable
