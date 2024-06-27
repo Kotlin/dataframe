@@ -139,15 +139,16 @@ public fun DataFrame.Companion.readSqlTable(
     val url = connection.metaData.url
     val dbType = extractDBTypeFromConnection(connection)
 
-    val selectAllQuery = if (limit > 0) dbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
-    else "SELECT * FROM $tableName"
+    val selectAllQuery = if (limit > 0) {
+        dbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
+    } else {
+        "SELECT * FROM $tableName"
+    }
 
     connection.createStatement().use { st ->
         logger.debug { "Connection with url:$url is established successfully." }
 
-        st.executeQuery(
-            selectAllQuery
-        ).use { rs ->
+        st.executeQuery(selectAllQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit, inferNullability)
         }
@@ -366,7 +367,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  */
 public fun DataFrame.Companion.getSchemaForSqlTable(
     dbConfig: DatabaseConfiguration,
-    tableName: String
+    tableName: String,
 ): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlTable(connection, tableName)
@@ -382,19 +383,14 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(
-    connection: Connection,
-    tableName: String
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tableName: String): DataFrameSchema {
     val dbType = extractDBTypeFromConnection(connection)
 
     val sqlQuery = "SELECT * FROM $tableName"
     val selectFirstRowQuery = dbType.sqlQueryLimit(sqlQuery, limit = 1)
 
     connection.createStatement().use { st ->
-        st.executeQuery(
-            selectFirstRowQuery
-        ).use { rs ->
+        st.executeQuery(selectFirstRowQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, dbType)
         }
@@ -410,7 +406,7 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
  */
 public fun DataFrame.Companion.getSchemaForSqlQuery(
     dbConfig: DatabaseConfiguration,
-    sqlQuery: String
+    sqlQuery: String,
 ): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlQuery(connection, sqlQuery)
@@ -523,16 +519,14 @@ private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetad
     }
 
     return DataFrameSchemaImpl(
-        columns = schemaColumns
+        columns = schemaColumns,
     )
 }
 
-private fun generateColumnSchemaValue(
-    dbType: DbType,
-    tableColumnMetadata: TableColumnMetadata
-): ColumnSchema = dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(
-    makeCommonSqlToKTypeMapping(tableColumnMetadata)
-)
+private fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
+    dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(
+        makeCommonSqlToKTypeMapping(tableColumnMetadata),
+    )
 
 /**
  * Retrieves the metadata of the columns in the result set.
@@ -548,8 +542,10 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     val tableColumns = mutableListOf<TableColumnMetadata>()
     val columnNameCounter = mutableMapOf<String, Int>()
     val databaseMetaData: DatabaseMetaData = rs.statement.connection.metaData
-    val catalog: String? = rs.statement.connection.catalog.takeUnless { it.isNullOrBlank() }
-    val schema: String? = rs.statement.connection.schema.takeUnless { it.isNullOrBlank() }
+    val catalog: String? = rs.statement.connection.catalog
+        .takeUnless { it.isNullOrBlank() }
+    val schema: String? = rs.statement.connection.schema
+        .takeUnless { it.isNullOrBlank() }
 
     for (i in 1 until numberOfColumns + 1) {
         val tableName = metaData.getTableName(i)
@@ -640,16 +636,19 @@ private fun fetchAndConvertDataFromResultSet(
         }
     }
 
-    val dataFrame = data.mapIndexed { index, values ->
-        DataColumn.createValueColumn(
-            name = tableColumns[index].name,
-            values = values,
-            infer = convertNullabilityInference(inferNullability),
-            type = kotlinTypesForSqlColumns[index]!!
-        )
-    }.toDataFrame()
+    val dataFrame = data
+        .mapIndexed { index, values ->
+            DataColumn.createValueColumn(
+                name = tableColumns[index].name,
+                values = values,
+                infer = convertNullabilityInference(inferNullability),
+                type = kotlinTypesForSqlColumns[index]!!,
+            )
+        }.toDataFrame()
 
-    logger.debug { "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query." }
+    logger.debug {
+        "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."
+    }
 
     return dataFrame
 }
@@ -660,7 +659,7 @@ private fun extractNewRowFromResultSetAndAddToData(
     tableColumns: MutableList<TableColumnMetadata>,
     data: List<MutableList<Any?>>,
     rs: ResultSet,
-    kotlinTypesForSqlColumns: MutableMap<Int, KType>
+    kotlinTypesForSqlColumns: MutableMap<Int, KType>,
 ) {
     repeat(tableColumns.size) { i ->
         data[i].add(
@@ -669,7 +668,7 @@ private fun extractNewRowFromResultSetAndAddToData(
             } catch (_: Throwable) {
                 val kType = kotlinTypesForSqlColumns[i]!!
                 if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1) // TODO: expand for all the types like in generateKType function
-            }
+            },
         )
     }
 }
@@ -682,9 +681,8 @@ private fun extractNewRowFromResultSetAndAddToData(
  *
  * @return The generated KType.
  */
-private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType {
-    return dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
-}
+private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
+    dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
 
 /**
  * Creates a mapping between common SQL types and their corresponding KTypes.
@@ -732,7 +730,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.SQLXML to SQLXML::class,
         Types.REF_CURSOR to Ref::class,
         Types.TIME_WITH_TIMEZONE to Time::class,
-        Types.TIMESTAMP_WITH_TIMEZONE to Timestamp::class
+        Types.TIMESTAMP_WITH_TIMEZONE to Timestamp::class,
     )
     // TODO: check mapping of JDBC types and classes correctly
     val kClass = jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class

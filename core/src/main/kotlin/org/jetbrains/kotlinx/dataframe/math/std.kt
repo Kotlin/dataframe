@@ -7,7 +7,11 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 @PublishedApi
-internal fun <T : Number> Iterable<T?>.std(type: KType, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double {
+internal fun <T : Number> Iterable<T?>.std(
+    type: KType,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): Double {
     if (type.isMarkedNullable) {
         if (skipNA) {
             return filterNotNull().std(type.withNullability(false), true, ddof)
@@ -27,10 +31,12 @@ internal fun <T : Number> Iterable<T?>.std(type: KType, skipNA: Boolean = skipNA
 }
 
 @JvmName("doubleStd")
-public fun Iterable<Double>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double = varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
+public fun Iterable<Double>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
+    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
 
 @JvmName("floatStd")
-public fun Iterable<Float>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double = varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
+public fun Iterable<Float>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
+    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
 
 @JvmName("intStd")
 public fun Iterable<Int>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)

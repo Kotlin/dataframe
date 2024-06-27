@@ -20,7 +20,9 @@ class SortGroupedDataframeTests {
     }
 
     enum class State {
-        Idle, Productive, Maintenance
+        Idle,
+        Productive,
+        Maintenance,
     }
 
     @Test
