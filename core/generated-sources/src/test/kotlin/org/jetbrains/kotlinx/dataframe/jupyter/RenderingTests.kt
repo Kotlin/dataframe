@@ -35,7 +35,7 @@ class RenderingTests : JupyterReplTestCase() {
                 "Charlie", 160
             )
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html shouldContain "Bill"
 
@@ -45,7 +45,7 @@ class RenderingTests : JupyterReplTestCase() {
             USE {
                 render<Int> { (it * 2).toString() }
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         useRes shouldBe Unit
 
@@ -62,7 +62,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class Person(val age: Int, val name: String)
             val df = (1..70).map { Person(it, "A".repeat(it)) }.toDataFrame()
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html1 shouldContain "showing only top 20 of 70 rows"
 
@@ -71,7 +71,7 @@ class RenderingTests : JupyterReplTestCase() {
             """
             dataFrameConfig.display.rowsLimit = 50
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html2 shouldContain "showing only top 50 of 70 rows"
     }
@@ -97,7 +97,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class Row(val id: Int)
             val df = (1..100).map { Row(it) }.toDataFrame()
             KotlinNotebookPluginUtils.getRowsSubsetForRendering(df, 20 , 50)
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 30, 1)
@@ -113,7 +113,9 @@ class RenderingTests : JupyterReplTestCase() {
      * @param script the script to be executed
      * @return the parsed DataFrame result as a `JsonObject`
      */
-    private fun executeScriptAndParseDataframeResult(@Language("kts") script: String): JsonObject {
+    private fun executeScriptAndParseDataframeResult(
+        @Language("kts") script: String,
+    ): JsonObject {
         val result = execRendered<MimeTypedResult>(script)
         return parseDataframeJson(result)
     }
@@ -123,9 +125,8 @@ class RenderingTests : JupyterReplTestCase() {
         json[METADATA]!!.jsonObject["ncol"]!!.jsonPrimitive.int shouldBe expectedColumns
     }
 
-    private fun parseDataframeJson(result: MimeTypedResult): JsonObject {
-        return Json.decodeFromString<JsonObject>(result["application/kotlindataframe+json"]!!)
-    }
+    private fun parseDataframeJson(result: MimeTypedResult): JsonObject =
+        Json.decodeFromString<JsonObject>(result["application/kotlindataframe+json"]!!)
 
     private fun JsonArray.getObj(index: Int) = this[index].jsonObject
 
@@ -136,7 +137,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class CustomRow(val id: Int, val category: String)
             val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
             KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(false))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -161,7 +162,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class CustomRow(val id: Int, val category: String)
             val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
             KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(true))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -179,7 +180,7 @@ class RenderingTests : JupyterReplTestCase() {
                 KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("category"), listOf("id")), listOf(true, false)),
                 0, 100
             )
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -192,8 +193,11 @@ class RenderingTests : JupyterReplTestCase() {
     private fun assertSortedByCategory(rows: List<JsonObject>) {
         rows.forEachIndexed { i, row ->
             val currentCategory = row["category"]!!.jsonPrimitive.content
-            if (i < 50) currentCategory shouldBe "odd"
-            else currentCategory shouldBe "even"
+            if (i < 50) {
+                currentCategory shouldBe "odd"
+            } else {
+                currentCategory shouldBe "even"
+            }
         }
     }
 
@@ -219,16 +223,17 @@ class RenderingTests : JupyterReplTestCase() {
     fun `json metadata contains schema metadata`() {
         val json = executeScriptAndParseDataframeResult(
             """
-                val col1 by columnOf("a", "b", "c")
-                val col2 by columnOf(1, 2, 3)
-                val col3 by columnOf("Foo", "Bar", null)
-                val df2 = dataFrameOf(Pair("header", listOf("A", "B", "C")))
-                val col4 by columnOf(df2, df2, df2)
-                var df = dataFrameOf(col1, col2, col3, col4)
-                df.group(col1, col2).into("group")            
-            """.trimIndent()
+            val col1 by columnOf("a", "b", "c")
+            val col2 by columnOf(1, 2, 3)
+            val col3 by columnOf("Foo", "Bar", null)
+            val df2 = dataFrameOf(Pair("header", listOf("A", "B", "C")))
+            val col4 by columnOf(df2, df2, df2)
+            var df = dataFrameOf(col1, col2, col3, col4)
+            df.group(col1, col2).into("group")            
+            """.trimIndent(),
         )
-        val expectedOutput = """
+        val expectedOutput =
+            """
             {
               "${'$'}version": "2.1.0",
               "metadata": {
@@ -360,7 +365,7 @@ class RenderingTests : JupyterReplTestCase() {
                 }
               }]
             }
-        """.trimIndent()
+            """.trimIndent()
         json shouldBe Json.parseToJsonElement(expectedOutput)
     }
 
@@ -371,14 +376,20 @@ class RenderingTests : JupyterReplTestCase() {
             data class Row(val id: Int, val group: Int)
             val df = (1..20).map { Row(it, if (it <= 10) 1 else 2) }.toDataFrame()
             KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group"))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 2, 2)
 
         val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
-        rows.getObj(0)["group1"]!!.jsonObject[DATA]!!.jsonArray.size shouldBe 10
-        rows.getObj(1)["group1"]!!.jsonObject[DATA]!!.jsonArray.size shouldBe 10
+        rows
+            .getObj(0)["group1"]!!
+            .jsonObject[DATA]!!
+            .jsonArray.size shouldBe 10
+        rows
+            .getObj(1)["group1"]!!
+            .jsonObject[DATA]!!
+            .jsonArray.size shouldBe 10
     }
 
     // Regression KTNB-424
@@ -390,7 +401,7 @@ class RenderingTests : JupyterReplTestCase() {
                 data class Row(val id: Int, val group: Int)
                 val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
                 KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group").first())
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             assertDataFrameDimensions(json, 2, 2)

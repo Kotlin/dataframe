@@ -13,14 +13,15 @@ internal fun getKernelUpdateMessage(
     kernelVersion: KotlinKernelVersion,
     minKernelVersion: String,
     clientType: JupyterClientType,
-): String = buildString {
-    append("Your Kotlin Jupyter kernel version appears to be out of date (version $kernelVersion). ")
-    appendLine("Please update it to version $minKernelVersion or newer to be able to use DataFrame.")
-    append("Follow the instructions at: ")
+): String =
+    buildString {
+        append("Your Kotlin Jupyter kernel version appears to be out of date (version $kernelVersion). ")
+        appendLine("Please update it to version $minKernelVersion or newer to be able to use DataFrame.")
+        append("Follow the instructions at: ")
 
-    when (clientType) {
-        DATALORE -> appendLine(UPDATING_DATALORE_URL)
-        KOTLIN_NOTEBOOK -> appendLine(UPDATING_KOTLIN_NOTEBOOK_URL)
-        else -> appendLine(UPDATING)
+        when (clientType) {
+            DATALORE -> appendLine(UPDATING_DATALORE_URL)
+            KOTLIN_NOTEBOOK -> appendLine(UPDATING_KOTLIN_NOTEBOOK_URL)
+            else -> appendLine(UPDATING)
+        }
     }
-}

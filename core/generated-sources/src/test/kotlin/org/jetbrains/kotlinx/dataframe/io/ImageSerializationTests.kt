@@ -59,7 +59,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
 
     private fun encodeImagesAsJson(
         images: List<BufferedImage>,
-        encodingOptions: Base64ImageEncodingOptions?
+        encodingOptions: Base64ImageEncodingOptions?,
     ): JsonObject {
         val df = dataFrameOf(listOf("imgs"), images)
         val jsonStr = df.toJsonWithMetadata(20, nestedRowLimit = 20, imageEncodingOptions = encodingOptions)
@@ -79,7 +79,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
     private fun decodeImagesFromJson(
         json: JsonObject,
         imgsNum: Int,
-        encodingOptions: Base64ImageEncodingOptions
+        encodingOptions: Base64ImageEncodingOptions,
     ): List<BufferedImage> {
         val result = mutableListOf<BufferedImage>()
         for (i in 0..<imgsNum) {
@@ -101,14 +101,13 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
             else -> Base64.getDecoder().decode(imgString)
         }
 
-    private fun decompressGzip(input: ByteArray): ByteArray {
-        return ByteArrayOutputStream().use { byteArrayOutputStream ->
+    private fun decompressGzip(input: ByteArray): ByteArray =
+        ByteArrayOutputStream().use { byteArrayOutputStream ->
             GZIPInputStream(input.inputStream()).use { inputStream ->
                 inputStream.copyTo(byteArrayOutputStream)
             }
             byteArrayOutputStream.toByteArray()
         }
-    }
 
     private fun resizeIfNeeded(image: BufferedImage, encodingOptions: Base64ImageEncodingOptions): BufferedImage =
         when {
@@ -164,14 +163,13 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
 
         @JvmStatic
         @Parameterized.Parameters
-        fun imageEncodingOptionsToTest(): Collection<Base64ImageEncodingOptions?> {
-            return listOf(
+        fun imageEncodingOptionsToTest(): Collection<Base64ImageEncodingOptions?> =
+            listOf(
                 DEFAULT,
                 GZIP_ON_RESIZE_OFF,
                 GZIP_OFF_RESIZE_OFF,
                 GZIP_ON_RESIZE_TO_700,
                 null,
             )
-        }
     }
 }
