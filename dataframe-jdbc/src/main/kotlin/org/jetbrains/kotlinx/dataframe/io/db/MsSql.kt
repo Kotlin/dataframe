@@ -17,9 +17,7 @@ public object MsSql : DbType("sqlserver") {
     override val driverClassName: String
         get() = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        return null
-    }
+    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? = null
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
@@ -42,17 +40,14 @@ public object MsSql : DbType("sqlserver") {
             catalogName.containsWithLowercase("tempdb")
     }
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
-        return TableMetadata(
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata =
+        TableMetadata(
             tables.getString("table_name"),
             tables.getString("table_schem"),
-            tables.getString("table_cat")
+            tables.getString("table_cat"),
         )
-    }
 
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        return null
-    }
+    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
     public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String {
         sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)

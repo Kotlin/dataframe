@@ -70,32 +70,32 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
 
         // region parts
 
-        /* Can be set to nothing to disable the definitions part */
+        // Can be set to nothing to disable the definitions part
         public interface DefinitionsPart
 
-        /* Can be set to nothing to disable the plain dsl part */
+        // Can be set to nothing to disable the plain dsl part
         public interface PlainDslPart
 
-        /* Can be set to nothing to disable the column set part */
+        // Can be set to nothing to disable the column set part
         public interface ColumnSetPart
 
-        /* Can be set to nothing to disable the column group part */
+        // Can be set to nothing to disable the column group part
         public interface ColumnGroupPart
 
         // endregion
 
         // region Template arguments
 
-        /* What to put in definitions part aside from the default part. */
+        // What to put in definitions part aside from the default part.
         public interface DefinitionsArg
 
-        /* What to put in the plain dsl part. Does not need indents. */
+        // What to put in the plain dsl part. Does not need indents.
         public interface PlainDslFunctionsArg
 
-        /* What to put in the column set part. Needs indents. */
+        // What to put in the column set part. Needs indents.
         public interface ColumnSetFunctionsArg
 
-        /* What to put in the column group part. Needs indents. */
+        // What to put in the column group part. Needs indents.
         public interface ColumnGroupFunctionsArg
 
         // endregion
