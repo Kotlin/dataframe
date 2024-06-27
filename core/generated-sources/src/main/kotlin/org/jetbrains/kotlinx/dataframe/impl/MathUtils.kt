@@ -17,12 +17,14 @@ internal fun <T : Number> DataColumn<T?>.scale(): Int {
 }
 
 internal fun Double.scale() = if (isFinite()) toBigDecimal().scale() else 0
+
 internal fun Float.scale() = if (isFinite()) toBigDecimal().scale() else 0
 
-internal fun Number.scale(): Int = when (this) {
-    is Double -> scale()
-    is Float -> scale()
-    is Int, is Long -> 0
-    is BigDecimal -> scale()
-    else -> 0
-}
+internal fun Number.scale(): Int =
+    when (this) {
+        is Double -> scale()
+        is Float -> scale()
+        is Int, is Long -> 0
+        is BigDecimal -> scale()
+        else -> 0
+    }

@@ -18,17 +18,18 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 internal fun <C> TransformableColumnSet<C>.atAnyDepthImpl(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnSet<C> = object : ColumnSet<C> {
+): ColumnSet<C> =
+    object : ColumnSet<C> {
 
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
-        this@atAnyDepthImpl.transformResolve(
-            context = context,
-            transformer = AtAnyDepthTransformer(
-                includeGroups = includeGroups,
-                includeTopLevel = includeTopLevel,
-            ),
-        )
-}
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+            this@atAnyDepthImpl.transformResolve(
+                context = context,
+                transformer = AtAnyDepthTransformer(
+                    includeGroups = includeGroups,
+                    includeTopLevel = includeTopLevel,
+                ),
+            )
+    }
 
 /**
  * AtAnyDepth implementation for [TransformableSingleColumn].
@@ -38,27 +39,26 @@ internal fun <C> TransformableColumnSet<C>.atAnyDepthImpl(
 internal fun <C> TransformableSingleColumn<C>.atAnyDepthImpl(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): SingleColumn<C> = object : SingleColumn<C> {
+): SingleColumn<C> =
+    object : SingleColumn<C> {
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
-        this@atAnyDepthImpl.transformResolveSingle(
-            context = context,
-            transformer = AtAnyDepthTransformer(
-                includeGroups = includeGroups,
-                includeTopLevel = includeTopLevel,
-            ),
-        )
-}
+        override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? =
+            this@atAnyDepthImpl.transformResolveSingle(
+                context = context,
+                transformer = AtAnyDepthTransformer(
+                    includeGroups = includeGroups,
+                    includeTopLevel = includeTopLevel,
+                ),
+            )
+    }
 
 /**
  * ## AtAnyDepth transformer.
  * A [ColumnsResolverTransformer] implementation around the [ColumnsResolver.flattenRecursively] function.
  * Created only using [atAnyDepthImpl].
  */
-private class AtAnyDepthTransformer(
-    val includeGroups: Boolean = true,
-    val includeTopLevel: Boolean = true,
-) : ColumnsResolverTransformer {
+private class AtAnyDepthTransformer(val includeGroups: Boolean = true, val includeTopLevel: Boolean = true) :
+    ColumnsResolverTransformer {
 
     override fun transform(columnsResolver: ColumnsResolver<*>): ColumnsResolver<*> =
         columnsResolver.flattenRecursively(
@@ -92,12 +92,13 @@ private class AtAnyDepthTransformer(
 internal fun ColumnsResolver<*>.flattenRecursively(
     includeGroups: Boolean = true,
     includeTopLevel: Boolean = true,
-): ColumnsResolver<*> = allColumnsInternal().transform { cols ->
-    if (includeTopLevel) {
-        cols.flattenRecursively()
-    } else {
-        cols
-            .filter { it.isColumnGroup() }
-            .flatMap { it.cols().flattenRecursively() }
-    }.filter { includeGroups || !it.isColumnGroup() }
-}
+): ColumnsResolver<*> =
+    allColumnsInternal().transform { cols ->
+        if (includeTopLevel) {
+            cols.flattenRecursively()
+        } else {
+            cols
+                .filter { it.isColumnGroup() }
+                .flatMap { it.cols().flattenRecursively() }
+        }.filter { includeGroups || !it.isColumnGroup() }
+    }

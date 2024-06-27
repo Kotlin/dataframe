@@ -16,9 +16,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
  */
 public interface SingleColumn<out C> : ColumnsResolver<C> {
 
-    override fun resolve(
-        context: ColumnResolutionContext,
-    ): List<ColumnWithPath<C>> = resolveSingle(context)?.let { listOf(it) } ?: emptyList()
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
+        resolveSingle(context)?.let { listOf(it) } ?: emptyList()
 
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
 }
