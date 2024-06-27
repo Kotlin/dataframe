@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.io.RendererDecimalFormat
-import org.jetbrains.kotlinx.dataframe.io.defaultPrecision
+import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PRECISION
 import org.jetbrains.kotlinx.dataframe.io.format
 import org.junit.Test
 import java.text.DecimalFormatSymbols
@@ -16,12 +16,12 @@ class PrecisionTests {
     fun precision() {
         columnOf(1.2, 3.2).scale() shouldBe 1
         columnOf(1.1232, 3.2).scale() shouldBe 4
-        columnOf(1.1220001, 12313).scale() shouldBe defaultPrecision
+        columnOf(1.1220001, 12313).scale() shouldBe DEFAULT_PRECISION
         columnOf(1, 2).scale() shouldBe 0
         columnOf(1.0, 2).scale() shouldBe 1
         columnOf(123121.0, -1231.0).scale() shouldBe 1
         columnOf(123121.00001, -1231.120).scale() shouldBe 5
-        columnOf(0.000343434343434343434343).scale() shouldBe defaultPrecision
+        columnOf(0.000343434343434343434343).scale() shouldBe DEFAULT_PRECISION
         columnOf(1E24).scale() shouldBe -23
     }
 

@@ -53,6 +53,7 @@ public class JSON(
         )
 
     override fun acceptsExtension(ext: String): Boolean = ext == "json"
+
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
     override val testOrder: Int = 10_000
@@ -64,9 +65,10 @@ public class JSON(
                 .add(
                     "keyValuePaths",
                     typeOf<List<JsonPath>>(),
-                    "listOf(${keyValuePaths.joinToString { "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")" }})",
-                )
-                .add(
+                    "listOf(${keyValuePaths.joinToString {
+                        "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
+                    }})",
+                ).add(
                     "typeClashTactic",
                     typeOf<TypeClashTactic>(),
                     "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
@@ -114,8 +116,8 @@ public class JSON(
     }
 }
 
-internal const val arrayColumnName: String = "array"
-internal const val valueColumnName: String = "value"
+internal const val ARRAY_COLUMN_NAME: String = "array"
+internal const val VALUE_COLUMN_NAME: String = "value"
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -298,7 +300,7 @@ public fun AnyFrame.toJsonWithMetadata(
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null
+    imageEncodingOptions: Base64ImageEncodingOptions? = null,
 ): String {
     val json = Json {
         this.prettyPrint = prettyPrint
@@ -307,7 +309,7 @@ public fun AnyFrame.toJsonWithMetadata(
     }
     return json.encodeToString(
         JsonElement.serializer(),
-        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions)
+        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions),
     )
 }
 
@@ -321,7 +323,7 @@ internal const val DEFAULT_IMG_SIZE = 600
  */
 public class Base64ImageEncodingOptions(
     public val imageSizeLimit: Int = DEFAULT_IMG_SIZE,
-    private val options: Int = GZIP_ON or LIMIT_SIZE_ON
+    private val options: Int = GZIP_ON or LIMIT_SIZE_ON,
 ) {
     public val isGzipOn: Boolean
         get() = options and GZIP_ON == GZIP_ON
@@ -349,8 +351,7 @@ public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {
     file.writeText(toJson(prettyPrint))
 }
 
-public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit =
-    writeJson(File(path), prettyPrint)
+public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit = writeJson(File(path), prettyPrint)
 
 public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
     writer.append(toJson(prettyPrint))

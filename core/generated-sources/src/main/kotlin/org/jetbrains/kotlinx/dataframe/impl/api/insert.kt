@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getAncestor
 internal data class ColumnToInsert(
     val insertionPath: ColumnPath,
     val column: AnyBaseCol,
-    val referenceNode: ReadonlyTreeNode<ReferenceData>? = null
+    val referenceNode: ReadonlyTreeNode<ReferenceData>? = null,
 )
 
 @PublishedApi
@@ -23,8 +23,7 @@ internal fun <T> DataFrame<T>.insertImpl(path: ColumnPath, column: AnyCol): Data
     insertImpl(this, listOf(ColumnToInsert(path, column)))
 
 @JvmName("insertImplT")
-internal fun <T> DataFrame<T>.insertImpl(columns: List<ColumnToInsert>) =
-    insertImpl(this, columns)
+internal fun <T> DataFrame<T>.insertImpl(columns: List<ColumnToInsert>) = insertImpl(this, columns)
 
 internal fun <T> insertImpl(df: DataFrame<T>?, columns: List<ColumnToInsert>) =
     insertImpl(df, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
@@ -36,28 +35,27 @@ internal fun <T> insertImpl(
     df: DataFrame<T>?,
     columns: List<ColumnToInsert>,
     treeNode: ReadonlyTreeNode<ReferenceData>?,
-    depth: Int
-): DataFrame<T> {
-    return if (columns.isEmpty()) {
+    depth: Int,
+): DataFrame<T> =
+    if (columns.isEmpty()) {
         df ?: DataFrame.empty().cast()
     } else {
         insertImplDataFrame(df, columns, treeNode, depth)
     }
-}
 
 internal fun <T> insertImplDataFrame(
     df: DataFrame<T>?,
     columns: List<ColumnToInsert>,
     treeNode: ReadonlyTreeNode<ReferenceData>?,
-    depth: Int
+    depth: Int,
 ): DataFrame<T> {
     class DfAdapter<T>(val df: DataFrame<T>) : DataFrameLikeContainer<BaseColumn<*>> {
-        override fun columns(): List<DataColumn<*>> {
-            return this.df.columns()
-        }
+        override fun columns(): List<DataColumn<*>> = this.df.columns()
     }
 
-    return if (columns.isEmpty()) df ?: DataFrame.empty().cast() else {
+    return if (columns.isEmpty()) {
+        df ?: DataFrame.empty().cast()
+    } else {
         insertImplGenericContainer(
             df?.let { DfAdapter(it) },
             columns.map { GenericColumnsToInsert(it.insertionPath, it.column, it.referenceNode) },
@@ -68,7 +66,7 @@ internal fun <T> insertImplDataFrame(
             rename = { rename(it) },
             createColumnGroup = { name, columns ->
                 DataColumn.createColumnGroup(name, columns.toDataFrame())
-            }
+            },
         ).df
     }
 }
@@ -90,12 +88,12 @@ internal fun <T : DataFrameLikeContainer<Column>, Column : GenericColumn, Column
     if (columns.isEmpty()) return df ?: empty
 
     val res: List<Column> = insertImplGenericTree(
-        columns,
-        treeNode,
-        depth,
-        df?.columns(),
+        columns = columns,
+        treeNode = treeNode,
+        depth = depth,
+        existingColumns = df?.columns(),
         rename = rename,
-        createColumnGroup
+        createColumnGroup = createColumnGroup,
     )
     return factory(res)
 }
@@ -108,10 +106,10 @@ public interface GenericColumnGroup<Column : GenericColumn> : GenericColumn {
     public fun columns(): List<Column>
 }
 
-internal data class GenericColumnsToInsert<Column : GenericColumn> (
+internal data class GenericColumnsToInsert<Column : GenericColumn>(
     val insertionPath: ColumnPath,
     val column: Column,
-    val referenceNode: ReadonlyTreeNode<ReferenceData>? = null
+    val referenceNode: ReadonlyTreeNode<ReferenceData>? = null,
 )
 
 internal fun <Column : GenericColumn, ColumnGroup : GenericColumnGroup<Column>> insertImplGenericTree(
@@ -134,52 +132,66 @@ internal fun <Column : GenericColumn, ColumnGroup : GenericColumnGroup<Column>> 
         if (subTree != null) {
             // assert that new columns go directly under current column so they have longer paths
             val invalidPath = subTree.firstOrNull { it.insertionPath.size == childDepth }
-            check(invalidPath == null) { "Can not insert column '${invalidPath!!.insertionPath.joinToString(".")}' because column with this path already exists in DataFrame" }
+            check(invalidPath == null) {
+                "Can not insert column '${invalidPath!!.insertionPath.joinToString(
+                    ".",
+                )}' because column with this path already exists in DataFrame"
+            }
             val group = it as? ColumnGroup
-            check(group != null) { "Can not insert columns under a column '${it.name()}', because it is not a column group" }
+            check(
+                group != null,
+            ) { "Can not insert columns under a column '${it.name()}', because it is not a column group" }
             val column = if (subTree.isEmpty()) {
                 group as Column
             } else {
                 val res = insertImplGenericTree(
-                    subTree,
-                    treeNode?.get(it.name()),
-                    childDepth,
-                    group.columns(),
-                    rename,
-                    createColumnGroup
+                    columns = subTree,
+                    treeNode = treeNode?.get(it.name()),
+                    depth = childDepth,
+                    existingColumns = group.columns(),
+                    rename = rename,
+                    createColumnGroup = createColumnGroup,
                 )
                 createColumnGroup(group.name(), res)
             }
             val newCol = column
             newColumns.add(newCol)
             columnsMap.remove(it.name())
-        } else newColumns.add(it)
+        } else {
+            newColumns.add(it)
+        }
     }
 
     // collect new columns to insert
-    val columnsToAdd = columns.mapNotNull {
-        val name = it.insertionPath[depth]
-        val subTree = columnsMap[name]
-        if (subTree != null) {
-            columnsMap.remove(name)
+    val columnsToAdd = columns
+        .mapNotNull {
+            val name = it.insertionPath[depth]
+            val subTree = columnsMap[name]
+            if (subTree != null) {
+                columnsMap.remove(name)
 
-            // look for columns in subtree that were originally located at the current insertion path
-            // find the minimal original index among them
-            // new column will be inserted at that position
-            val minIndex = subTree.minOf {
-                if (it.referenceNode == null) Int.MAX_VALUE
-                else {
-                    var col = it.referenceNode
-                    if (col.depth > depth) col = col.getAncestor(depth + 1)
-                    if (col.parent === treeNode) {
-                        if (col.data.wasRemoved) col.data.originalIndex else col.data.originalIndex + 1
-                    } else Int.MAX_VALUE
+                // look for columns in subtree that were originally located at the current insertion path
+                // find the minimal original index among them
+                // new column will be inserted at that position
+                val minIndex = subTree.minOf {
+                    if (it.referenceNode == null) {
+                        Int.MAX_VALUE
+                    } else {
+                        var col = it.referenceNode
+                        if (col.depth > depth) col = col.getAncestor(depth + 1)
+                        if (col.parent === treeNode) {
+                            if (col.data.wasRemoved) col.data.originalIndex else col.data.originalIndex + 1
+                        } else {
+                            Int.MAX_VALUE
+                        }
+                    }
                 }
-            }
 
-            minIndex to (name to subTree)
-        } else null
-    }.sortedBy { it.first } // sort by insertion index
+                minIndex to (name to subTree)
+            } else {
+                null
+            }
+        }.sortedBy { it.first } // sort by insertion index
 
     val removedSiblings = treeNode?.children
     var k = 0 // index in 'removedSiblings' list
@@ -201,28 +213,42 @@ internal fun <Column : GenericColumn, ColumnGroup : GenericColumnGroup<Column>> 
         val newCol = if (nodeToInsert != null) {
             val column = nodeToInsert.column
             if (columns.size > 1) {
-                check(columns.count { it.insertionPath.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
+                check(
+                    columns.count {
+                        it.insertionPath.size == childDepth
+                    } == 1,
+                ) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
                 column as ColumnGroup
                 val columns1 = columns.filter { it.insertionPath.size > childDepth }
                 val newDf = if (columns1.isEmpty()) {
                     listOf(column)
                 } else {
                     insertImplGenericTree(
-                        columns1, treeNode?.get(name),
-                        childDepth,
-                        column.columns(),
-                        rename,
-                        createColumnGroup
+                        columns = columns1,
+                        treeNode = treeNode?.get(name),
+                        depth = childDepth,
+                        existingColumns = column.columns(),
+                        rename = rename,
+                        createColumnGroup = createColumnGroup,
                     )
                 }
                 createColumnGroup(name, newDf)
-            } else column.rename(name)
+            } else {
+                column.rename(name)
+            }
         } else {
             val newDf =
                 if (columns.isEmpty()) {
                     emptyList()
                 } else {
-                    insertImplGenericTree(columns, treeNode?.get(name), childDepth, emptyList(), rename, createColumnGroup)
+                    insertImplGenericTree(
+                        columns = columns,
+                        treeNode = treeNode?.get(name),
+                        depth = childDepth,
+                        existingColumns = emptyList(),
+                        rename = rename,
+                        createColumnGroup = createColumnGroup,
+                    )
                 }
             createColumnGroup(name, newDf) // new node needs to be created
         }

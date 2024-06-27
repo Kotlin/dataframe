@@ -30,13 +30,21 @@ public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInst
 public data class NameValuePair<V>(val name: String, val value: V)
 
 // Without these overloads row.transpose().name or row.map { name } won't resolve
-public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String> @JvmName("NameValuePairAny_name") get() = this["name"] as DataColumn<String>
+public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String>
+    @JvmName("NameValuePairAny_name")
+    get() = this["name"] as DataColumn<String>
 
-public val DataRow<NameValuePair<*>>.name: String @JvmName("NameValuePairAny_name") get() = this["name"] as String
+public val DataRow<NameValuePair<*>>.name: String
+    @JvmName("NameValuePairAny_name")
+    get() = this["name"] as String
 
-public val ColumnsContainer<NameValuePair<*>>.value: DataColumn<*> @JvmName("NameValuePairAny_value") get() = this["value"]
+public val ColumnsContainer<NameValuePair<*>>.value: DataColumn<*>
+    @JvmName("NameValuePairAny_value")
+    get() = this["value"]
 
-public val DataRow<NameValuePair<*>>.value: Any? @JvmName("NameValuePairAny_value") get() = this["value"]
+public val DataRow<NameValuePair<*>>.value: Any?
+    @JvmName("NameValuePairAny_value")
+    get() = this["value"]
 
 // endregion
 
@@ -88,26 +96,36 @@ internal interface DiffDocs
  */
 internal interface DiffOrNullDocs
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
 public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
-    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+    prev()?.let { p ->
+        expression(
+            this,
+            this,
+        ) - expression(p, p)
+    } ?: firstRowResult
 
-// required to resolve `diff(0) { intValue }`
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+// required to resolve `diff(0) { intValue }`
 public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int =
-    prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
+    prev()?.let { p ->
+        expression(
+            this,
+            this,
+        ) - expression(p, p)
+    } ?: firstRowResult
 
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
@@ -125,15 +143,20 @@ public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T
 public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
     prev()?.let { p -> expression(this, this) - expression(p, p) } ?: firstRowResult
 
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
 public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? =
-    prev()?.let { p -> expression(this, this) - expression(p, p) }
+    prev()?.let { p ->
+        expression(
+            this,
+            this,
+        ) - expression(p, p)
+    }
 
 /**
  * Calculates the difference between the results of a row expression computed on the current and previous DataRow.
@@ -191,7 +214,9 @@ public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T>
     getRows(relativeIndices.mapNotNull { (index + it).let { if (it >= 0 && it < df().rowsCount()) it else null } })
 
 public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
-    getRows((relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices))
+    getRows(
+        (relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices),
+    )
 
 public fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0
