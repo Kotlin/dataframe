@@ -32,17 +32,12 @@ class ValueColTests : ColumnsSelectionDslTests() {
         val ageAccessor = valueColumn<Int>("age")
         listOf(
             df.select { age },
-
             df.select { valueCol(ageAccessor) },
-
             df.select { valueCol("age") },
             df.select { valueCol<Int>("age") },
-
             df.select { valueCol(pathOf("age")) },
             df.select { valueCol<Int>(pathOf("age")) },
-
             df.select { valueCol(Person::age) },
-
             df.select { all().valueCol(1) },
             df.select { valueCol(1) },
             df.select { valueCol<Int>(1) },
@@ -54,7 +49,6 @@ class ValueColTests : ColumnsSelectionDslTests() {
         val firstNameAccessor = valueColumn<String>("firstName")
         listOf(
             df.select { name.firstName },
-
             // reference
             df.select { name.valueCol(firstNameAccessor) },
             df.select { colGroup("name").valueCol(firstNameAccessor) },
@@ -62,7 +56,6 @@ class ValueColTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.valueCol(firstNameAccessor) },
             df.select { Person::name.valueCol(firstNameAccessor) },
             df.select { pathOf("name").valueCol(firstNameAccessor) },
-
             // name
             df.select { name.valueCol("firstName") },
             df.select { name.valueCol<String>("firstName") },
@@ -76,7 +69,6 @@ class ValueColTests : ColumnsSelectionDslTests() {
             df.select { Person::name.valueCol<String>("firstName") },
             df.select { pathOf("name").valueCol("firstName") },
             df.select { pathOf("name").valueCol<String>("firstName") },
-
             // path
             df.select { name.valueCol(pathOf("firstName")) },
             df.select { name.valueCol<String>(pathOf("firstName")) },
@@ -90,12 +82,10 @@ class ValueColTests : ColumnsSelectionDslTests() {
             df.select { Person::name.valueCol<String>(pathOf("firstName")) },
             df.select { pathOf("name").valueCol(pathOf("firstName")) },
             df.select { pathOf("name").valueCol<String>(pathOf("firstName")) },
-
             df.select { valueCol("name"["firstName"]) },
             df.select { valueCol<String>("name"["firstName"]) },
             df.select { asSingleColumn().valueCol("name"["firstName"]) },
             df.select { asSingleColumn().valueCol<String>("name"["firstName"]) },
-
             // property
             df.select { name.valueCol(Name::firstName) },
             df.select { colGroup("name").valueCol(Name::firstName) },
@@ -103,7 +93,6 @@ class ValueColTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.valueCol(Name::firstName) },
             df.select { Person::name.valueCol(Name::firstName) },
             df.select { pathOf("name").valueCol(Name::firstName) },
-
             // index
             df.select { name.valueCol(0) },
             df.select { name.valueCol<String>(0) },

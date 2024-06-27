@@ -5,14 +5,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupRef
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetRef
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnSetName
 
 /*
  * This template is to be used in displaying the Usage / DSL grammar
@@ -31,38 +26,38 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  
+     *
      *
      *
      *
@@ -74,32 +69,32 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
 
         // region parts
 
-        /* Can be set to nothing to disable the definitions part */
+        // Can be set to nothing to disable the definitions part
         public interface DefinitionsPart
 
-        /* Can be set to nothing to disable the plain dsl part */
+        // Can be set to nothing to disable the plain dsl part
         public interface PlainDslPart
 
-        /* Can be set to nothing to disable the column set part */
+        // Can be set to nothing to disable the column set part
         public interface ColumnSetPart
 
-        /* Can be set to nothing to disable the column group part */
+        // Can be set to nothing to disable the column group part
         public interface ColumnGroupPart
 
         // endregion
 
         // region Template arguments
 
-        /* What to put in definitions part aside from the default part. */
+        // What to put in definitions part aside from the default part.
         public interface DefinitionsArg
 
-        /* What to put in the plain dsl part. Does not need indents. */
+        // What to put in the plain dsl part. Does not need indents.
         public interface PlainDslFunctionsArg
 
-        /* What to put in the column set part. Needs indents. */
+        // What to put in the column set part. Needs indents.
         public interface ColumnSetFunctionsArg
 
-        /* What to put in the column group part. Needs indents. */
+        // What to put in the column group part. Needs indents.
         public interface ColumnGroupFunctionsArg
 
         // endregion
@@ -271,11 +266,11 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `number: `[`Int`][Int]
@@ -286,7 +281,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -297,7 +292,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]

@@ -15,7 +15,7 @@ internal fun BufferedImage.resizeKeepingAspectRatio(
     interpolation: Any = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR,
     renderingQuality: Any = RenderingHints.VALUE_RENDER_QUALITY,
     antialiasing: Any = RenderingHints.VALUE_ANTIALIAS_ON,
-    observer: ImageObserver? = null
+    observer: ImageObserver? = null,
 ): BufferedImage {
     val aspectRatio = width.toDouble() / height.toDouble()
     val size = min(maxSize, max(width, height))
@@ -36,7 +36,7 @@ internal fun BufferedImage.resize(
     interpolation: Any = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR,
     renderingQuality: Any = RenderingHints.VALUE_RENDER_QUALITY,
     antialiasing: Any = RenderingHints.VALUE_ANTIALIAS_ON,
-    observer: ImageObserver? = null
+    observer: ImageObserver? = null,
 ): BufferedImage {
     val resized = BufferedImage(width, height, resultImageType)
     val g: Graphics2D = resized.createGraphics()

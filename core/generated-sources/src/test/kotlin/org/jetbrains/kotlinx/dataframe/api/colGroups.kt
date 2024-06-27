@@ -2,13 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.samples.api.age
-import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
-import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
-import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
-import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class ColGroupsTests : ColumnsSelectionDslTests() {
@@ -24,14 +19,12 @@ class ColGroupsTests : ColumnsSelectionDslTests() {
     fun `colGroups at top-level`() {
         listOf(
             df.select { name },
-
             df.select { all().colGroups() },
             df.select { colGroups() },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { name },
-
             df.select { name }.select { all() },
             df.select { name }.select { colGroups() },
             df.select { name }.select { colGroups().all() },
@@ -49,7 +42,6 @@ class ColGroupsTests : ColumnsSelectionDslTests() {
     fun `colGroups at lower level`() {
         listOf(
             dfGroup.select { name.firstName },
-
             dfGroup.select { name.colGroups { "Name" in it.name() } },
             dfGroup.select { name.colsOf<AnyRow> { "Name" in it.name() } },
             dfGroup.select { name.colsOf<AnyRow>().colGroups { "Name" in it.name() } },

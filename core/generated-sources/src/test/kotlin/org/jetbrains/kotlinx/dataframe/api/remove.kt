@@ -8,6 +8,7 @@ class RemoveTests {
 
     val df = dataFrameOf("a", "b")(1, 2)
     val b by column<Int>()
+
     data class C(val b: Int)
 
     @Test

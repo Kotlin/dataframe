@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 
 open class Base {
+    @Suppress("ktlint:standard:argument-list-wrapping")
     val df = dataFrameOf("firstName", "lastName", "age", "city", "weight")(
         "Alice", "Cooper", 15, "London", 54,
         "Bob", "Dylan", 45, "Dubai", 87,
@@ -15,8 +16,9 @@ open class Base {
         "Mark", "Avrely", 40, "Milan", null,
         "Bob", "Marley", 30, "Tokyo", 68,
         "Alice", "Lindt", 20, null, 55,
-        "Mark", "Petrov", 30, "Moscow", 90
-    ).group("firstName", "lastName").into("name")
+        "Mark", "Petrov", 30, "Moscow", 90,
+    ).group("firstName", "lastName")
+        .into("name")
         .cast<Person>()
 
     @DataSchema
