@@ -38,10 +38,8 @@ public sealed class ConvertingMismatch(
         }
     }
 
-    public sealed class TypeConversionNotFound(
-        column: String,
-        cause: TypeConverterNotFoundException,
-    ) : ConvertingMismatch(column, null, cause) {
+    public sealed class TypeConversionNotFound(column: String, cause: TypeConverterNotFoundException) :
+        ConvertingMismatch(column, null, cause) {
 
         public data class ConversionNotFoundIgnored(
             override val column: String,
@@ -50,10 +48,8 @@ public sealed class ConvertingMismatch(
             override fun toString(): String = "${cause.message} for column \"$column\", saving as is"
         }
 
-        public data class ConversionNotFoundError(
-            override val column: String,
-            val e: TypeConverterNotFoundException,
-        ) : TypeConversionNotFound(column, e) {
+        public data class ConversionNotFoundError(override val column: String, val e: TypeConverterNotFoundException) :
+            TypeConversionNotFound(column, e) {
             override fun toString(): String = "${e.message} for column \"$column\", can not save"
         }
     }
@@ -81,29 +77,20 @@ public sealed class ConvertingMismatch(
         }
     }
 
-    public data class SavedAsString(
-        override val column: String,
-        val type: Class<*>,
-    ) : ConvertingMismatch(column, null, null) {
+    public data class SavedAsString(override val column: String, val type: Class<*>) :
+        ConvertingMismatch(column, null, null) {
         override fun toString(): String = "Column \"$column\" has type ${type.canonicalName}, will be saved as String\""
     }
 
-    public sealed class NullableMismatch(
-        column: String,
-        row: Int?,
-    ) : ConvertingMismatch(column, row, null) {
-        public data class NullValueIgnored(
-            override val column: String,
-            override val row: Int?,
-        ) : NullableMismatch(column, row) {
+    public sealed class NullableMismatch(column: String, row: Int?) : ConvertingMismatch(column, row, null) {
+        public data class NullValueIgnored(override val column: String, override val row: Int?) :
+            NullableMismatch(column, row) {
             override fun toString(): String =
                 "Column \"$column\" contains nulls in row $row but expected not nullable, saving as is"
         }
 
-        public data class NullValueError(
-            override val column: String,
-            override val row: Int?,
-        ) : NullableMismatch(column, row) {
+        public data class NullValueError(override val column: String, override val row: Int?) :
+            NullableMismatch(column, row) {
             override fun toString(): String =
                 "Column \"$column\" contains nulls in row $row but expected not nullable, can not save"
         }

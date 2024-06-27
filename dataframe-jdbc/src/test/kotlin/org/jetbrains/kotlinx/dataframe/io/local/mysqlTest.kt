@@ -174,7 +174,7 @@ class MySqlTest {
             """
 
             connection.createStatement().execute(
-                createTableQuery.trimIndent()
+                createTableQuery.trimIndent(),
             )
 
             @Language("SQL")
@@ -218,28 +218,30 @@ class MySqlTest {
             """
 
             connection.createStatement().execute(
-                createTableQuery2.trimIndent()
+                createTableQuery2.trimIndent(),
             )
 
             @Language("SQL")
-            val insertData1 = """
-            INSERT INTO table1 (
-                bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
-                integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
-                timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
-            """.trimIndent()
+            val insertData1 =
+                """
+                INSERT INTO table1 (
+                    bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
+                    integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
+                    timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
+                """.trimIndent()
 
             @Language("SQL")
-            val insertData2 = """
-            INSERT INTO table2 (
-                bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
-                integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
-                timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
-            """.trimIndent()
+            val insertData2 =
+                """
+                INSERT INTO table2 (
+                    bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
+                    integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
+                    timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, location, data
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_GeomFromText('POINT(1 1)'), ?)
+                """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
@@ -354,14 +356,15 @@ class MySqlTest {
     @Test
     fun `read from sql query`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT
                t1.id,
                t1.enumCol,
                t2.setCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MySql>()
         val result = df.filter { it[Table3MySql::id] == 1 }
@@ -387,7 +390,8 @@ class MySqlTest {
         val table2Df = dataframes[1].cast<Table2MySql>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2MySql::integerCol] != null && it[Table2MySql::integerCol]!! > 400 }
+        table2Df
+            .filter { it[Table2MySql::integerCol] != null && it[Table2MySql::integerCol]!! > 400 }
             .rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
@@ -401,42 +405,50 @@ class MySqlTest {
 
         result[0][1] shouldBe 1.toByte()
 
-        val result1 = df1.select("smallintCol")
+        val result1 = df1
+            .select("smallintCol")
             .add("smallintCol2") { it[Table1MySql::smallintCol] }
 
         result1[0][1] shouldBe 10.toShort()
 
-        val result2 = df1.select("mediumintCol")
+        val result2 = df1
+            .select("mediumintCol")
             .add("mediumintCol2") { it[Table1MySql::mediumintCol] }
 
         result2[0][1] shouldBe 100
 
-        val result3 = df1.select("mediumintUnsignedCol")
+        val result3 = df1
+            .select("mediumintUnsignedCol")
             .add("mediumintUnsignedCol2") { it[Table1MySql::mediumintUnsignedCol] }
 
         result3[0][1] shouldBe 100
 
-        val result4 = df1.select("integerUnsignedCol")
+        val result4 = df1
+            .select("integerUnsignedCol")
             .add("integerUnsignedCol2") { it[Table1MySql::integerUnsignedCol] }
 
         result4[0][1] shouldBe 100L
 
-        val result5 = df1.select("bigintCol")
+        val result5 = df1
+            .select("bigintCol")
             .add("bigintCol2") { it[Table1MySql::bigintCol] }
 
         result5[0][1] shouldBe 100
 
-        val result6 = df1.select("floatCol")
+        val result6 = df1
+            .select("floatCol")
             .add("floatCol2") { it[Table1MySql::floatCol] }
 
         result6[0][1] shouldBe 10.0f
 
-        val result7 = df1.select("doubleCol")
+        val result7 = df1
+            .select("doubleCol")
             .add("doubleCol2") { it[Table1MySql::doubleCol] }
 
         result7[0][1] shouldBe 10.0
 
-        val result8 = df1.select("decimalCol")
+        val result8 = df1
+            .select("decimalCol")
             .add("decimalCol2") { it[Table1MySql::decimalCol] }
 
         result8[0][1] shouldBe BigDecimal("10")

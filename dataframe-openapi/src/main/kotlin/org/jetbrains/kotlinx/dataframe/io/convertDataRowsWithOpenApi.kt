@@ -40,12 +40,13 @@ public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
  * @return [Pair] of result and the recursive depth.
  *   `true` if Receiver is a recursive list of [DataFrame]s, like [List]<[List]<[DataFrame]<*>>>
  */
-private fun KType.isRecursiveListOfDataFrame(depth: Int = 0): Pair<Boolean, Int> = when (jvmErasure) {
-    typeOf<List<*>>().jvmErasure -> arguments[0].type?.isRecursiveListOfDataFrame(depth + 1) ?: (false to depth)
-    typeOf<DataFrame<*>>().jvmErasure -> true to depth
-    typeOf<DataFrame<*>?>().jvmErasure -> true to depth
-    else -> false to depth
-}
+private fun KType.isRecursiveListOfDataFrame(depth: Int = 0): Pair<Boolean, Int> =
+    when (jvmErasure) {
+        typeOf<List<*>>().jvmErasure -> arguments[0].type?.isRecursiveListOfDataFrame(depth + 1) ?: (false to depth)
+        typeOf<DataFrame<*>>().jvmErasure -> true to depth
+        typeOf<DataFrame<*>?>().jvmErasure -> true to depth
+        else -> false to depth
+    }
 
 /**
  * @receiver Recursive [List] of [DataFrame]s, like [List]<[List]<[DataFrame]<*>>>, for which to convert the [DataFrame]s.
@@ -53,12 +54,10 @@ private fun KType.isRecursiveListOfDataFrame(depth: Int = 0): Pair<Boolean, Int>
  * @param convertTo Optional [ConvertSchemaDsl] to use for the conversion.
  * @return Receiver with converted [DataFrame]s.
  */
-private fun Any?.convertRecursiveListOfDataFrame(
-    type: KType,
-    convertTo: ConvertSchemaDsl<*>.() -> Unit = {},
-): Any? = when (this) {
-    is List<*> -> map { it?.convertRecursiveListOfDataFrame(type.arguments[0].type!!, convertTo) }
-    is DataFrame<*> -> convertTo(schemaType = type.arguments[0].type!!, body = convertTo)
-    null -> null
-    else -> throw IllegalArgumentException("$this is not a List or DataFrame")
-}
+private fun Any?.convertRecursiveListOfDataFrame(type: KType, convertTo: ConvertSchemaDsl<*>.() -> Unit = {}): Any? =
+    when (this) {
+        is List<*> -> map { it?.convertRecursiveListOfDataFrame(type.arguments[0].type!!, convertTo) }
+        is DataFrame<*> -> convertTo(schemaType = type.arguments[0].type!!, body = convertTo)
+        null -> null
+        else -> throw IllegalArgumentException("$this is not a List or DataFrame")
+    }
