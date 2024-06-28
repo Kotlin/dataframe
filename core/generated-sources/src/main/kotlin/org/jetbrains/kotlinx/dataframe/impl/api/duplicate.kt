@@ -47,11 +47,10 @@ internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int): DataColumn<T> {
 internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int, indicesSorted: Iterable<Int>): DataColumn<T> =
     when (this) {
         is ColumnGroup<*> ->
-            DataColumn
-                .createColumnGroup(
-                    name = name,
-                    df = asDataFrame().duplicateRowsImpl(n, indicesSorted),
-                ).asDataColumn()
+            DataColumn.createColumnGroup(
+                name = name,
+                df = asDataFrame().duplicateRowsImpl(n, indicesSorted),
+            ).asDataColumn()
 
         else -> {
             val list = mutableListOf<Any?>()
@@ -75,30 +74,26 @@ internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int, indicesSorted: Iterab
 
 internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int, indicesSorted: Iterable<Int>): DataFrame<T> =
     columns()
-        .map {
-            it.duplicateValuesImpl(n, indicesSorted)
-        }.toDataFrame()
+        .map { it.duplicateValuesImpl(n, indicesSorted) }
+        .toDataFrame()
         .cast()
 
 internal fun <T> DataRow<T>.duplicateImpl(n: Int): DataFrame<T> =
-    owner
-        .columns()
-        .map { col ->
-            when (col) {
-                is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicateImpl(n))
+    owner.columns().map { col ->
+        when (col) {
+            is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicateImpl(n))
 
-                else -> {
-                    val value = col[index]
-                    if (value is AnyFrame) {
-                        DataColumn.createFrameColumn(col.name, List(n) { value })
-                    } else {
-                        DataColumn.createValueColumn(
-                            col.name,
-                            List(n) { value },
-                            col.type.withNullability(value == null),
-                        )
-                    }
+            else -> {
+                val value = col[index]
+                if (value is AnyFrame) {
+                    DataColumn.createFrameColumn(col.name, List(n) { value })
+                } else {
+                    DataColumn.createValueColumn(
+                        col.name,
+                        List(n) { value },
+                        col.type.withNullability(value == null),
+                    )
                 }
             }
-        }.toDataFrame()
-        .cast()
+        }
+    }.toDataFrame().cast()

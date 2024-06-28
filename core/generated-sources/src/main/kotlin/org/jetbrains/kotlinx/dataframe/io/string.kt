@@ -193,8 +193,7 @@ internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalForm
         is Array<*> -> if (value.isEmpty()) "[ ]" else value.toList().toString()
 
         else ->
-            value
-                ?.asArrayAsListOrNull()
+            value?.asArrayAsListOrNull()
                 ?.let { renderValueToString(it, decimalFormat) }
                 ?: value.toString()
     }

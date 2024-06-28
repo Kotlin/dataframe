@@ -61,8 +61,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                 val path = src.treeNode.pathFromRoot().rename(c.column.name())
                 var column = c.column
                 if (inFrameColumns && column.isFrameColumn()) {
-                    column = column
-                        .asAnyFrameColumn()
+                    column = column.asAnyFrameColumn()
                         .map(typeOf<AnyFrame>()) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }
                         .cast()
                 }

@@ -347,16 +347,14 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
     public fun <C> SingleColumn<DataRow<*>>.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
     ): SingleColumn<DataFrame<C>> =
-        this
-            .ensureIsColumnGroup()
-            .transformSingle {
-                val child = it.getCol(frameCol)
-                    ?: throw IllegalStateException(
-                        "FrameColumn '${frameCol.path()}' not found in column group '${it.path}'",
-                    )
-                child.data.ensureIsFrameColumn()
-                listOf(child)
-            }.singleImpl()
+        this.ensureIsColumnGroup().transformSingle {
+            val child = it.getCol(frameCol)
+                ?: throw IllegalStateException(
+                    "FrameColumn '${frameCol.path()}' not found in column group '${it.path}'",
+                )
+            child.data.ensureIsFrameColumn()
+            listOf(child)
+        }.singleImpl()
 
     /**
      * ## Frame Col
@@ -845,14 +843,12 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [C] The type of the frame column.
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(name: String): SingleColumn<DataFrame<C>> =
-        this
-            .ensureIsColumnGroup()
-            .transformSingle {
-                val child = it.getCol(name)?.cast<DataFrame<C>>()
-                    ?: throw IllegalStateException("Frame column '$name' not found in column group '${it.path}'")
-                child.data.ensureIsFrameColumn()
-                listOf(child)
-            }.singleImpl()
+        this.ensureIsColumnGroup().transformSingle {
+            val child = it.getCol(name)?.cast<DataFrame<C>>()
+                ?: throw IllegalStateException("Frame column '$name' not found in column group '${it.path}'")
+            child.data.ensureIsFrameColumn()
+            listOf(child)
+        }.singleImpl()
 
     /**
      * ## Frame Col
@@ -1568,14 +1564,12 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [C] The type of the frame column.
      */
     public fun <C> SingleColumn<DataRow<*>>.frameCol(path: ColumnPath): SingleColumn<DataFrame<C>> =
-        this
-            .ensureIsColumnGroup()
-            .transformSingle {
-                val child = it.getCol(path)?.cast<DataFrame<C>>()
-                    ?: throw IllegalStateException("Frame column '$path' not found in column group '${it.path}'")
-                child.data.ensureIsFrameColumn()
-                listOf(child)
-            }.singleImpl()
+        this.ensureIsColumnGroup().transformSingle {
+            val child = it.getCol(path)?.cast<DataFrame<C>>()
+                ?: throw IllegalStateException("Frame column '$path' not found in column group '${it.path}'")
+            child.data.ensureIsFrameColumn()
+            listOf(child)
+        }.singleImpl()
 
     /**
      * ## Frame Col

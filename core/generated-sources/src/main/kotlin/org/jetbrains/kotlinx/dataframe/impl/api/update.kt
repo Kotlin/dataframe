@@ -132,8 +132,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
         }
 
         is ColumnGroup<*> -> {
-            this
-                .columns()
+            this.columns()
                 .mapIndexed { colIndex, col ->
                     val newValues = values.map {
                         when (it) {
@@ -156,9 +155,9 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
                     null -> nulls = true
 
                     else -> {
-                        require(
-                            it.javaClass.kotlin.isSubclassOf(kclass),
-                        ) { "Can not add value '$it' to column '$name' of type $type" }
+                        require(it.javaClass.kotlin.isSubclassOf(kclass)) {
+                            "Can not add value '$it' to column '$name' of type $type"
+                        }
                     }
                 }
             }

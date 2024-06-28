@@ -227,19 +227,17 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
                         it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> listOf(it[0])
 
                         else ->
-                            it
-                                .fold(null as (Set<KClass<*>>?)) { set, clazz ->
-                                    // collect a set of all common superclasses from original classes
-                                    val superclasses =
-                                        (clazz.allSuperclasses + clazz)
-                                            .filter { it.visibility == KVisibility.PUBLIC }
-                                            .toSet()
-                                    set?.intersect(superclasses) ?: superclasses
-                                }!!
-                                .let {
-                                    // leave only 'leaf' classes, that are not super to some other class in a set
-                                    it - it.flatMap { it.superclasses }.toSet()
-                                }.toList()
+                            it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                                // collect a set of all common superclasses from original classes
+                                val superclasses =
+                                    (clazz.allSuperclasses + clazz)
+                                        .filter { it.visibility == KVisibility.PUBLIC }
+                                        .toSet()
+                                set?.intersect(superclasses) ?: superclasses
+                            }!!.let {
+                                // leave only 'leaf' classes, that are not super to some other class in a set
+                                it - it.flatMap { it.superclasses }.toSet()
+                            }.toList()
                     }
                 }
         }
@@ -268,14 +266,13 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
         distinct.size == 1 -> distinct.single()
 
         else -> {
-            val classes = distinct
-                .map {
-                    if (it == nothingType(false) || it == nothingType(true)) {
-                        Nothing::class
-                    } else {
-                        it.jvmErasure
-                    }
-                }.distinct()
+            val classes = distinct.map {
+                if (it == nothingType(false) || it == nothingType(true)) {
+                    Nothing::class
+                } else {
+                    it.jvmErasure
+                }
+            }.distinct()
             when {
                 classes.size == 1 -> {
                     val typeProjections = classes.single().typeParameters.mapIndexed { index, parameter ->
@@ -300,14 +297,13 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
                     val distinctNoNothing = distinct.filterNot {
                         it == nothingType(false) || it == nothingType(true)
                     }
-                    val listTypes = distinctNoNothing
-                        .map {
-                            if (it.classifier == List::class) {
-                                it.arguments[0].type
-                            } else {
-                                it
-                            }
-                        }.toMutableSet()
+                    val listTypes = distinctNoNothing.map {
+                        if (it.classifier == List::class) {
+                            it.arguments[0].type
+                        } else {
+                            it
+                        }
+                    }.toMutableSet()
                     val type = listTypes
                         .filterNotNull()
                         .commonTypeListifyValues()

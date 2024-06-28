@@ -138,8 +138,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) :
             1 -> getColumnOrNull(path[0])
 
             else ->
-                path
-                    .dropLast(1)
+                path.dropLast(1)
                     .fold(this as AnyFrame?) { df, name -> df?.getColumnOrNull(name) as? AnyFrame? }
                     ?.getColumnOrNull(path.last())
         }
