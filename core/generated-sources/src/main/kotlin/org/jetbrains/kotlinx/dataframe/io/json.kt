@@ -65,10 +65,13 @@ public class JSON(
                 .add(
                     "keyValuePaths",
                     typeOf<List<JsonPath>>(),
-                    "listOf(${keyValuePaths.joinToString {
-                        "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
-                    }})",
-                ).add(
+                    "listOf(${
+                        keyValuePaths.joinToString {
+                            "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
+                        }
+                    })",
+                )
+                .add(
                     "typeClashTactic",
                     typeOf<TypeClashTactic>(),
                     "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",

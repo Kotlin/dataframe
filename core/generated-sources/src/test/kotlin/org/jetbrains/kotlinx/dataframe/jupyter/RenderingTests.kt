@@ -382,12 +382,10 @@ class RenderingTests : JupyterReplTestCase() {
         assertDataFrameDimensions(json, 2, 2)
 
         val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
-        rows
-            .getObj(0)["group1"]!!
+        rows.getObj(0)["group1"]!!
             .jsonObject[DATA]!!
             .jsonArray.size shouldBe 10
-        rows
-            .getObj(1)["group1"]!!
+        rows.getObj(1)["group1"]!!
             .jsonObject[DATA]!!
             .jsonArray.size shouldBe 10
     }

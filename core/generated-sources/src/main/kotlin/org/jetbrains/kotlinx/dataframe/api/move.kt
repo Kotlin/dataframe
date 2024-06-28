@@ -111,7 +111,7 @@ public fun <T, C> MoveClause<T, C>.under(
 ): DataFrame<T> =
     moveImpl(
         under = true,
-        column,
+        newPathExpression = column,
     )
 
 // endregion

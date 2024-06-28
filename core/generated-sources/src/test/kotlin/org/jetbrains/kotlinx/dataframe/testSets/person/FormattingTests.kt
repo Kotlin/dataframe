@@ -43,11 +43,8 @@ class FormattingTests : BaseTest() {
     @Test
     fun `override format`() {
         val formatter = typed
-            .format { age }
-            .linearBg(20 to green, 80 to red)
-            .format { age and weight }
-            .where { index % 2 == 0 }
-            .with { background(gray) }
+            .format { age }.linearBg(20 to green, 80 to red)
+            .format { age and weight }.where { index % 2 == 0 }.with { background(gray) }
             .formatter!!
 
         for (row in 0 until typed.nrow step 2) {

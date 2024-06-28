@@ -48,18 +48,12 @@ class GroupByTests {
         )
         val grouped = df.groupBy("a", "b").into("d")
 
-        grouped
-            .groupBy("a")
-            .aggregate {
-                getColumn("d") into "e"
-            }["e"]
-            .type() shouldBe typeOf<List<AnyFrame>>()
+        grouped.groupBy("a").aggregate {
+            getColumn("d") into "e"
+        }["e"].type() shouldBe typeOf<List<AnyFrame>>()
 
-        grouped
-            .groupBy("a")
-            .aggregate {
-                getFrameColumn("d") into "e"
-            }["e"]
-            .type() shouldBe typeOf<List<AnyFrame>>()
+        grouped.groupBy("a").aggregate {
+            getFrameColumn("d") into "e"
+        }["e"].type() shouldBe typeOf<List<AnyFrame>>()
     }
 }

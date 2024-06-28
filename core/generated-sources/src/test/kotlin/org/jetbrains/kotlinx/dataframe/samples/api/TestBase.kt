@@ -54,17 +54,15 @@ public open class TestBase {
         "Charlie", "Byrd", 30, "Moscow", 90, true,
     ).group("firstName", "lastName").into("name").cast<Person>()
 
-    val dfGroup = df
-        .convert { name.firstName }
-        .to {
-            val firstName by it
-            val secondName by it.map<_, String?> { null }.asValueColumn()
-            val thirdName by it.map<_, String?> { null }.asValueColumn()
+    val dfGroup = df.convert { name.firstName }.to {
+        val firstName by it
+        val secondName by it.map<_, String?> { null }.asValueColumn()
+        val thirdName by it.map<_, String?> { null }.asValueColumn()
 
-            dataFrameOf(firstName, secondName, thirdName)
-                .cast<FirstNames>(verify = true)
-                .asColumnGroup("firstName")
-        }.cast<Person2>(verify = true)
+        dataFrameOf(firstName, secondName, thirdName)
+            .cast<FirstNames>(verify = true)
+            .asColumnGroup("firstName")
+    }.cast<Person2>(verify = true)
 
     @DataSchema
     interface Name {

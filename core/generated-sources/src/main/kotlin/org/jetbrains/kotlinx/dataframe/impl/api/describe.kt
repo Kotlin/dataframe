@@ -35,8 +35,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         flatMap { col ->
             when (col.kind) {
                 ColumnKind.Frame ->
-                    col
-                        .asAnyFrameColumn()
+                    col.asAnyFrameColumn()
                         .concat()
                         .columns()
                         .map { it.addPath(col.path() + it.name) }
@@ -44,8 +43,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
 
                 ColumnKind.Group ->
                     if (atAnyDepth) {
-                        col
-                            .asColumnGroup()
+                        col.asColumnGroup()
                             .columns()
                             .map { it.addPath(col.path() + it.name) }
                             .collectAll(true)
@@ -72,10 +70,8 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         ColumnDescription::unique from { it.countDistinct() }
         ColumnDescription::nulls from { it.values.count { it == null } }
         ColumnDescription::top from inferType {
-            it.values
-                .filterNotNull()
-                .groupBy { it }
-                .maxByOrNull { it.value.size }
+            it.values.filterNotNull()
+                .groupBy { it }.maxByOrNull { it.value.size }
                 ?.key
         }
         if (hasNumeric) {
@@ -90,20 +86,17 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             ColumnDescription::max from inferType { if (it.isComparable()) it.asComparable().maxOrNull() else null }
         }
     }
-    df = df
-        .add(ColumnDescription::freq) {
-            val top = it[ColumnDescription::top]
-            val data = all[index]
-            data.values.count { it == top }
-        }.move(ColumnDescription::freq)
-        .after(ColumnDescription::top)
+    df = df.add(ColumnDescription::freq) {
+        val top = it[ColumnDescription::top]
+        val data = all[index]
+        data.values.count { it == top }
+    }.move(ColumnDescription::freq).after(ColumnDescription::top)
 
     return df.cast()
 }
 
 private fun buildTypeName(it: AnyCol): String {
-    val rawJavaType = it.type.jvmErasure.simpleName
-        .toString()
+    val rawJavaType = it.type.jvmErasure.simpleName.toString()
     return if (it.type.isMarkedNullable) {
         "$rawJavaType?"
     } else {

@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 
 internal data class PivotImpl<T>(val df: DataFrame<T>, val columns: PivotColumnsSelector<T, *>, val inward: Boolean?) :

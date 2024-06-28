@@ -40,10 +40,12 @@ public fun AnyRow.rowStd(skipNA: Boolean = skipNA_default, ddof: Int = ddof_defa
     values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA, ddof)
 
 public inline fun <reified T : Number> AnyRow.rowStdOf(ddof: Int = ddof_default): Double =
-    values().filterIsInstance<T>().std(
-        type = typeOf<T>(),
-        ddof = ddof,
-    )
+    values()
+        .filterIsInstance<T>()
+        .std(
+            type = typeOf<T>(),
+            ddof = ddof,
+        )
 
 // endregion
 

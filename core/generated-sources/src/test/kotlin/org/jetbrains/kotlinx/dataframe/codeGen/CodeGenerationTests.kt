@@ -222,18 +222,15 @@ class CodeGenerationTests : BaseTest() {
     fun `generate derived interface`() {
         val codeGen = CodeGenerator.create()
         val schema = df.dropNulls().schema()
-        val code = codeGen
-            .generate(
-                schema = schema,
-                name = "ValidPerson",
-                fields = true,
-                extensionProperties = true,
-                isOpen = true,
-                visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-                knownMarkers = listOf(
-                    MarkersExtractor.get<Person>(),
-                ),
-            ).code.declarations
+        val code = codeGen.generate(
+            schema = schema,
+            name = "ValidPerson",
+            fields = true,
+            extensionProperties = true,
+            isOpen = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            knownMarkers = listOf(MarkersExtractor.get<Person>()),
+        ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         val expected =
             """
@@ -310,15 +307,14 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `declaration with explicit public visibility`() {
         val repl = CodeGenerator.create()
-        val code = repl
-            .generate(
-                typed.schema(),
-                "DataType",
-                true,
-                true,
-                false,
-                MarkerVisibility.EXPLICIT_PUBLIC,
-            ).code.declarations
+        val code = repl.generate(
+            typed.schema(),
+            "DataType",
+            true,
+            true,
+            false,
+            MarkerVisibility.EXPLICIT_PUBLIC,
+        ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe
             """

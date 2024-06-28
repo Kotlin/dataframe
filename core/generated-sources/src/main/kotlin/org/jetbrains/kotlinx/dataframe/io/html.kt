@@ -303,16 +303,15 @@ public fun AnyFrame.toStaticHtml(
 
                         // add the dataframe as a nested table limiting the number of rows if needed
                         // CSS will not be included here, as it is already included in the main table
-                        cellValue
-                            .toStaticHtml(
-                                configuration = configuration.copy(
-                                    rowsLimit = newRowsLimit,
-                                    nestedRowsLimit = newNestedRowsLimit,
-                                ),
-                                cellRenderer = cellRenderer,
-                                includeCss = false,
-                                openNestedDfs = openNestedDfs,
-                            ).let { append(it.body) }
+                        cellValue.toStaticHtml(
+                            configuration = configuration.copy(
+                                rowsLimit = newRowsLimit,
+                                nestedRowsLimit = newNestedRowsLimit,
+                            ),
+                            cellRenderer = cellRenderer,
+                            includeCss = false,
+                            openNestedDfs = openNestedDfs,
+                        ).let { append(it.body) }
 
                         val size = cellValue.rowsCount()
                         if (size > newRowsLimit ?: Int.MAX_VALUE) {
@@ -834,9 +833,8 @@ internal class DataFrameFormatter(
             is Pair<*, *> -> {
                 val key = value.first.toString() + ": "
                 val shortValue =
-                    render(value.second, renderer, configuration.copy(cellContentLimit = 3)) ?: "...".addCss(
-                        structuralClass,
-                    )
+                    render(value.second, renderer, configuration.copy(cellContentLimit = 3))
+                        ?: "...".addCss(structuralClass)
                 val sizeOfValue = shortValue.textLength
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {

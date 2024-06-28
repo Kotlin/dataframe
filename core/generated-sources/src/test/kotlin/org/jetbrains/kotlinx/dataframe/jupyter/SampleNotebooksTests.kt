@@ -16,7 +16,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     @Test
     fun github() =
         exampleTest(
-            "github",
+            dir = "github",
             cellClause = CellClause.stopAfter { cell ->
                 "personal access token" in cell.source
             },
@@ -29,8 +29,8 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     @Ignore
     fun titanic() =
         exampleTest(
-            "titanic",
-            "Titanic",
+            dir = "titanic",
+            notebookName = "Titanic",
             replacer = CodeReplacer.byMap(
                 "../../idea-examples/" to "$IDEA_EXAMPLES_PATH/",
             ),
@@ -40,8 +40,8 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     @Ignore
     fun wine() =
         exampleTest(
-            "wine",
-            "WineNetWIthKotlinDL",
+            dir = "wine",
+            notebookName = "WineNetWIthKotlinDL",
             replacer = CodeReplacer.byMap(
                 testFile("wine", "winequality-red.csv"),
             ),
@@ -56,7 +56,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             Locale.setDefault(Locale.forLanguageTag("en-US"))
 
             exampleTest(
-                "netflix",
+                dir = "netflix",
                 replacer = CodeReplacer.byMap(
                     testFile("netflix", "country_codes.csv"),
                     testFile("netflix", "netflix_titles.csv"),
@@ -71,7 +71,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     @Ignore
     fun movies() =
         exampleTest(
-            "movies",
+            dir = "movies",
             replacer = CodeReplacer.byMap(
                 "ml-latest/movies.csv" to "$IDEA_EXAMPLES_PATH/movies/src/main/resources/movies.csv",
             ),

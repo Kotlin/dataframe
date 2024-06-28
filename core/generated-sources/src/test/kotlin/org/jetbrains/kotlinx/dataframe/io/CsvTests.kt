@@ -246,8 +246,7 @@ class CsvTests {
         )
         df.writeCSV(
             "src/test/resources/without_header.csv",
-            CSVFormat.DEFAULT
-                .builder()
+            CSVFormat.DEFAULT.builder()
                 .setSkipHeaderRecord(true)
                 .build(),
         )

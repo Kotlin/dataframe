@@ -216,6 +216,13 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     }
 }
 
+tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
+    onlyIf { false }
+}
+tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+    onlyIf { false }
+}
+
 // Exclude the generated/processed sources from the IDE
 idea {
     module {

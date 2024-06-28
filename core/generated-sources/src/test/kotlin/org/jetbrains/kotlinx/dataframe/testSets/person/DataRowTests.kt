@@ -34,35 +34,28 @@ class DataRowTests : BaseTest() {
 
     @Test
     fun prevNext() {
-        typed
-            .update { age }
-            .with { prev()?.age }
+        typed.update { age }.with { prev()?.age }
             .age
             .drop(1) shouldBe typed.age.dropLast(1)
-        typed
-            .update { age }
-            .with { next()?.age }
+        typed.update { age }.with { next()?.age }
             .age
             .dropLast(1) shouldBe typed.age.drop(1)
     }
 
     @Test
     fun diff() {
-        typed
-            .update { age }
-            .with { diffOrNull { age } }
+        typed.update { age }.with { diffOrNull { age } }
             .age
             .drop(1)
-            .values() shouldBe typed.age
-            .values()
-            .zipWithNext { curr, next -> next - curr }
+            .values() shouldBe typed.age.values().zipWithNext { curr, next -> next - curr }
     }
 
     @Test
     fun mean() {
-        typed.mapToColumn("mean") { rowMean() }.values() shouldBe typed.age
-            .values()
-            .zip(typed.weight.values()) { a, b -> if (b != null) (a + b) / 2.0 else a }
+        typed.mapToColumn("mean") { rowMean() }.values() shouldBe
+            typed.age
+                .values()
+                .zip(typed.weight.values()) { a, b -> if (b != null) (a + b) / 2.0 else a }
     }
 
     @Test
@@ -82,8 +75,7 @@ class DataRowTests : BaseTest() {
     @Test
     fun sum() {
         typed
-            .convert { weight }
-            .toDouble()
+            .convert { weight }.toDouble()
             .mapToColumn("sum") { rowSum() }
             .values() shouldBe
             typed.age.values().zip(typed.weight.values()) { a, b -> a + (b ?: 0).toDouble() }
@@ -91,18 +83,16 @@ class DataRowTests : BaseTest() {
 
     @Test
     fun namedValuesOf() {
-        typed
-            .mapToColumn("vals") {
-                namedValuesOf<Int>().map { it.value }
-            }.values() shouldBe typed.merge { age and weight }.by { it.filterNotNull() }.intoList()
+        typed.mapToColumn("vals") {
+            namedValuesOf<Int>().map { it.value }
+        }.values() shouldBe typed.merge { age and weight }.by { it.filterNotNull() }.intoList()
     }
 
     @Test
     fun valuesOf() {
-        typed
-            .mapToColumn("vals") {
-                valuesOf<String>()
-            }.values() shouldBe typed.merge { name and city }.by { it.filterNotNull() }.intoList()
+        typed.mapToColumn("vals") {
+            valuesOf<String>()
+        }.values() shouldBe typed.merge { name and city }.by { it.filterNotNull() }.intoList()
     }
 
     @Test

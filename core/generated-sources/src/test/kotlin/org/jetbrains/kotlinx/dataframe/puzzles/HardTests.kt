@@ -57,19 +57,13 @@ class HardTests {
 
         val expected = dataFrameOf("index", "name")(0, "d", 2, "c", 3, "f")
 
-        df
-            .add("index") { index() }
-            .gather { dropLast() }
-            .into("name", "vals")
-            .sortByDesc { vals }
-            .take(3)[index, name] shouldBe expected
+        df.add("index") { index() }
+            .gather { dropLast() }.into("name", "vals")
+            .sortByDesc { vals }.take(3)[index, name] shouldBe expected
 
-        df
-            .add("index") { index() }
-            .gather { dropLast() }
-            .into("name", "vals")
-            .sortByDesc("vals")
-            .take(3)["index", "name"] shouldBe expected
+        df.add("index") { index() }
+            .gather { dropLast() }.into("name", "vals")
+            .sortByDesc("vals").take(3)["index", "name"] shouldBe expected
     }
 
     @Test
@@ -102,10 +96,8 @@ class HardTests {
 
         val means = df
             .filter { vals >= 0 }
-            .groupBy { grps }
-            .mean()
-            .pivot { grps }
-            .values { vals }
+            .groupBy { grps }.mean()
+            .pivot { grps }.values { vals }
 
         df.add("patched_values") {
             if (vals() < 0) means[grps()] as Double else vals().toDouble()
@@ -113,10 +105,8 @@ class HardTests {
 
         val meansStr = df
             .filter { "vals"<Int>() >= 0 }
-            .groupBy("grps")
-            .mean()
-            .pivot("grps")
-            .values("vals")
+            .groupBy("grps").mean()
+            .pivot("grps").values("vals")
 
         df.add("patched_values") {
             if ("vals"<Int>() < 0) meansStr["grps"<String>()] as Double else "vals"<Int>().toDouble()
@@ -144,10 +134,8 @@ class HardTests {
             "b", 8.0, 4.0,
         )
 
-        df
-            .add("id") { index() }
-            .groupBy { groups }
-            .add("res") {
+        df.add("id") { index() }
+            .groupBy { groups }.add("res") {
                 round(relative(-2..0)[value].filter { !it.isNaN() }.mean())
             }.concat()
             .sortBy("id")

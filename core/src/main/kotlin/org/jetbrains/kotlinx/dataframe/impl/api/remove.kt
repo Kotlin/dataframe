@@ -24,7 +24,12 @@ internal fun <T> DataFrame<T>.removeImpl(
     columns: ColumnsSelector<T, *>,
 ): RemoveResult<T> {
     val colWithPaths = getColumnsWithPaths(
-        unresolvedColumnsPolicy = if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail,
+        unresolvedColumnsPolicy =
+            if (allowMissingColumns) {
+                UnresolvedColumnsPolicy.Skip
+            } else {
+                UnresolvedColumnsPolicy.Fail
+            },
         selector = columns,
     )
     val colPaths = colWithPaths.map { it.path }

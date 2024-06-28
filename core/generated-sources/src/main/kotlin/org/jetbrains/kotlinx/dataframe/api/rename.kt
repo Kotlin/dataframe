@@ -46,11 +46,10 @@ public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsS
  * Even [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
  */
 public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> =
-    this
-        // recursively rename all columns written with delimiters or starting with a capital to camel case
-        .rename {
-            colsAtAnyDepth { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }
-        }.toCamelCase()
+    // recursively rename all columns written with delimiters or starting with a capital to camel case
+    rename {
+        colsAtAnyDepth { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }
+    }.toCamelCase()
         // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
         .update {
             colsAtAnyDepth().colsOf<AnyFrame>()
@@ -77,8 +76,7 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  */
 public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
     into {
-        it
-            .name()
+        it.name()
             .toCamelCaseByDelimiters(DELIMITERS_REGEX)
             .replaceFirstChar { it.lowercaseChar() }
     }
