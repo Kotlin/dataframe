@@ -12,16 +12,14 @@ internal interface SchemaProcessor {
     fun process(
         schema: DataFrameSchema,
         isOpen: Boolean,
-        visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC
+        visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ): Marker
 
     companion object {
         fun create(
             namePrefix: String,
             existingMarkers: Iterable<Marker> = emptyList(),
-            fieldNameNormalizer: (String) -> String = { it }
-        ): SchemaProcessorImpl {
-            return SchemaProcessorImpl(existingMarkers, namePrefix, fieldNameNormalizer)
-        }
+            fieldNameNormalizer: (String) -> String = { it },
+        ): SchemaProcessorImpl = SchemaProcessorImpl(existingMarkers, namePrefix, fieldNameNormalizer)
     }
 }

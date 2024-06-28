@@ -12,13 +12,13 @@ internal class ComputedColumnReference<R>(
     val name: String,
     val type: KType,
     val infer: Infer,
-    val compute: RowExpression<Any?, R>
-) :
-    ColumnReference<R> {
+    val compute: RowExpression<Any?, R>,
+) : ColumnReference<R> {
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<R> {
-        return context.df.newColumn(type, name, infer) { compute(it, it) }.addPath()
-    }
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<R> =
+        context.df
+            .newColumn(type, name, infer) { compute(it, it) }
+            .addPath()
 
     override fun name() = name
 
@@ -30,4 +30,9 @@ internal class ComputedColumnReference<R>(
 }
 
 @PublishedApi
-internal fun <R> createComputedColumnReference(name: String, type: KType, infer: Infer, compute: RowExpression<Any?, R>): ColumnReference<R> = ComputedColumnReference(name, type, infer, compute)
+internal fun <R> createComputedColumnReference(
+    name: String,
+    type: KType,
+    infer: Infer,
+    compute: RowExpression<Any?, R>,
+): ColumnReference<R> = ComputedColumnReference(name, type, infer, compute)

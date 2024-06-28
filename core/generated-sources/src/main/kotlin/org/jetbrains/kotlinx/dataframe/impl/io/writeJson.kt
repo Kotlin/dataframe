@@ -35,9 +35,9 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPE
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
+import org.jetbrains.kotlinx.dataframe.io.ARRAY_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
-import org.jetbrains.kotlinx.dataframe.io.arrayColumnName
-import org.jetbrains.kotlinx.dataframe.io.valueColumnName
+import org.jetbrains.kotlinx.dataframe.io.VALUE_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -67,21 +67,24 @@ private val valueTypes =
     setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
 
 @OptIn(ExperimentalSerializationApi::class)
-private fun convert(value: Any?): JsonElement = when (value) {
-    is JsonElement -> value
-    is Number -> JsonPrimitive(value)
-    is String -> JsonPrimitive(value)
-    is Char -> JsonPrimitive(value.toString())
-    is Boolean -> JsonPrimitive(value)
-    null -> JsonPrimitive(null)
-    else -> JsonPrimitive(value.toString())
-}
+private fun convert(value: Any?): JsonElement =
+    when (value) {
+        is JsonElement -> value
+        is Number -> JsonPrimitive(value)
+        is String -> JsonPrimitive(value)
+        is Char -> JsonPrimitive(value.toString())
+        is Boolean -> JsonPrimitive(value)
+        null -> JsonPrimitive(null)
+        else -> JsonPrimitive(value.toString())
+    }
 
 internal fun encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject {
     val values: Map<String, JsonElement> = frame.columns().associate { col ->
         col.name to when {
             col is ColumnGroup<*> -> encodeRow(col, index)
+
             col is FrameColumn<*> -> encodeFrame(col[index])
+
             col.isList() -> {
                 col[index]?.let {
                     JsonArray((it as List<*>).map { value -> convert(value) })
@@ -105,7 +108,7 @@ internal fun encodeRowWithMetadata(
     frame: ColumnsContainer<*>,
     index: Int,
     rowLimit: Int? = null,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null
+    imageEncodingOptions: Base64ImageEncodingOptions? = null,
 ): JsonElement? {
     val values: List<Pair<String, JsonElement>> = frame.columns().map { col ->
         when (col) {
@@ -120,7 +123,7 @@ internal fun encodeRowWithMetadata(
                             addAll(
                                 schema.columns.values.map { columnSchema ->
                                     createJsonTypeDescriptor(columnSchema)
-                                }
+                                },
                             )
                         }
                     }
@@ -143,7 +146,7 @@ internal fun encodeRowWithMetadata(
                             addAll(
                                 schema.columns.values.map { columnSchema ->
                                     createJsonTypeDescriptor(columnSchema)
-                                }
+                                },
                             )
                         }
                         put(NCOL, JsonPrimitive(col[index].ncol))
@@ -162,28 +165,29 @@ internal fun encodeRowWithMetadata(
 internal fun encodeValue(
     col: AnyCol,
     index: Int,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null
-): JsonElement = when {
-    col.isList() -> col[index]?.let { list ->
-        val values = (list as List<*>).map { convert(it) }
-        JsonArray(values)
-    } ?: JsonArray(emptyList())
+    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+): JsonElement =
+    when {
+        col.isList() -> col[index]?.let { list ->
+            val values = (list as List<*>).map { convert(it) }
+            JsonArray(values)
+        } ?: JsonArray(emptyList())
 
-    col.typeClass in valueTypes -> convert(col[index])
+        col.typeClass in valueTypes -> convert(col[index])
 
-    col.typeClass == BufferedImage::class && imageEncodingOptions != null ->
-        col[index]?.let { image ->
-            JsonPrimitive(encodeBufferedImageAsBase64(image as BufferedImage, imageEncodingOptions))
-        } ?: JsonPrimitive("")
+        col.typeClass == BufferedImage::class && imageEncodingOptions != null ->
+            col[index]?.let { image ->
+                JsonPrimitive(encodeBufferedImageAsBase64(image as BufferedImage, imageEncodingOptions))
+            } ?: JsonPrimitive("")
 
-    else -> JsonPrimitive(col[index]?.toString())
-}
+        else -> JsonPrimitive(col[index]?.toString())
+    }
 
 private fun encodeBufferedImageAsBase64(
     image: BufferedImage,
-    imageEncodingOptions: Base64ImageEncodingOptions = Base64ImageEncodingOptions()
-): String? {
-    return try {
+    imageEncodingOptions: Base64ImageEncodingOptions = Base64ImageEncodingOptions(),
+): String? =
+    try {
         val preparedImage = if (imageEncodingOptions.isLimitSizeOn) {
             image.resizeKeepingAspectRatio(imageEncodingOptions.imageSizeLimit)
         } else {
@@ -200,22 +204,20 @@ private fun encodeBufferedImageAsBase64(
     } catch (e: IOException) {
         null
     }
-}
 
-private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject {
-    return JsonObject(
+private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject =
+    JsonObject(
         mutableMapOf(KIND to JsonPrimitive(columnSchema.kind.toString())).also {
             if (columnSchema.kind == ColumnKind.Value) {
                 it[TYPE] = JsonPrimitive(columnSchema.type.toString())
             }
-        }
+        },
     )
-}
 
 internal fun encodeFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int? = null,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null
+    imageEncodingOptions: Base64ImageEncodingOptions? = null,
 ): JsonArray {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
@@ -223,15 +225,19 @@ internal fun encodeFrameWithMetadata(
     val arraysAreFrames = arrayColumn?.kind() == ColumnKind.Frame
 
     val data = frame.indices().map { rowIndex ->
-        valueColumn
-            ?.get(rowIndex)
-            ?: arrayColumn?.get(rowIndex)
+        valueColumn?.get(rowIndex)
+            ?: arrayColumn
+                ?.get(rowIndex)
                 ?.let {
-                    if (arraysAreFrames) encodeFrameWithMetadata(
-                        it as AnyFrame,
-                        rowLimit,
-                        imageEncodingOptions
-                    ) else null
+                    if (arraysAreFrames) {
+                        encodeFrameWithMetadata(
+                            it as AnyFrame,
+                            rowLimit,
+                            imageEncodingOptions,
+                        )
+                    } else {
+                        null
+                    }
                 }
             ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, imageEncodingOptions)
     }
@@ -242,23 +248,34 @@ internal fun encodeFrameWithMetadata(
 internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return allColumns.filter { it.name.startsWith(valueColumnName) }
+    return allColumns
+        .filter { it.name.startsWith(VALUE_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
-        ?.maxByOrNull { it.name }?.let { valueCol ->
-            if (valueCol.kind() != ColumnKind.Value) { // check that value in this column is not null only when other values are null
+        ?.maxByOrNull { it.name }
+        ?.let { valueCol ->
+            // check that value in this column is not null only when other values are null
+            if (valueCol.kind() != ColumnKind.Value) {
                 null
             } else {
                 // check that value in this column is not null only when other values are null
                 val isValidValueColumn = rows().all { row ->
                     if (valueCol[row] != null) {
                         allColumns.all { col ->
-                            if (col.name != valueCol.name) col[row] == null
-                            else true
+                            if (col.name != valueCol.name) {
+                                col[row] == null
+                            } else {
+                                true
+                            }
                         }
-                    } else true
+                    } else {
+                        true
+                    }
                 }
-                if (isValidValueColumn) valueCol
-                else null
+                if (isValidValueColumn) {
+                    valueCol
+                } else {
+                    null
+                }
             }
         }
 }
@@ -272,22 +289,33 @@ internal val AnyFrame.isPossibleToFindUnnamedColumns: Boolean
 internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return columns().filter { it.name.startsWith(arrayColumnName) }
+    return columns()
+        .filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
-        ?.maxByOrNull { it.name }?.let { arrayCol ->
-            if (arrayCol.kind() == ColumnKind.Group) null
-            else {
+        ?.maxByOrNull { it.name }
+        ?.let { arrayCol ->
+            if (arrayCol.kind() == ColumnKind.Group) {
+                null
+            } else {
                 // check that value in this column is not null only when other values are null
                 val isValidArrayColumn = rows().all { row ->
                     if (arrayCol[row] != null) {
                         allColumns.all { col ->
-                            if (col.name != arrayCol.name) col[row] == null
-                            else true
+                            if (col.name != arrayCol.name) {
+                                col[row] == null
+                            } else {
+                                true
+                            }
                         }
-                    } else true
+                    } else {
+                        true
+                    }
                 }
-                if (isValidArrayColumn) arrayCol
-                else null
+                if (isValidArrayColumn) {
+                    arrayCol
+                } else {
+                    null
+                }
             }
         }
 }
@@ -301,7 +329,17 @@ internal fun encodeFrame(frame: AnyFrame): JsonArray {
     val data = frame.indices().map { rowIndex ->
         when {
             valueColumn != null -> valueColumn[rowIndex]
-            arrayColumn != null -> arrayColumn[rowIndex]?.let { if (arraysAreFrames) encodeFrame(it as AnyFrame) else null }
+
+            arrayColumn != null -> arrayColumn[rowIndex]?.let {
+                if (arraysAreFrames) {
+                    encodeFrame(
+                        it as AnyFrame,
+                    )
+                } else {
+                    null
+                }
+            }
+
             else -> encodeRow(frame, rowIndex)
         }
     }
@@ -313,9 +351,9 @@ internal fun encodeDataFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int,
     nestedRowLimit: Int? = null,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null
-): JsonObject {
-    return buildJsonObject {
+    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+): JsonObject =
+    buildJsonObject {
         put(VERSION, JsonPrimitive(SERIALIZATION_VERSION))
         putJsonObject(METADATA) {
             putJsonArray(COLUMNS) { addAll(frame.columnNames().map { JsonPrimitive(it) }) }
@@ -323,7 +361,7 @@ internal fun encodeDataFrameWithMetadata(
                 addAll(
                     frame.schema().columns.values.map { colSchema ->
                         createJsonTypeDescriptor(colSchema)
-                    }
+                    },
                 )
             }
             put(NROW, JsonPrimitive(frame.rowsCount()))
@@ -332,10 +370,9 @@ internal fun encodeDataFrameWithMetadata(
         put(
             KOTLIN_DATAFRAME,
             encodeFrameWithMetadata(
-                frame.take(rowLimit),
+                frame = frame.take(rowLimit),
                 rowLimit = nestedRowLimit,
-                imageEncodingOptions
-            )
+                imageEncodingOptions = imageEncodingOptions,
+            ),
         )
     }
-}

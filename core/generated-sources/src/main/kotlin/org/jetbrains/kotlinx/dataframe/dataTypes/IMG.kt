@@ -7,9 +7,15 @@ public data class IMG(
     val width: Int? = null,
     val height: Int? = null,
     val maxWidth: Int? = null,
-    val maxHeight: Int? = null
+    val maxHeight: Int? = null,
 ) {
-    public constructor(src: URL, width: Int? = null, height: Int? = null, maxWidth: Int? = null, maxHeight: Int? = null) : this(src.toString(), width, height, maxWidth, maxHeight)
+    public constructor(
+        src: URL,
+        width: Int? = null,
+        height: Int? = null,
+        maxWidth: Int? = null,
+        maxHeight: Int? = null,
+    ) : this(src.toString(), width, height, maxWidth, maxHeight)
 
     override fun toString(): String {
         val style = StringBuilder()

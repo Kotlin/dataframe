@@ -25,7 +25,9 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.test"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .packageName
+            .get() shouldBe "org.example.test"
     }
 
     @Test
@@ -42,7 +44,9 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .packageName
+            .get() shouldBe "org.example.my"
     }
 
     @Test
@@ -58,7 +62,9 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.findByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+        (project.tasks.findByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .packageName
+            .get() shouldBe "org.example.my"
     }
 
     @Test
@@ -74,7 +80,9 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.findByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+        (project.tasks.findByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .packageName
+            .get() shouldBe "org.example.my"
     }
 
     @Test
@@ -105,7 +113,9 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .packageName
+            .get() shouldBe "org.test.dataframe"
     }
 
     @Test
@@ -125,7 +135,9 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .packageName
+            .get() shouldBe "org.test.dataframe"
     }
 
     @Test
@@ -141,6 +153,8 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.dataframe"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .packageName
+            .get() shouldBe "org.dataframe"
     }
 }

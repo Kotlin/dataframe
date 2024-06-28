@@ -15,27 +15,25 @@ public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, s
 public fun <T, C> DataFrame<T>.flatten(
     keepParentNameForColumns: Boolean = false,
     separator: String = ".",
-    columns: ColumnsSelector<T, C>
+    columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = flattenImpl(columns, keepParentNameForColumns, separator)
 
 public fun <T> DataFrame<T>.flatten(
     vararg columns: String,
     keepParentNameForColumns: Boolean = false,
-    separator: String = "."
+    separator: String = ".",
 ): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: ColumnReference<C>,
     keepParentNameForColumns: Boolean = false,
-    separator: String = "."
-): DataFrame<T> =
-    flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
+    separator: String = ".",
+): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: KProperty<C>,
     keepParentNameForColumns: Boolean = false,
-    separator: String = "."
-): DataFrame<T> =
-    flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
+    separator: String = ".",
+): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
 // endregion

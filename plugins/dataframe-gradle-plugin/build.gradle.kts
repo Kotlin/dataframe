@@ -3,7 +3,7 @@ plugins {
     `java-gradle-plugin`
     `maven-publish`
     alias(libs.plugins.plugin.publish)
-    alias(libs.plugins.kotlinter)
+    alias(libs.plugins.ktlint)
 }
 
 repositories {
@@ -51,10 +51,12 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":core").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(
+                project(
+                    ":core",
+                ).configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(
                     File.separatorChar,
-                    '/'
-                )
+                    '/',
+                ),
             )
         }
     }
@@ -77,13 +79,14 @@ gradlePlugin {
             id = "org.jetbrains.kotlin.plugin.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.DeprecatingSchemaGeneratorPlugin"
             displayName = "Kotlin Dataframe gradle plugin"
-            description = "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
+            description =
+                "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>() {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
@@ -102,7 +105,6 @@ sourceSets {
         runtimeClasspath += output + compileClasspath + test.runtimeClasspath
     }
 }
-
 
 val integrationTestConfiguration by configurations.creating {
     extendsFrom(configurations.testImplementation.get())

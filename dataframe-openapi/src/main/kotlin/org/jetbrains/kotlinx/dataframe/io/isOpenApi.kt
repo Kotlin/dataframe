@@ -8,13 +8,14 @@ import java.net.URL
 private val logger = KotlinLogging.logger {}
 
 /** Needs to have any type schemas to convert. */
-public fun isOpenApiStr(text: String): Boolean = try {
-    val parsed = OpenAPIParser().readContents(text, null, null)
-    parsed.openAPI?.components?.schemas != null
-} catch (e: Throwable) {
-    logger.debug(e) { "Attempt to read input as YAML/JSON OpenAPI specification failed." }
-    false
-}
+public fun isOpenApiStr(text: String): Boolean =
+    try {
+        val parsed = OpenAPIParser().readContents(text, null, null)
+        parsed.openAPI?.components?.schemas != null
+    } catch (e: Throwable) {
+        logger.debug(e) { "Attempt to read input as YAML/JSON OpenAPI specification failed." }
+        false
+    }
 
 public fun isOpenApi(path: String): Boolean = isOpenApi(asURL(path))
 

@@ -42,12 +42,12 @@ public annotation class ImportDataSchema(
 )
 
 public enum class DataSchemaVisibility {
-    INTERNAL, IMPLICIT_PUBLIC, EXPLICIT_PUBLIC
+    INTERNAL,
+    IMPLICIT_PUBLIC,
+    EXPLICIT_PUBLIC,
 }
 
-public annotation class CsvOptions(
-    public val delimiter: Char,
-)
+public annotation class CsvOptions(public val delimiter: Char)
 
 /**
  * An annotation class that represents options for JDBC connection.
@@ -65,14 +65,12 @@ public annotation class JdbcOptions(
     public val password: String = "",
     public val extractCredFromEnv: Boolean = false,
     public val tableName: String = "",
-    public val sqlQuery: String = ""
+    public val sqlQuery: String = "",
 )
 
 public annotation class JsonOptions(
-
     /** Allows the choice of how to handle type clashes when reading a JSON file. */
     public val typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
-
     /**
      * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
      *     will be created.

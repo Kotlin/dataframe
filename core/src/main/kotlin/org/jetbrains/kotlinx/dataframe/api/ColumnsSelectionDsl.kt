@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
@@ -47,16 +46,14 @@ public annotation class ColumnsSelectionDslMarker
  * It does not directly implement [SingleColumn] for DSL purposes.
  */
 @ColumnsSelectionDslMarker
-public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
+public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     ColumnSelectionDsl<T>,
-
     // first {}, firstCol()
     FirstColumnsSelectionDsl,
     // last {}, lastCol()
     LastColumnsSelectionDsl,
     // single {}, singleCol()
     SingleColumnsSelectionDsl,
-
     // col(name), col(5), [5]
     ColColumnsSelectionDsl<T>,
     // valueCol(name), valueCol(5)
@@ -65,13 +62,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     FrameColColumnsSelectionDsl<T>,
     // colGroup(name), colGroup(5)
     ColGroupColumnsSelectionDsl<T>,
-
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5), [{}]
     ColsColumnsSelectionDsl<T>,
-
     // colA.."colB"
     ColumnRangeColumnsSelectionDsl,
-
     // valueCols {}, valueCols()
     ValueColsColumnsSelectionDsl,
     // frameCols {}, frameCols()
@@ -80,7 +74,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColGroupsColumnsSelectionDsl,
     // colsOfKind(Value, Frame) {}, colsOfKind(Value, Frame)
     ColsOfKindColumnsSelectionDsl,
-
     // all(Cols), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
     AllColumnsSelectionDsl<T>,
     // colsAtAnyDepth {}, colsAtAnyDepth()
@@ -91,12 +84,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     TakeColumnsSelectionDsl,
     // drop(5), dropLastCols(2), dropLastWhile {}, dropColsWhile {}
     DropColumnsSelectionDsl,
-
     // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
     SelectColumnsSelectionDsl,
     // except(), allExcept {}, allColsExcept {}
     AllExceptColumnsSelectionDsl,
-
     // nameContains(""), colsNameContains(""), nameStartsWith(""), colsNameEndsWith("")
     ColumnNameFiltersColumnsSelectionDsl,
     // withoutNulls(), colsWithoutNulls()
@@ -438,8 +429,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * `df.`[select][DataFrame.select]`  { "myColGroup"  `[`{`][String.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][String.select]` }`
      */
-    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        select(selector)
+    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
@@ -453,8 +443,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      * `df.`[select][DataFrame.select]`  {  `[`pathOf`][pathOf]`("pathTo", "myColGroup")`[`() {`][ColumnPath.select]`  someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() `[`}`][ColumnPath.select]` }`
      */
-    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        select(selector)
+    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
     // endregion
 }

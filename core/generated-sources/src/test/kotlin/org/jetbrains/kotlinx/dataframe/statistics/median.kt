@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.rowMedian
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class MedianTests {
 
     @Test
@@ -16,7 +17,7 @@ class MedianTests {
         val df = dataFrameOf("a", "b")(
             1, 4,
             2, 6,
-            7, 7
+            7, 7,
         )
         df.median("a", "b") shouldBe 5
     }
@@ -26,7 +27,7 @@ class MedianTests {
         val df = dataFrameOf("a", "b")(
             1, 3,
             2, 4,
-            7, 7
+            7, 7,
         )
         df.mapToColumn("", Infer.Type) { it.rowMedian() } shouldBe columnOf(2, 3, 7)
     }

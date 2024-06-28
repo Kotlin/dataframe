@@ -1,3 +1,5 @@
+@file:ExcludeFromSources
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
@@ -34,13 +36,12 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
  *  {@include [Indent]}`| `{@include [ColumnGroupWhileName]}**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
  * }
  */
-@ExcludeFromSources
 internal interface TakeAndDropColumnsSelectionDslGrammar {
 
-    /* Like "Take"/"Drop" */
+    // Like "Take"/"Drop"
     interface TitleArg
 
-    /* Operation, like "take"/"drop" */
+    // Operation, like "take"/"drop"
     interface OperationArg
 
     /** [**\`{@get [OperationArg]}\`**][ColumnsSelectionDsl.{@get [OperationArg]}]`(`[**`Last`**][ColumnsSelectionDsl.{@get [OperationArg]}Last]`)` */

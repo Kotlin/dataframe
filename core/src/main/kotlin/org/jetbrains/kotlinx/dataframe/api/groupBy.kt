@@ -93,9 +93,12 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
 @Refine
 @Interpretable("GroupByToDataFrame")
-public fun <T, G> GroupBy<T, G>.toDataFrame(groupedColumnName: String? = null): DataFrame<T> {
-    return if (groupedColumnName == null || groupedColumnName == groups.name()) internal().df else internal().df.rename(groups).into(groupedColumnName)
-}
+public fun <T, G> GroupBy<T, G>.toDataFrame(groupedColumnName: String? = null): DataFrame<T> =
+    if (groupedColumnName == null || groupedColumnName == groups.name()) {
+        internal().df
+    } else {
+        internal().df.rename(groups).into(groupedColumnName)
+    }
 
 internal fun <T, G> GroupBy<T, G>.internal(): GroupByImpl<T, G> = this as GroupByImpl<T, G>
 

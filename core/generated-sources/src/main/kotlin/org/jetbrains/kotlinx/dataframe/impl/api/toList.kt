@@ -28,9 +28,7 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
     val constructor = clazz.primaryConstructor
     require(constructor != null) { "Class `$clazz` doesn't have a primary constructor" }
 
-    val columnNames = clazz.memberProperties.map {
-        it.name to it.columnName
-    }.toMap()
+    val columnNames = clazz.memberProperties.associate { it.name to it.columnName }
 
     val convertedColumns = constructor.parameters.map {
         require(it.name != null) { "Parameter name can not be null. Parameter = $it" }
@@ -49,27 +47,37 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
                         val elementType = it.type.arguments[0].type
                         require(elementType != null) { "FrameColumn can not be converted to type `List<*>`" }
                         column.asAnyFrameColumn().map { it.toListImpl(elementType) }
-                    } else error("FrameColumn can not be converted to type `${it.type}`")
+                    } else {
+                        error("FrameColumn can not be converted to type `${it.type}`")
+                    }
                     col
                 }
+
                 ColumnKind.Group -> {
                     DataColumn.createValueColumn(column.name(), column.asColumnGroup().toListImpl(it.type))
                 }
+
                 ColumnKind.Value -> {
-                    require(!column.hasNulls() || it.type.isMarkedNullable) { "Can not set `null` in non-nullable property `${it.name}: ${it.type}`" }
+                    require(!column.hasNulls() || it.type.isMarkedNullable) {
+                        "Can not set `null` in non-nullable property `${it.name}: ${it.type}`"
+                    }
                     val converted = column.convertTo(it.type)
-                    require(converted.type.withNullability(false).isSubtypeOf(it.type)) { "Can not convert ${column.type()} to ${it.type} for column `${column.name()}`" }
+                    require(converted.type.withNullability(false).isSubtypeOf(it.type)) {
+                        "Can not convert ${column.type()} to ${it.type} for column `${column.name()}`"
+                    }
                     converted
                 }
             }
-        } else column
+        } else {
+            column
+        }
         convertedColumn
     }
 
     return rows().map { row ->
-        val parameters = convertedColumns.map {
-            row[it]
-        }.toTypedArray()
+        val parameters = convertedColumns
+            .map { row[it] }
+            .toTypedArray()
         constructor.call(*parameters)
     }
 }

@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class CumsumTests {
 
     val col by columnOf(1, 2, null, 3, 4)
@@ -55,7 +56,7 @@ class CumsumTests {
             "b", 2,
             "c", null,
             "a", 3,
-            "c", 4
+            "c", 4,
         )
         df.groupBy("str").cumSum().concat() shouldBe
             dataFrameOf("str", "col")(
@@ -63,7 +64,7 @@ class CumsumTests {
                 "a", 4,
                 "b", 2,
                 "c", null,
-                "c", 4
+                "c", 4,
             )
     }
 }

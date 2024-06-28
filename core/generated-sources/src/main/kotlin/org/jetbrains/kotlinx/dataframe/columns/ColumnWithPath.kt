@@ -31,15 +31,13 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
      * Casts this column to a [ColumnGroup] and returns a column with the specified [name] or null if it
      * can't be found.
      */
-    public fun getCol(name: String): ColumnWithPath<Any?>? =
-        asColumnGroup().getColumnOrNull(name)?.addParentPath(path)
+    public fun getCol(name: String): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(name)?.addParentPath(path)
 
     /**
      * Casts this column to a [ColumnGroup] and returns a column with the specified [index] or null if it
      * can't be found.
      */
-    public fun getCol(index: Int): ColumnWithPath<Any?>? =
-        asColumnGroup().getColumnOrNull(index)?.addParentPath(path)
+    public fun getCol(index: Int): ColumnWithPath<Any?>? = asColumnGroup().getColumnOrNull(index)?.addParentPath(path)
 
     /**
      * Casts this column to a [ColumnGroup] and returns a column with the specified [accessor] or null if it
