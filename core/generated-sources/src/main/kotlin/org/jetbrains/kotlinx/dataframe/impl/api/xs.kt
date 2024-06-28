@@ -19,11 +19,12 @@ internal fun <T, C> DataFrame<T>.xsImpl(
 ): DataFrame<T> {
     val cols =
         getColumnsImpl(
-            unresolvedColumnsPolicy = if (allowMissingColumns) {
-                UnresolvedColumnsPolicy.Create
-            } else {
-                UnresolvedColumnsPolicy.Fail
-            },
+            unresolvedColumnsPolicy =
+                if (allowMissingColumns) {
+                    UnresolvedColumnsPolicy.Create
+                } else {
+                    UnresolvedColumnsPolicy.Fail
+                },
             selector = keyColumns,
         )
     val n = keyValues.count()

@@ -144,12 +144,7 @@ class PivotTests {
             2, 1, 3,
             2, 1, 5,
         )
-        df
-            .pivot("a", inward = false)
-            .groupBy("b")
-            .default(-1)
-            .last()
-            .with { "c"<Int>() } shouldBe
+        df.pivot("a", inward = false).groupBy("b").default(-1).last().with { "c"<Int>() } shouldBe
             dataFrameOf("b", "1", "2")(
                 2, 3, -1,
                 0, 2, -1,

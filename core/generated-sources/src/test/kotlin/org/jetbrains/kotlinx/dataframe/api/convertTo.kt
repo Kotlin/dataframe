@@ -48,8 +48,7 @@ class ConvertToTests {
             df.convertTo<Schema>()
         }
 
-        df
-            .convertTo<Schema> { parser { A(it.toInt()) } }
+        df.convertTo<Schema> { parser { A(it.toInt()) } }
             .single()
             .a.value shouldBe 1
     }
@@ -62,8 +61,7 @@ class ConvertToTests {
             df.convertTo<Schema>()
         }
 
-        df
-            .convertTo<Schema> { convert<Int>().with { A(it) } }
+        df.convertTo<Schema> { convert<Int>().with { A(it) } }
             .single()
             .a.value shouldBe 1
     }
@@ -232,8 +230,7 @@ class ConvertToTests {
         ).toDataFrame { properties { preserve(DataFrame::class) } }
             .alsoDebug("df5 before convert:")
 
-        df5
-            .convertTo<DataSchemaWithAnyFrame>()
+        df5.convertTo<DataSchemaWithAnyFrame>()
             .alsoDebug("df5 after convert:")
             .convertTo<DataSchemaWithAnyFrame>()
             .alsoDebug("df5 after second convert:")

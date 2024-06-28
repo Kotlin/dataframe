@@ -60,10 +60,9 @@ class RenameTests : ColumnsSelectionDslTests() {
         val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
             1, 2, 3,
             4, 5, 6,
-        ).group { "a_renamed" and "b_renamed" }
-            .into("group_renamed")
-            .group { "group_renamed"["a_renamed"] }
-            .into { "group_renamed"["aGroup_renamed"] }
+        )
+            .group { "a_renamed" and "b_renamed" }.into("group_renamed")
+            .group { "group_renamed"["a_renamed"] }.into { "group_renamed"["aGroup_renamed"] }
 
         doubleGroupedDf
             .rename { colsAtAnyDepth() }
@@ -209,10 +208,8 @@ class RenameToCamelCaseTests {
         val df = deeplyNestedFrameColumn.renameToCamelCase()
         df.schema().asClue {
             shouldNotThrowAny {
-                df["col2"]
-                    .asAnyFrameColumn()
-                    .firstOrNull()!!["col1"]
-                    .asAnyFrameColumn()
+                df["col2"].asAnyFrameColumn()
+                    .firstOrNull()!!["col1"].asAnyFrameColumn()
                     .firstOrNull()!!["col0"]
             }
         }

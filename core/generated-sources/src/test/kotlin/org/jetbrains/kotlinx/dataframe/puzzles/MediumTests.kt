@@ -148,18 +148,12 @@ class MediumTests {
             "(90, 100]", 527,
         )
 
-        df
-            .groupBy { a.map { (it - 1) / 10 } }
-            .sum { b }
+        df.groupBy { a.map { (it - 1) / 10 } }.sum { b }
             .sortBy { a }
-            .convert { a }
-            .with { "(${it * 10}, ${it * 10 + 10}]" } shouldBe expected
+            .convert { a }.with { "(${it * 10}, ${it * 10 + 10}]" } shouldBe expected
 
-        df
-            .groupBy { "A"<Int>().map { (it - 1) / 10 } }
-            .sum("B")
+        df.groupBy { "A"<Int>().map { (it - 1) / 10 } }.sum("B")
             .sortBy("A")
-            .convert { "A"<Int>() }
-            .with { "(${it * 10}, ${it * 10 + 10}]" } shouldBe expected
+            .convert { "A"<Int>() }.with { "(${it * 10}, ${it * 10 + 10}]" } shouldBe expected
     }
 }

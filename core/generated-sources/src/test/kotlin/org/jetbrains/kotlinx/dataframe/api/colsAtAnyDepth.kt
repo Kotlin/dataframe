@@ -25,25 +25,22 @@ class AtAnyDepth : TestBase() {
     // old function copied over to avoid breaking changes
     private fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean): TransformableColumnSet<Any?> =
         transform {
-            it
-                .filter { it.isColumnGroup() }
+            it.filter { it.isColumnGroup() }
                 .flatMap { it.cols().flattenRecursively().filter(predicate) }
         }
 
     private val atAnyDepthGoal =
-        dfGroup
-            .getColumnsWithPaths {
-                asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { true }
-            }.sortedBy { it.name }
+        dfGroup.getColumnsWithPaths {
+            asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { true }
+        }.sortedBy { it.name }
 
     private val atAnyDepthNoGroups =
-        dfGroup
-            .getColumnsWithPaths {
-                asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { !it.isColumnGroup() }
-            }.sortedBy { it.name }
+        dfGroup.getColumnsWithPaths {
+            asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { !it.isColumnGroup() }
+        }.sortedBy { it.name }
 
-    private val atAnyDepthString = dfGroup
-        .getColumnsWithPaths {
+    private val atAnyDepthString =
+        dfGroup.getColumnsWithPaths {
             asSingleColumn()
                 .ensureIsColumnGroup()
                 .asColumnSet()
@@ -142,8 +139,7 @@ class AtAnyDepth : TestBase() {
 
         val dfWithFrames = df
             .add { expr { df } into frameCol }
-            .convert { name }
-            .to {
+            .convert { name }.to {
                 val firstName by it.asColumnGroup().firstName
                 val lastName by it.asColumnGroup().lastName
 
@@ -166,7 +162,8 @@ class AtAnyDepth : TestBase() {
             dfGroup.getColumnsWithPaths {
                 asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { "e" in it.name }
             },
-        ).map { it.sortedBy { it.name }.map { it.name to it.path } }
-            .shouldAllBeEqual()
+        ).map {
+            it.sortedBy { it.name }.map { it.name to it.path }
+        }.shouldAllBeEqual()
     }
 }

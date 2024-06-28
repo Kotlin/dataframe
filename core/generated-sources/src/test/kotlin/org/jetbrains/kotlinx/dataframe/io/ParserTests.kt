@@ -92,28 +92,16 @@ class ParserTests {
 
         datetimeCol.shouldBe(
             columnOf(
-                java.time.LocalDateTime
-                    .of(1971, 1, 2, 0, 0, 1)
-                    .toKotlinLocalDateTime(),
-                java.time.LocalDateTime
-                    .of(1971, 1, 2, 0, 1, 0)
-                    .toKotlinLocalDateTime(),
-                java.time.LocalDateTime
-                    .of(1971, 1, 2, 1, 0, 0)
-                    .toKotlinLocalDateTime(),
+                java.time.LocalDateTime.of(1971, 1, 2, 0, 0, 1).toKotlinLocalDateTime(),
+                java.time.LocalDateTime.of(1971, 1, 2, 0, 1, 0).toKotlinLocalDateTime(),
+                java.time.LocalDateTime.of(1971, 1, 2, 1, 0, 0).toKotlinLocalDateTime(),
             ),
         )
         longCol.convertToLocalDate(TimeZone.UTC).shouldBe(
             columnOf(
-                java.time.LocalDate
-                    .of(1971, 1, 2)
-                    .toKotlinLocalDate(),
-                java.time.LocalDate
-                    .of(1971, 1, 2)
-                    .toKotlinLocalDate(),
-                java.time.LocalDate
-                    .of(1971, 1, 2)
-                    .toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
             ),
         )
         longCol.convertToLocalTime(TimeZone.UTC).shouldBe(
@@ -126,15 +114,9 @@ class ParserTests {
 
         datetimeCol.convertToLocalDate().shouldBe(
             columnOf(
-                java.time.LocalDate
-                    .of(1971, 1, 2)
-                    .toKotlinLocalDate(),
-                java.time.LocalDate
-                    .of(1971, 1, 2)
-                    .toKotlinLocalDate(),
-                java.time.LocalDate
-                    .of(1971, 1, 2)
-                    .toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
             ),
         )
         datetimeCol.convertToLocalTime().shouldBe(

@@ -51,8 +51,7 @@ internal fun linearGradient(
 internal fun <T, C> FormatClause<T, C>.formatImpl(formatter: RowColFormatter<T, C>): FormattedFrame<T> {
     val columns =
         if (columns != null) {
-            df
-                .getColumnsWithPaths(columns)
+            df.getColumnsWithPaths(columns)
                 .mapNotNull { if (it.depth == 0) it.name else null }
                 .toSet()
         } else {

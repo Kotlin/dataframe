@@ -16,13 +16,21 @@ class ExplodeTests {
 
     @Test
     fun `explode list and duplicate value`() {
-        val exploded = dataFrameOf("a", "b")(1, listOf(2, 3)).explode()
+        val exploded = dataFrameOf(
+            "a", "b",
+        )(
+            1, listOf(2, 3),
+        ).explode()
         exploded shouldBe dataFrameOf("a", "b")(1, 2, 1, 3)
     }
 
     @Test
     fun `explode list and frame column`() {
-        val exploded = dataFrameOf("a", "b", "c", "d")(1, listOf(2, 3), dataFrameOf("x", "y")(4, 5, 6, 7), listOf(8))
+        val exploded = dataFrameOf(
+            "a", "b", "c", "d",
+        )(
+            1, listOf(2, 3), dataFrameOf("x", "y")(4, 5, 6, 7), listOf(8),
+        )
             .explode()
             .ungroup("c")
         exploded shouldBe dataFrameOf("a", "b", "x", "y", "d")(

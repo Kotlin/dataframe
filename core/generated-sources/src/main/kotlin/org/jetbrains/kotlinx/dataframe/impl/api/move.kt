@@ -60,12 +60,13 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
     val removed = df.removeImpl(columns = columns)
     val remainingColumns = removed.df.columns()
     val targetIndex = if (columnIndex > remainingColumns.size) remainingColumns.size else columnIndex
-    val newColumnList = remainingColumns.subList(0, targetIndex) +
-        removed.removedColumns.map { it.data.column as DataColumn<C> } +
-        if (targetIndex < remainingColumns.size) {
-            remainingColumns.subList(targetIndex, remainingColumns.size)
-        } else {
-            emptyList()
-        }
+    val newColumnList =
+        remainingColumns.subList(0, targetIndex) +
+            removed.removedColumns.map { it.data.column as DataColumn<C> } +
+            if (targetIndex < remainingColumns.size) {
+                remainingColumns.subList(targetIndex, remainingColumns.size)
+            } else {
+                emptyList()
+            }
     return newColumnList.toDataFrame().cast()
 }

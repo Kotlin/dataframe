@@ -55,10 +55,8 @@ class FlattenTests {
     fun `flatten nested`() {
         val df = dataFrameOf("a", "b", "c", "d")(1, 2, 3, 4)
         val grouped = df
-            .group("a", "b")
-            .into("e")
-            .group("e", "c")
-            .into("f")
+            .group("a", "b").into("e")
+            .group("e", "c").into("f")
 
         grouped.flatten() shouldBe df
         val flattened = grouped.flatten { "f"["e"] }
@@ -72,12 +70,9 @@ class FlattenTests {
     fun `flatten with parent name conflict`() {
         val df = dataFrameOf("a", "b", "c", "d")(1, 2, 3, 4)
         val grouped = df
-            .group("a", "b")
-            .into("e")
-            .group("e", "c")
-            .into("f")
-            .rename { "f"["e"] }
-            .into("a")
+            .group("a", "b").into("e")
+            .group("e", "c").into("f")
+            .rename { "f"["e"] }.into("a")
         val flattened = grouped.flatten { "f"["a"] }
         flattened.getColumnGroup("f").columnNames() shouldBe listOf("a", "b", "c")
         flattened.ungroup("f") shouldBe df
@@ -96,8 +91,7 @@ class FlattenTests {
         ).cast<Person>()
 
         val aggregate = df
-            .groupBy("city")
-            .aggregate {
+            .groupBy("city").aggregate {
                 mean() into "mean"
                 std() into "std"
             }

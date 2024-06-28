@@ -21,19 +21,17 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? =
         // resolve the n-1 first columns of the path as column groups (throwing an exception if any of them is not a column group)
-        path
-            .dropLast()
-            .foldIndexed(context.df) { i, df, colName ->
-                val col = df.getColumn<Any?>(colName, context.unresolvedColumnsPolicy) ?: return null
-                if (!col.isColumnGroup()) {
-                    error(
-                        "Cannot resolve column '${path.subList(0, i + 2).joinToString(".")}': " +
-                            "Column '${path.subList(0, i + 1).joinToString(".")}' is not a column group.",
-                    )
-                } else {
-                    col.asColumnGroup()
-                }
+        path.dropLast().foldIndexed(context.df) { i, df, colName ->
+            val col = df.getColumn<Any?>(colName, context.unresolvedColumnsPolicy) ?: return null
+            if (!col.isColumnGroup()) {
+                error(
+                    "Cannot resolve column '${path.subList(0, i + 2).joinToString(".")}': " +
+                        "Column '${path.subList(0, i + 1).joinToString(".")}' is not a column group.",
+                )
+            } else {
+                col.asColumnGroup()
             }
+        }
             // resolve the last column of the path
             .getColumn<Any?>(path.last(), context.unresolvedColumnsPolicy)
             ?.cast<T>()

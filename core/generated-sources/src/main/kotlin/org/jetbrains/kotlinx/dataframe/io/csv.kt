@@ -61,15 +61,13 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
 
 public enum class CSVType(public val format: CSVFormat) {
     DEFAULT(
-        CSVFormat.DEFAULT
-            .builder()
+        CSVFormat.DEFAULT.builder()
             .setAllowMissingColumnNames(true)
             .setIgnoreSurroundingSpaces(true)
             .build(),
     ),
     TDF(
-        CSVFormat.TDF
-            .builder()
+        CSVFormat.TDF.builder()
             .setAllowMissingColumnNames(true)
             .build(),
     ),
@@ -93,8 +91,7 @@ public fun DataFrame.Companion.readDelimStr(
     readLines: Int? = null,
 ): DataFrame<*> =
     StringReader(text).use {
-        val format = CSVType.DEFAULT.format
-            .builder()
+        val format = CSVType.DEFAULT.format.builder()
             .setHeader()
             .setDelimiter(delimiter)
             .build()
@@ -257,8 +254,7 @@ private fun getFormat(
     header: List<String>,
     duplicate: Boolean,
 ): CSVFormat =
-    type.format
-        .builder()
+    type.format.builder()
         .setDelimiter(delimiter)
         .setHeader(*header.toTypedArray())
         .setAllowMissingColumnNames(duplicate)
@@ -319,8 +315,7 @@ public fun ColType.toType(): KClass<out Any> =
 
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
-    format: CSVFormat = CSVFormat.DEFAULT
-        .builder()
+    format: CSVFormat = CSVFormat.DEFAULT.builder()
         .setHeader()
         .build(),
     colTypes: Map<String, ColType> = mapOf(),
@@ -407,8 +402,7 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
 }
 
 public fun AnyFrame.toCsv(format: CSVFormat = CSVFormat.DEFAULT): String =
-    StringWriter()
-        .use {
-            this.writeCSV(it, format)
-            it
-        }.toString()
+    StringWriter().use {
+        this.writeCSV(it, format)
+        it
+    }.toString()

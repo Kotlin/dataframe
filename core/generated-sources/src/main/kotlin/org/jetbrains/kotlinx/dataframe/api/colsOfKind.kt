@@ -397,9 +397,6 @@ public interface ColsOfKindColumnsSelectionDsl {
 internal fun ColumnsResolver<*>.columnsOfKindInternal(
     kinds: Set<ColumnKind>,
     filter: ColumnFilter<*>,
-): TransformableColumnSet<*> =
-    colsInternal {
-        it.kind() in kinds && filter(it)
-    }
+): TransformableColumnSet<*> = colsInternal { it.kind() in kinds && filter(it) }
 
 // endregion

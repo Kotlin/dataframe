@@ -4663,17 +4663,16 @@ internal fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolv
 internal fun <C> SingleColumn<DataRow<C>>.exceptExperimentalInternal(
     other: ColumnsResolver<*>,
 ): SingleColumn<DataRow<C>> =
-    ensureIsColumnGroup()
-        .transformSingle { singleCol ->
-            val columnsToExcept = singleCol
-                .asColumnGroup()
-                .getColumnsWithPaths { other }
-                .map { it.changePath(singleCol.path + it.path) }
+    ensureIsColumnGroup().transformSingle { singleCol ->
+        val columnsToExcept = singleCol
+            .asColumnGroup()
+            .getColumnsWithPaths { other }
+            .map { it.changePath(singleCol.path + it.path) }
 
-            val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
+        val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
 
-            newCols as List<ColumnWithPath<DataRow<*>>>
-        }.singleInternal() as SingleColumn<DataRow<C>>
+        newCols as List<ColumnWithPath<DataRow<*>>>
+    }.singleInternal() as SingleColumn<DataRow<C>>
 
 /**
  * Functions annotated with this annotation are experimental and will be removed or renamed in the future.

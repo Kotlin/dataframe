@@ -17,10 +17,7 @@ public fun <T : Comparable<T>> DataColumn<T>.digitize(
     right: Boolean = false,
 ): DataColumn<Int> =
     digitize(
-        bins = bins.toList().map {
-            org.jetbrains.kotlinx.dataframe.impl
-                .convert(it, kclass)
-        },
+        bins = bins.toList().map { org.jetbrains.kotlinx.dataframe.impl.convert(it, kclass) },
         right = right,
     )
 

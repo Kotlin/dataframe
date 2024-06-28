@@ -33,15 +33,13 @@ public abstract class AbstractDefaultReadMethod(
 ) : DefaultReadDfMethod {
     override fun toDeclaration(marker: Marker, visibility: String): String {
         val parameters = arguments.defaultValues.map {
-            ParameterSpec
-                .builder(it.name, it.property.type)
+            ParameterSpec.builder(it.name, it.property.type)
                 .defaultValue("%N", it.property)
                 .build()
         }
 
         val defaultPath = path?.let {
-            PropertySpec
-                .builder("defaultPath", typeNameOf<String>(), KModifier.CONST)
+            PropertySpec.builder("defaultPath", typeNameOf<String>(), KModifier.CONST)
                 .initializer("%S", path)
                 .build()
         }
@@ -50,32 +48,27 @@ public abstract class AbstractDefaultReadMethod(
 
         val arguments = parameters.joinToString(", ") { "${it.name} = ${it.name}" }
 
-        val typeSpec = TypeSpec
-            .companionObjectBuilder()
-            .apply {
-                if (defaultPath != null) {
-                    addProperty(defaultPath)
-                }
-            }.addProperties(this.arguments.defaultValues.map { it.property })
+        val typeSpec = TypeSpec.companionObjectBuilder()
+            .apply { if (defaultPath != null) addProperty(defaultPath) }
+            .addProperties(this.arguments.defaultValues.map { it.property })
             .addFunction(
-                FunSpec
-                    .builder(methodName)
+                FunSpec.builder(methodName)
                     .returns(type)
                     .addParameter(
-                        ParameterSpec
-                            .builder("path", typeNameOf<String>())
+                        ParameterSpec.builder("path", typeNameOf<String>())
                             .apply {
                                 if (defaultPath != null) {
                                     defaultValue("%N", defaultPath)
                                 }
                             }.build(),
-                    ).addParameters(parameters)
+                    )
+                    .addParameters(parameters)
                     .addParameter(
-                        ParameterSpec
-                            .builder("verify", typeNameOf<Boolean?>())
+                        ParameterSpec.builder("verify", typeNameOf<Boolean?>())
                             .defaultValue("null")
                             .build(),
-                    ).addCode(
+                    )
+                    .addCode(
                         """
                         val df = DataFrame.$methodName(path, $arguments)
                         return if ($VERIFY != null) df.$CAST($VERIFY = $VERIFY) else df.$CAST()
