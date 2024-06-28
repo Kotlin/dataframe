@@ -69,8 +69,7 @@ private const val READ_EXCEL_TEMP_FOLDER_PREFIX = "dataframe-excel"
  */
 private fun setWorkbookTempDirectory() {
     val tempDir = try {
-        Files
-            .createTempDirectory(READ_EXCEL_TEMP_FOLDER_PREFIX)
+        Files.createTempDirectory(READ_EXCEL_TEMP_FOLDER_PREFIX)
             .toFile()
             .also { it.deleteOnExit() }
     } catch (e: Exception) {
@@ -315,29 +314,31 @@ private fun repairNameIfRequired(
     when (nameRepairStrategy) {
         NameRepairStrategy.DO_NOTHING -> nameFromCell
 
-        NameRepairStrategy.CHECK_UNIQUE -> if (columnNameCounters.contains(nameFromCell)) {
-            throw DuplicateColumnNamesException(
-                columnNameCounters.keys.toList(),
-            )
-        } else {
-            nameFromCell
-        }
-
-        // probably it's never empty because of filling empty column names earlier
-        NameRepairStrategy.MAKE_UNIQUE -> if (nameFromCell.isEmpty()) {
-            val emptyName = "Unknown column"
-            if (columnNameCounters.contains(emptyName)) {
-                "${emptyName}${columnNameCounters[emptyName]}"
-            } else {
-                emptyName
-            }
-        } else {
+        NameRepairStrategy.CHECK_UNIQUE ->
             if (columnNameCounters.contains(nameFromCell)) {
-                "${nameFromCell}${columnNameCounters[nameFromCell]}"
+                throw DuplicateColumnNamesException(
+                    columnNameCounters.keys.toList(),
+                )
             } else {
                 nameFromCell
             }
-        }
+
+        // probably it's never empty because of filling empty column names earlier
+        NameRepairStrategy.MAKE_UNIQUE ->
+            if (nameFromCell.isEmpty()) {
+                val emptyName = "Unknown column"
+                if (columnNameCounters.contains(emptyName)) {
+                    "${emptyName}${columnNameCounters[emptyName]}"
+                } else {
+                    emptyName
+                }
+            } else {
+                if (columnNameCounters.contains(nameFromCell)) {
+                    "${nameFromCell}${columnNameCounters[nameFromCell]}"
+                } else {
+                    nameFromCell
+                }
+            }
     }
 
 private fun Cell?.cellValue(sheetName: String): Any? {
@@ -502,60 +503,34 @@ public fun <T> DataFrame<T>.writeExcel(
 
 private fun Cell.setCellValueByGuessedType(any: Any) =
     when (any) {
-        is AnyRow -> {
-            this.setCellValue(any.toJson())
-        }
+        is AnyRow -> this.setCellValue(any.toJson())
 
-        is AnyFrame -> {
-            this.setCellValue(any.toJson())
-        }
+        is AnyFrame -> this.setCellValue(any.toJson())
 
-        is Number -> {
-            this.setCellValue(any.toDouble())
-        }
+        is Number -> this.setCellValue(any.toDouble())
 
-        is LocalDate -> {
-            this.setCellValue(any)
-        }
+        is LocalDate -> this.setCellValue(any)
 
-        is LocalDateTime -> {
-            this.setTime(any)
-        }
+        is LocalDateTime -> this.setTime(any)
 
-        is Boolean -> {
-            this.setCellValue(any)
-        }
+        is Boolean -> this.setCellValue(any)
 
-        is Calendar -> {
-            this.setDate(any.time)
-        }
+        is Calendar -> this.setDate(any.time)
 
-        is Date -> {
-            this.setDate(any)
-        }
+        is Date -> this.setDate(any)
 
-        is RichTextString -> {
-            this.setCellValue(any)
-        }
+        is RichTextString -> this.setCellValue(any)
 
-        is String -> {
-            this.setCellValue(any)
-        }
+        is String -> this.setCellValue(any)
 
-        is kotlinx.datetime.LocalDate -> {
-            this.setCellValue(any.toJavaLocalDate())
-        }
+        is kotlinx.datetime.LocalDate -> this.setCellValue(any.toJavaLocalDate())
 
-        is kotlinx.datetime.LocalDateTime -> {
-            this.setTime(any.toJavaLocalDateTime())
-        }
+        is kotlinx.datetime.LocalDateTime -> this.setTime(any.toJavaLocalDateTime())
 
         // Another option would be to serialize everything else to string,
         // but people can convert columns to string with any serialization framework they want
         // so i think toString should do until more use cases arise.
-        else -> {
-            this.setCellValue(any.toString())
-        }
+        else -> this.setCellValue(any.toString())
     }
 
 /**

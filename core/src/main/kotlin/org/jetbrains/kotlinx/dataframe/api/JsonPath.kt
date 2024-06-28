@@ -29,14 +29,13 @@ public value class JsonPath(
         JsonPath(
             path.toCharArray().let { chars ->
                 val lastStarIndex = chars.lastIndexOf('*')
-                chars
-                    .flatMapIndexed { i, c ->
-                        if (i == lastStarIndex) {
-                            index.toString().toCharArray().toList()
-                        } else {
-                            listOf(c)
-                        }
-                    }.joinToString("")
+                chars.flatMapIndexed { i, c ->
+                    if (i == lastStarIndex) {
+                        index.toString().toCharArray().toList()
+                    } else {
+                        listOf(c)
+                    }
+                }.joinToString("")
             },
         )
 

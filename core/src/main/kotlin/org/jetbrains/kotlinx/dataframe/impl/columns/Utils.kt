@@ -202,8 +202,7 @@ internal fun <A, B> ColumnsResolver<A>.transform(
             context: ColumnResolutionContext,
             transformer: ColumnsResolverTransformer,
         ): List<ColumnWithPath<B>> =
-            transformer
-                .transform(this@transform)
+            transformer.transform(this@transform)
                 .resolve(context)
                 .let { converter(it as List<ColumnWithPath<A>>) }
     }
@@ -253,8 +252,7 @@ internal fun <A, B> ColumnsResolver<A>.transformWithContext(
             context: ColumnResolutionContext,
             transformer: ColumnsResolverTransformer,
         ): List<ColumnWithPath<B>> =
-            transformer
-                .transform(this@transformWithContext)
+            transformer.transform(this@transformWithContext)
                 .resolve(context)
                 .let { converter(context, it as List<ColumnWithPath<A>>) }
     }
@@ -294,11 +292,10 @@ internal fun <T> TransformableColumnSet<T>.singleWithTransformerImpl(): Transfor
             context: ColumnResolutionContext,
             transformer: ColumnsResolverTransformer,
         ): ColumnWithPath<T> =
-            this@singleWithTransformerImpl
-                .transformResolve(
-                    context = context,
-                    transformer = transformer,
-                ).singleImpl()
+            this@singleWithTransformerImpl.transformResolve(
+                context = context,
+                transformer = transformer,
+            ).singleImpl()
     }
 
 /**
@@ -324,11 +321,10 @@ internal fun <T> TransformableColumnSet<T>.singleOrNullWithTransformerImpl(): Tr
             context: ColumnResolutionContext,
             transformer: ColumnsResolverTransformer,
         ): ColumnWithPath<T>? =
-            this@singleOrNullWithTransformerImpl
-                .transformResolve(
-                    context = context,
-                    transformer = transformer,
-                ).singleOrNull()
+            this@singleOrNullWithTransformerImpl.transformResolve(
+                context = context,
+                transformer = transformer,
+            ).singleOrNull()
     }
 
 internal fun <T> ColumnsResolver<T>.getAt(index: Int): SingleColumn<T> =
@@ -461,8 +457,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
                 while (parent != null) {
                     val parentData = parent.data as ColumnGroup<*>? ?: break
                     parent.data = parentData
-                        .replace(currentNode.name)
-                        .with { currentNode.data!! }
+                        .replace(currentNode.name).with { currentNode.data!! }
                         .asColumnGroup(parentData.name)
                         .addPath(parentData.path())
 

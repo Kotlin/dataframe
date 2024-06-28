@@ -32,10 +32,10 @@ public data class RenderedContent(
 
     public operator fun plus(other: RenderedContent): RenderedContent =
         RenderedContent(
-            truncatedContent + other.truncatedContent,
-            textLength + other.textLength,
-            fullContent?.plus(other.fullContent) ?: other.fullContent,
-            isFormatted || other.isFormatted,
+            truncatedContent = truncatedContent + other.truncatedContent,
+            textLength = textLength + other.textLength,
+            fullContent = fullContent?.plus(other.fullContent) ?: other.fullContent,
+            isFormatted = isFormatted || other.isFormatted,
         )
 }
 

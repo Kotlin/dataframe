@@ -115,8 +115,7 @@ private fun DateDayVector.values(range: IntRange): List<LocalDate?> =
         if (getObject(it) == null) {
             null
         } else {
-            DateUtility
-                .getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
+            DateUtility.getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
                 .toLocalDate()
         }
     }

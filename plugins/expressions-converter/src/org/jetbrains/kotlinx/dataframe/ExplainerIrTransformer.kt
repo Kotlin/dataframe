@@ -72,10 +72,16 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
     }
 
     override fun visitBlockBody(body: IrBlockBody, data: ContainingDeclarations): IrBody {
-        @Suppress("ktlint")
         for (i in 0 until body.statements.size) {
             @Suppress("UNCHECKED_CAST")
-            (body.statements.set(i, (body.statements.get(i) as IrElementBase).transform(this, data.copy(statementIndex = i)) as IrStatement))
+            body.statements.set(
+                index = i,
+                element = (body.statements[i] as IrElementBase)
+                    .transform(
+                        transformer = this,
+                        data = data.copy(statementIndex = i),
+                    ) as IrStatement,
+            )
         }
         return body
     }
@@ -226,18 +232,8 @@ class ExplainerIrTransformer(val pluginContext: IrPluginContext) :
                         add(IrGetValueImpl(-1, -1, itSymbol))
                         add(expressionId.irConstImpl())
                         add(receiverId.irConstImpl())
-                        add(
-                            data.clazz
-                                ?.fqNameWhenAvailable
-                                ?.asString()
-                                .irConstImpl(),
-                        )
-                        add(
-                            data.function
-                                ?.name
-                                ?.asString()
-                                .irConstImpl(),
-                        )
+                        add(data.clazz?.fqNameWhenAvailable?.asString().irConstImpl())
+                        add(data.function?.name?.asString().irConstImpl())
                         add(IrConstImpl.int(-1, -1, pluginContext.irBuiltIns.intType, data.statementIndex))
                     }
                     body = pluginContext.irFactory.createBlockBody(-1, -1).apply {

@@ -47,21 +47,15 @@ class CleaningDataTests {
     fun `interpolate test`() {
         val expected = columnOf(10045, 10055, 10065, 10075, 10085).named("FlightNumber")
 
-        df
-            .update { flightNumber }
-            .where { it.isNaN() }
-            .with { prev()!![flightNumber] + (next()!![flightNumber] - prev()!![flightNumber]) / 2 }
-            .convert { flightNumber }
-            .toInt()[flightNumber] shouldBe expected
+        df.update { flightNumber }.where { it.isNaN() }.with {
+            prev()!![flightNumber] + (next()!![flightNumber] - prev()!![flightNumber]) / 2
+        }.convert { flightNumber }.toInt()[flightNumber] shouldBe expected
 
-        df
-            .update { "FlightNumber"<Double>() }
-            .where { it.isNaN() }
-            .with {
-                prev()!![{ "FlightNumber"<Double>() }] +
-                    (next()!![{ "FlightNumber"<Double>() }] - prev()!![{ "FlightNumber"<Double>() }]) / 2
-            }.convert { flightNumber }
-            .toInt()["FlightNumber"] shouldBe expected
+        df.update { "FlightNumber"<Double>() }.where { it.isNaN() }.with {
+            prev()!![{ "FlightNumber"<Double>() }] + (
+                next()!![{ "FlightNumber"<Double>() }] - prev()!![{ "FlightNumber"<Double>() }]
+            ) / 2
+        }.convert { flightNumber }.toInt()["FlightNumber"] shouldBe expected
     }
 
     @Test
@@ -91,19 +85,13 @@ class CleaningDataTests {
             "Brussels", "London",
         )
 
-        df
-            .split { fromTo }
-            .by('_')
-            .into("From", "To")[from, to]
-            .update { from and to }
-            .with { it.lowercase().replaceFirstChar(Char::uppercase) } shouldBe expected
+        df.split { fromTo }.by('_').into("From", "To")[from, to]
+            .update { from and to }.with { it.lowercase().replaceFirstChar(Char::uppercase) } shouldBe expected
 
-        df
-            .split { "From_To"<String>() }
-            .by('_')
-            .into("From", "To")["From", "To"]
-            .update { "From"<String>() and "To"<_>() }
-            .with { it.lowercase().replaceFirstChar(Char::uppercase) } shouldBe expected
+        df.split { "From_To"<String>() }.by('_').into("From", "To")["From", "To"]
+            .update { "From"<String>() and "To"<_>() }.with {
+                it.lowercase().replaceFirstChar(Char::uppercase)
+            } shouldBe expected
     }
 
     @Test
@@ -133,18 +121,12 @@ class CleaningDataTests {
             67.0, 32.0, Double.NaN,
         )
 
-        df
-            .convert { recentDelays }
-            .with { it.map { d -> d.toDouble() } }
-            .split { recentDelays }
-            .default(Double.NaN)
-            .into { "delay_$it" }[delay1, delay2, delay3] shouldBe expected
+        df.convert { recentDelays }.with { it.map { d -> d.toDouble() } }
+            .split { recentDelays }.default(Double.NaN).into { "delay_$it" }[delay1, delay2, delay3] shouldBe expected
 
-        df
-            .convert { "RecentDelays"<List<Int>>() }
-            .with { it.map { d -> d.toDouble() } }
-            .split { "RecentDelays"<List<Double>>() }
-            .default(Double.NaN)
-            .into { "delay_$it" }[delay1, delay2, delay3] shouldBe expected
+        df.convert { "RecentDelays"<List<Int>>() }.with { it.map { d -> d.toDouble() } }
+            .split { "RecentDelays"<List<Double>>() }.default(Double.NaN).into {
+                "delay_$it"
+            }[delay1, delay2, delay3] shouldBe expected
     }
 }

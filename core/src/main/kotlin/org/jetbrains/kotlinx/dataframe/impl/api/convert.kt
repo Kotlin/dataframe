@@ -104,14 +104,13 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                     // find converter for every value
                     val values = values.mapIndexed { row, value ->
                         currentRow = row
-                        value
-                            ?.let {
-                                val clazz = it.javaClass.kotlin
-                                val type = clazz.createStarProjectedType(false)
-                                val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
-                                    ?: throw TypeConverterNotFoundException(from, to, path)
-                                converter(it)
-                            }.checkNulls()
+                        value?.let {
+                            val clazz = it.javaClass.kotlin
+                            val type = clazz.createStarProjectedType(false)
+                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
+                                ?: throw TypeConverterNotFoundException(from, to, path)
+                            converter(it)
+                        }.checkNulls()
                     }
                     DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
                 }
@@ -225,9 +224,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             val converter = getConverter(underlyingType, to)
                 ?: throw TypeConverterNotFoundException(underlyingType, to, null)
             val property =
-                fromClass.memberProperties.single {
-                    it.name == constructorParameter.name
-                } as kotlin.reflect.KProperty1<Any, *>
+                fromClass.memberProperties
+                    .single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
             if (property.visibility != kotlin.reflect.KVisibility.PUBLIC) {
                 throw TypeConversionException(
                     "Not public member property in primary constructor of value type",

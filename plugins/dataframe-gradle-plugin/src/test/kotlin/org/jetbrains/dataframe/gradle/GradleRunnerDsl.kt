@@ -20,8 +20,7 @@ fun runGradleBuild(
 }
 
 fun gradleRunner(buildDir: File, task: String): GradleRunner =
-    GradleRunner
-        .create()
+    GradleRunner.create()
         .withProjectDir(buildDir)
         .withPluginClasspath()
         .withArguments(task, "--stacktrace", "--info")

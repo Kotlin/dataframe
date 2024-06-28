@@ -48,17 +48,16 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         val returnType = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(marker.shortName)))
 
         // convertTo: ConvertSchemaDsl<MyMarker>.() -> Unit = {}
-        val convertToParameter = ParameterSpec
-            .builder(
-                name = "convertTo",
-                type = LambdaTypeName.get(
-                    receiver = ConvertSchemaDsl::class
-                        .asClassName()
-                        .parameterizedBy(ClassName("", listOf(marker.shortName))),
-                    parameters = emptyList(),
-                    returnType = UNIT,
-                ),
-            ).defaultValue("{}")
+        val convertToParameter = ParameterSpec.builder(
+            name = "convertTo",
+            type = LambdaTypeName.get(
+                receiver = ConvertSchemaDsl::class
+                    .asClassName()
+                    .parameterizedBy(ClassName("", listOf(marker.shortName))),
+                parameters = emptyList(),
+                returnType = UNIT,
+            ),
+        ).defaultValue("{}")
             .build()
 
         fun getConvertMethod(): String =
@@ -76,37 +75,36 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                 .convertTo${marker.shortName}()
             """.trimIndent()
 
-        val typeSpec = TypeSpec
-            .companionObjectBuilder()
+        val typeSpec = TypeSpec.companionObjectBuilder()
             .addFunction(
-                FunSpec
-                    .builder("convertTo${marker.shortName}")
+                FunSpec.builder("convertTo${marker.shortName}")
                     .receiver(DataFrame::class.asClassName().parameterizedBy(STAR))
                     .addParameter(convertToParameter)
                     .addCode(getConvertMethod())
                     .returns(returnType)
                     .build(),
-            ).addProperty(
-                PropertySpec.Companion
-                    .builder(name = "keyValuePaths", type = typeOf<List<JsonPath>>().asTypeName())
+            )
+            .addProperty(
+                PropertySpec.Companion.builder(name = "keyValuePaths", type = typeOf<List<JsonPath>>().asTypeName())
                     .getter(
-                        FunSpec
-                            .getterBuilder()
+                        FunSpec.getterBuilder()
                             .addCode(
                                 run {
                                     val additionalPropertyPaths = (marker as OpenApiMarker)
                                         .additionalPropertyPaths
                                         .distinct()
 
-                                    "return listOf(${additionalPropertyPaths.joinToString {
-                                        "JsonPath(\"\"\"${it.path}\"\"\")"
-                                    }})"
+                                    "return listOf(${
+                                        additionalPropertyPaths.joinToString {
+                                            "JsonPath(\"\"\"${it.path}\"\"\")"
+                                        }
+                                    })"
                                 },
                             ).build(),
                     ).build(),
-            ).addFunction(
-                FunSpec
-                    .builder("readJson")
+            )
+            .addFunction(
+                FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("url", URL::class)
                     .addCode(
@@ -114,9 +112,9 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                             "readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)",
                         ),
                     ).build(),
-            ).addFunction(
-                FunSpec
-                    .builder("readJson")
+            )
+            .addFunction(
+                FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("path", String::class)
                     .addCode(
@@ -124,9 +122,9 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                             "readJson(path, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)",
                         ),
                     ).build(),
-            ).addFunction(
-                FunSpec
-                    .builder("readJson")
+            )
+            .addFunction(
+                FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("stream", InputStream::class)
                     .addCode(
@@ -134,9 +132,9 @@ internal object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                             "readJson(stream, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)",
                         ),
                     ).build(),
-            ).addFunction(
-                FunSpec
-                    .builder("readJsonStr")
+            )
+            .addFunction(
+                FunSpec.builder("readJsonStr")
                     .returns(returnType)
                     .addParameter("text", String::class)
                     .addCode(

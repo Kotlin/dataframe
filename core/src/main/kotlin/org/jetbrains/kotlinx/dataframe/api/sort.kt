@@ -165,29 +165,26 @@ private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
     receiver: ColumnsSelectionDsl<T>,
     expression: DataFrameExpression<G, C>,
 ): DataColumn<C?> =
-    receiver
-        .newColumnWithActualType("") { row ->
-            val group = row[groups]
-            expression(group, group)
-        }
+    receiver.newColumnWithActualType("") { row ->
+        val group = row[groups]
+        expression(group, group)
+    }
 
 public fun <T, G, C> GroupBy<T, G>.sortByGroup(
     nullsLast: Boolean = false,
     expression: DataFrameExpression<G, C>,
 ): GroupBy<T, G> =
-    toDataFrame()
-        .sortBy {
-            createColumnFromGroupExpression(this, expression).nullsLast(nullsLast)
-        }.asGroupBy(groups)
+    toDataFrame().sortBy {
+        createColumnFromGroupExpression(this, expression).nullsLast(nullsLast)
+    }.asGroupBy(groups)
 
 public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
     nullsLast: Boolean = false,
     expression: DataFrameExpression<G, C>,
 ): GroupBy<T, G> =
-    toDataFrame()
-        .sortBy {
-            createColumnFromGroupExpression(this, expression).desc().nullsLast(nullsLast)
-        }.asGroupBy(groups)
+    toDataFrame().sortBy {
+        createColumnFromGroupExpression(this, expression).desc().nullsLast(nullsLast)
+    }.asGroupBy(groups)
 
 public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { nrow }
 
@@ -195,13 +192,8 @@ public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc {
 
 public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> =
     toDataFrame()
-        .sortBy {
-            keys
-                .columns()
-                .toColumnSet()
-                .desc()
-                .nullsLast(nullsLast)
-        }.asGroupBy(groups)
+        .sortBy { keys.columns().toColumnSet().desc().nullsLast(nullsLast) }
+        .asGroupBy(groups)
 
 public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> =
     toDataFrame()

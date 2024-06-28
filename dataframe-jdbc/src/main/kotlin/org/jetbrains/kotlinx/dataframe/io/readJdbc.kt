@@ -543,10 +543,8 @@ private fun getTableColumnsMetadata(rs: ResultSet): MutableList<TableColumnMetad
     val tableColumns = mutableListOf<TableColumnMetadata>()
     val columnNameCounter = mutableMapOf<String, Int>()
     val databaseMetaData: DatabaseMetaData = rs.statement.connection.metaData
-    val catalog: String? = rs.statement.connection.catalog
-        .takeUnless { it.isNullOrBlank() }
-    val schema: String? = rs.statement.connection.schema
-        .takeUnless { it.isNullOrBlank() }
+    val catalog: String? = rs.statement.connection.catalog.takeUnless { it.isNullOrBlank() }
+    val schema: String? = rs.statement.connection.schema.takeUnless { it.isNullOrBlank() }
 
     for (i in 1 until numberOfColumns + 1) {
         val tableName = metaData.getTableName(i)
@@ -637,15 +635,14 @@ private fun fetchAndConvertDataFromResultSet(
         }
     }
 
-    val dataFrame = data
-        .mapIndexed { index, values ->
-            DataColumn.createValueColumn(
-                name = tableColumns[index].name,
-                values = values,
-                infer = convertNullabilityInference(inferNullability),
-                type = kotlinTypesForSqlColumns[index]!!,
-            )
-        }.toDataFrame()
+    val dataFrame = data.mapIndexed { index, values ->
+        DataColumn.createValueColumn(
+            name = tableColumns[index].name,
+            values = values,
+            infer = convertNullabilityInference(inferNullability),
+            type = kotlinTypesForSqlColumns[index]!!,
+        )
+    }.toDataFrame()
 
     logger.debug {
         "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."

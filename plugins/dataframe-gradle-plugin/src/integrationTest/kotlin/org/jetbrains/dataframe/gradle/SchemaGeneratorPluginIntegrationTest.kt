@@ -228,11 +228,15 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val filename = "data.csv"
             val dataFile = File(buildDir, filename)
             val notSupportedChars = setOf('\n', '\r')
-            (Char.MIN_VALUE..Char.MAX_VALUE)
-                .asSequence()
+            (Char.MIN_VALUE..Char.MAX_VALUE).asSequence()
                 .filterNot { it in notSupportedChars }
                 .chunked(100) {
-                    it.joinToString(separator = "", prefix = "\"", postfix = "\"", transform = ::escapeDoubleQuotes)
+                    it.joinToString(
+                        separator = "",
+                        prefix = "\"",
+                        postfix = "\"",
+                        transform = ::escapeDoubleQuotes,
+                    )
                 }.let {
                     dataFile.writeText(it.joinToString(",") + "\n" + (0 until it.count()).joinToString(","))
                 }

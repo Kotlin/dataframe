@@ -287,13 +287,7 @@ internal fun convertToDataFrame(
                 )
 
             kClass.isSubclassOf(Iterable::class) ->
-                when (
-                    val elementType = returnType
-                        .projectUpTo(Iterable::class)
-                        .arguments
-                        .firstOrNull()
-                        ?.type
-                ) {
+                when (val elementType = returnType.projectUpTo(Iterable::class).arguments.firstOrNull()?.type) {
                     null ->
                         DataColumn.createValueColumn(
                             name = it.columnName,

@@ -95,10 +95,8 @@ class RenderingTests : TestBase() {
     fun `empty row with nested empty row`() {
         val df = dataFrameOf("a", "b", "c")(null, null, null)
         val grouped = df
-            .group("a", "b")
-            .into("d")
-            .group("c", "d")
-            .into("e")[0]
+            .group("a", "b").into("d")
+            .group("c", "d").into("e")[0]
 
         val formatted = formatter.format(grouped, DefaultCellRenderer, DisplayConfiguration())
         Jsoup.parse(formatted).text() shouldBe "{ }"
@@ -125,10 +123,8 @@ class RenderingTests : TestBase() {
     @Test
     fun `render successfully 2`() {
         val df = dataFrameOf("name", "parent", "type")("Boston (MA)", "123wazxdPag5", "Campus")
-            .move("parent")
-            .into { "parent"["id"] }
-            .group { all() }
-            .into("Campus")
+            .move("parent").into { "parent"["id"] }
+            .group { all() }.into("Campus")
         df.toHTML().print()
     }
 
@@ -182,8 +178,7 @@ class RenderingTests : TestBase() {
         dfGroup.name.maxWidth() shouldBe 4
         dfGroup.name.firstName.maxWidth() shouldBe 3
         dfGroup.name.lastName.maxWidth() shouldBe 1
-        dfGroup.name.firstName.secondName
-            .maxWidth() shouldBe 1
+        dfGroup.name.firstName.secondName.maxWidth() shouldBe 1
     }
 
     @Test

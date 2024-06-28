@@ -16,6 +16,7 @@ import java.net.URL
 import java.nio.file.Files
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class XlsxTest {
 
     fun testResource(resourcePath: String): URL = this::class.java.classLoader.getResource(resourcePath)!!
@@ -73,10 +74,8 @@ class XlsxTest {
     fun `read and write are isomorphic for string, double and null values`() {
         val temp = Files.createTempFile("excel", ".xlsx").toFile()
         val df = dataFrameOf("col1", "col2")(
-            "string value",
-            3.2,
-            "string value 1",
-            null,
+            "string value", 3.2,
+            "string value 1", null,
         )
         val extendedDf = List(10) { df }.concat()
         extendedDf.writeExcel(temp)

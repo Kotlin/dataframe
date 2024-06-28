@@ -70,39 +70,38 @@ fun classpathFromClassloader(currentClassLoader: ClassLoader, unpackJarCollectio
             )
         }
     }
-    return allRelatedClassLoaders(currentClassLoader)
-        .flatMap { classLoader ->
-            var classPath = emptySequence<File>()
-            if (unpackJarCollections &&
-                JAR_COLLECTIONS_KEY_PATHS.any { classLoader.getResource(it)?.file?.isNotEmpty() == true }
-            ) {
-                // if cache dir is specified, find all jar collections (spring boot fat jars and WARs so far, and unpack it accordingly
-                val jarCollections = JAR_COLLECTIONS_KEY_PATHS
-                    .asSequence()
-                    .flatMap { currentClassLoader.getResources(it).asSequence() }
-                    .mapNotNull {
-                        it.toContainingJarOrNull()?.takeIf { file ->
-                            // additionally mark/check processed collection jars since unpacking is expensive
-                            file.extension in validJarCollectionFilesExtensions && processedJars.add(file)
-                        }
+    return allRelatedClassLoaders(currentClassLoader).flatMap { classLoader ->
+        var classPath = emptySequence<File>()
+        if (unpackJarCollections &&
+            JAR_COLLECTIONS_KEY_PATHS.any { classLoader.getResource(it)?.file?.isNotEmpty() == true }
+        ) {
+            // if cache dir is specified, find all jar collections (spring boot fat jars and WARs so far, and unpack it accordingly
+            val jarCollections = JAR_COLLECTIONS_KEY_PATHS
+                .asSequence()
+                .flatMap { currentClassLoader.getResources(it).asSequence() }
+                .mapNotNull {
+                    it.toContainingJarOrNull()?.takeIf { file ->
+                        // additionally mark/check processed collection jars since unpacking is expensive
+                        file.extension in validJarCollectionFilesExtensions && processedJars.add(file)
                     }
-                classPath +=
-                    jarCollections
-                        .flatMap { it.unpackJarCollection(unpackJarCollectionsDir) }
-                        .filter { it.isValidClasspathFile() }
-            }
-            classPath += when (classLoader) {
-                is URLClassLoader -> {
-                    classLoader.urLs.asSequence().mapNotNull { url -> url.toValidClasspathFileOrNull() }
                 }
+            classPath +=
+                jarCollections
+                    .flatMap { it.unpackJarCollection(unpackJarCollectionsDir) }
+                    .filter { it.isValidClasspathFile() }
+        }
+        classPath += when (classLoader) {
+            is URLClassLoader -> {
+                classLoader.urLs.asSequence().mapNotNull { url -> url.toValidClasspathFileOrNull() }
+            }
 
-                else -> {
-                    classLoader.classPathFromGetUrlsMethodOrNull()
-                        ?: classLoader.classPathFromTypicalResourceUrls()
-                }
+            else -> {
+                classLoader.classPathFromGetUrlsMethodOrNull()
+                    ?: classLoader.classPathFromTypicalResourceUrls()
             }
-            classPath
-        }.filter { processedJars.add(it) }
+        }
+        classPath
+    }.filter { processedJars.add(it) }
         .toList()
         .takeIf { it.isNotEmpty() }
 }
@@ -130,7 +129,11 @@ internal class ClassLoaderResourceRootFIlePathCalculator(private val keyResource
     operator fun invoke(resourceFile: File): File {
         if (keyResourcePathDepth < 0) {
             keyResourcePathDepth =
-                if (keyResourcePath.isBlank()) 0 else (keyResourcePath.trim('/').count { it == '/' } + 1)
+                if (keyResourcePath.isBlank()) {
+                    0
+                } else {
+                    keyResourcePath.trim('/').count { it == '/' } + 1
+                }
         }
         var root = resourceFile
         for (i in 0 until keyResourcePathDepth) {
@@ -166,34 +169,33 @@ private fun File.unpackJarCollection(rootTempDir: File): Sequence<File> {
     }
 
     return try {
-        ArrayList<File>()
-            .apply {
-                JarInputStream(FileInputStream(this@unpackJarCollection)).use { jarInputStream ->
-                    for (classesDir in JAR_COLLECTIONS_CLASSES_PATHS) {
-                        add(File(targetDir, classesDir))
-                    }
-                    do {
-                        val entry = jarInputStream.nextJarEntry
-                        if (entry != null) {
-                            try {
-                                if (!entry.isDirectory) {
-                                    val file = File(targetDir, entry.name)
-                                    if (JAR_COLLECTIONS_LIB_PATHS.any { entry.name.startsWith("$it/") }) {
-                                        add(file)
-                                    }
-                                    file.parentFile.mkdirs()
-                                    file.outputStream().use { outputStream ->
-                                        jarInputStream.copyTo(outputStream)
-                                        outputStream.flush()
-                                    }
-                                }
-                            } finally {
-                                jarInputStream.closeEntry()
-                            }
-                        }
-                    } while (entry != null)
+        ArrayList<File>().apply {
+            JarInputStream(FileInputStream(this@unpackJarCollection)).use { jarInputStream ->
+                for (classesDir in JAR_COLLECTIONS_CLASSES_PATHS) {
+                    add(File(targetDir, classesDir))
                 }
-            }.asSequence()
+                do {
+                    val entry = jarInputStream.nextJarEntry
+                    if (entry != null) {
+                        try {
+                            if (!entry.isDirectory) {
+                                val file = File(targetDir, entry.name)
+                                if (JAR_COLLECTIONS_LIB_PATHS.any { entry.name.startsWith("$it/") }) {
+                                    add(file)
+                                }
+                                file.parentFile.mkdirs()
+                                file.outputStream().use { outputStream ->
+                                    jarInputStream.copyTo(outputStream)
+                                    outputStream.flush()
+                                }
+                            }
+                        } finally {
+                            jarInputStream.closeEntry()
+                        }
+                    }
+                } while (entry != null)
+            }
+        }.asSequence()
     } catch (e: Throwable) {
         targetDir.deleteRecursively()
         throw e
@@ -201,8 +203,7 @@ private fun File.unpackJarCollection(rootTempDir: File): Sequence<File> {
 }
 
 fun classpathFromClasspathProperty(): List<File>? =
-    System
-        .getProperty("java.class.path")
+    System.getProperty("java.class.path")
         ?.split(String.format("\\%s", File.pathSeparatorChar).toRegex())
         ?.dropLastWhile(String::isEmpty)
         ?.map(::File)
@@ -352,8 +353,7 @@ object KotlinJars {
 
     private val explicitCompilerClasspath: List<File>? by lazy {
         System.getProperty(KOTLIN_COMPILER_CLASSPATH_PROPERTY)?.split(File.pathSeparator)?.map(::File)
-            ?: System
-                .getProperty(KOTLIN_COMPILER_JAR_PROPERTY)
+            ?: System.getProperty(KOTLIN_COMPILER_JAR_PROPERTY)
                 ?.let(::File)
                 ?.takeIf(File::exists)
                 ?.let { listOf(it) }
@@ -409,9 +409,7 @@ object KotlinJars {
             (
                 explicitCompilerClasspath == null &&
                     classpath.none { f ->
-                        kotlinCompilerJars.any {
-                            f.matchMaybeVersionedFile(it)
-                        }
+                        kotlinCompilerJars.any { f.matchMaybeVersionedFile(it) }
                     }
             )
         ) {
@@ -466,10 +464,9 @@ object KotlinJars {
     }
 
     val stdlib: File by lazy {
-        stdlibOrNull
-            ?: throw Exception(
-                "Unable to find kotlin stdlib, please specify it explicitly via \"$KOTLIN_STDLIB_JAR_PROPERTY\" property",
-            )
+        stdlibOrNull ?: throw Exception(
+            "Unable to find kotlin stdlib, please specify it explicitly via \"$KOTLIN_STDLIB_JAR_PROPERTY\" property",
+        )
     }
 
     val reflectOrNull: File? by lazy {

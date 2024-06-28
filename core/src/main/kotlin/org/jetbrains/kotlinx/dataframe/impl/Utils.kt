@@ -351,9 +351,8 @@ internal fun String.toSnakeCase(): String =
     }
 
 internal fun List<String>.joinToCamelCaseString(): String =
-    joinToString(separator = "") {
-        it.replaceFirstChar { it.uppercaseChar() }
-    }.replaceFirstChar { it.lowercaseChar() }
+    joinToString(separator = "") { it.replaceFirstChar { it.uppercaseChar() } }
+        .replaceFirstChar { it.lowercaseChar() }
 
 /** @include [KCallable.isGetterLike] */
 internal fun KFunction<*>.isGetterLike(): Boolean =

@@ -24,11 +24,7 @@ internal fun <T> DataFrame<T>.removeImpl(
     columns: ColumnsSelector<T, *>,
 ): RemoveResult<T> {
     val colWithPaths = getColumnsWithPaths(
-        unresolvedColumnsPolicy = if (allowMissingColumns) {
-            UnresolvedColumnsPolicy.Skip
-        } else {
-            UnresolvedColumnsPolicy.Fail
-        },
+        unresolvedColumnsPolicy = if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail,
         selector = columns,
     )
     val colPaths = colWithPaths.map { it.path }
@@ -75,8 +71,7 @@ internal fun <T> DataFrame<T>.removeImpl(
 
     val newDf = dfs(columns(), colWithPaths, root) ?: DataFrame.empty(nrow)
 
-    val removedColumns = root
-        .allRemovedColumns()
+    val removedColumns = root.allRemovedColumns()
         .map { it.pathFromRoot() to it }
         .sortedBy { originalOrder[it.first] }
         .map { it.second }

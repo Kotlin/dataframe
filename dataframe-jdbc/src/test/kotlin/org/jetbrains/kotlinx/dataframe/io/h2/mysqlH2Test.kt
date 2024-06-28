@@ -355,9 +355,9 @@ class MySqlH2Test {
         val table2Df = dataframes[1].cast<Table2MySql>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df
-            .filter { it[Table2MySql::integercol] != null && it[Table2MySql::integercol]!! > 400 }
-            .rowsCount() shouldBe 1
+        table2Df.filter {
+            it[Table2MySql::integercol] != null && it[Table2MySql::integercol]!! > 400
+        }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
     }
@@ -370,38 +370,32 @@ class MySqlH2Test {
 
         result[0][1] shouldBe 1.toByte()
 
-        val result1 = df1
-            .select("smallintcol")
+        val result1 = df1.select("smallintcol")
             .add("smallintcol2") { it[Table1MySql::smallintcol] }
 
         result1[0][1] shouldBe 10.toShort()
 
-        val result2 = df1
-            .select("mediumintcol")
+        val result2 = df1.select("mediumintcol")
             .add("mediumintcol2") { it[Table1MySql::mediumintcol] }
 
         result2[0][1] shouldBe 100
 
-        val result3 = df1
-            .select("mediumintunsignedcol")
+        val result3 = df1.select("mediumintunsignedcol")
             .add("mediumintunsignedcol2") { it[Table1MySql::mediumintunsignedcol] }
 
         result3[0][1] shouldBe 100
 
-        val result5 = df1
-            .select("bigintcol")
+        val result5 = df1.select("bigintcol")
             .add("bigintcol2") { it[Table1MySql::bigintcol] }
 
         result5[0][1] shouldBe 100
 
-        val result7 = df1
-            .select("doublecol")
+        val result7 = df1.select("doublecol")
             .add("doublecol2") { it[Table1MySql::doublecol] }
 
         result7[0][1] shouldBe 10.0
 
-        val result8 = df1
-            .select("decimalcol")
+        val result8 = df1.select("decimalcol")
             .add("decimalcol2") { it[Table1MySql::decimalcol] }
 
         result8[0][1] shouldBe BigDecimal("10")

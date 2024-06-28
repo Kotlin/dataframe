@@ -42,11 +42,8 @@ class SplitTests {
         )
 
         val regex = """(.*) \((\d{4})\)""".toRegex()
-        val split = title
-            .toDataFrame()
-            .split { title }
-            .match(regex)
-            .into("title", "year")
+        val split = title.toDataFrame()
+            .split { title }.match(regex).into("title", "year")
             .parse()
         split.schema().print()
         split["title"].hasNulls shouldBe false
@@ -62,17 +59,10 @@ class SplitTests {
             3, 6, 7,
         )
         val res = df
-            .groupBy("a")
-            .updateGroups { it.remove("a") }
-            .into("g")
-            .update("g")
-            .at(1)
-            .with { DataFrame.empty() }
-            .update("g")
-            .at(2)
-            .withNull()
-            .split { "g"<AnyFrame>() }
-            .intoColumns()
+            .groupBy("a").updateGroups { it.remove("a") }.into("g")
+            .update("g").at(1).with { DataFrame.empty() }
+            .update("g").at(2).withNull()
+            .split { "g"<AnyFrame>() }.intoColumns()
             .ungroup("g")
         res shouldBe dataFrameOf("a", "b", "c")(
             1, listOf(2, 4), listOf(3, 5),

@@ -118,9 +118,7 @@ class JdbcTest {
                 )
             """
 
-            connection.createStatement().execute(
-                createSaleTableQuery,
-            )
+            connection.createStatement().execute(createSaleTableQuery)
 
             // add data to the Customer table
             connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
@@ -204,20 +202,19 @@ class JdbcTest {
 
         connection.createStatement().execute(createTableQuery.trimIndent())
 
-        connection
-            .prepareStatement(
-                """
-                INSERT INTO TestTable VALUES (
-                    'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
-                    'Varchar IgnoreCase', X'010203', X'040506', X'070809',
-                    TRUE, 1, 100, 1000, 100000,
-                    123.45, 1.23, 3.14, 2.71,
-                    '2023-07-20', '08:30:00', '18:15:00', '2023-07-19 12:45:30',
-                    '2023-07-18 12:45:30', NULL,
-                    'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
-                )
-                """.trimIndent(),
-            ).executeUpdate()
+        connection.prepareStatement(
+            """
+            INSERT INTO TestTable VALUES (
+                'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
+                'Varchar IgnoreCase', X'010203', X'040506', X'070809',
+                TRUE, 1, 100, 1000, 100000,
+                123.45, 1.23, 3.14, 2.71,
+                '2023-07-20', '08:30:00', '18:15:00', '2023-07-19 12:45:30',
+                '2023-07-18 12:45:30', NULL,
+                'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
+            )
+            """.trimIndent(),
+        ).executeUpdate()
 
         connection
             .prepareStatement(
@@ -257,44 +254,37 @@ class JdbcTest {
         df.filter { it[TestTableData::integerCol]!! > 1000 }.rowsCount() shouldBe 2
 
         // testing numeric columns
-        val result = df
-            .select("tinyIntCol")
+        val result = df.select("tinyIntCol")
             .add("tinyIntCol2") { it[TestTableData::tinyIntCol] }
 
         result[0][1] shouldBe 1
 
-        val result1 = df
-            .select("smallIntCol")
+        val result1 = df.select("smallIntCol")
             .add("smallIntCol2") { it[TestTableData::smallIntCol] }
 
         result1[0][1] shouldBe 100
 
-        val result2 = df
-            .select("bigIntCol")
+        val result2 = df.select("bigIntCol")
             .add("bigIntCol2") { it[TestTableData::bigIntCol] }
 
         result2[0][1] shouldBe 100000
 
-        val result3 = df
-            .select("numericCol")
+        val result3 = df.select("numericCol")
             .add("numericCol2") { it[TestTableData::numericCol] }
 
         BigDecimal("123.45").compareTo(result3[0][1] as BigDecimal) shouldBe 0
 
-        val result4 = df
-            .select("realCol")
+        val result4 = df.select("realCol")
             .add("realCol2") { it[TestTableData::realCol] }
 
         result4[0][1] shouldBe 1.23f
 
-        val result5 = df
-            .select("doublePrecisionCol")
+        val result5 = df.select("doublePrecisionCol")
             .add("doublePrecisionCol2") { it[TestTableData::doublePrecisionCol] }
 
         result5[0][1] shouldBe 3.14
 
-        val result6 = df
-            .select("decFloatCol")
+        val result6 = df.select("decFloatCol")
             .add("decFloatCol2") { it[TestTableData::decFloatCol] }
 
         BigDecimal("2.71").compareTo(result6[0][1] as BigDecimal) shouldBe 0
@@ -525,9 +515,7 @@ class JdbcTest {
                 )
             """
 
-        connection.createStatement().execute(
-            createAlterTableQuery,
-        )
+        connection.createStatement().execute(createAlterTableQuery)
 
         @Language("SQL")
         val selectFromWeirdTableSQL = """

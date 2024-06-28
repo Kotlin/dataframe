@@ -102,8 +102,7 @@ private fun readOpenApi(
 
     // take the components.schemas from the openApi spec and convert them to a list of Markers, representing the
     // interfaces, enums, and typeAliases that need to be generated.
-    val result = openApi.components
-        ?.schemas
+    val result = openApi.components?.schemas
         ?.toMap()
         ?.toMarkers(topInterfaceName)
         ?.toList()
@@ -113,22 +112,21 @@ private fun readOpenApi(
     val codeGenerator = CodeGenerator.create(useFqNames = true)
 
     fun toCode(marker: OpenApiMarker): Code =
-        codeGenerator
-            .generate(
-                marker = marker
-                    .withVisibility(visibility)
-                    .withName(
-                        name = marker.name.withoutTopInterfaceName(topInterfaceName),
-                        prependTopInterfaceName = false,
-                    ),
-                interfaceMode = when (marker) {
-                    is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
-                    is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
-                    is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
-                },
-                extensionProperties = false,
-                readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
-            ).declarations
+        codeGenerator.generate(
+            marker = marker
+                .withVisibility(visibility)
+                .withName(
+                    name = marker.name.withoutTopInterfaceName(topInterfaceName),
+                    prependTopInterfaceName = false,
+                ),
+            interfaceMode = when (marker) {
+                is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
+                is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
+                is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
+            },
+            extensionProperties = false,
+            readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
+        ).declarations
 
     fun Code.merge(other: Code): Code = "$this\n$other"
 
@@ -136,13 +134,12 @@ private fun readOpenApi(
         if (marker !is OpenApiMarker.Interface) {
             ""
         } else {
-            codeGenerator
-                .generate(
-                    marker = marker.withVisibility(visibility),
-                    interfaceMode = InterfaceGenerationMode.None,
-                    extensionProperties = true,
-                    readDfMethod = null,
-                ).declarations
+            codeGenerator.generate(
+                marker = marker.withVisibility(visibility),
+                interfaceMode = InterfaceGenerationMode.None,
+                extensionProperties = true,
+                readDfMethod = null,
+            ).declarations
         }
 
     val (typeAliases, markers) = result
@@ -466,8 +463,7 @@ private fun Schema<*>.toMarker(
                                 val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
 
                                 // find the field type of the marker reference
-                                val fieldType = openApiTypeResult.marker
-                                    .toFieldType()
+                                val fieldType = openApiTypeResult.marker.toFieldType()
                                     .let { if (!isRequired) it.toNullable() else it }
 
                                 this += generatedFieldOf(
@@ -771,9 +767,7 @@ private fun Schema<*>.toOpenApiType(getRefMarker: GetRefMarker): OpenApiTypeResu
             // just Number-like types
             anyOfTypes.size == 2 &&
                 anyOfRefs.isEmpty() &&
-                anyOfTypes.containsAll(
-                    listOf(OpenApiType.Number, OpenApiType.Integer),
-                ) -> OpenApiType.Number
+                anyOfTypes.containsAll(listOf(OpenApiType.Number, OpenApiType.Integer)) -> OpenApiType.Number
 
             !anyOfTypes.any { it.isObject } && anyOfRefs.isEmpty() -> OpenApiType.Any
 

@@ -248,9 +248,9 @@ class PostgresH2Test {
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df
-            .filter { it[Table2::realcol] == 12.34f }
-            .rowsCount() shouldBe 3
+        table2Df.filter {
+            it[Table2::realcol] == 12.34f
+        }.rowsCount() shouldBe 3
         table2Df[0][4] shouldBe 1001
     }
 
@@ -258,25 +258,31 @@ class PostgresH2Test {
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
-        val result = df1.select("smallintcol").add("smallintcol2") { it[Table1::smallintcol] }
+        val result = df1.select("smallintcol")
+            .add("smallintcol2") { it[Table1::smallintcol] }
         result[0][1] shouldBe 11
 
-        val result1 = df1.select("bigserialcol").add("bigserialcol2") { it[Table1::bigserialcol] }
+        val result1 = df1.select("bigserialcol")
+            .add("bigserialcol2") { it[Table1::bigserialcol] }
         result1[0][1] shouldBe 1000000001L
 
-        val result2 = df1.select("doublecol").add("doublecol2") { it[Table1::doublecol] }
+        val result2 = df1.select("doublecol")
+            .add("doublecol2") { it[Table1::doublecol] }
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
 
-        val result4 = df2.select("numericcol").add("numericcol2") { it[Table2::numericcol] }
+        val result4 = df2.select("numericcol")
+            .add("numericcol2") { it[Table2::numericcol] }
         result4[0][1] shouldBe BigDecimal("12.34")
 
-        val result5 = df2.select("realcol").add("realcol2") { it[Table2::realcol] }
+        val result5 = df2.select("realcol")
+            .add("realcol2") { it[Table2::realcol] }
         result5[0][1] shouldBe 12.34f
 
-        val result8 = df2.select("serialcol").add("serialcol2") { it[Table2::serialcol] }
+        val result8 = df2.select("serialcol")
+            .add("serialcol2") { it[Table2::serialcol] }
         result8[0][1] shouldBe 1000001
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)

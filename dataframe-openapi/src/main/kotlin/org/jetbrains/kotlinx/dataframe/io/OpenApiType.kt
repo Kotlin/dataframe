@@ -76,8 +76,11 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
         fun getType(nullable: kotlin.Boolean): FieldType =
             FieldType.GroupFieldType(
-                markerName = (if (nullable) typeOf<DataRow<kotlin.Any?>>() else typeOf<DataRow<kotlin.Any>>())
-                    .toString(),
+                markerName = if (nullable) {
+                    typeOf<DataRow<kotlin.Any?>>()
+                } else {
+                    typeOf<DataRow<kotlin.Any>>()
+                }.toString(),
             )
     }
 
@@ -103,14 +106,9 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
             markerName: kotlin.String,
         ): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
-                typeFqName = "${List::class.qualifiedName!!}<${DataFrame::class.qualifiedName!!}<${markerName.let {
-                    if (nullable) {
-                        it
-                            .toNullable()
-                    } else {
-                        it
-                    }
-                }}>>${if (nullableArray) "?" else ""}",
+                typeFqName = "${List::class.qualifiedName!!}<${DataFrame::class.qualifiedName!!}<${
+                    markerName.let { if (nullable) it.toNullable() else it }
+                }>>${if (nullableArray) "?" else ""}",
             )
     }
 

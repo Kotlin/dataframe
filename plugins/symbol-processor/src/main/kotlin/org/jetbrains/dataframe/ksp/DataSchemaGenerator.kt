@@ -66,8 +66,7 @@ class DataSchemaGenerator(
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
 
     private fun resolvePathImports(resolver: Resolver) =
-        resolver
-            .getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
+        resolver.getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
             .filterIsInstance<KSFile>()
             .flatMap { file ->
                 file.getAnnotationsByType(ImportDataSchema::class).mapNotNull { it.toStatement(file, logger) }

@@ -325,25 +325,24 @@ internal class ArrowKtTest {
     @Test
     fun testWidening() {
         val warnings = ArrayList<ConvertingMismatch>()
-        val testRestrictWidening = citiesExampleFrame
-            .arrowWriter(
-                Schema.fromJSON(citiesExampleSchema),
-                ArrowWriter.Mode.STRICT,
-            ) { warning -> warnings.add(warning) }
-            .use { it.saveArrowFeatherToByteArray() }
+        val testRestrictWidening = citiesExampleFrame.arrowWriter(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode.STRICT,
+        ) { warning ->
+            warnings.add(warning)
+        }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.WideningMismatch.RejectedColumn("page_in_wiki"))
         shouldThrow<IllegalArgumentException> { DataFrame.readArrowFeather(testRestrictWidening)["page_in_wiki"] }
 
-        val testAllowWidening = citiesExampleFrame
-            .arrowWriter(
-                Schema.fromJSON(citiesExampleSchema),
-                ArrowWriter.Mode(
-                    restrictWidening = false,
-                    restrictNarrowing = true,
-                    strictType = true,
-                    strictNullable = true,
-                ),
-            ).use { it.saveArrowFeatherToByteArray() }
+        val testAllowWidening = citiesExampleFrame.arrowWriter(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode(
+                restrictWidening = false,
+                restrictNarrowing = true,
+                strictType = true,
+                strictNullable = true,
+            ),
+        ).use { it.saveArrowFeatherToByteArray() }
         DataFrame.readArrowFeather(testAllowWidening)["page_in_wiki"].values() shouldBe
             citiesExampleFrame["page_in_wiki"]
                 .values()
@@ -354,26 +353,25 @@ internal class ArrowKtTest {
     fun testNarrowing() {
         val frameWithoutRequiredField = citiesExampleFrame.copy().remove("settled")
 
-        frameWithoutRequiredField
-            .arrowWriter(
-                Schema.fromJSON(citiesExampleSchema),
-                ArrowWriter.Mode.STRICT,
-            ).use {
-                shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
-            }
+        frameWithoutRequiredField.arrowWriter(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode.STRICT,
+        ).use {
+            shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
+        }
 
         val warnings = ArrayList<ConvertingMismatch>()
-        val testAllowNarrowing = frameWithoutRequiredField
-            .arrowWriter(
-                targetSchema = Schema.fromJSON(citiesExampleSchema),
-                mode = ArrowWriter.Mode(
-                    restrictWidening = true,
-                    restrictNarrowing = false,
-                    strictType = true,
-                    strictNullable = true,
-                ),
-            ) { warning -> warnings.add(warning) }
-            .use { it.saveArrowFeatherToByteArray() }
+        val testAllowNarrowing = frameWithoutRequiredField.arrowWriter(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode(
+                restrictWidening = true,
+                restrictNarrowing = false,
+                strictType = true,
+                strictNullable = true,
+            ),
+        ) { warning ->
+            warnings.add(warning)
+        }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.NarrowingMismatch.NotPresentedColumnIgnored("settled"))
         shouldThrow<IllegalArgumentException> { DataFrame.readArrowFeather(testAllowNarrowing)["settled"] }
     }
@@ -389,36 +387,34 @@ internal class ArrowKtTest {
                     .convertToBoolean(),
             )
 
-        frameWithIncompatibleField
-            .arrowWriter(
-                Schema.fromJSON(citiesExampleSchema),
-                ArrowWriter.Mode.STRICT,
-            ).use {
-                shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
-            }
+        frameWithIncompatibleField.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Mode.STRICT,
+        ).use {
+            shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
+        }
 
         val warnings = ArrayList<ConvertingMismatch>()
-        val testLoyalType = frameWithIncompatibleField
-            .arrowWriter(
-                Schema.fromJSON(citiesExampleSchema),
-                ArrowWriter.Mode(
-                    restrictWidening = true,
-                    restrictNarrowing = true,
-                    strictType = false,
-                    strictNullable = true,
-                ),
-            ) { warning -> warnings.add(warning) }
-            .use { it.saveArrowFeatherToByteArray() }
+        val testLoyalType = frameWithIncompatibleField.arrowWriter(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode(
+                restrictWidening = true,
+                restrictNarrowing = true,
+                strictType = false,
+                strictNullable = true,
+            ),
+        ) { warning ->
+            warnings.add(warning)
+        }.use { it.saveArrowFeatherToByteArray() }
         warnings.map { it.toString() }.shouldContain(
-            ConvertingMismatch.TypeConversionNotFound
-                .ConversionNotFoundIgnored(
-                    "settled",
-                    TypeConverterNotFoundException(
-                        typeOf<Boolean>(),
-                        typeOf<kotlinx.datetime.LocalDateTime?>(),
-                        pathOf("settled"),
-                    ),
-                ).toString(),
+            ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored(
+                "settled",
+                TypeConverterNotFoundException(
+                    typeOf<Boolean>(),
+                    typeOf<kotlinx.datetime.LocalDateTime?>(),
+                    pathOf("settled"),
+                ),
+            ).toString(),
         )
         DataFrame.readArrowFeather(testLoyalType)["settled"].type() shouldBe typeOf<Boolean>()
     }
@@ -433,26 +429,25 @@ internal class ArrowKtTest {
             ),
         )
 
-        frameWithNulls
-            .arrowWriter(
-                Schema.fromJSON(citiesExampleSchema),
-                ArrowWriter.Mode.STRICT,
-            ).use {
-                shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
-            }
+        frameWithNulls.arrowWriter(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode.STRICT,
+        ).use {
+            shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
+        }
 
         val warnings = ArrayList<ConvertingMismatch>()
-        val testLoyalNullable = frameWithNulls
-            .arrowWriter(
-                Schema.fromJSON(citiesExampleSchema),
-                ArrowWriter.Mode(
-                    restrictWidening = true,
-                    restrictNarrowing = true,
-                    strictType = true,
-                    strictNullable = false,
-                ),
-            ) { warning -> warnings.add(warning) }
-            .use { it.saveArrowFeatherToByteArray() }
+        val testLoyalNullable = frameWithNulls.arrowWriter(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode(
+                restrictWidening = true,
+                restrictNarrowing = true,
+                strictType = true,
+                strictNullable = false,
+            ),
+        ) { warning ->
+            warnings.add(warning)
+        }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.NullableMismatch.NullValueIgnored("settled", 0))
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].type() shouldBe typeOf<LocalDateTime?>()
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].values() shouldBe
@@ -484,10 +479,11 @@ internal class ArrowKtTest {
             )
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
             val serializedAsRu = frameString.arrowWriter(targetSchema).saveArrowFeatherToByteArray()
-            DataFrame.readArrowFeather(serializedAsRu) shouldBe dataFrameOf("columnDot", "columnComma")(
-                columnDoubleFraction,
-                columnDoubleFraction,
-            )
+            DataFrame.readArrowFeather(serializedAsRu) shouldBe
+                dataFrameOf("columnDot", "columnComma")(
+                    columnDoubleFraction,
+                    columnDoubleFraction,
+                )
         } finally {
             Locale.setDefault(currentLocale)
         }

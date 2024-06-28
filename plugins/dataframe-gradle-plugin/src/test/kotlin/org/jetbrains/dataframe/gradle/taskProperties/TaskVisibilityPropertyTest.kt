@@ -29,8 +29,7 @@ class TaskVisibilityPropertyTest {
             project.evaluate()
         }
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
-            .schemaVisibility
-            .get()
+            .schemaVisibility.get()
             .shouldBe(DataSchemaVisibility.INTERNAL)
     }
 
@@ -52,8 +51,7 @@ class TaskVisibilityPropertyTest {
             project.evaluate()
         }
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
-            .schemaVisibility
-            .get()
+            .schemaVisibility.get()
             .shouldBe(DataSchemaVisibility.EXPLICIT_PUBLIC)
     }
 
@@ -77,8 +75,7 @@ class TaskVisibilityPropertyTest {
             project.evaluate()
         }
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
-            .schemaVisibility
-            .get()
+            .schemaVisibility.get()
             .shouldBe(DataSchemaVisibility.EXPLICIT_PUBLIC)
     }
 }

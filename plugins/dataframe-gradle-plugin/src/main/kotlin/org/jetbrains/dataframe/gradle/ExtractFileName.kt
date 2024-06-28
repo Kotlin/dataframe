@@ -5,8 +5,7 @@ import java.net.MalformedURLException
 import java.net.URL
 
 internal fun extractFileName(url: URL): String? =
-    url.path
-        .takeIf { it.isNotEmpty() }
+    url.path.takeIf { it.isNotEmpty() }
         ?.substringAfterLast("/")
         ?.substringBeforeLast(".")
 

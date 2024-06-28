@@ -114,8 +114,7 @@ public fun <T, C : String?> Split<T, C>.match(regex: String): SplitWithTransform
 public fun <T, C : String?> Split<T, C>.match(regex: Regex): SplitWithTransform<T, C, String?> =
     by {
         it?.let {
-            regex
-                .matchEntire(it)
+            regex.matchEntire(it)
                 ?.groups
                 ?.drop(1)
                 ?.map { it?.value }

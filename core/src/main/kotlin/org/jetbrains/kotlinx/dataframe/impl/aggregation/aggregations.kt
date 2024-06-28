@@ -62,17 +62,9 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
         val effectiveDropNA = if (dropNA) col.canHaveNA else false
         // TODO: use Set for distinct values
         val values = when {
-            effectiveDropNA && distinct ->
-                col
-                    .asSequence()
-                    .filter { !it.isNA }
-                    .distinct()
-                    .toList()
-
+            effectiveDropNA && distinct -> col.asSequence().filter { !it.isNA }.distinct().toList()
             effectiveDropNA && !distinct -> col.values.filter { !it.isNA }
-
             distinct -> col.values().distinct()
-
             else -> col.toList()
         }
 

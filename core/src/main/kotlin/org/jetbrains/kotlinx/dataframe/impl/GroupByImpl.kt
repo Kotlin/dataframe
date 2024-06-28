@@ -72,27 +72,26 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val hasKeyColumns = removed.df.ncol > 0
 
-    val groupedFrame = column.values
-        .map {
-            if (it == null) {
-                null
-            } else {
-                val builder = GroupByReceiverImpl(it, hasKeyColumns)
-                val result = body(builder, builder)
-                if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) {
-                    builder.yield(
-                        NamedValue.create(
-                            path = pathOf(defaultAggregateName),
-                            value = result,
-                            type = null,
-                            defaultValue = null,
-                            guessType = true,
-                        ),
-                    )
-                }
-                builder.compute()
+    val groupedFrame = column.values.map {
+        if (it == null) {
+            null
+        } else {
+            val builder = GroupByReceiverImpl(it, hasKeyColumns)
+            val result = body(builder, builder)
+            if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) {
+                builder.yield(
+                    NamedValue.create(
+                        path = pathOf(defaultAggregateName),
+                        value = result,
+                        type = null,
+                        defaultValue = null,
+                        guessType = true,
+                    ),
+                )
             }
-        }.concat()
+            builder.compute()
+        }
+    }.concat()
 
     val removedNode = removed.removedColumns.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)

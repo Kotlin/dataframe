@@ -84,10 +84,10 @@ internal class ArrowWriterImpl(
     private fun countTotalBytes(column: AnyCol): Long? {
         val columnType = column.type()
         return when {
-            columnType.isSubtypeOf(typeOf<String?>()) -> column.values.fold(0L) { totalBytes, value ->
-                totalBytes +
-                    value.toString().length * 4
-            }
+            columnType.isSubtypeOf(typeOf<String?>()) ->
+                column.values.fold(0L) { totalBytes, value ->
+                    totalBytes + value.toString().length * 4
+                }
 
             else -> null
         }
@@ -129,9 +129,7 @@ internal class ArrowWriterImpl(
 
             // Use [convertToDouble] as locale logic step
             ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) ->
-                column
-                    .convertToDouble()
-                    .convertToFloat()
+                column.convertToDouble().convertToFloat()
 
             ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE) -> column.convertToDouble()
 
@@ -141,99 +139,87 @@ internal class ArrowWriterImpl(
 
             is ArrowType.Time -> column.convertToLocalTime()
 
-            else -> {
+            else ->
                 throw NotImplementedError(
                     "Saving ${targetFieldType.javaClass.canonicalName} is currently not implemented",
                 )
-            }
         }
     }
 
     private fun infillVector(vector: FieldVector, column: AnyCol) {
         when (vector) {
             is VarCharVector ->
-                column
-                    .convertToString()
+                column.convertToString()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, Text(value)) }
                             ?: vector.setNull(i)
                     }
 
             is LargeVarCharVector ->
-                column
-                    .convertToString()
+                column.convertToString()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, Text(value)) }
                             ?: vector.setNull(i)
                     }
 
             is BitVector ->
-                column
-                    .convertToBoolean()
+                column.convertToBoolean()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value.compareTo(false)) }
                             ?: vector.setNull(i)
                     }
 
             is TinyIntVector ->
-                column
-                    .convertToInt()
+                column.convertToInt()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
                     }
 
             is SmallIntVector ->
-                column
-                    .convertToInt()
+                column.convertToInt()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
                     }
 
             is IntVector ->
-                column
-                    .convertToInt()
+                column.convertToInt()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
                     }
 
             is BigIntVector ->
-                column
-                    .convertToLong()
+                column.convertToLong()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
                     }
 
             is DecimalVector ->
-                column
-                    .convertToBigDecimal()
+                column.convertToBigDecimal()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
                     }
 
             is Decimal256Vector ->
-                column
-                    .convertToBigDecimal()
+                column.convertToBigDecimal()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
                     }
 
             is Float8Vector ->
-                column
-                    .convertToDouble()
+                column.convertToDouble()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
                     }
 
             is Float4Vector ->
-                column
-                    .convertToFloat()
+                column.convertToFloat()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value) }
                             ?: vector.setNull(i)
@@ -248,40 +234,35 @@ internal class ArrowWriterImpl(
                     }
 
             is DateMilliVector ->
-                column
-                    .convertToLocalDateTime()
+                column.convertToLocalDateTime()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeNanoVector ->
-                column
-                    .convertToLocalTime()
+                column.convertToLocalTime()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value.toNanoOfDay()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMicroVector ->
-                column
-                    .convertToLocalTime()
+                column.convertToLocalTime()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value.toNanoOfDay() / 1000) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMilliVector ->
-                column
-                    .convertToLocalTime()
+                column.convertToLocalTime()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeSecVector ->
-                column
-                    .convertToLocalTime()
+                column.convertToLocalTime()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()) }
                             ?: vector.setNull(i)

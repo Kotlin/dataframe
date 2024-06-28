@@ -64,7 +64,12 @@ class GetTests {
         val df = dataFrameOf(
             columnOf(
                 dataFrameOf("a")(1),
-                dataFrameOf("a", "b")(2, 3, 4, 5),
+                dataFrameOf("a", "b")(
+                    2,
+                    3,
+                    4,
+                    5,
+                ),
             ).named("x"),
         )
         val x by frameColumn<Schema>()

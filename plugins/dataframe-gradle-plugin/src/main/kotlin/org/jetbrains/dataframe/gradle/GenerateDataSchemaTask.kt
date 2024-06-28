@@ -239,8 +239,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     // See RegexExpectationsTest
     private fun escapePackageName(packageName: String): String =
         if (packageName.isNotEmpty()) {
-            packageName
-                .split(NameChecker.PACKAGE_IDENTIFIER_DELIMITER)
+            packageName.split(NameChecker.PACKAGE_IDENTIFIER_DELIMITER)
                 .joinToString(".") { part -> "`$part`" }
         } else {
             packageName

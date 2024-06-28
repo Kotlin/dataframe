@@ -104,9 +104,7 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                 val dropFirstNameInPath =
                     pivot.inward == true &&
                         value.path.isNotEmpty() &&
-                        pivot.aggregator.values
-                            .distinctBy { it.path.firstOrNull() }
-                            .count() == 1
+                        pivot.aggregator.values.distinctBy { it.path.firstOrNull() }.count() == 1
                 pivot.aggregator.values.forEach {
                     val targetPath =
                         if (dropFirstNameInPath && it.path.size > 0) {

@@ -79,8 +79,8 @@ internal object KspCompilationTestRunner {
                 kspCompilation.kspJavaSourceDir,
                 kspCompilation.kspKotlinSourceDir,
             ),
-            kspGeneratedFiles =
-                kspCompilation.kspJavaSourceDir.collectFiles() + kspCompilation.kspKotlinSourceDir.collectFiles(),
+            kspGeneratedFiles = kspCompilation.kspJavaSourceDir.collectFiles() +
+                kspCompilation.kspKotlinSourceDir.collectFiles(),
             rawOutput = combinedOutputStream.toString(Charsets.UTF_8),
         )
     }

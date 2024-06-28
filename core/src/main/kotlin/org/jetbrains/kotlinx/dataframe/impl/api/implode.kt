@@ -17,22 +17,21 @@ import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.typeOf
 
 internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
-    groupBy { allExcept(columns) }
-        .updateGroups {
-            replace(columns).with { column ->
-                val (value, type) = when (column.kind()) {
-                    ColumnKind.Value -> (if (dropNA) column.dropNA() else column).toList() to getListType(column.type())
-                    ColumnKind.Group -> column.asColumnGroup().extractDataFrame() to typeOf<AnyFrame>()
-                    ColumnKind.Frame -> column.asAnyFrameColumn().concat() to typeOf<List<AnyFrame>>()
+    groupBy { allExcept(columns) }.updateGroups {
+        replace(columns).with { column ->
+            val (value, type) = when (column.kind()) {
+                ColumnKind.Value -> (if (dropNA) column.dropNA() else column).toList() to getListType(column.type())
+                ColumnKind.Group -> column.asColumnGroup().extractDataFrame() to typeOf<AnyFrame>()
+                ColumnKind.Frame -> column.asAnyFrameColumn().concat() to typeOf<List<AnyFrame>>()
+            }
+            var first = true
+            column.map(type) {
+                if (first) {
+                    first = false
+                    value
+                } else {
+                    null
                 }
-                var first = true
-                column.map(type) {
-                    if (first) {
-                        first = false
-                        value
-                    } else {
-                        null
-                    }
-                }
-            }[0..0]
-        }.concat()
+            }
+        }[0..0]
+    }.concat()

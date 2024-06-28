@@ -391,9 +391,9 @@ class MariadbTest {
         val table2Df = dataframes[1].cast<Table2MariaDb>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df
-            .filter { it[Table2MariaDb::integerCol] != null && it[Table2MariaDb::integerCol]!! > 400 }
-            .rowsCount() shouldBe 1
+        table2Df.filter {
+            it[Table2MariaDb::integerCol] != null && it[Table2MariaDb::integerCol]!! > 400
+        }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
     }
@@ -402,56 +402,47 @@ class MariadbTest {
     fun `reading numeric types`() {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
 
-        val result = df1
-            .select("tinyintCol")
+        val result = df1.select("tinyintCol")
             .add("tinyintCol2") { it[Table1MariaDb::tinyintCol] }
 
         result[0][1] shouldBe 1
 
-        val result1 = df1
-            .select("smallintCol")
+        val result1 = df1.select("smallintCol")
             .add("smallintCol2") { it[Table1MariaDb::smallintCol] }
 
         result1[0][1] shouldBe 10
 
-        val result2 = df1
-            .select("mediumintCol")
+        val result2 = df1.select("mediumintCol")
             .add("mediumintCol2") { it[Table1MariaDb::mediumintCol] }
 
         result2[0][1] shouldBe 100
 
-        val result3 = df1
-            .select("mediumintUnsignedCol")
+        val result3 = df1.select("mediumintUnsignedCol")
             .add("mediumintUnsignedCol2") { it[Table1MariaDb::mediumintUnsignedCol] }
 
         result3[0][1] shouldBe 100
 
-        val result4 = df1
-            .select("integerUnsignedCol")
+        val result4 = df1.select("integerUnsignedCol")
             .add("integerUnsignedCol2") { it[Table1MariaDb::integerUnsignedCol] }
 
         result4[0][1] shouldBe 100L
 
-        val result5 = df1
-            .select("bigintCol")
+        val result5 = df1.select("bigintCol")
             .add("bigintCol2") { it[Table1MariaDb::bigintCol] }
 
         result5[0][1] shouldBe 100
 
-        val result6 = df1
-            .select("floatCol")
+        val result6 = df1.select("floatCol")
             .add("floatCol2") { it[Table1MariaDb::floatCol] }
 
         result6[0][1] shouldBe 10.0f
 
-        val result7 = df1
-            .select("doubleCol")
+        val result7 = df1.select("doubleCol")
             .add("doubleCol2") { it[Table1MariaDb::doubleCol] }
 
         result7[0][1] shouldBe 10.0
 
-        val result8 = df1
-            .select("decimalCol")
+        val result8 = df1.select("decimalCol")
             .add("decimalCol2") { it[Table1MariaDb::decimalCol] }
 
         result8[0][1] shouldBe BigDecimal("10")

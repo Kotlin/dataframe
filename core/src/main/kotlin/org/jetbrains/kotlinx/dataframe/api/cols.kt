@@ -1091,14 +1091,13 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 }
 
 internal fun SingleColumn<DataRow<*>>.colsInternal(refs: Iterable<ColumnReference<*>>): ColumnSet<*> =
-    ensureIsColumnGroup()
-        .transformSingle { col ->
-            refs.map {
-                col.getCol(it) ?: throw IllegalArgumentException(
-                    "Column at ${col.path.plus(it.path()).joinToString()} was not found.",
-                )
-            }
+    ensureIsColumnGroup().transformSingle { col ->
+        refs.map {
+            col.getCol(it) ?: throw IllegalArgumentException(
+                "Column at ${col.path.plus(it.path()).joinToString()} was not found.",
+            )
         }
+    }
 
 /**
  * If this [ColumnsResolver] is a [SingleColumn], it

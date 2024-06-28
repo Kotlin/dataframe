@@ -39,41 +39,40 @@ internal fun renderExtensions(
             }
         }
     }
-    return generator
-        .generate(
-            object : AbstractMarker(typeParameters, typeArguments) {
-                override val name: String = interfaceName
-                override val fields: List<BaseField> = properties.map {
-                    val type = it.propertyType.resolve()
-                    val qualifiedTypeReference = getQualifiedTypeReference(type)
-                    val fieldType = when {
-                        qualifiedTypeReference == "kotlin.collections.List" &&
-                            type.singleTypeArgumentIsDataSchema() ||
-                            qualifiedTypeReference == DataFrameNames.DATA_FRAME ->
-                            FieldType.FrameFieldType(
-                                markerName = type.renderTypeArguments(),
-                                nullable = type.isMarkedNullable,
-                            )
+    return generator.generate(
+        object : AbstractMarker(typeParameters, typeArguments) {
+            override val name: String = interfaceName
+            override val fields: List<BaseField> = properties.map {
+                val type = it.propertyType.resolve()
+                val qualifiedTypeReference = getQualifiedTypeReference(type)
+                val fieldType = when {
+                    qualifiedTypeReference == "kotlin.collections.List" &&
+                        type.singleTypeArgumentIsDataSchema() ||
+                        qualifiedTypeReference == DataFrameNames.DATA_FRAME ->
+                        FieldType.FrameFieldType(
+                            markerName = type.renderTypeArguments(),
+                            nullable = type.isMarkedNullable,
+                        )
 
-                        type.declaration.isAnnotationPresent(DataSchema::class) ->
-                            FieldType.GroupFieldType(type.render())
+                    type.declaration.isAnnotationPresent(DataSchema::class) ->
+                        FieldType.GroupFieldType(type.render())
 
-                        qualifiedTypeReference == DataFrameNames.DATA_ROW ->
-                            FieldType.GroupFieldType(type.renderTypeArguments())
+                    qualifiedTypeReference == DataFrameNames.DATA_ROW ->
+                        FieldType.GroupFieldType(type.renderTypeArguments())
 
-                        else -> FieldType.ValueFieldType(type.render())
-                    }
-
-                    BaseFieldImpl(
-                        fieldName = ValidFieldName.of(it.fieldName),
-                        columnName = it.columnName,
-                        fieldType = fieldType,
-                    )
+                    else -> FieldType.ValueFieldType(type.render())
                 }
 
-                override val visibility: MarkerVisibility = visibility
-            },
-        ).declarations
+                BaseFieldImpl(
+                    fieldName = ValidFieldName.of(it.fieldName),
+                    columnName = it.columnName,
+                    fieldType = fieldType,
+                )
+            }
+
+            override val visibility: MarkerVisibility = visibility
+        },
+    ).declarations
 }
 
 private fun getQualifiedTypeReference(type: KSType) =
@@ -84,8 +83,7 @@ private fun getQualifiedTypeReference(type: KSType) =
 
 @OptIn(KspExperimental::class)
 private fun KSType.singleTypeArgumentIsDataSchema() =
-    innerArguments
-        .singleOrNull()
+    innerArguments.singleOrNull()
         ?.type
         ?.resolve()
         ?.declaration

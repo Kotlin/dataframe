@@ -120,11 +120,9 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 public fun AnyCol.convertTo(newType: KType): AnyCol {
-    val isTypesAreCorrect = this
-        .type()
-        .withNullability(true)
-        .isSubtypeOf(typeOf<String?>()) &&
-        newType.withNullability(true) == typeOf<Double?>()
+    val isTypesAreCorrect =
+        this.type().withNullability(true).isSubtypeOf(typeOf<String?>()) &&
+            newType.withNullability(true) == typeOf<Double?>()
 
     if (isTypesAreCorrect) {
         return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)

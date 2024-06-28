@@ -72,8 +72,7 @@ class JsonTests {
                 [5, "e"]                
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, header = listOf("numbers", "letters"))
+        val df = DataFrame.readJsonStr(json, header = listOf("numbers", "letters"))
             .alsoDebug()
 
         df.columnsCount() shouldBe 2
@@ -97,8 +96,7 @@ class JsonTests {
                 [5, "e"]                
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, header = listOf("numbers", "letters"), typeClashTactic = ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, header = listOf("numbers", "letters"), typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
 
         df.columnsCount() shouldBe 2
@@ -119,9 +117,7 @@ class JsonTests {
                 {"a":2, "b":5, "c":4.5}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
         df["a"].type() shouldBe typeOf<Int>()
@@ -139,9 +135,7 @@ class JsonTests {
                 {"a":2, "b":5, "c":4.5}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
         df["a"].type() shouldBe typeOf<Int>()
@@ -160,9 +154,7 @@ class JsonTests {
                 {"a":[6,7,8]}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
         val group = df["a"] as ColumnGroup<*>
@@ -183,9 +175,7 @@ class JsonTests {
                 {"a":[6,7,8]}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
         val a = df["a"] as ValueColumn<*>
@@ -206,9 +196,7 @@ class JsonTests {
                 {"a":[3.4, 5.6]}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
         df["a"].type() shouldBe typeOf<List<Number>>()
@@ -226,9 +214,7 @@ class JsonTests {
                 {"a":[3.4, 5.6]}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
         df["a"].type() shouldBe typeOf<List<Number>>()
@@ -245,37 +231,31 @@ class JsonTests {
                 {"a":[ {"b":4}, {"d":5} ]}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 2
         val group = df["a"] as FrameColumn<*>
-        group[0]
-            .alsoDebug()
-            .let {
-                it.columnsCount() shouldBe 3
-                it.rowsCount() shouldBe 2
-                it["b"].type() shouldBe typeOf<Int?>()
-                it["c"].type() shouldBe typeOf<Int?>()
-                it["d"].type() shouldBe typeOf<Int?>()
-                it["b"].values.toList() shouldBe listOf(2, null)
-                it["c"].values.toList() shouldBe listOf(null, 3)
-                it["d"].values.toList() shouldBe listOf(null, null)
-            }
+        group[0].alsoDebug().let {
+            it.columnsCount() shouldBe 3
+            it.rowsCount() shouldBe 2
+            it["b"].type() shouldBe typeOf<Int?>()
+            it["c"].type() shouldBe typeOf<Int?>()
+            it["d"].type() shouldBe typeOf<Int?>()
+            it["b"].values.toList() shouldBe listOf(2, null)
+            it["c"].values.toList() shouldBe listOf(null, 3)
+            it["d"].values.toList() shouldBe listOf(null, null)
+        }
 
-        group[1]
-            .alsoDebug()
-            .let {
-                it.columnsCount() shouldBe 3
-                it.rowsCount() shouldBe 2
-                it["b"].type() shouldBe typeOf<Int?>()
-                it["c"].type() shouldBe typeOf<Int?>()
-                it["d"].type() shouldBe typeOf<Int?>()
-                it["b"].values.toList() shouldBe listOf(4, null)
-                it["c"].values.toList() shouldBe listOf(null, null)
-                it["d"].values.toList() shouldBe listOf(null, 5)
-            }
+        group[1].alsoDebug().let {
+            it.columnsCount() shouldBe 3
+            it.rowsCount() shouldBe 2
+            it["b"].type() shouldBe typeOf<Int?>()
+            it["c"].type() shouldBe typeOf<Int?>()
+            it["d"].type() shouldBe typeOf<Int?>()
+            it["b"].values.toList() shouldBe listOf(4, null)
+            it["c"].values.toList() shouldBe listOf(null, null)
+            it["d"].values.toList() shouldBe listOf(null, 5)
+        }
     }
 
     @Test
@@ -288,37 +268,31 @@ class JsonTests {
                 {"a":[ {"b":4}, {"d":5} ]}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 2
         val group = df["a"] as FrameColumn<*>
-        group[0]
-            .alsoDebug()
-            .let {
-                it.columnsCount() shouldBe 3
-                it.rowsCount() shouldBe 2
-                it["b"].type() shouldBe typeOf<Int?>()
-                it["c"].type() shouldBe typeOf<Int?>()
-                it["d"].type() shouldBe typeOf<Int?>()
-                it["b"].values.toList() shouldBe listOf(2, null)
-                it["c"].values.toList() shouldBe listOf(null, 3)
-                it["d"].values.toList() shouldBe listOf(null, null)
-            }
+        group[0].alsoDebug().let {
+            it.columnsCount() shouldBe 3
+            it.rowsCount() shouldBe 2
+            it["b"].type() shouldBe typeOf<Int?>()
+            it["c"].type() shouldBe typeOf<Int?>()
+            it["d"].type() shouldBe typeOf<Int?>()
+            it["b"].values.toList() shouldBe listOf(2, null)
+            it["c"].values.toList() shouldBe listOf(null, 3)
+            it["d"].values.toList() shouldBe listOf(null, null)
+        }
 
-        group[1]
-            .alsoDebug()
-            .let {
-                it.columnsCount() shouldBe 3
-                it.rowsCount() shouldBe 2
-                it["b"].type() shouldBe typeOf<Int?>()
-                it["c"].type() shouldBe typeOf<Int?>()
-                it["d"].type() shouldBe typeOf<Int?>()
-                it["b"].values.toList() shouldBe listOf(4, null)
-                it["c"].values.toList() shouldBe listOf(null, null)
-                it["d"].values.toList() shouldBe listOf(null, 5)
-            }
+        group[1].alsoDebug().let {
+            it.columnsCount() shouldBe 3
+            it.rowsCount() shouldBe 2
+            it["b"].type() shouldBe typeOf<Int?>()
+            it["c"].type() shouldBe typeOf<Int?>()
+            it["d"].type() shouldBe typeOf<Int?>()
+            it["b"].values.toList() shouldBe listOf(4, null)
+            it["c"].values.toList() shouldBe listOf(null, null)
+            it["d"].values.toList() shouldBe listOf(null, 5)
+        }
     }
 
     @Test
@@ -333,9 +307,7 @@ class JsonTests {
                 {"a":[{"a": "b"}, {"a" : "c"}, {"a" : "d"}]}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 4
         val group = df["a"] as ColumnGroup<*>
@@ -347,15 +319,12 @@ class JsonTests {
         nestedDf["a"].type() shouldBe typeOf<String?>()
         nestedDf["value"].type() shouldBe typeOf<Int?>()
         nestedDf["array"].type() shouldBe typeOf<DataFrame<*>>()
-        group
-            .getFrameColumn("array")[3]
-            .alsoDebug()
-            .let {
-                it.columnsCount() shouldBe 3
-                it.rowsCount() shouldBe 3
-                it["a"].type() shouldBe typeOf<String>()
-                it["a"].values.toList() shouldBe listOf("b", "c", "d")
-            }
+        group.getFrameColumn("array")[3].alsoDebug().let {
+            it.columnsCount() shouldBe 3
+            it.rowsCount() shouldBe 3
+            it["a"].type() shouldBe typeOf<String>()
+            it["a"].values.toList() shouldBe listOf("b", "c", "d")
+        }
     }
 
     @Test
@@ -607,9 +576,7 @@ class JsonTests {
                 null
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 4
         df["c"].type() shouldBe typeOf<Int?>()
@@ -640,9 +607,7 @@ class JsonTests {
                 null
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 4
         val c = df["c"] as ValueColumn<*>
@@ -678,9 +643,7 @@ class JsonTests {
                 null
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 7
         val a = df["a"] as ColumnGroup<*>
@@ -707,9 +670,7 @@ class JsonTests {
                 null
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
         val a = df["a"] as ValueColumn<*>
@@ -735,9 +696,7 @@ class JsonTests {
                 null
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
         val a = df["a"] as FrameColumn<*>
@@ -776,12 +735,11 @@ class JsonTests {
                 {"a":1}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(
-                text = json,
-                typeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-                keyValuePaths = listOf(JsonPath()),
-            ).alsoDebug()
+        val df = DataFrame.readJsonStr(
+            text = json,
+            typeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+            keyValuePaths = listOf(JsonPath()),
+        ).alsoDebug()
     }
 
     @Test
@@ -795,12 +753,11 @@ class JsonTests {
                 {"a":1}
             ]
             """.trimIndent()
-        val df = DataFrame
-            .readJsonStr(
-                text = json,
-                typeClashTactic = ANY_COLUMNS,
-                keyValuePaths = listOf(JsonPath()),
-            ).alsoDebug()
+        val df = DataFrame.readJsonStr(
+            text = json,
+            typeClashTactic = ANY_COLUMNS,
+            keyValuePaths = listOf(JsonPath()),
+        ).alsoDebug()
     }
 
     @Test
@@ -819,8 +776,7 @@ class JsonTests {
             """.trimIndent()
 
         // before
-        val noKeyValue = DataFrame
-            .readJsonStr(json, typeClashTactic = ARRAY_AND_VALUE_COLUMNS)
+        val noKeyValue = DataFrame.readJsonStr(json, typeClashTactic = ARRAY_AND_VALUE_COLUMNS)
             .alsoDebug()
 
 //        ⌌-------------------------------------------------------⌍
@@ -871,8 +827,7 @@ class JsonTests {
 
         // after
         val withKeyValue =
-            DataFrame
-                .readJsonStr(json, keyValuePaths = keyValuePaths, typeClashTactic = ARRAY_AND_VALUE_COLUMNS)
+            DataFrame.readJsonStr(json, keyValuePaths = keyValuePaths, typeClashTactic = ARRAY_AND_VALUE_COLUMNS)
                 .alsoDebug()
                 .also {
                     it["a"][1].let { it as AnyFrame }.alsoDebug()
@@ -946,8 +901,7 @@ class JsonTests {
             """.trimIndent()
 
         // before
-        val noKeyValue = DataFrame
-            .readJsonStr(json, typeClashTactic = ANY_COLUMNS)
+        val noKeyValue = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
 
 //        ⌌------------------------------⌍
@@ -983,12 +937,13 @@ class JsonTests {
         )
 
         // after
-        val withKeyValue = DataFrame
-            .readJsonStr(json, keyValuePaths = keyValuePaths, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug()
-            .also {
-                it["a"][1].let { it as AnyFrame }.alsoDebug()
-            }
+        val withKeyValue = DataFrame.readJsonStr(
+            text = json,
+            keyValuePaths = keyValuePaths,
+            typeClashTactic = ANY_COLUMNS,
+        ).alsoDebug().also {
+            it["a"][1].let { it as AnyFrame }.alsoDebug()
+        }
 
 //        ⌌------------------------------⌍
 //        |  | a:[key:String, value:Any?]|

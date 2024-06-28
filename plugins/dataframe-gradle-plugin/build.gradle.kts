@@ -51,12 +51,11 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(
-                    ":core",
-                ).configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(
-                    File.separatorChar,
-                    '/',
-                ),
+                project(":core").configurations
+                    .getByName("instrumentedJars")
+                    .artifacts.single()
+                    .file.absolutePath
+                    .replace(File.separatorChar, '/'),
             )
         }
     }
