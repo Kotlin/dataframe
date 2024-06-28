@@ -97,8 +97,7 @@ internal fun ColumnsResolver<*>.flattenRecursively(
         if (includeTopLevel) {
             cols.flattenRecursively()
         } else {
-            cols
-                .filter { it.isColumnGroup() }
+            cols.filter { it.isColumnGroup() }
                 .flatMap { it.cols().flattenRecursively() }
         }.filter { includeGroups || !it.isColumnGroup() }
     }

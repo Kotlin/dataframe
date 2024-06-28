@@ -231,11 +231,7 @@ val changeJarTask by tasks.creating {
     doFirst {
         tasks.withType<Jar> {
             doFirst {
-                require(
-                    generatedSources.kotlin.srcDirs
-                        .toList()
-                        .isNotEmpty(),
-                ) {
+                require(generatedSources.kotlin.srcDirs.toList().isNotEmpty()) {
                     logger.error("`processKDocsMain`'s outputs are empty, did `processKDocsMain` run before this task?")
                 }
                 kotlin.sourceSets.main {

@@ -227,19 +227,18 @@ public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(va
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
 public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> =
-    DataColumn
-        .createColumnGroup(
-            name = "",
-            df = dataFrameOf(columns),
-        ).asDataColumn()
+    DataColumn.createColumnGroup(
+        name = "",
+        df = dataFrameOf(columns),
+    )
+        .asDataColumn()
         .forceResolve()
 
 public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
-    DataColumn
-        .createFrameColumn(
-            name = "",
-            groups = frames.toList(),
-        ).forceResolve()
+    DataColumn.createFrameColumn(
+        name = "",
+        groups = frames.toList(),
+    ).forceResolve()
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
     createColumn(values, typeOf<T>(), false).forceResolve()
@@ -283,15 +282,11 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): AnyFra
     dataFrameOf(header).withValues(values)
 
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame =
-    header
-        .map { value ->
-            fill(value).asList().let {
-                DataColumn.create(
-                    value.toString(),
-                    it,
-                )
-            }
-        }.toDataFrame()
+    header.map { value ->
+        fill(value).asList().let {
+            DataColumn.create(value.toString(), it)
+        }
+    }.toDataFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
@@ -302,10 +297,9 @@ public class DataFrameBuilder(private val header: List<String>) {
     public operator fun invoke(columns: Iterable<AnyCol>): AnyFrame {
         val cols = columns.asList()
         require(cols.size == header.size) { "Number of columns differs from number of column names" }
-        return cols
-            .mapIndexed { i, col ->
-                col.rename(header[i])
-            }.toDataFrame()
+        return cols.mapIndexed { i, col ->
+            col.rename(header[i])
+        }.toDataFrame()
     }
 
     public operator fun invoke(vararg values: Any?): AnyFrame = withValues(values.asIterable())
@@ -322,13 +316,12 @@ public class DataFrameBuilder(private val header: List<String>) {
 
         val nrow = list.size / ncol
 
-        return (0 until ncol)
-            .map { col ->
-                val colValues = (0 until nrow).map { row ->
-                    list[row * ncol + col]
-                }
-                DataColumn.createWithTypeInference(header[col], colValues)
-            }.toDataFrame()
+        return (0 until ncol).map { col ->
+            val colValues = (0 until nrow).map { row ->
+                list[row * ncol + col]
+            }
+            DataColumn.createWithTypeInference(header[col], colValues)
+        }.toDataFrame()
     }
 
     public operator fun invoke(args: Sequence<Any?>): AnyFrame = invoke(*args.toList().toTypedArray())

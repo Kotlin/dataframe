@@ -18,10 +18,8 @@ internal class ColumnGroupWithPathImpl<T> internal constructor(
             this
         } else {
             ColumnGroupWithPathImpl(
-                column.rename(
-                    newName,
-                ),
-                path.dropLast(1) + newName,
+                column = column.rename(newName),
+                path = path.dropLast(1) + newName,
             )
         }
 

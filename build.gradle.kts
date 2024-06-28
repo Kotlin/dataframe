@@ -78,19 +78,13 @@ fun String.findVersion(): Version {
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
     // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
-    libs.plugins.kover
-        .get()
-        .pluginId,
+    libs.plugins.kover.get().pluginId,
     // TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
     libs.kotestAssertions.get().name,
     // Can't be updated to 7.4.0+ due to Java 8 compatibility
-    libs.android.gradle.api
-        .get()
-        .group,
+    libs.android.gradle.api.get().group,
     // TODO 0.1.6 broke kotlinter, https://github.com/Kotlin/dataframe/issues/598
-    libs.plugins.korro
-        .get()
-        .pluginId,
+    libs.plugins.korro.get().pluginId,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
 )
@@ -110,16 +104,14 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     doLast {
         val outputFile = layout.buildDirectory
             .file("../$outputDir/$reportfileName.json")
-            .get()
-            .asFile
+            .get().asFile
         when (val outDatedDependencies = DataFrame.readJson(outputFile)["outdated"]["dependencies"][0]) {
             is AnyFrame -> {
-                val df = outDatedDependencies
-                    .select {
-                        cols("group", "name", "version") and {
-                            "available"["milestone"] named "newVersion"
-                        }
-                    }.filter { "name"() !in dependencyUpdateExclusions && "group"() !in dependencyUpdateExclusions }
+                val df = outDatedDependencies.select {
+                    cols("group", "name", "version") and {
+                        "available"["milestone"] named "newVersion"
+                    }
+                }.filter { "name"() !in dependencyUpdateExclusions && "group"() !in dependencyUpdateExclusions }
                 logger.warn("Outdated dependencies found:")
                 df.print(
                     rowsLimit = Int.MAX_VALUE,

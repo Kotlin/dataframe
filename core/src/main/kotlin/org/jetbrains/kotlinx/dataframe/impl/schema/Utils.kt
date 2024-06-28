@@ -132,19 +132,17 @@ internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): An
     }
 
 internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
-    columns
-        .map { (name, schema) ->
-            schema.createEmptyColumn(name)
-        }.toDataFrame()
+    columns.map { (name, schema) ->
+        schema.createEmptyColumn(name)
+    }.toDataFrame()
 
 internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
     if (columns.isEmpty()) {
         DataFrame.empty(numberOfRows)
     } else {
-        columns
-            .map { (name, schema) ->
-                schema.createEmptyColumn(name, numberOfRows)
-            }.toDataFrame()
+        columns.map { (name, schema) ->
+            schema.createEmptyColumn(name, numberOfRows)
+        }.toDataFrame()
     }
 
 @PublishedApi

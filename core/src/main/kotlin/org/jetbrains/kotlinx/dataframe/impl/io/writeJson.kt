@@ -226,19 +226,17 @@ internal fun encodeFrameWithMetadata(
 
     val data = frame.indices().map { rowIndex ->
         valueColumn?.get(rowIndex)
-            ?: arrayColumn
-                ?.get(rowIndex)
-                ?.let {
-                    if (arraysAreFrames) {
-                        encodeFrameWithMetadata(
-                            it as AnyFrame,
-                            rowLimit,
-                            imageEncodingOptions,
-                        )
-                    } else {
-                        null
-                    }
+            ?: arrayColumn?.get(rowIndex)?.let {
+                if (arraysAreFrames) {
+                    encodeFrameWithMetadata(
+                        it as AnyFrame,
+                        rowLimit,
+                        imageEncodingOptions,
+                    )
+                } else {
+                    null
                 }
+            }
             ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, imageEncodingOptions)
     }
 
@@ -248,8 +246,7 @@ internal fun encodeFrameWithMetadata(
 internal fun AnyFrame.extractValueColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return allColumns
-        .filter { it.name.startsWith(VALUE_COLUMN_NAME) }
+    return allColumns.filter { it.name.startsWith(VALUE_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
         ?.let { valueCol ->
@@ -289,8 +286,7 @@ internal val AnyFrame.isPossibleToFindUnnamedColumns: Boolean
 internal fun AnyFrame.extractArrayColumn(): DataColumn<*>? {
     val allColumns = columns()
 
-    return columns()
-        .filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
+    return columns().filter { it.name.startsWith(ARRAY_COLUMN_NAME) }
         .takeIf { isPossibleToFindUnnamedColumns }
         ?.maxByOrNull { it.name }
         ?.let { arrayCol ->
@@ -332,9 +328,7 @@ internal fun encodeFrame(frame: AnyFrame): JsonArray {
 
             arrayColumn != null -> arrayColumn[rowIndex]?.let {
                 if (arraysAreFrames) {
-                    encodeFrame(
-                        it as AnyFrame,
-                    )
+                    encodeFrame(it as AnyFrame)
                 } else {
                     null
                 }
