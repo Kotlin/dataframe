@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
@@ -60,6 +62,7 @@ class Join : TestBase() {
     }
 
     class Right
+
     val DataFrame<Right>.fullName: ColumnGroup<Name> get() = getColumnGroup("fullName").cast()
 
     @Test

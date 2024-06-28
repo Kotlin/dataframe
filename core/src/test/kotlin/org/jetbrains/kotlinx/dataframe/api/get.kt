@@ -30,6 +30,7 @@ class GetTests {
     fun `get value from row`() {
         val a by column<Int>()
         val c by column<Int>()
+
         data class A(val a: Int, val b: Int, val c: Int)
 
         val df = dataFrameOf("a", "b")(1, 2)
@@ -63,8 +64,13 @@ class GetTests {
         val df = dataFrameOf(
             columnOf(
                 dataFrameOf("a")(1),
-                dataFrameOf("a", "b")(2, 3, 4, 5)
-            ).named("x")
+                dataFrameOf("a", "b")(
+                    2,
+                    3,
+                    4,
+                    5,
+                ),
+            ).named("x"),
         )
         val x by frameColumn<Schema>()
         df[x][0].a[0] shouldBe 1
@@ -72,9 +78,13 @@ class GetTests {
     }
 
     @Test
+    @Suppress("ktlint:standard:argument-list-wrapping")
     fun `create typed column group accessor`() {
         val df = dataFrameOf(
-            dataFrameOf("a", "b")(1, 2, 3, 4).asColumnGroup("x")
+            dataFrameOf("a", "b")(
+                1, 2,
+                3, 4,
+            ).asColumnGroup("x"),
         )
         val x by columnGroup<Schema>()
         df[x][0].a shouldBe 1

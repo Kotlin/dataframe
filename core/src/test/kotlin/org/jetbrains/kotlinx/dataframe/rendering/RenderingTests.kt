@@ -94,7 +94,9 @@ class RenderingTests : TestBase() {
     @Test
     fun `empty row with nested empty row`() {
         val df = dataFrameOf("a", "b", "c")(null, null, null)
-        val grouped = df.group("a", "b").into("d").group("c", "d").into("e")[0]
+        val grouped = df
+            .group("a", "b").into("d")
+            .group("c", "d").into("e")[0]
 
         val formatted = formatter.format(grouped, DefaultCellRenderer, DisplayConfiguration())
         Jsoup.parse(formatted).text() shouldBe "{ }"
@@ -145,7 +147,8 @@ class RenderingTests : TestBase() {
 
         val body = actualHtml.body.lines().joinToString("") { it.trimStart() }
 
-        body shouldContain """
+        body shouldContain
+            """
             <thead>
             <tr>
             <th class="bottomBorder" style="text-align:left">a</th>
@@ -159,7 +162,7 @@ class RenderingTests : TestBase() {
             </tr>
             </tbody>
             </table>
-        """.trimIndent().replace("\n", "")
+            """.trimIndent().replace("\n", "")
     }
 
     @Test

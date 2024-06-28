@@ -25,9 +25,13 @@ public interface ColumnsContainer<out T> {
     // region columns
 
     public fun columns(): List<AnyCol>
+
     public fun columnsCount(): Int
+
     public fun containsColumn(name: String): Boolean
+
     public fun containsColumn(path: ColumnPath): Boolean
+
     public fun getColumnIndex(name: String): Int
 
     // endregion
@@ -35,10 +39,15 @@ public interface ColumnsContainer<out T> {
     // region getColumnOrNull
 
     public fun getColumnOrNull(name: String): AnyCol?
+
     public fun getColumnOrNull(index: Int): AnyCol?
+
     public fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>?
+
     public fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>?
+
     public fun getColumnOrNull(path: ColumnPath): AnyCol?
+
     public fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>?
 
     // endregion
@@ -46,21 +55,31 @@ public interface ColumnsContainer<out T> {
     // region get
 
     public operator fun get(columnName: String): AnyCol = getColumn(columnName)
+
     public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
 
     public operator fun <R> get(column: DataColumn<R>): DataColumn<R> = getColumn(column.name()).cast()
+
     public operator fun <R> get(column: DataColumn<DataRow<R>>): ColumnGroup<R> = getColumn(column)
+
     public operator fun <R> get(column: DataColumn<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
     public operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumn(column)
+
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
+
     public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
     public operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.columnName).cast()
-    public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.columnName).asColumnGroup().cast()
-    public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.columnName).asAnyFrameColumn().castFrameColumn()
+
+    public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
+        get(column.columnName).asColumnGroup().cast()
+
+    public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
+        get(column.columnName).asAnyFrameColumn().castFrameColumn()
 
     public fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
+
     public fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
 
     // endregion

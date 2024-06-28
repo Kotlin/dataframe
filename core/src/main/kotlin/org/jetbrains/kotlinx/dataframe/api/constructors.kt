@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
+import org.jetbrains.kotlinx.dataframe.impl.UNNAMED_COLUMN_PREFIX
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
@@ -24,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
-import org.jetbrains.kotlinx.dataframe.impl.unnamedColumnPrefix
 import org.jetbrains.kotlinx.dataframe.size
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -96,8 +96,7 @@ public fun <T> ColumnGroupReference.valueColumn(): ColumnDelegate<T> = ColumnDel
 public fun ColumnGroupReference.valueColumn(name: String): ColumnAccessor<Any?> = ColumnAccessorImpl(path() + name)
 
 @JvmName("valueColumnTyped")
-public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> =
-    ColumnAccessorImpl(path() + name)
+public fun <T> ColumnGroupReference.valueColumn(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
 public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<Any?> =
     ColumnAccessorImpl(this.path() + path)
@@ -230,15 +229,16 @@ public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(
 public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> =
     DataColumn.createColumnGroup(
         name = "",
-        df = dataFrameOf(columns)
+        df = dataFrameOf(columns),
     )
         .asDataColumn()
         .forceResolve()
 
-public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataColumn.createFrameColumn(
-    "",
-    frames.toList()
-).forceResolve()
+public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
+    DataColumn.createFrameColumn(
+        name = "",
+        groups = frames.toList(),
+    ).forceResolve()
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
     createColumn(values, typeOf<T>(), false).forceResolve()
@@ -284,10 +284,7 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): AnyFra
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame =
     header.map { value ->
         fill(value).asList().let {
-            DataColumn.create(
-                value.toString(),
-                it
-            )
+            DataColumn.create(value.toString(), it)
         }
     }.toDataFrame()
 
@@ -335,19 +332,20 @@ public class DataFrameBuilder(private val header: List<String>) {
         withColumns { name ->
             valuesBuilder(name).let {
                 DataColumn.create(
-                    name,
-                    it.asList()
+                    name = name,
+                    values = it.asList(),
                 )
             }
         }
 
-    public inline fun <reified C> fill(nrow: Int, value: C): AnyFrame = withColumns { name ->
-        DataColumn.createValueColumn(
-            name,
-            List(nrow) { value },
-            typeOf<C>().withNullability(value == null)
-        )
-    }
+    public inline fun <reified C> fill(nrow: Int, value: C): AnyFrame =
+        withColumns { name ->
+            DataColumn.createValueColumn(
+                name = name,
+                values = List(nrow) { value },
+                type = typeOf<C>().withNullability(value == null),
+            )
+        }
 
     public inline fun <reified C> nulls(nrow: Int): AnyFrame = fill<C?>(nrow, null)
 
@@ -355,24 +353,26 @@ public class DataFrameBuilder(private val header: List<String>) {
         withColumns { name ->
             DataColumn.create(
                 name,
-                List(nrow) { init(it, name) }
+                List(nrow) { init(it, name) },
             )
         }
 
-    public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): AnyFrame = withColumns { name ->
-        DataColumn.create(
-            name,
-            List(nrow, init)
-        )
-    }
+    public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): AnyFrame =
+        withColumns { name ->
+            DataColumn.create(
+                name = name,
+                values = List(nrow, init),
+            )
+        }
 
-    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C) = withColumns { name ->
-        DataColumn.createValueColumn(
-            name,
-            List(nrow, init),
-            typeOf<C>()
-        )
-    }
+    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
+        withColumns { name ->
+            DataColumn.createValueColumn(
+                name = name,
+                values = List(nrow, init),
+                type = typeOf<C>(),
+            )
+        }
 
     public fun randomInt(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextInt() }
 
@@ -403,7 +403,7 @@ public class DynamicDataFrameBuilder {
 
     public fun add(col: AnyCol): String {
         val uniqueName = if (col.name().isEmpty()) {
-            generator.addUnique(unnamedColumnPrefix)
+            generator.addUnique(UNNAMED_COLUMN_PREFIX)
         } else {
             generator.addUnique(col.name())
         }
@@ -416,9 +416,7 @@ public class DynamicDataFrameBuilder {
         return uniqueName
     }
 
-    public fun toDataFrame(): AnyFrame {
-        return dataFrameOf(cols)
-    }
+    public fun toDataFrame(): AnyFrame = dataFrameOf(cols)
 }
 
 /**

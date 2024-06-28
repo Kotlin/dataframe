@@ -78,7 +78,9 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame
 
 // region into
 
-public fun <T, C> MoveClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference): DataFrame<T> =
+public fun <T, C> MoveClause<T, C>.into(
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+): DataFrame<T> =
     moveImpl(
         under = false,
         newPathExpression = column,
@@ -104,10 +106,12 @@ public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(
 public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> =
     column.path().let { path -> under { path } }
 
-public fun <T, C> MoveClause<T, C>.under(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference): DataFrame<T> =
+public fun <T, C> MoveClause<T, C>.under(
+    column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
+): DataFrame<T> =
     moveImpl(
         under = true,
-        column
+        column,
     )
 
 // endregion
@@ -118,8 +122,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
 
 public fun <T, C> MoveClause<T, C>.toTop(
     newColumnName: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String = { it.name() },
-): DataFrame<T> =
-    into { newColumnName(it).toColumnAccessor() }
+): DataFrame<T> = into { newColumnName(it).toColumnAccessor() }
 
 // endregion
 
@@ -135,8 +138,7 @@ public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = a
 
 // endregion
 
-// TODO: implement 'before'
-/*
+/* TODO: implement 'before'
 fun <T, C> MoveColsClause<T, C>.before(columnPath: ColumnPath) = before { columnPath.toColumnDef() }
 fun <T, C> MoveColsClause<T, C>.before(column: Column) = before { column }
 fun <T, C> MoveColsClause<T, C>.before(column: KProperty<*>) = before { column.toColumnDef() }

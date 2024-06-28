@@ -9,9 +9,10 @@ import org.jetbrains.kotlinx.dataframe.indices
 
 public fun AnyFrame.indices(): IntRange = 0 until rowsCount()
 
-public fun <T> DataFrame<T>.indices(filter: RowFilter<T>): List<Int> = indices.filter {
-    val row = get(it)
-    filter(row, row)
-}
+public fun <T> DataFrame<T>.indices(filter: RowFilter<T>): List<Int> =
+    indices.filter {
+        val row = get(it)
+        filter(row, row)
+    }
 
 // endregion

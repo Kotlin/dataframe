@@ -122,7 +122,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     ): TransformableColumnSet<*> =
         columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
-            filter = filter
+            filter = filter,
         )
 
     /**
@@ -138,7 +138,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     ): TransformableColumnSet<*> =
         asSingleColumn().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
-            filter = filter
+            filter = filter,
         )
 
     /**
@@ -154,7 +154,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     ): TransformableColumnSet<*> =
         this.ensureIsColumnGroup().columnsOfKindInternal(
             kinds = headPlusArray(kind, others).toSet(),
-            filter = filter
+            filter = filter,
         )
 
     /**
@@ -167,8 +167,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -180,8 +179,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     /**
      * @include [CommonColsOfKindDocs]
@@ -193,8 +191,7 @@ public interface ColsOfKindColumnsSelectionDsl {
         kind: ColumnKind,
         vararg others: ColumnKind,
         filter: ColumnFilter<*> = { true },
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsOfKind(kind, *others, filter = filter)
+    ): TransformableColumnSet<*> = columnGroup(this).colsOfKind(kind, *others, filter = filter)
 
     // endregion
 }
@@ -208,8 +205,6 @@ public interface ColsOfKindColumnsSelectionDsl {
 internal fun ColumnsResolver<*>.columnsOfKindInternal(
     kinds: Set<ColumnKind>,
     filter: ColumnFilter<*>,
-): TransformableColumnSet<*> = colsInternal {
-    it.kind() in kinds && filter(it)
-}
+): TransformableColumnSet<*> = colsInternal { it.kind() in kinds && filter(it) }
 
 // endregion
