@@ -36,10 +36,9 @@ class MoveTests {
 
     @Test
     fun `batch ungrouping`() {
-        val ungrouped = grouped
-            .move {
-                colsAtAnyDepth { it.depth() > 0 && !it.isColumnGroup() }
-            }.into { pathOf(it.path.joinToString(".")) }
+        val ungrouped = grouped.move {
+            colsAtAnyDepth { it.depth() > 0 && !it.isColumnGroup() }
+        }.into { pathOf(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
 

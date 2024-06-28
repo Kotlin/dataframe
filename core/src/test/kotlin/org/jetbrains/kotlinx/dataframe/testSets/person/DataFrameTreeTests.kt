@@ -281,9 +281,7 @@ class DataFrameTreeTests : BaseTest() {
         val selected = typed2.select { nameAndCity }
         val nested = selected.implode(dropNA = false) { nameAndCity.city }
         val mergedCity = column<List<String?>>("city")
-        val res = nested
-            .split { nameAndCity[mergedCity] }
-            .intoRows()
+        val res = nested.split { nameAndCity[mergedCity] }.intoRows()
         val expected = selected.sortBy { nameAndCity.name }
         val actual = res.sortBy { nameAndCity.name }
         actual shouldBe expected
@@ -302,17 +300,16 @@ class DataFrameTreeTests : BaseTest() {
                 body(g, g)
             }
 
-        val expected = modified
-            .cast<Person>()
-            .groupBy { name and city }
-            .map {
+        val expected = modified.cast<Person>()
+            .groupBy { name and city }.map {
                 val value = if (key.city == "Moscow") {
                     group.age.toList()
                 } else {
                     group.age[0]
                 }
                 (key.name to key.city.toString()) to value
-            }.plus("Bob" to "Moscow" to emptyList<Int>())
+            }
+            .plus("Bob" to "Moscow" to emptyList<Int>())
             .toMap()
 
         fun <T> DataFrame<T>.check() {
@@ -329,36 +326,19 @@ class DataFrameTreeTests : BaseTest() {
                 }
             }
 
-            val actual = data
-                .flatMap { col ->
-                    val city = col.name()
-                    rows().map { (it[name] to city) to col[it.index()] }.filter { it.second != null }
-                }.toMap()
+            val actual = data.flatMap { col ->
+                val city = col.name()
+                rows().map { (it[name] to city) to col[it.index()] }.filter { it.second != null }
+            }.toMap()
             actual shouldBe expected
         }
 
-        typed2
-            .pivot { nameAndCity.city }
-            .groupBy { nameAndCity.name }
-            .values { age }
-            .check()
-        df2
-            .pivot(nameAndCity[city])
-            .groupBy { nameAndCity[name] }
-            .values(age)
-            .check()
-        df2
-            .pivot {
-                it[GroupedPerson::nameAndCity][NameAndCity::city]
-            }.groupBy { it[GroupedPerson::nameAndCity][NameAndCity::name] }
-            .values(
-                GroupedPerson::age,
-            ).check()
-        df2
-            .pivot { it["nameAndCity"]["city"] }
-            .groupBy { it["nameAndCity"]["name"] }
-            .values("age")
-            .check()
+        typed2.pivot { nameAndCity.city }.groupBy { nameAndCity.name }.values { age }.check()
+        df2.pivot(nameAndCity[city]).groupBy { nameAndCity[name] }.values(age).check()
+        df2.pivot { it[GroupedPerson::nameAndCity][NameAndCity::city] }.groupBy {
+            it[GroupedPerson::nameAndCity][NameAndCity::name]
+        }.values(GroupedPerson::age).check()
+        df2.pivot { it["nameAndCity"]["city"] }.groupBy { it["nameAndCity"]["name"] }.values("age").check()
     }
 
     @Test
@@ -409,8 +389,7 @@ class DataFrameTreeTests : BaseTest() {
                     else -> {
                         val df = value as? AnyFrame
                         df shouldNotBe null
-                        df!!
-                            .rows()
+                        df!!.rows()
                             .map { it["age"] as Int to it["weight"] as Int? }
                             .sortedBy { it.first } shouldBe expValues.sortedBy { it.first }
                     }
@@ -427,7 +406,8 @@ class DataFrameTreeTests : BaseTest() {
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
         val nameGroup = split.nameAndCity.name.asColumnGroup()
         nameGroup.name() shouldBe "name"
-        nameGroup.columnsCount() shouldBe typed2.nameAndCity.name
+        nameGroup.columnsCount() shouldBe
+            typed2.nameAndCity.name
             .map { it.length }
             .max()
         nameGroup.columnNames() shouldBe (1..nameGroup.columnsCount()).map { "char$it" }
@@ -477,7 +457,8 @@ class DataFrameTreeTests : BaseTest() {
         val table = col as FrameColumn<*>
         table.schema.value.columns
             .map { it.key }
-            .sorted() shouldBe typed
+            .sorted() shouldBe
+            typed
             .select { age and weight }
             .columnNames()
             .sorted()
@@ -485,8 +466,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun extensionPropertiesTest() {
-        val code = CodeGenerator
-            .create()
+        val code = CodeGenerator.create()
             .generate<GroupedPerson>(
                 interfaceMode = InterfaceGenerationMode.None,
                 extensionProperties = true,
@@ -571,8 +551,7 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = grouped.groups.name()
         val plain = grouped.toDataFrame()
         val res = plain
-            .split(grouped.groups)
-            .intoRows()
+            .split(grouped.groups).intoRows()
             .remove { it[groupCol]["city"] }
             .ungroup(groupCol)
             .sortBy { name and age }
@@ -585,8 +564,7 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = grouped.groups.name()
         val plain = grouped.toDataFrame()
         val res = plain
-            .split(grouped.groups)
-            .intoRows()
+            .split(grouped.groups).intoRows()
             .remove { it[groupCol]["city"] }
             .ungroup(groupCol)
             .sortBy { name and age }
@@ -597,17 +575,10 @@ class DataFrameTreeTests : BaseTest() {
     fun explodeFrameColumnWithNulls() {
         val grouped = typed.groupBy { city }
         val groupCol = grouped.groups.toColumnAccessor()
-        val plain = grouped
-            .toDataFrame()
-            .update { groupCol }
-            .at(1)
-            .withNull()
-            .update { groupCol }
-            .at(2)
-            .with { emptyDataFrame() }
-            .update { groupCol }
-            .at(3)
-            .with { it.filter { false } }
+        val plain = grouped.toDataFrame()
+            .update { groupCol }.at(1).withNull()
+            .update { groupCol }.at(2).with { emptyDataFrame() }
+            .update { groupCol }.at(3).with { it.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.rowsCount() ?: 0, 1) }
         res.rowsCount() shouldBe expected
@@ -643,11 +614,8 @@ class DataFrameTreeTests : BaseTest() {
     fun `join by frame column`() {
         val left = typed.groupBy { name }.updateGroups { it.remove { name and city } }
         val right =
-            typed
-                .update { name }
-                .with { it.reversed() }
-                .groupBy { name }
-                .updateGroups { it.remove { name and city } }
+            typed.update { name }.with { it.reversed() }
+                .groupBy { name }.updateGroups { it.remove { name and city } }
         val groupCol = left.groups.toColumnAccessor()
         val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
         joined.columnsCount() shouldBe 3
@@ -718,10 +686,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `distinct at column group`() {
-        typed2.nameAndCity
-            .distinct()
-            .filter { name.startsWith("A") }
-            .columns() shouldBe
+        typed2.nameAndCity.distinct().filter { name.startsWith("A") }.columns() shouldBe
             typed
                 .select { name and city }
                 .distinct()
@@ -814,8 +779,7 @@ class DataFrameTreeTests : BaseTest() {
         val group by frameColumn<GroupedPerson>()
 
         typed2
-            .groupBy { expr { age > 30 } into "isOld" }
-            .into(group)
+            .groupBy { expr { age > 30 } into "isOld" }.into(group)
             .aggregate {
                 group().maxBy { rowsCount() }.weight.median() into "m"
             }["m"] shouldBe 61

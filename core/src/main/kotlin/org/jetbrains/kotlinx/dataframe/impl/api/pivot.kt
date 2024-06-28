@@ -55,9 +55,7 @@ internal class PivotChainColumnSet<C>(val first: ColumnsResolver<C>, val second:
 internal fun <T, C> DataFrame<T>.getPivotSequences(
     columns: PivotColumnsSelector<T, C>,
 ): List<List<PivotChainElement>> =
-    columns
-        .toColumnSet()
-        .resolve(this, UnresolvedColumnsPolicy.Fail)
+    columns.toColumnSet().resolve(this, UnresolvedColumnsPolicy.Fail)
         .map {
             when (val col = it) {
                 is PivotChain<*> -> col.columns as List<PivotChainElement>

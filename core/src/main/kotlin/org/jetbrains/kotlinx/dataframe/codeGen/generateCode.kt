@@ -23,15 +23,14 @@ public fun <T> DataFrame<T>.generateCode(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): String {
     val codeGen = CodeGenerator.create()
-    return codeGen
-        .generate(
-            schema = schema(),
-            name = markerName,
-            fields = fields,
-            extensionProperties = extensionProperties,
-            isOpen = true,
-            visibility = visibility,
-        ).code.declarations
+    return codeGen.generate(
+        schema = schema(),
+        name = markerName,
+        fields = fields,
+        extensionProperties = extensionProperties,
+        isOpen = true,
+        visibility = visibility,
+    ).code.declarations
 }
 
 public inline fun <reified T> DataFrame<T>.generateInterfaces(): String =

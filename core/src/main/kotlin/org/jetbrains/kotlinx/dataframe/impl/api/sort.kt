@@ -42,13 +42,12 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
     val sortColumns = getSortColumns(columns, unresolvedColumnsPolicy)
     if (sortColumns.isEmpty()) return this
 
-    val compChain = sortColumns
-        .map {
-            when (it.direction) {
-                SortDirection.Asc -> it.column.createComparator(it.nullsLast)
-                SortDirection.Desc -> it.column.createComparator(it.nullsLast).reversed()
-            }
-        }.reduce { a, b -> a.then(b) }
+    val compChain = sortColumns.map {
+        when (it.direction) {
+            SortDirection.Asc -> it.column.createComparator(it.nullsLast)
+            SortDirection.Desc -> it.column.createComparator(it.nullsLast).reversed()
+        }
+    }.reduce { a, b -> a.then(b) }
 
     val permutation = (0 until nrow).sortedWith(compChain)
 
@@ -70,9 +69,7 @@ internal fun <T, C> DataFrame<T>.getSortColumns(
     columns: SortColumnsSelector<T, C>,
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
 ): List<SortColumnDescriptor<*>> =
-    columns
-        .toColumnSet()
-        .resolve(this, unresolvedColumnsPolicy)
+    columns.toColumnSet().resolve(this, unresolvedColumnsPolicy)
         // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
         .filterNot { it.data is MissingColumnGroup<*> }
         .map {

@@ -108,31 +108,25 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
     when {
         // values is a non-empty list of AnyRows
         values.any() && values.all { it is AnyRow } ->
-            DataColumn
-                .createColumnGroup(
-                    name = "",
-                    df = (values as Iterable<AnyRow>).toDataFrame(),
-                ).asDataColumn()
-                .cast()
+            DataColumn.createColumnGroup(
+                name = "",
+                df = (values as Iterable<AnyRow>).toDataFrame(),
+            ).asDataColumn().cast()
 
         // values is a non-empty list of DataColumns
         values.any() && values.all { it is AnyCol } ->
-            DataColumn
-                .createColumnGroup(
-                    name = "",
-                    df = (values as Iterable<AnyCol>).toDataFrame(),
-                ).asDataColumn()
-                .cast()
+            DataColumn.createColumnGroup(
+                name = "",
+                df = (values as Iterable<AnyCol>).toDataFrame(),
+            ).asDataColumn().cast()
 
         // values is a non-empty list of DataFrames and nulls
         // (but not just nulls; we cannot assume that should create a FrameColumn)
         values.any() && values.all { it is AnyFrame? } && !values.all { it == null } ->
-            DataColumn
-                .createFrameColumn(
-                    name = "",
-                    groups = values.map { it as? AnyFrame ?: DataFrame.empty() },
-                ).asDataColumn()
-                .cast()
+            DataColumn.createFrameColumn(
+                name = "",
+                groups = values.map { it as? AnyFrame ?: DataFrame.empty() },
+            ).asDataColumn().cast()
 
         guessType ->
             guessColumnType(

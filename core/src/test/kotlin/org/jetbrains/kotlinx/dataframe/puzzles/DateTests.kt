@@ -72,26 +72,22 @@ class DateTests {
         val month4 by column<Int>()
         val month41 by column<Int>()
 
-        df
-            .add("month4") {
-                when (dti().monthNumber) {
-                    in 1..4 -> 1
-                    in 5..8 -> 2
-                    else -> 3
-                }
-            }.groupBy("month4")
-            .aggregate { maxBy(s) into "max" }
+        df.add("month4") {
+            when (dti().monthNumber) {
+                in 1..4 -> 1
+                in 5..8 -> 2
+                else -> 3
+            }
+        }.groupBy("month4").aggregate { maxBy(s) into "max" }
             .flatten()[month4, dti, month41] shouldBe expected
 
-        df
-            .add("month4") {
-                when ("dti"<LocalDate>().monthNumber) {
-                    in 1..4 -> 1
-                    in 5..8 -> 2
-                    else -> 3
-                }
-            }.groupBy("month4")
-            .aggregate { maxBy("s") into "max" }
+        df.add("month4") {
+            when ("dti"<LocalDate>().monthNumber) {
+                in 1..4 -> 1
+                in 5..8 -> 2
+                else -> 3
+            }
+        }.groupBy("month4").aggregate { maxBy("s") into "max" }
             .flatten()["month4", "dti", "month41"] shouldBe expected
     }
 

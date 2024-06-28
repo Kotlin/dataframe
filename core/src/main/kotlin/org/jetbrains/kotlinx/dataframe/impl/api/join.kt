@@ -31,17 +31,14 @@ import kotlin.reflect.full.withNullability
 
 internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
     {
-        left
-            .columnNames()
-            .intersect(right.columnNames().toSet())
+        left.columnNames().intersect(right.columnNames().toSet())
             .map { it.toColumnAccessor() }
             .let { ColumnsList(it) }
     }
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnsSelector<T, T> =
     {
-        dataFrames
-            .map { it.columnNames() }
+        dataFrames.map { it.columnNames() }
             .fold<List<String>, Set<String>?>(null) { set, names ->
                 set?.intersect(names.toSet()) ?: names.toSet()
             }.orEmpty()
@@ -174,8 +171,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         if (addNewColumns) {
             other.getColumnsWithPaths {
                 colsAtAnyDepth {
-                    !it.isColumnGroup() &&
-                        !rightJoinColumnPaths.contains(it.path)
+                    !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path)
                 }
             }
         } else {

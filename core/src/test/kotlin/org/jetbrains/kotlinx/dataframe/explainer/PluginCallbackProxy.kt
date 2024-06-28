@@ -95,15 +95,15 @@ object PluginCallbackProxy : PluginCallback {
                             body =
                                 """
                                 <details>
-                                <summary>${expressions.joinToString(".") { it.source }
-                                    .also {
+                                <summary>${
+                                    expressions.joinToString(".") { it.source }.also {
                                         if (it.length > 95) {
                                             TODO(
                                                 "expression is too long ${it.length}. better to split sample in multiple snippets",
                                             )
                                         }
-                                    }
-                                    .escapeHtmlForIFrame()}</summary>
+                                    }.escapeHtmlForIFrame()
+                                }</summary>
                                 ${details.body}
                                 </details>
                                 <br>
@@ -247,20 +247,19 @@ private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
 
         is Update<*, *> ->
-            dataframeLike.df
-                .let {
-                    var it = it.format(
-                        dataframeLike.columns as ColumnsSelectionDsl<Any?>.(
-                            it: ColumnsSelectionDsl<Any?>,
-                        ) -> ColumnsResolver<*>,
-                    )
-                    if (dataframeLike.filter != null) {
-                        it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
-                    }
-                    it.with {
-                        background(rgb(152, 251, 152))
-                    }
-                }.toHTML1()
+            dataframeLike.df.let {
+                var it = it.format(
+                    dataframeLike.columns as ColumnsSelectionDsl<Any?>.(
+                        it: ColumnsSelectionDsl<Any?>,
+                    ) -> ColumnsResolver<*>,
+                )
+                if (dataframeLike.filter != null) {
+                    it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
+                }
+                it.with {
+                    background(rgb(152, 251, 152))
+                }
+            }.toHTML1()
 
         is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
 

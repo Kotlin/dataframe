@@ -133,9 +133,9 @@ internal fun <Column : GenericColumn, ColumnGroup : GenericColumnGroup<Column>> 
             // assert that new columns go directly under current column so they have longer paths
             val invalidPath = subTree.firstOrNull { it.insertionPath.size == childDepth }
             check(invalidPath == null) {
-                "Can not insert column '${invalidPath!!.insertionPath.joinToString(
-                    ".",
-                )}' because column with this path already exists in DataFrame"
+                "Can not insert column '${
+                    invalidPath!!.insertionPath.joinToString(".")
+                }' because column with this path already exists in DataFrame"
             }
             val group = it as? ColumnGroup
             check(
@@ -163,35 +163,34 @@ internal fun <Column : GenericColumn, ColumnGroup : GenericColumnGroup<Column>> 
     }
 
     // collect new columns to insert
-    val columnsToAdd = columns
-        .mapNotNull {
-            val name = it.insertionPath[depth]
-            val subTree = columnsMap[name]
-            if (subTree != null) {
-                columnsMap.remove(name)
+    val columnsToAdd = columns.mapNotNull {
+        val name = it.insertionPath[depth]
+        val subTree = columnsMap[name]
+        if (subTree != null) {
+            columnsMap.remove(name)
 
-                // look for columns in subtree that were originally located at the current insertion path
-                // find the minimal original index among them
-                // new column will be inserted at that position
-                val minIndex = subTree.minOf {
-                    if (it.referenceNode == null) {
-                        Int.MAX_VALUE
+            // look for columns in subtree that were originally located at the current insertion path
+            // find the minimal original index among them
+            // new column will be inserted at that position
+            val minIndex = subTree.minOf {
+                if (it.referenceNode == null) {
+                    Int.MAX_VALUE
+                } else {
+                    var col = it.referenceNode
+                    if (col.depth > depth) col = col.getAncestor(depth + 1)
+                    if (col.parent === treeNode) {
+                        if (col.data.wasRemoved) col.data.originalIndex else col.data.originalIndex + 1
                     } else {
-                        var col = it.referenceNode
-                        if (col.depth > depth) col = col.getAncestor(depth + 1)
-                        if (col.parent === treeNode) {
-                            if (col.data.wasRemoved) col.data.originalIndex else col.data.originalIndex + 1
-                        } else {
-                            Int.MAX_VALUE
-                        }
+                        Int.MAX_VALUE
                     }
                 }
-
-                minIndex to (name to subTree)
-            } else {
-                null
             }
-        }.sortedBy { it.first } // sort by insertion index
+
+            minIndex to (name to subTree)
+        } else {
+            null
+        }
+    }.sortedBy { it.first } // sort by insertion index
 
     val removedSiblings = treeNode?.children
     var k = 0 // index in 'removedSiblings' list
@@ -213,11 +212,9 @@ internal fun <Column : GenericColumn, ColumnGroup : GenericColumnGroup<Column>> 
         val newCol = if (nodeToInsert != null) {
             val column = nodeToInsert.column
             if (columns.size > 1) {
-                check(
-                    columns.count {
-                        it.insertionPath.size == childDepth
-                    } == 1,
-                ) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
+                check(columns.count { it.insertionPath.size == childDepth } == 1) {
+                    "Can not insert more than one column into the path ${nodeToInsert.insertionPath}"
+                }
                 column as ColumnGroup
                 val columns1 = columns.filter { it.insertionPath.size > childDepth }
                 val newDf = if (columns1.isEmpty()) {

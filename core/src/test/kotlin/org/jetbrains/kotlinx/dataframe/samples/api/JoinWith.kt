@@ -163,7 +163,7 @@ class JoinWith : TestBase() {
     private fun DataFrameHtmlData.wrap(title: String): DataFrameHtmlData =
         copy(
             body =
-                """
+            """
                 <div class="table-container">
                     <b>$title</b>
                     $body
@@ -174,7 +174,7 @@ class JoinWith : TestBase() {
     private fun DataFrameHtmlData.wrap(): DataFrameHtmlData =
         copy(
             body =
-                """
+            """
                 <div class="table-container">
                     $body
                 </div>
@@ -195,7 +195,7 @@ class JoinWith : TestBase() {
                 .plus(
                     DataFrameHtmlData(
                         style =
-                            """
+                        """
                             body {
                                 display: flex;
                                 align-items: flex-start;
@@ -526,15 +526,15 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData
-                .tableDefinitions()
+            manualOutput = DataFrameHtmlData.tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
                         .plus(df1.innerJoin(df2, "index", "age").toColoredHTML().wrap("result"))
                         .wrapRow(),
-                ).plus(other),
+                )
+                .plus(other),
         )
     }
 
@@ -546,19 +546,18 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData
-                .tableDefinitions()
+            manualOutput = DataFrameHtmlData.tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
                         .plus(
-                            df1
-                                .innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML()
-                                .wrap("result"),
-                        ).wrapRow(),
-                ).plus(other),
+                            df1.innerJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML().wrap("result")
+                        )
+                        .wrapRow()
+                )
+                .plus(other)
         )
     }
 
@@ -571,27 +570,26 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData
-                .tableDefinitions()
+            manualOutput = DataFrameHtmlData.tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
-                        .plus(
-                            df1.leftJoin(df2, "index", "age").toColoredHTML().wrap("result"),
-                        ).wrapRow(),
-                ).plus(DataFrameHtmlData(body = "<br><br>"))
+                        .plus(df1.leftJoin(df2, "index", "age").toColoredHTML().wrap("result"))
+                        .wrapRow()
+                )
+                .plus(DataFrameHtmlData(body = "<br><br>"))
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap())
                         .plus(df2.toColoredHTML().wrap())
                         .plus(
-                            df1
-                                .leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML()
-                                .wrap(),
-                        ).wrapRow(),
-                ).plus(other),
+                            df1.leftJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML().wrap()
+                        )
+                        .wrapRow()
+                )
+                .plus(other)
         )
     }
 
@@ -604,34 +602,33 @@ class JoinWith : TestBase() {
         // SampleEnd
 
         PluginCallbackProxy.overrideHtmlOutput(
-            manualOutput = DataFrameHtmlData
-                .tableDefinitions()
+            manualOutput = DataFrameHtmlData.tableDefinitions()
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap("df1"))
                         .plus(df2.toColoredHTML().wrap("df2"))
-                        .plus(
-                            df1.rightJoin(df2, "index", "age").toColoredHTML().wrap("result"),
-                        ).wrapRow(),
-                ).plus(DataFrameHtmlData(body = "<br><br>"))
+                        .plus(df1.rightJoin(df2, "index", "age").toColoredHTML().wrap("result"))
+                        .wrapRow()
+                )
+                .plus(DataFrameHtmlData(body = "<br><br>"))
                 .plus(
                     DataFrameHtmlData()
                         .plus(df1.toColoredHTML().wrap())
                         .plus(df2.toColoredHTML().wrap())
                         .plus(
-                            df1
-                                .rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
-                                .toColoredHTML()
-                                .wrap(),
-                        ).wrapRow(),
-                ).plus(other),
+                            df1.rightJoinWith(df2) { it["index"] == right["index"] && it["age"] == right["age"] }
+                                .toColoredHTML().wrap()
+                        )
+                        .wrapRow()
+                )
+                .plus(other)
         )
     }
 
     private fun DataFrameHtmlData.wrapRow(): DataFrameHtmlData =
         copy(
             body =
-                """
+            """
                 <div class="table-row">
                     $body
                 </div>
@@ -640,7 +637,7 @@ class JoinWith : TestBase() {
 
     private val other = DataFrameHtmlData(
         style =
-            """
+        """
             body {
                 font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
                 font-size: 14px;

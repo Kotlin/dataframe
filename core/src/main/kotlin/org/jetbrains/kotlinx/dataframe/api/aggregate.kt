@@ -21,6 +21,4 @@ public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<A
 @Refine
 @Interpretable("Aggregate")
 public fun <T, R> Grouped<T>.aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T> =
-    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), {
-        groups.cast()
-    }, removeColumns = true, body).cast<T>()
+    aggregateGroupBy((this as GroupBy<*, *>).toDataFrame(), { groups.cast() }, removeColumns = true, body).cast<T>()

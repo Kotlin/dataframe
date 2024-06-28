@@ -326,10 +326,9 @@ internal fun fromJsonListAnyColumns(
                                 parsed.unwrapUnnamedColumns().firstOrNull()
                             }
                         }
-                        val valueType = map.values
-                            .map {
-                                guessValueType(sequenceOf(it))
-                            }.commonType()
+                        val valueType = map.values.map {
+                            guessValueType(sequenceOf(it))
+                        }.commonType()
 
                         valueTypes += valueType
 

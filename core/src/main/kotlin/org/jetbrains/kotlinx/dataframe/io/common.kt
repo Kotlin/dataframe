@@ -42,17 +42,16 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
         else -> {
             val header = get(0).map { it.toString() }
             val data = drop(1)
-            header
-                .mapIndexed { colIndex, name ->
-                    val values = data.map { row ->
-                        if (row.size <= colIndex) {
-                            null
-                        } else {
-                            row[colIndex]
-                        }
+            header.mapIndexed { colIndex, name ->
+                val values = data.map { row ->
+                    if (row.size <= colIndex) {
+                        null
+                    } else {
+                        row[colIndex]
                     }
-                    guessColumnType(name, values)
-                }.toDataFrame()
+                }
+                guessColumnType(name, values)
+            }.toDataFrame()
         }
     }
 

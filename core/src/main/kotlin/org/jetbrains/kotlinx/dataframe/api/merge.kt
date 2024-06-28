@@ -73,8 +73,7 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
         res = res
             .removeImpl(allowMissingColumns = true) { path }
             .df
-            .move(mergePath)
-            .into { path }
+            .move(mergePath).into { path }
     }
     return res
 }

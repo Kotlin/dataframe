@@ -96,10 +96,9 @@ public object KotlinNotebookPluginUtils {
                 ColumnPath(path)
             }
 
-            (sortKeys zip isDesc)
-                .map { (key, desc) ->
-                    if (desc) key.desc() else key
-                }.toColumnSet()
+            (sortKeys zip isDesc).map { (key, desc) ->
+                if (desc) key.desc() else key
+            }.toColumnSet()
         }
 
     /**

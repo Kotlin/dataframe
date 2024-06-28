@@ -88,11 +88,7 @@ public open class Marker(
     public val columnNames: List<String> get() = allFields.map { it.columnName }
 
     public val schema: DataFrameSchema by lazy {
-        DataFrameSchemaImpl(
-            allFields.associate {
-                it.columnName to it.columnSchema
-            },
-        )
+        DataFrameSchemaImpl(allFields.associate { it.columnName to it.columnSchema })
     }
 
     public fun implements(schema: Marker): Boolean =

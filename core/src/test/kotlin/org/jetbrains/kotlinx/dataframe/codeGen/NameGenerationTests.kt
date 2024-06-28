@@ -17,16 +17,15 @@ class NameGenerationTests {
     @Test
     fun `interface generation`() {
         val codeGen = CodeGenerator.create()
-        val code = codeGen
-            .generate(
-                schema = df.schema(),
-                name = "DataType",
-                fields = true,
-                extensionProperties = false,
-                isOpen = false,
-                visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-                knownMarkers = emptyList(),
-            ).code
+        val code = codeGen.generate(
+            schema = df.schema(),
+            name = "DataType",
+            fields = true,
+            extensionProperties = false,
+            isOpen = false,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            knownMarkers = emptyList(),
+        ).code
 
         val expected =
             """
