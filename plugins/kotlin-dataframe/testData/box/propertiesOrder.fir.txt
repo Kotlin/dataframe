@@ -1,6 +1,4 @@
-FILE: read.kt
-    package org.jetbrains.kotlinx.dataframe
-
+FILE: propertiesOrder.kt
     public final fun box(): R|kotlin/String| {
         lval df: R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/Read_16>| = Q|org/jetbrains/kotlinx/dataframe/DataFrame|.R|kotlin/let|<R|org/jetbrains/kotlinx/dataframe/DataFrame.Companion|, R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/Read_16>|>(<L> = fun <anonymous>(it: R|org/jetbrains/kotlinx/dataframe/DataFrame.Companion|): R|org/jetbrains/kotlinx/dataframe/DataFrame<<local>/Read_16>| <inline=Inline, kind=EXACTLY_ONCE>  {
             local abstract class Read_16I : R|kotlin/Any| {
@@ -59,9 +57,8 @@ FILE: read.kt
             }
 
             local abstract class Read_16 : R|<local>/Read_16I| {
-                public abstract var scope0: R|<local>/Scope0|
+                @R|org/jetbrains/kotlinx/dataframe/annotations/ScopeProperty|() public abstract val scope0: R|<local>/Scope0|
                     public get(): R|<local>/Scope0|
-                    public set(value: R|<local>/Scope0|): R|kotlin/Unit|
 
                 public constructor(): R|<local>/Read_16|
 
@@ -70,6 +67,6 @@ FILE: read.kt
             ^ @R|org/jetbrains/kotlinx/dataframe/annotations/Import|() R|<local>/it|.R|org/jetbrains/kotlinx/dataframe/io/read|(String(https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv))
         }
         )
-        (this@R|org/jetbrains/kotlinx/dataframe/box|, R|<local>/df|).R|<local>/Scope0.full_name|
+        (this@R|/box|, R|<local>/df|).R|<local>/Scope0.full_name|
         ^box String(OK)
     }
