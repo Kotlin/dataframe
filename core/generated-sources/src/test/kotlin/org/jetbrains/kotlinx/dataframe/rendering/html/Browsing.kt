@@ -10,7 +10,9 @@ class Browsing {
     @Test
     fun test() {
         data class Name(val firstName: String, val lastName: String?)
+
         data class Score(val subject: String, val value: Int)
+
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
 
         val students = listOf(
@@ -18,7 +20,7 @@ class Browsing {
             Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5))),
             Student(Name("Null", null), 100, listOf(Score("nothing", 5))),
             Student(Name("Antony", "Hover"), 20, listOf(Score("russian", 1))),
-            Student(Name("Sally", "Fever"), 20, listOf(Score("art", 4), Score("math", 4), Score("biology", 3)))
+            Student(Name("Sally", "Fever"), 20, listOf(Score("art", 4), Score("math", 4), Score("biology", 3))),
         )
 
         val df = students.toDataFrame {

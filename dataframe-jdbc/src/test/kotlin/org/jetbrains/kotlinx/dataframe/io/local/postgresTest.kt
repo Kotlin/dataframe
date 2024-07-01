@@ -118,7 +118,7 @@ class PostgresTest {
             )
             """
             connection.createStatement().execute(
-                createTableStatement.trimIndent()
+                createTableStatement.trimIndent(),
             )
 
             @Language("SQL")
@@ -147,7 +147,7 @@ class PostgresTest {
             )
             """
             connection.createStatement().execute(
-                createTableQuery.trimIndent()
+                createTableQuery.trimIndent(),
             )
 
             @Language("SQL")
@@ -281,7 +281,8 @@ class PostgresTest {
     @Test
     fun `read from sql query`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT
                 t1.id,
                 t1.bigintCol,
@@ -289,7 +290,7 @@ class PostgresTest {
                 t2.textCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<ViewTable>()
         val result = df.filter { it[ViewTable::id] == 1 }
@@ -315,8 +316,9 @@ class PostgresTest {
         val table2Df = dataframes[1].cast<Table2>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))") }
-            .rowsCount() shouldBe 1
+        table2Df.filter {
+            it[Table2::pathcol] == org.postgresql.geometric.PGpath("((1,2),(3,1))")
+        }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 1001
     }
 
@@ -324,31 +326,39 @@ class PostgresTest {
     fun `read columns of different types to check type mapping`() {
         val tableName1 = "table1"
         val df1 = DataFrame.readSqlTable(connection, tableName1).cast<Table1>()
-        val result = df1.select("smallintcol").add("smallintcol2") {it[Table1::smallintcol]}
+        val result = df1.select("smallintcol")
+            .add("smallintcol2") { it[Table1::smallintcol] }
         result[0][1] shouldBe 11
 
-        val result1 = df1.select("bigserialcol").add("bigserialcol2") {it[Table1::bigserialcol]}
+        val result1 = df1.select("bigserialcol")
+            .add("bigserialcol2") { it[Table1::bigserialcol] }
         result1[0][1] shouldBe 1000000001L
 
-        val result2 = df1.select("doublecol").add("doublecol2") {it[Table1::doublecol]}
+        val result2 = df1.select("doublecol")
+            .add("doublecol2") { it[Table1::doublecol] }
         result2[0][1] shouldBe 12.34
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
 
-        val result3 = df2.select("moneycol").add("moneycol2") {it[Table2::moneycol]}
+        val result3 = df2.select("moneycol")
+            .add("moneycol2") { it[Table2::moneycol] }
         result3[0][1] shouldBe "123,45 ?" // TODO: weird mapping
 
-        val result4 = df2.select("numericcol").add("numericcol2") {it[Table2::numericcol]}
+        val result4 = df2.select("numericcol")
+            .add("numericcol2") { it[Table2::numericcol] }
         result4[0][1] shouldBe BigDecimal("12.34")
 
-        val result5 = df2.select("realcol").add("realcol2") {it[Table2::realcol]}
+        val result5 = df2.select("realcol")
+            .add("realcol2") { it[Table2::realcol] }
         result5[0][1] shouldBe 12.34f
 
-        val result7 = df2.select("smallserialcol").add("smallserialcol2") {it[Table2::smallserialcol]}
+        val result7 = df2.select("smallserialcol")
+            .add("smallserialcol2") { it[Table2::smallserialcol] }
         result7[0][1] shouldBe 1001
 
-        val result8 = df2.select("serialcol").add("serialcol2") {it[Table2::serialcol]}
+        val result8 = df2.select("serialcol")
+            .add("serialcol2") { it[Table2::serialcol] }
         result8[0][1] shouldBe 1000001
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)

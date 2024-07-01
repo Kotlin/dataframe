@@ -9,15 +9,19 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 
 internal class ColumnGroupWithPathImpl<T> internal constructor(
     val column: ColumnGroup<T>,
-    override val path: ColumnPath
-) : ColumnWithPath<DataRow<T>>, ColumnGroupImpl<T>(column.name, column) {
+    override val path: ColumnPath,
+) : ColumnGroupImpl<T>(column.name, column),
+    ColumnWithPath<DataRow<T>> {
 
-    override fun rename(newName: String) = if (newName == name()) this else ColumnGroupWithPathImpl(
-        column.rename(
-            newName
-        ),
-        path.dropLast(1) + newName
-    )
+    override fun rename(newName: String) =
+        if (newName == name()) {
+            this
+        } else {
+            ColumnGroupWithPathImpl(
+                column = column.rename(newName),
+                path = path.dropLast(1) + newName,
+            )
+        }
 
     override val data: DataColumn<DataRow<T>>
         get() = column as DataColumn<DataRow<T>>

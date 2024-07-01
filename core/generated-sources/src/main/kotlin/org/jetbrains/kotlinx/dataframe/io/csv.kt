@@ -9,7 +9,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -57,8 +60,17 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
 }
 
 public enum class CSVType(public val format: CSVFormat) {
-    DEFAULT(CSVFormat.DEFAULT.builder().setAllowMissingColumnNames(true).setIgnoreSurroundingSpaces(true).build()),
-    TDF(CSVFormat.TDF.builder().setAllowMissingColumnNames(true).build())
+    DEFAULT(
+        CSVFormat.DEFAULT.builder()
+            .setAllowMissingColumnNames(true)
+            .setIgnoreSurroundingSpaces(true)
+            .build(),
+    ),
+    TDF(
+        CSVFormat.TDF.builder()
+            .setAllowMissingColumnNames(true)
+            .build(),
+    ),
 }
 
 private val defaultCharset = Charsets.UTF_8
@@ -79,7 +91,10 @@ public fun DataFrame.Companion.readDelimStr(
     readLines: Int? = null,
 ): DataFrame<*> =
     StringReader(text).use {
-        val format = CSVType.DEFAULT.format.builder().setHeader().setDelimiter(delimiter).build()
+        val format = CSVType.DEFAULT.format.builder()
+            .setHeader()
+            .setDelimiter(delimiter)
+            .build()
         readDelim(it, format, colTypes, skipLines, readLines)
     }
 
@@ -104,7 +119,7 @@ public fun DataFrame.Companion.read(
             skipLines,
             readLines,
             duplicate,
-            charset
+            charset,
         )
     }
 
@@ -123,12 +138,17 @@ public fun DataFrame.Companion.readCSV(
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
-            it, delimiter,
-            header, isCompressed(fileOrUrl),
-            CSVType.DEFAULT, colTypes,
-            skipLines, readLines,
-            duplicate, charset,
-            parserOptions
+            it,
+            delimiter,
+            header,
+            isCompressed(fileOrUrl),
+            CSVType.DEFAULT,
+            colTypes,
+            skipLines,
+            readLines,
+            duplicate,
+            charset,
+            parserOptions,
         )
     }
 
@@ -144,12 +164,17 @@ public fun DataFrame.Companion.readCSV(
     parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readDelim(
-        FileInputStream(file), delimiter,
-        header, isCompressed(file),
-        CSVType.DEFAULT, colTypes,
-        skipLines, readLines,
-        duplicate, charset,
-        parserOptions
+        FileInputStream(file),
+        delimiter,
+        header,
+        isCompressed(file),
+        CSVType.DEFAULT,
+        colTypes,
+        skipLines,
+        readLines,
+        duplicate,
+        charset,
+        parserOptions,
     )
 
 public fun DataFrame.Companion.readCSV(
@@ -164,12 +189,16 @@ public fun DataFrame.Companion.readCSV(
     parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readCSV(
-        url.openStream(), delimiter,
-        header, isCompressed(url),
+        url.openStream(),
+        delimiter,
+        header,
+        isCompressed(url),
         colTypes,
-        skipLines, readLines,
-        duplicate, charset,
-        parserOptions
+        skipLines,
+        readLines,
+        duplicate,
+        charset,
+        parserOptions,
     )
 
 public fun DataFrame.Companion.readCSV(
@@ -183,14 +212,20 @@ public fun DataFrame.Companion.readCSV(
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
     parserOptions: ParserOptions? = null,
-): DataFrame<*> = readDelim(
-    stream, delimiter,
-    header, isCompressed,
-    CSVType.DEFAULT, colTypes,
-    skipLines, readLines,
-    duplicate, charset,
-    parserOptions
-)
+): DataFrame<*> =
+    readDelim(
+        stream,
+        delimiter,
+        header,
+        isCompressed,
+        CSVType.DEFAULT,
+        colTypes,
+        skipLines,
+        readLines,
+        duplicate,
+        charset,
+        parserOptions,
+    )
 
 private fun getCSVType(path: String): CSVType =
     when (path.substringAfterLast('.').lowercase()) {
@@ -199,24 +234,31 @@ private fun getCSVType(path: String): CSVType =
         else -> throw IOException("Unknown file format")
     }
 
-private fun asStream(fileOrUrl: String) = (
+private fun asStream(fileOrUrl: String) =
     if (isURL(fileOrUrl)) {
         URL(fileOrUrl).toURI()
     } else {
         File(fileOrUrl).toURI()
-    }
-    ).toURL().openStream()
+    }.toURL().openStream()
 
-public fun asURL(fileOrUrl: String): URL = (
+public fun asURL(fileOrUrl: String): URL =
     if (isURL(fileOrUrl)) {
         URL(fileOrUrl).toURI()
     } else {
         File(fileOrUrl).toURI()
-    }
-    ).toURL()
+    }.toURL()
 
-private fun getFormat(type: CSVType, delimiter: Char, header: List<String>, duplicate: Boolean): CSVFormat =
-    type.format.builder().setDelimiter(delimiter).setHeader(*header.toTypedArray()).setAllowMissingColumnNames(duplicate).build()
+private fun getFormat(
+    type: CSVType,
+    delimiter: Char,
+    header: List<String>,
+    duplicate: Boolean,
+): CSVFormat =
+    type.format.builder()
+        .setDelimiter(delimiter)
+        .setHeader(*header.toTypedArray())
+        .setAllowMissingColumnNames(duplicate)
+        .build()
 
 public fun DataFrame.Companion.readDelim(
     inStream: InputStream,
@@ -242,7 +284,7 @@ public fun DataFrame.Companion.readDelim(
             colTypes,
             skipLines,
             readLines,
-            parserOptions
+            parserOptions,
         )
     }
 
@@ -258,21 +300,24 @@ public enum class ColType {
     String,
 }
 
-public fun ColType.toType(): KClass<out Any> = when (this) {
-    ColType.Int -> Int::class
-    ColType.Long -> Long::class
-    ColType.Double -> Double::class
-    ColType.Boolean -> Boolean::class
-    ColType.BigDecimal -> BigDecimal::class
-    ColType.LocalDate -> LocalDate::class
-    ColType.LocalTime -> LocalTime::class
-    ColType.LocalDateTime -> LocalDateTime::class
-    ColType.String -> String::class
-}
+public fun ColType.toType(): KClass<out Any> =
+    when (this) {
+        ColType.Int -> Int::class
+        ColType.Long -> Long::class
+        ColType.Double -> Double::class
+        ColType.Boolean -> Boolean::class
+        ColType.BigDecimal -> BigDecimal::class
+        ColType.LocalDate -> LocalDate::class
+        ColType.LocalTime -> LocalTime::class
+        ColType.LocalDateTime -> LocalDateTime::class
+        ColType.String -> String::class
+    }
 
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
-    format: CSVFormat = CSVFormat.DEFAULT.builder().setHeader().build(),
+    format: CSVFormat = CSVFormat.DEFAULT.builder()
+        .setHeader()
+        .build(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -322,6 +367,7 @@ public fun DataFrame.Companion.readDelim(
         val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
         when (colType) {
             null -> column.tryParse(parserOptions)
+
             else -> {
                 val parser = Parsers[colType.toType()]!!
                 column.parse(parser, parserOptions)
@@ -331,22 +377,13 @@ public fun DataFrame.Companion.readDelim(
     return cols.toDataFrame()
 }
 
-public fun AnyFrame.writeCSV(
-    file: File,
-    format: CSVFormat = CSVFormat.DEFAULT,
-): Unit =
+public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT): Unit =
     writeCSV(FileWriter(file), format)
 
-public fun AnyFrame.writeCSV(
-    path: String,
-    format: CSVFormat = CSVFormat.DEFAULT,
-): Unit =
+public fun AnyFrame.writeCSV(path: String, format: CSVFormat = CSVFormat.DEFAULT): Unit =
     writeCSV(FileWriter(path), format)
 
-public fun AnyFrame.writeCSV(
-    writer: Appendable,
-    format: CSVFormat = CSVFormat.DEFAULT,
-) {
+public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.DEFAULT) {
     format.print(writer).use { printer ->
         if (!format.skipHeaderRecord) {
             printer.printRecord(columnNames())

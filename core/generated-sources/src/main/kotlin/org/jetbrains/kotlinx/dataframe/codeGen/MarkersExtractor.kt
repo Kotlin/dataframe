@@ -17,15 +17,17 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-internal fun KType.shouldBeConvertedToFrameColumn(): Boolean = when (jvmErasure) {
-    DataFrame::class -> true
-    List::class -> arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true
-    else -> false
-}
+internal fun KType.shouldBeConvertedToFrameColumn(): Boolean =
+    when (jvmErasure) {
+        DataFrame::class -> true
+        List::class -> arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true
+        else -> false
+    }
 
-internal fun KType.shouldBeConvertedToColumnGroup(): Boolean = jvmErasure.let {
-    it == DataRow::class || it.hasAnnotation<DataSchema>()
-}
+internal fun KType.shouldBeConvertedToColumnGroup(): Boolean =
+    jvmErasure.let {
+        it == DataRow::class || it.hasAnnotation<DataSchema>()
+    }
 
 private fun String.toNullable(): String = if (endsWith("?")) this else "$this?"
 
@@ -79,10 +81,10 @@ internal object MarkersExtractor {
 
                 else -> {
                     fieldType = FieldType.ValueFieldType(
-                        if (nullableProperties) type.toString().toNullable() else type.toString()
+                        if (nullableProperties) type.toString().toNullable() else type.toString(),
                     )
                     ColumnSchema.Value(
-                        if (nullableProperties) type.withNullability(true) else type
+                        if (nullableProperties) type.withNullability(true) else type,
                     )
                 }
             }

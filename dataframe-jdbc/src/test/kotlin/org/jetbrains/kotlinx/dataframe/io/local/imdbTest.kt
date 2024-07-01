@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io.local
 
 import io.kotest.matchers.shouldBe
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -83,14 +84,18 @@ class ImdbTestTest {
 
     @Test
     fun `read sql query`() {
-        val sqlQuery = "select name, year, rank,\n" +
-            "GROUP_CONCAT (genre) as \"genres\"\n" +
-            "from movies join movies_directors on  movie_id = movies.id\n" +
-            "     join directors on directors.id=director_id left join movies_genres on movies.id = movies_genres.movie_id \n" +
-            "where directors.first_name = \"Quentin\" and directors.last_name = \"Tarantino\"\n" +
-            "and movies.name is not null and movies.name is not null\n" +
-            "group by name, year, rank\n" +
-            "order by year"
+        @Language("sql")
+        val sqlQuery =
+            """
+            select name, year, rank,
+            GROUP_CONCAT (genre) as "genres"
+            from movies join movies_directors on  movie_id = movies.id
+                 join directors on directors.id=director_id left join movies_genres on movies.id = movies_genres.movie_id 
+            where directors.first_name = "Quentin" and directors.last_name = "Tarantino"
+            and movies.name is not null and movies.name is not null
+            group by name, year, rank
+            order by year
+            """.trimIndent()
         val props = Properties()
         props.setProperty("user", USER_NAME)
         props.setProperty("password", PASSWORD)

@@ -68,7 +68,7 @@ class SqliteTest {
             """
 
             connection.createStatement().execute(
-                createCustomersTableQuery
+                createCustomersTableQuery,
             )
 
             @Language("SQL")
@@ -83,7 +83,7 @@ class SqliteTest {
             """
 
             connection.createStatement().execute(
-                createOrderTableQuery
+                createOrderTableQuery,
             )
 
             val profilePicture = "SampleProfilePictureData".toByteArray()
@@ -107,23 +107,25 @@ class SqliteTest {
                     it.executeUpdate()
                 }
 
-            connection.prepareStatement("INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)")
-                .use {
-                    it.setString(1, null)
-                    it.setString(2, "2023-07-21")
-                    it.setDouble(3, 150.75)
-                    it.setBytes(4, orderDetails)
-                    it.executeUpdate()
-                }
+            connection.prepareStatement(
+                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
+            ).use {
+                it.setString(1, null)
+                it.setString(2, "2023-07-21")
+                it.setDouble(3, 150.75)
+                it.setBytes(4, orderDetails)
+                it.executeUpdate()
+            }
 
-            connection.prepareStatement("INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)")
-                .use {
-                    it.setString(1, "John Doe")
-                    it.setString(2, "2023-08-21")
-                    it.setDouble(3, 250.75)
-                    it.setBytes(4, orderDetails)
-                    it.executeUpdate()
-                }
+            connection.prepareStatement(
+                "INSERT INTO Orders (customerName, orderDate, totalAmount, orderDetails) VALUES (?, ?, ?, ?)",
+            ).use {
+                it.setString(1, "John Doe")
+                it.setString(2, "2023-08-21")
+                it.setDouble(3, 250.75)
+                it.setBytes(4, orderDetails)
+                it.executeUpdate()
+            }
         }
 
         @AfterClass

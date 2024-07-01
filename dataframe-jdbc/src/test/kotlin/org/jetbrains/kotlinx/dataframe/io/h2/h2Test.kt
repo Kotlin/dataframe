@@ -118,9 +118,7 @@ class JdbcTest {
                 )
             """
 
-            connection.createStatement().execute(
-                createSaleTableQuery
-            )
+            connection.createStatement().execute(createSaleTableQuery)
 
             // add data to the Customer table
             connection.createStatement().execute("INSERT INTO Customer (id, name, age) VALUES (1, 'John', 40)")
@@ -206,20 +204,21 @@ class JdbcTest {
 
         connection.prepareStatement(
             """
-                INSERT INTO TestTable VALUES (
-                    'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
-                    'Varchar IgnoreCase', X'010203', X'040506', X'070809',
-                    TRUE, 1, 100, 1000, 100000,
-                    123.45, 1.23, 3.14, 2.71,
-                    '2023-07-20', '08:30:00', '18:15:00', '2023-07-19 12:45:30',
-                    '2023-07-18 12:45:30', NULL,
-                    'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
-                )
-            """.trimIndent()
+            INSERT INTO TestTable VALUES (
+                'ABC', 'XYZ', 'Long text data for CLOB', 'Medium text data for CLOB',
+                'Varchar IgnoreCase', X'010203', X'040506', X'070809',
+                TRUE, 1, 100, 1000, 100000,
+                123.45, 1.23, 3.14, 2.71,
+                '2023-07-20', '08:30:00', '18:15:00', '2023-07-19 12:45:30',
+                '2023-07-18 12:45:30', NULL,
+                'Option1', '{"key": "value"}', '123e4567-e89b-12d3-a456-426655440000'
+            )
+            """.trimIndent(),
         ).executeUpdate()
 
-        connection.prepareStatement(
-            """
+        connection
+            .prepareStatement(
+                """
                 INSERT INTO TestTable VALUES (
                     'DEF', 'LMN', 'Another CLOB data', 'Different CLOB data',
                     'Another Varchar', X'101112', X'131415', X'161718',
@@ -229,11 +228,12 @@ class JdbcTest {
                     '2023-07-19 18:15:30', NULL,
                     'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
                 )
-            """.trimIndent()
-        ).executeUpdate()
+                """.trimIndent(),
+            ).executeUpdate()
 
-        connection.prepareStatement(
-            """
+        connection
+            .prepareStatement(
+                """
                 INSERT INTO TestTable VALUES (
                     'GHI', 'OPQ', 'Third CLOB entry', 'Yet another CLOB data',
                     'Yet Another Varchar', X'192021', X'222324', X'252627',
@@ -245,8 +245,8 @@ class JdbcTest {
                     '"address": { "street": "123 Main St", "city": "Exampleville", "zipcode": "12345"}}', 
                     '345e6789-e89b-12d3-a456-426655440002'
                 )
-            """.trimIndent()
-        ).executeUpdate()
+                """.trimIndent(),
+            ).executeUpdate()
 
         val tableName = "TestTable"
         val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>()
@@ -515,9 +515,7 @@ class JdbcTest {
                 )
             """
 
-        connection.createStatement().execute(
-            createAlterTableQuery
-        )
+        connection.createStatement().execute(createAlterTableQuery)
 
         @Language("SQL")
         val selectFromWeirdTableSQL = """
@@ -537,13 +535,14 @@ class JdbcTest {
     @Test
     fun `read from sql query`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
             FROM Sale s
             INNER JOIN Customer c ON s.customerId = c.id
             WHERE c.age > 35
             GROUP BY s.customerId, c.name
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery).cast<CustomerSales>()
 
@@ -582,11 +581,12 @@ class JdbcTest {
     @Test
     fun `read from sql query with two repeated columns`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT c1.name, c2.name
             FROM Customer c1
             INNER JOIN Customer c2 ON c1.id = c2.id
-        """.trimIndent()
+            """.trimIndent()
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 2
@@ -597,11 +597,12 @@ class JdbcTest {
     @Test
     fun `read from sql query with three repeated columns`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT c1.name as name, c2.name as name_1, c1.name as name_1
             FROM Customer c1
             INNER JOIN Customer c2 ON c1.id = c2.id
-        """.trimIndent()
+            """.trimIndent()
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
         schema.columns.size shouldBe 3
@@ -716,10 +717,18 @@ class JdbcTest {
 
         connection.createStatement().execute(createTestTable1Query)
 
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
-        connection.createStatement().execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)",
+        )
+        connection.createStatement().execute(
+            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)",
+        )
 
         // start testing `readSqlTable` method
 
@@ -741,7 +750,9 @@ class JdbcTest {
         // with inferNullability: Boolean = false
         val df1 = DataFrame.readSqlTable(connection, tableName, inferNullability = false)
         df1.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+        // this column changed a type because it doesn't contain nulls
+        df1.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df1.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -751,9 +762,10 @@ class JdbcTest {
 
         // ith default inferNullability: Boolean = true
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT name, surname, age FROM TestTable1
-        """.trimIndent()
+            """.trimIndent()
 
         val df2 = DataFrame.readSqlQuery(connection, sqlQuery)
         df2.schema().columns["name"]!!.type shouldBe typeOf<String>()
@@ -768,7 +780,9 @@ class JdbcTest {
 
         // with inferNullability: Boolean = false
         val df3 = DataFrame.readSqlQuery(connection, sqlQuery, inferNullability = false)
-        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+        // this column changed a type because it doesn't contain nulls
+        df3.schema().columns["name"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
         df3.schema().columns["age"]!!.type shouldBe typeOf<Int>()
 
@@ -802,7 +816,9 @@ class JdbcTest {
 
                 val df5 = DataFrame.readResultSet(rs, H2(MySql), inferNullability = false)
                 df5.schema().columns["id"]!!.type shouldBe typeOf<Int>()
-                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>() // <=== this column changed a type because it doesn't contain nulls
+
+                // this column changed a type because it doesn't contain nulls
+                df5.schema().columns["name"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["surname"]!!.type shouldBe typeOf<String?>()
                 df5.schema().columns["age"]!!.type shouldBe typeOf<Int>()
             }

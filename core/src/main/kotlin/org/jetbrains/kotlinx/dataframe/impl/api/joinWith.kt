@@ -19,8 +19,9 @@ internal class JoinedDataRowImpl<A, B>(
     leftOwner: DataFrame<A>,
     val index: Int,
     rightOwner: DataFrame<B>,
-    index1: Int
-) : JoinedDataRow<A, B>, DataRowImpl<A>(index, leftOwner) {
+    index1: Int,
+) : DataRowImpl<A>(index, leftOwner),
+    JoinedDataRow<A, B> {
     override val right: DataRow<B> = DataRowImpl(index1, rightOwner)
 }
 
@@ -28,7 +29,7 @@ internal fun <A, B> DataFrame<A>.joinWithImpl(
     right: DataFrame<B>,
     type: JoinType = JoinType.Inner,
     addNewColumns: Boolean,
-    joinExpression: JoinExpression<A, B>
+    joinExpression: JoinExpression<A, B>,
 ): DataFrame<A> {
     val generator = ColumnNameGenerator(columnNames())
     if (addNewColumns) {

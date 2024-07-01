@@ -26,7 +26,7 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
             if (!col.isColumnGroup()) {
                 error(
                     "Cannot resolve column '${path.subList(0, i + 2).joinToString(".")}': " +
-                        "Column '${path.subList(0, i + 1).joinToString(".")}' is not a column group."
+                        "Column '${path.subList(0, i + 1).joinToString(".")}' is not a column group.",
                 )
             } else {
                 col.asColumnGroup()

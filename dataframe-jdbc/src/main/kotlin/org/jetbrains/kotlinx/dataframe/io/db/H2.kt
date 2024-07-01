@@ -47,12 +47,12 @@ public class H2(public val dialect: DbType = MySql) : DbType("h2") {
     override val driverClassName: String
         get() = "org.h2.Driver"
 
-    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        return dialect.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
-    }
+    override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? =
+        dialect.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
 
     override fun isSystemTable(tableMetadata: TableMetadata): Boolean {
         val locale = Locale.getDefault()
+
         fun String?.containsWithLowercase(substr: String) = this?.lowercase(locale)?.contains(substr) == true
         val schemaName = tableMetadata.schemaName
 
@@ -62,15 +62,10 @@ public class H2(public val dialect: DbType = MySql) : DbType("h2") {
         return isH2SystemTable || dialect.isSystemTable(tableMetadata)
     }
 
-    override fun buildTableMetadata(tables: ResultSet): TableMetadata {
-        return dialect.buildTableMetadata(tables)
-    }
+    override fun buildTableMetadata(tables: ResultSet): TableMetadata = dialect.buildTableMetadata(tables)
 
-    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        return dialect.convertSqlTypeToKType(tableColumnMetadata)
-    }
+    override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? =
+        dialect.convertSqlTypeToKType(tableColumnMetadata)
 
-    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String {
-        return dialect.sqlQueryLimit(sqlQuery, limit)
-    }
+    public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String = dialect.sqlQueryLimit(sqlQuery, limit)
 }

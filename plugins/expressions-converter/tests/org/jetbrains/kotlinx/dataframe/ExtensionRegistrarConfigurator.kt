@@ -12,7 +12,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
     @OptIn(ExperimentalCompilerApi::class)
     override fun CompilerPluginRegistrar.ExtensionStorage.registerCompilerExtensions(
         module: TestModule,
-        configuration: CompilerConfiguration
+        configuration: CompilerConfiguration,
     ) {
         IrGenerationExtension.registerExtension(ExplainerIrGenerationExtension())
     }

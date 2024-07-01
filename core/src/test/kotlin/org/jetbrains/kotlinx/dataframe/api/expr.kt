@@ -16,12 +16,16 @@ class ExprTests : ColumnsSelectionDslTests() {
             df.select { mapToColumn(age) { age } },
         ).shouldAllBeEqual()
 
-        df.get {
-            expr("fibonacci") {
-                if (index() < 2) 1
-                else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
-            }
-        }.toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13)
+        df
+            .get {
+                expr("fibonacci") {
+                    if (index() < 2) {
+                        1
+                    } else {
+                        prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+                    }
+                }
+            }.toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13)
 
         df.select {
             expr<_, Int?>(infer = Infer.None) { 1 }.type() shouldBe typeOf<Int?>()

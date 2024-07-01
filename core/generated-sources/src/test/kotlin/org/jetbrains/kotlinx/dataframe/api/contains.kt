@@ -46,6 +46,7 @@ class ContainsTests {
     fun `row contains key`() {
         val a by column<Int>()
         val b by column<Int>()
+
         data class A(val a: Int, val b: Int)
 
         val df = dataFrameOf("a")(1, 2)

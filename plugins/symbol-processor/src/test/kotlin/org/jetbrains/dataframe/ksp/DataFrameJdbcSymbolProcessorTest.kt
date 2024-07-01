@@ -23,13 +23,14 @@ class DataFrameJdbcSymbolProcessorTest {
     companion object {
         private lateinit var connection: Connection
 
-        val imports = """
+        val imports =
+            """
             import org.jetbrains.kotlinx.dataframe.annotations.*
             import org.jetbrains.kotlinx.dataframe.columns.*
             import org.jetbrains.kotlinx.dataframe.* 
-        """.trimIndent()
+            """.trimIndent()
 
-        const val generatedFile = "HelloJdbc${'$'}Extensions.kt"
+        const val GENERATED_FILE = "HelloJdbc${'$'}Extensions.kt"
 
         @JvmStatic
         @BeforeClass
@@ -57,18 +58,18 @@ class DataFrameJdbcSymbolProcessorTest {
                     name VARCHAR(50),
                     age INT
                 )
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             // Create table Sale
             connection.createStatement().execute(
                 """
-                    CREATE TABLE Sale (
-                        id INT PRIMARY KEY,
-                        customerId INT,
-                        amount DECIMAL(10, 2)
-                    )
-                """.trimIndent()
+                CREATE TABLE Sale (
+                    id INT PRIMARY KEY,
+                    customerId INT,
+                    amount DECIMAL(10, 2)
+                )
+                """.trimIndent(),
             )
 
             // add data to the Customer table
@@ -111,10 +112,10 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
                         import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                        """.trimIndent()
-                    )
-                )
-            )
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         result.successfulCompilation shouldBe false
     }
@@ -132,7 +133,7 @@ class DataFrameJdbcSymbolProcessorTest {
                              "$CONNECTION_URL",
                              jdbcOptions = JdbcOptions("", "", tableName = "Customer")
                         )
-        
+                        
                         package test
                         
                         import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
@@ -145,10 +146,10 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
                         import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                        """.trimIndent()
-                    )
-                )
-            )
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         println(result.kspGeneratedFiles)
         result.inspectLines("Customer.Generated.kt") {
@@ -167,47 +168,47 @@ class DataFrameJdbcSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                @file:ImportDataSchema(
-                     "Customer",
-                     "$CONNECTION_URL",
-                     jdbcOptions = JdbcOptions("", "", tableName = "Customer")
-                )
-                
-                package test
-                
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-                import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
-                import org.jetbrains.kotlinx.dataframe.api.filter
-                import org.jetbrains.kotlinx.dataframe.DataFrame
-                import org.jetbrains.kotlinx.dataframe.api.cast
-                import java.sql.Connection
-                import java.sql.DriverManager
-                import java.sql.SQLException
-                import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                
-                fun main() {    
-                    val tableName = "Customer"
-                    DriverManager.getConnection("$CONNECTION_URL").use { connection ->
-                        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
-                        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                        @file:ImportDataSchema(
+                             "Customer",
+                             "$CONNECTION_URL",
+                             jdbcOptions = JdbcOptions("", "", tableName = "Customer")
+                        )
+                        
+                        package test
+                        
+                        import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                        import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
+                        import org.jetbrains.kotlinx.dataframe.api.filter
+                        import org.jetbrains.kotlinx.dataframe.DataFrame
+                        import org.jetbrains.kotlinx.dataframe.api.cast
+                        import java.sql.Connection
+                        import java.sql.DriverManager
+                        import java.sql.SQLException
+                        import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+                        import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                        
+                        fun main() {    
+                            val tableName = "Customer"
+                            DriverManager.getConnection("$CONNECTION_URL").use { connection ->
+                                val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+                                df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
 
-                        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
-                        df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                                val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+                                df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                                
+                                val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
+                                val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+                                df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                                
+                                val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+                                df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                         
-                        val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
-                        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
-                        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
-                        
-                        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
-                        df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
- 
-                    }
-                }
-                        """.trimIndent()
-                    )
-                )
-            )
+                            }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         result.successfulCompilation shouldBe true
     }
@@ -223,53 +224,53 @@ class DataFrameJdbcSymbolProcessorTest {
                     SourceFile.kotlin(
                         "MySources.kt",
                         """
-                @file:ImportDataSchema(
-                     "Customer",
-                     "$CONNECTION_URL",
-                     jdbcOptions = JdbcOptions("", "", extractCredFromEnv = true, tableName = "Customer")
-                )
-                
-                package test
-                
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-                import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
-                import org.jetbrains.kotlinx.dataframe.api.filter
-                import org.jetbrains.kotlinx.dataframe.DataFrame
-                import org.jetbrains.kotlinx.dataframe.api.cast
-                import java.sql.Connection
-                import java.sql.DriverManager
-                import java.sql.SQLException
-                import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
-                
-                fun main() {    
-                    val tableName = "Customer"
-                    DriverManager.getConnection("$CONNECTION_URL").use { connection ->
-                        val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
-                        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                        @file:ImportDataSchema(
+                             "Customer",
+                             "$CONNECTION_URL",
+                             jdbcOptions = JdbcOptions("", "", extractCredFromEnv = true, tableName = "Customer")
+                        )
+                        
+                        package test
+                        
+                        import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                        import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
+                        import org.jetbrains.kotlinx.dataframe.api.filter
+                        import org.jetbrains.kotlinx.dataframe.DataFrame
+                        import org.jetbrains.kotlinx.dataframe.api.cast
+                        import java.sql.Connection
+                        import java.sql.DriverManager
+                        import java.sql.SQLException
+                        import org.jetbrains.kotlinx.dataframe.io.readSqlTable
+                        import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                        
+                        fun main() {    
+                            val tableName = "Customer"
+                            DriverManager.getConnection("$CONNECTION_URL").use { connection ->
+                                val df = DataFrame.readSqlTable(connection, tableName).cast<Customer>()
+                                df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
 
-                        val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
-                        df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                                val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
+                                df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                                
+                                val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
+                                val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
+                                df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
+                                
+                                val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
+                                df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                         
-                        val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
-                        val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
-                        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
-                        
-                        val df3 = DataFrame.readSqlTable(dbConfig, tableName, 1).cast<Customer>()
-                        df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
- 
-                    }
-                }
-                        """.trimIndent()
-                    )
-                )
-            )
+                            }
+                        }
+                        """.trimIndent(),
+                    ),
+                ),
+            ),
         )
         result.successfulCompilation shouldBe true
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
-        inspectLines(generatedFile, f)
+        inspectLines(GENERATED_FILE, f)
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(filename: String, f: (List<String>) -> Unit) {

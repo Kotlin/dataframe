@@ -178,7 +178,7 @@ class MariadbTest {
             )
         """
             connection.createStatement().execute(
-                createTableQuery.trimIndent()
+                createTableQuery.trimIndent(),
             )
 
             @Language("SQL")
@@ -218,28 +218,30 @@ class MariadbTest {
             )
             """
             connection.createStatement().execute(
-                createTableQuery2.trimIndent()
+                createTableQuery2.trimIndent(),
             )
 
             @Language("SQL")
-            val insertData1 = """
-            INSERT INTO table1 (
-                bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
-                integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
-                timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, jsonCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """.trimIndent()
+            val insertData1 =
+                """
+                INSERT INTO table1 (
+                    bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
+                    integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
+                    timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol, jsonCol
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """.trimIndent()
 
             @Language("SQL")
-            val insertData2 = """
-            INSERT INTO table2 (
-                bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
-                integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
-                timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
-                mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """.trimIndent()
+            val insertData2 =
+                """
+                INSERT INTO table2 (
+                    bitCol, tinyintCol, smallintCol, mediumintCol, mediumintUnsignedCol, integerCol, intCol, 
+                    integerUnsignedCol, bigintCol, floatCol, doubleCol, decimalCol, dateCol, datetimeCol, timestampCol,
+                    timeCol, yearCol, varcharCol, charCol, binaryCol, varbinaryCol, tinyblobCol, blobCol,
+                    mediumblobCol, longblobCol, textCol, mediumtextCol, longtextCol, enumCol, setCol
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """.trimIndent()
 
             connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
@@ -354,14 +356,15 @@ class MariadbTest {
     @Test
     fun `read from sql query`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT
                t1.id,
                t1.enumCol,
                t2.setCol
             FROM table1 t1
             JOIN table2 t2 ON t1.id = t2.id
-        """.trimIndent()
+            """.trimIndent()
 
         val df = DataFrame.readSqlQuery(connection, sqlQuery = sqlQuery).cast<Table3MariaDb>()
         val result = df.filter { it[Table3MariaDb::id] == 1 }
@@ -388,8 +391,9 @@ class MariadbTest {
         val table2Df = dataframes[1].cast<Table2MariaDb>()
 
         table2Df.rowsCount() shouldBe 3
-        table2Df.filter { it[Table2MariaDb::integerCol] != null && it[Table2MariaDb::integerCol]!! > 400 }
-            .rowsCount() shouldBe 1
+        table2Df.filter {
+            it[Table2MariaDb::integerCol] != null && it[Table2MariaDb::integerCol]!! > 400
+        }.rowsCount() shouldBe 1
         table2Df[0][11] shouldBe 20.0
         table2Df[0][26] shouldBe null
     }
