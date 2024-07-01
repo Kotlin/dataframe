@@ -199,9 +199,9 @@ class PivotTests {
         val pivoted = typed.pivot { key.map { "_$it" } }.groupBy { name }.with { value }
         pivoted.getColumns { "key".allCols() }.map { it.name() }.toSet() shouldBe
             typed.key
-            .distinct()
-            .map { "_$it" }
-            .toSet()
+                .distinct()
+                .map { "_$it" }
+                .toSet()
     }
 
     @Test
@@ -425,7 +425,8 @@ class PivotTests {
 
         val gathered = pivoted
             .gather { drop(1) }.notNull().into("key", "value")
-            .convert { value }.with { it as? Comparable<*> } // cast to make the equality test succeed (values are already the same)
+            .convert { value }
+            .with { it as? Comparable<*> } // cast to make the equality test succeed (values are already the same)
         val expected = expectedFiltered
             .update { key }.with { keyConverter(it) }
             .convert { value }.with { valueConverter(it) as? Comparable<*> }
