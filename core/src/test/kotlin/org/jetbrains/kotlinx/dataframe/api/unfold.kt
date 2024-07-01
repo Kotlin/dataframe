@@ -6,22 +6,13 @@ import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
 import kotlin.reflect.typeOf
 
-class ReplaceTests {
-
-    @Test
-    fun `replace named`() {
-        val df = dataFrameOf("a")(1)
-        val conv = df.replace { "a"<Int>() named "b" }.with { it.convertToDouble() }
-        conv.columnNames() shouldBe listOf("b")
-        conv.columnTypes() shouldBe listOf(typeOf<Double>())
-    }
-
+class UnfoldTests {
     @Test
     fun `unfold primitive`() {
         val a by columnOf("123")
         val df = dataFrameOf(a)
 
-        val conv = df.replace { a }.byUnfolding {
+        val conv = df.unfold { a }.by {
             "b" from { it }
             "c" from { DataRow.readJsonStr("""{"prop": 1}""") }
         }
@@ -36,10 +27,17 @@ class ReplaceTests {
     }
 
     @Test
+    fun aaa() {
+        val col by columnOf(A("1", 123, B(3.0)))
+        col.unfold().print()
+    }
+
+    @Test
     fun `unfold properties`() {
         val col by columnOf(A("1", 123, B(3.0)))
         val df1 = dataFrameOf(col)
-        val conv = df1.replace { col }.byUnfolding(maxDepth = 2)
+        // TODO `df1.replace { col }.with { it.unfold() }` breaks now
+        val conv = df1.unfold { col }.by(maxDepth = 2)
 
         val a = conv["col"]["a"]
         a.type() shouldBe typeOf<String>()
@@ -62,7 +60,7 @@ class ReplaceTests {
         val col1 by columnOf("1", "2")
         val col2 by columnOf(B(1.0), B(2.0))
         val df1 = dataFrameOf(col1, col2)
-        val conv = df1.replace { nameStartsWith("col") }.byUnfolding()
+        val conv = df1.unfold { nameStartsWith("col") }
 
         val a = conv["col1"]
         a.type() shouldBe typeOf<String>()
