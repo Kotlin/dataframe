@@ -40,7 +40,7 @@ internal sealed class OpenApiMarker private constructor(
     abstract fun toFieldType(): FieldType
 
     override fun toString(): String =
-        "MyMarker(markerType = ${this::class}, name = $name, isOpen = $isOpen, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)"
+        "MyMarker(name = $name, isOpen = $isOpen, markerType = ${this::class}, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)"
 
     /**
      * A [Marker] that will be used to generate an enum.
