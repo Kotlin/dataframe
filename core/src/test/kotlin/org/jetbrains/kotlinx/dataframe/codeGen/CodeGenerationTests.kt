@@ -11,8 +11,10 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
@@ -303,6 +305,27 @@ class CodeGenerationTests : BaseTest() {
             val matches = "`$it`".toRegex().findAll(declarations).toList()
             matches.size shouldBe 2
         }
+    }
+
+    @Test
+    fun `check method generateDataClasses`() {
+        val code = typed.groupBy { name }.toDataFrame().generateDataClasses(extensionProperties = false)
+
+        code shouldBe """
+            @DataSchema
+            data class Person1(
+                val age: Int,
+                val city: String?,
+                val name: String,
+                val weight: Int?
+            )
+
+            @DataSchema
+            data class Person(
+                val group: List<Person1>,
+                val name: String
+            )
+        """.trimIndent()
     }
 
     @Test
