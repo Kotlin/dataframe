@@ -448,12 +448,18 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         knownMarkers: Iterable<Marker>,
         readDfMethod: DefaultReadDfMethod?,
         fieldNameNormalizer: NameNormalizer,
+        asDataClass: Boolean
     ): CodeGenResult {
-        val context = SchemaProcessor.create(name, knownMarkers, fieldNameNormalizer)
+        val context = SchemaProcessor.create(name, if (asDataClass) emptyList() else knownMarkers, fieldNameNormalizer)
         val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach { itMarker ->
-            declarations.add(generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker }))
+            val declaration = if (asDataClass) {
+                generateClasses(itMarker)
+            } else {
+                generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker })
+            }
+            declarations.add(declaration)
             if (extensionProperties) {
                 declarations.add(generateExtensionProperties(itMarker, withNullable = false))
             }
@@ -479,17 +485,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
                 .joinToString() else ""
         val resultDeclarations = mutableListOf<String>()
 
-        val fieldsDeclaration = if (fields) marker.fields.map {
-            val override = if (it.overrides) "override " else ""
-            val columnNameAnnotation = if (it.columnName != it.fieldName.quotedIfNeeded) {
-                "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n"
-            } else {
-                ""
-            }
-
-            val fieldType = it.renderFieldType()
-            "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
-        }.join() else ""
+        val fieldsDeclaration = if (fields) renderFields(marker, propertyVisibility).join() else ""
 
         val readDfMethodDeclaration = readDfMethod?.toDeclaration(marker, propertyVisibility)
 
@@ -514,6 +510,36 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         }
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
+    }
+
+    private fun generateClasses(marker: Marker): Code {
+        val annotationName = DataSchema::class.simpleName
+
+        val visibility = renderTopLevelDeclarationVisibility(marker)
+        val propertyVisibility = renderInternalDeclarationVisibility(marker)
+        val header =
+            "@$annotationName\n${visibility}data class ${marker.name}("
+
+        val fieldsDeclaration = renderFields(marker, propertyVisibility).joinToString(",\n")
+        return buildString {
+            appendLine(header)
+            appendLine(fieldsDeclaration)
+            append(")")
+        }
+    }
+
+    private fun renderFields(marker: Marker, propertyVisibility: String): List<String> {
+        return marker.fields.map {
+            val override = if (it.overrides) "override " else ""
+            val columnNameAnnotation = if (it.columnName != it.fieldName.quotedIfNeeded) {
+                "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n"
+            } else {
+                ""
+            }
+
+            val fieldType = it.renderFieldType()
+            "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
+        }
     }
 }
 
