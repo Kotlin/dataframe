@@ -146,11 +146,17 @@ internal object FullyQualifiedNames : TypeRenderingStrategy {
             is FieldType.ValueFieldType ->
                 fieldType.typeFqName
 
-            is FieldType.GroupFieldType ->
+            is FieldType.GroupFieldType -> if (fieldType.renderAsObject) {
                 fieldType.markerName
+            } else {
+                renderAccessorFieldType()
+            }
 
-            is FieldType.FrameFieldType ->
-                "$dataFrame<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
+            is FieldType.FrameFieldType -> if (fieldType.renderAsList) {
+                "List<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
+            } else {
+                renderAccessorFieldType()
+            }
         }
 }
 
@@ -196,11 +202,17 @@ internal object ShortNames : TypeRenderingStrategy {
             is FieldType.ValueFieldType ->
                 fieldType.typeFqName.shorten()
 
-            is FieldType.GroupFieldType ->
+            is FieldType.GroupFieldType -> if (fieldType.renderAsObject) {
                 fieldType.markerName
+            } else {
+                renderAccessorFieldType()
+            }
 
-            is FieldType.FrameFieldType ->
-                "$dataFrame<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
+            is FieldType.FrameFieldType -> if (fieldType.renderAsList) {
+                "List<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
+            } else {
+                renderAccessorFieldType()
+            }
         }
 
     private fun String.shorten() = removeRedundantQualifier(this)

@@ -68,6 +68,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
                 markerName = marker.name.let {
                     if (nullable) it.toNullable() else it
                 },
+                renderAsObject = true
             )
     }
 
@@ -77,6 +78,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
         fun getType(nullable: kotlin.Boolean): FieldType =
             FieldType.GroupFieldType(
                 markerName = (if (nullable) typeOf<DataRow<kotlin.Any?>>() else typeOf<DataRow<kotlin.Any>>()).toString(),
+                renderAsObject = true
             )
     }
 
@@ -93,6 +95,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
             FieldType.FrameFieldType(
                 markerName = markerName.let { if (nullable) it.toNullable() else it },
                 nullable = false, // preferring DataFrame<Something?> over DataFrame<Something>?
+                renderAsList = false
             )
 
         /** used for list of AdditionalProperty objects (read as List<DataFrame<MyMarker>>) */

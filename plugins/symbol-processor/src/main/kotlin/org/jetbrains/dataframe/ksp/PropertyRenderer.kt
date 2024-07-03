@@ -50,10 +50,11 @@ internal fun renderExtensions(
                     FieldType.FrameFieldType(
                         markerName = type.renderTypeArguments(),
                         nullable = type.isMarkedNullable,
+                        renderAsList = true
                     )
 
-                type.declaration.isAnnotationPresent(DataSchema::class) -> FieldType.GroupFieldType(type.render())
-                qualifiedTypeReference == DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(type.renderTypeArguments())
+                type.declaration.isAnnotationPresent(DataSchema::class) -> FieldType.GroupFieldType(type.render(), renderAsObject = true)
+                qualifiedTypeReference == DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(type.renderTypeArguments(), renderAsObject = false)
                 else -> FieldType.ValueFieldType(type.render())
             }
 

@@ -61,10 +61,11 @@ internal class SchemaProcessorImpl(
 
         fun getFieldType(columnSchema: ColumnSchema): FieldType = when (columnSchema) {
             is ColumnSchema.Value -> FieldType.ValueFieldType(columnSchema.type.toString())
-            is ColumnSchema.Group -> FieldType.GroupFieldType(process(columnSchema.schema, false, visibility).name)
+            is ColumnSchema.Group -> FieldType.GroupFieldType(process(columnSchema.schema, false, visibility).name, renderAsObject = true)
             is ColumnSchema.Frame -> FieldType.FrameFieldType(
                 process(columnSchema.schema, false, visibility).name,
-                columnSchema.nullable
+                columnSchema.nullable,
+                renderAsList = true
             )
 
             else -> throw NotImplementedError()
