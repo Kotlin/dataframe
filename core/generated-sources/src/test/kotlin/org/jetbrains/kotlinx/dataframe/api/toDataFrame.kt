@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -396,5 +397,29 @@ class CreateDataFrameTests {
             DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
             DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
         ).schema()
+    }
+
+    @DataSchema
+    data class Person(val firstName: String, val lastName: String, val age: Int, val city: String?) : DataRowSchema
+
+    @DataSchema
+    data class Group(val id: String, val participants: List<Person>) : DataRowSchema
+
+    @Test
+    fun `deeply convert data schema and list of data schema`() {
+        val df = dataFrameOf(
+            Group("1", listOf(
+                Person("Alice", "Cooper", 15, "London"),
+                Person("Bob", "Dylan", 45, "Dubai")
+            )),
+            Group("2", listOf(
+                Person("Charlie", "Daniels", 20, "Moscow"),
+                Person("Charlie", "Chaplin", 40, "Milan"),
+            ))
+        )
+        shouldNotThrowAny {
+            df.participants[0].firstName
+            df.participants[0].city
+        }
     }
 }
