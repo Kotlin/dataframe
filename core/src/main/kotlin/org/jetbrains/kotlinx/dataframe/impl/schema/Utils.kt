@@ -96,6 +96,11 @@ internal fun AnyCol.extractSchema(): ColumnSchema = when (this) {
     else -> throw RuntimeException("Unknown column type: $this")
 }
 
+@PublishedApi
+internal fun getSchema(kClass: KClass<*>): DataFrameSchema {
+    return MarkersExtractor.get(kClass).schema
+}
+
 internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) {
     is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
     is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
