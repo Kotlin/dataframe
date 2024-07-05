@@ -11,8 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.TraversePropertiesDsl
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
-import org.jetbrains.kotlinx.dataframe.codeGen.shouldBeConvertedToColumnGroup
-import org.jetbrains.kotlinx.dataframe.codeGen.shouldBeConvertedToFrameColumn
+import org.jetbrains.kotlinx.dataframe.codeGen.getFieldKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -248,11 +247,12 @@ internal fun convertToDataFrame(
             }
         }
         val kClass = returnType.classifier as KClass<*>
+        val fieldKind = returnType.getFieldKind()
 
         val shouldCreateValueCol = (
             maxDepth <= 0 &&
-                !returnType.shouldBeConvertedToFrameColumn() &&
-                !returnType.shouldBeConvertedToColumnGroup()
+                !fieldKind.shouldBeConvertedToFrameColumn &&
+                !fieldKind.shouldBeConvertedToColumnGroup
             ) ||
             kClass == Any::class ||
             kClass in preserveClasses ||
