@@ -40,7 +40,8 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
     markerName: String? = null,
     extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-    useFqNames: Boolean = false
+    useFqNames: Boolean = false,
+    nameNormalizer: NameNormalizer = NameNormalizer.default,
 ): CodeString {
     val name = markerName ?: markerName<T>()
     val codeGen = CodeGenerator.create(useFqNames)
@@ -68,7 +69,7 @@ public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString =
 )
 
 /**
- * Converts delimited 'my_name', 'my name', etc, String to camelCase 'myName'
+ * Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName'
  */
 public val NameNormalizer.Companion.default: NameNormalizer get() = NameNormalizer.from(setOf('\t', ' ', '_'))
 
