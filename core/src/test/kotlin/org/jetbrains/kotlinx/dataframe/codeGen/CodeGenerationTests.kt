@@ -311,7 +311,7 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `data classses`() {
-        val code = typed.groupBy { name }.toDataFrame().generateDataClasses(extensionProperties = false)
+        val code = typed.groupBy { name }.toDataFrame().generateDataClasses()
 
         code shouldBe """
             @DataSchema

@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 
 public inline fun <reified T> DataFrame<T>.generateCode(
     fields: Boolean = true,
@@ -36,7 +38,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString = ge
 
 public inline fun <reified T> DataFrame<T>.generateDataClasses(
     markerName: String? = null,
-    extensionProperties: Boolean = true,
+    extensionProperties: Boolean = false,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false
 ): CodeString {
@@ -49,8 +51,8 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
         extensionProperties = extensionProperties,
         isOpen = false,
         visibility = visibility,
-        asDataClass = true
-    ).code.declarations
+        asDataClass = true,
+        fieldNameNormalizer = nameNormalizer
     ).code.declarations.toCodeString()
 }
 
