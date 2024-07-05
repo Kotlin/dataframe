@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema

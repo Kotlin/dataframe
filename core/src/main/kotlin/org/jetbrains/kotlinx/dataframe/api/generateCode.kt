@@ -1,8 +1,8 @@
-package org.jetbrains.kotlinx.dataframe.codeGen
+package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 
 public inline fun <reified T> DataFrame<T>.generateCode(
     fields: Boolean = true,
