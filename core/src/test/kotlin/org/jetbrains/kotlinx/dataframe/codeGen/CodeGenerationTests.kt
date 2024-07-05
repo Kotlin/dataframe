@@ -331,6 +331,17 @@ class CodeGenerationTests : BaseTest() {
     }
 
     @Test
+    fun `normalize name`() {
+        dataFrameOf("my_name")(1).generateDataClasses() shouldBe """
+            @DataSchema
+            data class DataEntry(
+                @ColumnName("my_name")
+                val myName: Int
+            )
+        """.trimIndent().toCodeString()
+    }
+
+    @Test
     fun patterns() {
         """^[\d]""".toRegex().matches("3fds")
     }
