@@ -34,7 +34,7 @@ public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T
 else cast()
 
 public inline fun <reified T> AnyFrame.castTo(
-    @Suppress("UNUSED_PARAMETER") df: DataFrame<T>,
+    @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     verify: Boolean = true
 ): DataFrame<T> {
     return cast<T>(verify = verify)
