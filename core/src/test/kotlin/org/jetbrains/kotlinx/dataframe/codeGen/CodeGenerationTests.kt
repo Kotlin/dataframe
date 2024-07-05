@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toCodeString
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -326,7 +327,7 @@ class CodeGenerationTests : BaseTest() {
                 val group: List<Person1>,
                 val name: String
             )
-        """.trimIndent()
+        """.trimIndent().toCodeString()
     }
 
     @Test

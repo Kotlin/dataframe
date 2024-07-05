@@ -117,7 +117,7 @@ class GatherTests {
 
     @Test
     fun `generated code is fully typed`() {
-        generatedCode.contains("<*>") shouldBe false
+        generatedCode.value.contains("<*>") shouldBe false
     }
 
     @Test
