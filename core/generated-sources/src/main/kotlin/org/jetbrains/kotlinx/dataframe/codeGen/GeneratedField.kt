@@ -5,9 +5,13 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.needsQuoting
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 
 public sealed interface FieldType {
-    public class ValueFieldType(public val typeFqName: String) : FieldType
-    public class FrameFieldType(public val markerName: String, public val nullable: Boolean) : FieldType
-    public class GroupFieldType(public val markerName: String) : FieldType
+    public data class ValueFieldType(public val typeFqName: String) : FieldType
+    public data class FrameFieldType(
+        public val markerName: String,
+        public val nullable: Boolean,
+        public val renderAsList: Boolean
+    ) : FieldType
+    public data class GroupFieldType(public val markerName: String, public val renderAsObject: Boolean) : FieldType
 }
 
 /**
@@ -36,8 +40,8 @@ private fun String.toNullable() = if (this.last() == '?' || this == "*") this el
 public fun FieldType.toNullable(): FieldType =
     if (isNotNullable()) {
         when (this) {
-            is FieldType.FrameFieldType -> FieldType.FrameFieldType(markerName.toNullable(), nullable)
-            is FieldType.GroupFieldType -> FieldType.GroupFieldType(markerName.toNullable())
+            is FieldType.FrameFieldType -> FieldType.FrameFieldType(markerName.toNullable(), nullable, renderAsList)
+            is FieldType.GroupFieldType -> FieldType.GroupFieldType(markerName.toNullable(), renderAsObject)
             is FieldType.ValueFieldType -> FieldType.ValueFieldType(typeFqName.toNullable())
         }
     } else this
@@ -55,6 +59,7 @@ public fun FieldType.toNotNullable(): FieldType =
                     else it.removeSuffix("?")
                 },
                 nullable = nullable,
+                renderAsList
             )
 
             is FieldType.GroupFieldType -> FieldType.GroupFieldType(
@@ -62,6 +67,7 @@ public fun FieldType.toNotNullable(): FieldType =
                     if (it == "*") "Any"
                     else it.removeSuffix("?")
                 },
+                renderAsObject
             )
 
             is FieldType.ValueFieldType -> FieldType.ValueFieldType(
@@ -86,6 +92,10 @@ public class ValidFieldName private constructor(private val identifier: String, 
 
     public operator fun plus(other: ValidFieldName): ValidFieldName {
         return ValidFieldName(identifier = identifier + other.identifier, needsQuote = needsQuote || other.needsQuote)
+    }
+
+    override fun toString(): String {
+        return identifier
     }
 
     public companion object {
