@@ -63,4 +63,3 @@ public object DefaultCellRenderer : CellRenderer {
         return renderValueForHtml(value, tooltipLimit, configuration.decimalFormat).truncatedContent
     }
 }
-

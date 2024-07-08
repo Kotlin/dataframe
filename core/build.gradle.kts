@@ -13,7 +13,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(jupyter.api)
         alias(korro)
         alias(keywordGenerator)
         alias(kover)
@@ -372,10 +371,6 @@ tasks.test {
             )
         )
     }
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
 }
 
 kotlinPublications {

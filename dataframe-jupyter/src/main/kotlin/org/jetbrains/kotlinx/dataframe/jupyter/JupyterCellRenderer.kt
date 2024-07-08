@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
