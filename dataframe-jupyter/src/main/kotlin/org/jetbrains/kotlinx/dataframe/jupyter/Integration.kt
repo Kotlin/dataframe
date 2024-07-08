@@ -267,6 +267,7 @@ internal class Integration(
         import("org.jetbrains.kotlinx.dataframe.jupyter.ImportDataSchema")
         import("org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema")
         import("org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils")
+        import("org.jetbrains.kotlinx.dataframe.jupyter.bodyAsDataFrame")
         import("java.net.URL")
         import("java.io.File")
         import("kotlinx.datetime.Instant")
