@@ -40,6 +40,7 @@ kotlinDatetime = "0.6.0"
 openapi = "2.1.20"
 kotlinLogging = "6.0.3"
 sl4j = "2.0.12"
+ktorClient = "0.2.0-dev-11"
 
 junit = "4.13.2"
 junit-jupiter = "5.10.2"
@@ -64,6 +65,7 @@ duckdb = "0.10.0"
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 jupyter-api = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-kernel", version.ref = "kotlinJupyter" }
+jupyter-ktor-client = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-ktor-client", version.ref = "ktorClient"}
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }

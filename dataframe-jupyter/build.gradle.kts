@@ -8,13 +8,16 @@ group = "org.jetbrains.kotlinx"
 
 repositories {
     mavenCentral()
+    maven("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
 }
 
 dependencies {
     compileOnly(project(":core"))
+    compileOnly(libs.jupyter.ktor.client)
     testImplementation(libs.junit)
     testImplementation(libs.serialization.json)
     testImplementation(project(":core"))
+    testImplementation(libs.jupyter.ktor.client)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
