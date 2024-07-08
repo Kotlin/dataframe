@@ -31,6 +31,7 @@ dependencies {
     }
 
     testApi(project(":core"))
+    testImplementation(project(":dataframe-jupyter"))
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
@@ -48,4 +49,16 @@ kotlinPublications {
 
 kotlin {
     explicitApi()
+}
+
+// Only for tests. Because tests depend on kotlin-jupyter, and it's compatible with Java 11
+tasks.compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
+}
+
+tasks.compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
