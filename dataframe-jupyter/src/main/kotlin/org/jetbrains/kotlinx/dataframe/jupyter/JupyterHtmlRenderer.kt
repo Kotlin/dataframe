@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -79,8 +81,8 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() -> {
                 buildJsonObject {
-                    put(NROW, df.size.nrow)
-                    put(NCOL, df.size.ncol)
+                    put(NROW, df.size().nrow)
+                    put(NCOL, df.size().ncol)
                     putJsonArray(COLUMNS) { addAll(df.columnNames()) }
                     put(KOTLIN_DATAFRAME, encodeFrame(df.take(limit)))
                 }.toString()
