@@ -12,17 +12,9 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.*
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
-import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
-import org.jetbrains.kotlinx.dataframe.io.readResultSet
-import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
-import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -404,6 +396,58 @@ class JdbcTest {
                 rs.beforeFirst()
 
                 val dataSchema1 = DataFrame.getSchemaForResultSet(rs, connection)
+                dataSchema1.columns.size shouldBe 3
+                dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+            }
+        }
+    }
+
+    @Test
+    fun `read from extension function on ResultSet`() {
+        connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).use { st ->
+            @Language("SQL")
+            val selectStatement = "SELECT * FROM Customer"
+
+            st.executeQuery(selectStatement).use { rs ->
+                val df = rs.toDF(H2(MySql)).cast<Customer>()
+
+                df.rowsCount() shouldBe 4
+                df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+                df[0][1] shouldBe "John"
+
+                rs.beforeFirst()
+
+                val df1 = rs.toDF(H2(MySql), 1).cast<Customer>()
+
+                df1.rowsCount() shouldBe 1
+                df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
+                df1[0][1] shouldBe "John"
+
+                rs.beforeFirst()
+
+                val dataSchema = rs.getDataFrameSchema(H2(MySql))
+                dataSchema.columns.size shouldBe 3
+                dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+
+                rs.beforeFirst()
+
+                val df2 = rs.toDF(connection).cast<Customer>()
+
+                df2.rowsCount() shouldBe 4
+                df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+                df2[0][1] shouldBe "John"
+
+                rs.beforeFirst()
+
+                val df3 = rs.toDF(connection, 1).cast<Customer>()
+
+                df3.rowsCount() shouldBe 1
+                df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
+                df3[0][1] shouldBe "John"
+
+                rs.beforeFirst()
+
+                val dataSchema1 = rs.getDataFrameSchema(connection)
                 dataSchema1.columns.size shouldBe 3
                 dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
             }

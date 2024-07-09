@@ -265,6 +265,32 @@ public fun DataFrame.Companion.readResultSet(
  *
  * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
+ * @param [dbType] the type of database that the [ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *
+ * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+ */
+public fun ResultSet.toDF(
+    dbType: DbType,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame {
+    return DataFrame.Companion.readResultSet(this, dbType, limit, inferNullability)
+}
+
+/**
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
+ *
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
+ * Therefore, you can iterate through it only once, from the first row to the last row.
+ *
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ *
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ *
  * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
  * Its state may be altered after the read operation.
  * @param [connection] the connection to the database (it's required to extract the database type)
@@ -284,6 +310,33 @@ public fun DataFrame.Companion.readResultSet(
     val dbType = extractDBTypeFromConnection(connection)
 
     return readResultSet(resultSet, dbType, limit, inferNullability)
+}
+
+/**
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
+ *
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
+ * Therefore, you can iterate through it only once, from the first row to the last row.
+ *
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ *
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ *
+ * @param [connection] the connection to the database (it's required to extract the database type)
+ * that the [ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *
+ * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+ */
+public fun ResultSet.toDF(
+    connection: Connection,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame {
+    return DataFrame.Companion.readResultSet(this, connection, limit, inferNullability)
 }
 
 /**
@@ -454,6 +507,18 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
 /**
  * Retrieves the schema from [ResultSet].
  *
+ * NOTE: This function will not close connection and result set and not retrieve data from the result set.
+ *
+ * @param [dbType] the type of database that the [ResultSet] belongs to.
+ * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
+ */
+public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema {
+    return DataFrame.getSchemaForResultSet(this, dbType)
+}
+
+/**
+ * Retrieves the schema from [ResultSet].
+ *
  * NOTE: [connection] is required to extract the database type.
  * This function will not close connection and result set and not retrieve data from the result set.
  *
@@ -466,6 +531,18 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, conne
 
     val tableColumns = getTableColumnsMetadata(resultSet)
     return buildSchemaByTableColumns(tableColumns, dbType)
+}
+
+/**
+ * Retrieves the schema from [ResultSet].
+ *
+ * NOTE: This function will not close connection and result set and not retrieve data from the result set.
+ *
+ * @param [connection] the connection to the database (it's required to extract the database type).
+ * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
+ */
+public fun ResultSet.getDataFrameSchema(connection: Connection): DataFrameSchema {
+    return DataFrame.getSchemaForResultSet(this, connection)
 }
 
 /**
