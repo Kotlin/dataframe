@@ -41,3 +41,4 @@ plugins {
 }
 include("dataframe-excel")
 include("core")
+include("dataframe-jupyter")
