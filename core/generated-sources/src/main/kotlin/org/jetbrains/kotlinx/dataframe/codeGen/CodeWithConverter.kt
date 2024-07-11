@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
-public typealias Code = String
-public typealias VariableName = String
+import org.jetbrains.kotlinx.jupyter.api.Code
+import org.jetbrains.kotlinx.jupyter.api.VariableName
 
 /**
  * Class representing generated code declarations for a [Marker].
