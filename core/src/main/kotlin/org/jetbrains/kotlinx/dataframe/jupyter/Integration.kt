@@ -1,5 +1,3 @@
-@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
-
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
@@ -34,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -231,10 +230,10 @@ internal class Integration(
                 { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
             )
             render<ColumnGroup<*>>(
-                { """ColumnGroup: name = "${it.name()}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
+                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
             )
             render<AnyCol>(
-                { """DataColumn: name = "${it.name()}", type = ${renderType(it.type())}, size = ${it.size()}""" },
+                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
             )
             render<AnyFrame>(
                 { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
