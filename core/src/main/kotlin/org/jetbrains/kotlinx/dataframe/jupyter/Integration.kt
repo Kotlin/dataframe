@@ -1,5 +1,3 @@
-@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
-
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
@@ -34,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -57,7 +56,7 @@ import kotlin.reflect.full.isSubtypeOf
 private const val MIN_KERNEL_VERSION = "0.11.0.198"
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
-// make sure to update URLs to this file here if it's moved or renamed https://github.com/Kotlin/kotlin-jupyter/pull/461
+
 internal class Integration(
     private val notebook: Notebook,
     private val options: MutableMap<String, String?>,
@@ -231,10 +230,10 @@ internal class Integration(
                 { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
             )
             render<ColumnGroup<*>>(
-                { """ColumnGroup: name = "${it.name()}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
+                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
             )
             render<AnyCol>(
-                { """DataColumn: name = "${it.name()}", type = ${renderType(it.type())}, size = ${it.size()}""" },
+                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
             )
             render<AnyFrame>(
                 { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
