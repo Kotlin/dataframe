@@ -57,7 +57,7 @@ import kotlin.reflect.full.isSubtypeOf
 private const val MIN_KERNEL_VERSION = "0.11.0.198"
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
-// make sure to update URLs to this file here if it's moved or renamed https://github.com/Kotlin/kotlin-jupyter/pull/461
+
 internal class Integration(
     private val notebook: Notebook,
     private val options: MutableMap<String, String?>,
