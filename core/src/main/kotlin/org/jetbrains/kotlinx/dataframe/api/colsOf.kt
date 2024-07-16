@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnSetName
@@ -203,6 +204,7 @@ public fun <C> ColumnSet<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
+@Interpretable("ColsOf1")
 public inline fun <reified C> ColumnSet<*>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
 ): TransformableColumnSet<C> = colsOf(typeOf<C>(), filter)
@@ -228,6 +230,7 @@ public fun <C> ColumnsSelectionDsl<*>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
+@Interpretable("ColsOf0")
 public inline fun <reified C> ColumnsSelectionDsl<*>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
 ): TransformableColumnSet<C> = asSingleColumn().colsOf(typeOf<C>(), filter)
