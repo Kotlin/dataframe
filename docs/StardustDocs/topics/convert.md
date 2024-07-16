@@ -5,11 +5,12 @@ Returns [`DataFrame`](DataFrame.md) with changed values in some columns. Allows 
 
 ```text
 convert { columnsSelector }
-    .with { rowExpression } | .perRowCol { rowColExpression } | to<Type>() | to { colExpression }
+    .with { rowExpression } | .asFrame { frameExpression } | .perRowCol { rowColExpression } | to<Type>() | to { colExpression }
 
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = (DataRow, DataColumn) -> NewValue
 colExpression = DataFrame.(DataColumn) -> DataColumn
+frameExpression: DataFrame.(DataFrame) -> DataFrame
 ```
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
@@ -22,6 +23,17 @@ df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList(
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convert.html"/>
+<!---END-->
+
+ColumnGroup can be converted using DataFrame API, for example:
+
+<!---FUN convertAsFrame-->
+
+```kotlin
+df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsFrame.html"/>
 <!---END-->
 
 `convert` supports automatic type conversions between the following types:

@@ -8,12 +8,15 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.annotations.*
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -110,6 +113,9 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
 public inline fun <T, C, reified R> Convert<T, C>.with(
     noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> = with(Infer.Nulls, rowConverter)
+
+public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(body: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>): DataFrame<T> =
+    to { body(this, it.asColumnGroup()).asColumnGroup(it.name()) }
 
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     infer: Infer = Infer.Nulls,
