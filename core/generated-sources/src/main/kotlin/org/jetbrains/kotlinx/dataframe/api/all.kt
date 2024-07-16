@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.BehaviorArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ColumnDoesNotExistArg
 import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg
@@ -308,6 +309,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.allExcept]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("All0")
     public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> =
         asSingleColumn().allColumnsInternal()
 

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ColsAtAnyDepthColumnsSelectionDsl.Grammar.ColumnSetName
@@ -278,6 +279,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [DataFrame.flatten]
      * @see [ColumnsSelectionDsl.simplify]
      */
+    @Interpretable("ColsAtAnyDepth0")
     public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
 
