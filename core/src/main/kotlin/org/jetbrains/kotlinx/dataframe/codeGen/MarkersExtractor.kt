@@ -75,7 +75,7 @@ internal object MarkersExtractor {
     private fun getFields(markerClass: KClass<*>, nullableProperties: Boolean): List<GeneratedField> {
         val order = getPropertyOrderFromPrimaryConstructor(markerClass) ?: emptyMap()
         val structuralProperties = markerClass.memberProperties.filter { !it.hasAnnotation<ScopeProperty>() }
-        return structuralProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { _, it ->
+        return structuralProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.map {
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
