@@ -117,9 +117,7 @@ class PostgresTest {
                 jsonbCol jsonb not null
             )
             """
-            connection.createStatement().execute(
-                createTableStatement.trimIndent(),
-            )
+            connection.createStatement().execute(createTableStatement.trimIndent())
 
             @Language("SQL")
             val createTableQuery = """
@@ -146,9 +144,7 @@ class PostgresTest {
                 xmlCol xml not null
             )
             """
-            connection.createStatement().execute(
-                createTableQuery.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
             val insertData1 = """

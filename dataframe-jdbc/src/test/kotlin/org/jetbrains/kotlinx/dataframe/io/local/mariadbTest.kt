@@ -177,9 +177,7 @@ class MariadbTest {
                 CHECK (JSON_VALID(jsonCol))
             )
         """
-            connection.createStatement().execute(
-                createTableQuery.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
             val createTableQuery2 = """
@@ -217,9 +215,7 @@ class MariadbTest {
                 setCol SET('Option1', 'Option2', 'Option3')
             )
             """
-            connection.createStatement().execute(
-                createTableQuery2.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery2.trimIndent())
 
             @Language("SQL")
             val insertData1 =

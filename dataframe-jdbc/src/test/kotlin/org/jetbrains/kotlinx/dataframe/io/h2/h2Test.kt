@@ -216,37 +216,35 @@ class JdbcTest {
             """.trimIndent(),
         ).executeUpdate()
 
-        connection
-            .prepareStatement(
-                """
-                INSERT INTO TestTable VALUES (
-                    'DEF', 'LMN', 'Another CLOB data', 'Different CLOB data',
-                    'Another Varchar', X'101112', X'131415', X'161718',
-                    FALSE, 2, 200, 2000, 200000,
-                    234.56, 2.34, 4.56, 3.14,
-                    '2023-07-21', '14:30:00', '22:45:00', '2023-07-20 18:15:30',
-                    '2023-07-19 18:15:30', NULL,
-                    'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
-                )
-                """.trimIndent(),
-            ).executeUpdate()
+        connection.prepareStatement(
+            """
+            INSERT INTO TestTable VALUES (
+                'DEF', 'LMN', 'Another CLOB data', 'Different CLOB data',
+                'Another Varchar', X'101112', X'131415', X'161718',
+                FALSE, 2, 200, 2000, 200000,
+                234.56, 2.34, 4.56, 3.14,
+                '2023-07-21', '14:30:00', '22:45:00', '2023-07-20 18:15:30',
+                '2023-07-19 18:15:30', NULL,
+                'Option2', '{"key": "another_value"}', '234e5678-e89b-12d3-a456-426655440001'
+            )
+            """.trimIndent(),
+        ).executeUpdate()
 
-        connection
-            .prepareStatement(
-                """
-                INSERT INTO TestTable VALUES (
-                    'GHI', 'OPQ', 'Third CLOB entry', 'Yet another CLOB data',
-                    'Yet Another Varchar', X'192021', X'222324', X'252627',
-                    TRUE, 3, 300, 3000, 300000,
-                    345.67, 3.45, 5.67, 4.71,
-                    '2023-07-22', '20:45:00', '03:30:00', '2023-07-21 23:45:15',
-                    '2023-07-20 23:45:15', NULL,
-                    'Option3', '{ "person": { "name": "John Doe", "age": 30 }, ' ||
-                    '"address": { "street": "123 Main St", "city": "Exampleville", "zipcode": "12345"}}', 
-                    '345e6789-e89b-12d3-a456-426655440002'
-                )
-                """.trimIndent(),
-            ).executeUpdate()
+        connection.prepareStatement(
+            """
+            INSERT INTO TestTable VALUES (
+                'GHI', 'OPQ', 'Third CLOB entry', 'Yet another CLOB data',
+                'Yet Another Varchar', X'192021', X'222324', X'252627',
+                TRUE, 3, 300, 3000, 300000,
+                345.67, 3.45, 5.67, 4.71,
+                '2023-07-22', '20:45:00', '03:30:00', '2023-07-21 23:45:15',
+                '2023-07-20 23:45:15', NULL,
+                'Option3', '{ "person": { "name": "John Doe", "age": 30 }, ' ||
+                '"address": { "street": "123 Main St", "city": "Exampleville", "zipcode": "12345"}}', 
+                '345e6789-e89b-12d3-a456-426655440002'
+            )
+            """.trimIndent(),
+        ).executeUpdate()
 
         val tableName = "TestTable"
         val df = DataFrame.readSqlTable(connection, tableName).cast<TestTableData>()
@@ -717,18 +715,14 @@ class JdbcTest {
 
         connection.createStatement().execute(createTestTable1Query)
 
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)",
-        )
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)",
-        )
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)",
-        )
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)",
-        )
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
 
         // start testing `readSqlTable` method
 

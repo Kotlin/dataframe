@@ -173,9 +173,7 @@ class MySqlTest {
             )
             """
 
-            connection.createStatement().execute(
-                createTableQuery.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
             val createTableQuery2 = """
@@ -217,9 +215,7 @@ class MySqlTest {
             )
             """
 
-            connection.createStatement().execute(
-                createTableQuery2.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery2.trimIndent())
 
             @Language("SQL")
             val insertData1 =

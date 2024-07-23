@@ -151,9 +151,7 @@ class MariadbH2Test {
                 jsonCol JSON NOT NULL
             )
         """
-            connection.createStatement().execute(
-                createTableQuery.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
             val createTableQuery2 = """
@@ -190,9 +188,7 @@ class MariadbH2Test {
                 enumCol ENUM('Value1', 'Value2', 'Value3')
             )
             """
-            connection.createStatement().execute(
-                createTableQuery2.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery2.trimIndent())
 
             @Language("SQL")
             val insertData1 =

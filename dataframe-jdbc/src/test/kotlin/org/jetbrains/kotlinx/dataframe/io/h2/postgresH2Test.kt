@@ -93,9 +93,7 @@ class PostgresH2Test {
                 integerCol integer
             )
             """
-            connection.createStatement().execute(
-                createTableStatement.trimIndent(),
-            )
+            connection.createStatement().execute(createTableStatement.trimIndent())
 
             @Language("SQL")
             val createTableQuery = """
@@ -114,9 +112,7 @@ class PostgresH2Test {
                 uuidCol uuid not null
             )
             """
-            connection.createStatement().execute(
-                createTableQuery.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
             val insertData1 = """

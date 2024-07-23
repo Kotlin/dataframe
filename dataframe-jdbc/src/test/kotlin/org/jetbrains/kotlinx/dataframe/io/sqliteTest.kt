@@ -67,9 +67,7 @@ class SqliteTest {
             )
             """
 
-            connection.createStatement().execute(
-                createCustomersTableQuery,
-            )
+            connection.createStatement().execute(createCustomersTableQuery)
 
             @Language("SQL")
             val createOrderTableQuery = """
@@ -82,9 +80,7 @@ class SqliteTest {
             )
             """
 
-            connection.createStatement().execute(
-                createOrderTableQuery,
-            )
+            connection.createStatement().execute(createOrderTableQuery)
 
             val profilePicture = "SampleProfilePictureData".toByteArray()
             val orderDetails = "OrderDetailsData".toByteArray()

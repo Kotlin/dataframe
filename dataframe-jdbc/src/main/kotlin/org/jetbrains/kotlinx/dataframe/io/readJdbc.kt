@@ -525,9 +525,8 @@ private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetad
 }
 
 private fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
-    dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(
-        makeCommonSqlToKTypeMapping(tableColumnMetadata),
-    )
+    dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
+        ?: ColumnSchema.Value(makeCommonSqlToKTypeMapping(tableColumnMetadata))
 
 /**
  * Retrieves the metadata of the columns in the result set.
@@ -681,7 +680,8 @@ private fun extractNewRowFromResultSetAndAddToData(
  * @return The generated KType.
  */
 private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
-    dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
+    dbType.convertSqlTypeToKType(tableColumnMetadata)
+        ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
 
 /**
  * Creates a mapping between common SQL types and their corresponding KTypes.

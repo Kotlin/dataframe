@@ -139,9 +139,7 @@ class MSSQLTest {
             );
             """
 
-            connection.createStatement().execute(
-                createTableQuery.trimIndent(),
-            )
+            connection.createStatement().execute(createTableQuery.trimIndent())
 
             @Language("SQL")
             val insertData1 =
@@ -315,18 +313,14 @@ class MSSQLTest {
 
         connection.createStatement().execute(createTestTable1Query)
 
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)",
-        )
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)",
-        )
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)",
-        )
-        connection.createStatement().execute(
-            "INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)",
-        )
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (1, 'John', 'Crawford', 40)")
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (2, 'Alice', 'Smith', 25)")
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (3, 'Bob', 'Johnson', 47)")
+        connection.createStatement()
+            .execute("INSERT INTO TestTable1 (id, name, surname, age) VALUES (4, 'Sam', NULL, 15)")
 
         // start testing `readSqlTable` method
 
