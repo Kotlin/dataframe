@@ -356,7 +356,8 @@ class CodeGenerationTests : BaseTest() {
     fun `check method generateDataClasses`() {
         val code = typed.groupBy { name }.toDataFrame().generateDataClasses()
 
-        code shouldBe """
+        code shouldBe
+            """
             @DataSchema
             data class Person1(
                 val age: Int,
@@ -370,18 +371,19 @@ class CodeGenerationTests : BaseTest() {
                 val group: List<Person1>,
                 val name: String
             )
-        """.trimIndent().toCodeString()
+            """.trimIndent().toCodeString()
     }
 
     @Test
     fun `check name normalization for generated data classes`() {
-        dataFrameOf("my_name")(1).generateDataClasses() shouldBe """
+        dataFrameOf("my_name")(1).generateDataClasses() shouldBe
+            """
             @DataSchema
             data class DataEntry(
                 @ColumnName("my_name")
                 val myName: Int
             )
-        """.trimIndent().toCodeString()
+            """.trimIndent().toCodeString()
     }
 
     @Test
