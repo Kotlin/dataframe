@@ -218,6 +218,14 @@ class Modify : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
+    fun convertAsFrame() {
+        // SampleStart
+        df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
     fun parseAll() {
         // SampleStart
         df.parse()

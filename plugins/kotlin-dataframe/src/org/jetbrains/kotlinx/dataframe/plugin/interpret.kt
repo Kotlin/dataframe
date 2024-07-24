@@ -76,6 +76,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.SingleColumnApproximation
 
 fun <T> KotlinTypeFacade.interpret(
     functionCall: FirFunctionCall,
@@ -88,14 +90,15 @@ fun <T> KotlinTypeFacade.interpret(
     val defaultArguments = processor.expectedArguments.filter { it.defaultValue is Present }.map { it.name }.toSet()
     val actualArgsMap = refinedArguments.associateBy { it.name.identifier }.toSortedMap()
     val conflictingKeys = additionalArguments.keys intersect actualArgsMap.keys
-    if (conflictingKeys.isNotEmpty()) {
-        error("Conflicting keys: $conflictingKeys")
+    if (conflictingKeys.isNotEmpty() && isTest) {
+        interpretationFrameworkError("Conflicting keys: $conflictingKeys")
     }
     val expectedArgsMap = processor.expectedArguments
         .filterNot { it.name.startsWith("typeArg") }
         .associateBy { it.name }.toSortedMap().minus(additionalArguments.keys)
 
-    if (expectedArgsMap.keys - defaultArguments != actualArgsMap.keys - defaultArguments) {
+    val unexpectedArguments = expectedArgsMap.keys - defaultArguments != actualArgsMap.keys - defaultArguments
+    if (unexpectedArguments && isTest) {
         val message = buildString {
             appendLine("ERROR: Different set of arguments")
             appendLine("Implementation class: $processor")
@@ -105,8 +108,7 @@ fun <T> KotlinTypeFacade.interpret(
             appendLine("add arguments to an interpeter:")
             appendLine(diff.map { actualArgsMap[it] })
         }
-        reporter.reportInterpretationError(functionCall, message)
-        return null
+        interpretationFrameworkError(message)
     }
 
     val arguments = mutableMapOf<String, Interpreter.Success<Any?>>()
@@ -204,7 +206,8 @@ fun <T> KotlinTypeFacade.interpret(
             }
 
             is Interpreter.Dsl -> {
-                { receiver: Any ->
+                { receiver: Any, dslArguments: Map<String, Interpreter.Success<Any?>> ->
+                    val map = mapOf("dsl" to Interpreter.Success(receiver)) + dslArguments
                     (it.expression as FirAnonymousFunctionExpression)
                         .anonymousFunction.body!!
                         .statements.filterIsInstance<FirFunctionCall>()
@@ -213,7 +216,7 @@ fun <T> KotlinTypeFacade.interpret(
                             interpret(
                                 call,
                                 schemaProcessor,
-                                mapOf("dsl" to Interpreter.Success(receiver)),
+                                map,
                                 reporter
                             )
                         }
@@ -269,6 +272,10 @@ fun <T> KotlinTypeFacade.interpret(
     }
 }
 
+fun interpretationFrameworkError(message: String): Nothing = throw InterpretationFrameworkError(message)
+
+class InterpretationFrameworkError(message: String) : Error(message)
+
 interface InterpretationErrorReporter {
     val errorReported: Boolean
     fun reportInterpretationError(call: FirFunctionCall, message: String)
@@ -298,7 +305,7 @@ fun KotlinTypeFacade.pluginDataFrameSchema(schemaTypeArg: ConeTypeProjection): P
 }
 
 fun KotlinTypeFacade.pluginDataFrameSchema(coneClassLikeType: ConeClassLikeType): PluginDataFrameSchema {
-    val symbol = coneClassLikeType.toSymbol(session) as FirRegularClassSymbol
+    val symbol = coneClassLikeType.toSymbol(session) as? FirRegularClassSymbol ?: return PluginDataFrameSchema(emptyList())
     val declarationSymbols = if (symbol.isLocal && symbol.resolvedSuperTypes.firstOrNull() != session.builtinTypes.anyType.type) {
         val rootSchemaSymbol = symbol.resolvedSuperTypes.first().toSymbol(session) as FirRegularClassSymbol
         rootSchemaSymbol.declaredMemberScope(session, FirResolvePhase.DECLARATIONS)
@@ -331,7 +338,7 @@ fun KotlinTypeFacade.pluginDataFrameSchema(coneClassLikeType: ConeClassLikeType)
     return PluginDataFrameSchema(columns)
 }
 
-private fun KotlinTypeFacade.columnWithPathApproximations(result: FirPropertyAccessExpression): List<ColumnWithPathApproximation> {
+private fun KotlinTypeFacade.columnWithPathApproximations(result: FirPropertyAccessExpression): ColumnsResolver {
     return result.resolvedType.let {
         val column = when (it.classId) {
             Names.DATA_COLUMN_CLASS_ID -> {
@@ -346,9 +353,13 @@ private fun KotlinTypeFacade.columnWithPathApproximations(result: FirPropertyAcc
                 val path = f(result)
                 SimpleColumnGroup(path, pluginDataFrameSchema(arg).columns())
             }
-            else -> return emptyList()
+            else -> return object : ColumnsResolver {
+                override fun resolve(df: PluginDataFrameSchema): List<ColumnWithPathApproximation> {
+                    return emptyList()
+                }
+            }
         }
-        listOf(
+        SingleColumnApproximation(
             ColumnWithPathApproximation(
                 path = ColumnPathApproximation(path(result)),
                 column

@@ -790,4 +790,10 @@ class DataFrameTreeTests : BaseTest() {
         val a: DataFrame<NameAndCity> = typed2["nameAndCity"].cast<DataRow<NameAndCity>>().asDataFrame()
         val b: DataFrame<NameAndCity> = typed2[nameAndCity].cast<NameAndCity>().asDataFrame()
     }
+
+    @Test
+    fun `convert ColumnGroup as Frame`() {
+        val df = typed2.convert { nameAndCity }.asFrame { it.remove { city } }
+        df.nameAndCity.columns() shouldBe typed2.nameAndCity.remove { city }.columns()
+    }
 }

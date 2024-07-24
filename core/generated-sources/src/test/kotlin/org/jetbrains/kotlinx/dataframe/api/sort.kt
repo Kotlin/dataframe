@@ -1,8 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrowMessage
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.io.readDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.testResource
+import org.jetbrains.kotlinx.dataframe.testSets.*
+import org.jetbrains.kotlinx.dataframe.testSets.DsSalaries
 import org.junit.Test
 
 class SortDataColumn {
@@ -66,5 +71,28 @@ class SortDataColumn {
 
         col.sortWith { df1, df2 -> df1[a] - df2[a] } shouldBe sortedCol
         col.sortWith(compareBy { it[a] }) shouldBe sortedCol
+    }
+
+    @Test
+    fun `sort by nested column`() {
+        val df = testResource("ds_salaries.csv").readDataFrame().cast<DsSalaries>()
+        val aggregate = df.pivot(false) { companySize }.groupBy { companyLocation }.aggregate {
+            maxOf { salaryInUsd } into "salary"
+            maxBy { salaryInUsd } into "extra"
+        }
+        aggregate.sortBy(pathOf("L", "salary"))[0][pathOf("L", "salary")] shouldBe null
+        aggregate.sortByDesc(pathOf("L", "salary"))[0][pathOf("L", "salary")] shouldBe 600_000
+    }
+
+    @Test
+    fun `sort by invalid nested column`() {
+        val df = testResource("ds_salaries.csv").readDataFrame().cast<DsSalaries>()
+        val aggregate = df.pivot(false) { companySize }.groupBy { companyLocation }.aggregate {
+            maxOf { salaryInUsd } into "salary"
+            maxBy { salaryInUsd } into "extra"
+        }
+        shouldThrowMessage("Can not use ColumnGroup as sort column") {
+            aggregate.sortBy(pathOf("L", "extra"))
+        }
     }
 }

@@ -11,8 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.TraversePropertiesDsl
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
-import org.jetbrains.kotlinx.dataframe.codeGen.shouldBeConvertedToColumnGroup
-import org.jetbrains.kotlinx.dataframe.codeGen.shouldBeConvertedToFrameColumn
+import org.jetbrains.kotlinx.dataframe.codeGen.getFieldKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -59,9 +58,8 @@ internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
     private val clazz: KClass<*>,
     private val prefix: ColumnPath = emptyPath(),
-    private val configuration: TraverseConfiguration = TraverseConfiguration(),
-) : CreateDataFrameDsl<T>(),
-    TraversePropertiesDsl by configuration {
+    private val configuration: TraverseConfiguration = TraverseConfiguration()
+) : CreateDataFrameDsl<T>(), TraversePropertiesDsl by configuration {
 
     internal val columns = mutableListOf<Pair<ColumnPath, AnyBaseCol>>()
 
@@ -87,13 +85,12 @@ internal class CreateDataFrameDslImpl<T>(
 
         val preserveProperties = mutableSetOf<KCallable<*>>()
 
-        fun clone(): TraverseConfiguration =
-            TraverseConfiguration().also {
-                it.excludeClasses.addAll(excludeClasses)
-                it.excludeProperties.addAll(excludeProperties)
-                it.preserveProperties.addAll(preserveProperties)
-                it.preserveClasses.addAll(preserveClasses)
-            }
+        fun clone(): TraverseConfiguration = TraverseConfiguration().also {
+            it.excludeClasses.addAll(excludeClasses)
+            it.excludeProperties.addAll(excludeProperties)
+            it.preserveProperties.addAll(preserveProperties)
+            it.preserveClasses.addAll(preserveClasses)
+        }
 
         override fun exclude(vararg properties: KCallable<*>) {
             for (prop in properties) {
@@ -173,11 +170,13 @@ internal fun convertToDataFrame(
             clazz.memberProperties
                 .filter { it.visibility == KVisibility.PUBLIC }
         }
+
         // fall back to getter functions for pojo-like classes if no member properties were found
         .ifEmpty {
             clazz.memberFunctions
                 .filter { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
         }
+
         // sort properties by order in constructor
         .sortWithConstructor(clazz)
 
@@ -194,9 +193,7 @@ internal fun convertToDataFrame(
                 "value class $kClass is expected to have primary constructor, but couldn't obtain it"
             }
             val parameter = constructor.parameters.singleOrNull()
-                ?: error(
-                    "conversion of value class $kClass with multiple parameters in constructor is not yet supported",
-                )
+                ?: error("conversion of value class $kClass with multiple parameters in constructor is not yet supported")
             // there's no need to unwrap if underlying field is nullable
             if (parameter.type.isMarkedNullable) return@let null
             // box and unbox impl methods are part of binary API of value classes
@@ -218,7 +215,7 @@ internal fun convertToDataFrame(
             } else {
                 val value = try {
                     val value = it.call(obj)
-                    /*
+                    /**
                      * here we do what compiler does
                      * @see org.jetbrains.kotlinx.dataframe.api.CreateDataFrameTests.testKPropertyGetLibrary
                      */
@@ -250,12 +247,13 @@ internal fun convertToDataFrame(
             }
         }
         val kClass = returnType.classifier as KClass<*>
+        val fieldKind = returnType.getFieldKind()
 
         val shouldCreateValueCol = (
             maxDepth <= 0 &&
-                !returnType.shouldBeConvertedToFrameColumn() &&
-                !returnType.shouldBeConvertedToColumnGroup()
-        ) ||
+                !fieldKind.shouldBeConvertedToFrameColumn &&
+                !fieldKind.shouldBeConvertedToColumnGroup
+            ) ||
             kClass == Any::class ||
             kClass in preserveClasses ||
             property in preserveProperties ||
@@ -277,7 +275,7 @@ internal fun convertToDataFrame(
             shouldCreateFrameCol ->
                 DataColumn.createFrameColumn(
                     name = it.columnName,
-                    groups = values as List<AnyFrame>,
+                    groups = values as List<AnyFrame>
                 )
 
             shouldCreateColumnGroup ->

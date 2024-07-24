@@ -42,3 +42,5 @@ public fun <T, G> GroupBy<T, G>.print(): Unit = println(this)
 public fun DataFrameSchema.print(): Unit = println(this)
 
 // endregion
+
+public fun CodeString.print(): Unit = println(this)

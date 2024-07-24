@@ -161,6 +161,43 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
 ): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
 
 /**
+ * Converts values in [DataFrame] to match given column schema [T].
+ *
+ * Original columns are mapped to destination columns by column [path][DataColumn.path].
+ *
+ * Type converters for every column are selected automatically. See [convert] operation for details.
+ *
+ * To specify custom type converters for the particular types use [ConvertSchemaDsl].
+ *
+ * Example of Dsl:
+ * ```kotlin
+ * df.convertTo(schemaFrom = sample) {
+ *     // defines how to convert Int? -> String
+ *     convert<Int?>().with { it?.toString() ?: "No input given" }
+ *     // defines how to convert String -> SomeType
+ *     parser { SomeType(it) }
+ *     // fill missing column `sum` with expression `a + b`
+ *     fill { sum }.with { a + b }
+ * }
+ * ```
+ *
+ * @param [T] class that defines target schema for conversion.
+ * @param [schemaFrom] dataframe which type [T] will be used.
+ * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
+ * @param [body] optional dsl to define custom type converters.
+ * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
+ * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
+ * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
+ * @throws [TypeConversionException] if type converter failed to convert column values.
+ * @return converted [DataFrame].
+ */
+public inline fun <reified T : Any> AnyFrame.convertTo(
+    @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
+    excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
+    noinline body: ConvertSchemaDsl<T>.() -> Unit = {}
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
+
+/**
  * Converts values in [DataFrame] to match given column schema [schemaType].
  *
  * Original columns are mapped to destination columns by column [path][DataColumn.path].
