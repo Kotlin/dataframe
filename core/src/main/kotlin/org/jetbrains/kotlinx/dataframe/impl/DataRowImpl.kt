@@ -21,12 +21,79 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 
     override operator fun <R> get(column: ColumnReference<R>): R {
         ColumnAccessTracker.registerColumnAccess(column.name())
-        return column.getValue(this)
+
+        val fromColumnByRow = column.getValue(this)
+
+        val fromDfByName = df
+            .let {
+                try {
+                    it.getColumnOrNull(column.name())
+                } catch (e: IllegalStateException) {
+                    return fromColumnByRow
+                }
+            }
+            .let { it ?: return fromColumnByRow }
+            .let {
+                try {
+                    it[index]
+                } catch (e: IndexOutOfBoundsException) {
+                    return fromColumnByRow
+                }
+            }
+            .let {
+                try {
+                    it as R
+                } catch (e: ClassCastException) {
+                    return fromColumnByRow
+                }
+            }
+
+        return when {
+
+            // Issue #442: df1Row[df2Column] should be df1Row[df2Column.name], not df2Column[df1Row(.index)]
+            // so, give fromDfByName priority if it's not the same as fromColumnByRow
+            fromDfByName != fromColumnByRow -> fromDfByName
+
+            else -> fromColumnByRow
+        }
     }
 
     override fun <R> getValueOrNull(column: ColumnReference<R>): R? {
         ColumnAccessTracker.registerColumnAccess(column.name())
-        return column.getValueOrNull(this)
+
+        val fromColumnByRow = column.getValueOrNull(this)
+
+        val fromDfByName = df
+            .let {
+                try {
+                    it.getColumnOrNull(column.name())
+                } catch (e: IllegalStateException) {
+                    return fromColumnByRow
+                }
+            }
+            .let { it ?: return fromColumnByRow }
+            .let {
+                try {
+                    it[index]
+                } catch (e: IndexOutOfBoundsException) {
+                    return fromColumnByRow
+                }
+            }.let {
+                try {
+                    it as R?
+                } catch (e: ClassCastException) {
+                    return fromColumnByRow
+                }
+            }
+
+        return when {
+
+            // Issue #442: df1Row[df2Column] should be df1Row[df2Column.name], not df2Column[df1Row(.index)]
+            // so, give fromDfByName priority if it's not the same as fromColumnByRow
+            fromDfByName != fromColumnByRow -> fromDfByName
+
+            else -> fromColumnByRow
+        }
     }
 
     override fun index() = index

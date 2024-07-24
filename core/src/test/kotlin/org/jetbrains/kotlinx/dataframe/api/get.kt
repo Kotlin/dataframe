@@ -3,12 +3,12 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
-import java.lang.ClassCastException
-import java.lang.IllegalArgumentException
 
 class GetTests {
 
@@ -30,6 +30,7 @@ class GetTests {
     fun `get value from row`() {
         val a by column<Int>()
         val c by column<Int>()
+
         data class A(val a: Int, val b: Int, val c: Int)
 
         val df = dataFrameOf("a", "b")(1, 2)
@@ -88,5 +89,47 @@ class GetTests {
             df[0].getColumnGroup("a")
         }
         throwable.message shouldContain "Cannot cast null value of a ValueColumn to"
+    }
+
+    @Test
+    fun `select data column with same name as in df`() {
+        val df = dataFrameOf("a")(1, 2, 3)
+
+        val aColumnAccessor = column<String>("a")
+        df.select { aColumnAccessor } shouldBe df
+
+        val directColumn = columnOf(4, 5, 6) named "a"
+        // TODO issue #457:
+        //  df.select { directColumn } shouldBe dataFrameOf(directColumn)
+
+        val otherDfColumn = dataFrameOf("a")(4, 5, 6)["a"]
+        df.select { otherDfColumn } shouldBe dataFrameOf(otherDfColumn)
+    }
+
+    @Test
+    fun `Get column from a data row`() {
+        val df1 = dataFrameOf("a")(1, 2, 3)
+        val a by column<String>()
+        val aPath = pathOf("a")
+
+        val df2 = dataFrameOf("a")(4, 5, 6)
+
+        df1.rows().forEach { df1Row ->
+            val df2Col = df2["a"]
+
+            df1Row["a"] shouldBe df1[df1Row.index()][0]
+
+            df1Row[a] shouldBe df1[df1Row.index()][0]
+
+            df1Row[aPath] shouldBe df1[df1Row.index()][0]
+
+            df1Row[df2Col.name()] shouldBe df1[df1Row.index()][0]
+
+            df1Row[df2Col] shouldNotBe df2Col[df1Row] // old
+
+            df1Row[df2Col] shouldBe df1Row[df2Col.name()] // new
+
+            df1Row[df2Col] shouldBe df1[df1Row.index()][0]
+        }
     }
 }
