@@ -36,7 +36,7 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         knownMarkers: Iterable<Marker> = emptyList(),
         readDfMethod: DefaultReadDfMethod? = null,
         fieldNameNormalizer: NameNormalizer = NameNormalizer.id(),
-        asDataClass: Boolean = false
+        asDataClass: Boolean = false,
     ): CodeGenResult
 
     public fun generate(

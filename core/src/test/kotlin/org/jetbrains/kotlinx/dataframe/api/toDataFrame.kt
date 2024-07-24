@@ -423,7 +423,12 @@ class CreateDataFrameTests {
     }
 
     @DataSchema
-    data class Person(val firstName: String, val lastName: String, val age: Int, val city: String?) : DataRowSchema
+    data class Person(
+        val firstName: String,
+        val lastName: String,
+        val age: Int,
+        val city: String?,
+    ) : DataRowSchema
 
     @DataSchema
     data class Group(val id: String, val participants: List<Person>) : DataRowSchema

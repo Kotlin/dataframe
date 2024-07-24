@@ -194,7 +194,7 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
 public inline fun <reified T : Any> AnyFrame.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
-    noinline body: ConvertSchemaDsl<T>.() -> Unit = {}
+    noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
 ): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
 
 /**
