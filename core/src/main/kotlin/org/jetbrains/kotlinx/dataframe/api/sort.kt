@@ -106,8 +106,7 @@ public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C = sor
 public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataFrame<T> =
     sortByImpl(UnresolvedColumnsPolicy.Fail, columns)
 
-public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<*>): DataFrame<T> =
-    sortBy { cols.toColumnSet() }
+public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<*>): DataFrame<T> = sortBy { cols.toColumnSet() }
 
 public fun <T> DataFrame<T>.sortBy(vararg cols: String): DataFrame<T> = sortBy { cols.toColumnSet() }
 
@@ -140,8 +139,7 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
 
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: String): GroupBy<T, G> = sortBy { cols.toColumnSet() }
 
-public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: ColumnReference<*>): GroupBy<T, G> =
-    sortBy { cols.toColumnSet() }
+public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: ColumnReference<*>): GroupBy<T, G> = sortBy { cols.toColumnSet() }
 
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> =
     sortBy { cols.toColumnSet() }

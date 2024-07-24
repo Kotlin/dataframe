@@ -408,8 +408,8 @@ class DataFrameTreeTests : BaseTest() {
         nameGroup.name() shouldBe "name"
         nameGroup.columnsCount() shouldBe
             typed2.nameAndCity.name
-            .map { it.length }
-            .max()
+                .map { it.length }
+                .max()
         nameGroup.columnNames() shouldBe (1..nameGroup.columnsCount()).map { "char$it" }
     }
 
@@ -459,9 +459,9 @@ class DataFrameTreeTests : BaseTest() {
             .map { it.key }
             .sorted() shouldBe
             typed
-            .select { age and weight }
-            .columnNames()
-            .sorted()
+                .select { age and weight }
+                .columnNames()
+                .sorted()
     }
 
     @Test

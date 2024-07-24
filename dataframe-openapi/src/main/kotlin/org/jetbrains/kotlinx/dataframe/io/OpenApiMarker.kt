@@ -135,7 +135,7 @@ internal sealed class OpenApiMarker private constructor(
         override fun toFieldType(): FieldType =
             FieldType.GroupFieldType(
                 markerName = name + if (nullable) "?" else "",
-                renderAsObject = true
+                renderAsObject = true,
             )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): Interface =
@@ -210,7 +210,7 @@ internal sealed class OpenApiMarker private constructor(
             FieldType.FrameFieldType(
                 markerName = name + if (nullable) "?" else "",
                 nullable = false,
-                renderAsList = false
+                renderAsList = false,
             )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): AdditionalPropertyInterface =
@@ -334,7 +334,7 @@ internal sealed class OpenApiMarker private constructor(
         override fun toFieldType(): FieldType =
             FieldType.GroupFieldType(
                 markerName = name + if (nullable) "?" else "",
-                renderAsObject = true
+                renderAsObject = true,
             )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): MarkerAlias =

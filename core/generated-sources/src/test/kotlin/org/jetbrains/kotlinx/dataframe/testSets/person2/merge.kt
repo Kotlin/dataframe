@@ -16,7 +16,7 @@ class MergeTests : Base() {
 
         merged shouldBe
             df.merge { name.firstName and city }.by { it[0] + " from " + it[1] }.into("name2")
-            .remove { name }
-            .rename("name2" to "name")
+                .remove { name }
+                .rename("name2" to "name")
     }
 }
