@@ -113,8 +113,9 @@ public interface FrameColsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
     @Interpretable("FrameCols0")
-    public fun ColumnSet<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
-        frameColumnsInternal(filter)
+    public fun ColumnSet<*>.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true },
+    ): TransformableColumnSet<DataFrame<*>> = frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -124,8 +125,9 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun ColumnsSelectionDsl<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
-        asSingleColumn().frameColumnsInternal(filter)
+    public fun ColumnsSelectionDsl<*>.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true },
+    ): TransformableColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -135,8 +137,9 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
-    public fun SingleColumn<DataRow<*>>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
-        this.ensureIsColumnGroup().frameColumnsInternal(filter)
+    public fun SingleColumn<DataRow<*>>.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true },
+    ): TransformableColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -159,8 +162,9 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[frameCols][KProperty.frameCols]`() }`
      */
-    public fun KProperty<*>.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
-        columnGroup(this).frameCols(filter)
+    public fun KProperty<*>.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true },
+    ): TransformableColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
 
     /**
      * @include [CommonFrameColsDocs]
@@ -168,8 +172,9 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
      */
-    public fun ColumnPath.frameCols(filter: Predicate<FrameColumn<*>> = { true }): TransformableColumnSet<DataFrame<*>> =
-        columnGroup(this).frameCols(filter)
+    public fun ColumnPath.frameCols(
+        filter: Predicate<FrameColumn<*>> = { true },
+    ): TransformableColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
 }
 
 /**
@@ -179,7 +184,9 @@ public interface FrameColsColumnsSelectionDsl {
  * @return A [TransformableColumnSet] containing the frame columns that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun ColumnsResolver<*>.frameColumnsInternal(filter: (FrameColumn<*>) -> Boolean): TransformableColumnSet<AnyFrame> =
+internal fun ColumnsResolver<*>.frameColumnsInternal(
+    filter: (FrameColumn<*>) -> Boolean,
+): TransformableColumnSet<AnyFrame> =
     colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
 
 // endregion

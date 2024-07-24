@@ -12,10 +12,13 @@ internal fun String.withTopInterfaceName(topInterfaceName: ValidFieldName): Stri
     if (startsWith("${topInterfaceName.quotedIfNeeded}.")) this else "${topInterfaceName.quotedIfNeeded}.$this"
 
 internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): String =
-    if (startsWith("${topInterfaceName.quotedIfNeeded}.")) substringAfter("${topInterfaceName.quotedIfNeeded}.") else this
+    if (startsWith("${topInterfaceName.quotedIfNeeded}.")) {
+        substringAfter("${topInterfaceName.quotedIfNeeded}.")
+    } else {
+        this
+    }
 
-internal fun String.snakeToLowerCamelCase(): String =
-    toCamelCaseByDelimiters(DELIMITERS_REGEX)
+internal fun String.snakeToLowerCamelCase(): String = toCamelCaseByDelimiters(DELIMITERS_REGEX)
 
 internal fun String.snakeToUpperCamelCase(): String =
     snakeToLowerCamelCase()
@@ -33,24 +36,23 @@ internal fun generatedFieldOf(
     columnName: String,
     overrides: Boolean,
     fieldType: FieldType,
-): GeneratedField = GeneratedField(
-    fieldName = fieldName,
-    columnName = columnName,
-    overrides = overrides,
-    columnSchema = ColumnSchema.Value(typeOf<Any?>()), // unused
-    fieldType = fieldType,
-)
+): GeneratedField =
+    GeneratedField(
+        fieldName = fieldName,
+        columnName = columnName,
+        overrides = overrides,
+        columnSchema = ColumnSchema.Value(typeOf<Any?>()), // unused
+        fieldType = fieldType,
+    )
 
 /** Helper function to create a [GeneratedField] for enums. */
-internal fun generatedEnumFieldOf(
-    fieldName: ValidFieldName,
-    columnName: String,
-): GeneratedField = generatedFieldOf(
-    fieldName = fieldName,
-    columnName = columnName,
-    overrides = false,
-    fieldType = FieldType.ValueFieldType(typeOf<String>().toString()), // all enums will be of type String
-)
+internal fun generatedEnumFieldOf(fieldName: ValidFieldName, columnName: String): GeneratedField =
+    generatedFieldOf(
+        fieldName = fieldName,
+        columnName = columnName,
+        overrides = false,
+        fieldType = FieldType.ValueFieldType(typeOf<String>().toString()), // all enums will be of type String
+    )
 
 /** Small helper function to produce a new enum Marker. */
 internal fun produceNewEnum(

@@ -28,6 +28,7 @@ import kotlin.reflect.KProperty
 
 public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
     public fun <C> ColumnSet<C>.desc(): ColumnSet<C> = addFlag(SortFlag.Reversed)
+
     public fun <C> SingleColumn<C>.desc(): SingleColumn<C> = addFlag(SortFlag.Reversed).single()
 
     public fun String.desc(): SingleColumn<Comparable<*>?> = invoke<Comparable<*>>().desc()
@@ -96,19 +97,16 @@ public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
     DataColumn.create(name, values().sortedWith(comparator), type) as C
 
 /** @include [CommonDataColumnSortWithDocs] */
-public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C =
-    sortWith(Comparator(comparator))
+public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C = sortWith(Comparator(comparator))
 
 // endregion
 
 // region DataFrame
 
-public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataFrame<T> = sortByImpl(
-    UnresolvedColumnsPolicy.Fail, columns
-)
+public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataFrame<T> =
+    sortByImpl(UnresolvedColumnsPolicy.Fail, columns)
 
-public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<*>): DataFrame<T> =
-    sortBy { cols.toColumnSet() }
+public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<*>): DataFrame<T> = sortBy { cols.toColumnSet() }
 
 public fun <T> DataFrame<T>.sortBy(vararg cols: String): DataFrame<T> = sortBy { cols.toColumnSet() }
 
@@ -141,8 +139,7 @@ public fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<*>): Data
 
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: String): GroupBy<T, G> = sortBy { cols.toColumnSet() }
 
-public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: ColumnReference<*>): GroupBy<T, G> =
-    sortBy { cols.toColumnSet() }
+public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: ColumnReference<*>): GroupBy<T, G> = sortBy { cols.toColumnSet() }
 
 public fun <T, G> GroupBy<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): GroupBy<T, G> =
     sortBy { cols.toColumnSet() }
@@ -165,35 +162,40 @@ public fun <T, G, C> GroupBy<T, G>.sortByDesc(selector: SortColumnsSelector<G, C
 private fun <T, G, C> GroupBy<T, G>.createColumnFromGroupExpression(
     receiver: ColumnsSelectionDsl<T>,
     expression: DataFrameExpression<G, C>,
-): DataColumn<C?> {
-    return receiver.newColumnWithActualType("") { row ->
+): DataColumn<C?> =
+    receiver.newColumnWithActualType("") { row ->
         val group = row[groups]
         expression(group, group)
     }
-}
 
 public fun <T, G, C> GroupBy<T, G>.sortByGroup(
     nullsLast: Boolean = false,
     expression: DataFrameExpression<G, C>,
-): GroupBy<T, G> = toDataFrame().sortBy {
-    createColumnFromGroupExpression(this, expression).nullsLast(nullsLast)
-}.asGroupBy(groups)
+): GroupBy<T, G> =
+    toDataFrame().sortBy {
+        createColumnFromGroupExpression(this, expression).nullsLast(nullsLast)
+    }.asGroupBy(groups)
 
 public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
     nullsLast: Boolean = false,
     expression: DataFrameExpression<G, C>,
-): GroupBy<T, G> = toDataFrame().sortBy {
-    createColumnFromGroupExpression(this, expression).desc().nullsLast(nullsLast)
-}.asGroupBy(groups)
+): GroupBy<T, G> =
+    toDataFrame().sortBy {
+        createColumnFromGroupExpression(this, expression).desc().nullsLast(nullsLast)
+    }.asGroupBy(groups)
 
 public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { nrow }
 
 public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc { nrow }
 
-public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> = toDataFrame()
-    .sortBy { keys.columns().toColumnSet().desc().nullsLast(nullsLast) }.asGroupBy(groups)
+public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> =
+    toDataFrame()
+        .sortBy { keys.columns().toColumnSet().desc().nullsLast(nullsLast) }
+        .asGroupBy(groups)
 
-public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> = toDataFrame()
-    .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }.asGroupBy(groups)
+public fun <T, G> GroupBy<T, G>.sortByKey(nullsLast: Boolean = false): GroupBy<T, G> =
+    toDataFrame()
+        .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }
+        .asGroupBy(groups)
 
 // endregion

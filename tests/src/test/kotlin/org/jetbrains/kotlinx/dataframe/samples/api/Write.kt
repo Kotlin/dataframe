@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.string.shouldStartWith
@@ -157,40 +159,40 @@ class Write : TestBase() {
         useTempFile { file ->
             val schemaJson =
                 """{
-  "fields" : [ {
-    "name" : "name",
-    "nullable" : true,
-    "type" : {
-      "name" : "utf8"
-    },
-    "children" : [ ]
-  }, {
-    "name" : "age",
-    "nullable" : false,
-    "type" : {
-      "name" : "int",
-      "bitWidth" : 32,
-      "isSigned" : true
-    },
-    "children" : [ ]
-  }, {
-    "name" : "city",
-    "nullable" : false,
-    "type" : {
-      "name" : "utf8"
-    },
-    "children" : [ ]
-  }, {
-    "name" : "weight",
-    "nullable" : true,
-    "type" : {
-      "name" : "floatingpoint",
-      "precision" : "DOUBLE"
-    },
-    "children" : [ ]
-  } ]
-}
-"""
+                  "fields" : [ {
+                    "name" : "name",
+                    "nullable" : true,
+                    "type" : {
+                      "name" : "utf8"
+                    },
+                    "children" : [ ]
+                  }, {
+                    "name" : "age",
+                    "nullable" : false,
+                    "type" : {
+                      "name" : "int",
+                      "bitWidth" : 32,
+                      "isSigned" : true
+                    },
+                    "children" : [ ]
+                  }, {
+                    "name" : "city",
+                    "nullable" : false,
+                    "type" : {
+                      "name" : "utf8"
+                    },
+                    "children" : [ ]
+                  }, {
+                    "name" : "weight",
+                    "nullable" : true,
+                    "type" : {
+                      "name" : "floatingpoint",
+                      "precision" : "DOUBLE"
+                    },
+                    "children" : [ ]
+                  } ]
+                }
+                """
 
             // SampleStart
             // Get schema from anywhere you want. It can be deserialized from JSON, generated from another dataset

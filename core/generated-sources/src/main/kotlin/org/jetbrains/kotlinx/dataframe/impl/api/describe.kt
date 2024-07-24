@@ -31,28 +31,29 @@ import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.jvm.jvmErasure
 
 internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
-    fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> = flatMap { col ->
-        when (col.kind) {
-            ColumnKind.Frame ->
-                col.asAnyFrameColumn()
-                    .concat()
-                    .columns()
-                    .map { it.addPath(col.path() + it.name) }
-                    .collectAll(true)
-
-            ColumnKind.Group ->
-                if (atAnyDepth) {
-                    col.asColumnGroup()
+    fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
+        flatMap { col ->
+            when (col.kind) {
+                ColumnKind.Frame ->
+                    col.asAnyFrameColumn()
+                        .concat()
                         .columns()
                         .map { it.addPath(col.path() + it.name) }
                         .collectAll(true)
-                } else {
-                    listOf(col)
-                }
 
-            ColumnKind.Value -> listOf(col)
+                ColumnKind.Group ->
+                    if (atAnyDepth) {
+                        col.asColumnGroup()
+                            .columns()
+                            .map { it.addPath(col.path() + it.name) }
+                            .collectAll(true)
+                    } else {
+                        listOf(col)
+                    }
+
+                ColumnKind.Value -> listOf(col)
+            }
         }
-    }
 
     val all = cols.collectAll(false)
 
@@ -69,7 +70,9 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         ColumnDescription::unique from { it.countDistinct() }
         ColumnDescription::nulls from { it.values.count { it == null } }
         ColumnDescription::top from inferType {
-            it.values.filterNotNull().groupBy { it }.maxByOrNull { it.value.size }?.key
+            it.values.filterNotNull()
+                .groupBy { it }.maxByOrNull { it.value.size }
+                ?.key
         }
         if (hasNumeric) {
             ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }

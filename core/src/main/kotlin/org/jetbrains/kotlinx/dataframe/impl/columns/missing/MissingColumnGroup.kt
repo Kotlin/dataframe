@@ -18,7 +18,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsContainer<*>) : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
+internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsContainer<*>) :
+    MissingDataColumn<DataRow<T>>(),
+    DataColumnGroup<T> {
 
     override fun getColumnOrNull(name: String) = MissingColumnGroup<Any?>(path + name, host)
 
@@ -48,21 +50,25 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
 
     override fun <R> aggregate(body: AggregateGroupedBody<T, R>) = throw UnsupportedOperationException()
 
-    override fun <R> getColumnOrNull(column: ColumnReference<R>) = MissingColumnGroup<Any>(path + column.name(), host).asDataColumn().cast<R>()
+    override fun <R> getColumnOrNull(column: ColumnReference<R>) =
+        MissingColumnGroup<Any>(path + column.name(), host).asDataColumn().cast<R>()
 
-    override fun <R> getColumnOrNull(column: KProperty<R>) = MissingColumnGroup<Any>(path + column.name, host).asDataColumn().cast<R>()
+    override fun <R> getColumnOrNull(column: KProperty<R>) =
+        MissingColumnGroup<Any>(path + column.name, host).asDataColumn().cast<R>()
 
     override fun getColumnOrNull(path: ColumnPath) = MissingColumnGroup<Any?>(this.path + path, host)
 
-    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = MissingColumnGroup<Any>(path + "", host).asDataColumn().cast<R>()
+    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) =
+        MissingColumnGroup<Any>(path + "", host).asDataColumn().cast<R>()
 
     override fun name(): String = path.name
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = when (context.unresolvedColumnsPolicy) {
-        UnresolvedColumnsPolicy.Skip -> null
-        UnresolvedColumnsPolicy.Create -> this.addPath(path)
-        UnresolvedColumnsPolicy.Fail -> error("Failed to resolve column $path")
-    }
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? =
+        when (context.unresolvedColumnsPolicy) {
+            UnresolvedColumnsPolicy.Skip -> null
+            UnresolvedColumnsPolicy.Create -> this.addPath(path)
+            UnresolvedColumnsPolicy.Fail -> error("Failed to resolve column $path")
+        }
 
     override fun containsColumn(name: String): Boolean = false
 

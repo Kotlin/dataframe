@@ -31,10 +31,11 @@ public fun <T> DataFrame<T>.generateCode(
     ).code.declarations.toCodeString()
 }
 
-public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString = generateCode(
-    fields = true,
-    extensionProperties = false
-)
+public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString =
+    generateCode(
+        fields = true,
+        extensionProperties = false,
+    )
 
 public inline fun <reified T> DataFrame<T>.generateDataClasses(
     markerName: String? = null,
@@ -53,20 +54,24 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
         isOpen = false,
         visibility = visibility,
         asDataClass = true,
-        fieldNameNormalizer = nameNormalizer
+        fieldNameNormalizer = nameNormalizer,
     ).code.declarations.toCodeString()
 }
 
 @PublishedApi
-internal inline fun <reified T> markerName(): String = if (T::class.isAbstract) {
-    T::class.simpleName!!
-} else "DataEntry"
+internal inline fun <reified T> markerName(): String =
+    if (T::class.isAbstract) {
+        T::class.simpleName!!
+    } else {
+        "DataEntry"
+    }
 
-public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString = generateCode(
-    markerName = markerName,
-    fields = true,
-    extensionProperties = false
-)
+public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString =
+    generateCode(
+        markerName = markerName,
+        fields = true,
+        extensionProperties = false,
+    )
 
 /**
  * Converts delimited 'my_name', 'my name', etc., String to camelCase 'myName'

@@ -27,7 +27,8 @@ class QuickSelectTests {
     fun long() {
         val random = Random(120)
         val list = (0..20).shuffled(random)
-        for (i in list)
+        for (i in list) {
             list.quickSelect(i) shouldBe i
+        }
     }
 }

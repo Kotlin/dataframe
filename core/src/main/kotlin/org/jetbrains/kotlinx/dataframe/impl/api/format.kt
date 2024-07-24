@@ -26,18 +26,19 @@ internal fun encHex(v: Short): String = "${(v / 16).toString(16)}${(v % 16).toSt
 
 internal fun RGBColor.encode() = encRgb(r, g, b)
 
-internal fun componentWise(color1: RGBColor, color2: RGBColor, f: (Short, Short) -> Short) = RGBColor(
-    f(color1.r, color2.r),
-    f(color1.g, color2.g),
-    f(color1.b, color2.b)
-)
+internal fun componentWise(color1: RGBColor, color2: RGBColor, f: (Short, Short) -> Short) =
+    RGBColor(
+        f(color1.r, color2.r),
+        f(color1.g, color2.g),
+        f(color1.b, color2.b),
+    )
 
 internal fun linearGradient(
     x: Double,
     minValue: Double,
     minColor: RGBColor,
     maxValue: Double,
-    maxColor: RGBColor
+    maxColor: RGBColor,
 ): RGBColor {
     if (x < minValue) return minColor
     if (x > maxValue) return maxColor
@@ -49,15 +50,24 @@ internal fun linearGradient(
 
 internal fun <T, C> FormatClause<T, C>.formatImpl(formatter: RowColFormatter<T, C>): FormattedFrame<T> {
     val columns =
-        if (columns != null) df.getColumnsWithPaths(columns).mapNotNull { if (it.depth == 0) it.name else null }
-            .toSet() else null
+        if (columns != null) {
+            df.getColumnsWithPaths(columns)
+                .mapNotNull { if (it.depth == 0) it.name else null }
+                .toSet()
+        } else {
+            null
+        }
     return FormattedFrame(df) { row, col ->
         val oldAttributes = oldFormatter?.invoke(FormattingDSL, row, col.cast())
         if (columns == null || columns.contains(col.name())) {
             val value = row[col] as C
             if (filter == null || filter(row, value)) {
                 oldAttributes and formatter(FormattingDSL, row.cast(), col.cast())
-            } else oldAttributes
-        } else oldAttributes
+            } else {
+                oldAttributes
+            }
+        } else {
+            oldAttributes
+        }
     }
 }

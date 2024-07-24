@@ -26,7 +26,10 @@ import kotlin.reflect.KProperty
  * @param T Schema marker. See [DataFrame] for details.
  */
 @HasSchema(schemaArg = 0)
-public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T>, GenericColumnGroup<BaseColumn<*>> {
+public interface ColumnGroup<out T> :
+    BaseColumn<DataRow<T>>,
+    DataFrame<T>,
+    GenericColumnGroup<BaseColumn<*>> {
 
     /**
      * Gets the rows at given indices.
@@ -57,5 +60,6 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T>, Gene
 
     override fun rename(newName: String): ColumnGroup<T>
 
-    override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnGroup<T> = super.getValue(thisRef, property) as ColumnGroup<T>
+    override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnGroup<T> =
+        super.getValue(thisRef, property) as ColumnGroup<T>
 }

@@ -4,7 +4,8 @@ public enum class CompareResult {
     Equals,
     IsSuper,
     IsDerived,
-    None;
+    None,
+    ;
 
     public fun isSuperOrEqual(): Boolean = this == Equals || this == IsSuper
 
@@ -19,10 +20,11 @@ public enum class CompareResult {
         }
 
     public companion object {
-        public fun compareNullability(thisIsNullable: Boolean, otherIsNullable: Boolean): CompareResult = when {
-            thisIsNullable == otherIsNullable -> Equals
-            thisIsNullable -> IsSuper
-            else -> IsDerived
-        }
+        public fun compareNullability(thisIsNullable: Boolean, otherIsNullable: Boolean): CompareResult =
+            when {
+                thisIsNullable == otherIsNullable -> Equals
+                thisIsNullable -> IsSuper
+                else -> IsDerived
+            }
     }
 }

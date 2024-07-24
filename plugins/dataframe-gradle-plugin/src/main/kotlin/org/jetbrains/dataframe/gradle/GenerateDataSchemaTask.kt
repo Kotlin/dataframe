@@ -146,7 +146,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             val parsedDf = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {
                 is DfReadResult.Error -> throw Exception(
                     "Error while reading dataframe from data at $url",
-                    readResult.reason
+                    readResult.reason,
                 )
 
                 is DfReadResult.Success -> readResult
@@ -175,10 +175,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     }
 
     // TODO: copy pasted from symbol-processor: DataSchemaGenerator, should be refactored somehow
-    private fun generateSchemaByJdbcOptions(
-        jdbcOptions: JdbcOptionsDsl,
-        connection: Connection,
-    ): DataFrameSchema {
+    private fun generateSchemaByJdbcOptions(jdbcOptions: JdbcOptionsDsl, connection: Connection): DataFrameSchema {
         logger.debug("Table name: ${jdbcOptions.tableName}")
         logger.debug("SQL query: ${jdbcOptions.sqlQuery}")
 
@@ -207,27 +204,28 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
         DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
 
-    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing {
+    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(
             "Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
-                "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
+                "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!",
         )
-    }
 
-    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing {
+    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(
             "Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
-                "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
+                "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!",
         )
-    }
 
     private fun stringOf(data: Any): String =
         when (data) {
             is File -> data.absolutePath
+
             is URL -> data.toExternalForm()
+
             is String ->
                 when {
                     isURL(data) -> stringOf(URL(data))
+
                     else -> {
                         val relativeFile = project.file(data)
                         val absoluteFile = File(data)
@@ -238,22 +236,24 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             else -> unsupportedType()
         }
 
-    private fun escapePackageName(packageName: String): String {
-        // See RegexExpectationsTest
-        return if (packageName.isNotEmpty()) {
+    // See RegexExpectationsTest
+    private fun escapePackageName(packageName: String): String =
+        if (packageName.isNotEmpty()) {
             packageName.split(NameChecker.PACKAGE_IDENTIFIER_DELIMITER)
                 .joinToString(".") { part -> "`$part`" }
         } else {
             packageName
         }
-    }
 
     private fun urlOf(data: Any): URL =
         when (data) {
             is File -> data.toURI()
+
             is URL -> data.toURI()
+
             is String -> when {
                 isURL(data) -> URL(data).toURI()
+
                 else -> {
                     val relativeFile = project.file(data)
                     val absoluteFile = File(data)

@@ -63,7 +63,8 @@ class TaskNamePropertyTest {
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
-                data = "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
+                data =
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
                 name = "org.test.example.[321]"
                 src = project.projectDir
             }
@@ -80,7 +81,8 @@ class TaskNamePropertyTest {
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
-                data = "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
+                data =
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
                 packageName = ""
                 src = project.projectDir
             }

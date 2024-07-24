@@ -20,8 +20,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> =
-    Split(this, columns)
+public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> = Split(this, columns)
 
 public fun <T> DataFrame<T>.split(vararg columns: String): Split<T, Any> = split { columns.toColumnSet() }
 
@@ -29,10 +28,7 @@ public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split
 
 public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumnSet() }
 
-public data class Split<T, C>(
-    internal val df: DataFrame<T>,
-    internal val columns: ColumnsSelector<T, C?>,
-) {
+public data class Split<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C?>) {
     public fun <P> cast(): Split<T, P> = this as Split<T, P>
 }
 
@@ -61,53 +57,53 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.default(value: R?): SplitWithTr
 
 // region by
 
-public inline fun <T, C, reified R> Split<T, C>.by(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> =
-    by(typeOf<R>(), splitter)
+public inline fun <T, C, reified R> Split<T, C>.by(
+    noinline splitter: DataRow<T>.(C) -> Iterable<R>,
+): SplitWithTransform<T, C, R> = by(typeOf<R>(), splitter)
 
 public fun <T, C> Split<T, C>.by(
     vararg delimiters: Char,
     trim: Boolean = true,
     ignoreCase: Boolean = false,
     limit: Int = 0,
-): SplitWithTransform<T, C, String> = by {
-    it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
-        if (trim) it.map { it.trim() }
-        else it
+): SplitWithTransform<T, C, String> =
+    by {
+        it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
+            if (trim) it.map { it.trim() } else it
+        }
     }
-}
 
 public fun <T, C> Split<T, C>.by(
     regex: Regex,
     trim: Boolean = true,
     limit: Int = 0,
-): SplitWithTransform<T, C, String> = by {
-    it.toString().split(regex, limit = limit).let {
-        if (trim) it.map { it.trim() }
-        else it
+): SplitWithTransform<T, C, String> =
+    by {
+        it.toString().split(regex, limit = limit).let {
+            if (trim) it.map { it.trim() } else it
+        }
     }
-}
 
 public fun <T, C> Split<T, C>.by(
     vararg delimiters: String,
     trim: Boolean = true,
     ignoreCase: Boolean = false,
     limit: Int = 0,
-): SplitWithTransform<T, C, String> = by {
-    it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
-        if (trim) it.map { it.trim() }
-        else it
+): SplitWithTransform<T, C, String> =
+    by {
+        it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
+            if (trim) it.map { it.trim() } else it
+        }
     }
-}
 
 @PublishedApi
 internal fun <T, C, R> Split<T, C>.by(
     type: KType,
     splitter: DataRow<T>.(C) -> Iterable<R>,
-): SplitWithTransform<T, C, R> {
-    return SplitWithTransform(df, columns, false, type) {
+): SplitWithTransform<T, C, R> =
+    SplitWithTransform(df, columns, false, type) {
         if (it == null) emptyList() else splitter(it).asList()
     }
-}
 
 // endregion
 
@@ -115,33 +111,38 @@ internal fun <T, C, R> Split<T, C>.by(
 
 public fun <T, C : String?> Split<T, C>.match(regex: String): SplitWithTransform<T, C, String?> = match(regex.toRegex())
 
-public fun <T, C : String?> Split<T, C>.match(regex: Regex): SplitWithTransform<T, C, String?> = by {
-    it?.let { regex.matchEntire(it)?.groups?.drop(1)?.map { it?.value } } ?: emptyList<String>()
-}
+public fun <T, C : String?> Split<T, C>.match(regex: Regex): SplitWithTransform<T, C, String?> =
+    by {
+        it?.let {
+            regex.matchEntire(it)
+                ?.groups
+                ?.drop(1)
+                ?.map { it?.value }
+        } ?: emptyList<String>()
+    }
 
 // endregion
 
-internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> = by {
-    when (it) {
-        is List<*> -> it
-        is AnyFrame -> it.rows()
-        else -> listOf(it)
-    }
-}.into()
+internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> =
+    by {
+        when (it) {
+            is List<*> -> it
+            is AnyFrame -> it.rows()
+            else -> listOf(it)
+        }
+    }.into()
 
 // region into
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
-): DataFrame<T> =
-    into(listOf(firstName.name()) + otherNames.map { it.name() })
+): DataFrame<T> = into(listOf(firstName.name()) + otherNames.map { it.name() })
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: KProperty<*>,
     vararg otherNames: KProperty<*>,
-): DataFrame<T> =
-    into(listOf(firstName.columnName) + otherNames.map { it.columnName })
+): DataFrame<T> = into(listOf(firstName.columnName) + otherNames.map { it.columnName })
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     vararg names: String,
@@ -151,43 +152,39 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     names: List<String>,
     extraNamesGenerator: (ColumnWithPath<C>.(extraColumnIndex: Int) -> String)? = null,
-): DataFrame<T> = splitImpl(this) { numberOfNewCols ->
-    if (extraNamesGenerator != null && names.size < numberOfNewCols) {
-        names + (1..(numberOfNewCols - names.size)).map { extraNamesGenerator(this, it) }
-    } else names
-}
+): DataFrame<T> =
+    splitImpl(this) { numberOfNewCols ->
+        if (extraNamesGenerator != null && names.size < numberOfNewCols) {
+            names + (1..(numberOfNewCols - names.size)).map { extraNamesGenerator(this, it) }
+        } else {
+            names
+        }
+    }
 
 public fun <T, C : Iterable<*>> Split<T, C>.into(
     vararg names: String,
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
-): DataFrame<T> =
-    by { it }.into(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it }.into(names.toList(), extraNamesGenerator)
 
 @JvmName("splitDataFrameInto")
 public fun <T, C> Split<T, DataFrame<C>>.into(
     vararg names: String,
     extraNamesGenerator: ColumnNamesGenerator<DataFrame<C>>? = null,
-): DataFrame<T> =
-    by { it.rows() }.into(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it.rows() }.into(names.toList(), extraNamesGenerator)
 
-public fun <T, A, B> Split<T, Pair<A, B>>.into(
-    firstCol: String,
-    secondCol: String,
-): DataFrame<T> =
+public fun <T, A, B> Split<T, Pair<A, B>>.into(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.into(
     firstCol: ColumnAccessor<A>,
     secondCol: ColumnAccessor<B>,
-): DataFrame<T> =
-    by { listOf(it.first, it.second) }.into(firstCol, secondCol)
+): DataFrame<T> = by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
 @JvmName("intoTC")
 public fun <T> Split<T, String>.into(
     vararg names: String,
     extraNamesGenerator: (ColumnWithPath<String>.(extraColumnIndex: Int) -> String)? = null,
-): DataFrame<T> =
-    by { it.splitDefault() }.into(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it.splitDefault() }.into(names.toList(), extraNamesGenerator)
 
 // endregion
 
@@ -196,8 +193,7 @@ public fun <T> Split<T, String>.into(
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     names: Iterable<String>,
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
-): DataFrame<T> =
-    copy(inward = true).into(names.toList(), extraNamesGenerator)
+): DataFrame<T> = copy(inward = true).into(names.toList(), extraNamesGenerator)
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     vararg names: String,
@@ -207,60 +203,50 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
-): DataFrame<T> =
-    inward(listOf(firstName.name()) + otherNames.map { it.name() })
+): DataFrame<T> = inward(listOf(firstName.name()) + otherNames.map { it.name() })
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: KProperty<*>,
     vararg otherNames: KProperty<*>,
-): DataFrame<T> =
-    inward(listOf(firstName.columnName) + otherNames.map { it.columnName })
+): DataFrame<T> = inward(listOf(firstName.columnName) + otherNames.map { it.columnName })
 
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
     vararg names: String,
     noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null,
-): DataFrame<T> =
-    by { it }.inward(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it }.inward(names.toList(), extraNamesGenerator)
 
 @JvmName("splitDataFrameInward")
 public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
     vararg names: String,
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
-): DataFrame<T> =
-    by { it.rows() }.inward(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it.rows() }.inward(names.toList(), extraNamesGenerator)
 
-public fun <T, A, B> Split<T, Pair<A, B>>.inward(
-    firstCol: String,
-    secondCol: String,
-): DataFrame<T> =
+public fun <T, A, B> Split<T, Pair<A, B>>.inward(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.inward(
     firstCol: ColumnAccessor<A>,
     secondCol: ColumnAccessor<B>,
-): DataFrame<T> =
-    by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
+): DataFrame<T> = by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
 @JvmName("inwardTC")
 public fun <T> Split<T, String>.inward(
     vararg names: String,
     extraNamesGenerator: (ColumnWithPath<String>.(extraColumnIndex: Int) -> String)? = null,
-): DataFrame<T> =
-    by { it.splitDefault() }.inward(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it.splitDefault() }.inward(names.toList(), extraNamesGenerator)
 
 // endregion
 
 // region intoColumns
 
-public fun <T, C : AnyFrame> Split<T, C>.intoColumns(): DataFrame<T> {
-    return df.convert(columns).with {
+public fun <T, C : AnyFrame> Split<T, C>.intoColumns(): DataFrame<T> =
+    df.convert(columns).with {
         when {
             it == null -> null
             it.isEmpty() -> DataRow.empty
             else -> it.implode { all() }.single()
         }
     }
-}
 
 // endregion
 

@@ -5,9 +5,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -15,11 +12,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.Issues
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
@@ -47,19 +39,19 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `index: `[`Int`][Int]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `T: Column type`
@@ -68,7 +60,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`valueCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCol]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
@@ -77,7 +69,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -88,7 +80,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
@@ -168,7 +160,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     private interface CommonValueColDocs {
 
-        /* Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]} */
+        // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
         interface ExampleArg
 
         /**
@@ -183,13 +175,13 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
          */
         interface DoubleExample
 
-        /* Receiver argument for the example(s) */
+        // Receiver argument for the example(s)
         interface ReceiverArg
 
-        /* Argument for the example(s) */
+        // Argument for the example(s)
         interface Arg
 
-        /* Optional note */
+        // Optional note
         interface Note
 
         /** @param [C] The type of the value column. */
@@ -298,7 +290,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> = valueCol.ensureIsValueColumn()
 
@@ -350,12 +342,14 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
             val child = it.getCol(valueCol)
-                ?: throw IllegalStateException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
+                ?: throw IllegalStateException(
+                    "ValueColumn '${valueCol.path()}' not found in column group '${it.path}'",
+                )
             child.data.ensureIsValueColumn()
             listOf(child)
         }.singleImpl()
@@ -408,7 +402,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
@@ -461,7 +455,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
@@ -514,7 +508,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> KProperty<*>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
@@ -567,7 +561,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
@@ -678,7 +672,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
@@ -733,7 +727,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> valueCol(name: String): ColumnAccessor<C> = valueColumn<C>(name).ensureIsValueColumn()
@@ -787,12 +781,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<*> =
-        valueCol<Any?>(name)
+    public fun SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -843,7 +836,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<C> =
@@ -903,12 +896,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -959,7 +951,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<C> =
@@ -1014,12 +1006,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun String.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -1070,7 +1061,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(name: String): ColumnAccessor<C> =
@@ -1125,12 +1116,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -1181,7 +1171,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> KProperty<*>.valueCol(name: String): ColumnAccessor<C> =
@@ -1236,12 +1226,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun ColumnPath.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * ## Value Col
@@ -1292,7 +1281,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [name] The name of the value column. 
+     * @param [name] The name of the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(name: String): ColumnAccessor<C> =
@@ -1404,7 +1393,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
@@ -1459,7 +1448,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> valueCol(path: ColumnPath): ColumnAccessor<C> = valueColumn<C>(path).ensureIsValueColumn()
@@ -1513,12 +1502,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<*> =
-        valueCol<Any?>(path)
+    public fun SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1569,7 +1557,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<C> =
@@ -1629,12 +1617,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1685,7 +1672,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<C> =
@@ -1740,12 +1727,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun String.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1796,7 +1782,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(path: ColumnPath): ColumnAccessor<C> =
@@ -1851,12 +1837,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -1907,7 +1892,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<C> =
@@ -1962,12 +1947,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * ## Value Col
@@ -2018,7 +2002,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      *
-     * @param [path] The path to the value column. 
+     * @param [path] The path to the value column.
      * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<C> =
@@ -2128,7 +2112,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [property] The [KProperty] reference to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> valueCol(property: KProperty<C>): SingleColumn<C> = valueColumn(property).ensureIsValueColumn()
 
@@ -2180,7 +2164,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [property] The [KProperty] reference to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(property: KProperty<C>): SingleColumn<C> =
         valueCol<C>(property.name)
@@ -2233,7 +2217,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [property] The [KProperty] reference to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
@@ -2286,7 +2270,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [property] The [KProperty] reference to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> String.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
@@ -2339,7 +2323,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [property] The [KProperty] reference to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> KProperty<*>.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
@@ -2392,7 +2376,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [property] The [KProperty] reference to the value column.
-     * @param [C] The type of the value column. 
+     * @param [C] The type of the value column.
      */
     public fun <C> ColumnPath.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
@@ -2503,7 +2487,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the value column.
      *
      */
@@ -2559,12 +2543,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2616,11 +2599,10 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the value column.
      */
-    public fun <C> ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<C> =
-        asSingleColumn().valueCol<C>(index)
+    public fun <C> ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<C> = asSingleColumn().valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -2672,12 +2654,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2729,7 +2710,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the value column.
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> =
@@ -2789,12 +2770,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun String.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2846,11 +2826,10 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the value column.
      */
-    public fun <C> String.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> String.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -2902,12 +2881,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -2959,11 +2937,10 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the value column.
      */
-    public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
      * ## Value Col
@@ -3015,12 +2992,11 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun ColumnPath.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * ## Value Col
@@ -3072,11 +3048,10 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      *
      * @param [index] The index of the value column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the value column.
      */
-    public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     // endregion
 }

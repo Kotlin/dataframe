@@ -19,7 +19,7 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
+import java.util.Locale
 
 class SchemaGeneratorPlugin : Plugin<Project> {
 
@@ -30,8 +30,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val appliedPlugin = KOTLIN_EXTENSIONS
                 .mapNotNull {
                     target.extensions.findByType(it.extensionClass)?.let { ext -> AppliedPlugin(ext, it) }
-                }
-                .firstOrNull()
+                }.firstOrNull()
 
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
@@ -60,8 +59,11 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         schema: Schema,
     ): Task {
         val interfaceName = getInterfaceName(schema)
+
         fun propertyError(property: String): Nothing {
-            error("No supported Kotlin plugin was found. Please apply one or specify property $property for schema $interfaceName explicitly")
+            error(
+                "No supported Kotlin plugin was found. Please apply one or specify property $property for schema $interfaceName explicitly",
+            )
         }
 
         val sourceSetName by lazy {
@@ -98,7 +100,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 val sourceSet = appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSetName)
                 val path = appliedPlugin.sourceSetConfiguration.getKotlinRoot(
                     sourceSet.kotlin.sourceDirectories,
-                    sourceSetName
+                    sourceSetName,
                 )
                 val src = target.file(path)
                 inferPackageName(src)
@@ -175,19 +177,23 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
             return androidSpecificRoot
                 ?: error(
-                    "Directory '$ktSet' or '$javaSet' was not found in $sourceSetName. Please, specify 'src' explicitly"
+                    "Directory '$ktSet' or '$javaSet' was not found in $sourceSetName. Please, specify 'src' explicitly",
                 )
         }
     }
 
-    private fun fileName(data: Any?): String? {
-        return when (data) {
+    private fun fileName(data: Any?): String? =
+        when (data) {
             is String -> extractFileName(data)
+
             is URL -> extractFileName(data)
+
             is File -> extractFileName(data)
-            else -> throw IllegalArgumentException("data for schema must be File, URL or String, but was ${data?.javaClass ?: ""}($data)")
+
+            else -> throw IllegalArgumentException(
+                "data for schema must be File, URL or String, but was ${data?.javaClass ?: ""}($data)",
+            )
         }
-    }
 
     private fun extractPackageName(fqName: String): String? {
         val packageName = fqName

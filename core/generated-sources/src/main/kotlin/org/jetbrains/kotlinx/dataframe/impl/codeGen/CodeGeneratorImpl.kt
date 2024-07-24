@@ -50,18 +50,21 @@ private val letterCategories = setOf(
     CharCategory.TITLECASE_LETTER,
     CharCategory.MODIFIER_LETTER,
     CharCategory.LOWERCASE_LETTER,
-    CharCategory.DECIMAL_DIGIT_NUMBER
+    CharCategory.DECIMAL_DIGIT_NUMBER,
 )
 
 internal fun String.needsQuoting(): Boolean =
-    if (isQuoted()) false
-    else isBlank() ||
-        first().isDigit() ||
-        contains(charsToQuote) ||
-        HardKeywords.VALUES.contains(this) ||
-        ModifierKeywords.VALUES.contains(this) ||
-        all { it == '_' } ||
-        any { it != '_' && it.category !in letterCategories }
+    if (isQuoted()) {
+        false
+    } else {
+        isBlank() ||
+            first().isDigit() ||
+            contains(charsToQuote) ||
+            HardKeywords.VALUES.contains(this) ||
+            ModifierKeywords.VALUES.contains(this) ||
+            all { it == '_' } ||
+            any { it != '_' && it.category !in letterCategories }
+    }
 
 public fun String.isQuoted(): Boolean = startsWith("`") && endsWith("`")
 
@@ -227,14 +230,15 @@ internal object ShortNames : TypeRenderingStrategy {
     }
 }
 
-internal open class ExtensionsCodeGeneratorImpl(
-    private val typeRendering: TypeRenderingStrategy,
-) : ExtensionsCodeGenerator, TypeRenderingStrategy by typeRendering {
+internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeRenderingStrategy) :
+    ExtensionsCodeGenerator,
+    TypeRenderingStrategy by typeRendering {
 
-    fun renderStringLiteral(name: String) = name
-        .replace("\\", "\\\\")
-        .replace("$", "\\\$")
-        .replace("\"", "\\\"")
+    fun renderStringLiteral(name: String) =
+        name
+            .replace("\\", "\\\\")
+            .replace("$", "\\\$")
+            .replace("\"", "\\\"")
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 
@@ -258,7 +262,9 @@ internal open class ExtensionsCodeGeneratorImpl(
                 it
             }
         }
-        return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
+        return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${
+            renderStringLiteral(jvmName)
+        }\") get() = $getter as $propertyType"
     }
 
     /**
@@ -326,8 +332,8 @@ internal open class ExtensionsCodeGeneratorImpl(
                         propertyType = fieldType,
                         getter = getter,
                         visibility = visibility,
-                    )
-                )
+                    ),
+                ),
             )
             if (withNullable) {
                 declarations.addAll(
@@ -349,8 +355,8 @@ internal open class ExtensionsCodeGeneratorImpl(
                             propertyType = nullableFieldType,
                             getter = getter,
                             visibility = visibility,
-                        )
-                    )
+                        ),
+                    ),
                 )
             }
         }
@@ -362,21 +368,24 @@ internal open class ExtensionsCodeGeneratorImpl(
         return createCodeWithConverter(code, marker.name)
     }
 
-    protected fun renderTopLevelDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
-        MarkerVisibility.INTERNAL -> "internal "
-        MarkerVisibility.IMPLICIT_PUBLIC -> ""
-        MarkerVisibility.EXPLICIT_PUBLIC -> "public "
-    }
+    protected fun renderTopLevelDeclarationVisibility(marker: IsolatedMarker) =
+        when (marker.visibility) {
+            MarkerVisibility.INTERNAL -> "internal "
+            MarkerVisibility.IMPLICIT_PUBLIC -> ""
+            MarkerVisibility.EXPLICIT_PUBLIC -> "public "
+        }
 
-    protected fun renderInternalDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
-        MarkerVisibility.INTERNAL -> ""
-        MarkerVisibility.IMPLICIT_PUBLIC -> ""
-        MarkerVisibility.EXPLICIT_PUBLIC -> "public "
-    }
+    protected fun renderInternalDeclarationVisibility(marker: IsolatedMarker) =
+        when (marker.visibility) {
+            MarkerVisibility.INTERNAL -> ""
+            MarkerVisibility.IMPLICIT_PUBLIC -> ""
+            MarkerVisibility.EXPLICIT_PUBLIC -> "public "
+        }
 }
 
 internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQualifiedNames) :
-    ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
+    ExtensionsCodeGeneratorImpl(typeRendering),
+    CodeGenerator {
     override fun generate(
         marker: Marker,
         interfaceMode: InterfaceGenerationMode,
@@ -429,11 +438,15 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             "    ${ValidFieldName.of(fieldName).quotedIfNeeded}(\"$valueName\")${if (isLast) ";" else ","}"
         }.join()
 
-        val body = if (fieldsDeclaration.isNotBlank()) buildString {
-            append(" {\n")
-            append(fieldsDeclaration)
-            append("\n}")
-        } else ""
+        val body = if (fieldsDeclaration.isNotBlank()) {
+            buildString {
+                append(" {\n")
+                append(fieldsDeclaration)
+                append("\n}")
+            }
+        } else {
+            ""
+        }
 
         return listOf(header + body).join()
     }
@@ -448,7 +461,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         knownMarkers: Iterable<Marker>,
         readDfMethod: DefaultReadDfMethod?,
         fieldNameNormalizer: NameNormalizer,
-        asDataClass: Boolean
+        asDataClass: Boolean,
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, if (asDataClass) emptyList() else knownMarkers, fieldNameNormalizer)
         val marker = context.process(schema, isOpen, visibility)
@@ -468,11 +481,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         return CodeGenResult(code, context.generatedMarkers)
     }
 
-    private fun generateInterface(
-        marker: Marker,
-        fields: Boolean,
-        readDfMethod: DefaultReadDfMethod? = null,
-    ): Code {
+    private fun generateInterface(marker: Marker, fields: Boolean, readDfMethod: DefaultReadDfMethod? = null): Code {
         val annotationName = DataSchema::class.simpleName
 
         val visibility = renderTopLevelDeclarationVisibility(marker)
@@ -481,8 +490,13 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         val header =
             "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\n${visibility}interface ${marker.name}"
         val baseInterfacesDeclaration =
-            if (marker.superMarkers.isNotEmpty()) " : " + marker.superMarkers.map { it.value.name + it.value.typeArguments }
-                .joinToString() else ""
+            if (marker.superMarkers.isNotEmpty()) {
+                " : " + marker.superMarkers
+                    .map { it.value.name + it.value.typeArguments }
+                    .joinToString()
+            } else {
+                ""
+            }
         val resultDeclarations = mutableListOf<String>()
 
         val fieldsDeclaration = if (fields) renderFields(marker, propertyVisibility).join() else ""
@@ -528,8 +542,8 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         }
     }
 
-    private fun renderFields(marker: Marker, propertyVisibility: String): List<String> {
-        return marker.fields.map {
+    private fun renderFields(marker: Marker, propertyVisibility: String): List<String> =
+        marker.fields.map {
             val override = if (it.overrides) "override " else ""
             val columnNameAnnotation = if (it.columnName != it.fieldName.quotedIfNeeded) {
                 "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n"
@@ -540,7 +554,6 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }
-    }
 }
 
 public fun CodeWithConverter.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
