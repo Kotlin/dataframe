@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class SeriesTests {
 
     val df = dataFrameOf("city", "day", "temp")(
@@ -27,7 +28,7 @@ class SeriesTests {
         "Moscow", 2, 20,
         "London", 2, 15,
         "Moscow", 5, 10,
-        "London", 5, 18
+        "London", 5, 18,
     )
 
     // Generated code
@@ -49,8 +50,12 @@ class SeriesTests {
             .add("diff") { diff(0) { temp } }
             .concat()
 
-        val srcData = typed.rows().map { (it.city to it.day) to it.temp }.toMap()
-        val expected = typed.sortBy { city and day }.rows().map { row -> srcData[row.city to (row.day - 1)]?.let { row.temp - it } ?: 0 }
+        val srcData = typed.rows().associate { (it.city to it.day) to it.temp }
+        val expected = typed.sortBy { city and day }.rows().map { row ->
+            srcData[row.city to (row.day - 1)]
+                ?.let { row.temp - it }
+                ?: 0
+        }
         withDiff["diff"].toList() shouldBe expected
     }
 
@@ -67,7 +72,11 @@ class SeriesTests {
         val expected = typed
             .sortBy { city and day }
             .rows()
-            .map { row -> (0 until k).map { srcData[row.city to row.day - it] }.filterNotNull().let { it.sum().toDouble() / it.size } }
+            .map { row ->
+                (0 until k).mapNotNull { srcData[row.city to row.day - it] }.let {
+                    it.sum().toDouble() / it.size
+                }
+            }
 
         withMa["ma_temp"].toList() shouldBe expected
     }

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
@@ -8,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 public open class TestBase {
 
     val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
@@ -17,7 +20,7 @@ public open class TestBase {
         "Charlie", "Chaplin", 40, "Milan", null, true,
         "Bob", "Marley", 30, "Tokyo", 68, true,
         "Alice", "Wolf", 20, null, 55, false,
-        "Charlie", "Byrd", 30, "Moscow", 90, true
+        "Charlie", "Byrd", 30, "Moscow", 90, true,
     ).group("firstName", "lastName").into("name").cast<Person>()
 
     @DataSchema

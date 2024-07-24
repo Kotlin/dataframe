@@ -16,17 +16,19 @@ import java.io.File
 import java.io.File.separatorChar
 import java.io.InputStream
 
+@Suppress("ktlint:standard:backing-property-naming")
 class OpenApiTests : JupyterReplTestCase() {
 
     private val openApi = OpenApi()
     private val additionalImports = openApi.createDefaultReadMethod().additionalImports.joinToString("\n")
 
     private fun execGeneratedCode(code: Code): Code {
-        @Language("kts") val res1 = execRendered(
+        @Language("kts")
+        val res1 = execRendered(
             """
             $additionalImports
             $code
-            """.trimLines()
+            """.trimLines(),
         )
         return code
     }
@@ -104,7 +106,8 @@ class OpenApiTests : JupyterReplTestCase() {
         val functionName = fullFunctionName.quotedIfNeeded
         val code = execGeneratedCode(file, fullFunctionName.unquoted).trimLines()
 
-        @Language("kt") val petInterface = """
+        @Language("kt")
+        val petInterface = """
             @DataSchema(isOpen = false)
             interface Pet {
                 val id: kotlin.Long
@@ -115,7 +118,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(petInterface)
 
-        @Language("kt") val petExtensions = """
+        @Language("kt")
+        val petExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long> @JvmName("Pet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.id: kotlin.Long @JvmName("Pet_id") get() = this["id"] as kotlin.Long
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullablePet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
@@ -132,13 +136,15 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(petExtensions)
 
-        @Language("kt") val petsTypeAlias = """
+        @Language("kt")
+        val petsTypeAlias = """
             typealias Pets = org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Pet>
         """.trimLines()
 
         code should haveSubstring(petsTypeAlias)
 
-        @Language("kt") val errorInterface = """
+        @Language("kt")
+        val errorInterface = """
             @DataSchema(isOpen = false)
             interface Error {
                 val code: kotlin.Int
@@ -148,7 +154,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(errorInterface)
 
-        @Language("kt") val errorExtensions = """
+        @Language("kt")
+        val errorExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("Error_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.code: kotlin.Int @JvmName("Error_code") get() = this["code"] as kotlin.Int
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableError_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
@@ -161,7 +168,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(errorExtensions)
 
-        @Language("kts") val res2 = execRaw("$functionName.Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
+        @Language("kts")
+        val res2 = execRaw("$functionName.Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
     }
 
     @Test
@@ -184,7 +192,8 @@ class OpenApiTests : JupyterReplTestCase() {
             name = fullFunctionName.unquoted,
         ).trimLines()
 
-        @Language("kts") val statusInterface = """
+        @Language("kts")
+        val statusInterface = """
             enum class Status(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
                 PLACED("placed"),
                 APPROVED("approved"),
@@ -194,7 +203,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(statusInterface)
 
-        @Language("kt") val orderInterface = """
+        @Language("kt")
+        val orderInterface = """
             @DataSchema(isOpen = false)
             interface Order {
                 val id: kotlin.Long?
@@ -208,7 +218,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(orderInterface)
 
-        @Language("kt") val customerInterface = """
+        @Language("kt")
+        val customerInterface = """
             @DataSchema(isOpen = false)
             interface Customer {
                 val id: kotlin.Long?
@@ -219,7 +230,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(customerInterface)
 
-        @Language("kt") val customerExtensions = """
+        @Language("kt")
+        val customerExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer>.address: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>> @JvmName("Customer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer>.address: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?> @JvmName("Customer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer?>.address: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>> @JvmName("NullableCustomer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>>
@@ -236,7 +248,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(customerExtensions)
 
-        @Language("kt") val orderExtensions = """
+        @Language("kt")
+        val orderExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order>.complete: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("Order_complete") get() = this["complete"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.complete: kotlin.Boolean? @JvmName("Order_complete") get() = this["complete"] as kotlin.Boolean?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.complete: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableOrder_complete") get() = this["complete"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
@@ -265,7 +278,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(orderExtensions)
 
-        @Language("kt") val addressInterface = """
+        @Language("kt")
+        val addressInterface = """
             @DataSchema(isOpen = false)
             interface Address {
                 val street: kotlin.String?
@@ -277,7 +291,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(addressInterface)
 
-        @Language("kt") val addressExtensions = """
+        @Language("kt")
+        val addressExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address>.city: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_city") get() = this["city"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address>.city: kotlin.String? @JvmName("Address_city") get() = this["city"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address?>.city: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_city") get() = this["city"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
@@ -298,7 +313,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(addressExtensions)
 
-        @Language("kt") val categoryInterface = """
+        @Language("kt")
+        val categoryInterface = """
             @DataSchema(isOpen = false)
             interface Category {
                 val id: kotlin.Long?
@@ -308,7 +324,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(categoryInterface)
 
-        @Language("kt") val categoryExtensions = """
+        @Language("kt")
+        val categoryExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Category>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Category_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category>.id: kotlin.Long? @JvmName("Category_id") get() = this["id"] as kotlin.Long?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Category?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableCategory_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
@@ -321,7 +338,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(categoryExtensions)
 
-        @Language("kt") val userInterface = """
+        @Language("kt")
+        val userInterface = """
             @DataSchema(isOpen = false)
             interface User {
                 val id: kotlin.Long?
@@ -337,7 +355,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(userInterface)
 
-        @Language("kt") val userExtensions = """
+        @Language("kt")
+        val userExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.email: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_email") get() = this["email"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.email: kotlin.String? @JvmName("User_email") get() = this["email"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.email: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_email") get() = this["email"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
@@ -374,7 +393,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(userExtensions)
 
-        @Language("kt") val tagInterface = """
+        @Language("kt")
+        val tagInterface = """
             @DataSchema(isOpen = false)
             interface Tag {
                 val id: kotlin.Long?
@@ -384,7 +404,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(tagInterface)
 
-        @Language("kt") val status1Enum = """
+        @Language("kt")
+        val status1Enum = """
             enum class Status1(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
                 AVAILABLE("available"),
                 PENDING("pending"),
@@ -394,7 +415,9 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(status1Enum)
 
-        @Language("kt") val petInterface = """
+        // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
+        @Language("kt")
+        val petInterface = """
             @DataSchema(isOpen = false)
             interface Pet {
                 val id: kotlin.Long?
@@ -404,11 +427,12 @@ class OpenApiTests : JupyterReplTestCase() {
                 val tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
                 val status: $functionName.Status1?
                 public companion object {
-        """.trimLines() // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
+        """.trimLines()
 
         code should haveSubstring(petInterface)
 
-        @Language("kt") val petExtensions = """
+        @Language("kt")
+        val petExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.category: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?> @JvmName("NullablePet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?>
@@ -437,7 +461,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(petExtensions)
 
-        @Language("kt") val apiResponseInterface = """
+        @Language("kt")
+        val apiResponseInterface = """
             @DataSchema(isOpen = false)
             interface ApiResponse {
                 val code: kotlin.Int?
@@ -448,7 +473,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(apiResponseInterface)
 
-        @Language("kt") val apiResponseExtensions = """
+        @Language("kt")
+        val apiResponseExtensions = """
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("ApiResponse_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
             val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse>.code: kotlin.Int? @JvmName("ApiResponse_code") get() = this["code"] as kotlin.Int?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableApiResponse_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
@@ -465,14 +491,17 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(apiResponseExtensions)
 
-        @Language("kts") val res2 =
+        @Language("kts")
+        val res2 =
             execRaw("$functionName.Pet.readJsonStr(\"\"\"$someAdvancedPetsData\"\"\")") as AnyFrame
 
-        @Language("kts") val res3 =
+        @Language("kts")
+        val res3 =
             execRaw("$functionName.Order.readJsonStr(\"\"\"$someAdvancedOrdersData\"\"\")") as AnyFrame
 
         shouldThrowAny {
-            @Language("kts") val res4 =
+            @Language("kts")
+            val res4 =
                 execRaw("$functionName.Order.readJsonStr(\"\"\"$someAdvancedFailingOrdersData\"\"\")") as AnyFrame
             res4
         }
@@ -489,7 +518,8 @@ class OpenApiTests : JupyterReplTestCase() {
         )
             .trimLines()
 
-        @Language("kt") val s = """
+        @Language("kt")
+        val s = """
             interface `Other advanced test` {
                 
                 enum class EyeColor(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
@@ -1085,25 +1115,25 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val res1 = execRaw(
-            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<$functionName.Cat>(ExcessiveColumns.Remove)"
+            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<$functionName.Cat>(ExcessiveColumns.Remove)",
         ) as AnyFrame
         val res1Schema = res1.schema()
 
         @Language("kts")
         val res2 = execRaw(
-            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<$functionName.Dog>(ExcessiveColumns.Remove)"
+            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<$functionName.Dog>(ExcessiveColumns.Remove)",
         ) as AnyFrame
         val res2Schema = res2.schema()
 
         @Language("kts")
         val res3 = execRaw(
-            "$functionName.Error.readJsonStr(\"\"\"$advancedErrorData\"\"\")"
+            "$functionName.Error.readJsonStr(\"\"\"$advancedErrorData\"\"\")",
         ) as AnyFrame
         val res3Schema = res3.schema()
 
         @Language("kts")
         val res4 = execRaw(
-            "$functionName.ErrorHolder.readJsonStr(\"\"\"$advancedErrorHolderData\"\"\")"
+            "$functionName.ErrorHolder.readJsonStr(\"\"\"$advancedErrorHolderData\"\"\")",
         ) as AnyFrame
         val res4Schema = res4.schema()
     }
@@ -1125,7 +1155,7 @@ class OpenApiTests : JupyterReplTestCase() {
                         (updated ?: added).year > 2019
                     }
                 }
-            """.trimIndent()
+            """.trimIndent(),
         ) as AnyFrame
 
         df.isNotEmpty().shouldBeTrue()
@@ -1140,9 +1170,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kts")
         val df1 = execRaw(
-            """`${::`MLC Test 1`.name}`.LocationsWithPeople.readJsonStr($mlcLocationsWithPeopleDataTripleQuote)
-                    .also { it.print() }
-            """.trimIndent()
+            """
+            `${::`MLC Test 1`.name}`.LocationsWithPeople.readJsonStr($mlcLocationsWithPeopleDataTripleQuote)
+            .also { it.print() }
+            """.trimIndent(),
         ) as AnyFrame
 
         df1.isNotEmpty().shouldBeTrue()
@@ -1157,9 +1188,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kts")
         val df2 = execRaw(
-            """`${::`MLC Test 2`.name}`.PeopleWithLocation.readJsonStr($mlcPeopleWithLocationDataTripleQuote)
-                    .also { it.print() }
-            """.trimIndent()
+            """
+            `${::`MLC Test 2`.name}`.PeopleWithLocation.readJsonStr($mlcPeopleWithLocationDataTripleQuote)
+            .also { it.print() }
+            """.trimIndent(),
         ) as AnyFrame
 
         df2.isNotEmpty().shouldBeTrue()
@@ -1168,14 +1200,18 @@ class OpenApiTests : JupyterReplTestCase() {
     @Test
     fun `Jupyter importDataSchema`() {
         val filePath = apiGuruYaml.absolutePath.let {
-            if (separatorChar == '\\') it.replace("\\", "\\\\")
-            else it
+            if (separatorChar == '\\') {
+                it.replace("\\", "\\\\")
+            } else {
+                it
+            }
         }
+
         @Language("kts")
         val _1 = execRaw(
             """
-                val ApiGuru = importDataSchema(File("$filePath"))
-            """.trimIndent()
+            val ApiGuru = importDataSchema(File("$filePath"))
+            """.trimIndent(),
         )
 
         val apiGuruDataTripleQuote = "\"\"\"${apiGuruData.replace("$", "\${'$'}")}\"\"\""
@@ -1183,9 +1219,9 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val _2 = execRaw(
             """
-                val df = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
-                df
-            """.trimIndent()
+            val df = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
+            df
+            """.trimIndent(),
         ) as AnyFrame
 
         println(_2)
@@ -1193,12 +1229,12 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val _3 = execRaw(
             """
-                df.filter {
-                  value.versions.value.any {
-                    (updated ?: added).year >= 2021
-                  }
-                }
-            """.trimIndent()
+            df.filter {
+              value.versions.value.any {
+                (updated ?: added).year >= 2021
+              }
+            }
+            """.trimIndent(),
         ) as AnyFrame
     }
 

@@ -8,18 +8,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.documentation.ExportAsHtml
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
@@ -73,16 +64,14 @@ public annotation class ColumnsSelectionDslMarker
  *
  */
 @ColumnsSelectionDslMarker
-public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
+public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
     ColumnSelectionDsl<T>,
-
     // first {}, firstCol()
     FirstColumnsSelectionDsl,
     // last {}, lastCol()
     LastColumnsSelectionDsl,
     // single {}, singleCol()
     SingleColumnsSelectionDsl,
-
     // col(name), col(5), [5]
     ColColumnsSelectionDsl<T>,
     // valueCol(name), valueCol(5)
@@ -91,13 +80,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     FrameColColumnsSelectionDsl<T>,
     // colGroup(name), colGroup(5)
     ColGroupColumnsSelectionDsl<T>,
-
     // cols {}, cols(), cols(colA, colB), cols(1, 5), cols(1..5), [{}]
     ColsColumnsSelectionDsl<T>,
-
     // colA.."colB"
     ColumnRangeColumnsSelectionDsl,
-
     // valueCols {}, valueCols()
     ValueColsColumnsSelectionDsl,
     // frameCols {}, frameCols()
@@ -106,7 +92,6 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     ColGroupsColumnsSelectionDsl,
     // colsOfKind(Value, Frame) {}, colsOfKind(Value, Frame)
     ColsOfKindColumnsSelectionDsl,
-
     // all(Cols), allAfter(colA), allBefore(colA), allFrom(colA), allUpTo(colA)
     AllColumnsSelectionDsl<T>,
     // colsAtAnyDepth {}, colsAtAnyDepth()
@@ -117,12 +102,10 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
     TakeColumnsSelectionDsl,
     // drop(5), dropLastCols(2), dropLastWhile {}, dropColsWhile {}
     DropColumnsSelectionDsl,
-
     // select {}, TODO due to String.invoke conflict this cannot be moved out of ColumnsSelectionDsl
     SelectColumnsSelectionDsl,
     // except(), allExcept {}, allColsExcept {}
     AllExceptColumnsSelectionDsl,
-
     // nameContains(""), colsNameContains(""), nameStartsWith(""), colsNameEndsWith("")
     ColumnNameFiltersColumnsSelectionDsl,
     // withoutNulls(), colsWithoutNulls()
@@ -204,7 +187,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**`..`**][org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.rangeTo]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
@@ -267,7 +250,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -330,7 +313,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
@@ -408,16 +391,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      *
      *
      */
-    public interface DslGrammar {
-
-        
-
-        
-
-        
-
-        
-    }
+    public interface DslGrammar
 
     /**
      * Invokes the given [ColumnsSelector] using this [ColumnsSelectionDsl].
@@ -576,8 +550,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
-    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        select(selector)
+    public operator fun <R> String.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
     /**
      * ## Select from [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup]
@@ -625,8 +598,7 @@ public interface ColumnsSelectionDsl<out T> : /* SingleColumn<DataRow<T>> */
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
-    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> =
-        select(selector)
+    public operator fun <R> ColumnPath.invoke(selector: ColumnsSelector<*, R>): ColumnSet<R> = select(selector)
 
     // endregion
 }

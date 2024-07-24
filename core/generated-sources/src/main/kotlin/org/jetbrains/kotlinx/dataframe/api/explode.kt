@@ -19,7 +19,7 @@ private val defaultExplodeColumns: ColumnsSelector<*, *> = { colsAtAnyDepth { it
 @Interpretable("Explode0")
 public fun <T> DataFrame<T>.explode(
     dropEmpty: Boolean = true,
-    selector: ColumnsSelector<T, *> = defaultExplodeColumns
+    selector: ColumnsSelector<T, *> = defaultExplodeColumns,
 ): DataFrame<T> = explodeImpl(dropEmpty, selector)
 
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
@@ -37,7 +37,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: 
 
 public fun <T> DataRow<T>.explode(
     dropEmpty: Boolean = true,
-    selector: ColumnsSelector<T, *> = defaultExplodeColumns
+    selector: ColumnsSelector<T, *> = defaultExplodeColumns,
 ): DataFrame<T> = toDataFrame().explode(dropEmpty, selector)
 
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =

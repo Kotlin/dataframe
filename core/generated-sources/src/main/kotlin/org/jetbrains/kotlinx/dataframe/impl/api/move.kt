@@ -43,7 +43,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(
     under: Boolean = false,
-    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference
+    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
 ): DataFrame<T> {
     val receiver = object : DataFrameReceiver<T>(df, UnresolvedColumnsPolicy.Fail), ColumnsSelectionDsl<T> {}
     val removeResult = df.removeImpl(columns = columns)
@@ -60,6 +60,13 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
     val removed = df.removeImpl(columns = columns)
     val remainingColumns = removed.df.columns()
     val targetIndex = if (columnIndex > remainingColumns.size) remainingColumns.size else columnIndex
-    val newColumnList = remainingColumns.subList(0, targetIndex) + removed.removedColumns.map { it.data.column as DataColumn<C> } + if (targetIndex < remainingColumns.size) remainingColumns.subList(targetIndex, remainingColumns.size) else emptyList()
+    val newColumnList =
+        remainingColumns.subList(0, targetIndex) +
+            removed.removedColumns.map { it.data.column as DataColumn<C> } +
+            if (targetIndex < remainingColumns.size) {
+                remainingColumns.subList(targetIndex, remainingColumns.size)
+            } else {
+                emptyList()
+            }
     return newColumnList.toDataFrame().cast()
 }

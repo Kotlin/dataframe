@@ -9,5 +9,5 @@ public enum class ColumnKind {
     },
     Frame {
         override fun toString(): String = "FrameColumn"
-    }
+    },
 }

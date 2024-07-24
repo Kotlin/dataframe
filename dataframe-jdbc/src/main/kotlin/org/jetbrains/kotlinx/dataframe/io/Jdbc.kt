@@ -9,23 +9,22 @@ import java.io.File
 import java.io.InputStream
 
 // TODO: https://github.com/Kotlin/dataframe/issues/450
-public class Jdbc : SupportedCodeGenerationFormat, SupportedDataFrameFormat {
+public class Jdbc :
+    SupportedCodeGenerationFormat,
+    SupportedDataFrameFormat {
     public override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJDBC(stream)
 
     public override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJDBC(file)
+
     override fun readCodeForGeneration(
         stream: InputStream,
         name: String,
-        generateHelperCompanionObject: Boolean
+        generateHelperCompanionObject: Boolean,
     ): Code {
         TODO("Not yet implemented")
     }
 
-    override fun readCodeForGeneration(
-        file: File,
-        name: String,
-        generateHelperCompanionObject: Boolean
-    ): Code {
+    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code {
         TODO("Not yet implemented")
     }
 
@@ -35,9 +34,8 @@ public class Jdbc : SupportedCodeGenerationFormat, SupportedDataFrameFormat {
 
     override val testOrder: Int = 40000
 
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        return DefaultReadJdbcMethod(pathRepresentation)
-    }
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
+        DefaultReadJdbcMethod(pathRepresentation)
 }
 
 private fun DataFrame.Companion.readJDBC(stream: File): DataFrame<*> {
@@ -48,6 +46,6 @@ private fun DataFrame.Companion.readJDBC(stream: InputStream): DataFrame<*> {
     TODO("Not yet implemented")
 }
 
-internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readJDBC)
+internal class DefaultReadJdbcMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_JDBC)
 
-private const val readJDBC = "readJDBC"
+private const val READ_JDBC = "readJDBC"

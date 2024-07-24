@@ -33,7 +33,8 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .src.get()
             .shouldBe(project.file("build/generated/dataframe/main1/kotlin/"))
     }
 
@@ -68,7 +69,8 @@ class TaskSourceSetPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .src.get()
             .shouldBe(project.file("build/generated/dataframe/main/kotlin/"))
     }
 
@@ -89,7 +91,8 @@ class TaskSourceSetPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .src.get()
             .shouldBe(project.file("build/generated/dataframe/main1/kotlin/"))
     }
 
@@ -109,7 +112,10 @@ class TaskSourceSetPropertyTest {
             project.evaluate()
         }
         exception.causes.shouldHaveSize(1)
-        exception.causes.forOne { it.message shouldContain "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly" }
+        exception.causes.forOne {
+            it.message shouldContain
+                "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly"
+        }
     }
 
     @Test
@@ -128,7 +134,8 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask)
+            .dataSchema.get()
             .shouldBe(project.file("src/main/kotlin/org/example/my/321.Generated.kt"))
     }
 
@@ -150,7 +157,8 @@ class TaskSourceSetPropertyTest {
         }
         exception.causes.shouldHaveSize(1)
         exception.causes.forOne {
-            it.message shouldContain "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly"
+            it.message shouldContain
+                "No supported Kotlin plugin was found. Please apply one or specify property src for schema 321 explicitly"
         }
     }
 }

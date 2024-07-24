@@ -30,17 +30,11 @@ public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>
         return result
     }
 
-    override fun equals(other: Any?): Boolean {
-        return other is DataFrameSchema && compare(other).isEqual()
-    }
+    override fun equals(other: Any?): Boolean = other is DataFrameSchema && compare(other).isEqual()
 
-    override fun toString(): String {
-        return render()
-    }
+    override fun toString(): String = render()
 
-    override fun hashCode(): Int {
-        return columns.hashCode()
-    }
+    override fun hashCode(): Int = columns.hashCode()
 }
 
 internal fun DataFrameSchemaImpl.render(): String {

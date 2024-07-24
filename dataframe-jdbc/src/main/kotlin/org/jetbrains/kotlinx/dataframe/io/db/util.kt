@@ -17,7 +17,8 @@ private val logger = KotlinLogging.logger {}
  * @throws [SQLException] if the URL is null.
  */
 public fun extractDBTypeFromConnection(connection: Connection): DbType {
-    val url = connection.metaData?.url ?: throw IllegalStateException("URL information is missing in connection meta data!")
+    val url = connection.metaData?.url
+        ?: throw IllegalStateException("URL information is missing in connection meta data!")
     logger.info { "Processing DB type extraction for connection url: $url" }
 
     return if (url.contains(H2().dbTypeInJdbcUrl)) {
@@ -25,9 +26,7 @@ public fun extractDBTypeFromConnection(connection: Connection): DbType {
         val modeQuery = "SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'"
         var mode = ""
         connection.createStatement().use { st ->
-            st.executeQuery(
-                modeQuery
-            ).use { rs ->
+            st.executeQuery(modeQuery).use { rs ->
                 if (rs.next()) {
                     mode = rs.getString("SETTING_VALUE")
                     logger.debug { "Fetched H2 DB mode: $mode" }
@@ -40,9 +39,13 @@ public fun extractDBTypeFromConnection(connection: Connection): DbType {
         // H2 doesn't support MariaDB and SQLite
         when (mode.lowercase(Locale.getDefault())) {
             H2.MODE_MYSQL.lowercase(Locale.getDefault()) -> H2(MySql)
+
             H2.MODE_MSSQLSERVER.lowercase(Locale.getDefault()) -> H2(MsSql)
+
             H2.MODE_POSTGRESQL.lowercase(Locale.getDefault()) -> H2(PostgreSql)
+
             H2.MODE_MARIADB.lowercase(Locale.getDefault()) -> H2(MariaDb)
+
             else -> {
                 val message = "Unsupported database type in the url: $url. " +
                     "Only MySQL, MariaDB, MSSQL and PostgreSQL are supported!"
@@ -70,14 +73,20 @@ public fun extractDBTypeFromUrl(url: String?): DbType {
         val helperH2Instance = H2()
         return when {
             helperH2Instance.dbTypeInJdbcUrl in url -> createH2Instance(url)
+
             MariaDb.dbTypeInJdbcUrl in url -> MariaDb
+
             MySql.dbTypeInJdbcUrl in url -> MySql
+
             Sqlite.dbTypeInJdbcUrl in url -> Sqlite
+
             PostgreSql.dbTypeInJdbcUrl in url -> PostgreSql
+
             MsSql.dbTypeInJdbcUrl in url -> MsSql
+
             else -> throw IllegalArgumentException(
                 "Unsupported database type in the url: $url. " +
-                    "Only H2, MariaDB, MySQL, MSSQL, SQLite and PostgreSQL are supported!"
+                    "Only H2, MariaDB, MySQL, MSSQL, SQLite and PostgreSQL are supported!",
             )
         }
     } else {
@@ -105,13 +114,16 @@ private fun createH2Instance(url: String): DbType {
     // H2 doesn't support MariaDB and SQLite
     return when (mode.lowercase(Locale.getDefault())) {
         H2.MODE_MYSQL.lowercase(Locale.getDefault()) -> H2(MySql)
+
         H2.MODE_MSSQLSERVER.lowercase(Locale.getDefault()) -> H2(MsSql)
+
         H2.MODE_POSTGRESQL.lowercase(Locale.getDefault()) -> H2(PostgreSql)
+
         H2.MODE_MARIADB.lowercase(Locale.getDefault()) -> H2(MariaDb)
 
         else -> throw IllegalArgumentException(
             "Unsupported database mode: $mode. " +
-                "Only MySQL, MariaDB, MSSQL, PostgreSQL modes are supported!"
+                "Only MySQL, MariaDB, MSSQL, PostgreSQL modes are supported!",
         )
     }
 }

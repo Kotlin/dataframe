@@ -12,7 +12,9 @@ import org.jetbrains.kotlinx.dataframe.impl.owner
  *
  * Stores a list of [column names][DataColumn.name] that are used to retrieve columns through a chain of [column groups][ColumnGroup].
  */
-public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnAccessor<Any?> {
+public data class ColumnPath(val path: List<String>) :
+    List<String> by path,
+    ColumnAccessor<Any?> {
 
     public constructor(name: String) : this(listOf(name))
 

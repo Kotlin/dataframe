@@ -68,7 +68,7 @@ internal object KotlinCompilationUtil {
             kotlinScriptRuntimeJar = compilation.kotlinScriptRuntimeJar
 
             inheritedClasspath = getClasspathFromClassloader(
-                KotlinCompilationUtil::class.java.classLoader
+                KotlinCompilationUtil::class.java.classLoader,
             )
         }
     }
@@ -92,14 +92,16 @@ internal object KotlinCompilationUtil {
                 break
             }
             check(currentClassloader is URLClassLoader) {
-                """Classpath for compilation could not be extracted
+                """
+                Classpath for compilation could not be extracted
                 since $currentClassloader is not an instance of URLClassloader
                 """.trimIndent()
             }
             // We only know how to extract classpaths from URLClassloaders.
             currentClassloader.urLs.forEach { url ->
                 check(url.protocol == "file") {
-                    """Given classloader consists of classpaths which are unsupported for
+                    """
+                    Given classloader consists of classpaths which are unsupported for
                     compilation.
                     """.trimIndent()
                 }
@@ -116,9 +118,7 @@ internal object KotlinCompilationUtil {
  *
  * @see getSystemClasspaths
  */
-fun getSystemClasspathFiles(): Set<File> {
-    return getSystemClasspaths().map { File(it) }.toSet()
-}
+fun getSystemClasspathFiles(): Set<File> = getSystemClasspaths().map { File(it) }.toSet()
 
 /**
  * Returns the file paths from the system class loader

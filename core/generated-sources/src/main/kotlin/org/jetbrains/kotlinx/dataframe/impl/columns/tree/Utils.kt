@@ -43,6 +43,7 @@ internal fun <T> TreeNode<T>.topmostChildren(yieldCondition: (TreeNode<T>) -> Bo
 
 internal fun <T> TreeNode<T>.topmostChildrenExcluding(excludeRoot: TreeNode<*>): List<TreeNode<T>> {
     val result = mutableListOf<TreeNode<T>>()
+
     fun doDfs(node: TreeNode<T>, exclude: TreeNode<*>) {
         if (exclude.children.isNotEmpty()) {
             node.children.filter { !exclude.contains(it.name) }.forEach { result.add(it) }
@@ -71,14 +72,11 @@ internal fun <T : ReadonlyTreeNode<*>, R> T.map(operation: (node: T, children: L
 internal fun <T> TreeNode<T?>.allChildrenNotNull(): List<TreeNode<T>> =
     allChildren { it.data != null } as List<TreeNode<T>>
 
-internal fun <T> TreeNode<T?>.topmostChildrenNotNull() =
-    topmostChildren { it.data != null } as List<TreeNode<T>>
+internal fun <T> TreeNode<T?>.topmostChildrenNotNull() = topmostChildren { it.data != null } as List<TreeNode<T>>
 
-internal fun TreeNode<ColumnPosition>.allRemovedColumns() =
-    allChildren { it.data.wasRemoved && it.data.column != null }
+internal fun TreeNode<ColumnPosition>.allRemovedColumns() = allChildren { it.data.wasRemoved && it.data.column != null }
 
-internal fun TreeNode<ColumnPosition>.allWithColumns() =
-    allChildren { it.data.column != null }
+internal fun TreeNode<ColumnPosition>.allWithColumns() = allChildren { it.data.column != null }
 
 internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPath<*>> {
     val result = mutableListOf<ColumnWithPath<*>>()
@@ -91,7 +89,7 @@ internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPa
                 flattenRecursively(
                     it.data.asColumnGroup()
                         .columns()
-                        .map { it.addPath(path + it.name()) }
+                        .map { it.addPath(path + it.name()) },
                 )
             }
         }
@@ -101,6 +99,7 @@ internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPa
 }
 
 internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(null) { it }
+
 internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (AnyCol) -> D): TreeNode<D> {
     val root = TreeNode.createRoot(emptyData)
 

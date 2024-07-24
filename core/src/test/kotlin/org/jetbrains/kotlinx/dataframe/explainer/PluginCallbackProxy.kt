@@ -43,7 +43,7 @@ fun interface PluginCallback {
         receiverId: String?,
         containingClassFqName: String?,
         containingFunName: String?,
-        statementIndex: Int
+        statementIndex: Int,
     )
 }
 
@@ -52,6 +52,7 @@ object PluginCallbackProxy : PluginCallback {
     val expressionsByStatement = mutableMapOf<Int, List<Expression>>()
 
     private var manualOutput: DataFrameHtmlData? = null
+
     fun overrideHtmlOutput(manualOutput: DataFrameHtmlData) {
         this.manualOutput = manualOutput
     }
@@ -60,7 +61,7 @@ object PluginCallbackProxy : PluginCallback {
         val source: String,
         val containingClassFqName: String?,
         val containingFunName: String?,
-        val df: Any
+        val df: Any,
     )
 
     fun start() {
@@ -81,26 +82,32 @@ object PluginCallbackProxy : PluginCallback {
             val statements = expressionsByStatement.toMap()
             when (statements.size) {
                 0 -> error("function doesn't have any dataframe expression")
+
                 1 -> {
                     output += statementOutput(statements.values.single())
                 }
+
                 else -> {
                     statements.forEach { (index, expressions) ->
                         var details: DataFrameHtmlData = statementOutput(expressions)
 
                         details = details.copy(
                             body =
-                            """
-                            <details>
-                            <summary>${expressions.joinToString(".") { it.source }
-                                .also {
-                                    if (it.length > 95) TODO("expression is too long ${it.length}. better to split sample in multiple snippets")
-                                }
-                                .escapeHtmlForIFrame()}</summary>
-                            ${details.body}
-                            </details>
-                            <br>
-                            """.trimIndent()
+                                """
+                                <details>
+                                <summary>${
+                                    expressions.joinToString(".") { it.source }.also {
+                                        if (it.length > 95) {
+                                            TODO(
+                                                "expression is too long ${it.length}. better to split sample in multiple snippets",
+                                            )
+                                        }
+                                    }.escapeHtmlForIFrame()
+                                }</summary>
+                                ${details.body}
+                                </details>
+                                <br>
+                                """.trimIndent(),
                         )
                         output += details
                     }
@@ -125,19 +132,17 @@ object PluginCallbackProxy : PluginCallback {
             """
             
             <dataFrame src="$group.html"/>
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 
-    private fun List<Expression>.joinToSource(): String =
-        joinToString(".") { it.source }
+    private fun List<Expression>.joinToSource(): String = joinToString(".") { it.source }
 
-    private fun statementOutput(
-        expressions: List<Expression>,
-    ): DataFrameHtmlData {
+    private fun statementOutput(expressions: List<Expression>): DataFrameHtmlData {
         var data = DataFrameHtmlData()
         val allow = setOf(
-            "toDataFrame", "peek(dataFrameOf(col), dataFrameOf(col))"
+            "toDataFrame",
+            "peek(dataFrameOf(col), dataFrameOf(col))",
         )
         if (expressions.isEmpty()) {
             error("No dataframe expressions in sample")
@@ -155,12 +160,13 @@ object PluginCallbackProxy : PluginCallback {
                     0 -> {
                         val table = convertToHTML(expression.df)
                         val description = table.copy(
-                            body = """
-                                    <details>
-                                    <summary>Input ${convertToDescription(expression.df)}</summary>
-                                     ${table.body}
-                                    </details>
-                            """.trimIndent()
+                            body =
+                                """
+                                <details>
+                                <summary>Input ${convertToDescription(expression.df)}</summary>
+                                 ${table.body}
+                                </details>
+                                """.trimIndent(),
                         )
                         data += description
                     }
@@ -168,12 +174,13 @@ object PluginCallbackProxy : PluginCallback {
                     expressions.lastIndex -> {
                         val table = convertToHTML(expression.df)
                         val description = table.copy(
-                            body = """
-                                    <details>
-                                    <summary>Output ${convertToDescription(expression.df)}</summary>
-                                     ${table.body}
-                                    </details>
-                            """.trimIndent()
+                            body =
+                                """
+                                <details>
+                                <summary>Output ${convertToDescription(expression.df)}</summary>
+                                 ${table.body}
+                                </details>
+                                """.trimIndent(),
                         )
                         data += description
                     }
@@ -181,12 +188,13 @@ object PluginCallbackProxy : PluginCallback {
                     else -> {
                         val table = convertToHTML(expression.df)
                         val description = table.copy(
-                            body = """
-                                    <details>
-                                    <summary>Step $i: ${convertToDescription(expression.df)}</summary>
-                                     ${table.body}
-                                    </details>
-                            """.trimIndent()
+                            body =
+                                """
+                                <details>
+                                <summary>Step $i: ${convertToDescription(expression.df)}</summary>
+                                 ${table.body}
+                                </details>
+                                """.trimIndent(),
                         )
                         data += description
                     }
@@ -196,12 +204,13 @@ object PluginCallbackProxy : PluginCallback {
         return data
     }
 
-    var action: PluginCallback = PluginCallback { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
-        expressionsByStatement.compute(statementIndex) { _, list ->
-            val element = Expression(source, containingClassFqName, containingFunName, df)
-            list?.plus(element) ?: listOf(element)
+    var action: PluginCallback =
+        PluginCallback { source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex ->
+            expressionsByStatement.compute(statementIndex) { _, list ->
+                val element = Expression(source, containingClassFqName, containingFunName, df)
+                list?.plus(element) ?: listOf(element)
+            }
         }
-    }
 
     override fun doAction(
         source: String,
@@ -211,7 +220,7 @@ object PluginCallbackProxy : PluginCallback {
         receiverId: String?,
         containingClassFqName: String?,
         containingFunName: String?,
-        statementIndex: Int
+        statementIndex: Int,
     ) {
         action.doAction(source, name, df, id, receiverId, containingClassFqName, containingFunName, statementIndex)
     }
@@ -219,56 +228,91 @@ object PluginCallbackProxy : PluginCallback {
 
 private fun convertToHTML(dataframeLike: Any): DataFrameHtmlData {
     fun DataFrame<*>.toHTML() = toHTML(SamplesDisplayConfiguration, getFooter = WritersideFooter)
+
     fun FormattedFrame<*>.toHTML1() = toHTML(SamplesDisplayConfiguration)
 
     return when (dataframeLike) {
         is Pivot<*> -> dataframeLike.frames().toDataFrame().toHTML()
+
         is ReducedPivot<*> -> dataframeLike.values().toDataFrame().toHTML()
+
         is PivotGroupBy<*> -> dataframeLike.frames().toHTML()
+
         is ReducedPivotGroupBy<*> -> dataframeLike.values().toHTML()
+
         is SplitWithTransform<*, *, *> -> dataframeLike.into().toHTML()
+
         is Merge<*, *, *> -> dataframeLike.into("merged").toHTML()
+
         is Gather<*, *, *, *> -> dataframeLike.into("key", "value").toHTML()
-        is Update<*, *> -> dataframeLike.df.let {
-            var it = it.format(dataframeLike.columns as ColumnsSelectionDsl<Any?>.(it: ColumnsSelectionDsl<Any?>) -> ColumnsResolver<*>)
-            if (dataframeLike.filter != null) {
-                it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
-            }
-            it.with {
-                background(rgb(152, 251, 152))
-            }
-        }
-            .toHTML1()
+
+        is Update<*, *> ->
+            dataframeLike.df.let {
+                var it = it.format(
+                    dataframeLike.columns as ColumnsSelectionDsl<Any?>.(
+                        it: ColumnsSelectionDsl<Any?>,
+                    ) -> ColumnsResolver<*>,
+                )
+                if (dataframeLike.filter != null) {
+                    it = it.where(dataframeLike.filter as RowValueFilter<Any?, Any?>)
+                }
+                it.with {
+                    background(rgb(152, 251, 152))
+                }
+            }.toHTML1()
+
         is Convert<*, *> -> DataFrameHtmlData(body = "<p>${dataframeLike::class}</p>")
+
         is FormattedFrame<*> -> dataframeLike.toHTML1()
+
         is GroupBy<*, *> -> dataframeLike.toDataFrame().toHTML()
+
         is AnyFrame -> dataframeLike.toHTML()
+
         is AnyCol -> dataframeLike.toDataFrame().toHTML()
+
         is DataRow<*> -> dataframeLike.toDataFrame().toHTML()
+
         is Split<*, *> -> dataframeLike.toDataFrame().toHTML()
+
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
 }
 
-private fun convertToDescription(dataframeLike: Any): String {
-    return when (dataframeLike) {
-        is AnyFrame -> dataframeLike.let { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
+private fun convertToDescription(dataframeLike: Any): String =
+    when (dataframeLike) {
+        is AnyFrame -> dataframeLike.let {
+            "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"
+        }
+
         is Pivot<*> -> "Pivot"
+
         is ReducedPivot<*> -> "ReducedPivot"
+
         is PivotGroupBy<*> -> "PivotGroupBy"
+
         is ReducedPivotGroupBy<*> -> "ReducedPivotGroupBy"
+
         is SplitWithTransform<*, *, *> -> "SplitWithTransform"
+
         is Split<*, *> -> "Split"
+
         is Merge<*, *, *> -> "Merge"
+
         is Gather<*, *, *, *> -> "Gather"
+
         is Update<*, *> -> "Update"
+
         is Convert<*, *> -> "Convert"
+
         is FormattedFrame<*> -> "FormattedFrame"
+
         is GroupBy<*, *> -> "GroupBy"
+
         is DataRow<*> -> "DataRow"
+
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }.escapeHtmlForIFrame()
-}
 
 internal fun String.escapeHtmlForIFrame(): String {
     val str = this
@@ -280,10 +324,15 @@ internal fun String.escapeHtmlForIFrame(): String {
                     append(c.code)
                     append(';')
                 }
+
                 c == '"' -> append("&quot;")
+
                 c == '<' -> append("&amp;lt;")
+
                 c == '>' -> append("&amp;gt;")
+
                 c == '&' -> append("&amp;")
+
                 else -> {
                     append(c)
                 }

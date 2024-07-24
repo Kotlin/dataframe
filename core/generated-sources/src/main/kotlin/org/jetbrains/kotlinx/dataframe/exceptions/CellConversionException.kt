@@ -9,7 +9,7 @@ public class CellConversionException(
     to: KType,
     column: ColumnPath,
     public val row: Int?,
-    override val cause: Throwable?
+    override val cause: Throwable?,
 ) : TypeConversionException(value, from, to, column) {
     override val message: String
         get() = "${super.message} in column $column, row $row"

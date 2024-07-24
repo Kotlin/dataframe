@@ -16,6 +16,7 @@ class InferTypeTests {
     }
 
     open class A<T>(val value: T)
+
     class B<T>(value: T) : A<T>(value)
 
     @Test

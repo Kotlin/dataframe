@@ -21,9 +21,10 @@ public inline fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit
 
 // region GroupBy
 
-public inline fun <T, G> GroupBy<T, G>.forEach(body: (GroupBy.Entry<T, G>) -> Unit): Unit = keys.forEach { key ->
-    val group = groups[key.index()]
-    body(GroupBy.Entry(key, group))
-}
+public inline fun <T, G> GroupBy<T, G>.forEach(body: (GroupBy.Entry<T, G>) -> Unit): Unit =
+    keys.forEach { key ->
+        val group = groups[key.index()]
+        body(GroupBy.Entry(key, group))
+    }
 
 // endregion

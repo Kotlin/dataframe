@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
@@ -27,6 +29,7 @@ class Collections {
     @TransformDataFrameExpressions
     fun listInterop2() {
         data class Input(val a: Int, val b: Int)
+
         val list = listOf(Input(1, 2), Input(3, 4))
         // SampleStart
         val df = list.toDataFrame()
@@ -77,6 +80,7 @@ class Collections {
             .group("name", "lastName").into("fullName")
 
         data class FullName(val name: String, val lastName: String)
+
         data class Person(val fullName: FullName, val age: Int)
 
         val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]

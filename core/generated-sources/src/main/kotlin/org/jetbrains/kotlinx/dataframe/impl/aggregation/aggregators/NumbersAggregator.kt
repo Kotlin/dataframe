@@ -9,14 +9,13 @@ import kotlin.reflect.KType
 internal class NumbersAggregator<C : Number>(name: String, aggregate: (Iterable<C>, KType) -> C?) :
     AggregatorBase<C, C>(name, aggregate) {
 
-    override fun aggregate(columns: Iterable<DataColumn<C?>>): C? {
-        return aggregateMixed(columns.mapNotNull { aggregate(it) })
-    }
+    override fun aggregate(columns: Iterable<DataColumn<C?>>): C? = aggregateMixed(columns.mapNotNull { aggregate(it) })
 
     class Factory(private val aggregate: Iterable<Number>.(KType) -> Number?) : AggregatorProvider<Number, Number> {
         override fun create(name: String) = NumbersAggregator(name, aggregate)
 
-        override operator fun getValue(obj: Any?, property: KProperty<*>): NumbersAggregator<Number> = create(property.name)
+        override operator fun getValue(obj: Any?, property: KProperty<*>): NumbersAggregator<Number> =
+            create(property.name)
     }
 
     fun aggregateMixed(values: Iterable<C>): C? {

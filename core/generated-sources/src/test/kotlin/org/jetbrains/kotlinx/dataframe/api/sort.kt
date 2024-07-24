@@ -32,16 +32,16 @@ class SortDataColumn {
             listOf(
                 dataFrameOf("a")(1, 2),
                 dataFrameOf("a")(1),
-                dataFrameOf("a")(1, 2, 3)
-            )
+                dataFrameOf("a")(1, 2, 3),
+            ),
         )
         val sortedCol = DataColumn.createFrameColumn(
             "",
             listOf(
                 dataFrameOf("a")(1),
                 dataFrameOf("a")(1, 2),
-                dataFrameOf("a")(1, 2, 3)
-            )
+                dataFrameOf("a")(1, 2, 3),
+            ),
         )
 
         col.sortWith { df1, df2 -> df1.nrow - df2.nrow } shouldBe sortedCol

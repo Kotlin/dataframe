@@ -13,20 +13,22 @@ internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typ
 
 // region DataFrame
 
-public data class Corr<T, C>(
-    internal val df: DataFrame<T>,
-    internal val columns: ColumnsSelector<T, C>,
-)
+public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
 
 public fun <T> DataFrame<T>.corr(): DataFrame<T> = corr { colsAtAnyDepth { it.isSuitableForCorr() } }.withItself()
 
 public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> = Corr(this, columns)
+
 public fun <T> DataFrame<T>.corr(vararg columns: String): Corr<T, Any?> = corr { columns.toColumnSet() }
+
 public fun <T, C> DataFrame<T>.corr(vararg columns: KProperty<C>): Corr<T, C> = corr { columns.toColumnSet() }
+
 public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T, C> = corr { columns.toColumnSet() }
 
 public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataFrame<T> = corrImpl(otherColumns)
+
 public fun <T, C> Corr<T, C>.with(vararg otherColumns: String): DataFrame<T> = with { otherColumns.toColumnSet() }
+
 public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: KProperty<R>): DataFrame<T> =
     with { otherColumns.toColumnSet() }
 
