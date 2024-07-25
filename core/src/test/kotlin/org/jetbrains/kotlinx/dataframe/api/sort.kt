@@ -6,8 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.io.readDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testResource
-import org.jetbrains.kotlinx.dataframe.testSets.*
 import org.jetbrains.kotlinx.dataframe.testSets.DsSalaries
+import org.jetbrains.kotlinx.dataframe.testSets.companyLocation
+import org.jetbrains.kotlinx.dataframe.testSets.companySize
+import org.jetbrains.kotlinx.dataframe.testSets.salaryInUsd
 import org.junit.Test
 
 class SortDataColumn {
@@ -32,16 +34,16 @@ class SortDataColumn {
             listOf(
                 dataFrameOf("a")(1, 2),
                 dataFrameOf("a")(1),
-                dataFrameOf("a")(1, 2, 3)
-            )
+                dataFrameOf("a")(1, 2, 3),
+            ),
         )
         val sortedCol = DataColumn.createFrameColumn(
             "",
             listOf(
                 dataFrameOf("a")(1),
                 dataFrameOf("a")(1, 2),
-                dataFrameOf("a")(1, 2, 3)
-            )
+                dataFrameOf("a")(1, 2, 3),
+            ),
         )
 
         col.sortWith { df1, df2 -> df1.nrow - df2.nrow } shouldBe sortedCol

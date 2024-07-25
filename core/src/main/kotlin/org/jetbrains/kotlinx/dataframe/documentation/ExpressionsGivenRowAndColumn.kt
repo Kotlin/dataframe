@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpressionLink
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpression
 
@@ -19,6 +19,7 @@ internal interface ExpressionsGivenRowAndColumn {
     interface OperationArg
 
     // Using <code>` notation to not create double `` when including
+
     /** {@set [OperationArg] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 

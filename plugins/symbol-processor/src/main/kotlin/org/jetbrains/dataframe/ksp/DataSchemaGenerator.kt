@@ -65,12 +65,12 @@ class DataSchemaGenerator(
 
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
 
-    private fun resolvePathImports(resolver: Resolver) = resolver
-        .getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
-        .filterIsInstance<KSFile>()
-        .flatMap { file ->
-            file.getAnnotationsByType(ImportDataSchema::class).mapNotNull { it.toStatement(file, logger) }
-        }
+    private fun resolvePathImports(resolver: Resolver) =
+        resolver.getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
+            .filterIsInstance<KSFile>()
+            .flatMap { file ->
+                file.getAnnotationsByType(ImportDataSchema::class).mapNotNull { it.toStatement(file, logger) }
+            }
 
     private fun ImportDataSchema.toStatement(file: KSFile, logger: KSPLogger): ImportDataSchemaStatement? {
         val url = if (isURL(path)) {
@@ -94,7 +94,7 @@ class DataSchemaGenerator(
                     csvOptions = csvOptions,
                     jsonOptions = jsonOptions,
                     jdbcOptions = jdbcOptions,
-                    isJdbc = true
+                    isJdbc = true,
                 )
             }
 
@@ -111,7 +111,7 @@ class DataSchemaGenerator(
             } catch (exception: MalformedURLException) {
                 logger.error(
                     "Failed to convert resolved path '${relativeFile.absolutePath}' or '${absoluteFile.absolutePath}' to URL: ${exception.message}",
-                    file
+                    file,
                 )
                 return null
             }
@@ -130,11 +130,12 @@ class DataSchemaGenerator(
         )
     }
 
-    private fun DataSchemaVisibility.toMarkerVisibility(): MarkerVisibility = when (this) {
-        DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
-        DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
-        DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
-    }
+    private fun DataSchemaVisibility.toMarkerVisibility(): MarkerVisibility =
+        when (this) {
+            DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
+            DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
+            DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
+        }
 
     private fun reportMissingKspArgument(file: KSFile) {
         logger.error(
@@ -143,7 +144,7 @@ class DataSchemaGenerator(
             |DataFrame Gradle plugin should set it by default to "project.projectDir".
             |If you do not use DataFrame Gradle plugin, configure option manually 
             """.trimMargin(),
-            symbol = file
+            symbol = file,
         )
     }
 
@@ -185,7 +186,7 @@ class DataSchemaGenerator(
             val connection = DriverManager.getConnection(
                 url,
                 userName,
-                password
+                password,
             )
 
             connection.use {
@@ -204,7 +205,7 @@ class DataSchemaGenerator(
                     visibility = importStatement.visibility,
                     knownMarkers = emptyList(),
                     readDfMethod = null,
-                    fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+                    fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet()),
                 )
                 val code = codeGenResult.toStandaloneSnippet(packageName, additionalImports)
                 schemaFile.bufferedWriter().use {
@@ -251,7 +252,9 @@ class DataSchemaGenerator(
         // on error, try with reading dataframe first
         val parsedDf = when (val readResult = CodeGenerator.urlDfReader(importStatement.dataSource.data, formats)) {
             is DfReadResult.Error -> {
-                logger.error("Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${readResult.reason}")
+                logger.error(
+                    "Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${readResult.reason}",
+                )
                 return
             }
 
@@ -259,7 +262,9 @@ class DataSchemaGenerator(
         }
 
         val readDfMethod =
-            parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
+            parsedDf.getReadDfMethod(
+                importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath },
+            )
         val codeGenerator = CodeGenerator.create(useFqNames = false)
 
         val codeGenResult = codeGenerator.generate(
@@ -271,7 +276,7 @@ class DataSchemaGenerator(
             visibility = importStatement.visibility,
             knownMarkers = emptyList(),
             readDfMethod = readDfMethod,
-            fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+            fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet()),
         )
         val code = codeGenResult.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
         schemaFile.bufferedWriter().use {
@@ -281,7 +286,7 @@ class DataSchemaGenerator(
 
     private fun generateSchemaForImport(
         importStatement: ImportDataSchemaStatement,
-        connection: Connection
+        connection: Connection,
     ): DataFrameSchema {
         logger.info("Table name: ${importStatement.jdbcOptions.tableName}")
         logger.info("SQL query: ${importStatement.jdbcOptions.sqlQuery}")
@@ -311,17 +316,15 @@ class DataSchemaGenerator(
     private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
         DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
 
-    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing {
+    private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(
             "Table name '$tableName' and SQL query '$sqlQuery' both are filled! " +
-                "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
+                "Clear 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!",
         )
-    }
 
-    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing {
+    private fun throwBothFieldsEmptyException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(
             "Table name '$tableName' and SQL query '$sqlQuery' both are empty! " +
-                "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!"
+                "Populate 'tableName' or 'sqlQuery' properties in jdbcOptions with value to generate schema for SQL table or result of SQL query!",
         )
-    }
 }

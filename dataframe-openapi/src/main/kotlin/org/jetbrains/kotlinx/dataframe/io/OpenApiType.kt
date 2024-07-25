@@ -68,7 +68,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
                 markerName = marker.name.let {
                     if (nullable) it.toNullable() else it
                 },
-                renderAsObject = true
+                renderAsObject = true,
             )
     }
 
@@ -77,8 +77,12 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
         fun getType(nullable: kotlin.Boolean): FieldType =
             FieldType.GroupFieldType(
-                markerName = (if (nullable) typeOf<DataRow<kotlin.Any?>>() else typeOf<DataRow<kotlin.Any>>()).toString(),
-                renderAsObject = true
+                markerName = if (nullable) {
+                    typeOf<DataRow<kotlin.Any?>>()
+                } else {
+                    typeOf<DataRow<kotlin.Any>>()
+                }.toString(),
+                renderAsObject = true,
             )
     }
 
@@ -95,7 +99,7 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
             FieldType.FrameFieldType(
                 markerName = markerName.let { if (nullable) it.toNullable() else it },
                 nullable = false, // preferring DataFrame<Something?> over DataFrame<Something>?
-                renderAsList = false
+                renderAsList = false,
             )
 
         /** used for list of AdditionalProperty objects (read as List<DataFrame<MyMarker>>) */
@@ -105,7 +109,9 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
             markerName: kotlin.String,
         ): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
-                typeFqName = "${List::class.qualifiedName!!}<${DataFrame::class.qualifiedName!!}<${markerName.let { if (nullable) it.toNullable() else it }}>>${if (nullableArray) "?" else ""}",
+                typeFqName = "${List::class.qualifiedName!!}<${DataFrame::class.qualifiedName!!}<${
+                    markerName.let { if (nullable) it.toNullable() else it }
+                }>>${if (nullableArray) "?" else ""}",
             )
     }
 
@@ -122,23 +128,25 @@ internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 
         val all: List<OpenApiType> = listOf(String, Integer, Number, Boolean, Object, Array, Any)
 
-        fun fromStringOrNull(type: kotlin.String?): OpenApiType? = when (type) {
-            "string" -> String
-            "integer" -> Integer
-            "number" -> Number
-            "boolean" -> Boolean
-            "object" -> Object
-            "array" -> Array
-            null -> Any
-            else -> null
-        }
+        fun fromStringOrNull(type: kotlin.String?): OpenApiType? =
+            when (type) {
+                "string" -> String
+                "integer" -> Integer
+                "number" -> Number
+                "boolean" -> Boolean
+                "object" -> Object
+                "array" -> Array
+                null -> Any
+                else -> null
+            }
     }
 }
 
 /** https://swagger.io/docs/specification/data-models/data-types/#numbers */
 internal enum class OpenApiIntegerFormat(val value: String) {
     INT32("int32"),
-    INT64("int64");
+    INT64("int64"),
+    ;
 
     companion object {
         fun fromStringOrNull(value: String?): OpenApiIntegerFormat? = values().firstOrNull { it.value == value }
@@ -148,7 +156,8 @@ internal enum class OpenApiIntegerFormat(val value: String) {
 /** https://swagger.io/docs/specification/data-models/data-types/#numbers */
 internal enum class OpenApiNumberFormat(val value: String) {
     FLOAT("float"),
-    DOUBLE("double");
+    DOUBLE("double"),
+    ;
 
     companion object {
         fun fromStringOrNull(value: String?): OpenApiNumberFormat? = values().firstOrNull { it.value == value }
@@ -161,7 +170,8 @@ internal enum class OpenApiStringFormat(val value: String) {
     DATE_TIME("date-time"),
     PASSWORD("password"),
     BYTE("byte"),
-    BINARY("binary");
+    BINARY("binary"),
+    ;
 
     companion object {
         fun fromStringOrNull(value: String?): OpenApiStringFormat? = values().firstOrNull { it.value == value }

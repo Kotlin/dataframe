@@ -39,12 +39,13 @@ public abstract class ColumnSchema {
         override val nullable: Boolean = type.isMarkedNullable
         override val contentType: KType? = null
 
-        public fun compare(other: Value): CompareResult = when {
-            type == other.type -> CompareResult.Equals
-            type.isSubtypeOf(other.type) -> CompareResult.IsDerived
-            type.isSupertypeOf(other.type) -> CompareResult.IsSuper
-            else -> CompareResult.None
-        }
+        public fun compare(other: Value): CompareResult =
+            when {
+                type == other.type -> CompareResult.Equals
+                type.isSubtypeOf(other.type) -> CompareResult.IsDerived
+                type.isSupertypeOf(other.type) -> CompareResult.IsSuper
+                else -> CompareResult.None
+            }
     }
 
     public class Group(public val schema: DataFrameSchema, override val contentType: KType?) : ColumnSchema() {

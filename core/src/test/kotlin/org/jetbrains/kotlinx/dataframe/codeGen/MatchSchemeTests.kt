@@ -40,7 +40,8 @@ class MatchSchemeTests {
         val pageInfo: DataRow<PageInfo>
     }
 
-    val json = """
+    val json =
+        """
         {
             "kind": "qq",
             "pageInfo": {
@@ -68,7 +69,7 @@ class MatchSchemeTests {
                 }
             ]
         }
-    """.trimIndent()
+        """.trimIndent()
 
     val df = DataFrame.readJsonStr(json)
 

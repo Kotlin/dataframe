@@ -27,15 +27,12 @@ import org.jetbrains.kotlinx.dataframe.nrow
 @Suppress("UNCHECKED_CAST", "RemoveExplicitTypeArguments")
 internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> =
     toDataFrame()
-
         // sort the individual groups by the columns specified
         .update { groups }
         .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
-
         // sort the groups by the columns specified (must be either be the keys column or "groups")
         // will do nothing if the columns specified are not the keys column or "groups"
         .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
-
         .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
@@ -73,7 +70,8 @@ internal fun <T, C> DataFrame<T>.getSortColumns(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
 ): List<SortColumnDescriptor<*>> =
     columns.toColumnSet().resolve(this, unresolvedColumnsPolicy)
-        .filterNot { it.data is MissingColumnGroup<*> } // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
+        // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
+        .filterNot { it.data is MissingColumnGroup<*> }
         .map {
             when (val col = it.data) {
                 is SortColumnDescriptor<*> -> col
@@ -84,7 +82,8 @@ internal fun <T, C> DataFrame<T>.getSortColumns(
 
 internal enum class SortFlag { Reversed, NullsLast }
 
-internal fun <C> ColumnsResolver<C>.addFlag(flag: SortFlag): ColumnSetWithSortFlag<C> = ColumnSetWithSortFlag(this, flag)
+internal fun <C> ColumnsResolver<C>.addFlag(flag: SortFlag): ColumnSetWithSortFlag<C> =
+    ColumnSetWithSortFlag(this, flag)
 
 internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
     val col = data
@@ -108,8 +107,7 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
 }
 
 internal class ColumnSetWithSortFlag<C>(val column: ColumnsResolver<C>, val flag: SortFlag) : ColumnSet<C> {
-    override fun resolve(context: ColumnResolutionContext) =
-        column.resolve(context).map { it.addFlag(flag) }
+    override fun resolve(context: ColumnResolutionContext) = column.resolve(context).map { it.addFlag(flag) }
 }
 
 internal class SortColumnDescriptor<C>(
@@ -120,7 +118,8 @@ internal class SortColumnDescriptor<C>(
 
 internal enum class SortDirection { Asc, Desc }
 
-internal fun SortDirection.reversed(): SortDirection = when (this) {
-    SortDirection.Asc -> SortDirection.Desc
-    SortDirection.Desc -> SortDirection.Asc
-}
+internal fun SortDirection.reversed(): SortDirection =
+    when (this) {
+        SortDirection.Asc -> SortDirection.Desc
+        SortDirection.Desc -> SortDirection.Asc
+    }

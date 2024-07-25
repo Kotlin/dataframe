@@ -24,9 +24,10 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> = indices.filter {
-    predicate(get(it))
-}.let { get(it) }
+public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
+    indices
+        .filter { predicate(get(it)) }
+        .let { get(it) }
 
 // endregion
 

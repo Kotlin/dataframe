@@ -6,17 +6,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -42,27 +36,27 @@ public interface ColsOfColumnsSelectionDsl {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `singleColumn: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>>`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnGroupReference: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `T: Column type`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `kType: `[`KType`][kotlin.reflect.KType]
@@ -71,7 +65,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**colsOf**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
@@ -80,7 +74,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -91,7 +85,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      *  ### On a column group reference:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
@@ -99,7 +93,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsOf`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`  [  `**`(`**[`kType`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.KTypeDef]**`)`**`  ] [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
@@ -226,10 +220,8 @@ public interface ColsOfColumnsSelectionDsl {
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> String.colsOf(
-        type: KType,
-        filter: ColumnFilter<C> = { true },
-    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
+    public fun <C> String.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+        columnGroup(this).colsOf(type, filter)
 
     /**
      * ## Cols Of
@@ -276,10 +268,8 @@ public interface ColsOfColumnsSelectionDsl {
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> KProperty<*>.colsOf(
-        type: KType,
-        filter: ColumnFilter<C> = { true },
-    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
+    public fun <C> KProperty<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+        columnGroup(this).colsOf(type, filter)
 
     /**
      * ## Cols Of
@@ -326,10 +316,8 @@ public interface ColsOfColumnsSelectionDsl {
      * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
      */
-    public fun <C> ColumnPath.colsOf(
-        type: KType,
-        filter: ColumnFilter<C> = { true },
-    ): ColumnSet<*> = columnGroup(this).colsOf(type, filter)
+    public fun <C> ColumnPath.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
+        columnGroup(this).colsOf(type, filter)
 }
 
 /**
@@ -377,10 +365,8 @@ public interface ColsOfColumnsSelectionDsl {
  * @param [filter] an optional filter function that takes a column of type [C] and returns `true` if the column should be included.
  * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns of given type that were included by [filter].
  */
-public fun <C> ColumnSet<*>.colsOf(
-    type: KType,
-    filter: ColumnFilter<C> = { true },
-): TransformableColumnSet<C> = colsOfInternal(type, filter)
+public fun <C> ColumnSet<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): TransformableColumnSet<C> =
+    colsOfInternal(type, filter)
 
 /**
  * ## Cols Of
@@ -636,10 +622,7 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
  * match the given [filter] and are the given [type].
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnsResolver<*>.colsOfInternal(
-    type: KType,
-    filter: ColumnFilter<C>,
-): TransformableColumnSet<C> =
+internal fun <C> ColumnsResolver<*>.colsOfInternal(type: KType, filter: ColumnFilter<C>): TransformableColumnSet<C> =
     colsInternal {
         it.isSubtypeOf(type) && filter(it.cast())
     } as TransformableColumnSet<C>

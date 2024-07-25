@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.junit.Test
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class ConvertToTests {
 
     @Test
@@ -47,10 +48,9 @@ class ConvertToTests {
             df.convertTo<Schema>()
         }
 
-        df.convertTo<Schema> {
-            parser { A(it.toInt()) }
-        }
-            .single().a.value shouldBe 1
+        df.convertTo<Schema> { parser { A(it.toInt()) } }
+            .single()
+            .a.value shouldBe 1
     }
 
     @Test
@@ -61,9 +61,9 @@ class ConvertToTests {
             df.convertTo<Schema>()
         }
 
-        df.convertTo<Schema> {
-            convert<Int>().with { A(it) }
-        }.single().a.value shouldBe 1
+        df.convertTo<Schema> { convert<Int>().with { A(it) } }
+            .single()
+            .a.value shouldBe 1
     }
 
     @Test
@@ -117,10 +117,7 @@ class ConvertToTests {
     }
 
     @DataSchema
-    data class Location(
-        val name: String,
-        val gps: Gps?,
-    )
+    data class Location(val name: String, val gps: Gps?)
 
     @DataSchema
     data class Gps(val latitude: Double, val longitude: Double)
@@ -193,16 +190,14 @@ class ConvertToTests {
 
         val df1 = listOf(
             DataSchemaWithAnyFrame(locations),
-        )
-            .toDataFrame()
+        ).toDataFrame()
             .alsoDebug("df1:")
 
         df1.convertTo<DataSchemaWithAnyFrame>()
 
         val df2 = listOf(
             DataSchemaWithAnyFrame(gps),
-        )
-            .toDataFrame()
+        ).toDataFrame()
             .alsoDebug("df2:")
 
         df2.convertTo<DataSchemaWithAnyFrame>()
@@ -210,16 +205,14 @@ class ConvertToTests {
         val df3 = listOf(
             DataSchemaWithAnyFrame(null),
             DataSchemaWithAnyFrame(gps),
-        )
-            .toDataFrame { properties { preserve(DataFrame::class) } }
+        ).toDataFrame { properties { preserve(DataFrame::class) } }
             .alsoDebug("df3 before convert:")
 
         df3.convertTo<DataSchemaWithAnyFrame>()
 
         val df4 = listOf(
             DataSchemaWithAnyFrame(null),
-        )
-            .toDataFrame { properties { preserve(DataFrame::class) } }
+        ).toDataFrame { properties { preserve(DataFrame::class) } }
             .alsoDebug("df4 before convert:")
 
         df4.convertTo<DataSchemaWithAnyFrame>()
@@ -234,8 +227,7 @@ class ConvertToTests {
             DataSchemaWithAnyFrame(null),
             DataSchemaWithAnyFrame(locations),
             DataSchemaWithAnyFrame(gps),
-        )
-            .toDataFrame { properties { preserve(DataFrame::class) } }
+        ).toDataFrame { properties { preserve(DataFrame::class) } }
             .alsoDebug("df5 before convert:")
 
         df5.convertTo<DataSchemaWithAnyFrame>()
@@ -279,7 +271,9 @@ class ConvertToTests {
             Location("Away", null),
         ).toDataFrame().cast<Location>()
 
-        val converted = locations.remove { gps.longitude }.cast<Unit>()
+        val converted = locations
+            .remove { gps.longitude }
+            .cast<Unit>()
             .convertTo<Location> {
                 fill { gps.longitude }.with { gps.latitude }
             }
@@ -317,7 +311,7 @@ class ConvertToTests {
     }
 
     @Test
-    fun `convert ValueColumn of lists, nulls and frames into FrameColumn`(){
+    fun `convert ValueColumn of lists, nulls and frames into FrameColumn`() {
         @DataSchema
         data class Entry(val v: Int)
 

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.add
