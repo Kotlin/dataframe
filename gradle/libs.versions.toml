@@ -1,11 +1,11 @@
 [versions]
-ksp = "1.9.23-1.0.20"
+ksp = "2.0.0-1.0.23"
 kotlinJupyter = "0.12.0-139"
 
 ktlint = "12.1.1"
 
 # make sure to sync manually with :generator module
-kotlin = "1.9.22"
+kotlin = "2.0.0"
 kotlinpoet = "1.16.0"
 dokka = "1.9.10"
 
@@ -55,7 +55,7 @@ plugin-publish = "1.2.1"
 shadow = "8.1.1"
 android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
 ktor-server-netty = "2.3.8"
-kotlin-compile-testing = "1.5.0"
+kotlin-compile-testing = "1.6.0"
 duckdb = "0.10.0"
 
 [libraries]
