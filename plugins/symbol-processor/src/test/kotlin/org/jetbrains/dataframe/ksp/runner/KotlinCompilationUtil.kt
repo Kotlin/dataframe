@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalCompilerApi::class)
+
 package org.jetbrains.dataframe.ksp.runner
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.JvmTarget
 import java.io.File
 import java.io.OutputStream
@@ -22,7 +25,7 @@ internal object KotlinCompilationUtil {
         compilation.sources = sources
         // workaround for https://github.com/tschuchortdev/kotlin-compile-testing/issues/105
         compilation.kotlincArguments += "-Xjava-source-roots=${javaSrcRoot.absolutePath}"
-        compilation.jvmDefault = "enable"
+        compilation.jvmDefault = "all"
         compilation.jvmTarget = JvmTarget.JVM_1_8.description
         compilation.inheritClassPath = false
         compilation.verbose = false

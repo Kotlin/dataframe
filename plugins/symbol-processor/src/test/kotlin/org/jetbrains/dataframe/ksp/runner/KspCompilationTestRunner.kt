@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCompilerApi::class)
+
 package org.jetbrains.dataframe.ksp.runner
 
 import com.tschuchort.compiletesting.KotlinCompilation
@@ -6,6 +8,7 @@ import com.tschuchort.compiletesting.kspArgs
 import com.tschuchort.compiletesting.kspSourcesDir
 import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.jetbrains.dataframe.ksp.DataFrameSymbolProcessorProvider
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Paths
