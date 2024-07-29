@@ -17,21 +17,24 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-internal fun KType.getFieldKind(): FieldKind = when {
-    jvmErasure == DataFrame::class -> Frame
-    jvmErasure == List::class && (arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true) -> ListToFrame
-    jvmErasure == DataRow::class -> Group
-    jvmErasure.hasAnnotation<DataSchema>() -> ObjectToGroup
-    else -> Default
-}
+internal fun KType.getFieldKind(): FieldKind =
+    when {
+        jvmErasure == DataFrame::class -> Frame
+        jvmErasure == List::class && (arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true) -> ListToFrame
+        jvmErasure == DataRow::class -> Group
+        jvmErasure.hasAnnotation<DataSchema>() -> ObjectToGroup
+        else -> Default
+    }
 
 internal sealed interface FieldKind {
     val shouldBeConvertedToColumnGroup: Boolean get() = false
     val shouldBeConvertedToFrameColumn: Boolean get() = false
 }
+
 internal data object Frame : FieldKind {
     override val shouldBeConvertedToFrameColumn: Boolean = true
 }
+
 internal data object ListToFrame : FieldKind {
     override val shouldBeConvertedToFrameColumn: Boolean = true
 }
@@ -75,7 +78,7 @@ internal object MarkersExtractor {
     private fun getFields(markerClass: KClass<*>, nullableProperties: Boolean): List<GeneratedField> {
         val order = getPropertyOrderFromPrimaryConstructor(markerClass) ?: emptyMap()
         val structuralProperties = markerClass.memberProperties.filter { !it.hasAnnotation<ScopeProperty>() }
-        return structuralProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { _, it ->
+        return structuralProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.map {
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
@@ -88,7 +91,7 @@ internal object MarkersExtractor {
                     val marker = get(nestedType.jvmErasure, nullableProperties || type.isMarkedNullable)
                     fieldType = FieldType.GroupFieldType(
                         marker.name,
-                        renderAsObject = fieldKind is ObjectToGroup
+                        renderAsObject = fieldKind is ObjectToGroup,
                     )
                     ColumnSchema.Group(marker.schema, nestedType)
                 }
@@ -99,17 +102,17 @@ internal object MarkersExtractor {
                     fieldType = FieldType.FrameFieldType(
                         marker.name,
                         type.isMarkedNullable || nullableProperties,
-                        renderAsList = fieldKind is ListToFrame
+                        renderAsList = fieldKind is ListToFrame,
                     )
                     ColumnSchema.Frame(marker.schema, type.isMarkedNullable, frameType)
                 }
 
                 else -> {
                     fieldType = FieldType.ValueFieldType(
-                        if (nullableProperties) type.toString().toNullable() else type.toString()
+                        if (nullableProperties) type.toString().toNullable() else type.toString(),
                     )
                     ColumnSchema.Value(
-                        if (nullableProperties) type.withNullability(true) else type
+                        if (nullableProperties) type.withNullability(true) else type,
                     )
                 }
             }

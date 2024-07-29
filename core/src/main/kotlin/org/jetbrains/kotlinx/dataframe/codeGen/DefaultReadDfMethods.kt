@@ -19,12 +19,12 @@ public interface DefaultReadDfMethod {
 }
 
 // Used APIs
-private const val cast = "cast"
-private const val verify = "verify" // cast(true) is obscure, i think it's better to use named argument here
-private const val readCSV = "readCSV"
-private const val readTSV = "readTSV"
-private const val readJson = "readJson"
-private const val readJdbc = "readJdbc"
+private const val CAST = "cast"
+private const val VERIFY = "verify" // cast(true) is obscure, i think it's better to use named argument here
+private const val READ_CSV = "readCSV"
+private const val READ_TSV = "readTSV"
+private const val READ_JSON = "readJson"
+private const val READ_JDBC = "readJdbc"
 
 public abstract class AbstractDefaultReadMethod(
     private val path: String?,
@@ -49,11 +49,7 @@ public abstract class AbstractDefaultReadMethod(
         val arguments = parameters.joinToString(", ") { "${it.name} = ${it.name}" }
 
         val typeSpec = TypeSpec.companionObjectBuilder()
-            .apply {
-                if (defaultPath != null) {
-                    addProperty(defaultPath)
-                }
-            }
+            .apply { if (defaultPath != null) addProperty(defaultPath) }
             .addProperties(this.arguments.defaultValues.map { it.property })
             .addFunction(
                 FunSpec.builder(methodName)
@@ -64,25 +60,21 @@ public abstract class AbstractDefaultReadMethod(
                                 if (defaultPath != null) {
                                     defaultValue("%N", defaultPath)
                                 }
-                            }
-                            .build()
-
+                            }.build(),
                     )
                     .addParameters(parameters)
                     .addParameter(
                         ParameterSpec.builder("verify", typeNameOf<Boolean?>())
                             .defaultValue("null")
-                            .build()
+                            .build(),
                     )
                     .addCode(
                         """
                         val df = DataFrame.$methodName(path, $arguments)
-                        return if ($verify != null) df.$cast($verify = $verify) else df.$cast()
-                        """.trimIndent()
-                    )
-                    .build()
-            )
-            .build()
+                        return if ($VERIFY != null) df.$CAST($VERIFY = $VERIFY) else df.$CAST()
+                        """.trimIndent(),
+                    ).build(),
+            ).build()
 
         return typeSpec.toString()
     }
@@ -90,15 +82,14 @@ public abstract class AbstractDefaultReadMethod(
     override val additionalImports: List<String> = listOf("import org.jetbrains.kotlinx.dataframe.io.$methodName")
 }
 
-internal class DefaultReadJsonMethod(path: String?, arguments: MethodArguments) : AbstractDefaultReadMethod(
-    path = path,
-    arguments = arguments,
-    methodName = readJson,
-)
+internal class DefaultReadJsonMethod(path: String?, arguments: MethodArguments) :
+    AbstractDefaultReadMethod(
+        path = path,
+        arguments = arguments,
+        methodName = READ_JSON,
+    )
 
-internal class DefaultReadCsvMethod(
-    path: String?,
-    arguments: MethodArguments,
-) : AbstractDefaultReadMethod(path, arguments, readCSV)
+internal class DefaultReadCsvMethod(path: String?, arguments: MethodArguments) :
+    AbstractDefaultReadMethod(path, arguments, READ_CSV)
 
-internal class DefaultReadTsvMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readTSV)
+internal class DefaultReadTsvMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, READ_TSV)

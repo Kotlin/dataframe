@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Frame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Group
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value
@@ -40,12 +39,13 @@ class AtAnyDepth : TestBase() {
             asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { !it.isColumnGroup() }
         }.sortedBy { it.name }
 
-    private val atAnyDepthString = dfGroup.getColumnsWithPaths {
-        asSingleColumn()
-            .ensureIsColumnGroup()
-            .asColumnSet()
-            .dfsInternal { it.isSubtypeOf(typeOf<String?>()) }
-    }.sortedBy { it.name }
+    private val atAnyDepthString =
+        dfGroup.getColumnsWithPaths {
+            asSingleColumn()
+                .ensureIsColumnGroup()
+                .asColumnSet()
+                .dfsInternal { it.isSubtypeOf(typeOf<String?>()) }
+        }.sortedBy { it.name }
 
     @Test
     fun `first, last, and single`() {
@@ -62,7 +62,6 @@ class AtAnyDepth : TestBase() {
 
         listOf(
             dfGroup.select { city },
-
             dfGroup.select { colsAtAnyDepth().first { col -> col.any { it == "London" } } },
             dfGroup.select { colsAtAnyDepth { col -> col.any { it == "London" } }.first() },
             dfGroup.select { colsAtAnyDepth().last { col -> col.any { it == "London" } } },
@@ -90,7 +89,8 @@ class AtAnyDepth : TestBase() {
     @Test
     fun `all atAnyDepth`() {
         dfGroup.getColumnsWithPaths { colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
-        dfGroup.getColumnsWithPaths { all().colsAtAnyDepth().cols { !it.isColumnGroup() } }
+        dfGroup
+            .getColumnsWithPaths { all().colsAtAnyDepth().cols { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
@@ -101,20 +101,23 @@ class AtAnyDepth : TestBase() {
 
     @Test
     fun `colsOf atAnyDepth`() {
-        dfGroup.getColumnsWithPaths { colsAtAnyDepth().colsOf<String?>() }.sortedBy { it.name } shouldBe atAnyDepthString
+        dfGroup.getColumnsWithPaths { colsAtAnyDepth().colsOf<String?>() }.sortedBy { it.name } shouldBe
+            atAnyDepthString
     }
 
     @Test
     fun `all allAtAnyDepth`() {
         dfGroup.getColumnsWithPaths { all().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
-        dfGroup.getColumnsWithPaths { all().colsAtAnyDepth { !it.isColumnGroup() } }
+        dfGroup
+            .getColumnsWithPaths { all().colsAtAnyDepth { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
     @Test
     fun `cols allAtAnyDepth`() {
         dfGroup.getColumnsWithPaths { cols().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
-        dfGroup.getColumnsWithPaths { cols().colsAtAnyDepth { !it.isColumnGroup() } }
+        dfGroup
+            .getColumnsWithPaths { cols().colsAtAnyDepth { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
@@ -135,9 +138,7 @@ class AtAnyDepth : TestBase() {
         val frameCol by frameColumn<Person>()
 
         val dfWithFrames = df
-            .add {
-                expr { df } into frameCol
-            }
+            .add { expr { df } into frameCol }
             .convert { name }.to {
                 val firstName by it.asColumnGroup().firstName
                 val lastName by it.asColumnGroup().lastName
@@ -160,7 +161,7 @@ class AtAnyDepth : TestBase() {
             },
             dfGroup.getColumnsWithPaths {
                 asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { "e" in it.name }
-            }
+            },
         ).map {
             it.sortedBy { it.name }.map { it.name to it.path }
         }.shouldAllBeEqual()

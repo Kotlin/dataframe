@@ -38,7 +38,7 @@ import org.jetbrains.kotlin.fir.extensions.FirFunctionCallRefinementExtension
 import org.jetbrains.kotlin.fir.moduleData
 import org.jetbrains.kotlin.fir.references.FirResolvedNamedReference
 import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
-import org.jetbrains.kotlin.fir.resolve.calls.CallInfo
+import org.jetbrains.kotlin.fir.resolve.calls.candidate.CallInfo
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.fqName
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
@@ -83,6 +83,7 @@ class FunctionCallTransformer(
     session: FirSession,
     override val cache: FirCache<String, PluginDataFrameSchema, KotlinTypeFacade>,
     override val schemasDirectory: String?,
+    override val isTest: Boolean,
 ) : FirFunctionCallRefinementExtension(session), KotlinTypeFacade {
     companion object {
         const val DEFAULT_NAME = "DataFrameType"

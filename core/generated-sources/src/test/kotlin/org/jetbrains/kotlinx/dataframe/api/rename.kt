@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class RenameTests : ColumnsSelectionDslTests() {
 
     companion object {
@@ -59,7 +60,8 @@ class RenameTests : ColumnsSelectionDslTests() {
         val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
             1, 2, 3,
             4, 5, 6,
-        ).group { "a_renamed" and "b_renamed" }.into("group_renamed")
+        )
+            .group { "a_renamed" and "b_renamed" }.into("group_renamed")
             .group { "group_renamed"["a_renamed"] }.into { "group_renamed"["aGroup_renamed"] }
 
         doubleGroupedDf
@@ -78,7 +80,6 @@ class RenameTests : ColumnsSelectionDslTests() {
 
         listOf(
             dfRenamed.select { age2 },
-
             df.select { expr { age } named "age2" },
             df.select { expr { age } into "age2" },
             df.select { expr { age } named age2 },
@@ -89,7 +90,6 @@ class RenameTests : ColumnsSelectionDslTests() {
             df.select { expr { age } into pathOf("age2") },
             df.select { expr { age } named col("age2") },
             df.select { expr { age } into col("age2") },
-
             df.select { age named "age2" },
             df.select { age into "age2" },
             df.select { age named age2 },
@@ -100,7 +100,6 @@ class RenameTests : ColumnsSelectionDslTests() {
             df.select { age into pathOf("age2") },
             df.select { age named col("age2") },
             df.select { age into col("age2") },
-
             df.select { "age" named "age2" },
             df.select { "age" into "age2" },
             df.select { "age" named age2 },
@@ -111,7 +110,6 @@ class RenameTests : ColumnsSelectionDslTests() {
             df.select { "age" into pathOf("age2") },
             df.select { "age" named col("age2") },
             df.select { "age" into col("age2") },
-
             df.select { Person::age named "age2" },
             df.select { Person::age into "age2" },
             df.select { Person::age named age2 },
@@ -122,7 +120,6 @@ class RenameTests : ColumnsSelectionDslTests() {
             df.select { Person::age into pathOf("age2") },
             df.select { Person::age named col("age2") },
             df.select { Person::age into col("age2") },
-
             df.select { pathOf("age") named "age2" },
             df.select { pathOf("age") into "age2" },
             df.select { pathOf("age") named age2 },
@@ -133,7 +130,6 @@ class RenameTests : ColumnsSelectionDslTests() {
             df.select { pathOf("age") into pathOf("age2") },
             df.select { pathOf("age") named col("age2") },
             df.select { pathOf("age") into col("age2") },
-
             df.select { col("age") named "age2" },
             df.select { col("age") into "age2" },
             df.select { col("age") named age2 },
@@ -152,12 +148,12 @@ class RenameToCamelCaseTests {
     companion object {
         val nestedDf = dataFrameOf("test_name")(dataFrameOf("another_name")(1))
         val nestedColumnGroup = dataFrameOf("test_name")(
-            dataFrameOf("another_name")(1).first()
+            dataFrameOf("another_name")(1).first(),
         )
         val doublyNestedColumnGroup = dataFrameOf("test_name")(
             dataFrameOf("another_name")(
-                dataFrameOf("third_name")(1).first()
-            ).first()
+                dataFrameOf("third_name")(1).first(),
+            ).first(),
         )
         val deeplyNestedDf = kotlin.run {
             val df = dataFrameOf("another_name")(1)
@@ -187,8 +183,8 @@ class RenameToCamelCaseTests {
     fun `doubly nested row`() {
         val doublyNestedColumnGroup = dataFrameOf("test_name")(
             dataFrameOf("another_name")(
-                dataFrameOf("third_name")(1).first()
-            ).first()
+                dataFrameOf("third_name")(1).first(),
+            ).first(),
         )
 
         val df = doublyNestedColumnGroup.renameToCamelCase()
@@ -212,7 +208,9 @@ class RenameToCamelCaseTests {
         val df = deeplyNestedFrameColumn.renameToCamelCase()
         df.schema().asClue {
             shouldNotThrowAny {
-                df["col2"].asAnyFrameColumn().firstOrNull()!!["col1"].asAnyFrameColumn().firstOrNull()!!["col0"]
+                df["col2"].asAnyFrameColumn()
+                    .firstOrNull()!!["col1"].asAnyFrameColumn()
+                    .firstOrNull()!!["col0"]
             }
         }
     }

@@ -36,15 +36,16 @@ public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
 
 // region DataRow
 
-public fun AnyRow.rowStd(
-    skipNA: Boolean = skipNA_default,
-    ddof: Int = ddof_default,
-): Double = values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA, ddof)
+public fun AnyRow.rowStd(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
+    values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA, ddof)
 
 public inline fun <reified T : Number> AnyRow.rowStdOf(ddof: Int = ddof_default): Double =
-    values().filterIsInstance<T>().std(
-        typeOf<T>(), ddof = ddof
-    )
+    values()
+        .filterIsInstance<T>()
+        .std(
+            type = typeOf<T>(),
+            ddof = ddof,
+        )
 
 // endregion
 
@@ -244,8 +245,7 @@ public fun <T, R : Number> PivotGroupBy<T>.stdFor(
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
     columns: ColumnsForAggregateSelector<T, R?>,
-): DataFrame<T> =
-    Aggregators.std(skipNA, ddof).aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.stdFor(
     vararg columns: String,

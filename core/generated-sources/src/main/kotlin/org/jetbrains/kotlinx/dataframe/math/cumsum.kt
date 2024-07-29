@@ -11,8 +11,9 @@ internal val defaultCumSumSkipNA: Boolean = true
 internal fun DataColumn<Double>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Double> {
     var sum = .0
     return map {
-        if (skipNA && it.isNaN()) it
-        else {
+        if (skipNA && it.isNaN()) {
+            it
+        } else {
             sum += it
             sum
         }
@@ -23,8 +24,9 @@ internal fun DataColumn<Double>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): D
 internal fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Double> {
     var sum = .0
     return map {
-        if (skipNA && it.isNA) Double.NaN
-        else {
+        if (skipNA && it.isNA) {
+            Double.NaN
+        } else {
             sum += it ?: Double.NaN
             sum
         }
@@ -35,8 +37,9 @@ internal fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): 
 internal fun DataColumn<Float>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Float> {
     var sum = .0f
     return map {
-        if (skipNA && it.isNaN()) it
-        else {
+        if (skipNA && it.isNaN()) {
+            it
+        } else {
             sum += it
             sum
         }
@@ -46,8 +49,9 @@ internal fun DataColumn<Float>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Da
 internal fun DataColumn<Float?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Float> {
     var sum = .0f
     return map {
-        if (skipNA && it.isNA) Float.NaN
-        else {
+        if (skipNA && it.isNA) {
+            Float.NaN
+        } else {
             sum += it ?: Float.NaN
             sum
         }
@@ -73,7 +77,9 @@ internal fun DataColumn<Int?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Dat
                 if (!skipNA) fillNull = true
                 null
             }
+
             fillNull -> null
+
             else -> {
                 sum += it
                 sum
@@ -101,7 +107,9 @@ internal fun DataColumn<Long?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Da
                 if (!skipNA) fillNull = true
                 null
             }
+
             fillNull -> null
+
             else -> {
                 sum += it
                 sum
@@ -129,7 +137,9 @@ internal fun DataColumn<BigDecimal?>.cumSum(skipNA: Boolean = defaultCumSumSkipN
                 if (!skipNA) fillNull = true
                 null
             }
+
             fillNull -> null
+
             else -> {
                 sum += it
                 sum

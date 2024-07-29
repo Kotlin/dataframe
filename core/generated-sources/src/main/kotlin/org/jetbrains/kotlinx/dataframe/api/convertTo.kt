@@ -33,16 +33,13 @@ public enum class ExcessiveColumns {
     /**
      * Throw [ExcessiveColumnsException] if any excessive columns were found in the original dataframe
      */
-    Fail
+    Fail,
 }
 
 /**
  * Holds data context for [fill] operation
  */
-public data class ConvertToFill<T, C>(
-    internal val dsl: ConvertSchemaDsl<T>,
-    val columns: ColumnsSelector<T, C>
-)
+public data class ConvertToFill<T, C>(internal val dsl: ConvertSchemaDsl<T>, val columns: ColumnsSelector<T, C>)
 
 /** Provides access to [fromType] and [toSchema] in the flexible [ConvertSchemaDsl.convertIf] method. */
 public class ConverterScope(public val fromType: KType, public val toSchema: ColumnSchema)
@@ -95,7 +92,9 @@ public interface ConvertSchemaDsl<in T> {
  * All [fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [with] expression.
  * @param columns target columns in destination dataframe schema to be filled
  */
-public inline fun <T, reified C> ConvertSchemaDsl<T>.fill(noinline columns: ColumnsSelector<T, C>): ConvertToFill<T, C> = ConvertToFill(this, columns)
+public inline fun <T, reified C> ConvertSchemaDsl<T>.fill(
+    noinline columns: ColumnsSelector<T, C>,
+): ConvertToFill<T, C> = ConvertToFill(this, columns)
 
 public fun <T, C> ConvertToFill<T, C>.with(expr: RowExpression<T, C>) {
     (dsl as ConvertSchemaDslInternal<T>).fill(columns as ColumnsSelector<*, C>, expr as RowExpression<*, C>)
@@ -158,7 +157,7 @@ public class ConvertType<T>(
  */
 public inline fun <reified T : Any> AnyFrame.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
-    noinline body: ConvertSchemaDsl<T>.() -> Unit = {}
+    noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
 ): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
 
 /**
@@ -195,7 +194,7 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
 public inline fun <reified T : Any> AnyFrame.convertTo(
     @Suppress("UNUSED_PARAMETER") schemaFrom: DataFrame<T>,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
-    noinline body: ConvertSchemaDsl<T>.() -> Unit = {}
+    noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
 ): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
 
 /**

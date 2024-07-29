@@ -16,6 +16,7 @@ import java.net.URL
 import java.nio.file.Files
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class XlsxTest {
 
     fun testResource(resourcePath: String): URL = this::class.java.classLoader.getResource(resourcePath)!!
@@ -51,7 +52,7 @@ class XlsxTest {
             testResource("sample2.xlsx"),
             "Sheet1",
             columns = "A:C",
-            stringColumns = StringColumns("A:C")
+            stringColumns = StringColumns("A:C"),
         )
         df shouldBe dataFrameOf("col1", "col2", "C")("1", "", "3")
     }
@@ -65,10 +66,8 @@ class XlsxTest {
 
     @Test
     fun `first sheet is default sheet`() {
-        DataFrame.readExcel(
-            testResource("sample.xls"),
-            "Sheet1"
-        ) shouldBe DataFrame.readExcel(testResource("sample.xls"))
+        DataFrame.readExcel(testResource("sample.xls"), "Sheet1") shouldBe
+            DataFrame.readExcel(testResource("sample.xls"))
     }
 
     @Test
@@ -195,7 +194,7 @@ class XlsxTest {
     fun `read mixed column`() {
         val df = DataFrame.readExcel(
             testResource("mixed_column.xlsx"),
-            stringColumns = StringColumns("A")
+            stringColumns = StringColumns("A"),
         )
         df["col1"].type() shouldBe typeOf<String>()
         df shouldBe dataFrameOf("col1")("100", "A100", "B100", "C100")

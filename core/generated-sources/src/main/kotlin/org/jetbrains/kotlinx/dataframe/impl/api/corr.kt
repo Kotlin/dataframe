@@ -20,13 +20,16 @@ import kotlin.math.sqrt
 internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>): DataFrame<T> {
     val len = df.nrow
 
-    fun <P> List<ColumnWithPath<P>>.unpackColumnGroups() = flatMap {
-        // extract nested number columns from ColumnGroups
-        if (it.isColumnGroup()) {
-            val groupPath = it.path
-            df.getColumnsWithPaths { groupPath.colsAtAnyDepth { it.isSuitableForCorr() } }.map { it.cast() }
-        } else listOf(it)
-    }
+    fun <P> List<ColumnWithPath<P>>.unpackColumnGroups() =
+        flatMap {
+            // extract nested number columns from ColumnGroups
+            if (it.isColumnGroup()) {
+                val groupPath = it.path
+                df.getColumnsWithPaths { groupPath.colsAtAnyDepth { it.isSuitableForCorr() } }.map { it.cast() }
+            } else {
+                listOf(it)
+            }
+        }
 
     var cols1 = df.getColumnsWithPaths(columns)
         .filter { it.isColumnGroup() || it.isSuitableForCorr() }
@@ -56,13 +59,15 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
     val newColumns = cols2.map { c2 ->
         val values = cols1.map { c1 ->
             val cachedValue = cache[c2.path to c1.path]
-            if (cachedValue != null) cachedValue
-            else {
+            if (cachedValue != null) {
+                cachedValue
+            } else {
                 val s1 = stdMeans[c1.path]!!
                 val s2 = stdMeans[c2.path]!!
                 val v1 = cols[c1.path]!!
                 val v2 = cols[c2.path]!!
-                val res = (0 until len).sumOf { (v1[it] - s1.mean) * (v2[it] - s2.mean) } / sqrt(s1.variance * s2.variance)
+                val res = (0 until len)
+                    .sumOf { (v1[it] - s1.mean) * (v2[it] - s2.mean) } / sqrt(s1.variance * s2.variance)
                 cache[c1.path to c2.path] = res
                 res
             }

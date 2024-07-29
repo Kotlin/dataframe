@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -112,15 +113,16 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith\]
      * {@set [ExtraParamsArg]}
      */
+    @ExcludeFromSources
     private interface CommonNameContainsDocs {
 
-        /* Example to give */
+        // Example to give
         interface ExampleArg
 
-        /* [text\] or [regex\] */
+        // [text\] or [regex\]
         interface ArgumentArg
 
-        /* Optional extra params. */
+        // Optional extra params.
         interface ExtraParamsArg
     }
 
@@ -131,6 +133,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *  @param [ignoreCase\] `true` to ignore character case when comparing strings. By default `false`.
      * }
      */
+    @ExcludeFromSources
     private interface NameContainsTextDocs
 
     /**
@@ -145,8 +148,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun <C> ColumnSet<C>.nameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<C> =
-        colsInternal { it.name.contains(text, ignoreCase) } as TransformableColumnSet<C>
+    ): TransformableColumnSet<C> = colsInternal { it.name.contains(text, ignoreCase) } as TransformableColumnSet<C>
 
     /**
      * @include [NameContainsTextDocs]
@@ -157,8 +159,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnsSelectionDsl<*>.nameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        asSingleColumn().colsNameContains(text, ignoreCase)
+    ): TransformableColumnSet<*> = asSingleColumn().colsNameContains(text, ignoreCase)
 
     /**
      * @include [NameContainsTextDocs]
@@ -169,8 +170,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.colsNameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.contains(text, ignoreCase) }
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.contains(text, ignoreCase) }
 
     /**
      * @include [NameContainsTextDocs]
@@ -178,10 +178,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameContains][String.colsNameContains]`("my") }`
      */
-    public fun String.colsNameContains(
-        text: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
+    public fun String.colsNameContains(text: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
         columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
@@ -193,8 +190,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun KProperty<*>.colsNameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsNameContains(text, ignoreCase)
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * @include [NameContainsTextDocs]
@@ -205,8 +201,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnPath.colsNameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsNameContains(text, ignoreCase)
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameContains(text, ignoreCase)
 
     /**
      * @include [CommonNameContainsDocs]
@@ -303,24 +298,25 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @return A [ColumnSet] containing
      *   all columns {@get [CommonNameStartsEndsDocs.NounArg]} with {@get [CommonNameStartsEndsDocs.ArgumentArg]} in their name.
      */
+    @ExcludeFromSources
     private interface CommonNameStartsEndsDocs {
 
-        /* "Starts" or "Ends" */
+        // "Starts" or "Ends"
         interface CapitalTitleArg
 
-        /* "starting" or "ending" */
+        // "starting" or "ending"
         interface NounArg
 
-        /* "startsWith" or "endsWith" */
+        // "startsWith" or "endsWith"
         interface OperationNameArg
 
-        /* "nameStartsWith" or "nameEndsWith" */
+        // "nameStartsWith" or "nameEndsWith"
         interface NameOperationNameArg
 
-        /* "colsNameStartsWith" or "colsNameEndsWith" */
+        // "colsNameStartsWith" or "colsNameEndsWith"
         interface ColsNameOperationNameArg
 
-        /* [prefix\] or [suffix\] */
+        // [prefix\] or [suffix\]
         interface ArgumentArg
 
         interface ExampleArg
@@ -340,11 +336,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith\]
      * @see [nameContains\]
      */
+    @ExcludeFromSources
     private interface CommonNameStartsWithDocs
 
     @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
-    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> =
-        nameStartsWith(prefix)
+    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> = nameStartsWith(prefix)
 
     @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
     public fun ColumnsSelectionDsl<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
@@ -364,8 +360,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun <C> ColumnSet<C>.nameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<C> =
-        colsInternal { it.name.startsWith(prefix, ignoreCase) } as TransformableColumnSet<C>
+    ): TransformableColumnSet<C> = colsInternal { it.name.startsWith(prefix, ignoreCase) } as TransformableColumnSet<C>
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -376,8 +371,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnsSelectionDsl<*>.nameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        asSingleColumn().colsNameStartsWith(prefix, ignoreCase)
+    ): TransformableColumnSet<*> = asSingleColumn().colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -388,8 +382,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.colsNameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.startsWith(prefix, ignoreCase) }
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.startsWith(prefix, ignoreCase) }
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -400,8 +393,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun String.colsNameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -412,8 +404,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun KProperty<*>.colsNameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     /**
      * @include [CommonNameStartsWithDocs]
@@ -424,8 +415,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnPath.colsNameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameStartsWith(prefix, ignoreCase)
 
     // endregion
 
@@ -443,6 +433,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith\]
      * @see [nameContains\]
      */
+    @ExcludeFromSources
     private interface CommonNameEndsWithDocs
 
     @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
@@ -451,8 +442,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
         colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
 
     @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
-    public fun ColumnsSelectionDsl<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        nameEndsWith(suffix)
+    public fun ColumnsSelectionDsl<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> = nameEndsWith(suffix)
 
     @Deprecated("Use colsNameEndsWith instead", ReplaceWith("this.colsNameEndsWith(suffix)"))
     public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
@@ -468,8 +458,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun <C> ColumnSet<C>.nameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<C> =
-        colsInternal { it.name.endsWith(suffix, ignoreCase) } as TransformableColumnSet<C>
+    ): TransformableColumnSet<C> = colsInternal { it.name.endsWith(suffix, ignoreCase) } as TransformableColumnSet<C>
 
     /**
      * @include [CommonNameEndsWithDocs]
@@ -480,8 +469,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnsSelectionDsl<*>.nameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
+    ): TransformableColumnSet<*> = asSingleColumn().colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * @include [CommonNameEndsWithDocs]
@@ -492,8 +480,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.colsNameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix, ignoreCase) }
+    ): TransformableColumnSet<*> = this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix, ignoreCase) }
 
     /**
      * @include [CommonNameEndsWithDocs]
@@ -501,10 +488,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "someGroupCol".`[colsNameEndsWith][String.colsNameEndsWith]`("-order") }`
      */
-    public fun String.colsNameEndsWith(
-        suffix: CharSequence,
-        ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
+    public fun String.colsNameEndsWith(suffix: CharSequence, ignoreCase: Boolean = false): TransformableColumnSet<*> =
         columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
@@ -516,8 +500,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun KProperty<*>.colsNameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     /**
      * @include [CommonNameEndsWithDocs]
@@ -528,8 +511,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     public fun ColumnPath.colsNameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
-    ): TransformableColumnSet<*> =
-        columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+    ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
 
     // endregion
 }

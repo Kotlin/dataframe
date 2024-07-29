@@ -8,7 +8,7 @@ public data class RenderedContent(
     val truncatedContent: String,
     val textLength: Int,
     val fullContent: String?,
-    val isFormatted: Boolean
+    val isFormatted: Boolean,
 ) {
     public companion object {
 
@@ -18,13 +18,20 @@ public data class RenderedContent(
 
         public fun text(str: String): RenderedContent = RenderedContent(str, str.length, null, false)
 
-        public fun truncatedText(str: String, fullText: String): RenderedContent = RenderedContent(str, str.length, fullText, false)
+        public fun truncatedText(str: String, fullText: String): RenderedContent =
+            RenderedContent(str, str.length, fullText, false)
     }
 
     val isTruncated: Boolean
         get() = fullContent != null
 
-    public operator fun plus(other: RenderedContent): RenderedContent = RenderedContent(truncatedContent + other.truncatedContent, textLength + other.textLength, fullContent?.plus(other.fullContent) ?: other.fullContent, isFormatted || other.isFormatted)
+    public operator fun plus(other: RenderedContent): RenderedContent =
+        RenderedContent(
+            truncatedContent = truncatedContent + other.truncatedContent,
+            textLength = textLength + other.textLength,
+            fullContent = fullContent?.plus(other.fullContent) ?: other.fullContent,
+            isFormatted = isFormatted || other.isFormatted,
+        )
 }
 
 public interface CellRenderer {
@@ -39,27 +46,22 @@ public interface CellRenderer {
     public fun tooltip(value: Any?, configuration: DisplayConfiguration): String
 }
 
-public abstract class ChainedCellRenderer(
-    private val parent: CellRenderer,
-) : CellRenderer {
+public abstract class ChainedCellRenderer(private val parent: CellRenderer) : CellRenderer {
     public abstract fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent?
+
     public abstract fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String?
 
-    public override fun content(value: Any?, configuration: DisplayConfiguration): RenderedContent {
-        return maybeContent(value, configuration) ?: parent.content(value, configuration)
-    }
+    public override fun content(value: Any?, configuration: DisplayConfiguration): RenderedContent =
+        maybeContent(value, configuration) ?: parent.content(value, configuration)
 
-    public override fun tooltip(value: Any?, configuration: DisplayConfiguration): String {
-        return maybeTooltip(value, configuration) ?: parent.tooltip(value, configuration)
-    }
+    public override fun tooltip(value: Any?, configuration: DisplayConfiguration): String =
+        maybeTooltip(value, configuration) ?: parent.tooltip(value, configuration)
 }
 
 public object DefaultCellRenderer : CellRenderer {
-    public override fun content(value: Any?, configuration: DisplayConfiguration): RenderedContent {
-        return renderValueForHtml(value, configuration.cellContentLimit, configuration.decimalFormat)
-    }
+    public override fun content(value: Any?, configuration: DisplayConfiguration): RenderedContent =
+        renderValueForHtml(value, configuration.cellContentLimit, configuration.decimalFormat)
 
-    public override fun tooltip(value: Any?, configuration: DisplayConfiguration): String {
-        return renderValueForHtml(value, tooltipLimit, configuration.decimalFormat).truncatedContent
-    }
+    public override fun tooltip(value: Any?, configuration: DisplayConfiguration): String =
+        renderValueForHtml(value, tooltipLimit, configuration.decimalFormat).truncatedContent
 }
