@@ -98,7 +98,7 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
  * @property [user] the username used for authentication (optional, default is empty string).
  * @property [password] the password used for authentication (optional, default is empty string).
  */
-public data class DatabaseConfiguration(val url: String, val user: String = "", val password: String = "")
+public data class DbConnectionConfig(val url: String, val user: String = "", val password: String = "")
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -110,7 +110,7 @@ public data class DatabaseConfiguration(val url: String, val user: String = "", 
  * @return the DataFrame containing the data from the SQL table.
  */
 public fun DataFrame.Companion.readSqlTable(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     tableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -169,7 +169,7 @@ public fun DataFrame.Companion.readSqlTable(
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DataFrame.Companion.readSqlQuery(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -219,19 +219,17 @@ public fun DataFrame.Companion.readSqlQuery(
 }
 
 /**
- * Converts the result of an SQL query to the DataFrame.
- * Also, it could be a just name of the SQL table.
- *
- * NOTE: It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
  *
  * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
+ * It should be a name of one of the existing SQL tables,
+ * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return the DataFrame containing the result of the SQL query.
  */
-public fun DatabaseConfiguration.toDF(
+public fun DbConnectionConfig.readDataFrame(
     sqlQueryOrTableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -255,19 +253,17 @@ private fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
 }
 
 /**
- * Converts the result of an SQL query to the DataFrame.
- * Also, it could be a just name of the SQL table.
- *
- * NOTE: It should be a name of one of the existing SQL tables,
- * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
- * It should not contain `;` symbol.
+ * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
  *
  * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
+ * It should be a name of one of the existing SQL tables,
+ * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @return the DataFrame containing the result of the SQL query.
  */
-public fun Connection.toDF(
+public fun Connection.readDataFrame(
     sqlQueryOrTableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -335,7 +331,7 @@ public fun DataFrame.Companion.readResultSet(
  *
  * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
  */
-public fun ResultSet.toDF(
+public fun ResultSet.readDataFrame(
     dbType: DbType,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -394,7 +390,7 @@ public fun DataFrame.Companion.readResultSet(
  *
  * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
  */
-public fun ResultSet.toDF(
+public fun ResultSet.readDataFrame(
     connection: Connection,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -413,7 +409,7 @@ public fun ResultSet.toDF(
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -481,7 +477,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @return the [DataFrameSchema] object representing the schema of the SQL table
  */
 public fun DataFrame.Companion.getSchemaForSqlTable(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     tableName: String,
 ): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
@@ -520,7 +516,7 @@ public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tabl
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
 public fun DataFrame.Companion.getSchemaForSqlQuery(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     sqlQuery: String,
 ): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
@@ -554,7 +550,7 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQ
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DatabaseConfiguration.getDataFrameSchema(
+public fun DbConnectionConfig.getDataFrameSchema(
     sqlQueryOrTableName: String
 ): DataFrameSchema {
     return when {
@@ -641,7 +637,7 @@ public fun ResultSet.getDataFrameSchema(connection: Connection): DataFrameSchema
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): Map<String, DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DbConnectionConfig): Map<String, DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForAllSqlTables(connection)
     }

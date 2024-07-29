@@ -309,7 +309,7 @@ class JdbcTest {
         dataSchema.columns.size shouldBe 3
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
-        val dbConfig = DatabaseConfiguration(url = URL)
+        val dbConfig = DbConnectionConfig(url = URL)
         val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
 
         df2.rowsCount() shouldBe 4
@@ -330,13 +330,13 @@ class JdbcTest {
     @Test
     fun `read from table with extension functions`() {
         val tableName = "Customer"
-        val df = connection.toDF(tableName).cast<Customer>()
+        val df = connection.readDataFrame(tableName).cast<Customer>()
 
         df.rowsCount() shouldBe 4
         df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         df[0][1] shouldBe "John"
 
-        val df1 = connection.toDF(tableName, 1).cast<Customer>()
+        val df1 = connection.readDataFrame(tableName, 1).cast<Customer>()
 
         df1.rowsCount() shouldBe 1
         df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -346,14 +346,14 @@ class JdbcTest {
         dataSchema.columns.size shouldBe 3
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
-        val dbConfig = DatabaseConfiguration(url = URL)
-        val df2 = dbConfig.toDF(tableName).cast<Customer>()
+        val dbConfig = DbConnectionConfig(url = URL)
+        val df2 = dbConfig.readDataFrame(tableName).cast<Customer>()
 
         df2.rowsCount() shouldBe 4
         df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
         df2[0][1] shouldBe "John"
 
-        val df3 = dbConfig.toDF(tableName, 1).cast<Customer>()
+        val df3 = dbConfig.readDataFrame(tableName, 1).cast<Customer>()
 
         df3.rowsCount() shouldBe 1
         df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -376,7 +376,7 @@ class JdbcTest {
             df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
             df1[0][1] shouldBe "John"
 
-            val dbConfig = DatabaseConfiguration(url = URL)
+            val dbConfig = DbConnectionConfig(url = URL)
             val df2 = DataFrame.readSqlTable(dbConfig, tableName, 2).cast<Customer>()
 
             df2.rowsCount() shouldBe 2
@@ -444,7 +444,7 @@ class JdbcTest {
             val selectStatement = "SELECT * FROM Customer"
 
             st.executeQuery(selectStatement).use { rs ->
-                val df = rs.toDF(H2(MySql)).cast<Customer>()
+                val df = rs.readDataFrame(H2(MySql)).cast<Customer>()
 
                 df.rowsCount() shouldBe 4
                 df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
@@ -452,7 +452,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val df1 = rs.toDF(H2(MySql), 1).cast<Customer>()
+                val df1 = rs.readDataFrame(H2(MySql), 1).cast<Customer>()
 
                 df1.rowsCount() shouldBe 1
                 df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -466,7 +466,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val df2 = rs.toDF(connection).cast<Customer>()
+                val df2 = rs.readDataFrame(connection).cast<Customer>()
 
                 df2.rowsCount() shouldBe 4
                 df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
@@ -474,7 +474,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val df3 = rs.toDF(connection, 1).cast<Customer>()
+                val df3 = rs.readDataFrame(connection, 1).cast<Customer>()
 
                 df3.rowsCount() shouldBe 1
                 df3.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 1
@@ -639,7 +639,7 @@ class JdbcTest {
         dataSchema.columns.size shouldBe 2
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
-        val dbConfig = DatabaseConfiguration(url = URL)
+        val dbConfig = DbConnectionConfig(url = URL)
         val df2 = DataFrame.readSqlQuery(dbConfig, sqlQuery).cast<CustomerSales>()
 
         df2.rowsCount() shouldBe 2
@@ -668,13 +668,13 @@ class JdbcTest {
             GROUP BY s.customerId, c.name
         """.trimIndent()
 
-        val df = connection.toDF(sqlQuery).cast<CustomerSales>()
+        val df = connection.readDataFrame(sqlQuery).cast<CustomerSales>()
 
         df.rowsCount() shouldBe 2
         df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df[0][0] shouldBe "John"
 
-        val df1 = connection.toDF(sqlQuery, 1).cast<CustomerSales>()
+        val df1 = connection.readDataFrame(sqlQuery, 1).cast<CustomerSales>()
 
         df1.rowsCount() shouldBe 1
         df1.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
@@ -684,14 +684,14 @@ class JdbcTest {
         dataSchema.columns.size shouldBe 2
         dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
 
-        val dbConfig = DatabaseConfiguration(url = URL)
-        val df2 = dbConfig.toDF(sqlQuery).cast<CustomerSales>()
+        val dbConfig = DbConnectionConfig(url = URL)
+        val df2 = dbConfig.readDataFrame(sqlQuery).cast<CustomerSales>()
 
         df2.rowsCount() shouldBe 2
         df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df2[0][0] shouldBe "John"
 
-        val df3 = dbConfig.toDF( sqlQuery, 1).cast<CustomerSales>()
+        val df3 = dbConfig.readDataFrame( sqlQuery, 1).cast<CustomerSales>()
 
         df3.rowsCount() shouldBe 1
         df3.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
@@ -784,7 +784,7 @@ class JdbcTest {
         // TODO: fix nullability
         saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
 
-        val dbConfig = DatabaseConfiguration(url = URL)
+        val dbConfig = DbConnectionConfig(url = URL)
         val dataframes2 = DataFrame.readAllSqlTables(dbConfig).values.toList()
 
         val customerDf2 = dataframes2[0].cast<Customer>()
