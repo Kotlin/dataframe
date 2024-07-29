@@ -111,7 +111,7 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.DriverManager
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                        import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                        import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
                         """.trimIndent(),
                     ),
                 ),
@@ -145,7 +145,7 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.DriverManager
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                        import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                        import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
                         """.trimIndent(),
                     ),
                 ),
@@ -185,7 +185,7 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.DriverManager
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                        import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                        import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
                         
                         fun main() {    
                             val tableName = "Customer"
@@ -196,7 +196,7 @@ class DataFrameJdbcSymbolProcessorTest {
                                 val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
                                 df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                                 
-                                val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
+                                val dbConfig = DbConnectionConfig(url = "$CONNECTION_URL")
                                 val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
                                 df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                                 
@@ -241,7 +241,7 @@ class DataFrameJdbcSymbolProcessorTest {
                         import java.sql.DriverManager
                         import java.sql.SQLException
                         import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                        import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                        import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
                         
                         fun main() {    
                             val tableName = "Customer"
@@ -252,7 +252,7 @@ class DataFrameJdbcSymbolProcessorTest {
                                 val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
                                 df1.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                                 
-                                val dbConfig = DatabaseConfiguration(url = "$CONNECTION_URL")
+                                val dbConfig = DbConnectionConfig(url = "$CONNECTION_URL")
                                 val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
                                 df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }
                                 
