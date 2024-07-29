@@ -233,13 +233,26 @@ public fun DbConnectionConfig.readDataFrame(
     sqlQueryOrTableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): AnyFrame {
-    return when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(this, sqlQueryOrTableName, limit, inferNullability)
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(this, sqlQueryOrTableName, limit, inferNullability)
-        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
+): AnyFrame =
+    when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
     }
-}
 
 private fun isSqlQuery(sqlQueryOrTableName: String): Boolean {
     val queryPattern = Regex("(?i)\\b(SELECT)\\b")
@@ -267,13 +280,26 @@ public fun Connection.readDataFrame(
     sqlQueryOrTableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): AnyFrame {
-    return when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(this, sqlQueryOrTableName, limit, inferNullability)
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(this, sqlQueryOrTableName, limit, inferNullability)
-        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
+): AnyFrame =
+    when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
     }
-}
 
 /** SQL query is accepted only if it starts from SELECT */
 private fun isValid(sqlQuery: String): Boolean {
@@ -335,9 +361,7 @@ public fun ResultSet.readDataFrame(
     dbType: DbType,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): AnyFrame {
-    return DataFrame.Companion.readResultSet(this, dbType, limit, inferNullability)
-}
+): AnyFrame = DataFrame.Companion.readResultSet(this, dbType, limit, inferNullability)
 
 /**
  * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
@@ -394,9 +418,7 @@ public fun ResultSet.readDataFrame(
     connection: Connection,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): AnyFrame {
-    return DataFrame.Companion.readResultSet(this, connection, limit, inferNullability)
-}
+): AnyFrame = DataFrame.Companion.readResultSet(this, connection, limit, inferNullability)
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -476,10 +498,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
  * @return the [DataFrameSchema] object representing the schema of the SQL table
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(
-    dbConfig: DbConnectionConfig,
-    tableName: String,
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlTable(connection, tableName)
     }
@@ -515,10 +534,7 @@ public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tabl
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(
-    dbConfig: DbConnectionConfig,
-    sqlQuery: String,
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlQuery(connection, sqlQuery)
     }
@@ -550,15 +566,16 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQ
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DbConnectionConfig.getDataFrameSchema(
-    sqlQueryOrTableName: String
-): DataFrameSchema {
-    return when {
+public fun DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema =
+    when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
-        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
     }
-}
 
 /**
  * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
@@ -566,15 +583,16 @@ public fun DbConnectionConfig.getDataFrameSchema(
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun Connection.getDataFrameSchema(
-    sqlQueryOrTableName: String
-): DataFrameSchema {
-    return when {
+public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema =
+    when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
-        else -> throw IllegalArgumentException("$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!")
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
     }
-}
 
 /**
  * Retrieves the schema from [ResultSet].
@@ -598,9 +616,7 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
  * @param [dbType] the type of database that the [ResultSet] belongs to.
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
-public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema {
-    return DataFrame.getSchemaForResultSet(this, dbType)
-}
+public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataFrame.getSchemaForResultSet(this, dbType)
 
 /**
  * Retrieves the schema from [ResultSet].
@@ -627,9 +643,8 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, conne
  * @param [connection] the connection to the database (it's required to extract the database type).
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
-public fun ResultSet.getDataFrameSchema(connection: Connection): DataFrameSchema {
-    return DataFrame.getSchemaForResultSet(this, connection)
-}
+public fun ResultSet.getDataFrameSchema(connection: Connection): DataFrameSchema =
+    DataFrame.getSchemaForResultSet(this, connection)
 
 /**
  * Retrieves the schemas of all non-system tables in the database using the provided database configuration.

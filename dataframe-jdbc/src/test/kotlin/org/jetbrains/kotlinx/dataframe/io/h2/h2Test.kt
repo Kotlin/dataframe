@@ -12,9 +12,19 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.io.db.H2
 import org.jetbrains.kotlinx.dataframe.io.db.MySql
+import org.jetbrains.kotlinx.dataframe.io.getDataFrameSchema
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForResultSet
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
+import org.jetbrains.kotlinx.dataframe.io.readDataFrame
+import org.jetbrains.kotlinx.dataframe.io.readResultSet
+import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
+import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -660,13 +670,14 @@ class JdbcTest {
     @Test
     fun `read from sql query with extension functions`() {
         @Language("SQL")
-        val sqlQuery = """
+        val sqlQuery =
+            """
             SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
             FROM Sale s
             INNER JOIN Customer c ON s.customerId = c.id
             WHERE c.age > 35
             GROUP BY s.customerId, c.name
-        """.trimIndent()
+            """.trimIndent()
 
         val df = connection.readDataFrame(sqlQuery).cast<CustomerSales>()
 
@@ -691,7 +702,7 @@ class JdbcTest {
         df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
         df2[0][0] shouldBe "John"
 
-        val df3 = dbConfig.readDataFrame( sqlQuery, 1).cast<CustomerSales>()
+        val df3 = dbConfig.readDataFrame(sqlQuery, 1).cast<CustomerSales>()
 
         df3.rowsCount() shouldBe 1
         df3.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
