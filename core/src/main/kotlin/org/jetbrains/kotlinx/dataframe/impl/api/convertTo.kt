@@ -276,8 +276,8 @@ internal fun AnyFrame.convertToImpl(
 
     dsl.fillers.forEach { filler ->
         val paths = result.getColumnPaths(UnresolvedColumnsPolicy.Create, filler.columns).toSet()
-        missingPaths -= paths
         val (newPaths, existingPaths) = paths.partition { it in missingPaths }
+        missingPaths -= paths
 
         // first fill cols that are already in the df
         result = result.update { existingPaths.toColumnSet() }.with { filler.expr(this, this) }
