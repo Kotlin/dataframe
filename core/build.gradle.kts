@@ -19,6 +19,7 @@ plugins {
         alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
+        alias(buildconfig)
 
         // dependence on our own plugin
         alias(dataframe)
