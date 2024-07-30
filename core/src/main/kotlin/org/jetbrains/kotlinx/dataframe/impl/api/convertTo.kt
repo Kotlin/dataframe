@@ -11,13 +11,13 @@ import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.ConverterScope
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -29,12 +29,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyColumn
+import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.schema.createNullFilledColumn
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.impl.schema.render
 import org.jetbrains.kotlinx.dataframe.kind
@@ -252,22 +254,15 @@ internal fun AnyFrame.convertToImpl(
             }
         }.toMutableList()
 
-        // when the target is nullable but the source does not contain a column, fill it in with nulls / empty dataframes
+        // when the target is nullable but the source does not contain a column,
+        // fill it in with nulls / empty dataframes
         val size = this.size.nrow
         schema.columns.forEach { (name, targetColumn) ->
-            val isNullable =
-                // like value column of type Int?
-                targetColumn.nullable ||
-                    // like value column of type Int? (backup check)
-                    targetColumn.type.isMarkedNullable ||
-                    // like DataRow<Something?> for a group column (all columns in the group will be nullable)
-                    targetColumn.contentType?.isMarkedNullable == true ||
-                    // frame column can be filled with empty dataframes
-                    targetColumn.kind == ColumnKind.Frame
-
             if (name !in visited) {
-                newColumns += targetColumn.createEmptyColumn(name, size)
-                if (!isNullable) {
+                try {
+                    newColumns += targetColumn.createNullFilledColumn(name, size)
+                } catch (e: IllegalStateException) {
+                    // if this could not be done automatically, they need to be filled manually
                     missingPaths.add(path + name)
                 }
             }
@@ -280,10 +275,16 @@ internal fun AnyFrame.convertToImpl(
     var result = convertToSchema(marker.schema, emptyPath())
 
     dsl.fillers.forEach { filler ->
-        val paths = result.getColumnPaths(filler.columns)
-        missingPaths.removeAll(paths.toSet())
-        result = result.update { paths.toColumnSet() }.with {
-            filler.expr(this, this)
+        val paths = result.getColumnPaths(UnresolvedColumnsPolicy.Create, filler.columns).toSet()
+        val (newPaths, existingPaths) = paths.partition { it in missingPaths }
+        missingPaths -= paths
+
+        // first fill cols that are already in the df
+        result = result.update { existingPaths.toColumnSet() }.with { filler.expr(this, this) }
+
+        // then create any missing ones by filling
+        result = newPaths.fold(result) { df, newPath ->
+            df.add(newPath, Infer.Type) { filler.expr(this, this) }
         }
     }
 
