@@ -389,12 +389,12 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
     /*  TODO: test is broken
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:12:43 Unresolved reference: readSqlTable
-    e: file://test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:13:43 Unresolved reference: DbConnectionConfig
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:19:28 Unresolved reference: readSqlTable
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:20:21 Unresolved reference: age
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:22:29 Unresolved reference: readSqlTable
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:23:22 Unresolved reference: age
-    e: file://test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DatabaseConfiguration
+    e: file://test3901867314473689900/src/main/kotlin/Main.kt:25:24 Unresolved reference: DbConnectionConfig
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:26:29 Unresolved reference: readSqlTable
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:27:22 Unresolved reference: age
     e: file://test3901867314473689900/src/main/kotlin/Main.kt:29:29 Unresolved reference: readSqlTable
@@ -426,7 +426,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     import java.sql.DriverManager
                     import java.sql.SQLException
                     import org.jetbrains.kotlinx.dataframe.io.readSqlTable
-                    import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+                    import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
                     
                     fun main() {    
                         Class.forName("org.h2.Driver")
@@ -438,7 +438,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                             val df1 = DataFrame.readSqlTable(connection, tableName, 1).cast<Customer>()
                             df1.filter { age != null && age > 30 }
                             
-                            val dbConfig = DatabaseConfiguration(url = "$connectionUrl")
+                            val dbConfig = DbConnectionConfig(url = "$connectionUrl")
                             val df2 = DataFrame.readSqlTable(dbConfig, tableName).cast<Customer>()
                             df2.filter { age != null && age > 30 }
                             
