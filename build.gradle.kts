@@ -162,6 +162,7 @@ allprojects {
             configure<BuildConfigExtension> {
                 packageName = "org.jetbrains.kotlinx.dataframe"
                 className = "BuildConfig"
+                buildConfigField("VERSION", "${project.version}")
             }
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set buildConfig on :${this.name}")
