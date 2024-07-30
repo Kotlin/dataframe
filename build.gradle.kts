@@ -1,4 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import com.github.gmazzo.buildconfig.BuildConfigExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -25,6 +26,7 @@ plugins {
         alias(docProcessor) apply false
         alias(simpleGit) apply false
         alias(dependencyVersions)
+        alias(buildconfig) apply false
 
         // dependence on our own plugin
         alias(dataframe) apply false
@@ -154,6 +156,18 @@ allprojects {
 
         // set the java toolchain version to 11 for all subprojects for CI stability
         extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(11)
+
+        // Attempts to configure buildConfig for each sub-project that uses it
+        try {
+            configure<BuildConfigExtension> {
+                packageName = "org.jetbrains.kotlinx.dataframe"
+                className = "BuildConfig"
+                buildConfigField("VERSION", "${project.version}")
+                buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
+            }
+        } catch (_: UnknownDomainObjectException) {
+            logger.warn("Could not set buildConfig on :${this.name}")
+        }
     }
 }
 
