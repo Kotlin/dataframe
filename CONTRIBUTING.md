@@ -52,8 +52,8 @@ so do familiarize yourself with the following guidelines.
 
 ## PR workflow
 
-0. The contributor builds the library locally and runs all unit tests via the Gradle task `dataframe:test`
-   (see the ["Building"](#building) chapter).
+0. The contributor builds the library locally and runs all unit tests via the Gradle task 
+   `dataframe:test -Pkotlin.dataframe.debug=true` (see the ["Building"](#building) chapter).
 1. The contributor submits the PR if the local build is successful and the tests are green.
 2. The reviewer puts their name in the "Reviewers" section of the proposed PR at the start of the review process.
 3. The reviewer leaves comments or marks the PR with the abbreviation "LGTM" (Looks good to me).
@@ -103,6 +103,8 @@ This library is built with Gradle.
 * Run `./gradlew build` to build. It also runs all the tests and checks the linter.
 * Run `./gradlew <module>:test` to test the module you are looking at to speed
   things up during development.
+* Make sure to pass the extra parameter `-Pkotlin.dataframe.debug=true` to enable debug mode. This flag will
+  make sure some extra checks are run, which are important but too heavy for production.
 
 You can import this project into IDEA, but you have to delegate the build actions
 to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle -> Runner)

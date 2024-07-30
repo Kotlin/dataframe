@@ -163,6 +163,7 @@ allprojects {
                 packageName = "org.jetbrains.kotlinx.dataframe"
                 className = "BuildConfig"
                 buildConfigField("VERSION", "${project.version}")
+                buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
             }
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set buildConfig on :${this.name}")
