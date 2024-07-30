@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
@@ -2196,6 +2197,9 @@ class DataFrameTests : BaseTest() {
     fun `isNumber`() {
         typed.age.isNumber() shouldBe true
         typed.weight.isNumber() shouldBe true
+
+        DataColumn.createValueColumn("a", emptyList<Nothing>(), nothingType(false)).isNumber() shouldBe true
+        DataColumn.createValueColumn("a", listOf(null), nothingType(true)).isNumber() shouldBe true
     }
 
     @Test

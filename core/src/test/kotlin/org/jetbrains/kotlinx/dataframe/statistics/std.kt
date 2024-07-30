@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.columnTypes
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.std
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.math.std
+import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -36,5 +39,17 @@ class StdTests {
         value.std() shouldBe expected
         df[value].std() shouldBe expected
         df.std { value } shouldBe expected
+    }
+
+    @Test
+    fun `std on empty or nullable column`() {
+        val empty = DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false))
+        val nullable = DataColumn.createValueColumn("", listOf(null), nothingType(true))
+
+        empty.values().std(empty.type) shouldBe Double.NaN
+        nullable.values().std(nullable.type) shouldBe Double.NaN
+
+        empty.std() shouldBe Double.NaN
+        nullable.std() shouldBe Double.NaN
     }
 }
