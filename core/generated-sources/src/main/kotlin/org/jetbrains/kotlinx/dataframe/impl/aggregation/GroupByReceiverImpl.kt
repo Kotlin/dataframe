@@ -118,7 +118,18 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                 pivot.aggregator.values.clear()
             }
 
-            is AggregateInternalDsl<*> -> yield(value.copy(value = value.value.df))
+            is AggregateInternalDsl<*> -> {
+                // Attempt to create DataFrame<Type> from AggregateInternalDsl<Type>
+                val dfType = value.type?.arguments?.firstOrNull()?.type?.let {
+                    DataFrame::class.createTypeWithArgument(it)
+                }
+                yield(
+                    value.copy(
+                        value = value.value.df,
+                        type = dfType ?: value.type,
+                    ),
+                )
+            }
 
             else -> values.add(value)
         }
