@@ -197,15 +197,19 @@ internal fun commonParent(vararg classes: KClass<*>): KClass<*>? = commonParent(
 internal fun Iterable<KClass<*>>.withMostSuperclasses(): KClass<*>? = maxByOrNull { it.allSuperclasses.size }
 
 internal fun Iterable<KClass<*>>.createType(nullable: Boolean, upperBound: KType? = null): KType =
-    if (upperBound == null) {
-        (withMostSuperclasses() ?: Any::class).createStarProjectedType(nullable)
-    } else {
-        val upperClass = upperBound.classifier as KClass<*>
-        val baseClass = filter { it.isSubclassOf(upperClass) }.withMostSuperclasses() ?: withMostSuperclasses()
-        if (baseClass == null) {
-            upperBound.withNullability(nullable)
-        } else {
-            upperBound.projectTo(baseClass).withNullability(nullable)
+    when {
+        !iterator().hasNext() -> upperBound?.withNullability(nullable) ?: nothingType(nullable)
+
+        upperBound == null -> (withMostSuperclasses() ?: Any::class).createStarProjectedType(nullable)
+
+        else -> {
+            val upperClass = upperBound.classifier as KClass<*>
+            val baseClass = filter { it.isSubclassOf(upperClass) }.withMostSuperclasses() ?: withMostSuperclasses()
+            if (baseClass == null) {
+                upperBound.withNullability(nullable)
+            } else {
+                upperBound.projectTo(baseClass).withNullability(nullable)
+            }
         }
     }
 
