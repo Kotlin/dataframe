@@ -30,8 +30,14 @@ internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: C
                     first = false
                     value
                 } else {
-                    null
+                    // these rows will not be taken into account,
+                    // but we cannot leave them empty, as `map` creates a full column
+                    when (column.kind()) {
+                        ColumnKind.Value -> emptyList<Any?>()
+                        ColumnKind.Group -> DataFrame.empty()
+                        ColumnKind.Frame -> emptyList<AnyFrame>()
+                    }
                 }
             }
-        }[0..0]
+        }[0..0] // takes only the first row
     }.concat()
