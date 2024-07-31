@@ -141,7 +141,7 @@ internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int
             schema = lazyOf(schema),
         )
 
-        else -> error("Unexpected ColumnSchema: $this")
+        else -> error("Cannot create null-filled column of unexpected ColumnSchema: $this")
     }
 
 internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
