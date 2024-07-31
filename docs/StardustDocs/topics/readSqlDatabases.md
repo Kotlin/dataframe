@@ -46,7 +46,7 @@ implementation("org.postgresql:postgresql:$version")
 For MySQL:
 
 ```kotlin
-implementation("mysql:mysql-connector-java:$version")
+implementation("com.mysql:mysql-connector-j:$version")
 ```
 
 For SQLite:
