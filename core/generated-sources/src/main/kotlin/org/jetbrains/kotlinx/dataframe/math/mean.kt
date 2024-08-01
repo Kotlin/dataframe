@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -31,7 +32,10 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA
 
         Number::class -> (this as Sequence<Number>).map { it.toDouble() }.mean(skipNA)
 
-        else -> throw IllegalArgumentException("Unable to compute mean for type $type")
+        // this means the sequence is empty
+        Nothing::class -> Double.NaN
+
+        else -> throw IllegalArgumentException("Unable to compute the mean for type ${renderType(type)}")
     }
 }
 

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -46,6 +47,8 @@ import org.jetbrains.kotlinx.dataframe.size
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
+
+private val logger = KotlinLogging.logger {}
 
 private open class Converter(val transform: ConverterScope.(Any?) -> Any?, val skipNulls: Boolean)
 
@@ -262,6 +265,7 @@ internal fun AnyFrame.convertToImpl(
                 try {
                     newColumns += targetColumn.createNullFilledColumn(name, size)
                 } catch (e: IllegalStateException) {
+                    logger.debug(e) { "" }
                     // if this could not be done automatically, they need to be filled manually
                     missingPaths.add(path + name)
                 }
@@ -274,20 +278,39 @@ internal fun AnyFrame.convertToImpl(
     val marker = MarkersExtractor.get(clazz)
     var result = convertToSchema(marker.schema, emptyPath())
 
+    /*
+     * Here we handle all registered fillers of the user.
+     * Fillers are registered in the DSL like:
+     * ```kt
+     * df.convertTo<Target> {
+     *   fill { col1 and col2 }.with { something }
+     *   fill { col3 }.with { somethingElse }
+     * }
+     * ```
+     * Users can use this to fill up any column that was missing during the conversion.
+     * They can also fill up and thus overwrite any existing column here.
+     */
     dsl.fillers.forEach { filler ->
+        // get all paths from the `fill { col1 and col2 }` part
         val paths = result.getColumnPaths(UnresolvedColumnsPolicy.Create, filler.columns).toSet()
-        val (newPaths, existingPaths) = paths.partition { it in missingPaths }
-        missingPaths -= paths
 
-        // first fill cols that are already in the df
+        // split the paths into those that are already in the df and those that are missing
+        val (newPaths, existingPaths) = paths.partition { it in missingPaths }
+
+        // first fill cols that are already in the df using the `with {}` part of the dsl
         result = result.update { existingPaths.toColumnSet() }.with { filler.expr(this, this) }
 
-        // then create any missing ones by filling
+        // then create any missing ones by filling using the `with {}` part of the dsl
         result = newPaths.fold(result) { df, newPath ->
             df.add(newPath, Infer.Type) { filler.expr(this, this) }
         }
+
+        // remove the paths that are now filled
+        missingPaths -= paths
     }
 
+    // Inform the user which target columns could not be created in the conversion
+    // The user will need to supply extra information for these, like `fill {}` them.
     if (missingPaths.isNotEmpty()) {
         throw IllegalArgumentException(
             "The following columns were not found in DataFrame: ${
