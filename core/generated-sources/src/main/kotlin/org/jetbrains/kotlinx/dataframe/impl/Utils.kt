@@ -121,7 +121,7 @@ internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
 internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
 
 @PublishedApi
-internal fun <T : Number> KClass<T>.zero(): T =
+internal fun <T : Number> KClass<T>.zeroOrNull(): T? =
     when (this) {
         Int::class -> 0 as T
         Byte::class -> 0.toByte() as T
@@ -131,9 +131,13 @@ internal fun <T : Number> KClass<T>.zero(): T =
         Float::class -> 0.toFloat() as T
         BigDecimal::class -> BigDecimal.ZERO as T
         BigInteger::class -> BigInteger.ZERO as T
-        Number::class -> 0 as T
-        else -> TODO()
+        Number::class -> 0 as? T
+        else -> null
     }
+
+@PublishedApi
+internal fun <T : Number> KClass<T>.zero(): T =
+    zeroOrNull() ?: throw NotImplementedError("Zero value for $this is not supported")
 
 internal fun <T> catchSilent(body: () -> T): T? =
     try {
