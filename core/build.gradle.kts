@@ -19,6 +19,7 @@ plugins {
         alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
+        alias(buildconfig)
 
         // dependence on our own plugin
         alias(dataframe)
@@ -72,6 +73,8 @@ dependencies {
 
     api(libs.kotlin.datetimeJvm)
     implementation(libs.kotlinpoet)
+    implementation(libs.sl4j)
+    implementation(libs.kotlinLogging)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {

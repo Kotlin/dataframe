@@ -46,7 +46,7 @@ implementation("org.postgresql:postgresql:$version")
 For MySQL:
 
 ```kotlin
-implementation("mysql:mysql-connector-java:$version")
+implementation("com.mysql:mysql-connector-j:$version")
 ```
 
 For SQLite:
@@ -65,14 +65,14 @@ For example, if you have a local PostgreSQL database named as `testDatabase` wit
 you could read first 100 rows and print the data just copying the code below:
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 import org.jetbrains.kotlinx.dataframe.api.print
 
 val url = "jdbc:postgresql://localhost:5432/testDatabase"
 val username = "postgres"
 val password = "password"
 
-val dbConfig = DatabaseConfiguration(url, username, password)
+val dbConfig = DbConnectionConfig(url, username, password)
 
 val tableName = "Customer"
 
@@ -113,37 +113,37 @@ Find a full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-
 These functions read all data from a specific table in the database. 
 Variants with a limit parameter restrict how many rows will be read from the table.
 
-**readSqlTable(dbConfig: DatabaseConfiguration, tableName: String): AnyFrame**
+**readSqlTable(dbConfig: DbConnectionConfig, tableName: String): AnyFrame**
 
 Read all data from a specific table in the SQL database and transform it into an AnyFrame object.
 
-The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection, 
+The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection, 
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val users = DataFrame.readSqlTable(dbConfig, "Users")
 ```
 
-**readSqlTable(dbConfig: DatabaseConfiguration, tableName: String, limit: Int): AnyFrame**
+**readSqlTable(dbConfig: DbConnectionConfig, tableName: String, limit: Int): AnyFrame**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val users = DataFrame.readSqlTable(dbConfig, "Users", 100)
 ```
 
 **readSqlTable(connection: Connection, tableName: String): AnyFrame**
 
-Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
+Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
@@ -177,37 +177,37 @@ connection.close()
 These functions execute an SQL query on the database and convert the result into a DataFrame. 
 If a limit is provided, only that many rows will be returned from the result.
 
-**readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): AnyFrame**
+**readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String): AnyFrame**
 
 Execute a specific SQL query on the SQL database and retrieve the resulting data as an AnyFrame.
 
-The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
+The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val df = DataFrame.readSqlQuery(dbConfig, "SELECT * FROM Users WHERE age > 35")
 ```
 
-**readSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String, limit: Int): AnyFrame**
+**readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, limit: Int): AnyFrame**
 
 A variant of the previous function,
 but with an added `limit: Int` parameter that allows setting the maximum number of records to be read.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val df = DataFrame.readSqlQuery(dbConfig, "SELECT * FROM Users WHERE age > 35", 10)
 ```
 
 **readSqlQuery(connection: Connection, sqlQuery: String): AnyFrame**
 
-Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
+Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
@@ -319,13 +319,13 @@ Variants with a limit parameter restrict how many rows will be read from each ta
 
 Retrieves data from all the non-system tables in the SQL database and returns them as a map of table names to AnyFrame objects.
 
-The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
+The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val dataframes = DataFrame.readAllSqlTables(dbConfig)
 ```
@@ -338,16 +338,16 @@ but with an added `limit: Int` parameter that allows setting the maximum number 
 NOTE: the setting the different limits for different tables is not supported.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val dataframes = DataFrame.readAllSqlTables(dbConfig, 100)
 ```
 
 **readAllSqlTables(connection: Connection): List\<AnyFrame>**
 
-Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
+Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
@@ -384,24 +384,24 @@ The purpose of these functions is to facilitate the retrieval of table schema.
 By providing a table name and either a database configuration or connection, 
 these functions return the [DataFrameSchema](schema.md) of the specified table.
 
-**getSchemaForSqlTable(dbConfig: DatabaseConfiguration, tableName: String): DataFrameSchema**
+**getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String): DataFrameSchema**
 
 This function captures the schema of a specific table from an SQL database.
 
-The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
+The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val schema = DataFrame.getSchemaForSqlTable(dbConfig, "Users")
 ```
 
 **getSchemaForSqlTable(connection: Connection, tableName: String): DataFrameSchema**
 
-Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
+Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
@@ -421,24 +421,24 @@ These functions return the schema of an SQL query result.
 Once you provide a database configuration or connection and an SQL query, 
 they return the [DataFrameSchema](schema.md) of the query result.
 
-**getSchemaForSqlQuery(dbConfig: DatabaseConfiguration, sqlQuery: String): DataFrameSchema**
+**getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String): DataFrameSchema**
 
 This function executes an SQL query on the database and then retrieves the resulting schema.
 
-The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
+The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val schema = DataFrame.getSchemaForSqlQuery(dbConfig, "SELECT * FROM Users WHERE age > 35")
 ```
 
 **getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema**
 
-Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
+Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
@@ -475,7 +475,7 @@ val schema = DataFrame.getSchemaForResultSet(resultSet, PostgreSql)
 
 **getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema**
 
-Another variant, where instead of `dbConfig: DatabaseConfiguration` we use a JDBC connection: `Connection` object.
+Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
@@ -493,18 +493,18 @@ connection.close()
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
-**getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): Map\<String, DataFrameSchema>**
+**getSchemaForAllSqlTables(dbConfig: DbConnectionConfig): Map\<String, DataFrameSchema>**
 
 This function retrieves the schema of all tables from an SQL database 
 and returns them as a map of table names to [`DataFrameSchema`](schema.md) objects.
 
-The `dbConfig: DatabaseConfiguration` parameter represents the configuration for a database connection,
+The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection,
 created under the hood and managed by the library. Typically, it requires a URL, username and password.
 
 ```kotlin
-import org.jetbrains.kotlinx.dataframe.io.DatabaseConfiguration
+import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
 
-val dbConfig = DatabaseConfiguration("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
+val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWORD")
 
 val schemas = DataFrame.getSchemaForAllSqlTables(dbConfig)
 ```

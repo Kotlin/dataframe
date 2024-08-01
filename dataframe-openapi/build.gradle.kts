@@ -22,6 +22,7 @@ repositories {
 dependencies {
     api(project(":core"))
 
+    implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlinpoet)
