@@ -97,8 +97,8 @@ class UtilTests {
 
     @Test
     fun `createType test`() {
-        emptyList<KClass<*>>().createType(nullable = false) shouldBe typeOf<Any>()
-        emptyList<KClass<*>>().createType(nullable = true) shouldBe typeOf<Any?>()
+        emptyList<KClass<*>>().createType(nullable = false) shouldBe nothingType(nullable = false)
+        emptyList<KClass<*>>().createType(nullable = true) shouldBe nothingType(nullable = true)
 
         listOf(Nothing::class).createType(nullable = false) shouldBe nothingType(nullable = false)
         listOf(Nothing::class).createType(nullable = true) shouldBe nothingType(nullable = true)
@@ -111,6 +111,9 @@ class UtilTests {
 
         listOf(Nothing::class).commonType(false) shouldBe nothingType(nullable = false)
         listOf(Nothing::class).commonType(true) shouldBe nothingType(nullable = true)
+
+        emptyList<KClass<*>>().commonType(false, null) shouldBe nothingType(nullable = false)
+        emptyList<KClass<*>>().commonType(true, null) shouldBe nothingType(nullable = true)
     }
 
     val a = listOf(1, 2.0, "a")
@@ -133,6 +136,7 @@ class UtilTests {
         guessValueType(sequenceOf(1, 2.0, "a", null, listOf(1, 2))) shouldBe typeOf<Any?>()
 
         guessValueType(sequenceOf(null, null)) shouldBe nothingType(nullable = true)
+        guessValueType(emptySequence()) shouldBe nothingType(nullable = false)
 
         guessValueType(sequenceOf(listOf<Int?>(null))) shouldBe typeOf<List<Nothing?>>()
         guessValueType(sequenceOf(emptyList<Int>())) shouldBe typeOf<List<Nothing>>()
