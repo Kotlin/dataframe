@@ -73,6 +73,8 @@ dependencies {
 
     api(libs.kotlin.datetimeJvm)
     implementation(libs.kotlinpoet)
+    implementation(libs.sl4j)
+    implementation(libs.kotlinLogging)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
