@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
+import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.KType
@@ -118,7 +119,19 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                 pivot.aggregator.values.clear()
             }
 
-            is AggregateInternalDsl<*> -> yield(value.copy(value = value.value.df))
+            is AggregateInternalDsl<*> -> {
+                // Attempt to create DataFrame<Type> from AggregateInternalDsl<Type>
+                val dfType = value.type?.arguments?.firstOrNull()?.type
+                    ?.let { DataFrame::class.createTypeWithArgument(it) }
+                    ?: DataFrame::class.createStarProjectedType(nullable = false)
+
+                yield(
+                    value.copy(
+                        value = value.value.df,
+                        type = dfType,
+                    ),
+                )
+            }
 
             else -> values.add(value)
         }
