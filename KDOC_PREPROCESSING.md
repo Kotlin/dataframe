@@ -12,6 +12,33 @@ only once and then include it in multiple places.
 
 This document explains how to use the KDoc preprocessor in the DataFrame project.
 
+<!-- TOC -->
+* [KDoc Preprocessing](#kdoc-preprocessing)
+  * [How the Processing Works](#how-the-processing-works)
+  * [Previewing the Processed KDocs in IntelliJ IDEA](#previewing-the-processed-kdocs-in-intellij-idea)
+  * [Notation](#notation)
+    * [`@include`: Including content from other KDocs](#include-including-content-from-other-kdocs)
+    * [`@includeFile`: Including all content from a relative file](#includefile-including-all-content-from-a-relative-file)
+    * [`@set` and `@get` / `$`: Setting and getting variables](#set-and-get---setting-and-getting-variables)
+    * [`@comment`: Commenting out KDoc content](#comment-commenting-out-kdoc-content)
+    * [`@sample` and `@sampleNoComments`: Including code samples](#sample-and-samplenocomments-including-code-samples)
+    * [`@exportAsHtmlStart` and `@exportAsHtmlEnd`: Exporting content as HTML](#exportashtmlstart-and-exportashtmlend-exporting-content-as-html)
+    * [`\`: Escape Character](#-escape-character)
+    * [`@ExcludeFromSources` Annotation: Excluding code content from sources](#excludefromsources-annotation-excluding-code-content-from-sources)
+  * [KDoc Preprocessor Conventions in DataFrame](#kdoc-preprocessor-conventions-in-dataframe)
+    * [Common Concepts and Definitions](#common-concepts-and-definitions)
+    * [Link Interfaces](#link-interfaces)
+    * [Arg Interfaces](#arg-interfaces)
+    * [URLs](#urls)
+    * [Utils](#utils)
+    * [Documenting an Operation](#documenting-an-operation)
+    * [Clickable Examples](#clickable-examples)
+    * [DSL Grammars](#dsl-grammars)
+      * [Symbols](#symbols)
+  * [Advanced DSL Grammar Templating (Columns Selection DSL)](#advanced-dsl-grammar-templating-columns-selection-dsl)
+  * [KDoc -> WriterSide](#kdoc---writerside)
+<!-- TOC -->
+
 ## How the Processing Works
 
 Unlike Java, Kotlin library authors
@@ -321,6 +348,307 @@ like `@file:ExcludeFromSources`.
 
 ## KDoc Preprocessor Conventions in DataFrame
 
+### Common Concepts and Definitions
+
+Some definitions are used in multiple places in the library.
+It's often useful to define them in one place and include them in multiple other places or
+to just link to them so users can read more explanation while clicking through KDocs.
+
+Common definitions and concepts are placed in
+the [documentation folder](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation)
+and include things like:
+
+- [Access APIs](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/AccessApi.kt)
+    - To be linked to
+    - String API, Column Accessors API etc.
+- [Selecting Columns](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/SelectingColumns.kt)
+    - To be included in `select`, `update` etc. like `{@include [SelectingColumns.ColumnNames.WithExample]}` (with
+      args).
+    - Or to be linked to with `{@include [SelectingColumnsLink]}`.
+    - By name, by column accessor, by DSL etc.
+- [Selecting Rows](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/SelectingRows.kt)
+    - To be included like `{@include [SelectingRows.RowValueCondition.WithExample]}` in `Update.where`, `filter`, etc.
+    - Explains the concept and provides examples (with args)
+- [`ExpressionsGivenColumn`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenColumn.kt) / [`-DataFrame`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenDataFrame.kt) / [`-Row`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenRow.kt) / [`-RowAndColumn`](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/ExpressionsGivenRowAndColumn.kt)
+    - To be included or linked to in functions like `perRowCol`, `asFrame`, etc.
+    - Explains the concepts of `ColumnExpression`, `DataFrameExpression`, `RowExpression`, etc.
+- [`NA`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/NA.kt) / [
+  `NaN`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/NaN.kt)
+    - To be linked to for more information on the concepts
+- [DslGrammar](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt)
+    - To be linked to from each DSL grammar by the link interface
+- Check the folder to see if there are more and feel free to add them if needed :)
+
+### Link Interfaces
+
+As can be seen, interfaces that can be "linked" to, like [
+`AccessApi`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/AccessApi.kt), are often
+accompanied by a `-Link` interface, like
+
+```kt
+/** [Access API][AccessApi] */
+internal interface AccessApiLink
+```
+
+This allows other docs to simply `{@include [AccessApiLink]}` if they want to refer to
+Access APIs and it provides a single place of truth for if we ever want to rename this concept.
+
+In general, docs accompanied by a `-Link` interface are meant to be linked to, while docs without
+a `-Link` interface are meant to be included in other docs
+(and are often accompanied by [
+`@ExcludeFromSources`](#excludefromsources-annotation-excluding-code-content-from-sources)).
+We can deviate from this convention if it makes sense, of course.
+
+### Arg Interfaces
+
+```kt
+/**
+ * ## Common Doc
+ * Hello from $[NameArg]!
+ */
+interface CommonDoc {
+
+    // The name to be greeted from
+    interface NameArg
+}
+```
+
+When using `@set` and `@get` / `$`, it's a good practice to use a reference as the key name.
+This makes the KDoc more refactor-safe, and it makes it easier to understand which arguments
+need to be provided for a certain template.
+
+A good example of this concept can be found in the
+[`AllColumnsSelectionDsl.CommonAllSubsetDocs` documentation interface](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/all.kt).
+This interface provides a template for all overloads of `allBefore`,
+`allAfter`, `allFrom`, and `allUpTo` in a single place.
+
+Nested in the documentation interface, there are several other interfaces that define the expected arguments
+of the template.
+These interfaces are named `TitleArg`, `FunctionArg`, etc. and commonly have no KDocs itself,
+just a simple comment explaining what the argument is for.
+
+Other documentation interfaces like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set
+all the arguments accordingly.
+
+It's recommended to name argument interfaces `-Arg`, and have them nested in the documentation interface, though,
+this has not always been done in the past.
+
+### URLs
+
+When linking to external URLs, it's recommended to use
+[DocumentationUrls](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DocumentationUrls.kt) and
+[Issues](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/Issues.kt).
+
+It's a central place where we can store URLs that can be used in multiple places in the library. Plus it makes
+it easier to update the documentation whenever (part of) a URL changes.
+
+### Utils
+
+The [`utils.kt` file](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/utils.kt) contains
+all sorts of helper interfaces for the documentation.
+For instance `{@include [LineBreak]}` can insert a line break in the KDoc and the family of `Indent`
+documentation interfaces can provide you with different non-breaking-space-based indents.
+
+If you need a new utility, feel free to add it to this file.
+
+### Documenting an Operation
+
+When documentation operations such as `select`, `update`, `filter`, etc., it's often useful to work with a central
+template. 
+This template has a title like: `## The Select Operation`, explains its purpose and links to relevant concepts
+(with examples). The template can then be included (optionally via multiple other templates and with/without args)
+on each overload of the operation.
+
+It should also link to a DSL grammar if that's available for that operation, plus, if there's
+a page on the website relevant to it, it should provide a way to get to that page.
+
+Let's take the [`select` operation](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/select.kt) as an example:
+
+TODO...
+
+
+### Clickable Examples
+
+Examples inside ` ```kt ``` ` code blocks are not clickable unfortunately, as they are not resolved
+as actual code
+([KT-55073](https://youtrack.jetbrains.com/issue/KT-55073/Improve-KDoc-experience),
+[KTIJ-23232](https://youtrack.jetbrains.com/issue/KTIJ-23232/KDoc-autocompletion-and-basic-highlighting-of-code-samples)).
+
+To work around this, we can do it manually by adding `` ` `` tags and references to functions.
+For instance, writing 
+```kt 
+/**
+ * For example:
+ *
+ * `df.`[`select`][DataFrame.select]`  {  `[`allExcept`][ColumnsSelectionDsl.allExcept]`("a") }`
+ */
+```
+will render it correctly, like:
+
+![example.png](docs/imgs/example.png)
+
+But keep these things in mind:
+- `[]` references don't work inside `` ` `` tags, so make sure you write them outside code scope.
+- Make sure all empty spaces are inside `` ` `` code spans. If they aren't, they will render weirdly.
+- According to the [spec](https://github.github.com/gfm/#code-spans), if a string inside a `` ` `` code span `` ` ``
+  begins and ends with a space but does not consist entirely of whitespace, a single space is removed from the front
+  and the back. So be careful writing things like `` ` { ` `` and add extra spaces if needed.
+- In IntelliJ, references inside `[]` are automatically formatted as `<code>` when rendered to HTML at the moment.
+  This may change in the future,
+  so if you want to be sure it looks like code, you can write it like: `` [`function`][ref.to.function]  ``
+- Having multiple `[]` references and code spans in the same line breaks rendering in IntelliJ ([KT-55073](https://youtrack.jetbrains.com/issue/KT-55073/Improve-KDoc-experience#focus=Comments-27-6854785.0-0)). 
+  This can be avoided by providing aliases to each reference.
+- Both `**` and `__` can be used to make something __bold__ in Markdown. So if you ever need to `@include` something
+  bold next to something else bold and you want to avoid getting `**a****b**` (which doesn't render correctly), alternate,
+  like `**a**__b__`.
+- Add one extra newline if you want to put something on a new line. Otherwise, they'll render on the same line.
+- Use `&nbsp;` (or `{@include [Indent]}`) to add non-breaking-space-based indents in you code samples.
+
+### DSL Grammars
+
+![dslgrammar.png](docs/imgs/dslgrammar.png)
+
+Any family of functions or operations can show off their notation in a DSL grammar.
+This is done by creating a documentation interface like
+[`Update.Grammar`](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/api/update.kt) and linking to it
+from each function.
+
+Each grammar doc must come with a `{@include [DslGrammarLink]}`, which is a link to provide the user with the details
+of how the [DSL grammar notation](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammar.kt) works.
+An explanation is provided for each symbol used in the grammar.
+
+I'll copy it here for reference:
+
+The notation we use is _roughly_ based on [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form)
+with some slight deviations to improve readability in the context of Kotlin.
+The grammars are also almost always decorated with highlighted code snippets allowing you to click around and explore!
+
+#### Symbols
+- '**`bold text`**' : literal Kotlin notation, e.g. '**`myFunction`**', '**`{ }`**', '**`[ ]`**', etc.
+- '`normal text`' : Definitions or types existing either just in the grammar or in the library itself.
+- '`:`' : Separates a definition from its type, e.g. '`name: String`'.
+- '`|`', '`/`' : Separates multiple possibilities, often clarified with `()` brackets or spaces, e.g. '**`a`**` ( `**`b`**` | `**`c`**` )`'.
+- '`[ ... ]`' : Indicates that the contents are optional, e.g. '`[ `**`a`**` ]`'. Careful to not confuse this with **bold** Kotlin brackets **`[]`**.
+    - NOTE: sometimes **`function`**` [`**`{ }`**`]` notation is used to indicate that the function has an optional lambda. This function will still require **`()`** brackets to work without lambda.
+- '**`,`**` ..`' : Indicates that the contents can be repeated with multiple arguments of the same type(s), e.g. '`[ `**`a,`**` .. ]`'.
+- '`( ... )`' : Indicates grouping, e.g. '`( `**`a`**` | `**`b`**` )` **`c`**'.
+
+No other symbols of [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) are used.
+
+Note that the grammar is not always 100% accurate to keep the readability acceptable.
+Always use your common sense reading it, and if you're unsure, try out the function yourself or check
+the source code :).
+
+## Advanced DSL Grammar Templating (Columns Selection DSL)
+
+One place where the KDoc preprocessor really shines is in the templating of DSL grammars.
+This has been executed for providing DSL grammars to each function family of the Columns Selection DSL (and a single large
+grammar for the DSL itself and the website). It could be repeated in other places if it makes sense there.
+I'll provide a brief overview of how this is structured for this specific case.
+
+The template is defined at [DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate](./core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl.kt).
+
+Filled in, it looks something like:
+
+![firstdslgrammar.png](docs/imgs/firstdslgrammar.png)
+
+As you can see, it consists of three parts: `Definitions`, `What can be called directly in the Columns Selection DSL`,
+`What can be called on a ColumnSet`, and `What can be called on a Column Group (reference)`.
+
+The definition part is filled in like:
+
+```kt 
+/**
+ * {@set [DslGrammarTemplate.DefinitionsArg]
+ *  {@include [DslGrammarTemplate.ColumnSetDef]}
+ *  {@include [LineBreak]}
+ *  {@include [DslGrammarTemplate.ColumnGroupDef]}
+ *  {@include [LineBreak]}
+ *  {@include [DslGrammarTemplate.ConditionDef]}
+ *  ...
+ * }
+ */
+```
+Inside, it should contain all definitions used in the current grammar.
+All definitions are defined at `DslGrammarTemplate.XDef` and they contain their formal name and type.
+They need to be broken up by line breaks.
+
+All other parts are filled in like:
+
+```kt
+/**
+ * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+ *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+ *  ...
+ * }
+ *
+ * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+ *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
+ *  ...
+ * }
+ * ...
+ */
+interface Grammar {
+
+    /** [**`first`**][ColumnsSelectionDsl.first] */
+    interface PlainDslName
+
+    /** __`.`__[**`first`**][ColumnsSelectionDsl.first] */
+    interface ColumnSetName
+
+    /** __`.`__[**`firstCol`**][ColumnsSelectionDsl.firstCol] */
+    interface ColumnGroupName
+}
+```
+
+When a reference to a certain definition is used, we take `DslGrammarTemplate.XRef`.
+Clicking on them takes users to the respective
+`XDef` and thus provides them with the formal name and type of the definition.
+
+You may also notice that the `PlainDslName`, `ColumnSetName`, and `ColumnGroupName` interfaces are defined separately.
+This is to make sure they can be reused in the large Columns Selection DSL grammar and on the website.
+
+You don't always need all 3 parts in the grammar; not all functions can be used in each context.
+For instance, for the function `none()`, the column set- and column group parts can be dropped.
+This can be done in this template by overwriting the respective `DslGrammarTemplate.XPart` with nothing, like here:
+
+<p align="center">
+  <img src="docs/imgs/nonegrammar1.png" alt="nonegrammar1.png" width="45%"/>
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="docs/imgs/nonegrammar2.png" alt="nonegrammar2.png" width="45%"/>
+</p>
+
+Finally, to wrap up the part about this specific template, I'd like to show you the end result.
+This is a part of the grammar for the `ColumnsSelectionDsl` itself and how it renders in the KDoc on the user side:
+
+<p align="center">
+  <img src="docs/imgs/csdsl1.png" alt="csdsl1.png" width="45%"/>
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="docs/imgs/csdsl2.png" alt="csdsl2.png" width="45%"/>
+</p>
+
+A fully interactive, single-source-of-truth grammar for the Columns Selection DSL!
+
 ## KDoc -> WriterSide
 
-### `@ExportAsHtml`
+There's a special annotation, `@ExportAsHtml`, that allows you to export the content of the KDoc of the annotated
+function, interface, or class as HTML.
+The Markdown of the KDoc is rendered to HTML using [JetBrains/markdown](https://github.com/JetBrains/markdown) and, in
+the case of DataFrame, put in [./docs/StardustDocs/snippets/kdocs](./docs/StardustDocs/snippets/kdocs).
+From there, the HTML can be included in any WriterSide page as an iFrame.
+This can be done using our custom `<dataFrame src=""/>` tag.
+
+An example of the result can be found in the
+[DataFrame documentation](https://kotlin.github.io/dataframe/columnselectors.html#full-dsl-grammar).
+
+The annotation supports two parameters: `theme`, and `stripReferences`, which both are `true` by default.
+When the `theme` argument is `true`, some CSS is added to the HTML output to make it look good in combination with
+WriterSide. If the `stripReferences` is `true`, all `[]` references are stripped,
+like `[name][fully.qualified.name]` -> `<code>name</code>`. This makes the output a lot more readable since
+the references won't be clickable in the HTML output anyway.
+
+Optionally, the tags `@exportAsHtmlStart` and `@exportAsHtmlEnd` can be used to mark the start and end of the content
+to be exported as HTML.
+This is useful when you only want to export a part of the KDoc.
+
+`@ExportAsHtml` can also safely be used in combination with `@ExcludeFromSources`.
