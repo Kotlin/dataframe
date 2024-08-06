@@ -35,10 +35,12 @@ internal abstract class DataColumnImpl<T>(
     init {
         // Check for [Issue #713](https://github.com/Kotlin/dataframe/issues/713).
         // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
-        if (BuildConfig.DEBUG) {
-            require(values.all { it matches type }) {
-                val types = values.map { if (it == null) "Nothing?" else it!!::class.simpleName }.distinct()
-                "Values of $kind '$name' have types '$types' which are not compatible given with column type '$type'"
+        if (this::class.java.desiredAssertionStatus()) {
+            if (BuildConfig.DEBUG) {
+                require(values.all { it matches type }) {
+                    val types = values.map { if (it == null) "Nothing?" else it!!::class.simpleName }.distinct()
+                    "Values of $kind '$name' have types '$types' which are not compatible given with column type '$type'"
+                }
             }
         }
     }
