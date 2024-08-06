@@ -41,3 +41,6 @@ Explore YouTube videos with YouTube REST API and Kotlin Dataframe
 ___
 * imdb sql database ([notebook](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)) &ndash; In this notebook, we use Kotlin DataFrame and Kandy library to analyze data from [IMDB](https://datasets.imdbws.com/) (SQL dump for the MariaDB database with the name "imdb" could be downloaded by this [link](https://drive.google.com/file/d/10HnOu0Yem2Tkz_34SfvDoHTVqF_8b4N7/view?usp=sharing)).
 
+---
+* 0.14.0 Dev Feature Overview [notebook](notebooks/feature_overviews/0.14.0/new_features.ipynb)
+  Overview of new features available in 0.14.0-dev
