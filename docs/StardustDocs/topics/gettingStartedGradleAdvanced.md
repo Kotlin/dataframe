@@ -154,13 +154,16 @@ dependencies {
 #### Linter configuration
 
 We provide a Gradle plugin that generates interfaces with your data.
-Use this configuration to prevent linter from complaining about formatting in the generated sources.
+If you're using any sort of linter, it might complain about them generated sources.
+
+Use a configuration similar to this to prevent your linter from complaining about the 
+formatting of the generated sources.
 
 <tabs>
 <tab title="Kotlin DSL">
 
 ```kotlin
-// (Only if you use kotlint) Excludes for `kotlint`:
+// Exclusions for `kotlinter`, if you use it:
 tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
     exclude {
         it.name.endsWith(".Generated.kt")
@@ -176,6 +179,7 @@ tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
 <tab title="Groovy DSL">
 
 ```groovy
+// Exclusions for `kotlinter`, if you use it:
 tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
     exclude {
         it.name.endsWith(".Generated.kt")
@@ -184,6 +188,14 @@ tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
         it.name.endsWith("\$Extensions.kt")
     }
 }
+```
+
+</tab>
+<tab title=".editorconfig">
+
+```.editorconfig
+[{**/*.Generated.kt,**/*$Extensions.kt}]
+ktlint = disabled
 ```
 
 </tab>
