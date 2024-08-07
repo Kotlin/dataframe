@@ -41,7 +41,7 @@ You could find the following articles there:
 Check out new features in development for the next release in this [notebook](examples/notebooks/feature_overviews/0.14.0/new_features.ipynb)
 
 The DataFrame compiler plugin reached public preview state!
-Here's a [demo project](https://github.com/koperagen/df-plugin-demo) that works with IntelliJ IDEA 2024.2 Beta.
+Here's a [demo project](https://github.com/koperagen/df-plugin-demo) that works with IntelliJ IDEA 2024.2.
 
 ## Setup
 
