@@ -1,0 +1,5 @@
+<configuration>
+    <root level="DEBUG"/>
+    <logger name="i.swagger.v3.parser.OpenAPIV3Parser" level="ERROR"/>
+    <logger name="io.swagger.v3.parser.OpenAPIV3Parser" level="ERROR"/>
+</configuration>
