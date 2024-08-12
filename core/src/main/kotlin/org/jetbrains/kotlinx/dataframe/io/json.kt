@@ -303,7 +303,7 @@ public fun AnyFrame.toJsonWithMetadata(
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+    encodingOptions: List<EncodingOptions> = emptyList(),
 ): String {
     val json = Json {
         this.prettyPrint = prettyPrint
@@ -312,11 +312,18 @@ public fun AnyFrame.toJsonWithMetadata(
     }
     return json.encodeToString(
         JsonElement.serializer(),
-        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions),
+        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, encodingOptions),
     )
 }
 
 internal const val DEFAULT_IMG_SIZE = 600
+
+/**
+ * Interface representing encoding options that can be applied when converting a data structure to JSON format.
+ * Implementations of this interface can provide specific behaviors for encoding various data types,
+ * such as images or data frames, when serializing to JSON.
+ */
+public interface EncodingOptions
 
 /**
  * Class representing the options for encoding images.
@@ -327,7 +334,7 @@ internal const val DEFAULT_IMG_SIZE = 600
 public class Base64ImageEncodingOptions(
     public val imageSizeLimit: Int = DEFAULT_IMG_SIZE,
     private val options: Int = GZIP_ON or LIMIT_SIZE_ON,
-) {
+) : EncodingOptions {
     public val isGzipOn: Boolean
         get() = options and GZIP_ON == GZIP_ON
 
@@ -340,6 +347,14 @@ public class Base64ImageEncodingOptions(
         public const val LIMIT_SIZE_ON: Int = 2 // 2^1
     }
 }
+
+/**
+ * Represents encoding options for converting to JSON objects that can be convertible to DataFrame
+ *
+ * @param rowsLimit Optional limit on the number of rows to be included in the JSON output.
+ * Default is null, meaning no limit is imposed.
+ */
+public class DataframeConvertableEncodingOptions(public val rowsLimit: Int? = null) : EncodingOptions
 
 public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
     val json = Json {
