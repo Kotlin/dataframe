@@ -62,7 +62,11 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         encodingOptions: Base64ImageEncodingOptions?,
     ): JsonObject {
         val df = dataFrameOf(listOf("imgs"), images)
-        val jsonStr = df.toJsonWithMetadata(20, nestedRowLimit = 20, imageEncodingOptions = encodingOptions)
+        val jsonStr = df.toJsonWithMetadata(
+            20,
+            nestedRowLimit = 20,
+            encodingOptions = if (encodingOptions != null) listOf(encodingOptions) else emptyList(),
+        )
 
         return parseJsonStr(jsonStr)
     }

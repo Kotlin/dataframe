@@ -13,7 +13,9 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
+import org.jetbrains.kotlinx.dataframe.io.DataframeConvertableEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
+import org.jetbrains.kotlinx.dataframe.io.EncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
 import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
@@ -34,6 +36,7 @@ import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 private const val MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI = "0.11.0.311"
 private const val MIN_IDE_VERSION_SUPPORT_JSON_WITH_METADATA = 241
 private const val MIN_IDE_VERSION_SUPPORT_IMAGE_VIEWER = 242
+private const val MIN_IDE_VERSION_SUPPORT_DATAFRAME_CONVERTABLE = 243
 
 internal class JupyterHtmlRenderer(val display: DisplayConfiguration, val builder: JupyterIntegration.Builder)
 
@@ -85,13 +88,19 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
             }
 
             else -> {
-                val imageEncodingOptions =
-                    if (ideBuildNumber.supportsImageViewer()) Base64ImageEncodingOptions() else null
+                val encodingOptions = buildList<EncodingOptions> {
+                    if (ideBuildNumber.supportsDataFrameConvertableValues()) {
+                        add(DataframeConvertableEncodingOptions())
+                    }
+                    if (ideBuildNumber.supportsImageViewer()) {
+                        add(Base64ImageEncodingOptions())
+                    }
+                }
 
                 df.toJsonWithMetadata(
                     rowLimit = limit,
                     nestedRowLimit = reifiedDisplayConfiguration.rowsLimit,
-                    imageEncodingOptions = imageEncodingOptions,
+                    encodingOptions = encodingOptions,
                 )
             }
         }
@@ -107,6 +116,9 @@ private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsDynamicNestedTable
 
 private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsImageViewer() =
     this != null && majorVersion >= MIN_IDE_VERSION_SUPPORT_IMAGE_VIEWER
+
+private fun KotlinNotebookPluginUtils.IdeBuildNumber?.supportsDataFrameConvertableValues() =
+    this != null && majorVersion >= MIN_IDE_VERSION_SUPPORT_DATAFRAME_CONVERTABLE
 
 internal fun Notebook.renderAsIFrameAsNeeded(
     data: HtmlData,
