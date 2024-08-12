@@ -101,6 +101,36 @@ public object KotlinNotebookPluginUtils {
             }.toColumnSet()
         }
 
+    internal fun isDataframeConvertable(dataframeLike: Any?): Boolean =
+        when (dataframeLike) {
+            is Pivot<*>,
+            is ReducedGroupBy<*, *>,
+            is ReducedPivot<*>,
+            is PivotGroupBy<*>,
+            is ReducedPivotGroupBy<*>,
+            is SplitWithTransform<*, *, *>,
+            is Split<*, *>,
+            is Merge<*, *, *>,
+            is Gather<*, *, *, *>,
+            is Update<*, *>,
+            is Convert<*, *>,
+            is FormattedFrame<*>,
+            is AnyCol,
+            is AnyRow,
+            is GroupBy<*, *>,
+            is AnyFrame,
+            is DisableRowsLimitWrapper,
+            is MoveClause<*, *>,
+            is RenameClause<*, *>,
+            is ReplaceClause<*, *>,
+            is GroupClause<*, *>,
+            is InsertClause<*>,
+            is FormatClause<*, *>,
+            -> true
+
+            else -> false
+        }
+
     /**
      * Converts [dataframeLike] to [AnyFrame].
      * If [dataframeLike] is already [AnyFrame] then it is returned as is.
