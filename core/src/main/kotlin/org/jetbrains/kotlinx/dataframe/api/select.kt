@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -48,12 +49,14 @@ internal interface Select {
 }
 
 /** {@set [SelectingColumns.OperationArg] [select][select]} */
+@ExcludeFromSources
 private interface SetSelectOperationArg
 
 /**
  * {@include [Select]}
  * ### This Select Overload
  */
+@ExcludeFromSources
 private interface CommonSelectDocs
 
 /**
