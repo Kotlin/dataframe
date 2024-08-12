@@ -106,20 +106,6 @@ internal interface Select {
     interface SelectSelectingOptions
 }
 
-private interface SetSelectOperationArg
-
-/**
- * ## The Select Operation
- *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
- *
- * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
- *
- * For more information: [See `select` on the documentation website.](https://kotlin.github.io/dataframe/select.html)
- * ### This Select Overload
- */
-private interface CommonSelectDocs
-
 /**
  * ## The Select Operation
  *
