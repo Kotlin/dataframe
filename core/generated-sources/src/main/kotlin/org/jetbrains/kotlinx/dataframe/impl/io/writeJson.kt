@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.columns.CellKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -38,6 +39,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.io.ARRAY_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.VALUE_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils
+import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.isDataframeConvertable
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -168,6 +171,22 @@ internal fun encodeValue(
     imageEncodingOptions: Base64ImageEncodingOptions? = null,
 ): JsonElement =
     when {
+        isDataframeConvertable(col[index]) -> if (col[index] == null) {
+            JsonPrimitive(null)
+        } else {
+            val data = encodeFrameWithMetadata(
+                KotlinNotebookPluginUtils.convertToDataFrame(col[index]!!),
+                null,
+                imageEncodingOptions,
+            )
+            buildJsonObject {
+                put(DATA, data)
+                putJsonObject(METADATA) {
+                    put(KIND, JsonPrimitive(CellKind.DataFrameConvertable.toString()))
+                }
+            }
+        }
+
         col.isList() -> col[index]?.let { list ->
             val values = (list as List<*>).map { convert(it) }
             JsonArray(values)
