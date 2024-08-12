@@ -12,8 +12,11 @@ rendering Kotlin dataframes in the Kotlin notebooks plugin of IntelliJ IDEA.
  * ...
 
 **2.1.0:**
- * Added a `types` property to dataframe and and row metadata. It contains column
+ * Added a `types` property to dataframe and row metadata. It contains column
    information for all groups, frames and values.
+
+**2.1.1:**
+ * Added a new type of `ValueColumn` value that is DataFrameConvertable type
 
 ### Top level json structure
 ```json
@@ -32,8 +35,8 @@ rendering Kotlin dataframes in the Kotlin notebooks plugin of IntelliJ IDEA.
 ### Row
 ```json
 { 
-    "<value_column_name1>": string|Boolean|Double|Int|Float|Long|Short|Byte|list,,
-    "<value_column_name2>": string|Boolean|Double|Int|Float|Long|Short|Byte|list,,
+    "<value_column_name1>": string|Boolean|Double|Int|Float|Long|Short|Byte|list|DataFrameConvertable,
+    "<value_column_name2>": string|Boolean|Double|Int|Float|Long|Short|Byte|list|DataFrameConvertable,
     ...
     "<column_group_name1>": ColumnGroup,
     "<column_group_name2>": ColumnGroup,
@@ -76,4 +79,16 @@ rendering Kotlin dataframes in the Kotlin notebooks plugin of IntelliJ IDEA.
     "type": FQN + nullability identifier (?), e.g "Kotlin.String?" // Only available if kind == "ValueColumn"
 }
 ```
+
+### DataFrameConvertable
+```json
+{
+    "metadata": {
+        "kind": "DataFrameConvertable"
+    },
+    "data": [ Row, ... ]
+}
+```
+
+
 
