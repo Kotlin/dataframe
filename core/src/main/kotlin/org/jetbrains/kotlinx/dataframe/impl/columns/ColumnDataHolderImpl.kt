@@ -4,10 +4,57 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+/**
+ * Using the [ofPrimitiveArray] functions, this can store natively without converting:
+ * - [BooleanArray]
+ * - [ByteArray]
+ * - [ShortArray]
+ * - [IntArray]
+ * - [LongArray]
+ * - [FloatArray]
+ * - [DoubleArray]
+ * - [CharArray]
+ * - [UByteArray]
+ * - [UShortArray]
+ * - [UIntArray]
+ * - [ULongArray]
+ *
+ * Store with converting to primitive arrays:
+ * - [Array][Array]`<`[Boolean][Boolean]`>`
+ * - [Array][Array]`<`[Byte][Byte]`>`
+ * - [Array][Array]`<`[Short][Short]`>`
+ * - [Array][Array]`<`[Int][Int]`>`
+ * - [Array][Array]`<`[Long][Long]`>`
+ * - [Array][Array]`<`[Float][Float]`>`
+ * - [Array][Array]`<`[Double][Double]`>`
+ * - [Array][Array]`<`[Char][Char]`>`
+ * - [Array][Array]`<`[UByte][UByte]`>`
+ * - [Array][Array]`<`[UShort][UShort]`>`
+ * - [Array][Array]`<`[UInt][UInt]`>`
+ * - [Array][Array]`<`[ULong][ULong]`>`
+ * - [Collection][Collection]`<`[Boolean][Boolean]`>`
+ * - [Collection][Collection]`<`[Byte][Byte]`>`
+ * - [Collection][Collection]`<`[Short][Short]`>`
+ * - [Collection][Collection]`<`[Int][Int]`>`
+ * - [Collection][Collection]`<`[Long][Long]`>`
+ * - [Collection][Collection]`<`[Float][Float]`>`
+ * - [Collection][Collection]`<`[Double][Double]`>`
+ * - [Collection][Collection]`<`[Char][Char]`>`
+ * - [Collection][Collection]`<`[UByte][UByte]`>`
+ * - [Collection][Collection]`<`[UShort][UShort]`>`
+ * - [Collection][Collection]`<`[UInt][UInt]`>`
+ * - [Collection][Collection]`<`[ULong][ULong]`>`
+ *
+ * Store them as is:
+ * - [Array][Array]`<`[Any?][Any]`>`
+ * - [Collection][Collection]`<`[Any?][Any]`>`
+ *
+ */
 internal class ColumnDataHolderImpl<T>(private val list: List<T>, distinct: Lazy<Set<T>>?) : ColumnDataHolder<T> {
 
     override val distinct = distinct ?: lazy { list.toSet() }
@@ -41,36 +88,36 @@ private val UINT = typeOf<UInt>()
 private val ULONG = typeOf<ULong>()
 
 /**
- * Constructs [ColumnDataHolderImpl] using an [asList] wrapper around the [list].
+ * Constructs [ColumnDataHolderImpl] using an [asList] wrapper around the [collection].
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <T> ColumnDataHolder.Companion.of(
-    list: Collection<T>,
+internal fun <T> ColumnDataHolder.Companion.ofCollection(
+    collection: Collection<T>,
     type: KType,
     distinct: Lazy<Set<T>>? = null,
 ): ColumnDataHolder<T> {
-    if (list is ColumnDataHolder<*>) return list as ColumnDataHolder<T>
+    if (collection is ColumnDataHolder<*>) return collection as ColumnDataHolder<T>
 
     try {
         val newList = when (type) {
-            BOOLEAN -> (list as Collection<Boolean>).toBooleanArray().asList()
-            BYTE -> (list as Collection<Byte>).toByteArray().asList()
-            SHORT -> (list as Collection<Short>).toShortArray().asList()
-            INT -> (list as Collection<Int>).toIntArray().asList()
-            LONG -> (list as Collection<Long>).toLongArray().asList()
-            FLOAT -> (list as Collection<Float>).toFloatArray().asList()
-            DOUBLE -> (list as Collection<Double>).toDoubleArray().asList()
-            CHAR -> (list as Collection<Char>).toCharArray().asList()
-            UBYTE -> (list as Collection<UByte>).toUByteArray().asList()
-            USHORT -> (list as Collection<UShort>).toUShortArray().asList()
-            UINT -> (list as Collection<UInt>).toUIntArray().asList()
-            ULONG -> (list as Collection<ULong>).toULongArray().asList()
-            else -> list.asList()
+            BOOLEAN -> (collection as Collection<Boolean>).toBooleanArray().asList()
+            BYTE -> (collection as Collection<Byte>).toByteArray().asList()
+            SHORT -> (collection as Collection<Short>).toShortArray().asList()
+            INT -> (collection as Collection<Int>).toIntArray().asList()
+            LONG -> (collection as Collection<Long>).toLongArray().asList()
+            FLOAT -> (collection as Collection<Float>).toFloatArray().asList()
+            DOUBLE -> (collection as Collection<Double>).toDoubleArray().asList()
+            CHAR -> (collection as Collection<Char>).toCharArray().asList()
+            UBYTE -> (collection as Collection<UByte>).toUByteArray().asList()
+            USHORT -> (collection as Collection<UShort>).toUShortArray().asList()
+            UINT -> (collection as Collection<UInt>).toUIntArray().asList()
+            ULONG -> (collection as Collection<ULong>).toULongArray().asList()
+            else -> collection.asList()
         } as List<T>
 
         return ColumnDataHolderImpl(newList, distinct)
     } catch (e: Exception) {
-        throw IllegalArgumentException("Can't create ColumnDataHolder from $list and type $type", e)
+        throw IllegalArgumentException("Can't create ColumnDataHolder from $collection and type $type", e)
     }
 }
 
@@ -80,7 +127,7 @@ internal fun <T> ColumnDataHolder.Companion.of(
  * wrapped with [asList].
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <T> ColumnDataHolder.Companion.of(
+internal fun <T> ColumnDataHolder.Companion.ofBoxedArray(
     array: Array<T>,
     type: KType,
     distinct: Lazy<Set<T>>? = null,
@@ -116,7 +163,7 @@ internal fun <T> ColumnDataHolder.Companion.of(
  * [primitiveArray] must be an array of primitives, returns `null` if something goes wrong.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <T> ColumnDataHolder.Companion.of(
+internal fun <T> ColumnDataHolder.Companion.ofPrimitiveArray(
     primitiveArray: Any,
     type: KType,
     distinct: Lazy<Set<T>>? = null,
@@ -157,3 +204,16 @@ internal fun <T> ColumnDataHolder.Companion.of(
 
     return ColumnDataHolderImpl(newList, distinct)
 }
+
+@Suppress("UNCHECKED_CAST")
+internal fun <T> ColumnDataHolder.Companion.of(
+    any: Any,
+    type: KType,
+    distinct: Lazy<Set<T>>? = null,
+): ColumnDataHolder<T> =
+    when {
+        any.isPrimitiveArray -> ofPrimitiveArray(primitiveArray = any, type = type, distinct = distinct)
+        any.isArray -> ofBoxedArray(array = any as Array<T>, type = type, distinct = distinct)
+        any is Collection<*> -> ofCollection(collection = any as Collection<T>, type = type, distinct = distinct)
+        else -> throw IllegalArgumentException("Can't create ColumnDataHolder from $any and type $type")
+    }
