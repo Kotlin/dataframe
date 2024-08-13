@@ -1,53 +1,24 @@
-[//]: # (title: Extension properties API)
+[//]: # (title: Extension Properties API)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
-When [`DataFrame`](DataFrame.md) is used within Jupyter/Kotlin Notebook or Datalore with the Kotlin Kernel,
-something special happens:
-After every cell execution, all new global variables of type DataFrame are analyzed and replaced
-with a typed [`DataFrame`](DataFrame.md) wrapper along with auto-generated extension properties for data access.
-For instance, say we run:
+Auto-generated extension properties are the safest and easiest way to access columns in a [`DataFrame`](DataFrame.md).
+They are generated based on a [dataframe schema](schemas.md), 
+with the name and type of properties inferred from the name and type of the corresponding columns.
 
-<!---FUN extensionProperties1-->
-
+Having these, it allows you to work with your dataframe like:
 ```kotlin
-val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
+val peopleDf /* : DataFrame<Person> */ = DataFrame.read("people.csv").cast<Person>()
+val nameColumn /* : DataColumn<String> */ = peopleDf.name
+val ageColumn /* : DataColumn<Int> */ = peopleDf.personData.age
+```
+and of course
+```kotlin
+peopleDf.add("lastName") { name.split(",").last() }
+    .dropNulls { personData.age }
+    .filter { survived && home.endsWith("NY") && personData.age in 10..20 }
 ```
 
-<!---END-->
-
-
-<dataFrame src="manual/extensionPropertiesApi1.html"/>
-
-
-In normal Kotlin code, we would now have a variable of type [`AnyFrame` (=`DataFrame<*>`)](DataFrame.md)  that doesn't
-have any
-extension properties to access its columns. We would either have to define them manually or use the
-[`@DataSchema`](schemas.md) annotation to [generate them](schemasGradle.md#configuration).
-
-By contrast, after this cell is run in a notebook, the columns of the dataframe are used as a basis
-to generate a hidden `@DataSchema interface TypeX`,
-along with extension properties like `val DataFrame<TypeX>.age` etc.
-Next, the `df` variable is shadowed by a new version cast to `DataFrame<TypeX>`.
-
-As a result, now columns can be accessed directly on `df`!
-
-<!---FUN extensionProperties2-->
-
-```kotlin
-df.add("lastName") { name.split(",").last() }
-    .dropNulls { age }
-    .filter { survived && home.endsWith("NY") && age in 10..20 }
-```
-
-<!---END-->
-
-The `titanic.csv` file could be found [here](https://github.com/Kotlin/dataframe/blob/master/data/titanic.csv).
-
-Extension properties can be generated in IntelliJ IDEA using
-the [Kotlin Dataframe Gradle plugin](schemasGradle.md#configuration).
-
-<warning>
-In notebooks generated properties won't appear and be updated until the cell has been executed.
-It often means that you have to introduce new variable frequently to sync extension properties with actual schema.
-</warning>
+To find out how to use this API in your environment, check out [Working with Data Schemas](schemas.md)
+or jump straight to [Data Schemas in Gradle projects](schemasGradle.md), 
+or [Data Schemas in Jupyter notebooks](schemasJupyter.md).
