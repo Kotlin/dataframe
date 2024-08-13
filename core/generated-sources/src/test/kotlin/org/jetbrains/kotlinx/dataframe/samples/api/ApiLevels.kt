@@ -142,7 +142,7 @@ class ApiLevels {
     @TransformDataFrameExpressions
     fun extensionProperties1() {
         // SampleStart
-        val df = DataFrame.read("titanic.csv")
+        val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
         // SampleEnd
     }
 }
