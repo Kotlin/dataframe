@@ -6,16 +6,17 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.impl.io.BufferedImageEncoder
+import org.jetbrains.kotlinx.dataframe.impl.io.DataframeConvertableEncoder
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
+import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
-import org.jetbrains.kotlinx.dataframe.io.DataframeConvertableEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.EncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
 import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
@@ -88,19 +89,19 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
             }
 
             else -> {
-                val encodingOptions = buildList<EncodingOptions> {
+                val encoders = buildList<CustomEncoder> {
                     if (ideBuildNumber.supportsDataFrameConvertableValues()) {
-                        add(DataframeConvertableEncodingOptions())
+                        add(DataframeConvertableEncoder(this))
                     }
                     if (ideBuildNumber.supportsImageViewer()) {
-                        add(Base64ImageEncodingOptions())
+                        add(BufferedImageEncoder(Base64ImageEncodingOptions()))
                     }
                 }
 
                 df.toJsonWithMetadata(
                     rowLimit = limit,
                     nestedRowLimit = reifiedDisplayConfiguration.rowsLimit,
-                    encodingOptions = encodingOptions,
+                    customEncoders = encoders,
                 )
             }
         }

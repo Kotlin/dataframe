@@ -7,6 +7,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.impl.io.BufferedImageEncoder
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.ALL_OFF
@@ -65,7 +66,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         val jsonStr = df.toJsonWithMetadata(
             20,
             nestedRowLimit = 20,
-            encodingOptions = if (encodingOptions != null) listOf(encodingOptions) else emptyList(),
+            customEncoders = listOfNotNull(encodingOptions?.let { BufferedImageEncoder(encodingOptions) }),
         )
 
         return parseJsonStr(jsonStr)
