@@ -1,11 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import com.beust.klaxon.Parser
-import com.beust.klaxon.json
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.decodeFromStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.single
@@ -17,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
 import org.jetbrains.kotlinx.dataframe.impl.io.readJson
+import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
+import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
@@ -46,6 +53,7 @@ public class JSON(
         )
 
     override fun acceptsExtension(ext: String): Boolean = ext == "json"
+
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
     override val testOrder: Int = 10_000
@@ -57,7 +65,11 @@ public class JSON(
                 .add(
                     "keyValuePaths",
                     typeOf<List<JsonPath>>(),
-                    "listOf(${keyValuePaths.joinToString { "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")" }})",
+                    "listOf(${
+                        keyValuePaths.joinToString {
+                            "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")"
+                        }
+                    })",
                 )
                 .add(
                     "typeClashTactic",
@@ -107,8 +119,8 @@ public class JSON(
     }
 }
 
-public const val arrayColumnName: String = "array"
-public const val valueColumnName: String = "value"
+internal const val ARRAY_COLUMN_NAME: String = "array"
+internal const val VALUE_COLUMN_NAME: String = "value"
 
 /**
  * @param file Where to fetch the Json as [InputStream] to be converted to a [DataFrame].
@@ -148,6 +160,8 @@ public fun DataRow.Companion.readJson(
  * @param header Optional list of column names. If given, the stream will be read like an object with [header] being the keys.
  * @return [DataFrame] from the given [path].
  */
+@OptInRefine
+@Interpretable("ReadJson0")
 public fun DataFrame.Companion.readJson(
     path: String,
     header: List<String> = emptyList(),
@@ -208,12 +222,13 @@ public fun DataRow.Companion.readJson(
  * @param header Optional list of column names. If given, [stream] will be read like an object with [header] being the keys.
  * @return [DataFrame] from the given [stream].
  */
+@OptIn(ExperimentalSerializationApi::class)
 public fun DataFrame.Companion.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(Parser.default().parse(stream), header, keyValuePaths, typeClashTactic)
+): AnyFrame = readJson(Json.decodeFromStream<JsonElement>(stream), header, keyValuePaths, typeClashTactic)
 
 /**
  * @param stream Json as [InputStream] to be converted to a [DataRow].
@@ -238,12 +253,14 @@ public fun DataRow.Companion.readJson(
  * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
  * @return [DataFrame] from the given [text].
  */
+@Refine
+@Interpretable("ReadJsonStr")
 public fun DataFrame.Companion.readJsonStr(
     text: String,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(Parser.default().parse(StringBuilder(text)), header, keyValuePaths, typeClashTactic)
+): AnyFrame = readJson(Json.parseToJsonElement(text), header, keyValuePaths, typeClashTactic)
 
 /**
  * @param text Json as [String] to be converted to a [DataRow].
@@ -260,22 +277,25 @@ public fun DataRow.Companion.readJsonStr(
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
 ): AnyRow = DataFrame.readJsonStr(text, header, keyValuePaths, typeClashTactic).single()
 
-public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
-    return json {
-        encodeFrame(this@toJson)
-    }.toJsonString(prettyPrint, canonical)
+public fun AnyFrame.toJson(prettyPrint: Boolean = false): String {
+    val json = Json {
+        this.prettyPrint = prettyPrint
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+    }
+    return json.encodeToString(JsonElement.serializer(), encodeFrame(this@toJson))
 }
 
 /**
  * Converts the DataFrame to a JSON string representation with additional metadata about serialized data.
- * It is heavily used to implement some integration features in Kotlin Notebook IntellJ IDEA plugin.
+ * It is heavily used to implement some integration features in Kotlin Notebook IntelliJ IDEA plugin.
  *
  * @param rowLimit The maximum number of top-level dataframe rows to include in the output JSON.
  * @param nestedRowLimit The maximum number of nested frame rows to include in the output JSON.
  * If null, all rows are included.
  * Applied for each frame column recursively
  * @param prettyPrint Specifies whether the output JSON should be formatted with indentation and line breaks.
- * @param canonical Specifies whether the output JSON should be in a canonical form.
+ * @param imageEncodingOptions The options for encoding images. The default is null, which indicates that the image is not encoded as Base64.
  *
  * @return The DataFrame converted to a JSON string with metadata.
  */
@@ -283,38 +303,71 @@ public fun AnyFrame.toJsonWithMetadata(
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
-    canonical: Boolean = false
+    imageEncodingOptions: Base64ImageEncodingOptions? = null,
 ): String {
-    return json {
-        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit)
-    }.toJsonString(prettyPrint, canonical)
+    val json = Json {
+        this.prettyPrint = prettyPrint
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+    }
+    return json.encodeToString(
+        JsonElement.serializer(),
+        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions),
+    )
 }
 
-public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
-    return json {
-        encodeRow(df(), index())
-    }?.toJsonString(prettyPrint, canonical) ?: ""
+internal const val DEFAULT_IMG_SIZE = 600
+
+/**
+ * Class representing the options for encoding images.
+ *
+ * @property imageSizeLimit The maximum size to which images should be resized. Defaults to the value of DEFAULT_IMG_SIZE.
+ * @property options Bitwise-OR of the [GZIP_ON] and [LIMIT_SIZE_ON] constants. Defaults to [GZIP_ON] or [LIMIT_SIZE_ON].
+ */
+public class Base64ImageEncodingOptions(
+    public val imageSizeLimit: Int = DEFAULT_IMG_SIZE,
+    private val options: Int = GZIP_ON or LIMIT_SIZE_ON,
+) {
+    public val isGzipOn: Boolean
+        get() = options and GZIP_ON == GZIP_ON
+
+    public val isLimitSizeOn: Boolean
+        get() = options and LIMIT_SIZE_ON == LIMIT_SIZE_ON
+
+    public companion object {
+        public const val ALL_OFF: Int = 0
+        public const val GZIP_ON: Int = 1 // 2^0
+        public const val LIMIT_SIZE_ON: Int = 2 // 2^1
+    }
 }
 
-public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    file.writeText(toJson(prettyPrint, canonical))
+public fun AnyRow.toJson(prettyPrint: Boolean = false): String {
+    val json = Json {
+        this.prettyPrint = prettyPrint
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+    }
+    return json.encodeToString(JsonElement.serializer(), encodeRow(df(), index()))
 }
 
-public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false): Unit =
-    writeJson(File(path), prettyPrint, canonical)
-
-public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    writer.append(toJson(prettyPrint, canonical))
+public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false) {
+    file.writeText(toJson(prettyPrint))
 }
 
-public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    file.writeText(toJson(prettyPrint, canonical))
+public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false): Unit = writeJson(File(path), prettyPrint)
+
+public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
+    writer.append(toJson(prettyPrint))
 }
 
-public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    writeJson(File(path), prettyPrint, canonical)
+public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false) {
+    file.writeText(toJson(prettyPrint))
 }
 
-public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    writer.append(toJson(prettyPrint, canonical))
+public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false) {
+    writeJson(File(path), prettyPrint)
+}
+
+public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
+    writer.append(toJson(prettyPrint))
 }

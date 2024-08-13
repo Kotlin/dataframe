@@ -66,7 +66,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                         // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
-                            return CodeWithConverter.Empty
+                            return CodeWithConverter.EMPTY
                         }
                         // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
                         targetSchema = columnSchema
@@ -78,11 +78,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
-    fun generate(
-        schema: DataFrameSchema,
-        name: String,
-        isOpen: Boolean,
-    ): CodeWithConverter {
+    fun generate(schema: DataFrameSchema, name: String, isOpen: Boolean): CodeWithConverter {
         val result = generator.generate(
             schema = schema,
             name = name,
@@ -111,9 +107,9 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             if (temp != null) {
                 val baseClasses = clazz.superclasses.filter { it != Any::class }
 
-                val baseClassNames = baseClasses.map {
-                    it.simpleName!!
-                }.sorted()
+                val baseClassNames = baseClasses
+                    .map { it.simpleName!! }
+                    .sorted()
 
                 val tempBaseClassNames = temp.superMarkers.map { it.value.shortName }.sorted()
 

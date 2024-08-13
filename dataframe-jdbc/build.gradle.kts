@@ -3,7 +3,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
         alias(jupyter.api)
     }
 }
@@ -28,6 +28,7 @@ dependencies {
     testImplementation(libs.mssql)
     testImplementation(libs.junit)
     testImplementation(libs.sl4j)
+    testImplementation(libs.jts)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }

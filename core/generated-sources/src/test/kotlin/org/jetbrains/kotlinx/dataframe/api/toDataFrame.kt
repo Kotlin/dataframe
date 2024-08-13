@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -89,7 +90,13 @@ class CreateDataFrameTests {
     data class A(val v: Int)
 
     @DataSchema
-    data class B(val str: String, val frame: DataFrame<A>, val row: DataRow<A>, val list: List<A>, val a: A)
+    data class B(
+        val str: String,
+        val frame: DataFrame<A>,
+        val row: DataRow<A>,
+        val list: List<A>,
+        val a: A,
+    )
 
     @Test
     fun `preserve properties test`() {
@@ -98,7 +105,7 @@ class CreateDataFrameTests {
 
         val data = listOf(
             B("q", d1, d1[0], emptyList(), A(7)),
-            B("w", d2, d2[1], listOf(A(6)), A(8))
+            B("w", d2, d2[1], listOf(A(6)), A(8)),
         )
 
         val df = data.toDataFrame()
@@ -114,7 +121,10 @@ class CreateDataFrameTests {
         df.list[1].v[0] shouldBe 6
         df.a[0].v shouldBe 7
 
-        val df2 = data.toDataFrame { preserve(B::row); properties { preserve(DataFrame::class) } }
+        val df2 = data.toDataFrame {
+            preserve(B::row)
+            properties { preserve(DataFrame::class) }
+        }
         df2.frame.kind shouldBe ColumnKind.Value
         df2.frame.type shouldBe typeOf<DataFrame<A>>()
         df2["row"].kind shouldBe ColumnKind.Value
@@ -127,7 +137,12 @@ class CreateDataFrameTests {
 
     @Test
     fun `don't convert value types`() {
-        data class Entry(val a: Int, val b: String, val c: Boolean, val e: DummyEnum)
+        data class Entry(
+            val a: Int,
+            val b: String,
+            val c: Boolean,
+            val e: DummyEnum,
+        )
 
         val df = listOf(Entry(1, "s", true, DummyEnum.A)).toDataFrame(maxDepth = 100)
         df.columns().forEach {
@@ -138,6 +153,7 @@ class CreateDataFrameTests {
     @Test
     fun `convert type with no properties`() {
         class Child
+
         class Entry(val a: Int, val child: Child)
 
         val df = listOf(Entry(1, Child())).toDataFrame(maxDepth = 100)
@@ -192,6 +208,7 @@ class CreateDataFrameTests {
     @Test
     fun treatErasedGenericAsAny() {
         class IncompatibleVersionErrorData<T>(val expected: T, val actual: T)
+
         class DeserializedContainerSource(val incompatibility: IncompatibleVersionErrorData<*>)
 
         val functions = listOf(DeserializedContainerSource(IncompatibleVersionErrorData(1, 2)))
@@ -235,14 +252,27 @@ class CreateDataFrameTests {
     @Ignore
     @Test
     fun generateBuiltInsOverrides() {
-        listOf("Byte", "Short", "Int", "Long", "String", "Char", "Boolean", "UByte", "UShort", "UInt", "ULong").forEach { type ->
+        listOf(
+            "Byte",
+            "Short",
+            "Int",
+            "Long",
+            "String",
+            "Char",
+            "Boolean",
+            "UByte",
+            "UShort",
+            "UInt",
+            "ULong",
+        ).forEach { type ->
             val typeParameter = type.first()
-            val func = """
-            @JvmName("toDataFrame$type")
-            public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
-                ValueProperty<$typeParameter>::value from { it }
-            }.cast()
-            """.trimIndent()
+            val func =
+                """
+                @JvmName("toDataFrame$type")
+                public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
+                    ValueProperty<$typeParameter>::value from { it }
+                }.cast()
+                """.trimIndent()
             println(func)
             println()
         }
@@ -252,10 +282,7 @@ class CreateDataFrameTests {
     @JvmInline
     internal value class Speed(val kmh: Number?)
 
-    internal class PathSegment(
-        val id: String,
-        val speedLimit: Speed? = null,
-    )
+    internal class PathSegment(val id: String, val speedLimit: Speed? = null)
 
     @Test
     fun valueClassNullableField() {
@@ -276,10 +303,7 @@ class CreateDataFrameTests {
     @JvmInline
     internal value class Speed1(val kmh: Number)
 
-    internal class PathSegment1(
-        val id: String,
-        val speedLimit: Speed1? = null,
-    )
+    internal class PathSegment1(val id: String, val speedLimit: Speed1? = null)
 
     @Test
     fun valueClass() {
@@ -325,11 +349,13 @@ class CreateDataFrameTests {
         }
 
         fun getA(): Int = a
+
         fun setA(a: Int) {
             this.a = a
         }
 
         fun getB(): String = b
+
         fun setB(b: String) {
             this.b = b
         }
@@ -350,9 +376,7 @@ class CreateDataFrameTests {
             return result
         }
 
-        override fun toString(): String {
-            return "FakePojo(a=$a, b='$b')"
-        }
+        override fun toString(): String = "FakePojo(a=$a, b='$b')"
     }
 
     @Test
@@ -388,7 +412,7 @@ class CreateDataFrameTests {
     @Test
     fun `arrays in to DF`() {
         val df = listOf(
-            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null))
+            Arrays(intArrayOf(1, 2), arrayOf(3, 4), arrayOf(5, null)),
         ).toDataFrame(maxDepth = Int.MAX_VALUE)
 
         df.schema() shouldBe dataFrameOf(
@@ -396,5 +420,36 @@ class CreateDataFrameTests {
             DataColumn.createValueColumn("b", listOf(arrayOf(3, 4)), typeOf<Array<Int>>()),
             DataColumn.createValueColumn("c", listOf(arrayOf(5, null)), typeOf<Array<Int?>>()),
         ).schema()
+    }
+
+    @DataSchema
+    data class Person(
+        val firstName: String,
+        val lastName: String,
+        val age: Int,
+        val city: String?,
+    ) : DataRowSchema
+
+    @DataSchema
+    data class Group(val id: String, val participants: List<Person>) : DataRowSchema
+
+    @Test
+    fun `deeply convert data schema and list of data schema`() {
+        val participants1 = listOf(
+            Person("Alice", "Cooper", 15, "London"),
+            Person("Bob", "Dylan", 45, "Dubai"),
+        )
+        val participants2 = listOf(
+            Person("Charlie", "Daniels", 20, "Moscow"),
+            Person("Charlie", "Chaplin", 40, "Milan"),
+        )
+        val df = dataFrameOf(
+            Group("1", participants1),
+            Group("2", participants2),
+        )
+        shouldNotThrowAny {
+            df.participants[0].firstName
+            df.participants[0].city
+        }
     }
 }

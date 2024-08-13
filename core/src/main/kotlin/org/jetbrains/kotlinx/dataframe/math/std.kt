@@ -2,18 +2,22 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.ddof_default
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 @PublishedApi
-internal fun <T : Number> Iterable<T?>.std(type: KType, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double {
+internal fun <T : Number> Iterable<T?>.std(
+    type: KType,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+): Double {
     if (type.isMarkedNullable) {
-        if (skipNA) {
-            return filterNotNull().std(type.withNullability(false), true, ddof)
-        } else {
-            if (contains(null)) return Double.NaN
-            return std(type.withNullability(false), skipNA, ddof)
+        return when {
+            skipNA -> filterNotNull().std(type = type.withNullability(false), skipNA = true, ddof = ddof)
+            contains(null) -> Double.NaN
+            else -> std(type = type.withNullability(false), skipNA = false, ddof = ddof)
         }
     }
     return when (type.classifier) {
@@ -22,15 +26,18 @@ internal fun <T : Number> Iterable<T?>.std(type: KType, skipNA: Boolean = skipNA
         Int::class, Short::class, Byte::class -> (this as Iterable<Int>).std(ddof)
         Long::class -> (this as Iterable<Long>).std(ddof)
         BigDecimal::class -> (this as Iterable<BigDecimal>).std(ddof)
-        else -> throw IllegalArgumentException("Unsupported type ${type.classifier}")
+        Nothing::class -> Double.NaN
+        else -> throw IllegalArgumentException("Unable to compute the std for type ${renderType(type)}")
     }
 }
 
 @JvmName("doubleStd")
-public fun Iterable<Double>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double = varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
+public fun Iterable<Double>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
+    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
 
 @JvmName("floatStd")
-public fun Iterable<Float>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double = varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
+public fun Iterable<Float>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
+    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
 
 @JvmName("intStd")
 public fun Iterable<Int>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)

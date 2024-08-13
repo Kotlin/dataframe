@@ -5,18 +5,11 @@ import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.documentation.Indent
-import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.singleImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
@@ -30,8 +23,9 @@ import kotlin.reflect.KProperty
  * ## Col [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]
  *
  * See [Grammar] for all functions in this interface.
+ * @param _UNUSED [#KT-68546](https://youtrack.jetbrains.com/issue/KT-68546/Conflicting-overloads-in-non-generic-interface-K2-2.0.0)
  */
-public interface ColColumnsSelectionDsl {
+public interface ColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * ## Col Grammar
@@ -44,25 +38,19 @@ public interface ColColumnsSelectionDsl {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
+     *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `index: `[`Int`][Int]
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `T: Column type`
@@ -71,7 +59,7 @@ public interface ColColumnsSelectionDsl {
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`col`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
@@ -80,7 +68,7 @@ public interface ColColumnsSelectionDsl {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -91,7 +79,7 @@ public interface ColColumnsSelectionDsl {
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
@@ -169,7 +157,7 @@ public interface ColColumnsSelectionDsl {
      */
     private interface CommonColDocs {
 
-        /* Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]} */
+        // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
         interface ExampleArg
 
         /**
@@ -184,13 +172,13 @@ public interface ColColumnsSelectionDsl {
          */
         interface DoubleExample
 
-        /* Receiver argument for the example(s) */
+        // Receiver argument for the example(s)
         interface ReceiverArg
 
-        /* Argument for the example(s) */
+        // Argument for the example(s)
         interface Arg
 
-        /* Optional note */
+        // Optional note
         interface Note
 
         /** @param [C] The type of the column. */
@@ -295,7 +283,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      *
      */
     @Deprecated(IDENTITY_FUNCTION, ReplaceWith(COL_REPLACE))
@@ -347,7 +335,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> SingleColumn<DataRow<*>>.col(col: ColumnAccessor<C>): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
@@ -402,7 +390,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> AnyColumnGroupAccessor.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().column(col.path())
@@ -453,7 +441,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> String.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(col.path())
@@ -504,7 +492,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> KProperty<*>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(col.path())
@@ -555,7 +543,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> ColumnPath.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(col.path())
@@ -662,7 +650,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
@@ -715,7 +703,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
     public fun <C> col(name: String): ColumnAccessor<C> = column(name)
@@ -767,12 +755,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun SingleColumn<DataRow<*>>.col(name: String): SingleColumn<*> =
-        col<Any?>(name)
+    public fun SingleColumn<DataRow<*>>.col(name: String): SingleColumn<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -821,7 +808,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
     public fun <C> SingleColumn<DataRow<*>>.col(name: String): SingleColumn<C> =
@@ -878,12 +865,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun AnyColumnGroupAccessor.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun AnyColumnGroupAccessor.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -932,11 +918,10 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
-    public fun <C> AnyColumnGroupAccessor.col(name: String): ColumnAccessor<C> =
-        this.ensureIsColumnGroup().column(name)
+    public fun <C> AnyColumnGroupAccessor.col(name: String): ColumnAccessor<C> = this.ensureIsColumnGroup().column(name)
 
     /**
      * ## Col
@@ -985,12 +970,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun String.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun String.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -1039,7 +1023,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
     public fun <C> String.col(name: String): ColumnAccessor<C> =
@@ -1094,12 +1078,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun KProperty<*>.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun KProperty<*>.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -1148,7 +1131,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
     public fun <C> KProperty<*>.col(name: String): ColumnAccessor<C> =
@@ -1201,12 +1184,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnPath.col(name: String): ColumnAccessor<*> =
-        col<Any?>(name)
+    public fun ColumnPath.col(name: String): ColumnAccessor<*> = col<Any?>(name)
 
     /**
      * ## Col
@@ -1255,7 +1237,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [name] The name of the column. 
+     * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
     public fun <C> ColumnPath.col(name: String): ColumnAccessor<C> =
@@ -1363,7 +1345,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
@@ -1416,7 +1398,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      * @param [C] The type of the column.
      */
     public fun <C> col(path: ColumnPath): ColumnAccessor<C> = column(path)
@@ -1468,12 +1450,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<*> =
-        col<Any?>(path)
+    public fun SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1522,7 +1503,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      * @param [C] The type of the column.
      */
     public fun <C> SingleColumn<DataRow<*>>.col(path: ColumnPath): SingleColumn<C> =
@@ -1579,12 +1560,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1633,7 +1613,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      * @param [C] The type of the column.
      */
     public fun <C> AnyColumnGroupAccessor.col(path: ColumnPath): ColumnAccessor<C> =
@@ -1686,12 +1666,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun String.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun String.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1740,7 +1719,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      * @param [C] The type of the column.
      */
     public fun <C> String.col(path: ColumnPath): ColumnAccessor<C> =
@@ -1793,12 +1772,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun KProperty<*>.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun KProperty<*>.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1847,7 +1825,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      * @param [C] The type of the column.
      */
     public fun <C> KProperty<*>.col(path: ColumnPath): ColumnAccessor<C> =
@@ -1900,12 +1878,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnPath.col(path: ColumnPath): ColumnAccessor<*> =
-        col<Any?>(path)
+    public fun ColumnPath.col(path: ColumnPath): ColumnAccessor<*> = col<Any?>(path)
 
     /**
      * ## Col
@@ -1954,7 +1931,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      *
-     * @param [path] The path to the column. 
+     * @param [path] The path to the column.
      * @param [C] The type of the column.
      */
     public fun <C> ColumnPath.col(path: ColumnPath): ColumnAccessor<C> =
@@ -2060,7 +2037,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [property] The [KProperty] reference to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> col(property: KProperty<C>): SingleColumn<C> = column(property)
 
@@ -2110,10 +2087,9 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [property] The [KProperty] reference to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
-    public fun <C> SingleColumn<DataRow<*>>.col(property: KProperty<C>): SingleColumn<C> =
-        col<C>(property.name)
+    public fun <C> SingleColumn<DataRow<*>>.col(property: KProperty<C>): SingleColumn<C> = col<C>(property.name)
 
     /**
      * ## Col
@@ -2161,7 +2137,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [property] The [KProperty] reference to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> AnyColumnGroupAccessor.col(property: KProperty<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().column(property)
@@ -2212,7 +2188,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [property] The [KProperty] reference to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> String.col(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(property)
@@ -2263,7 +2239,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [property] The [KProperty] reference to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> KProperty<*>.col(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(property)
@@ -2314,7 +2290,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [property] The [KProperty] reference to the column.
-     * @param [C] The type of the column. 
+     * @param [C] The type of the column.
      */
     public fun <C> ColumnPath.col(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(property)
@@ -2423,7 +2399,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      *
      *
@@ -2478,7 +2454,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      *
      */
@@ -2532,12 +2508,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2587,11 +2562,10 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      */
-    public fun <C> ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<C> =
-        asSingleColumn().col<C>(index)
+    public fun <C> ColumnsSelectionDsl<*>.col(index: Int): SingleColumn<C> = asSingleColumn().col<C>(index)
 
     /**
      * ## Col
@@ -2641,12 +2615,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2696,7 +2669,7 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      */
     public fun <C> SingleColumn<DataRow<*>>.col(index: Int): SingleColumn<C> =
@@ -2753,12 +2726,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun String.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun String.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2808,11 +2780,10 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      */
-    public fun <C> String.col(index: Int): SingleColumn<C> =
-        columnGroup(this).col<C>(index)
+    public fun <C> String.col(index: Int): SingleColumn<C> = columnGroup(this).col<C>(index)
 
     /**
      * ## Col
@@ -2862,12 +2833,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun KProperty<*>.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun KProperty<*>.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -2917,11 +2887,10 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      */
-    public fun <C> KProperty<*>.col(index: Int): SingleColumn<C> =
-        columnGroup(this).col<C>(index)
+    public fun <C> KProperty<*>.col(index: Int): SingleColumn<C> = columnGroup(this).col<C>(index)
 
     /**
      * ## Col
@@ -2971,12 +2940,11 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colUnTyped")
-    public fun ColumnPath.col(index: Int): SingleColumn<*> =
-        col<Any?>(index)
+    public fun ColumnPath.col(index: Int): SingleColumn<*> = col<Any?>(index)
 
     /**
      * ## Col
@@ -3026,11 +2994,10 @@ public interface ColColumnsSelectionDsl {
      *
      *
      * @param [index] The index of the column.
-     * @throws [IndexOutOfBoundsException] if the index is out of bounds. 
+     * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      */
-    public fun <C> ColumnPath.col(index: Int): SingleColumn<C> =
-        columnGroup(this).col<C>(index)
+    public fun <C> ColumnPath.col(index: Int): SingleColumn<C> = columnGroup(this).col<C>(index)
 
     // endregion
 }

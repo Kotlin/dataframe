@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalCompilerApi::class)
+
 package org.jetbrains.dataframe.ksp.runner
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.JvmTarget
 import java.io.File
 import java.io.OutputStream
@@ -22,7 +25,7 @@ internal object KotlinCompilationUtil {
         compilation.sources = sources
         // workaround for https://github.com/tschuchortdev/kotlin-compile-testing/issues/105
         compilation.kotlincArguments += "-Xjava-source-roots=${javaSrcRoot.absolutePath}"
-        compilation.jvmDefault = "enable"
+        compilation.jvmDefault = "all"
         compilation.jvmTarget = JvmTarget.JVM_1_8.description
         compilation.inheritClassPath = false
         compilation.verbose = false
@@ -68,7 +71,7 @@ internal object KotlinCompilationUtil {
             kotlinScriptRuntimeJar = compilation.kotlinScriptRuntimeJar
 
             inheritedClasspath = getClasspathFromClassloader(
-                KotlinCompilationUtil::class.java.classLoader
+                KotlinCompilationUtil::class.java.classLoader,
             )
         }
     }
@@ -92,14 +95,16 @@ internal object KotlinCompilationUtil {
                 break
             }
             check(currentClassloader is URLClassLoader) {
-                """Classpath for compilation could not be extracted
+                """
+                Classpath for compilation could not be extracted
                 since $currentClassloader is not an instance of URLClassloader
                 """.trimIndent()
             }
             // We only know how to extract classpaths from URLClassloaders.
             currentClassloader.urLs.forEach { url ->
                 check(url.protocol == "file") {
-                    """Given classloader consists of classpaths which are unsupported for
+                    """
+                    Given classloader consists of classpaths which are unsupported for
                     compilation.
                     """.trimIndent()
                 }
@@ -116,9 +121,7 @@ internal object KotlinCompilationUtil {
  *
  * @see getSystemClasspaths
  */
-fun getSystemClasspathFiles(): Set<File> {
-    return getSystemClasspaths().map { File(it) }.toSet()
-}
+fun getSystemClasspathFiles(): Set<File> = getSystemClasspaths().map { File(it) }.toSet()
 
 /**
  * Returns the file paths from the system class loader

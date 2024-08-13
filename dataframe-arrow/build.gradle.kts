@@ -3,11 +3,15 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
     }
 }
 
 group = "org.jetbrains.kotlinx"
+
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     api(project(":core"))

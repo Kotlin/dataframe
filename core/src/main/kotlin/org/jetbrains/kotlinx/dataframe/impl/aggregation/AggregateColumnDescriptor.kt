@@ -12,13 +12,15 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 internal class AggregateColumnDescriptor<C>(
     val column: ColumnWithPath<C>,
     val default: C? = null,
-    val newPath: ColumnPath? = null
+    val newPath: ColumnPath? = null,
 ) : ColumnWithPath<C> by column
 
 internal fun <T, C> DataFrame<T>.getAggregateColumn(selector: ColumnsForAggregateSelector<T, C>) =
     getAggregateColumns(selector).single()
 
-internal fun <T, C> DataFrame<T>.getAggregateColumns(selector: ColumnsForAggregateSelector<T, C>): List<AggregateColumnDescriptor<C>> {
+internal fun <T, C> DataFrame<T>.getAggregateColumns(
+    selector: ColumnsForAggregateSelector<T, C>,
+): List<AggregateColumnDescriptor<C>> {
     val columns = selector.toColumns().resolve(this, UnresolvedColumnsPolicy.Create)
     return columns.map {
         when (val col = it) {

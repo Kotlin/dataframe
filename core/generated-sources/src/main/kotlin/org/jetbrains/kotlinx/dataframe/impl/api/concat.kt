@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.getListType
+import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -54,16 +55,31 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
                 col.toList()
             } else {
                 val nrow = columnSizes[index]
-                if (!nulls && nrow > 0 && defaultValue == null) nulls = true
+                if (!nulls && nrow > 0 && defaultValue == null) {
+                    nulls = true
+                } else if (defaultValue != null) {
+                    types.add(
+                        guessValueType(sequenceOf(defaultValue)),
+                    )
+                }
                 List(nrow) { defaultValue }
             }
         }
 
         val guessType = types.size > 1
         val baseType = types.commonType()
-        val tartypeOf = if (guessType || !hasList) baseType.withNullability(nulls)
-        else getListType(baseType.withNullability(listOfNullable))
-        return guessColumnType(name, list, tartypeOf, guessType, defaultValue).cast()
+        val tartypeOf = if (guessType || !hasList) {
+            baseType.withNullability(nulls)
+        } else {
+            getListType(baseType.withNullability(listOfNullable))
+        }
+        return guessColumnType(
+            name = name,
+            values = list,
+            suggestedType = tartypeOf,
+            suggestedTypeIsUpperBound = guessType,
+            defaultValue = defaultValue,
+        ).cast()
     }
 }
 

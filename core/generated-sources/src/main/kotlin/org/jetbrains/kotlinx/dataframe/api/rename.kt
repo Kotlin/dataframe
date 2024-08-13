@@ -3,21 +3,15 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamNameArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ReceiverTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixIntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixNamedName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.IntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.NamedName
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
@@ -31,6 +25,7 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
     rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
         .into(*mappings.map { it.second }.toTypedArray())
 
+@Interpretable("Rename")
 public fun <T, C> DataFrame<T>.rename(columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
 
 public fun <T, C> DataFrame<T>.rename(vararg cols: ColumnReference<C>): RenameClause<T, C> =
@@ -40,6 +35,7 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
 
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
 
+@HasSchema(schemaArg = 0)
 public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
 /**
@@ -49,22 +45,22 @@ public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsS
  * and converting the first char to lowercase.
  * Even [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
  */
-public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> = this
+public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> =
     // recursively rename all columns written with delimiters or starting with a capital to camel case
-    .rename {
+    rename {
         colsAtAnyDepth { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }
     }.toCamelCase()
-
-    // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
-    .update {
-        colsAtAnyDepth().colsOf<AnyFrame>()
-    }.with { it.renameToCamelCase() }
+        // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
+        .update {
+            colsAtAnyDepth().colsOf<AnyFrame>()
+        }.with { it.renameToCamelCase() }
 
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 
-public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> =
-    renameImpl(newNames)
+@Refine
+@Interpretable("RenameInto")
+public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFrame<T> =
     into(*newNames.map { it.name }.toTypedArray())
@@ -78,11 +74,12 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  * Renames the selected columns to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
  * and converting the first char to lowercase.
  */
-public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into {
-    it.name()
-        .toCamelCaseByDelimiters(DELIMITERS_REGEX)
-        .replaceFirstChar { it.lowercaseChar() }
-}
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
+    into {
+        it.name()
+            .toCamelCaseByDelimiters(DELIMITERS_REGEX)
+            .replaceFirstChar { it.lowercaseChar() }
+    }
 
 // endregion
 
@@ -126,16 +123,13 @@ public interface RenameColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
-     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
-     *
-     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+     *  `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *  
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]` `[**named**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.named]`/`[**into**][org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.into]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
@@ -211,6 +205,7 @@ public interface RenameColumnsSelectionDsl {
 
         /** "newName" or "nameOf" */
         interface ParamNameArg
+
         interface ParamArg
 
         interface ParamTypeArg
@@ -298,8 +293,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
-    public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
-        named(nameOf.name)
+    public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf.name)
 
     /**
      * ## Rename: `named` / `into`
@@ -326,8 +320,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
-    public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
-        named(nameOf.columnName)
+    public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf.columnName)
 
     /**
      * ## Rename: `named` / `into`

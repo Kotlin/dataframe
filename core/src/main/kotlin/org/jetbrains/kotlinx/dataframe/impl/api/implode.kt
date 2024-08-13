@@ -16,8 +16,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.extractDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.typeOf
 
-internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> {
-    return groupBy { allExcept(columns) }.updateGroups {
+internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
+    groupBy { allExcept(columns) }.updateGroups {
         replace(columns).with { column ->
             val (value, type) = when (column.kind()) {
                 ColumnKind.Value -> (if (dropNA) column.dropNA() else column).toList() to getListType(column.type())
@@ -29,8 +29,15 @@ internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: C
                 if (first) {
                     first = false
                     value
-                } else null
+                } else {
+                    // these rows will not be taken into account,
+                    // but we cannot leave them empty, as `map` creates a full column
+                    when (column.kind()) {
+                        ColumnKind.Value -> emptyList<Any?>()
+                        ColumnKind.Group -> DataFrame.empty()
+                        ColumnKind.Frame -> emptyList<AnyFrame>()
+                    }
+                }
             }
-        }[0..0]
+        }[0..0] // takes only the first row
     }.concat()
-}

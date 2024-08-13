@@ -11,8 +11,12 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toCodeString
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
@@ -34,40 +38,74 @@ class CodeGenerationTests : BaseTest() {
     val stringName = String::class.simpleName!!
     val intName = Int::class.simpleName!!
 
-    fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false) = buildString {
-        appendLine("""val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>""")
-        appendLine("""val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName""")
-        if (addNullable) {
-            appendLine("""val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>""")
-            appendLine("""val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?""")
+    fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false) =
+        buildString {
+            appendLine(
+                """val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>""",
+            )
+            appendLine(
+                """val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName""",
+            )
+            if (addNullable) {
+                appendLine(
+                    """val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>""",
+                )
+                appendLine(
+                    """val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?""",
+                )
+            }
+            appendLine(
+                """val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
+            )
+            appendLine(
+                """val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?""",
+            )
+            if (addNullable) {
+                appendLine(
+                    """val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
+                )
+                appendLine(
+                    """val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?""",
+                )
+            }
+            appendLine(
+                """val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>""",
+            )
+            appendLine(
+                """val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName""",
+            )
+            if (addNullable) {
+                appendLine(
+                    """val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>""",
+                )
+                appendLine(
+                    """val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?""",
+                )
+            }
+            appendLine(
+                """val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+            )
+            append(
+                """val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+            )
+            if (addNullable) {
+                appendLine("")
+                appendLine(
+                    """val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+                )
+                append(
+                    """val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+                )
+            }
         }
-        appendLine("""val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""")
-        appendLine("""val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?""")
-        if (addNullable) {
-            appendLine("""val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""")
-            appendLine("""val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?""")
-        }
-        appendLine("""val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>""")
-        appendLine("""val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName""")
-        if (addNullable) {
-            appendLine("""val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>""")
-            appendLine("""val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?""")
-        }
-        appendLine("""val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""")
-        append("""val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?""")
-        if (addNullable) {
-            appendLine("")
-            appendLine("""val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""")
-            append("""val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?""")
-        }
-    }
 
     @Test
     fun `generate marker interface`() {
         val codeGen = ReplCodeGenerator.create()
         val generated = codeGen.process(df, ::df)
         val typeName = ReplCodeGeneratorImpl.markerInterfacePrefix
-        val expectedDeclaration = """
+        val expectedDeclaration =
+            """
             @DataSchema
             interface $typeName {
                 val age: Int
@@ -76,7 +114,7 @@ class CodeGenerationTests : BaseTest() {
                 val weight: Int?
             }
             
-        """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
+            """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
@@ -97,7 +135,8 @@ class CodeGenerationTests : BaseTest() {
         val property = ::row
         val generated = ReplCodeGenerator.create().process(df[0], property)
         val typeName = ReplCodeGeneratorImpl.markerInterfacePrefix
-        val expectedDeclaration = """
+        val expectedDeclaration =
+            """
             @DataSchema
             interface $typeName {
                 val age: Int
@@ -106,7 +145,7 @@ class CodeGenerationTests : BaseTest() {
                 val weight: Int?
             }
             
-        """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
+            """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
@@ -121,7 +160,8 @@ class CodeGenerationTests : BaseTest() {
         val generated = ReplCodeGenerator.create().process(grouped, property)
         val type1 = ReplCodeGeneratorImpl.markerInterfacePrefix + "1"
         val type2 = ReplCodeGeneratorImpl.markerInterfacePrefix
-        val declaration1 = """
+        val declaration1 =
+            """
             @DataSchema(isOpen = false)
             interface $type1 {
                 val city: String?
@@ -133,9 +173,10 @@ class CodeGenerationTests : BaseTest() {
             val $dfName<$type1>.name: $dataCol<$stringName> @JvmName("${type1}_name") get() = this["name"] as $dataCol<$stringName>
             val $dfRowName<$type1>.name: $stringName @JvmName("${type1}_name") get() = this["name"] as $stringName
             
-        """.trimIndent()
+            """.trimIndent()
 
-        val declaration2 = """
+        val declaration2 =
+            """
             @DataSchema
             interface $type2 {
                 val age: Int
@@ -149,7 +190,7 @@ class CodeGenerationTests : BaseTest() {
             val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$type1>
             val $dfName<$type2>.weight: $dataCol<$intName?> @JvmName("${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
-        """.trimIndent()
+            """.trimIndent()
 
         val expectedConverter = "it.cast<$type2>()"
 
@@ -160,13 +201,16 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `generate extension properties`() {
         val personClass = (Person::class).qualifiedName!!
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface $personClass { }
-        """.trimIndent() + "\n" + expectedProperties(personClassName, personShortName, addNullable = true)
+            """.trimIndent() + "\n" + expectedProperties(personClassName, personShortName, addNullable = true)
 
-        val code = CodeGenerator.create(useFqNames = false)
-            .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true).declarations
+        val code = CodeGenerator
+            .create(useFqNames = false)
+            .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true)
+            .declarations
         code shouldBe expected
     }
 
@@ -189,12 +233,11 @@ class CodeGenerationTests : BaseTest() {
             extensionProperties = true,
             isOpen = true,
             visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            knownMarkers = listOf(
-                MarkersExtractor.get<Person>()
-            )
+            knownMarkers = listOf(MarkersExtractor.get<Person>()),
         ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface ValidPerson : $personClassName {
                 override val city: kotlin.String
@@ -205,7 +248,7 @@ class CodeGenerationTests : BaseTest() {
             val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
             val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
             val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
-        """.trimIndent()
+            """.trimIndent()
         code shouldBe expected
     }
 
@@ -213,11 +256,12 @@ class CodeGenerationTests : BaseTest() {
     fun `empty interface with properties`() {
         val codeGen = CodeGenerator.create(useFqNames = false)
         val code = codeGen.generate(df.schema(), "Person", false, true, true).code.declarations
-        val expected = """
+        val expected =
+            """
             @DataSchema
             interface Person { }
             
-        """.trimIndent() + "\n" + expectedProperties("Person", "Person")
+            """.trimIndent() + "\n" + expectedProperties("Person", "Person")
         code shouldBe expected
     }
 
@@ -225,7 +269,8 @@ class CodeGenerationTests : BaseTest() {
     fun `interface with fields`() {
         val repl = CodeGenerator.create()
         val code = repl.generate(typed.schema(), "DataType", true, false, false).code.declarations
-        code shouldBe """
+        code shouldBe
+            """
             @DataSchema(isOpen = false)
             interface DataType {
                 val age: kotlin.Int
@@ -233,7 +278,7 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
-        """.trimIndent()
+            """.trimIndent()
     }
 
     @Test
@@ -242,7 +287,8 @@ class CodeGenerationTests : BaseTest() {
         val code =
             repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        code shouldBe """
+        code shouldBe
+            """
             @DataSchema(isOpen = false)
             internal interface DataType {
                 val age: kotlin.Int
@@ -259,7 +305,7 @@ class CodeGenerationTests : BaseTest() {
             internal val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
             internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
-        """.trimIndent()
+            """.trimIndent()
     }
 
     @Test
@@ -271,10 +317,11 @@ class CodeGenerationTests : BaseTest() {
             true,
             true,
             false,
-            MarkerVisibility.EXPLICIT_PUBLIC
+            MarkerVisibility.EXPLICIT_PUBLIC,
         ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        code shouldBe """
+        code shouldBe
+            """
             @DataSchema(isOpen = false)
             public interface DataType {
                 public val age: kotlin.Int
@@ -291,7 +338,7 @@ class CodeGenerationTests : BaseTest() {
             public val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
             public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             public val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
-        """.trimIndent()
+            """.trimIndent()
     }
 
     @Test
@@ -303,6 +350,40 @@ class CodeGenerationTests : BaseTest() {
             val matches = "`$it`".toRegex().findAll(declarations).toList()
             matches.size shouldBe 2
         }
+    }
+
+    @Test
+    fun `check method generateDataClasses`() {
+        val code = typed.groupBy { name }.toDataFrame().generateDataClasses()
+
+        code shouldBe
+            """
+            @DataSchema
+            data class Person1(
+                val age: Int,
+                val city: String?,
+                val name: String,
+                val weight: Int?
+            )
+
+            @DataSchema
+            data class Person(
+                val group: List<Person1>,
+                val name: String
+            )
+            """.trimIndent().toCodeString()
+    }
+
+    @Test
+    fun `check name normalization for generated data classes`() {
+        dataFrameOf("my_name")(1).generateDataClasses() shouldBe
+            """
+            @DataSchema
+            data class DataEntry(
+                @ColumnName("my_name")
+                val myName: Int
+            )
+            """.trimIndent().toCodeString()
     }
 
     @Test

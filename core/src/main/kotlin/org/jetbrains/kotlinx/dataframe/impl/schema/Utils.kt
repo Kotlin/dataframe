@@ -43,7 +43,9 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
                 val otherType = schema.columns[name]
                 if (otherType == null) {
                     columnsToUpdate.add(name)
-                } else columnSchemas.add(otherType)
+                } else {
+                    columnSchemas.add(otherType)
+                }
             }
             columnsToUpdate.forEach { collectedTypes.remove(it) }
             columnsToUpdate.clear()
@@ -89,28 +91,44 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     return DataFrameSchemaImpl(result)
 }
 
-internal fun AnyCol.extractSchema(): ColumnSchema = when (this) {
-    is ValueColumn<*> -> ColumnSchema.Value(type)
-    is ColumnGroup<*> -> ColumnSchema.Group(schema(), typeOf<Any?>())
-    is FrameColumn<*> -> ColumnSchema.Frame(schema.value, hasNulls, typeOf<Any?>())
-    else -> throw RuntimeException("Unknown column type: $this")
-}
-
-internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) {
-    is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
-    is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
-    is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
-    else -> error("Unexpected ColumnSchema: $this")
-}
-
-/** Create "empty" column, filled with either null or empty dataframes. */
-internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): AnyCol =
+internal fun AnyCol.extractSchema(): ColumnSchema =
     when (this) {
-        is ColumnSchema.Value -> DataColumn.createValueColumn(
-            name = name,
-            values = List(numberOfRows) { null },
-            type = type,
-        )
+        is ValueColumn<*> -> ColumnSchema.Value(type)
+        is ColumnGroup<*> -> ColumnSchema.Group(schema(), typeOf<Any?>())
+        is FrameColumn<*> -> ColumnSchema.Frame(schema.value, hasNulls, typeOf<Any?>())
+        else -> throw RuntimeException("Unknown column type: $this")
+    }
+
+@PublishedApi
+internal fun getSchema(kClass: KClass<*>): DataFrameSchema = MarkersExtractor.get(kClass).schema
+
+/**
+ * Create "empty" column based on the toplevel of [this] [ColumnSchema].
+ */
+internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol =
+    when (this) {
+        is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
+        is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
+        is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
+        else -> error("Unexpected ColumnSchema: $this")
+    }
+
+/**
+ * Creates a column based on [this] [ColumnSchema] filled with `null` or empty dataframes.
+ * @throws IllegalStateException if the column is not nullable and [numberOfRows]` > 0`.
+ */
+internal fun ColumnSchema.createNullFilledColumn(name: String, numberOfRows: Int): AnyCol =
+    when (this) {
+        is ColumnSchema.Value -> {
+            if (!type.isMarkedNullable && numberOfRows > 0) {
+                error("Cannot create a null-filled value column of type $type as it's not nullable.")
+            }
+            DataColumn.createValueColumn(
+                name = name,
+                values = List(numberOfRows) { null },
+                type = type,
+            )
+        }
 
         is ColumnSchema.Group -> DataColumn.createColumnGroup(
             name = name,
@@ -123,7 +141,7 @@ internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): An
             schema = lazyOf(schema),
         )
 
-        else -> error("Unexpected ColumnSchema: $this")
+        else -> error("Cannot create null-filled column of unexpected ColumnSchema: $this")
     }
 
 internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
@@ -136,7 +154,7 @@ internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
         DataFrame.empty(numberOfRows)
     } else {
         columns.map { (name, schema) ->
-            schema.createEmptyColumn(name, numberOfRows)
+            schema.createNullFilledColumn(name, numberOfRows)
         }.toDataFrame()
     }
 

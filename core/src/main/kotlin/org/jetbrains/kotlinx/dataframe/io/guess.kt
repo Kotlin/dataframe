@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.jupyter.api.Code
@@ -35,10 +37,10 @@ public sealed interface SupportedFormat {
 public sealed interface SupportedFormatSample {
 
     @JvmInline
-    public value class File(public val sampleFile: java.io.File) : SupportedFormatSample
+    public value class DataFile(public val sampleFile: File) : SupportedFormatSample
 
     @JvmInline
-    public value class URL(public val sampleUrl: java.net.URL) : SupportedFormatSample
+    public value class DataUrl(public val sampleUrl: URL) : SupportedFormatSample
 
     @JvmInline
     public value class PathString(public val samplePath: String) : SupportedFormatSample
@@ -85,17 +87,18 @@ public interface SupportedCodeGenerationFormat : SupportedFormat {
      * @param name the name of the top-level interface to generate
      * @param generateHelperCompanionObject whether to generate a helper companion object (only needed for Jupyter)
      */
-    public fun readCodeForGeneration(
-        file: File,
-        name: String,
-        generateHelperCompanionObject: Boolean = false,
-    ): Code
+    public fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean = false): Code
 }
 
 public class MethodArguments {
     internal val defaultValues = mutableListOf<Argument>()
 
-    public fun add(name: String, type: KType, initializerTemplate: String, vararg values: Any?): MethodArguments {
+    public fun add(
+        name: String,
+        type: KType,
+        initializerTemplate: String,
+        vararg values: Any?,
+    ): MethodArguments {
         val capitalizedName = name.replaceFirstChar { it.uppercaseChar() }
         val propertyName = "default$capitalizedName"
 
@@ -125,7 +128,7 @@ internal val supportedFormats: List<SupportedFormat> by lazy {
         ServiceLoader.load(SupportedDataFrameFormat::class.java).toList() +
             ServiceLoader.load(SupportedCodeGenerationFormat::class.java).toList() +
             ServiceLoader.load(SupportedFormat::class.java).toList()
-        ).distinct()
+    ).distinct()
         .sortedBy { it.testOrder }
 }
 
@@ -138,13 +141,13 @@ internal fun guessFormatForExtension(
 internal fun guessFormat(
     file: File,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: SupportedFormatSample.File? = SupportedFormatSample.File(file),
+    sample: SupportedFormatSample.DataFile? = SupportedFormatSample.DataFile(file),
 ): SupportedFormat? = guessFormatForExtension(file.extension.lowercase(), formats, sample = sample)
 
 internal fun guessFormat(
     url: URL,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: SupportedFormatSample.URL? = SupportedFormatSample.URL(url),
+    sample: SupportedFormatSample.DataUrl? = SupportedFormatSample.DataUrl(url),
 ): SupportedFormat? = guessFormatForExtension(url.path.substringAfterLast("."), formats, sample = sample)
 
 internal fun guessFormat(
@@ -159,8 +162,11 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
     fun doClose() = src.close()
 
     override fun reset() = src.reset()
+
     override fun available() = src.available()
+
     override fun markSupported() = src.markSupported()
+
     override fun mark(readlimit: Int) = src.mark(readlimit)
 }
 
@@ -206,21 +212,15 @@ internal fun DataFrame.Companion.read(
     formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>(),
 ): ReadAnyFrame {
     if (format != null) return format to format.readDataFrame(stream, header = header)
-    val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
-    try {
-        val readLimit = 10000
-        input.mark(readLimit)
-
+    stream.use { input ->
+        val byteArray = input.readBytes() // read 8192 bytes
         formats.sortedBy { it.testOrder }.forEach {
             try {
-                input.reset()
-                return it to it.readDataFrame(input, header = header)
-            } catch (e: Exception) {
+                return it to it.readDataFrame(byteArray.inputStream(), header = header)
+            } catch (_: Exception) {
             }
         }
-        throw IllegalArgumentException("Unknown stream format")
-    } finally {
-        input.doClose()
+        throw IllegalArgumentException("Unknown stream format; Tried $formats")
     }
 }
 
@@ -239,20 +239,16 @@ internal fun DataFrame.Companion.read(
         } catch (e: Exception) {
         }
     }
-    throw IllegalArgumentException("Unknown file format")
+    throw IllegalArgumentException("Unknown file format; Tried $formats")
 }
 
 internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: AnyFrame)
 
 internal infix fun SupportedDataFrameFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
 
-internal data class GeneratedCode(
-    val format: SupportedCodeGenerationFormat,
-    val code: Code,
-)
+internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val code: Code)
 
-internal infix fun SupportedCodeGenerationFormat.to(code: Code) =
-    GeneratedCode(this, code)
+internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, code)
 
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
     read(
@@ -266,24 +262,28 @@ public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(file, header).single()
 
-public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame = when {
-    isFile(url) -> read(urlAsFile(url), header)
-    isProtocolSupported(url) -> catchHttpResponse(url) {
-        read(
-            stream = it,
-            format = guessFormat(url)?.also {
-                if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
-            } as SupportedDataFrameFormat?,
-            header = header,
-        ).df
-    }
+public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame =
+    when {
+        isFile(url) -> read(urlAsFile(url), header)
 
-    else -> throw IllegalArgumentException("Invalid protocol for url $url")
-}
+        isProtocolSupported(url) -> catchHttpResponse(url) {
+            read(
+                stream = it,
+                format = guessFormat(url)?.also {
+                    if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
+                } as SupportedDataFrameFormat?,
+                header = header,
+            ).df
+        }
+
+        else -> throw IllegalArgumentException("Invalid protocol for url $url")
+    }
 
 public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
+@OptInRefine
+@Interpretable("Read0")
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asURL(path), header)
 
@@ -291,7 +291,9 @@ public fun DataRow.Companion.read(path: String, header: List<String> = emptyList
     DataFrame.read(path, header).single()
 
 public fun URL.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
+
 public fun URL.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
 
 public fun File.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
+
 public fun File.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)

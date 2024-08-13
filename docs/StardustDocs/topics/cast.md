@@ -26,3 +26,37 @@ df.cast<Person>()
 ```
 
 To convert [`DataFrame`](DataFrame.md) columns to match given schema, use [`convertTo`](convertTo.md) operation.
+
+**Reusing implicitly generated schema**
+
+```kotlin
+castTo<T>(df: DataFrame<T>)
+```
+
+In notebooks, dataframe types are implicitly generated.
+
+![Implicitly generated schema](implicitlyGeneratedSchema.png)
+
+This type can be referred to, but its name will change whenever you re-execute cells.
+Here how you can do it in a more robust way:
+
+<!---FUN castToGenerateSchema-->
+
+```kotlin
+val sample = DataFrame.readJson("sample.json")
+```
+
+<!---END-->
+
+<!---FUN castTo-->
+
+```kotlin
+for (file in files) {
+    // df here is expected to have the same structure as sample
+    val df = DataFrame.readJson(file).castTo(sample)
+    val count = df.count { perf > 10.0 }
+    println("$file: $count")
+}
+```
+
+<!---END-->

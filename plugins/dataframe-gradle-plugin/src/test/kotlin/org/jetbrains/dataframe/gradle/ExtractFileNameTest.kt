@@ -7,13 +7,21 @@ import java.net.URL
 class ExtractFileNameTest {
     @Test
     fun `1`() {
-        val name = extractFileName("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+        val name =
+            extractFileName(
+                "https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json",
+            )
         assert(name == "playlistItems")
     }
 
     @Test
     fun `2`() {
-        val name = extractFileName(URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json"))
+        val name =
+            extractFileName(
+                URL(
+                    "https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json",
+                ),
+            )
         assert(name == "playlistItems")
     }
 

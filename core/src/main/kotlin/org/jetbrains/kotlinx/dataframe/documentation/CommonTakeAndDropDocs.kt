@@ -1,3 +1,5 @@
+@file:ExcludeFromSources
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -7,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.FirstOrLastArg
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.NounArg
 import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.OperationArg
@@ -43,7 +44,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonTakeAndDropDocs.Title
  * @param [n\] The number of columns to {@get [NounArg]}.
  * @return A [ColumnSet] containing the {@get [FirstOrLastArg]} [n\] columns.
  */
-@ExcludeFromSources
 internal interface CommonTakeAndDropDocs {
 
     /** Title, like "Take Last" */

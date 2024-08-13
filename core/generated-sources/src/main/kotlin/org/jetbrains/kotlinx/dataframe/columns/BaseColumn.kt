@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.impl.api.GenericColumn
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -18,7 +19,9 @@ import kotlin.reflect.KType
  *
  * @param T type of values contained in column.
  */
-public interface BaseColumn<out T> : ColumnReference<T> {
+public interface BaseColumn<out T> :
+    ColumnReference<T>,
+    GenericColumn {
 
     // region info
 
@@ -47,12 +50,14 @@ public interface BaseColumn<out T> : ColumnReference<T> {
      *
      * NOTE: This doesn't work in the [ColumnsSelectionDsl], use [ColumnsSelectionDsl.cols] to select columns by index.
      */
-    public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
-        headPlusIterable(
-            firstIndex,
-            otherIndices.asIterable()
+    public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> =
+        get(
+            headPlusIterable(
+                firstIndex,
+                otherIndices.asIterable(),
+            ),
         )
-    )
+
     public operator fun get(row: AnyRow): T = get(row.index())
 
     /**
@@ -91,7 +96,8 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     override fun rename(newName: String): BaseColumn<T>
 
-    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
+    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> =
+        (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()

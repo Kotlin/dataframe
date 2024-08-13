@@ -1,4 +1,4 @@
-# Kotlin Dataframe: typesafe in-memory structured data processing for JVM
+# Kotlin DataFrame: typesafe in-memory structured data processing for JVM
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component alpha stability](https://img.shields.io/badge/project-alpha-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.9.22-blue.svg?logo=kotlin)](http://kotlinlang.org)
@@ -8,7 +8,7 @@
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Kotlin/dataframe/HEAD)
 
-Kotlin Dataframe aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
+Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic nature of data by utilizing both the full power of the Kotlin language and the opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
 
 * **Hierarchical** — represents hierarchical data structures, such as JSON or a tree of JVM objects.
 * **Functional** — data processing pipeline is organized in a chain of `DataFrame` transformation operations. Every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
@@ -18,7 +18,7 @@ Kotlin Dataframe aims to reconcile Kotlin's static typing with the dynamic natur
 * **Interoperable** — convertable with Kotlin data classes and collections.
 * **Generic** — can store objects of any type, not only numbers or strings.
 * **Typesafe** — on-the-fly generation of extension properties for type safe data access with Kotlin-style care for null safety.
-* **Polymorphic** — type compatibility derives from column schema compatibility. You can define a function that requires a special subset of columns in dataframe but doesn't care about other columns.
+* **Polymorphic** — type compatibility derives from column schema compatibility. You can define a function that requires a special subset of columns in a dataframe but doesn't care about other columns.
 
 Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter). Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
 
@@ -33,9 +33,15 @@ You could find the following articles there:
 * [Full list of all supported operations](https://kotlin.github.io/dataframe/operations.html)
     * [Reading from SQL databases](https://kotlin.github.io/dataframe/readsqldatabases.html)
     * [Reading/writing from/to different file formats like JSON, CSV, Apache Arrow](https://kotlin.github.io/dataframe/read.html)
-    * [Joining a few dataframes](https://kotlin.github.io/dataframe/join.html)
+    * [Joining dataframes](https://kotlin.github.io/dataframe/join.html)
     * [GroupBy operation](https://kotlin.github.io/dataframe/groupby.html)
 * [Rendering to HTML](https://kotlin.github.io/dataframe/tohtml.html#jupyter-notebooks)
+
+### What's new
+Check out new features in development for the next release in this [notebook](examples/notebooks/feature_overviews/0.14.0/new_features.ipynb)
+
+The DataFrame compiler plugin reached public preview state!
+Here's a [demo project](https://github.com/koperagen/df-plugin-demo) that works with IntelliJ IDEA 2024.2.
 
 ## Setup
 
@@ -99,13 +105,13 @@ fun main() {
 
 ## Getting started in Jupyter Notebook / Kotlin Notebook
 
-Install [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
+Install the [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
 
-Import stable `dataframe` version into notebook: 
+Import the stable `dataframe` version into a notebook: 
 ```
 %use dataframe
 ```
-or specific version:
+or a specific version:
 ```
 %use dataframe(<version>)
 ```
@@ -205,7 +211,7 @@ clean
     }
 ```
 
-Check it out on [**Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) to get a better visual impression of what happens and what the hierarchical DataFrame structure looks like. 
+Check it out on [**Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) to get a better visual impression of what happens and what the hierarchical dataframe structure looks like. 
 
 Explore [**more examples here**](examples).
 
@@ -229,4 +235,4 @@ This project and the corresponding community are governed by the [JetBrains Open
 
 ## License
 
-Kotlin Dataframe is licensed under the [Apache 2.0 License](LICENSE).
+Kotlin DataFrame is licensed under the [Apache 2.0 License](LICENSE).

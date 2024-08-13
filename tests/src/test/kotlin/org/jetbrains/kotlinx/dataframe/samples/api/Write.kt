@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.string.shouldStartWith
@@ -46,7 +48,8 @@ class Write : TestBase() {
     @Test
     fun writeCsvStr() {
         // SampleStart
-        val csvStr = df.toCsv(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
+        val format = CSVFormat.DEFAULT.builder().setDelimiter(';').setRecordSeparator(System.lineSeparator()).build()
+        val csvStr = df.toCsv(format)
         // SampleEnd
         csvStr shouldStartWith """
             name;age;city;weight;isHappy
@@ -60,16 +63,16 @@ class Write : TestBase() {
         val jsonStr = df.toJson(prettyPrint = true)
         // SampleEnd
         jsonStr shouldStartWith """
-            [{
-              "name": {
-                "firstName": "Alice",
-                "lastName": "Cooper"
-              },
-              "age": 15,
-              "city": "London",
-              "weight": 54,
-              "isHappy": true
-            }
+            [
+                {
+                    "name": {
+                        "firstName": "Alice",
+                        "lastName": "Cooper"
+                    },
+                    "age": 15,
+                    "city": "London",
+                    "weight": 54,
+                    "isHappy": true
         """.rejoinWithSystemLineSeparator()
     }
 
@@ -116,8 +119,10 @@ class Write : TestBase() {
 
             // Create different sheets from different data frames in the workbook
             val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
-            val happyPersonsSheet = df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
-            val unhappyPersonsSheet = df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
+            val happyPersonsSheet =
+                df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
+            val unhappyPersonsSheet =
+                df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
 
             // Do anything you want by POI
             listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
@@ -153,41 +158,41 @@ class Write : TestBase() {
     fun writeArrowPerSchema() {
         useTempFile { file ->
             val schemaJson =
-"""{
-  "fields" : [ {
-    "name" : "name",
-    "nullable" : true,
-    "type" : {
-      "name" : "utf8"
-    },
-    "children" : [ ]
-  }, {
-    "name" : "age",
-    "nullable" : false,
-    "type" : {
-      "name" : "int",
-      "bitWidth" : 32,
-      "isSigned" : true
-    },
-    "children" : [ ]
-  }, {
-    "name" : "city",
-    "nullable" : false,
-    "type" : {
-      "name" : "utf8"
-    },
-    "children" : [ ]
-  }, {
-    "name" : "weight",
-    "nullable" : true,
-    "type" : {
-      "name" : "floatingpoint",
-      "precision" : "DOUBLE"
-    },
-    "children" : [ ]
-  } ]
-}
-"""
+                """{
+                  "fields" : [ {
+                    "name" : "name",
+                    "nullable" : true,
+                    "type" : {
+                      "name" : "utf8"
+                    },
+                    "children" : [ ]
+                  }, {
+                    "name" : "age",
+                    "nullable" : false,
+                    "type" : {
+                      "name" : "int",
+                      "bitWidth" : 32,
+                      "isSigned" : true
+                    },
+                    "children" : [ ]
+                  }, {
+                    "name" : "city",
+                    "nullable" : false,
+                    "type" : {
+                      "name" : "utf8"
+                    },
+                    "children" : [ ]
+                  }, {
+                    "name" : "weight",
+                    "nullable" : true,
+                    "type" : {
+                      "name" : "floatingpoint",
+                      "precision" : "DOUBLE"
+                    },
+                    "children" : [ ]
+                  } ]
+                }
+                """
 
             // SampleStart
             // Get schema from anywhere you want. It can be deserialized from JSON, generated from another dataset
@@ -226,9 +231,11 @@ class Write : TestBase() {
             // Create a new Excel workbook with a single sheet called "allPersons", replacing the file if it already exists -> Current sheets: allPersons
             df.writeExcel(file, sheetName = "allPersons")
             // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons
-            df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "happyPersons", keepFile = true)
+            df.filter { person -> person.isHappy }.remove("isHappy")
+                .writeExcel(file, sheetName = "happyPersons", keepFile = true)
             // Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons, unhappyPersons
-            df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
+            df.filter { person -> !person.isHappy }.remove("isHappy")
+                .writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
             // SampleEnd
         }
     }

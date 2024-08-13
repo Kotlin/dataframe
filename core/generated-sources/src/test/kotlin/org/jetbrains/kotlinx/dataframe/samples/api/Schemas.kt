@@ -1,3 +1,5 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class Schemas {
 
     @DataSchema
@@ -24,6 +27,7 @@ class Schemas {
     }
 
     fun DataFrame<Person>.splitName() = split { name }.by(",").inward("firstName", "lastName")
+
     fun DataFrame<Person>.adults() = filter { age > 18 }
 
     @Test
@@ -32,7 +36,7 @@ class Schemas {
         // SampleStart
         val df = dataFrameOf("name", "age")(
             "Alice", 15,
-            "Bob", null
+            "Bob", null,
         )
         // SampleEnd
     }
@@ -43,7 +47,7 @@ class Schemas {
         // SampleStart
         val df = dataFrameOf("name", "age")(
             "Alice", 15,
-            "Bob", 20
+            "Bob", 20,
         )
         // SampleEnd
     }
@@ -54,7 +58,7 @@ class Schemas {
         // SampleStart
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5
+            "Marley, Bob", 20, 73.5,
         )
         // SampleEnd
         df.print()
@@ -65,7 +69,7 @@ class Schemas {
     fun splitNameWorks() {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5
+            "Marley, Bob", 20, 73.5,
         ).cast<Person>()
         // SampleStart
         df.splitName()
@@ -77,7 +81,7 @@ class Schemas {
     fun adultsWorks() {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
-            "Marley, Bob", 20, 73.5
+            "Marley, Bob", 20, 73.5,
         ).cast<Person>()
         // SampleStart
         df.adults()
@@ -92,12 +96,13 @@ class Schemas {
         // SampleStart
         @DataSchema
         data class Name(val firstName: String, val lastName: String)
+
         @DataSchema
         data class Person(val name: Name, val age: Int?)
 
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", "15", 60.0,
-            "Marley, Bob", "20", 73.5
+            "Marley, Bob", "20", 73.5,
         ).split { "name"<String>() }.inward("firstName", "lastName")
 
         val persons = df.cast<Person>().toList()
@@ -110,7 +115,7 @@ class Schemas {
         // SampleStart
         val df = dataFrameOf("name", "age")(
             "Alice", 15,
-            "Bob", 20
+            "Bob", 20,
         ).cast<Person>()
         // age only available after executing `build` or `kspKotlin`!
         val teens = df.filter { age in 10..19 }

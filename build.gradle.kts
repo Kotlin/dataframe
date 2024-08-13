@@ -1,4 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import com.github.gmazzo.buildconfig.BuildConfigExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -9,20 +11,22 @@ import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
-        alias(serialization)
+        alias(serialization) apply false
         alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
         alias(korro) apply false
         alias(docProcessor) apply false
         alias(simpleGit) apply false
         alias(dependencyVersions)
+        alias(buildconfig) apply false
 
         // dependence on our own plugin
         alias(dataframe) apply false
@@ -52,11 +56,16 @@ dependencies {
     api(project(":dataframe-jdbc"))
 }
 
-private enum class Version : Comparable<Version> {
-    SNAPSHOT, DEV, ALPHA, BETA, RC, STABLE;
+enum class Version : Comparable<Version> {
+    SNAPSHOT,
+    DEV,
+    ALPHA,
+    BETA,
+    RC,
+    STABLE,
 }
 
-private fun String.findVersion(): Version {
+fun String.findVersion(): Version {
     val version = this.lowercase()
     return when {
         "snapshot" in version -> Version.SNAPSHOT
@@ -70,17 +79,13 @@ private fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    // 5.6 requires Java 11
-    libs.klaxon.get().name,
     // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
     libs.plugins.kover.get().pluginId,
-    // TODO Updating requires major changes all across the project, https://github.com/Kotlin/dataframe/issues/364
-    libs.plugins.kotlinter.get().pluginId,
     // TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
     libs.kotestAssertions.get().name,
     // Can't be updated to 7.4.0+ due to Java 8 compatibility
     libs.android.gradle.api.get().group,
-    // TODO 0.1.6 breaks ktlint, https://github.com/Kotlin/dataframe/issues/598
+    // TODO 0.1.6 broke kotlinter, https://github.com/Kotlin/dataframe/issues/598
     libs.plugins.korro.get().pluginId,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
@@ -124,6 +129,8 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
+kotlin.jvmToolchain(11)
+
 allprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
@@ -136,29 +143,30 @@ allprojects {
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
     }
 
-    // Attempts to configure kotlinter for each sub-project that uses the plugin
+    // Attempts to configure ktlint for each sub-project that uses the plugin
     afterEvaluate {
         try {
-            kotlinter {
-                ignoreFailures = false
-                reporters = arrayOf("checkstyle", "plain")
-                experimentalRules = true
-                disabledRules = arrayOf(
-                    "no-wildcard-imports",
-                    "experimental:spacing-between-declarations-with-annotations",
-                    "experimental:enum-entry-name-case",
-                    "experimental:argument-list-wrapping",
-                    "experimental:annotation",
-                    "max-line-length",
-                    "filename",
-                    "comment-spacing",
-                    "curly-spacing",
-                    "experimental:annotation-spacing",
-                    "no-unused-imports", // broken
-                )
+            configure<KtlintExtension> {
+                version = "1.3.0"
+                // rules are set up through .editorconfig
             }
         } catch (_: UnknownDomainObjectException) {
-            logger.warn("Could not set kotlinter config on :${this.name}")
+            logger.warn("Could not set ktlint config on :${this.name}")
+        }
+
+        // set the java toolchain version to 11 for all subprojects for CI stability
+        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(11)
+
+        // Attempts to configure buildConfig for each sub-project that uses it
+        try {
+            configure<BuildConfigExtension> {
+                packageName = "org.jetbrains.kotlinx.dataframe"
+                className = "BuildConfig"
+                buildConfigField("VERSION", "${project.version}")
+                buildConfigField("DEBUG", findProperty("kotlin.dataframe.debug")?.toString()?.toBoolean() ?: false)
+            }
+        } catch (_: UnknownDomainObjectException) {
+            logger.warn("Could not set buildConfig on :${this.name}")
         }
     }
 }
@@ -219,13 +227,13 @@ kotlinPublications {
     sonatypeSettings(
         project.findProperty("kds.sonatype.user") as String?,
         project.findProperty("kds.sonatype.password") as String?,
-        "dataframe project, v. ${project.version}"
+        "dataframe project, v. ${project.version}",
     )
 
     signingCredentials(
         project.findProperty("kds.sign.key.id") as String?,
         project.findProperty("kds.sign.key.private") as String?,
-        project.findProperty("kds.sign.key.passphrase") as String?
+        project.findProperty("kds.sign.key.passphrase") as String?,
     )
 
     pom {

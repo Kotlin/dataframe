@@ -33,8 +33,10 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `data schema type`() {
         fields.keys.asClue {
-            fields["a"]!!.renderAccessorFieldType() shouldBe "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
-            fields["a"]!!.renderFieldType() shouldBe "org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker"
+            fields["a"]!!.renderAccessorFieldType() shouldBe
+                "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
+            fields["a"]!!.renderFieldType() shouldBe
+                "org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker"
         }
     }
 
@@ -49,8 +51,10 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `list parametrized by data schema type`() {
         fields.keys.asClue {
-            fields["c"]!!.renderAccessorFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
-            fields["c"]!!.renderFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
+            fields["c"]!!.renderAccessorFieldType() shouldBe
+                "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
+            fields["c"]!!.renderFieldType() shouldBe
+                "List<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
         }
     }
 
@@ -65,23 +69,28 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `data row`() {
         fields.keys.asClue {
-            fields["e"]!!.renderAccessorFieldType() shouldBe "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
-            fields["e"]!!.renderFieldType() shouldBe "org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker"
+            fields["e"]!!.renderAccessorFieldType() shouldBe
+                "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
+            fields["e"]!!.renderFieldType() shouldBe
+                "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
         }
     }
 
     @Test
     fun `data frame`() {
         fields.keys.asClue {
-            fields["f"]!!.renderAccessorFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
-            fields["f"]!!.renderFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
+            fields["f"]!!.renderAccessorFieldType() shouldBe
+                "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
+            fields["f"]!!.renderFieldType() shouldBe
+                "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
         }
     }
 
     @Test
     fun `column for data schema type`() {
         fields.keys.asClue {
-            fields["a"]!!.renderColumnType() shouldBe "ColumnGroup<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
+            fields["a"]!!.renderColumnType() shouldBe
+                "ColumnGroup<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
         }
     }
 
@@ -95,7 +104,8 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `column for list parametrized by data schema type`() {
         fields.keys.asClue {
-            fields["c"]!!.renderColumnType() shouldBe "DataColumn<DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>>"
+            fields["c"]!!.renderColumnType() shouldBe
+                "DataColumn<DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>>"
         }
     }
 
@@ -109,14 +119,16 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `data row column`() {
         fields.keys.asClue {
-            fields["e"]!!.renderColumnType() shouldBe "ColumnGroup<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
+            fields["e"]!!.renderColumnType() shouldBe
+                "ColumnGroup<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
         }
     }
 
     @Test
     fun `data frame column`() {
         fields.keys.asClue {
-            fields["f"]!!.renderColumnType() shouldBe "DataColumn<DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>>"
+            fields["f"]!!.renderColumnType() shouldBe
+                "DataColumn<DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>>"
         }
     }
 

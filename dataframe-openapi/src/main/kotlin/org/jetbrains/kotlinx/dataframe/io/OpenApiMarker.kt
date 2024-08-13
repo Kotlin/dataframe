@@ -22,8 +22,7 @@ internal sealed class OpenApiMarker private constructor(
     fields: List<GeneratedField>,
     superMarkers: List<Marker>,
     prependTopInterfaceName: Boolean = true,
-) : IsObject,
-    Marker(
+) : Marker(
         name = if (prependTopInterfaceName) name.withTopInterfaceName(topInterfaceName) else name,
         isOpen = false,
         fields = fields,
@@ -31,16 +30,19 @@ internal sealed class OpenApiMarker private constructor(
         visibility = visibility,
         typeParameters = emptyList(),
         typeArguments = emptyList(),
-    ) {
+    ),
+    IsObject {
 
     abstract val additionalPropertyPaths: List<JsonPath>
+
     abstract fun withName(name: String, prependTopInterfaceName: Boolean = true): OpenApiMarker
+
     abstract fun withVisibility(visibility: MarkerVisibility): OpenApiMarker
 
     abstract fun toFieldType(): FieldType
 
     override fun toString(): String =
-        "MyMarker(markerType = ${this::class}, name = $name, isOpen = $isOpen, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)"
+        "MyMarker(name = $name, isOpen = $isOpen, markerType = ${this::class}, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)"
 
     /**
      * A [Marker] that will be used to generate an enum.
@@ -58,14 +60,14 @@ internal sealed class OpenApiMarker private constructor(
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = true,
     ) : OpenApiMarker(
-        nullable = nullable,
-        name = name,
-        topInterfaceName = topInterfaceName,
-        visibility = visibility,
-        fields = fields,
-        superMarkers = emptyList(),
-        prependTopInterfaceName = prependTopInterfaceName,
-    ) {
+            nullable = nullable,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            visibility = visibility,
+            fields = fields,
+            superMarkers = emptyList(),
+            prependTopInterfaceName = prependTopInterfaceName,
+        ) {
 
         // enums become List<Something>, not Dataframe<*>
         override val isObject = false
@@ -96,7 +98,7 @@ internal sealed class OpenApiMarker private constructor(
                 fields = fields,
                 name = name,
                 topInterfaceName = topInterfaceName,
-                visibility = visibility
+                visibility = visibility,
             )
     }
 
@@ -118,14 +120,14 @@ internal sealed class OpenApiMarker private constructor(
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = true,
     ) : OpenApiMarker(
-        nullable = nullable,
-        name = name,
-        topInterfaceName = topInterfaceName,
-        visibility = visibility,
-        fields = fields,
-        superMarkers = superMarkers,
-        prependTopInterfaceName = prependTopInterfaceName,
-    ) {
+            nullable = nullable,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            visibility = visibility,
+            fields = fields,
+            superMarkers = superMarkers,
+            prependTopInterfaceName = prependTopInterfaceName,
+        ) {
 
         // Will be a DataFrame<*>
         override val isObject = true
@@ -133,6 +135,7 @@ internal sealed class OpenApiMarker private constructor(
         override fun toFieldType(): FieldType =
             FieldType.GroupFieldType(
                 markerName = name + if (nullable) "?" else "",
+                renderAsObject = true,
             )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): Interface =
@@ -155,7 +158,7 @@ internal sealed class OpenApiMarker private constructor(
                 name = name,
                 topInterfaceName = topInterfaceName,
                 additionalPropertyPaths = additionalPropertyPaths,
-                visibility = visibility
+                visibility = visibility,
             )
     }
 
@@ -177,28 +180,28 @@ internal sealed class OpenApiMarker private constructor(
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = true,
     ) : Interface(
-        nullable = nullable,
-        name = name,
-        topInterfaceName = topInterfaceName,
-        visibility = visibility,
-        fields = listOf(
-            generatedFieldOf(
-                overrides = true,
-                fieldName = ValidFieldName.of(AdditionalProperty<*>::`value`.name),
-                columnName = "value",
-                fieldType = valueType,
+            nullable = nullable,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            visibility = visibility,
+            fields = listOf(
+                generatedFieldOf(
+                    overrides = true,
+                    fieldName = ValidFieldName.of(AdditionalProperty<*>::`value`.name),
+                    columnName = "value",
+                    fieldType = valueType,
+                ),
+                generatedFieldOf(
+                    overrides = true,
+                    fieldName = ValidFieldName.of(AdditionalProperty<*>::key.name),
+                    columnName = AdditionalProperty<*>::key.name,
+                    fieldType = FieldType.ValueFieldType(String::class.qualifiedName!!),
+                ),
             ),
-            generatedFieldOf(
-                overrides = true,
-                fieldName = ValidFieldName.of(AdditionalProperty<*>::key.name),
-                columnName = AdditionalProperty<*>::key.name,
-                fieldType = FieldType.ValueFieldType(String::class.qualifiedName!!),
-            ),
-        ),
-        additionalPropertyPaths = (additionalPropertyPaths + JsonPath()).distinct(),
-        superMarkers = listOf(AdditionalProperty.getMarker(listOf(valueType.name))),
-        prependTopInterfaceName = prependTopInterfaceName,
-    ) {
+            additionalPropertyPaths = (additionalPropertyPaths + JsonPath()).distinct(),
+            superMarkers = listOf(AdditionalProperty.getMarker(listOf(valueType.name))),
+            prependTopInterfaceName = prependTopInterfaceName,
+        ) {
 
         // Will be a DataFrame<out AdditionalProperty>
         override val isObject = true
@@ -207,6 +210,7 @@ internal sealed class OpenApiMarker private constructor(
             FieldType.FrameFieldType(
                 markerName = name + if (nullable) "?" else "",
                 nullable = false,
+                renderAsList = false,
             )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): AdditionalPropertyInterface =
@@ -227,7 +231,7 @@ internal sealed class OpenApiMarker private constructor(
                 name = name,
                 topInterfaceName = topInterfaceName,
                 additionalPropertyPaths = additionalPropertyPaths,
-                visibility = visibility
+                visibility = visibility,
             )
     }
 
@@ -248,26 +252,25 @@ internal sealed class OpenApiMarker private constructor(
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = false,
     ) : OpenApiMarker(
-        nullable = nullable,
-        name = name,
-        topInterfaceName = topInterfaceName,
-        visibility = visibility,
-        fields = emptyList(),
-        superMarkers = listOf(
-            Marker(
-                name = superMarkerName,
-
-                // all below is unused
-                isOpen = false,
-                fields = emptyList(),
-                superMarkers = emptyList(),
-                visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-                typeParameters = emptyList(),
-                typeArguments = emptyList(),
-            )
-        ),
-        prependTopInterfaceName = prependTopInterfaceName,
-    ) {
+            nullable = nullable,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            visibility = visibility,
+            fields = emptyList(),
+            superMarkers = listOf(
+                Marker(
+                    name = superMarkerName,
+                    // all below is unused
+                    isOpen = false,
+                    fields = emptyList(),
+                    superMarkers = emptyList(),
+                    visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                    typeParameters = emptyList(),
+                    typeArguments = emptyList(),
+                ),
+            ),
+            prependTopInterfaceName = prependTopInterfaceName,
+        ) {
 
         override val isObject = false
 
@@ -314,14 +317,14 @@ internal sealed class OpenApiMarker private constructor(
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         prependTopInterfaceName: Boolean = false,
     ) : OpenApiMarker(
-        nullable = nullable || superMarker.nullable,
-        name = name,
-        topInterfaceName = topInterfaceName,
-        visibility = visibility,
-        fields = emptyList(),
-        superMarkers = listOf(superMarker),
-        prependTopInterfaceName = prependTopInterfaceName,
-    ) {
+            nullable = nullable || superMarker.nullable,
+            name = name,
+            topInterfaceName = topInterfaceName,
+            visibility = visibility,
+            fields = emptyList(),
+            superMarkers = listOf(superMarker),
+            prependTopInterfaceName = prependTopInterfaceName,
+        ) {
 
         // depends on the marker it points to whether it's primitive or not
         override val isObject = superMarker.isObject
@@ -331,6 +334,7 @@ internal sealed class OpenApiMarker private constructor(
         override fun toFieldType(): FieldType =
             FieldType.GroupFieldType(
                 markerName = name + if (nullable) "?" else "",
+                renderAsObject = true,
             )
 
         override fun withName(name: String, prependTopInterfaceName: Boolean): MarkerAlias =

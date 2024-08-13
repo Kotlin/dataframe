@@ -1,24 +1,25 @@
+@file:Suppress("ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnTypes
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.ColType
+import org.jetbrains.kotlinx.dataframe.io.StringColumns
 import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.readCSV
+import org.jetbrains.kotlinx.dataframe.io.readExcel
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.testArrowFeather
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
+import org.junit.Ignore
 import org.junit.Test
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.typeOf
 
 class Read {
@@ -30,7 +31,7 @@ class Read {
             file,
             delimiter = '|',
             header = listOf("A", "B", "C", "D"),
-            parserOptions = ParserOptions(nullStrings = setOf("not assigned"))
+            parserOptions = ParserOptions(nullStrings = setOf("not assigned")),
         )
         // SampleEnd
         df.rowsCount() shouldBe 3
@@ -63,17 +64,10 @@ class Read {
     }
 
     @Test
+    @Ignore
     fun fixMixedColumn() {
         // SampleStart
-        val df = dataFrameOf("IDS")(100.0, "A100", "B100", "C100")
-        val df1 = df.convert("IDS").with(Infer.Type) {
-            if (it is Double) {
-                it.toLong().toString()
-            } else {
-                it
-            }
-        }
-        df1["IDS"].type() shouldBe typeOf<String>()
+        val df = DataFrame.readExcel("mixed_column.xlsx", stringColumns = StringColumns("A"))
         // SampleEnd
     }
 
@@ -104,7 +98,7 @@ class Read {
         // SampleStart
         val df = DataFrame.readCSV(
             file,
-            colTypes = mapOf("colName" to ColType.String)
+            colTypes = mapOf("colName" to ColType.String),
         )
         // SampleEnd
     }

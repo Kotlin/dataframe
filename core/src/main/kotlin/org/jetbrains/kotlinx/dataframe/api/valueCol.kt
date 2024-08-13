@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.PlainDslName
@@ -17,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.Issues
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.onResolve
@@ -30,8 +32,9 @@ import kotlin.reflect.KProperty
  * ## Value Col {@include [ColumnsSelectionDslLink]}
  *
  * See [Grammar] for all functions in this interface.
+ * @param _UNUSED {@include [Issues.ConflictingOverloadsK2Link]}
  */
-public interface ValueColColumnsSelectionDsl {
+public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * ## Value Col Grammar
@@ -119,7 +122,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     private interface CommonValueColDocs {
 
-        /* Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]} */
+        // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
         interface ExampleArg
 
         /**
@@ -134,13 +137,13 @@ public interface ValueColColumnsSelectionDsl {
          */
         interface DoubleExample
 
-        /* Receiver argument for the example(s) */
+        // Receiver argument for the example(s)
         interface ReceiverArg
 
-        /* Argument for the example(s) */
+        // Argument for the example(s)
         interface Arg
 
-        /* Optional note */
+        // Optional note
         interface Note
 
         /** @param [C\] The type of the value column. */
@@ -169,7 +172,9 @@ public interface ValueColColumnsSelectionDsl {
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
             val child = it.getCol(valueCol)
-                ?: throw IllegalStateException("ValueColumn '${valueCol.path()}' not found in column group '${it.path}'")
+                ?: throw IllegalStateException(
+                    "ValueColumn '${valueCol.path()}' not found in column group '${it.path}'",
+                )
             child.data.ensureIsValueColumn()
             listOf(child)
         }.singleImpl()
@@ -228,8 +233,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<*> =
-        valueCol<Any?>(name)
+    public fun SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<*> = valueCol<Any?>(name)
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -248,8 +252,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -263,8 +266,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun String.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
@@ -278,8 +280,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -293,8 +294,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(name: String): ColumnAccessor<*> =
-        valueCol<Any?>(name)
+    public fun ColumnPath.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -333,8 +333,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<*> =
-        valueCol<Any?>(path)
+    public fun SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<*> = valueCol<Any?>(path)
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -353,8 +352,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -368,8 +366,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun String.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
@@ -383,8 +380,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
@@ -398,8 +394,7 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<*> =
-        valueCol<Any?>(path)
+    public fun ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
@@ -481,23 +476,20 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg]}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    public fun <C> ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<C> =
-        asSingleColumn().valueCol<C>(index)
+    public fun <C> ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<C> = asSingleColumn().valueCol<C>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
@@ -515,45 +507,39 @@ public interface ValueColColumnsSelectionDsl {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun String.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun String.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    public fun <C> String.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> String.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
-    public fun ColumnPath.valueCol(index: Int): SingleColumn<*> =
-        valueCol<Any?>(index)
+    public fun ColumnPath.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
-    public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> =
-        columnGroup(this).valueCol<C>(index)
+    public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     // endregion
 }

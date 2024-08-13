@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.cumSum
@@ -8,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.junit.Test
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class CumsumTests {
 
     val col by columnOf(1, 2, null, 3, 4)
@@ -43,7 +45,7 @@ class CumsumTests {
 
     @Test
     fun `number column`() {
-        val doubles by columnOf(1, 2, null, Double.NaN, 4)
+        val doubles: DataColumn<Number?> by columnOf(1, 2, null, Double.NaN, 4)
         doubles.cumSum().toList() shouldBe listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
     }
 
@@ -54,7 +56,7 @@ class CumsumTests {
             "b", 2,
             "c", null,
             "a", 3,
-            "c", 4
+            "c", 4,
         )
         df.groupBy("str").cumSum().concat() shouldBe
             dataFrameOf("str", "col")(
@@ -62,7 +64,7 @@ class CumsumTests {
                 "a", 4,
                 "b", 2,
                 "c", null,
-                "c", 4
+                "c", 4,
             )
     }
 }

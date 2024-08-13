@@ -4,7 +4,7 @@ plugins {
         alias(kotlin.jvm)
         alias(shadow)
         alias(publisher)
-        alias(kotlinter)
+        alias(ktlint)
     }
 }
 

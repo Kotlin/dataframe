@@ -16,6 +16,7 @@ import java.net.URL
 import java.nio.file.Files
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:argument-list-wrapping")
 class XlsxTest {
 
     fun testResource(resourcePath: String): URL = this::class.java.classLoader.getResource(resourcePath)!!
@@ -46,6 +47,17 @@ class XlsxTest {
     }
 
     @Test
+    fun `column with empty header and with formatting`() {
+        val df = DataFrame.readExcel(
+            testResource("sample2.xlsx"),
+            "Sheet1",
+            columns = "A:C",
+            stringColumns = StringColumns("A:C"),
+        )
+        df shouldBe dataFrameOf("col1", "col2", "C")("1", "", "3")
+    }
+
+    @Test
     fun `limit row number`() {
         val df = DataFrame.readExcel(testResource("sample4.xls"), "Sheet1", rowsCount = 5)
         val column = List(5) { (it + 1).toDouble() }.toColumn("col1")
@@ -54,10 +66,8 @@ class XlsxTest {
 
     @Test
     fun `first sheet is default sheet`() {
-        DataFrame.readExcel(
-            testResource("sample.xls"),
-            "Sheet1"
-        ) shouldBe DataFrame.readExcel(testResource("sample.xls"))
+        DataFrame.readExcel(testResource("sample.xls"), "Sheet1") shouldBe
+            DataFrame.readExcel(testResource("sample.xls"))
     }
 
     @Test
@@ -178,5 +188,15 @@ class XlsxTest {
     fun `read xlsx file that has cells with formulas that return numbers and strings`() {
         val df = DataFrame.readExcel(testResource("formula_cell.xlsx"))
         df.columnNames() shouldBe listOf("Number", "Greater than 5", "Multiplied by 10", "Divided by 5")
+    }
+
+    @Test
+    fun `read mixed column`() {
+        val df = DataFrame.readExcel(
+            testResource("mixed_column.xlsx"),
+            stringColumns = StringColumns("A"),
+        )
+        df["col1"].type() shouldBe typeOf<String>()
+        df shouldBe dataFrameOf("col1")("100", "A100", "B100", "C100")
     }
 }

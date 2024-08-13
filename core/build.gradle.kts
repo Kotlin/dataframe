@@ -5,8 +5,6 @@ import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_F
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jmailen.gradle.kotlinter.tasks.LintTask
-import xyz.ronella.gradle.plugin.simple.git.OSType
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
@@ -18,9 +16,10 @@ plugins {
         alias(korro)
         alias(keywordGenerator)
         alias(kover)
-        alias(kotlinter)
+        alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
+        alias(buildconfig)
 
         // dependence on our own plugin
         alias(dataframe)
@@ -67,11 +66,15 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
-    implementation(libs.klaxon)
+    implementation(libs.serialization.core)
+    implementation(libs.serialization.json)
+
     implementation(libs.fuel)
 
     api(libs.kotlin.datetimeJvm)
     implementation(libs.kotlinpoet)
+    implementation(libs.sl4j)
+    implementation(libs.kotlinLogging)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
@@ -102,10 +105,6 @@ tasks.withType<KspTask> {
     }
 }
 
-tasks.named("lintKotlinSamples") {
-    onlyIf { false }
-}
-
 val clearTestResults by tasks.creating(Delete::class) {
     delete(layout.buildDirectory.dir("dataframes"))
     delete(layout.buildDirectory.dir("korroOutputLines"))
@@ -128,7 +127,10 @@ val samplesTest = tasks.register<Test>("samplesTest") {
     ignoreFailures = true
 
     testClassesDirs = fileTree("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin")
-    classpath = files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") + configurations["samplesRuntimeClasspath"] + sourceSets["main"].runtimeClasspath
+    classpath =
+        files("${layout.buildDirectory.get().asFile.path}/classes/testWithOutputs/kotlin") +
+        configurations["samplesRuntimeClasspath"] +
+        sourceSets["main"].runtimeClasspath
 }
 
 val clearSamplesOutputs by tasks.creating {
@@ -136,7 +138,8 @@ val clearSamplesOutputs by tasks.creating {
 
     doFirst {
         delete {
-            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets")).exclude("**/manual/**")
+            val generatedSnippets = fileTree(file("../docs/StardustDocs/snippets"))
+                .exclude("**/manual/**", "**/kdocs/**")
             delete(generatedSnippets)
         }
     }
@@ -165,63 +168,62 @@ tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
 }
 
-// This task installs the pre-commit hook to the local machine the first time the project is built
-// The pre-commit hook contains the command to run processKDocsMain before each commit
-val installGitPreCommitHook by tasks.creating(Copy::class) {
-    doNotTrackState(/* reasonNotToTrackState = */ "Fails on TeamCity otherwise.")
-
-    val gitHooksDir = File(rootProject.rootDir, ".git/hooks")
-    if (gitHooksDir.exists()) {
-        from(File(rootProject.rootDir, "gradle/scripts/pre-commit"))
-        into(gitHooksDir)
-        fileMode = 755
-
-        // Workaround for https://github.com/Kotlin/dataframe/issues/612
-        if (OSType.identify() in listOf(OSType.Mac, OSType.Linux)) doLast {
-            exec {
-                workingDir(gitHooksDir)
-                commandLine("chmod", "755", "pre-commit")
-            }
-        }
-    } else {
-        logger.lifecycle("'.git/hooks' directory not found. Skipping installation of pre-commit hook.")
-    }
-}
-tasks.named("assemble") {
-    dependsOn(installGitPreCommitHook)
-}
-
 // region docPreprocessor
 
-// This task is used to add all generated sources (from processKDocsMain) to git
 val generatedSourcesFolderName = "generated-sources"
-val addGeneratedSourcesToGit by tasks.creating(GitTask::class) {
-    directory.set(file("."))
-    command.set("add")
-    args.set(listOf("-A", generatedSourcesFolderName))
-}
 
 // Backup the kotlin source files location
-val kotlinMainSources: FileCollection = kotlin.sourceSets.main.get().kotlin.sourceDirectories
-val kotlinTestSources: FileCollection = kotlin.sourceSets.test.get().kotlin.sourceDirectories
+val kotlinMainSources = kotlin.sourceSets.main
+    .get()
+    .kotlin.sourceDirectories
+    .toList()
+val kotlinTestSources = kotlin.sourceSets.test
+    .get()
+    .kotlin.sourceDirectories
+    .toList()
 
 fun pathOf(vararg parts: String) = parts.joinToString(File.separator)
 
+// Include both test and main sources for cross-referencing, Exclude generated sources
+val processKDocsMainSources = (kotlinMainSources + kotlinTestSources)
+    .filterNot { pathOf("build", "generated") in it.path }
+
+// sourceset of the generated sources as a result of `processKDocsMain`, this will create linter tasks
+val generatedSources by kotlin.sourceSets.creating {
+    kotlin {
+        setSrcDirs(
+            listOf(
+                "build/generated/ksp/main/kotlin/",
+                "core/build/generatedSrc",
+                "$generatedSourcesFolderName/src/main/kotlin",
+                "$generatedSourcesFolderName/src/main/java",
+            ),
+        )
+    }
+}
+
 // Task to generate the processed documentation
-val processKDocsMain by creatingProcessDocTask(
-    sources = (kotlinMainSources + kotlinTestSources) // Include both test and main sources for cross-referencing
-        .filterNot { pathOf("build", "generated") in it.path }, // Exclude generated sources
-) {
+val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     target = file(generatedSourcesFolderName)
     arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
 
+    // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
+    outputReadOnly = false
+
+    exportAsHtml {
+        dir = file("../docs/StardustDocs/snippets/kdocs")
+    }
     task {
         group = "KDocs"
-        doLast {
-            // ensure generated sources are added to git
-            addGeneratedSourcesToGit.executeCommand()
-        }
+        finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
     }
+}
+
+tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
+    onlyIf { false }
+}
+tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+    onlyIf { false }
 }
 
 // Exclude the generated/processed sources from the IDE
@@ -231,32 +233,46 @@ idea {
     }
 }
 
-// Modify all Jar tasks such that before running the Kotlin sources are set to
-// the target of processKdocMain and they are returned back to normal afterwards.
-tasks.withType<Jar> {
-    dependsOn(processKDocsMain)
-    mustRunAfter(tasks.generateKeywordsSrc)
+// If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
+// the target of `processKdocMain`, and they are returned to normal afterward.
+// This is usually only done when publishing
+val changeJarTask by tasks.creating {
     outputs.upToDateWhen { false }
-
     doFirst {
-        kotlin.sourceSets.main {
-            kotlin.setSrcDirs(
-                processKDocsMain.targets
-                    .filterNot {
-                        pathOf("src", "test", "kotlin") in it.path ||
-                            pathOf("src", "test", "java") in it.path
-                    } // filter out test sources again
-                    .plus(kotlinMainSources.filter {
-                        pathOf("build", "generated") in it.path
-                    }) // Include generated sources (which were excluded above)
-            )
+        tasks.withType<Jar> {
+            doFirst {
+                require(generatedSources.kotlin.srcDirs.toList().isNotEmpty()) {
+                    logger.error("`processKDocsMain`'s outputs are empty, did `processKDocsMain` run before this task?")
+                }
+                kotlin.sourceSets.main {
+                    kotlin.setSrcDirs(generatedSources.kotlin.srcDirs)
+                }
+                logger.lifecycle("$this is run with modified sources: \"$generatedSourcesFolderName\"")
+            }
+
+            doLast {
+                kotlin.sourceSets.main {
+                    kotlin.setSrcDirs(kotlinMainSources)
+                }
+            }
         }
     }
+}
 
-    doLast {
-        kotlin.sourceSets.main {
-            kotlin.setSrcDirs(kotlinMainSources)
-        }
+// if `processKDocsMain` runs, the Jar tasks must run after it so the generated-sources are there
+tasks.withType<Jar> {
+    mustRunAfter(changeJarTask, tasks.generateKeywordsSrc, processKDocsMain)
+}
+
+// modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
+tasks.named { it.startsWith("publish") }.configureEach {
+    dependsOn(processKDocsMain, changeJarTask)
+}
+
+// Exclude the generated/processed sources from the IDE
+idea {
+    module {
+        excludeDirs.add(file(generatedSourcesFolderName))
     }
 }
 
@@ -309,35 +325,34 @@ tasks.withType<KspTaskJvm> {
     dependsOn(tasks.generateKeywordsSrc)
 }
 
-tasks.formatKotlinMain {
+tasks.runKtlintFormatOverMainSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
 }
 
-tasks.formatKotlinTest {
+tasks.runKtlintFormatOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
 }
 
-tasks.lintKotlinMain {
+tasks.named("runKtlintFormatOverGeneratedSourcesSourceSet") {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspKotlin")
 }
 
-tasks.lintKotlinTest {
+tasks.runKtlintCheckOverMainSourceSet {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
+}
+
+tasks.runKtlintCheckOverTestSourceSet {
     dependsOn(tasks.generateKeywordsSrc)
     dependsOn("kspTestKotlin")
 }
 
-tasks.withType<LintTask> {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
+tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
+    dependsOn(tasks.generateKeywordsSrc)
+    dependsOn("kspKotlin")
 }
 
 kotlin {
@@ -361,8 +376,8 @@ tasks.test {
         excludes.set(
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
-                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
-            )
+                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
+            ),
         )
     }
 }

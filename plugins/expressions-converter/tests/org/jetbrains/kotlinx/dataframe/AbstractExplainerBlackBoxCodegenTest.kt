@@ -45,7 +45,7 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
         classicFrontendHandlersStep {
             useHandlers(
                 ::ClassicDiagnosticsHandler,
-                ::DeclarationsDumpHandler
+                ::DeclarationsDumpHandler,
             )
         }
         psi2IrStep()
@@ -66,8 +66,7 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
     }
 
     class MyClasspathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
-        override fun runtimeClassPaths(module: TestModule): List<File> {
-            return (classpathFromClassloader(javaClass.classLoader) ?: error("no classpath"))
-        }
+        override fun runtimeClassPaths(module: TestModule): List<File> =
+            (classpathFromClassloader(javaClass.classLoader) ?: error("no classpath"))
     }
 }

@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
-import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromConnection
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.math.BigDecimal
@@ -98,7 +98,7 @@ public data class TableMetadata(val name: String, val schemaName: String?, val c
  * @property [user] the username used for authentication (optional, default is empty string).
  * @property [password] the password used for authentication (optional, default is empty string).
  */
-public data class DatabaseConfiguration(val url: String, val user: String = "", val password: String = "")
+public data class DbConnectionConfig(val url: String, val user: String = "", val password: String = "")
 
 /**
  * Reads data from an SQL table and converts it into a DataFrame.
@@ -110,7 +110,7 @@ public data class DatabaseConfiguration(val url: String, val user: String = "", 
  * @return the DataFrame containing the data from the SQL table.
  */
 public fun DataFrame.Companion.readSqlTable(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     tableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -138,17 +138,18 @@ public fun DataFrame.Companion.readSqlTable(
     inferNullability: Boolean = true,
 ): AnyFrame {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
-    val selectAllQuery = if (limit > 0) dbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
-    else "SELECT * FROM $tableName"
+    val selectAllQuery = if (limit > 0) {
+        dbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
+    } else {
+        "SELECT * FROM $tableName"
+    }
 
     connection.createStatement().use { st ->
         logger.debug { "Connection with url:$url is established successfully." }
 
-        st.executeQuery(
-            selectAllQuery
-        ).use { rs ->
+        st.executeQuery(selectAllQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit, inferNullability)
         }
@@ -168,7 +169,7 @@ public fun DataFrame.Companion.readSqlTable(
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DataFrame.Companion.readSqlQuery(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
@@ -203,8 +204,7 @@ public fun DataFrame.Companion.readSqlQuery(
             "Also it should not contain any separators like `;`."
     }
 
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val internalSqlQuery = if (limit > 0) dbType.sqlQueryLimit(sqlQuery, limit) else sqlQuery
 
@@ -217,6 +217,89 @@ public fun DataFrame.Companion.readSqlQuery(
         }
     }
 }
+
+/**
+ * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
+ * It should be a name of one of the existing SQL tables,
+ * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
+ * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame containing the result of the SQL query.
+ */
+public fun DbConnectionConfig.readDataFrame(
+    sqlQueryOrTableName: String,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame =
+    when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
+    }
+
+private fun isSqlQuery(sqlQueryOrTableName: String): Boolean {
+    val queryPattern = Regex("(?i)\\b(SELECT)\\b")
+    return queryPattern.containsMatchIn(sqlQueryOrTableName.trim())
+}
+
+private fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
+    // Match table names with optional schema and catalog (e.g., catalog.schema.table)
+    val tableNamePattern = Regex("^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*){0,2}$")
+    return tableNamePattern.matches(sqlQueryOrTableName.trim())
+}
+
+/**
+ * Converts the result of an SQL query or SQL table (by name) to the DataFrame.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute or name of the SQL table.
+ * It should be a name of one of the existing SQL tables,
+ * or the SQL query should start from SELECT and contain one query for reading data without any manipulation.
+ * It should not contain `;` symbol.
+ * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame containing the result of the SQL query.
+ */
+public fun Connection.readDataFrame(
+    sqlQueryOrTableName: String,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame =
+    when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
+            this,
+            sqlQueryOrTableName,
+            limit,
+            inferNullability,
+        )
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
+    }
 
 /** SQL query is accepted only if it starts from SELECT */
 private fun isValid(sqlQuery: String): Boolean {
@@ -267,6 +350,30 @@ public fun DataFrame.Companion.readResultSet(
  *
  * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
  *
+ * @param [dbType] the type of database that the [ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *
+ * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+ */
+public fun ResultSet.readDataFrame(
+    dbType: DbType,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame = DataFrame.Companion.readResultSet(this, dbType, limit, inferNullability)
+
+/**
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
+ *
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
+ * Therefore, you can iterate through it only once, from the first row to the last row.
+ *
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ *
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ *
  * @param [resultSet] the [ResultSet][java.sql.ResultSet] containing the data to read.
  * Its state may be altered after the read operation.
  * @param [connection] the connection to the database (it's required to extract the database type)
@@ -283,40 +390,66 @@ public fun DataFrame.Companion.readResultSet(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
 ): AnyFrame {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     return readResultSet(resultSet, dbType, limit, inferNullability)
 }
 
 /**
- * Reads all tables from the given database using the provided database configuration and limit.
+ * Reads the data from a [ResultSet][java.sql.ResultSet] and converts it into a DataFrame.
+ *
+ * A [ResultSet][java.sql.ResultSet] object maintains a cursor pointing to its current row of data.
+ * By default, a ResultSet object is not updatable and has a cursor that can only move forward.
+ * Therefore, you can iterate through it only once, from the first row to the last row.
+ *
+ * For more details, refer to the official Java documentation on [ResultSet][java.sql.ResultSet].
+ *
+ * NOTE: Reading from the [ResultSet][java.sql.ResultSet] could potentially change its state.
+ *
+ * @param [connection] the connection to the database (it's required to extract the database type)
+ * that the [ResultSet] belongs to.
+ * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
+ * @param [inferNullability] indicates how the column nullability should be inferred.
+ * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
+ *
+ * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
+ */
+public fun ResultSet.readDataFrame(
+    connection: Connection,
+    limit: Int = DEFAULT_LIMIT,
+    inferNullability: Boolean = true,
+): AnyFrame = DataFrame.Companion.readResultSet(this, connection, limit, inferNullability)
+
+/**
+ * Reads all non-system tables from a database and returns them
+ * as a map of SQL tables and corresponding dataframes using the provided database configuration and limit.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [limit] the maximum number of rows to read from each table.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return a list of [AnyFrame] objects representing the non-system tables from the database.
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
-    dbConfig: DatabaseConfiguration,
+    dbConfig: DbConnectionConfig,
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): List<AnyFrame> {
+): Map<String, AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return readAllSqlTables(connection, catalogue, limit, inferNullability)
     }
 }
 
 /**
- * Reads all non-system tables from a database and returns them as a list of data frames.
+ * Reads all non-system tables from a database and returns them
+ * as a map of SQL tables and corresponding dataframes.
  *
  * @param [connection] the database connection to read tables from.
  * @param [limit] the maximum number of rows to read from each table.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @return a list of [AnyFrame] objects representing the non-system tables from the database.
+ * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * @see DriverManager.getConnection
  */
@@ -325,20 +458,19 @@ public fun DataFrame.Companion.readAllSqlTables(
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): List<AnyFrame> {
+): Map<String, AnyFrame> {
     val metaData = connection.metaData
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
-    // exclude a system and other tables without data, but it looks like it supported badly for many databases
+    // exclude a system and other tables without data, but it looks like it is supported badly for many databases
     val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
 
-    val dataFrames = mutableListOf<AnyFrame>()
+    val dataFrames = mutableMapOf<String, AnyFrame>()
 
     while (tables.next()) {
         val table = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(table)) {
-            // we filter her second time because of specific logic with SQLite and possible issues with future databases
+            // we filter here a second time because of specific logic with SQLite and possible issues with future databases
             val tableName = when {
                 catalogue != null && table.schemaName != null -> "$catalogue.${table.schemaName}.${table.name}"
                 catalogue != null && table.schemaName == null -> "$catalogue.${table.name}"
@@ -351,7 +483,7 @@ public fun DataFrame.Companion.readAllSqlTables(
             logger.debug { "Reading table: $tableName" }
 
             val dataFrame = readSqlTable(connection, tableName, limit, inferNullability)
-            dataFrames += dataFrame
+            dataFrames += tableName to dataFrame
             logger.debug { "Finished reading table: $tableName" }
         }
     }
@@ -366,10 +498,7 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
  * @return the [DataFrameSchema] object representing the schema of the SQL table
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(
-    dbConfig: DatabaseConfiguration,
-    tableName: String
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlTable(connection, tableName)
     }
@@ -384,20 +513,14 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(
-    connection: Connection,
-    tableName: String
-): DataFrameSchema {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tableName: String): DataFrameSchema {
+    val dbType = extractDBTypeFromConnection(connection)
 
     val sqlQuery = "SELECT * FROM $tableName"
     val selectFirstRowQuery = dbType.sqlQueryLimit(sqlQuery, limit = 1)
 
     connection.createStatement().use { st ->
-        st.executeQuery(
-            selectFirstRowQuery
-        ).use { rs ->
+        st.executeQuery(selectFirstRowQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, dbType)
         }
@@ -411,10 +534,7 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(
-    dbConfig: DatabaseConfiguration,
-    sqlQuery: String
-): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlQuery(connection, sqlQuery)
     }
@@ -430,8 +550,7 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
  * @see DriverManager.getConnection
  */
 public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     connection.createStatement().use { st ->
         st.executeQuery(sqlQuery).use { rs ->
@@ -440,6 +559,40 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQ
         }
     }
 }
+
+/**
+ * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
+ * @return the schema of the SQL query as a [DataFrameSchema] object.
+ */
+public fun DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema =
+    when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
+    }
+
+/**
+ * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
+ *
+ * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
+ * @return the schema of the SQL query as a [DataFrameSchema] object.
+ */
+public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema =
+    when {
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
+
+        else -> throw IllegalArgumentException(
+            "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
+        )
+    }
 
 /**
  * Retrieves the schema from [ResultSet].
@@ -458,6 +611,16 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
 /**
  * Retrieves the schema from [ResultSet].
  *
+ * NOTE: This function will not close connection and result set and not retrieve data from the result set.
+ *
+ * @param [dbType] the type of database that the [ResultSet] belongs to.
+ * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
+ */
+public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataFrame.getSchemaForResultSet(this, dbType)
+
+/**
+ * Retrieves the schema from [ResultSet].
+ *
  * NOTE: [connection] is required to extract the database type.
  * This function will not close connection and result set and not retrieve data from the result set.
  *
@@ -466,48 +629,58 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
  * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
  */
 public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, connection: Connection): DataFrameSchema {
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val tableColumns = getTableColumnsMetadata(resultSet)
     return buildSchemaByTableColumns(tableColumns, dbType)
 }
 
 /**
- * Retrieves the schema of all non-system tables in the database using the provided database configuration.
+ * Retrieves the schema from [ResultSet].
+ *
+ * NOTE: This function will not close connection and result set and not retrieve data from the result set.
+ *
+ * @param [connection] the connection to the database (it's required to extract the database type).
+ * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
+ */
+public fun ResultSet.getDataFrameSchema(connection: Connection): DataFrameSchema =
+    DataFrame.getSchemaForResultSet(this, connection)
+
+/**
+ * Retrieves the schemas of all non-system tables in the database using the provided database configuration.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @return a list of [DataFrameSchema] objects representing the schema of each non-system table.
+ * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DatabaseConfiguration): List<DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DbConnectionConfig): Map<String, DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForAllSqlTables(connection)
     }
 }
 
 /**
- * Retrieves the schema of all non-system tables in the database using the provided database connection.
+ * Retrieves the schemas of all non-system tables in the database using the provided database connection.
  *
  * @param [connection] the database connection.
- * @return a list of [DataFrameSchema] objects representing the schema of each non-system table.
+ * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): List<DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): Map<String, DataFrameSchema> {
     val metaData = connection.metaData
-    val url = connection.metaData.url
-    val dbType = extractDBTypeFromUrl(url)
+    val dbType = extractDBTypeFromConnection(connection)
 
     val tableTypes = arrayOf("TABLE")
     // exclude a system and other tables without data
     val tables = metaData.getTables(null, null, null, tableTypes)
 
-    val dataFrameSchemas = mutableListOf<DataFrameSchema>()
+    val dataFrameSchemas = mutableMapOf<String, DataFrameSchema>()
 
     while (tables.next()) {
         val jdbcTable = dbType.buildTableMetadata(tables)
         if (!dbType.isSystemTable(jdbcTable)) {
-            // we filter her second time because of specific logic with SQLite and possible issues with future databases
-            val dataFrameSchema = getSchemaForSqlTable(connection, jdbcTable.name)
-            dataFrameSchemas += dataFrameSchema
+            // we filter her a second time because of specific logic with SQLite and possible issues with future databases
+            val tableName = jdbcTable.name
+            val dataFrameSchema = getSchemaForSqlTable(connection, tableName)
+            dataFrameSchemas += tableName to dataFrameSchema
         }
     }
 
@@ -528,16 +701,13 @@ private fun buildSchemaByTableColumns(tableColumns: MutableList<TableColumnMetad
     }
 
     return DataFrameSchemaImpl(
-        columns = schemaColumns
+        columns = schemaColumns,
     )
 }
 
-private fun generateColumnSchemaValue(
-    dbType: DbType,
-    tableColumnMetadata: TableColumnMetadata
-): ColumnSchema = dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata) ?: ColumnSchema.Value(
-    makeCommonSqlToKTypeMapping(tableColumnMetadata)
-)
+private fun generateColumnSchemaValue(dbType: DbType, tableColumnMetadata: TableColumnMetadata): ColumnSchema =
+    dbType.convertSqlTypeToColumnSchemaValue(tableColumnMetadata)
+        ?: ColumnSchema.Value(makeCommonSqlToKTypeMapping(tableColumnMetadata))
 
 /**
  * Retrieves the metadata of the columns in the result set.
@@ -650,11 +820,13 @@ private fun fetchAndConvertDataFromResultSet(
             name = tableColumns[index].name,
             values = values,
             infer = convertNullabilityInference(inferNullability),
-            type = kotlinTypesForSqlColumns[index]!!
+            type = kotlinTypesForSqlColumns[index]!!,
         )
     }.toDataFrame()
 
-    logger.debug { "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query." }
+    logger.debug {
+        "DataFrame with ${dataFrame.rowsCount()} rows and ${dataFrame.columnsCount()} columns created as a result of SQL query."
+    }
 
     return dataFrame
 }
@@ -665,7 +837,7 @@ private fun extractNewRowFromResultSetAndAddToData(
     tableColumns: MutableList<TableColumnMetadata>,
     data: List<MutableList<Any?>>,
     rs: ResultSet,
-    kotlinTypesForSqlColumns: MutableMap<Int, KType>
+    kotlinTypesForSqlColumns: MutableMap<Int, KType>,
 ) {
     repeat(tableColumns.size) { i ->
         data[i].add(
@@ -673,8 +845,9 @@ private fun extractNewRowFromResultSetAndAddToData(
                 rs.getObject(i + 1)
             } catch (_: Throwable) {
                 val kType = kotlinTypesForSqlColumns[i]!!
-                if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1) // TODO: expand for all the types like in generateKType function
-            }
+                // TODO: expand for all the types like in generateKType function
+                if (kType.isSupertypeOf(String::class.starProjectedType)) rs.getString(i + 1) else rs.getString(i + 1)
+            },
         )
     }
 }
@@ -687,9 +860,9 @@ private fun extractNewRowFromResultSetAndAddToData(
  *
  * @return The generated KType.
  */
-private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType {
-    return dbType.convertSqlTypeToKType(tableColumnMetadata) ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
-}
+private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetadata): KType =
+    dbType.convertSqlTypeToKType(tableColumnMetadata)
+        ?: makeCommonSqlToKTypeMapping(tableColumnMetadata)
 
 /**
  * Creates a mapping between common SQL types and their corresponding KTypes.
@@ -737,7 +910,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.SQLXML to SQLXML::class,
         Types.REF_CURSOR to Ref::class,
         Types.TIME_WITH_TIMEZONE to Time::class,
-        Types.TIMESTAMP_WITH_TIMEZONE to Timestamp::class
+        Types.TIMESTAMP_WITH_TIMEZONE to Timestamp::class,
     )
     // TODO: check mapping of JDBC types and classes correctly
     val kClass = jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class

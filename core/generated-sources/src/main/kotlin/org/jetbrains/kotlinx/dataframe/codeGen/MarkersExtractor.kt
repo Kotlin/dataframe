@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.ScopeProperty
 import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertyOrderFromPrimaryConstructor
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KClass
@@ -16,14 +17,36 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-internal fun KType.shouldBeConvertedToFrameColumn(): Boolean = when (jvmErasure) {
-    DataFrame::class -> true
-    List::class -> arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true
-    else -> false
+internal fun KType.getFieldKind(): FieldKind =
+    when {
+        jvmErasure == DataFrame::class -> Frame
+        jvmErasure == List::class && (arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true) -> ListToFrame
+        jvmErasure == DataRow::class -> Group
+        jvmErasure.hasAnnotation<DataSchema>() -> ObjectToGroup
+        else -> Default
+    }
+
+internal sealed interface FieldKind {
+    val shouldBeConvertedToColumnGroup: Boolean get() = false
+    val shouldBeConvertedToFrameColumn: Boolean get() = false
 }
 
-internal fun KType.shouldBeConvertedToColumnGroup(): Boolean = jvmErasure.let {
-    it == DataRow::class || it.hasAnnotation<DataSchema>()
+internal data object Frame : FieldKind {
+    override val shouldBeConvertedToFrameColumn: Boolean = true
+}
+
+internal data object ListToFrame : FieldKind {
+    override val shouldBeConvertedToFrameColumn: Boolean = true
+}
+
+internal data object Default : FieldKind
+
+internal data object Group : FieldKind {
+    override val shouldBeConvertedToColumnGroup: Boolean = true
+}
+
+internal data object ObjectToGroup : FieldKind {
+    override val shouldBeConvertedToColumnGroup: Boolean = true
 }
 
 private fun String.toNullable(): String = if (endsWith("?")) this else "$this?"
@@ -54,33 +77,42 @@ internal object MarkersExtractor {
 
     private fun getFields(markerClass: KClass<*>, nullableProperties: Boolean): List<GeneratedField> {
         val order = getPropertyOrderFromPrimaryConstructor(markerClass) ?: emptyMap()
-        return markerClass.memberProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { _, it ->
+        val structuralProperties = markerClass.memberProperties.filter { !it.hasAnnotation<ScopeProperty>() }
+        return structuralProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.map {
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
             val fieldType: FieldType
             val clazz = type.jvmErasure
+            val fieldKind = type.getFieldKind()
             val columnSchema = when {
-                type.shouldBeConvertedToColumnGroup() -> {
+                fieldKind.shouldBeConvertedToColumnGroup -> {
                     val nestedType = if (clazz == DataRow::class) type.arguments[0].type ?: typeOf<Any?>() else type
                     val marker = get(nestedType.jvmErasure, nullableProperties || type.isMarkedNullable)
-                    fieldType = FieldType.GroupFieldType(marker.name)
+                    fieldType = FieldType.GroupFieldType(
+                        marker.name,
+                        renderAsObject = fieldKind is ObjectToGroup,
+                    )
                     ColumnSchema.Group(marker.schema, nestedType)
                 }
 
-                type.shouldBeConvertedToFrameColumn() -> {
+                fieldKind.shouldBeConvertedToFrameColumn -> {
                     val frameType = type.arguments[0].type ?: typeOf<Any?>()
                     val marker = get(frameType.jvmErasure, nullableProperties || type.isMarkedNullable)
-                    fieldType = FieldType.FrameFieldType(marker.name, type.isMarkedNullable || nullableProperties)
+                    fieldType = FieldType.FrameFieldType(
+                        marker.name,
+                        type.isMarkedNullable || nullableProperties,
+                        renderAsList = fieldKind is ListToFrame,
+                    )
                     ColumnSchema.Frame(marker.schema, type.isMarkedNullable, frameType)
                 }
 
                 else -> {
                     fieldType = FieldType.ValueFieldType(
-                        if (nullableProperties) type.toString().toNullable() else type.toString()
+                        if (nullableProperties) type.toString().toNullable() else type.toString(),
                     )
                     ColumnSchema.Value(
-                        if (nullableProperties) type.withNullability(true) else type
+                        if (nullableProperties) type.withNullability(true) else type,
                     )
                 }
             }

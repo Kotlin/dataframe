@@ -97,8 +97,8 @@ class UtilTests {
 
     @Test
     fun `createType test`() {
-        emptyList<KClass<*>>().createType(nullable = false) shouldBe typeOf<Any>()
-        emptyList<KClass<*>>().createType(nullable = true) shouldBe typeOf<Any?>()
+        emptyList<KClass<*>>().createType(nullable = false) shouldBe nothingType(nullable = false)
+        emptyList<KClass<*>>().createType(nullable = true) shouldBe nothingType(nullable = true)
 
         listOf(Nothing::class).createType(nullable = false) shouldBe nothingType(nullable = false)
         listOf(Nothing::class).createType(nullable = true) shouldBe nothingType(nullable = true)
@@ -111,6 +111,9 @@ class UtilTests {
 
         listOf(Nothing::class).commonType(false) shouldBe nothingType(nullable = false)
         listOf(Nothing::class).commonType(true) shouldBe nothingType(nullable = true)
+
+        emptyList<KClass<*>>().commonType(false, null) shouldBe nothingType(nullable = false)
+        emptyList<KClass<*>>().commonType(true, null) shouldBe nothingType(nullable = true)
     }
 
     val a = listOf(1, 2.0, "a")
@@ -133,6 +136,7 @@ class UtilTests {
         guessValueType(sequenceOf(1, 2.0, "a", null, listOf(1, 2))) shouldBe typeOf<Any?>()
 
         guessValueType(sequenceOf(null, null)) shouldBe nothingType(nullable = true)
+        guessValueType(emptySequence()) shouldBe nothingType(nullable = false)
 
         guessValueType(sequenceOf(listOf<Int?>(null))) shouldBe typeOf<List<Nothing?>>()
         guessValueType(sequenceOf(emptyList<Int>())) shouldBe typeOf<List<Nothing>>()
@@ -218,21 +222,27 @@ class UtilTests {
     }
 
     interface UpperBound
+
     interface TypeWithUpperbound1<T : UpperBound>
+
     interface TestType1<T : UpperBound> : TypeWithUpperbound1<T>
+
     interface TestTypeIn1<in T> : Comparable<T>
+
     interface TestType2<S : UpperBound> : TestTypeIn1<TestType1<S>>
 
     @Test
     fun replaceGenericTypeParametersWithUpperbound() {
         val typeWithUpperboundT = TestType1::class.supertypes.first() // TypeWithUpperbound<T>
-        typeWithUpperboundT.replaceGenericTypeParametersWithUpperbound() shouldBe typeOf<TypeWithUpperbound1<UpperBound>>()
+        typeWithUpperboundT.replaceGenericTypeParametersWithUpperbound() shouldBe
+            typeOf<TypeWithUpperbound1<UpperBound>>()
 
         val comparableTypeT = TestTypeIn1::class.supertypes.first() // Comparable<T>
         comparableTypeT.replaceGenericTypeParametersWithUpperbound() shouldBe typeOf<Comparable<Nothing>>()
 
         val nestedTypeWithUpperboundT = TestType2::class.supertypes.first() // TestTypeIn1<TestType1<S>>
-        nestedTypeWithUpperboundT.replaceGenericTypeParametersWithUpperbound() shouldBe typeOf<TestTypeIn1<TestType1<UpperBound>>>()
+        nestedTypeWithUpperboundT.replaceGenericTypeParametersWithUpperbound() shouldBe
+            typeOf<TestTypeIn1<TestType1<UpperBound>>>()
     }
 
     interface AbstractType<T>
@@ -264,18 +274,18 @@ class UtilTests {
 //        emptyList<KType>().commonType() shouldBe nothingType(false)
         listOf(
             typeOf<AbstractType<Int>>(),
-            typeOf<AbstractType<Int>>()
+            typeOf<AbstractType<Int>>(),
         ).commonType() shouldBe typeOf<AbstractType<Int>>()
 //        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<Any>>()).commonType() shouldBe typeOf<AbstractType<out Any>>()
 //        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<in Int>>()).commonType() shouldBe typeOf<AbstractType<in Int>>()
         listOf(
             typeOf<AbstractType<in Int>>(),
-            typeOf<AbstractType<in Int>>()
+            typeOf<AbstractType<in Int>>(),
         ).commonType() shouldBe typeOf<AbstractType<in Int>>()
 //        listOf(typeOf<AbstractType<Int>>(), typeOf<AbstractType<out Int>>()).commonType() shouldBe typeOf<AbstractType<out Int>>()
         listOf(
             typeOf<AbstractType<out Int>>(),
-            typeOf<AbstractType<out Int>>()
+            typeOf<AbstractType<out Int>>(),
         ).commonType() shouldBe typeOf<AbstractType<out Int>>()
 //        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in Int>>()).commonType(useStar = false) shouldBe typeOf<AbstractType<out Any?>>()
 //        listOf(typeOf<AbstractType<out Int>>(), typeOf<AbstractType<in Int>>()).commonType() shouldBe typeOf<AbstractType<*>>()
@@ -292,12 +302,12 @@ class UtilTests {
         listOf(typeOf<Int>(), nothingType(false)).commonType() shouldBe typeOf<Int>()
         listOf(
             typeOf<List<Int>>(),
-            typeOf<List<String>>()
+            typeOf<List<String>>(),
         ).commonType(false) shouldBe typeOf<List<out Comparable<Nothing>>>()
         listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType() shouldBe typeOf<List<out Comparable<*>>>()
         listOf(
             typeOf<List<Int>>(),
-            typeOf<Set<String>>()
+            typeOf<Set<String>>(),
         ).commonType(false) shouldBe typeOf<Collection<out Comparable<Nothing>>>()
         listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType() shouldBe typeOf<Collection<out Comparable<*>>>()
         listOf(typeOf<List<Int>>(), typeOf<List<List<Any>>>()).commonType() shouldBe typeOf<List<out Any>>()
@@ -320,11 +330,11 @@ class UtilTests {
         listOf(typeOf<Int>(), typeOf<Double>(), nothingType(true)).commonTypeListifyValues() shouldBe typeOf<Number?>()
         listOf(
             typeOf<List<Int>>(),
-            typeOf<List<String>>()
+            typeOf<List<String>>(),
         ).commonTypeListifyValues() shouldBe typeOf<List<out Comparable<*>>>()
         listOf(
             typeOf<List<Int>>(),
-            typeOf<Set<String>>()
+            typeOf<Set<String>>(),
         ).commonTypeListifyValues() shouldBe typeOf<Collection<out Comparable<*>>>()
 
         listOf(
@@ -375,7 +385,7 @@ class UtilTests {
         listOf(
             typeOf<List<Nothing>>(),
             typeOf<Set<Nothing>>(),
-            nothingType(true)
+            nothingType(true),
         ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing>?>()
 
         listOf(

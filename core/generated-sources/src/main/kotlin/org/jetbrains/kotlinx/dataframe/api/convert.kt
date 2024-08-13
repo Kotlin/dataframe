@@ -8,11 +8,17 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
@@ -33,19 +39,19 @@ import org.jetbrains.kotlinx.dataframe.path
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> =
-    Convert(this, columns)
+@Interpretable("Convert0")
+public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> = Convert(this, columns)
 
-public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> =
-    convert { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> = convert { columns.toColumnSet() }
 
+@Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
@@ -56,59 +62,73 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
     vararg cols: ColumnReference<C>,
     infer: Infer = Infer.Nulls,
     noinline expression: RowValueExpression<T, C, R>,
-): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(infer, expression)
+): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
     infer: Infer = Infer.Nulls,
     noinline expression: RowValueExpression<T, C, R>,
-): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(infer, expression)
+): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@Interpretable("Convert6")
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
     infer: Infer = Infer.Nulls,
     noinline expression: RowValueExpression<T, Any?, R>,
-): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(infer, expression)
+): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
-public inline fun <T, C, reified R> Convert<T, C?>.notNull(crossinline expression: RowValueExpression<T, C, R>): DataFrame<T> =
+public inline fun <T, C, reified R> Convert<T, C?>.notNull(
+    crossinline expression: RowValueExpression<T, C, R>,
+): DataFrame<T> =
     with {
-        if (it == null) null
-        else expression(this, it)
+        if (it == null) {
+            null
+        } else {
+            expression(this, it)
+        }
     }
 
+@HasSchema(schemaArg = 0)
 public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
+    @Interpretable("To0")
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 }
 
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
+public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
+    df.replace(columns).with { columnConverter(df, it) }
+
+@Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
     noinline rowConverter: RowValueExpression<T, C, R>,
-): DataFrame<T> =
-    withRowCellImpl(typeOf<R>(), infer, rowConverter)
+): DataFrame<T> = withRowCellImpl(typeOf<R>(), infer, rowConverter)
+
+@Refine
+@Interpretable("With0")
+public inline fun <T, C, reified R> Convert<T, C>.with(
+    noinline rowConverter: RowValueExpression<T, C, R>,
+): DataFrame<T> = with(Infer.Nulls, rowConverter)
+
+public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
+    body: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
+): DataFrame<T> = to { body(this, it.asColumnGroup()).asColumnGroup(it.name()) }
 
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     infer: Infer = Infer.Nulls,
     noinline expression: RowColumnExpression<T, C, R>,
-): DataFrame<T> =
-    convertRowColumnImpl(typeOf<R>(), infer, expression)
-
-public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
-    df.replace(columns).with { columnConverter(df, it) }
+): DataFrame<T> = convertRowColumnImpl(typeOf<R>(), infer, expression)
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 public fun AnyCol.convertTo(newType: KType): AnyCol {
-    val isTypesAreCorrect = this.type().withNullability(true)
-        .isSubtypeOf(typeOf<String?>()) && newType.withNullability(true) == typeOf<Double?>()
+    val isTypesAreCorrect = this.type().withNullability(true).isSubtypeOf(typeOf<String?>()) &&
+        newType.withNullability(true) == typeOf<Double?>()
 
     if (isTypesAreCorrect) {
         return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)
@@ -167,9 +187,8 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
  * If [locale] parameter is null, the current system locale is used. If column can not be parsed, then POSIX format is used.
  */
 @JvmName("convertToDoubleFromString")
-public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> {
-    return this.castToNullable().convertToDouble(locale).castToNotNullable()
-}
+public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> =
+    this.castToNullable().convertToDouble(locale).castToNotNullable()
 
 /**
  * Parse String column to Double considering locale (number format).
@@ -188,7 +207,7 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
                         value = value,
                         from = typeOf<String>(),
                         to = typeOf<Double>(),
-                        column = path
+                        column = path,
                     )
                 }
             }
@@ -241,14 +260,10 @@ public fun <T, R : URL?> Convert<T, R>.toImg(width: Int? = null, height: Int? = 
 
 // region toURL
 
-public fun DataColumn<String>.convertToURL(): DataColumn<URL> {
-    return map { URL(it) }
-}
+public fun DataColumn<String>.convertToURL(): DataColumn<URL> = map { URL(it) }
 
 @JvmName("convertToURLFromStringNullable")
-public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> {
-    return map { it?.let { URL(it) } }
-}
+public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let { URL(it) } }
 
 public fun <T, R : String?> Convert<T, R>.toURL(): DataFrame<T> = to { it.convertToURL() }
 
@@ -256,14 +271,10 @@ public fun <T, R : String?> Convert<T, R>.toURL(): DataFrame<T> = to { it.conver
 
 // region toInstant
 
-public fun DataColumn<String>.convertToInstant(): DataColumn<Instant> {
-    return map { Instant.parse(it) }
-}
+public fun DataColumn<String>.convertToInstant(): DataColumn<Instant> = map { Instant.parse(it) }
 
 @JvmName("convertToInstantFromStringNullable")
-public fun DataColumn<String?>.convertToInstant(): DataColumn<Instant?> {
-    return map { it?.let { Instant.parse(it) } }
-}
+public fun DataColumn<String?>.convertToInstant(): DataColumn<Instant?> = map { it?.let { Instant.parse(it) } }
 
 public fun <T, R : String?> Convert<T, R>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
 

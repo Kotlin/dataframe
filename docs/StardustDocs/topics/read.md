@@ -401,7 +401,7 @@ Sometimes cells can have the wrong format in an Excel file. For example, you exp
 
 ```text
 IDS
-100 <-- Intended to be String, but has wrong cell format in original .xlsx file
+100 <-- Intended to be String, but has numeric cell format in original .xlsx file
 A100
 B100
 C100
@@ -409,20 +409,12 @@ C100
 
 You will get column of `Serializable` instead (common parent for `Double` and `String`).
 
-You can fix it using the `.convert()` function:
+You can fix it by providing an additional parameter:
 
 <!---FUN fixMixedColumn-->
 
 ```kotlin
-val df = dataFrameOf("IDS")(100.0, "A100", "B100", "C100")
-val df1 = df.convert("IDS").with(Infer.Type) {
-    if (it is Double) {
-        it.toLong().toString()
-    } else {
-        it
-    }
-}
-df1["IDS"].type() shouldBe typeOf<String>()
+val df = DataFrame.readExcel("mixed_column.xlsx", stringColumns = StringColumns("A"))
 ```
 
 <!---END-->

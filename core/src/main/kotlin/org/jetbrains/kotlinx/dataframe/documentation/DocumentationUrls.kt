@@ -1,3 +1,5 @@
+@file:ExcludeFromSources
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 internal interface DocumentationUrls {

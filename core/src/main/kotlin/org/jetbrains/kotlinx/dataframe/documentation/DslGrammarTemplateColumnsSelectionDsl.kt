@@ -70,32 +70,32 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
 
         // region parts
 
-        /* Can be set to nothing to disable the definitions part */
+        // Can be set to nothing to disable the definitions part
         public interface DefinitionsPart
 
-        /* Can be set to nothing to disable the plain dsl part */
+        // Can be set to nothing to disable the plain dsl part
         public interface PlainDslPart
 
-        /* Can be set to nothing to disable the column set part */
+        // Can be set to nothing to disable the column set part
         public interface ColumnSetPart
 
-        /* Can be set to nothing to disable the column group part */
+        // Can be set to nothing to disable the column group part
         public interface ColumnGroupPart
 
         // endregion
 
         // region Template arguments
 
-        /* What to put in definitions part aside from the default part. */
+        // What to put in definitions part aside from the default part.
         public interface DefinitionsArg
 
-        /* What to put in the plain dsl part. Does not need indents. */
+        // What to put in the plain dsl part. Does not need indents.
         public interface PlainDslFunctionsArg
 
-        /* What to put in the column set part. Needs indents. */
+        // What to put in the column set part. Needs indents.
         public interface ColumnSetFunctionsArg
 
-        /* What to put in the column group part. Needs indents. */
+        // What to put in the column group part. Needs indents.
         public interface ColumnGroupFunctionsArg
 
         // endregion
@@ -103,10 +103,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         // region Definitions for at the top of the template
 
         /**
-         * `columnGroupReference: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*>`
-         *
-         * {@include [QuadrupleIndent]}{@include [QuadrupleIndent]}{@include [Indent]}{@include [HalfIndent]}{@include [QuarterIndent]}
-         * `| `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroupReference: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupNoSingleColumnDef
 
@@ -117,18 +114,12 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         public interface ColumnsSelectorDef
 
         /**
-         * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]
-         *
-         * {@include [DoubleIndent]}{@include [HalfIndent]}{@include [QuarterIndent]}
-         * `| `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `column: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnDef
 
         /**
-         * `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]
-         *
-         * {@include [QuadrupleIndent]}{@include [Indent]}{@include [QuarterIndent]}
-         * `| `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
+         * `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
          */
         public interface ColumnGroupDef
 

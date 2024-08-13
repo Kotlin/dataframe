@@ -78,9 +78,9 @@ fun tryGetResourcePathForClass(aClass: Class<*>): File? {
     }
 }
 
-fun getResourcePathForClass(aClass: Class<*>): File {
-    return tryGetResourcePathForClass(aClass) ?: throw IllegalStateException("Resource for class: ${aClass.name} not found")
-}
+fun getResourcePathForClass(aClass: Class<*>): File =
+    tryGetResourcePathForClass(aClass)
+        ?: throw IllegalStateException("Resource for class: ${aClass.name} not found")
 
 fun tryGetResourcePathForClassByName(name: String, classLoader: ClassLoader): File? =
     try {
@@ -99,11 +99,16 @@ internal fun URL.toFileOrNull() =
     } catch (e: java.net.URISyntaxException) {
         null
     } ?: run {
-        if (protocol != "file") null
-        else File(file)
+        if (protocol != "file") {
+            null
+        } else {
+            File(file)
+        }
     }
 
 internal fun URL.toContainingJarOrNull(): File? =
     if (protocol == "jar") {
         (openConnection() as? JarURLConnection)?.jarFileURL?.toFileOrNull()
-    } else null
+    } else {
+        null
+    }

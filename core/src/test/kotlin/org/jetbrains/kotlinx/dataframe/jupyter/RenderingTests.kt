@@ -1,14 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.matchers.comparables.shouldBeGreaterThan
 import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
@@ -31,7 +35,7 @@ class RenderingTests : JupyterReplTestCase() {
                 "Charlie", 160
             )
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html shouldContain "Bill"
 
@@ -41,7 +45,7 @@ class RenderingTests : JupyterReplTestCase() {
             USE {
                 render<Int> { (it * 2).toString() }
             }
-            """.trimIndent()
+            """.trimIndent(),
         )
         useRes shouldBe Unit
 
@@ -58,7 +62,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class Person(val age: Int, val name: String)
             val df = (1..70).map { Person(it, "A".repeat(it)) }.toDataFrame()
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html1 shouldContain "showing only top 20 of 70 rows"
 
@@ -67,7 +71,7 @@ class RenderingTests : JupyterReplTestCase() {
             """
             dataFrameConfig.display.rowsLimit = 50
             df
-            """.trimIndent()
+            """.trimIndent(),
         )
         html2 shouldContain "showing only top 50 of 70 rows"
     }
@@ -93,14 +97,14 @@ class RenderingTests : JupyterReplTestCase() {
             data class Row(val id: Int)
             val df = (1..100).map { Row(it) }.toDataFrame()
             KotlinNotebookPluginUtils.getRowsSubsetForRendering(df, 20 , 50)
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 30, 1)
 
-        val rows = json.array<JsonArray<*>>(KOTLIN_DATAFRAME)!!
-        rows.getObj(0).int("id") shouldBe 21
-        rows.getObj(rows.lastIndex).int("id") shouldBe 50
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
+        rows.getObj(0)["id"]?.jsonPrimitive?.int shouldBe 21
+        rows.getObj(rows.lastIndex)["id"]?.jsonPrimitive?.int shouldBe 50
     }
 
     /**
@@ -109,22 +113,22 @@ class RenderingTests : JupyterReplTestCase() {
      * @param script the script to be executed
      * @return the parsed DataFrame result as a `JsonObject`
      */
-    private fun executeScriptAndParseDataframeResult(@Language("kts") script: String): JsonObject {
+    private fun executeScriptAndParseDataframeResult(
+        @Language("kts") script: String,
+    ): JsonObject {
         val result = execRendered<MimeTypedResult>(script)
         return parseDataframeJson(result)
     }
 
     private fun assertDataFrameDimensions(json: JsonObject, expectedRows: Int, expectedColumns: Int) {
-        json.obj(METADATA)!!.int("nrow") shouldBe expectedRows
-        json.obj(METADATA)!!.int("ncol") shouldBe expectedColumns
+        json[METADATA]!!.jsonObject["nrow"]!!.jsonPrimitive.int shouldBe expectedRows
+        json[METADATA]!!.jsonObject["ncol"]!!.jsonPrimitive.int shouldBe expectedColumns
     }
 
-    private fun parseDataframeJson(result: MimeTypedResult): JsonObject {
-        val parser = Parser.default()
-        return parser.parse(StringBuilder(result["application/kotlindataframe+json"]!!)) as JsonObject
-    }
+    private fun parseDataframeJson(result: MimeTypedResult): JsonObject =
+        Json.decodeFromString<JsonObject>(result["application/kotlindataframe+json"]!!)
 
-    private fun JsonArray<*>.getObj(index: Int) = this[index] as JsonObject
+    private fun JsonArray.getObj(index: Int) = this[index].jsonObject
 
     @Test
     fun `test kotlin notebook plugin utils sort by one column asc`() {
@@ -133,7 +137,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class CustomRow(val id: Int, val category: String)
             val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
             KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(false))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -142,10 +146,10 @@ class RenderingTests : JupyterReplTestCase() {
 
     @Suppress("UNCHECKED_CAST")
     private fun assertSortedById(json: JsonObject, desc: Boolean) {
-        val rows = json[KOTLIN_DATAFRAME] as JsonArray<JsonObject>
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray as List<JsonObject>
         var previousId = if (desc) 101 else 0
-        rows.forEach { row ->
-            val currentId = row.int("id")!!
+        rows.forEach { row: JsonObject ->
+            val currentId = row["id"]!!.jsonPrimitive.int
             if (desc) currentId shouldBeLessThan previousId else currentId shouldBeGreaterThan previousId
             previousId = currentId
         }
@@ -158,7 +162,7 @@ class RenderingTests : JupyterReplTestCase() {
             data class CustomRow(val id: Int, val category: String)
             val df = (1..100).map { CustomRow(it, if (it % 2 == 0) "even" else "odd") }.toDataFrame()
             KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id")), listOf(true))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
@@ -176,30 +180,33 @@ class RenderingTests : JupyterReplTestCase() {
                 KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("category"), listOf("id")), listOf(true, false)),
                 0, 100
             )
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 100, 2)
 
-        val rows = json[KOTLIN_DATAFRAME] as JsonArray<JsonObject>
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray as List<JsonObject>
         assertSortedByCategory(rows)
         assertSortedById(rows)
     }
 
-    private fun assertSortedByCategory(rows: JsonArray<JsonObject>) {
+    private fun assertSortedByCategory(rows: List<JsonObject>) {
         rows.forEachIndexed { i, row ->
-            val currentCategory = row.string("category")
-            if (i < 50) currentCategory shouldBe "odd"
-            else currentCategory shouldBe "even"
+            val currentCategory = row["category"]!!.jsonPrimitive.content
+            if (i < 50) {
+                currentCategory shouldBe "odd"
+            } else {
+                currentCategory shouldBe "even"
+            }
         }
     }
 
-    private fun assertSortedById(rows: JsonArray<JsonObject>) {
+    private fun assertSortedById(rows: List<JsonObject>) {
         var previousCategory = "odd"
         var previousId = 0
         for (row in rows) {
-            val currentCategory = row.string("category")!!
-            val currentId = row.int("id")!!
+            val currentCategory = row["category"]!!.jsonPrimitive.content
+            val currentId = row["id"]!!.jsonPrimitive.int
 
             if (previousCategory == "odd" && currentCategory == "even") {
                 previousId shouldBeGreaterThan currentId
@@ -213,20 +220,174 @@ class RenderingTests : JupyterReplTestCase() {
     }
 
     @Test
+    fun `json metadata contains schema metadata`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val col1 by columnOf("a", "b", "c")
+            val col2 by columnOf(1, 2, 3)
+            val col3 by columnOf("Foo", "Bar", null)
+            val df2 = dataFrameOf(Pair("header", listOf("A", "B", "C")))
+            val col4 by columnOf(df2, df2, df2)
+            var df = dataFrameOf(col1, col2, col3, col4)
+            df.group(col1, col2).into("group")            
+            """.trimIndent(),
+        )
+        val expectedOutput =
+            """
+            {
+              "${'$'}version": "2.1.0",
+              "metadata": {
+                "columns": ["group", "col3", "col4"],
+                "types": [{
+                  "kind": "ColumnGroup"
+                }, {
+                  "kind": "ValueColumn",
+                  "type": "kotlin.String?"
+                }, {
+                  "kind": "FrameColumn"
+                }],
+                "nrow": 3,
+                "ncol": 3
+              },
+              "kotlin_dataframe": [{
+                "group": {
+                  "data": {
+                    "col1": "a",
+                    "col2": 1
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
+                  }
+                },
+                "col3": "Foo",
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
+              }, {
+                "group": {
+                  "data": {
+                    "col1": "b",
+                    "col2": 2
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
+                  }
+                },
+                "col3": "Bar",
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
+              }, {
+                "group": {
+                  "data": {
+                    "col1": "c",
+                    "col2": 3
+                  },
+                  "metadata": {
+                    "kind": "ColumnGroup",
+                    "columns": ["col1", "col2"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }, {
+                      "kind": "ValueColumn",
+                      "type": "kotlin.Int"
+                    }]
+                  }
+                },
+                "col3": null,
+                "col4": {
+                  "data": [{
+                    "header": "A"
+                  }, {
+                    "header": "B"
+                  }, {
+                    "header": "C"
+                  }],
+                  "metadata": {
+                    "kind": "FrameColumn",
+                    "columns": ["header"],
+                    "types": [{
+                      "kind": "ValueColumn",
+                      "type": "kotlin.String"
+                    }],
+                    "ncol": 1,
+                    "nrow": 3
+                  }
+                }
+              }]
+            }
+            """.trimIndent()
+        json shouldBe Json.parseToJsonElement(expectedOutput)
+    }
+
+    @Test
     fun `test kotlin dataframe conversion groupby`() {
         val json = executeScriptAndParseDataframeResult(
             """
             data class Row(val id: Int, val group: Int)
             val df = (1..20).map { Row(it, if (it <= 10) 1 else 2) }.toDataFrame()
             KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group"))
-            """.trimIndent()
+            """.trimIndent(),
         )
 
         assertDataFrameDimensions(json, 2, 2)
 
-        val rows = json.array<JsonArray<*>>(KOTLIN_DATAFRAME)!!
-        (rows.getObj(0).obj("group1")!![DATA] as JsonArray<*>).size shouldBe 10
-        (rows.getObj(1).obj("group1")!![DATA] as JsonArray<*>).size shouldBe 10
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
+        rows.getObj(0)["group1"]!!
+            .jsonObject[DATA]!!
+            .jsonArray.size shouldBe 10
+        rows.getObj(1)["group1"]!!
+            .jsonObject[DATA]!!
+            .jsonArray.size shouldBe 10
     }
 
     // Regression KTNB-424
@@ -238,7 +399,7 @@ class RenderingTests : JupyterReplTestCase() {
                 data class Row(val id: Int, val group: Int)
                 val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
                 KotlinNotebookPluginUtils.convertToDataFrame(df.groupBy("group").first())
-                """.trimIndent()
+                """.trimIndent(),
             )
 
             assertDataFrameDimensions(json, 2, 2)

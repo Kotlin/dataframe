@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.impl.truncate
@@ -31,11 +32,13 @@ import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import java.awt.Desktop
+import java.awt.image.BufferedImage
 import java.io.File
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.file.Path
-import java.util.*
+import java.util.LinkedList
+import java.util.Random
 import kotlin.io.path.writeText
 import kotlin.math.ceil
 
@@ -78,10 +81,16 @@ internal fun ColumnDataForJs.renderHeader(): String {
     return "<span title=\"$tooltip\">${column.name()}</span>"
 }
 
-internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow: Int): String {
+internal fun tableJs(
+    columns: List<ColumnDataForJs>,
+    id: Int,
+    rootId: Int,
+    nrow: Int,
+): String {
     var index = 0
     val data = buildString {
         append("[")
+
         fun appendColWithChildren(col: ColumnDataForJs): Int {
             val children = col.nested.map { appendColWithChildren(it) }
             val colIndex = index++
@@ -91,7 +100,9 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow:
                         val html = "\"" + it.html.escapeForHtmlInJs() + "\""
                         if (it.style == null) {
                             html
-                        } else "{ style: \"${it.style}\", value: $html}"
+                        } else {
+                            "{ style: \"${it.style}\", value: $html}"
+                        }
                     }
 
                     is DataFrameReference -> {
@@ -116,13 +127,14 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow:
         "___COLUMNS___" to data,
         "___ID___" to id,
         "___ROOT___" to rootId,
-        "___NROW___" to nrow
+        "___NROW___" to nrow,
     )
     return js
 }
 
 internal var tableInSessionId = 0
 internal var sessionId = (Random().nextInt() % 128) shl 24
+
 internal fun nextTableId() = sessionId + (tableInSessionId++)
 
 internal fun AnyFrame.toHtmlData(
@@ -152,8 +164,12 @@ internal fun AnyFrame.toHtmlData(
                     DataFrameReference(id, value.size)
                 }
             } else {
-                val html = formatter.format(value, cellRenderer, renderConfig)
-                val style = renderConfig.cellFormatter?.invoke(FormattingDSL, it, col)?.attributes()?.ifEmpty { null }
+                val html =
+                    formatter.format(downsizeBufferedImageIfNeeded(value, renderConfig), cellRenderer, renderConfig)
+                val style = renderConfig.cellFormatter
+                    ?.invoke(FormattingDSL, it, col)
+                    ?.attributes()
+                    ?.ifEmpty { null }
                     ?.joinToString(";") { "${it.first}:${it.second}" }
                 HtmlContent(html, style)
             }
@@ -179,6 +195,26 @@ internal fun AnyFrame.toHtmlData(
     val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
     return DataFrameHtmlData(style = "", body = body, script = script)
 }
+
+private const val DEFAULT_HTML_IMG_SIZE = 100
+
+/**
+ * This method resizes a BufferedImage if necessary, according to the provided DisplayConfiguration.
+ * It is essential to prevent potential memory problems when serializing HTML data for display in the Kotlin Notebook plugin.
+ *
+ * @param value The input value to be checked and possibly downsized.
+ * @param renderConfig The DisplayConfiguration to determine if downsizing is needed.
+ * @return The downsized BufferedImage if value is a BufferedImage and downsizing is enabled in the DisplayConfiguration,
+ *         otherwise returns the input value unchanged.
+ */
+private fun downsizeBufferedImageIfNeeded(value: Any?, renderConfig: DisplayConfiguration): Any? =
+    when {
+        value is BufferedImage && renderConfig.downsizeBufferedImage -> {
+            value.resizeKeepingAspectRatio(DEFAULT_HTML_IMG_SIZE)
+        }
+
+        else -> value
+    }
 
 /**
  * Renders [this] [DataFrame] as static HTML (meaning no JS is used).
@@ -225,25 +261,31 @@ public fun AnyFrame.toStaticHtml(
 
     // Adds a header to the html. This header contains all the column names including nested ones
     // properly laid out with borders.
-    fun StringBuilder.emitHeader() = emitTag("thead") {
-        for (row in colGrid) {
-            emitTag("tr") {
-                for ((j, col) in row.withIndex()) {
-                    val colBorders = col.borders.toMutableSet()
-                    // check if the next cell has a left border, and if so, add a right border to this cell
-                    if (row.getOrNull(j + 1)?.borders?.contains(Border.LEFT) == true) {
-                        colBorders += Border.RIGHT
-                    }
-                    emitTag("th", "${colBorders.toClass()} style=\"text-align:left\"") {
-                        append(col.columnWithPath?.name ?: "")
+    fun StringBuilder.emitHeader() =
+        emitTag("thead") {
+            for (row in colGrid) {
+                emitTag("tr") {
+                    for ((j, col) in row.withIndex()) {
+                        val colBorders = col.borders.toMutableSet()
+                        // check if the next cell has a left border, and if so, add a right border to this cell
+                        if (row.getOrNull(j + 1)?.borders?.contains(Border.LEFT) == true) {
+                            colBorders += Border.RIGHT
+                        }
+                        emitTag("th", "${colBorders.toClass()} style=\"text-align:left\"") {
+                            append(col.columnWithPath?.name ?: "")
+                        }
                     }
                 }
             }
         }
-    }
 
     // Adds a single cell to the html. DataRows from column groups already need to be split up into separate cells.
-    fun StringBuilder.emitCell(cellValue: Any?, row: AnyRow, col: ColumnWithPath<*>, borders: Set<Border>): Unit =
+    fun StringBuilder.emitCell(
+        cellValue: Any?,
+        row: AnyRow,
+        col: ColumnWithPath<*>,
+        borders: Set<Border>,
+    ): Unit =
         emitTag("td", "${borders.toClass()} style=\"vertical-align:top\"") {
             when (col) {
                 // uses the <details> and <summary> to create a collapsible cell for dataframes
@@ -287,38 +329,42 @@ public fun AnyFrame.toStaticHtml(
         }
 
     // Adds a single row to the html. This row uses the flattened columns to get them displayed non-collapsed.
-    fun StringBuilder.emitRow(row: AnyRow) = emitTag("tr") {
-        for ((i, col) in flattenedCols.withIndex()) {
-            val border = borders[i].toMutableSet()
-            // check if the next cell has a left border, and if so, add a right border to this cell
-            if (borders.getOrNull(i + 1)?.contains(Border.LEFT) == true) {
-                border += Border.RIGHT
+    fun StringBuilder.emitRow(row: AnyRow) =
+        emitTag("tr") {
+            for ((i, col) in flattenedCols.withIndex()) {
+                val border = borders[i].toMutableSet()
+                // check if the next cell has a left border, and if so, add a right border to this cell
+                if (borders.getOrNull(i + 1)?.contains(Border.LEFT) == true) {
+                    border += Border.RIGHT
+                }
+                val cell = row[col.path()]
+                emitCell(cell, row, col, border)
             }
-            val cell = row[col.path()]
-            emitCell(cell, row, col, border)
         }
-    }
 
     // Adds the body of the html. This body contains all the cols and rows of the dataframe.
-    fun StringBuilder.emitBody() = emitTag("tbody") {
-        val rowsCountToRender = minOf(rowsCount(), rowsLimit ?: Int.MAX_VALUE)
-        for (rowIndex in 0..<rowsCountToRender) {
-            emitRow(df[rowIndex])
+    fun StringBuilder.emitBody() =
+        emitTag("tbody") {
+            val rowsCountToRender = minOf(rowsCount(), rowsLimit ?: Int.MAX_VALUE)
+            for (rowIndex in 0..<rowsCountToRender) {
+                emitRow(df[rowIndex])
+            }
         }
-    }
 
     // Base function which adds the table to the html.
-    fun StringBuilder.emitTable() = emitTag("table", """class="dataframe" id="$id"""") {
-        emitHeader()
-        emitBody()
-    }
+    fun StringBuilder.emitTable() =
+        emitTag("table", """class="dataframe" id="$id"""") {
+            emitHeader()
+            emitBody()
+        }
 
     return DataFrameHtmlData(
         body = buildString { emitTable() },
         // will hide the table if JS is enabled
-        script = """
+        script =
+            """
             document.getElementById("$id").style.display = "none";
-        """.trimIndent(),
+            """.trimIndent(),
     ) + DataFrameHtmlData.tableDefinitions(includeJs = false, includeCss = includeCss)
 }
 
@@ -330,15 +376,18 @@ private enum class Border(val className: String) {
     // NOTE: these don't render unless at leftmost; add rightBorder to the previous cell.
     LEFT("leftBorder"),
     RIGHT("rightBorder"),
-    BOTTOM("bottomBorder");
+    BOTTOM("bottomBorder"),
 }
 
 /**
  * Converts a set of borders to a class string for html/css rendering.
  */
 private fun Set<Border>.toClass(): String =
-    if (isEmpty()) ""
-    else "class=\"${joinToString(" ") { it.className }}\""
+    if (isEmpty()) {
+        ""
+    } else {
+        "class=\"${joinToString(" ") { it.className }}\""
+    }
 
 /**
  * Wrapper class which contains a nullable [ColumnWithPath] and a set of [Border]s.
@@ -352,14 +401,20 @@ private data class ColumnWithPathWithBorder<T>(
 /** Returns the depth of the most-nested column in this df/group, starting at 0 */
 internal fun AnyFrame.maxDepth(startingAt: Int = 0): Int =
     columns().maxOfOrNull {
-        if (it is ColumnGroup<*>) it.maxDepth(startingAt + 1)
-        else startingAt
+        if (it is ColumnGroup<*>) {
+            it.maxDepth(startingAt + 1)
+        } else {
+            startingAt
+        }
     } ?: startingAt
 
 /** Returns the max number of columns needed to display this column flattened */
 internal fun BaseColumn<*>.maxWidth(): Int =
-    if (this is ColumnGroup<*>) columns().sumOf { it.maxWidth() }.coerceAtLeast(1)
-    else 1
+    if (this is ColumnGroup<*>) {
+        columns().sumOf { it.maxWidth() }.coerceAtLeast(1)
+    } else {
+        1
+    }
 
 /**
  * Given a [DataFrame], this function returns a depth-first "matrix" containing all columns
@@ -475,27 +530,28 @@ public data class DataFrameHtmlData(
     @Language("html", prefix = "<body>", suffix = "</body>") val body: String = "",
     @Language("js") val script: String = "",
 ) {
-    override fun toString(): String = buildString {
-        appendLine("<html>")
-        if (style.isNotBlank()) {
-            appendLine("<head>")
-            appendLine("<style type=\"text/css\">")
-            appendLine(style)
-            appendLine("</style>")
-            appendLine("</head>")
+    override fun toString(): String =
+        buildString {
+            appendLine("<html>")
+            if (style.isNotBlank()) {
+                appendLine("<head>")
+                appendLine("<style type=\"text/css\">")
+                appendLine(style)
+                appendLine("</style>")
+                appendLine("</head>")
+            }
+            if (body.isNotBlank()) {
+                appendLine("<body>")
+                appendLine(body)
+                appendLine("</body>")
+            }
+            if (script.isNotBlank()) {
+                appendLine("<script>")
+                appendLine(script)
+                appendLine("</script>")
+            }
+            appendLine("</html>")
         }
-        if (body.isNotBlank()) {
-            appendLine("<body>")
-            appendLine(body)
-            appendLine("</body>")
-        }
-        if (script.isNotBlank()) {
-            appendLine("<script>")
-            appendLine(script)
-            appendLine("</script>")
-        }
-        appendLine("</html>")
-    }
 
     public operator fun plus(other: DataFrameHtmlData): DataFrameHtmlData =
         DataFrameHtmlData(
@@ -541,14 +597,12 @@ public data class DataFrameHtmlData(
          * @see DataFrame.toHTML
          * @see DataFrameHtmlData.plus
          */
-        public fun tableDefinitions(
-            includeJs: Boolean = true,
-            includeCss: Boolean = true,
-        ): DataFrameHtmlData = DataFrameHtmlData(
-            style = if (includeCss) getResources("/table.css") else "",
-            script = if (includeJs) getResourceText("/init.js") else "",
-            body = "",
-        )
+        public fun tableDefinitions(includeJs: Boolean = true, includeCss: Boolean = true): DataFrameHtmlData =
+            DataFrameHtmlData(
+                style = if (includeCss) getResources("/table.css") else "",
+                script = if (includeJs) getResourceText("/init.js") else "",
+                body = "",
+            )
     }
 }
 
@@ -568,6 +622,7 @@ public data class DisplayConfiguration(
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
     var useDarkColorScheme: Boolean = false,
     var enableFallbackStaticTables: Boolean = true,
+    var downsizeBufferedImage: Boolean = true,
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
@@ -585,27 +640,22 @@ public value class RendererDecimalFormat private constructor(internal val format
             return RendererDecimalFormat("%.${precision}f")
         }
 
-        public fun of(format: String): RendererDecimalFormat {
-            return RendererDecimalFormat(format)
-        }
+        public fun of(format: String): RendererDecimalFormat = RendererDecimalFormat(format)
 
-        internal val DEFAULT: RendererDecimalFormat = fromPrecision(defaultPrecision)
+        internal val DEFAULT: RendererDecimalFormat = fromPrecision(DEFAULT_PRECISION)
     }
 }
 
-internal const val defaultPrecision = 6
+internal const val DEFAULT_PRECISION = 6
 
-private fun flagFromEnv(envName: String): Boolean {
-    return System.getenv(envName)?.toBooleanStrictOrNull() ?: false
-}
+private fun flagFromEnv(envName: String): Boolean = System.getenv(envName)?.toBooleanStrictOrNull() ?: false
 
 internal fun String.escapeNewLines() = replace("\n", "\\n").replace("\r", "\\r")
 
 internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
 
-internal fun renderValueForHtml(value: Any?, truncate: Int, format: RendererDecimalFormat): RenderedContent {
-    return formatter.truncate(renderValueToString(value, format), truncate)
-}
+internal fun renderValueForHtml(value: Any?, truncate: Int, format: RendererDecimalFormat): RenderedContent =
+    formatter.truncate(renderValueToString(value, format), truncate)
 
 internal fun String.escapeHTML(): String {
     val str = this
@@ -639,33 +689,31 @@ internal class DataFrameFormatter(
 
     private fun String.structural() = addCss(structuralClass)
 
-    private fun RenderedContent.addCss(css: String? = null): RenderedContent {
-        return if (css != null) {
+    private fun RenderedContent.addCss(css: String? = null): RenderedContent =
+        if (css != null) {
             copy(truncatedContent = "<span class=\"$css\">$truncatedContent</span>", isFormatted = true)
-        } else this
-    }
+        } else {
+            this
+        }
 
-    internal fun truncate(str: String, limit: Int): RenderedContent {
-        return if (limit in 1 until str.length) {
+    internal fun truncate(str: String, limit: Int): RenderedContent =
+        if (limit in 1 until str.length) {
             val ellipsis = "...".ellipsis(str)
-            if (limit < 4) ellipsis
-            else {
+            if (limit < 4) {
+                ellipsis
+            } else {
                 val len = (limit - 3).coerceAtLeast(1)
                 RenderedContent.textWithLength(str.substring(0, len).escapeHTML(), len) + ellipsis
             }
         } else {
             RenderedContent.textWithLength(str.escapeHTML(), str.length)
         }
-    }
 
-    fun format(
-        value: Any?,
-        renderer: CellRenderer,
-        configuration: DisplayConfiguration,
-    ): String {
+    fun format(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): String {
         val result = render(value, renderer, configuration)
         return when {
             result == null -> ""
+
             result.isFormatted || result.isTruncated -> {
                 val tooltip = result.fullContent?.escapeHTML() ?: ""
                 return "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
@@ -707,6 +755,7 @@ internal class DataFrameFormatter(
                 if (index > 0) {
                     sb += ", ".addCss(structuralClass)
                 }
+
                 fun addEllipsis() {
                     if (limit == sb.len + "..".length + postfix.length) {
                         sb += "..".addCss(structuralClass)
@@ -721,12 +770,14 @@ internal class DataFrameFormatter(
                     break
                 }
                 val valueLimit = when (index) {
-                    values.size - 1 -> limit - sb.len - postfix.length // last
+                    values.size - 1 -> limit - sb.len - postfix.length
+
+                    // last
                     values.size - 2 -> { // prev before last
                         val sizeOfLast = render(
                             values.last(),
                             renderer,
-                            configuration.copy(cellContentLimit = 4)
+                            configuration.copy(cellContentLimit = 4),
                         )?.textLength ?: 3
                         limit - sb.len - ", ".length - sizeOfLast - postfix.length
                     }
@@ -747,10 +798,12 @@ internal class DataFrameFormatter(
 
         val result = when (value) {
             null -> "null".addCss(nullClass)
+
             is AnyRow -> {
                 val values = value.getVisibleValues()
                 when {
                     values.isEmpty() -> "{ }".addCss(nullClass)
+
                     else -> {
                         when (limit) {
                             3 -> "...".structural()
@@ -767,9 +820,11 @@ internal class DataFrameFormatter(
             }
 
             is AnyFrame -> renderer.content("DataFrame [${value.size}]", configuration).addCss(dataFrameClass)
+
             is List<*> ->
                 when {
                     value.isEmpty() -> "[ ]".addCss(nullClass)
+
                     else -> renderList(value, "[", "]").let {
                         it.copy(fullContent = value.joinToString("\n") { it.toString() })
                     }
@@ -778,15 +833,16 @@ internal class DataFrameFormatter(
             is Pair<*, *> -> {
                 val key = value.first.toString() + ": "
                 val shortValue =
-                    render(value.second, renderer, configuration.copy(cellContentLimit = 3)) ?: "...".addCss(
-                        structuralClass
-                    )
+                    render(value.second, renderer, configuration.copy(cellContentLimit = 3))
+                        ?: "...".addCss(structuralClass)
                 val sizeOfValue = shortValue.textLength
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {
                     if (limit > 3) {
                         ("$key...").truncate(limit).addCss(structuralClass)
-                    } else null
+                    } else {
+                        null
+                    }
                 } else {
                     val renderedValue =
                         render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length))
@@ -796,13 +852,15 @@ internal class DataFrameFormatter(
             }
 
             is Number -> renderer.content(value, configuration).addCss(numberClass)
+
             is URL -> wrap(
                 "<a href='$value' target='_blank'>",
                 renderer.content(value.toString(), configuration),
-                "</a>"
+                "</a>",
             )
 
             is DataFrameHtmlData -> RenderedContent.text(value.body)
+
             else -> renderer.content(value, configuration)
         }
         if (result != null && result.textLength > configuration.cellContentLimit) return null

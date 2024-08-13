@@ -1,10 +1,12 @@
 # Examples of Kotlin Dataframe
 
 ### Idea examples
-* [movies](idea-examples/movies) Using 3 different [Access APIs](https://kotlin.github.io/dataframe/apilevels.html) to perform data cleaning task
+* [movies](idea-examples/movies) Using 3 different [Access APIs](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
 * [titanic](idea-examples/titanic)
 * [youtube](idea-examples/youtube)
 * [json](idea-examples/json) Using OpenAPI support in DataFrame's Gradle and KSP plugins to access data from [API guru](https://apis.guru/) in a type-safe manner
+* [imdb sql database](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples) This project prominently showcases how to convert data from an SQL table to a Kotlin DataFrame 
+and how to transform the result of an SQL query into a DataFrame.
 
 ### Notebook examples
 
@@ -35,3 +37,10 @@ ___
 ___
 * youtube ([notebook](notebooks/youtube/Youtube.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/uXH0VfIM6qrrmwPJnLBi0j)) &ndash;
 Explore YouTube videos with YouTube REST API and Kotlin Dataframe 
+
+___
+* imdb sql database ([notebook](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)) &ndash; In this notebook, we use Kotlin DataFrame and Kandy library to analyze data from [IMDB](https://datasets.imdbws.com/) (SQL dump for the MariaDB database with the name "imdb" could be downloaded by this [link](https://drive.google.com/file/d/10HnOu0Yem2Tkz_34SfvDoHTVqF_8b4N7/view?usp=sharing)).
+
+---
+* 0.14.0 Dev Feature Overview [notebook](notebooks/feature_overviews/0.14.0/new_features.ipynb)
+  Overview of new features available in 0.14.0-dev

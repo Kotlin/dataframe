@@ -45,22 +45,31 @@ internal fun renderExtensions(
             val type = it.propertyType.resolve()
             val qualifiedTypeReference = getQualifiedTypeReference(type)
             val fieldType = when {
-                qualifiedTypeReference == "kotlin.collections.List" && type.singleTypeArgumentIsDataSchema() ||
+                qualifiedTypeReference == "kotlin.collections.List" &&
+                    type.singleTypeArgumentIsDataSchema() ||
                     qualifiedTypeReference == DataFrameNames.DATA_FRAME ->
                     FieldType.FrameFieldType(
                         markerName = type.renderTypeArguments(),
                         nullable = type.isMarkedNullable,
+                        renderAsList = true,
                     )
 
-                type.declaration.isAnnotationPresent(DataSchema::class) -> FieldType.GroupFieldType(type.render())
-                qualifiedTypeReference == DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(type.renderTypeArguments())
+                type.declaration.isAnnotationPresent(DataSchema::class) ->
+                    FieldType.GroupFieldType(markerName = type.render(), renderAsObject = true)
+
+                qualifiedTypeReference == DataFrameNames.DATA_ROW ->
+                    FieldType.GroupFieldType(
+                        markerName = type.renderTypeArguments(),
+                        renderAsObject = false,
+                    )
+
                 else -> FieldType.ValueFieldType(type.render())
             }
 
             BaseFieldImpl(
                 fieldName = ValidFieldName.of(it.fieldName),
                 columnName = it.columnName,
-                fieldType = fieldType
+                fieldType = fieldType,
             )
         }
 
@@ -68,10 +77,11 @@ internal fun renderExtensions(
     }).declarations
 }
 
-private fun getQualifiedTypeReference(type: KSType) = when (val declaration = type.declaration) {
-    is KSTypeParameter -> declaration.name.getShortName()
-    else -> declaration.getQualifiedNameOrThrow()
-}
+private fun getQualifiedTypeReference(type: KSType) =
+    when (val declaration = type.declaration) {
+        is KSTypeParameter -> declaration.name.getShortName()
+        else -> declaration.getQualifiedNameOrThrow()
+    }
 
 @OptIn(KspExperimental::class)
 private fun KSType.singleTypeArgumentIsDataSchema() =
@@ -94,21 +104,22 @@ private fun KSType.render(): String {
 
 private fun KSType.renderTypeArguments(): String = innerArguments.joinToString(", ") { render(it) }
 
-private fun render(typeArgument: KSTypeArgument): String {
-    return when (val variance = typeArgument.variance) {
+private fun render(typeArgument: KSTypeArgument): String =
+    when (val variance = typeArgument.variance) {
         Variance.STAR -> variance.label
-        Variance.INVARIANT, Variance.COVARIANT, Variance.CONTRAVARIANT -> buildString {
-            append(variance.label)
-            if (variance.label.isNotEmpty()) {
-                append(" ")
+
+        Variance.INVARIANT, Variance.COVARIANT, Variance.CONTRAVARIANT ->
+            buildString {
+                append(variance.label)
+                if (variance.label.isNotEmpty()) {
+                    append(" ")
+                }
+                append(
+                    typeArgument.type?.resolve()?.render()
+                        ?: error("typeArgument.type should only be null for Variance.STAR"),
+                )
             }
-            append(
-                typeArgument.type?.resolve()?.render()
-                    ?: error("typeArgument.type should only be null for Variance.STAR")
-            )
-        }
     }
-}
 
 internal class Property(val columnName: String, val fieldName: String, val propertyType: KSTypeReference)
 

@@ -1,11 +1,29 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions
+import org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions
+import org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions
 import org.jetbrains.kotlinx.dataframe.api.Update.UpdateOperationArg
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.documentation.*
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.NA
+import org.jetbrains.kotlinx.dataframe.documentation.NaN
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
+import org.jetbrains.kotlinx.dataframe.get
+import org.jetbrains.kotlinx.dataframe.typeClass
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -59,8 +77,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
-public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
-    fillNulls { columns.toColumnSet() }
+public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> = fillNulls { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNullsFunctionDoc]
@@ -94,7 +111,7 @@ internal inline val Any?.isNA: Boolean
 
 internal inline val AnyCol.canHaveNaN: Boolean get() = typeClass.let { it == Double::class || it == Float::class }
 
-internal inline val AnyCol.canHaveNA: Boolean get() = hasNulls() || canHaveNaN || kind != ColumnKind.Value
+internal inline val AnyCol.canHaveNA: Boolean get() = hasNulls() || canHaveNaN || kind() != ColumnKind.Value
 
 internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
 
@@ -151,16 +168,14 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
-public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
-    fillNaNs { columns.toColumnSet() }
+public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = fillNaNs { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNaNsFunctionDoc]
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.KPropertiesParam]
  */
-public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> =
-    fillNaNs { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> = fillNaNs { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNaNsFunctionDoc]
@@ -223,16 +238,14 @@ public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
-public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
-    fillNA { columns.toColumnSet() }
+public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fillNA { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNAFunctionDoc]
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.KPropertiesParam]
  */
-public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> =
-    fillNA { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> = fillNA { columns.toColumnSet() }
 
 /**
  * @include [CommonFillNAFunctionDoc]
@@ -309,10 +322,15 @@ private interface CommonDropNullsFunctionDoc
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropDslParam]
  */
+@Refine
+@Interpretable("DropNulls0")
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
-    return if (whereAllNull) drop { row -> cols.all { col -> col[row] == null } }
-    else drop { row -> cols.any { col -> col[row] == null } }
+    return if (whereAllNull) {
+        drop { row -> cols.all { col -> col[row] == null } }
+    } else {
+        drop { row -> cols.any { col -> col[row] == null } }
+    }
 }
 
 /**
@@ -320,8 +338,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: Co
  * This overload operates on all columns in the [DataFrame].
  * @include [DropNulls.WhereAllNullParam]
  */
-public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> =
-    dropNulls(whereAllNull) { all() }
+public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { all() }
 
 /**
  * @include [CommonDropNullsFunctionDoc]
@@ -413,8 +430,11 @@ private interface CommonDropNAFunctionDoc
  */
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
-    return if (whereAllNA) drop { cols.all { this[it].isNA } }
-    else drop { cols.any { this[it].isNA } }
+    return if (whereAllNA) {
+        drop { cols.all { this[it].isNA } }
+    } else {
+        drop { cols.any { this[it].isNA } }
+    }
 }
 
 /**
@@ -452,8 +472,7 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllN
  * This overload operates on all columns in the [DataFrame].
  * @include [DropNA.WhereAllNAParam]
  */
-public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> =
-    dropNA(whereAllNA) { all() }
+public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { all() }
 
 /**
  * ## The Drop `NA` Operation
@@ -518,8 +537,11 @@ private interface CommonDropNaNsFunctionDoc
  */
 public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
-    return if (whereAllNaN) drop { cols.all { this[it].isNaN } }
-    else drop { cols.any { this[it].isNaN } }
+    return if (whereAllNaN) {
+        drop { cols.all { this[it].isNaN } }
+    } else {
+        drop { cols.any { this[it].isNaN } }
+    }
 }
 
 /**
@@ -557,8 +579,7 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAl
  * This overload operates on all columns in the [DataFrame].
  * @include [DropNaNs.WhereAllNaNParam]
  */
-public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { all() }
+public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> = dropNaNs(whereAllNaN) { all() }
 
 /**
  * ## The Drop `NaN` Operation

@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
@@ -19,13 +21,20 @@ import kotlin.reflect.KProperty
 
 // region read DataFrame from objects
 
-public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> = toDataFrame {
-    properties()
-}
+@Refine
+@Interpretable("toDataFrameDefault")
+public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
+    toDataFrame {
+        properties()
+    }
 
+@Refine
+@Interpretable("toDataFrameDsl")
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
     createDataFrameImpl(T::class, body)
 
+@Refine
+@Interpretable("toDataFrame")
 public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, maxDepth: Int = 0): DataFrame<T> =
     toDataFrame {
         properties(roots = props, maxDepth = maxDepth)
@@ -35,8 +44,9 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     var uniqueDf: DataFrame<T>? = null
     for (row in this) {
-        if (uniqueDf == null) uniqueDf = row.df()
-        else {
+        if (uniqueDf == null) {
+            uniqueDf = row.df()
+        } else {
             if (uniqueDf !== row.df()) {
                 uniqueDf = null
                 break
@@ -46,7 +56,9 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     return if (uniqueDf != null) {
         val permutation = map { it.index }
         uniqueDf[permutation]
-    } else map { it.toDataFrame() }.concat()
+    } else {
+        map { it.toDataFrame() }.concat()
+    }
 }
 
 @JvmName("toDataFrameAnyColumn")
@@ -99,42 +111,50 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
             val col = DataColumn.createColumnGroup(columnNames[index], nestedDf)
             assert(columns[index] == null)
             columns[index] = col
-        } else assert(columns[index] != null)
+        } else {
+            assert(columns[index] != null)
+        }
     }
     return columns.map { it!! }.toDataFrame().cast()
 }
 
 @JvmName("toDataFrameColumnPathAnyNullable")
-public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
-    return map { it.first to guessColumnType(it.first.last(), it.second.asList()) }.toDataFrameFromPairs<Unit>()
-}
+public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
+    map {
+        it.first to guessColumnType(it.first.last(), it.second.asList())
+    }.toDataFrameFromPairs<Unit>()
 
-public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
-    return map { ColumnPath(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrameFromPairs<Unit>()
-}
+public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
+    map {
+        ColumnPath(it.first) to guessColumnType(it.first, it.second.asList())
+    }.toDataFrameFromPairs<Unit>()
 
 public interface TraversePropertiesDsl {
 
     /**
      * Skip given [classes] during recursive (dfs) traversal.
      */
+    @Interpretable("Exclude0")
     public fun exclude(vararg classes: KClass<*>)
 
     /**
      * Skip given [properties] during recursive (dfs) traversal.
      * These can also be getter-like functions (like `getX()` or `isX()`).
      */
+    @Interpretable("Exclude1")
     public fun exclude(vararg properties: KCallable<*>)
 
     /**
      * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      */
+    @Interpretable("Preserve0")
     public fun preserve(vararg classes: KClass<*>)
 
     /**
      * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns.
      * These can also be getter-like functions (like `getX()` or `isX()`).
      */
+    @Interpretable("Preserve1")
     public fun preserve(vararg properties: KCallable<*>)
 }
 
@@ -150,6 +170,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
 
+    @Interpretable("Properties0")
     public abstract fun properties(
         vararg roots: KCallable<*>,
         maxDepth: Int = 0,
@@ -162,8 +183,8 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
         add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
 
-    public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit =
-        add(this, expression)
+    @Interpretable("ToDataFrameFrom0")
+    public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
 
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
@@ -201,69 +222,82 @@ string.toDataFrame()
  */
 
 @JvmName("toDataFrameByte")
-public inline fun <reified B : Byte?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> = toDataFrame {
-    ValueProperty<B>::value from { it }
-}.cast()
+public inline fun <reified B : Byte?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> =
+    toDataFrame {
+        ValueProperty<B>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameShort")
-public inline fun <reified S : Short?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> = toDataFrame {
-    ValueProperty<S>::value from { it }
-}.cast()
+public inline fun <reified S : Short?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> =
+    toDataFrame {
+        ValueProperty<S>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameInt")
-public inline fun <reified I : Int?> Iterable<I>.toDataFrame(): DataFrame<ValueProperty<I>> = toDataFrame {
-    ValueProperty<I>::value from { it }
-}.cast()
+public inline fun <reified I : Int?> Iterable<I>.toDataFrame(): DataFrame<ValueProperty<I>> =
+    toDataFrame {
+        ValueProperty<I>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameLong")
-public inline fun <reified L : Long?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> = toDataFrame {
-    ValueProperty<L>::value from { it }
-}.cast()
+public inline fun <reified L : Long?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> =
+    toDataFrame {
+        ValueProperty<L>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameString")
-public inline fun <reified S : String?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> = toDataFrame {
-    ValueProperty<S>::value from { it }
-}.cast()
+public inline fun <reified S : String?> Iterable<S>.toDataFrame(): DataFrame<ValueProperty<S>> =
+    toDataFrame {
+        ValueProperty<S>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameChar")
-public inline fun <reified C : Char?> Iterable<C>.toDataFrame(): DataFrame<ValueProperty<C>> = toDataFrame {
-    ValueProperty<C>::value from { it }
-}.cast()
+public inline fun <reified C : Char?> Iterable<C>.toDataFrame(): DataFrame<ValueProperty<C>> =
+    toDataFrame {
+        ValueProperty<C>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameBoolean")
-public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> = toDataFrame {
-    ValueProperty<B>::value from { it }
-}.cast()
+public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> =
+    toDataFrame {
+        ValueProperty<B>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameFloat")
-public inline fun <reified F : Float?> Iterable<F>.toDataFrame(): DataFrame<ValueProperty<F>> = toDataFrame {
-    ValueProperty<F>::value from { it }
-}.cast()
+public inline fun <reified F : Float?> Iterable<F>.toDataFrame(): DataFrame<ValueProperty<F>> =
+    toDataFrame {
+        ValueProperty<F>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameDouble")
-public inline fun <reified D : Double?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> = toDataFrame {
-    ValueProperty<D>::value from { it }
-}.cast()
+public inline fun <reified D : Double?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> =
+    toDataFrame {
+        ValueProperty<D>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameUByte")
-public inline fun <reified U : UByte?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
-    ValueProperty<U>::value from { it }
-}.cast()
+public inline fun <reified U : UByte?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> =
+    toDataFrame {
+        ValueProperty<U>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameUShort")
-public inline fun <reified U : UShort?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
-    ValueProperty<U>::value from { it }
-}.cast()
+public inline fun <reified U : UShort?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> =
+    toDataFrame {
+        ValueProperty<U>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameUInt")
-public inline fun <reified U : UInt?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
-    ValueProperty<U>::value from { it }
-}.cast()
+public inline fun <reified U : UInt?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> =
+    toDataFrame {
+        ValueProperty<U>::value from { it }
+    }.cast()
 
 @JvmName("toDataFrameULong")
-public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> = toDataFrame {
-    ValueProperty<U>::value from { it }
-}.cast()
+public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<ValueProperty<U>> =
+    toDataFrame {
+        ValueProperty<U>::value from { it }
+    }.cast()
 
 @DataSchema
 public interface ValueProperty<T> {
@@ -272,18 +306,18 @@ public interface ValueProperty<T> {
 
 // region Create DataFrame from Map
 
-public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { DataColumn.createWithTypeInference(it.key, it.value.asList()) }.toDataFrame()
-}
+public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame =
+    map {
+        DataColumn.createWithTypeInference(it.key, it.value.asList())
+    }.toDataFrame()
 
 @JvmName("toDataFrameColumnPathAnyNullable")
-public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map {
+public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
+    map {
         it.key to DataColumn.createWithTypeInference(
-            it.key.last(),
-            it.value.asList()
+            name = it.key.last(),
+            values = it.value.asList(),
         )
     }.toDataFrameFromPairs<Unit>()
-}
 
 // endregion

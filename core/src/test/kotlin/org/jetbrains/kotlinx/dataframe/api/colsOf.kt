@@ -14,14 +14,12 @@ class ColsOfTests : ColumnsSelectionDslTests() {
     fun `top level`() {
         listOf(
             df.select { city },
-
             df.select { colsOf<String?>() },
             df.select { all().colsOf<String?>() },
         ).shouldAllBeEqual()
 
         listOf(
             df.select { age },
-
             df.select { colsOf<Int?> { "a" in it.name } },
             df.select { all().colsOf<Int?> { "a" in it.name } },
         ).shouldAllBeEqual()
@@ -31,16 +29,12 @@ class ColsOfTests : ColumnsSelectionDslTests() {
     fun `lower level`() {
         listOf(
             df.select { name { firstName and lastName } },
-
             df.select { name.colsOf<String>() },
             df.select { name.colsOf<String> { "Name" in it.name } },
-
             df.select { "name".colsOf<String>(typeOf<String>()) },
             df.select { "name".colsOf<String>(typeOf<String>()) { "Name" in it.name } },
-
             df.select { Person::name.colsOf<String>(typeOf<String>()) },
             df.select { Person::name.colsOf<String>(typeOf<String>()) { "Name" in it.name } },
-
             df.select { pathOf("name").colsOf<String>(typeOf<String>()) },
             df.select { pathOf("name").colsOf<String>(typeOf<String>()) { "Name" in it.name } },
         ).shouldAllBeEqual()

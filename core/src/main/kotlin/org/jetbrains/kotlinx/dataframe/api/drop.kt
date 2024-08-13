@@ -24,11 +24,12 @@ import kotlin.reflect.KProperty
 
 public fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
 
-public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> = when {
-    n == 0 -> this
-    n >= size -> get(emptyList())
-    else -> get(n until size)
-}
+public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> =
+    when {
+        n == 0 -> this
+        n >= size -> get(emptyList())
+        else -> get(n until size)
+    }
 
 public fun <T> DataColumn<T>.dropLast(n: Int = 1): DataColumn<T> = take(size - n)
 
@@ -131,8 +132,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[drop][ColumnsSelectionDsl.drop]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> =
-        asSingleColumn().dropCols(n)
+    public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
 
     /**
      * @include [CommonDropFirstDocs]
@@ -196,8 +196,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
      */
-    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> =
-        this.asSingleColumn().dropLastCols(n)
+    public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]

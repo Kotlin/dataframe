@@ -134,10 +134,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnRefere
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> =
     minFor { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C>> Grouped<T>.min(
-    name: String? = null,
-    columns: ColumnsSelector<T, C?>,
-): DataFrame<T> =
+public fun <T, C : Comparable<C>> Grouped<T>.min(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.min.aggregateAll(this, name, columns)
 
 public fun <T> Grouped<T>.min(vararg columns: String, name: String? = null): DataFrame<T> =
@@ -154,8 +151,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, 
 public fun <T, C : Comparable<C>> Grouped<T>.minOf(
     name: String? = null,
     expression: RowExpression<T, C>,
-): DataFrame<T> =
-    Aggregators.min.aggregateOfDelegated(this, name) { minOfOrNull(expression) }
+): DataFrame<T> = Aggregators.min.aggregateOfDelegated(this, name) { minOfOrNull(expression) }
 
 public fun <T, G, R : Comparable<R>> GroupBy<T, G>.minBy(rowExpression: RowExpression<G, R?>): ReducedGroupBy<T, G> =
     reduce { minByOrNull(rowExpression) }
@@ -228,8 +224,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false): DataFrame<T> = mi
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, R?>,
-): DataFrame<T> =
-    Aggregators.min.aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.min.aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.minFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     minFor(separate) { columns.toComparableColumns() }
