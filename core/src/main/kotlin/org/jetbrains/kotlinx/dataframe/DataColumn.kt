@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.ofCollection
+import org.jetbrains.kotlinx.dataframe.impl.columns.ofBoxedArray
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
@@ -42,6 +44,49 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     public companion object {
 
+        public fun <T> createValueColumn(
+            name: String,
+            values: ColumnDataHolder<T>,
+            type: KType,
+            defaultValue: T? = null,
+        ): ValueColumn<T> = ValueColumnImpl(values, name, type, defaultValue)
+
+        public fun createValueColumn(name: String, values: BooleanArray): ValueColumn<Boolean> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Boolean>())
+
+        public fun createValueColumn(name: String, values: ByteArray): ValueColumn<Byte> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Byte>())
+
+        public fun createValueColumn(name: String, values: ShortArray): ValueColumn<Short> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Short>())
+
+        public fun createValueColumn(name: String, values: IntArray): ValueColumn<Int> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Int>())
+
+        public fun createValueColumn(name: String, values: LongArray): ValueColumn<Long> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Long>())
+
+        public fun createValueColumn(name: String, values: FloatArray): ValueColumn<Float> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Float>())
+
+        public fun createValueColumn(name: String, values: DoubleArray): ValueColumn<Double> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Double>())
+
+        public fun createValueColumn(name: String, values: CharArray): ValueColumn<Char> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<Char>())
+
+        public fun createValueColumn(name: String, values: UByteArray): ValueColumn<UByte> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<UByte>())
+
+        public fun createValueColumn(name: String, values: UShortArray): ValueColumn<UShort> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<UShort>())
+
+        public fun createValueColumn(name: String, values: UIntArray): ValueColumn<UInt> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<UInt>())
+
+        public fun createValueColumn(name: String, values: ULongArray): ValueColumn<ULong> =
+            createValueColumn(name, values.asColumnDataHolder(), typeOf<ULong>())
+
         /**
          * Creates [ValueColumn] using given [name], [values] and [type].
          *
@@ -56,7 +101,15 @@ public interface DataColumn<out T> : BaseColumn<T> {
             type: KType,
             infer: Infer = Infer.None,
             defaultValue: T? = null,
-        ): ValueColumn<T> = ValueColumnImpl(values, name, getValuesType(values, type, infer), defaultValue)
+        ): ValueColumn<T> {
+            val valueType = getValuesType(values, type, infer)
+            return createValueColumn(
+                name = name,
+                values = ColumnDataHolder.ofCollection(values, valueType),
+                type = valueType,
+                defaultValue = defaultValue,
+            )
+        }
 
         /**
          * Creates [ValueColumn] using given [name], [values] and reified column [type].
@@ -74,25 +127,56 @@ public interface DataColumn<out T> : BaseColumn<T> {
             infer: Infer = Infer.None,
         ): ValueColumn<T> =
             createValueColumn(
-                name,
-                values,
-                getValuesType(
-                    values,
-                    typeOf<T>(),
-                    infer,
+                name = name,
+                values = values,
+                type = getValuesType(
+                    values = values,
+                    type = typeOf<T>(),
+                    infer = infer,
                 ),
+            )
+
+        public fun <T> createValueColumn(
+            name: String,
+            values: Array<T>,
+            type: KType,
+            infer: Infer = Infer.None,
+            defaultValue: T? = null,
+        ): ValueColumn<T> {
+            val valueType = getValuesType(values.asList(), type, infer)
+            return createValueColumn(
+                name = name,
+                values = ColumnDataHolder.ofBoxedArray(values, valueType),
+                type = valueType,
+                defaultValue = defaultValue,
+            )
+        }
+
+        public inline fun <reified T> createValueColumn(
+            name: String,
+            values: Array<T>,
+            infer: Infer = Infer.None,
+        ): ValueColumn<T> =
+            createValueColumn(
+                name = name,
+                values = values,
+                type = getValuesType(values.asList(), typeOf<T>(), infer),
             )
 
         public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(name, df)
 
         public fun <T> createFrameColumn(name: String, df: DataFrame<T>, startIndices: Iterable<Int>): FrameColumn<T> =
-            FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence()).toList(), lazy { df.schema() })
+            FrameColumnImpl(
+                name,
+                df.splitByIndices(startIndices.asSequence()).toList().toColumnDataHolder(),
+                lazy { df.schema() },
+            )
 
         public fun <T> createFrameColumn(
             name: String,
             groups: List<DataFrame<T>>,
             schema: Lazy<DataFrameSchema>? = null,
-        ): FrameColumn<T> = FrameColumnImpl(name, groups, schema)
+        ): FrameColumn<T> = FrameColumnImpl(name, groups.toColumnDataHolder(), schema)
 
         public fun <T> createWithTypeInference(
             name: String,
