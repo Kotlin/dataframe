@@ -235,7 +235,7 @@ class RenderingTests : JupyterReplTestCase() {
         val expectedOutput =
             """
             {
-              "${'$'}version": "2.1.0",
+              "${'$'}version": "2.1.1",
               "metadata": {
                 "columns": ["group", "col3", "col4"],
                 "types": [{
