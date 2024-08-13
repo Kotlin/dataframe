@@ -74,18 +74,18 @@ internal class ColumnDataHolderImpl<T>(private val list: List<T>, distinct: Lazy
     override fun iterator(): Iterator<T> = list.iterator()
 }
 
-private val BOOLEAN = typeOf<Boolean>()
-private val BYTE = typeOf<Byte>()
-private val SHORT = typeOf<Short>()
-private val INT = typeOf<Int>()
-private val LONG = typeOf<Long>()
-private val FLOAT = typeOf<Float>()
-private val DOUBLE = typeOf<Double>()
-private val CHAR = typeOf<Char>()
-private val UBYTE = typeOf<UByte>()
-private val USHORT = typeOf<UShort>()
-private val UINT = typeOf<UInt>()
-private val ULONG = typeOf<ULong>()
+internal val BOOLEAN = typeOf<Boolean>()
+internal val BYTE = typeOf<Byte>()
+internal val SHORT = typeOf<Short>()
+internal val INT = typeOf<Int>()
+internal val LONG = typeOf<Long>()
+internal val FLOAT = typeOf<Float>()
+internal val DOUBLE = typeOf<Double>()
+internal val CHAR = typeOf<Char>()
+internal val UBYTE = typeOf<UByte>()
+internal val USHORT = typeOf<UShort>()
+internal val UINT = typeOf<UInt>()
+internal val ULONG = typeOf<ULong>()
 
 /**
  * Constructs [ColumnDataHolderImpl] using an [asList] wrapper around the [collection].
