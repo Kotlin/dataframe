@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
@@ -16,9 +15,9 @@ import java.io.File
 class OtherSamples {
 
     @Test
-    fun extensionPropertiesApi1() {
+    fun example() {
         val df = DataFrame.read("../data/titanic.csv", delimiter = ';').take(5)
-        writeTable(df, "extensionPropertiesApi1")
+        // writeTable(df, "exampleName")
     }
 
     private fun writeTable(df: AnyFrame, name: String) {
