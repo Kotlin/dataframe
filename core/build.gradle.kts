@@ -82,6 +82,8 @@ dependencies {
     }
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
+
+    testImplementation("org.openjdk.jol:jol-core:0.10")
 }
 
 val samplesImplementation by configurations.getting {
