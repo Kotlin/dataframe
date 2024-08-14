@@ -25,53 +25,134 @@ import kotlin.reflect.typeOf
  * - [ULongArray]
  *
  * Store with converting to primitive arrays:
- * - [Array][Array]`<`[Boolean][Boolean]`>`
- * - [Array][Array]`<`[Byte][Byte]`>`
- * - [Array][Array]`<`[Short][Short]`>`
- * - [Array][Array]`<`[Int][Int]`>`
- * - [Array][Array]`<`[Long][Long]`>`
- * - [Array][Array]`<`[Float][Float]`>`
- * - [Array][Array]`<`[Double][Double]`>`
- * - [Array][Array]`<`[Char][Char]`>`
- * - [Array][Array]`<`[UByte][UByte]`>`
- * - [Array][Array]`<`[UShort][UShort]`>`
- * - [Array][Array]`<`[UInt][UInt]`>`
- * - [Array][Array]`<`[ULong][ULong]`>`
- * - [Collection][Collection]`<`[Boolean][Boolean]`>`
- * - [Collection][Collection]`<`[Byte][Byte]`>`
- * - [Collection][Collection]`<`[Short][Short]`>`
- * - [Collection][Collection]`<`[Int][Int]`>`
- * - [Collection][Collection]`<`[Long][Long]`>`
- * - [Collection][Collection]`<`[Float][Float]`>`
- * - [Collection][Collection]`<`[Double][Double]`>`
- * - [Collection][Collection]`<`[Char][Char]`>`
- * - [Collection][Collection]`<`[UByte][UByte]`>`
- * - [Collection][Collection]`<`[UShort][UShort]`>`
- * - [Collection][Collection]`<`[UInt][UInt]`>`
- * - [Collection][Collection]`<`[ULong][ULong]`>`
+ * - [Array][Array]`<`[Boolean?][Boolean]`>`
+ * - [Array][Array]`<`[Byte?][Byte]`>`
+ * - [Array][Array]`<`[Short?][Short]`>`
+ * - [Array][Array]`<`[Int?][Int]`>`
+ * - [Array][Array]`<`[Long?][Long]`>`
+ * - [Array][Array]`<`[Float?][Float]`>`
+ * - [Array][Array]`<`[Double?][Double]`>`
+ * - [Array][Array]`<`[Char?][Char]`>`
+ * - [Array][Array]`<`[UByte?][UByte]`>`
+ * - [Array][Array]`<`[UShort?][UShort]`>`
+ * - [Array][Array]`<`[UInt?][UInt]`>`
+ * - [Array][Array]`<`[ULong?][ULong]`>`
+ * - [Collection][Collection]`<`[Boolean?][Boolean]`>`
+ * - [Collection][Collection]`<`[Byte?][Byte]`>`
+ * - [Collection][Collection]`<`[Short?][Short]`>`
+ * - [Collection][Collection]`<`[Int?][Int]`>`
+ * - [Collection][Collection]`<`[Long?][Long]`>`
+ * - [Collection][Collection]`<`[Float?][Float]`>`
+ * - [Collection][Collection]`<`[Double?][Double]`>`
+ * - [Collection][Collection]`<`[Char?][Char]`>`
+ * - [Collection][Collection]`<`[UByte?][UByte]`>`
+ * - [Collection][Collection]`<`[UShort?][UShort]`>`
+ * - [Collection][Collection]`<`[UInt?][UInt]`>`
+ * - [Collection][Collection]`<`[ULong?][ULong]`>`
+ *
+ * Yes, as you can see, also nullable types are supported. The values are stored in primitive arrays,
+ * and a separate array is used to store the indices of the null values.
+ *
+ * Since, [ColumnDataHolder] can be used as a [List], this is invisible to the user.
  *
  * Store them as is:
  * - [Array][Array]`<`[Any?][Any]`>`
  * - [Collection][Collection]`<`[Any?][Any]`>`
  *
  */
-internal class ColumnDataHolderImpl<T>(private val list: List<T>, distinct: Lazy<Set<T>>?) : ColumnDataHolder<T> {
+internal class ColumnDataHolderImpl<T>(
+    private val list: List<T>,
+    distinct: Lazy<Set<T>>?,
+    private val nullIndices: IntArray,
+) : ColumnDataHolder<T> {
 
-    override val distinct = distinct ?: lazy { list.toSet() }
+    override val distinct = distinct ?: lazy {
+        val mutableList = list.toMutableList()
+        for (i in mutableList.indices) {
+            if (i in nullIndices) mutableList[i] = null as T
+        }
+        mutableList.toSet()
+    }
 
     override val size: Int get() = list.size
 
+    override fun isEmpty(): Boolean = list.isEmpty()
+
+    override fun indexOf(element: T): Int {
+        if (element == null) return nullIndices.first()
+        for (i in list.indices) {
+            if (i in nullIndices) continue
+            if (list[i] == element) return i
+        }
+        return -1
+    }
+
+    override fun containsAll(elements: Collection<T>): Boolean = elements.all { contains(it) }
+
     override fun toSet(): Set<T> = distinct.value
 
-    override fun toList(): List<T> = list
+    override fun get(index: Int): T =
+        if (index in nullIndices) {
+            null as T
+        } else {
+            list[index]
+        }
 
-    override fun get(index: Int): T = list[index]
+    override fun get(range: IntRange): List<T> {
+        val mutableList = list.toMutableList()
+        for (nullIndex in nullIndices) {
+            if (nullIndex in range) mutableList[nullIndex] = null as T
+        }
+        return mutableList.subList(range.first, range.last + 1)
+    }
 
-    override fun get(range: IntRange): List<T> = list.subList(range.first, range.last + 1)
+    override fun contains(element: T): Boolean =
+        if (element == null) {
+            nullIndices.isNotEmpty()
+        } else {
+            list.contains(element)
+        }
 
-    override fun contains(value: T): Boolean = list.contains(value)
+    override fun iterator(): Iterator<T> = listIterator()
 
-    override fun iterator(): Iterator<T> = list.iterator()
+    override fun listIterator(): ListIterator<T> = listIterator(0)
+
+    override fun listIterator(index: Int): ListIterator<T> =
+        object : ListIterator<T> {
+
+            val iterator = list.listIterator(index)
+
+            override fun hasNext(): Boolean = iterator.hasNext()
+
+            override fun hasPrevious(): Boolean = iterator.hasNext()
+
+            override fun next(): T {
+                val i = nextIndex()
+                val res = iterator.next()
+                return if (i in nullIndices) null as T else res
+            }
+
+            override fun nextIndex(): Int = iterator.nextIndex()
+
+            override fun previous(): T {
+                val i = previousIndex()
+                val res = iterator.previous()
+                return if (i in nullIndices) null as T else res
+            }
+
+            override fun previousIndex(): Int = iterator.previousIndex()
+        }
+
+    override fun subList(fromIndex: Int, toIndex: Int): List<T> = get(fromIndex..<toIndex)
+
+    override fun lastIndexOf(element: T): Int {
+        if (element == null) return nullIndices.last()
+        for (i in list.indices.reversed()) {
+            if (i in nullIndices) continue
+            if (list[i] == element) return i
+        }
+        return -1
+    }
 }
 
 internal val BOOLEAN = typeOf<Boolean>()
@@ -87,6 +168,56 @@ internal val USHORT = typeOf<UShort>()
 internal val UINT = typeOf<UInt>()
 internal val ULONG = typeOf<ULong>()
 
+internal val NULLABLE_BOOLEAN = typeOf<Boolean?>()
+internal val NULLABLE_BYTE = typeOf<Byte?>()
+internal val NULLABLE_SHORT = typeOf<Short?>()
+internal val NULLABLE_INT = typeOf<Int?>()
+internal val NULLABLE_LONG = typeOf<Long?>()
+internal val NULLABLE_FLOAT = typeOf<Float?>()
+internal val NULLABLE_DOUBLE = typeOf<Double?>()
+internal val NULLABLE_CHAR = typeOf<Char?>()
+internal val NULLABLE_UBYTE = typeOf<UByte?>()
+internal val NULLABLE_USHORT = typeOf<UShort?>()
+internal val NULLABLE_UINT = typeOf<UInt?>()
+internal val NULLABLE_ULONG = typeOf<ULong?>()
+
+internal fun zeroValueOf(type: KType): Any? =
+    when (type) {
+        NULLABLE_BOOLEAN, BOOLEAN -> false
+        NULLABLE_BYTE, BYTE -> 0.toByte()
+        NULLABLE_SHORT, SHORT -> 0.toShort()
+        NULLABLE_INT, INT -> 0
+        NULLABLE_LONG, LONG -> 0L
+        NULLABLE_FLOAT, FLOAT -> 0.0f
+        NULLABLE_DOUBLE, DOUBLE -> 0.0
+        NULLABLE_CHAR, CHAR -> 0.toChar()
+        NULLABLE_UBYTE, UBYTE -> 0.toUByte()
+        NULLABLE_USHORT, USHORT -> 0.toUShort()
+        NULLABLE_UINT, UINT -> 0.toUInt()
+        NULLABLE_ULONG, ULONG -> 0.toULong()
+        else -> null
+    }
+
+private fun <T> Array<T?>.fillNulls(zeroValue: Any, nullIndices: MutableList<Int>): Array<T> {
+    for (i in indices) {
+        if (this[i] == null) {
+            this[i] = zeroValue as T
+            nullIndices.add(i)
+        }
+    }
+    return this as Array<T>
+}
+
+private fun <T> MutableList<T?>.fillNulls(zeroValue: Any, nullIndices: MutableList<Int>): List<T> {
+    for (i in indices) {
+        if (this[i] == null) {
+            this[i] = zeroValue as T
+            nullIndices.add(i)
+        }
+    }
+    return this as List<T>
+}
+
 /**
  * Constructs [ColumnDataHolderImpl] using an [asList] wrapper around the [collection].
  */
@@ -99,23 +230,108 @@ internal fun <T> ColumnDataHolder.Companion.ofCollection(
     if (collection is ColumnDataHolder<*>) return collection as ColumnDataHolder<T>
 
     try {
+        val nullIndices = mutableListOf<Int>()
         val newList = when (type) {
             BOOLEAN -> (collection as Collection<Boolean>).toBooleanArray().asList()
+
             BYTE -> (collection as Collection<Byte>).toByteArray().asList()
+
             SHORT -> (collection as Collection<Short>).toShortArray().asList()
+
             INT -> (collection as Collection<Int>).toIntArray().asList()
+
             LONG -> (collection as Collection<Long>).toLongArray().asList()
+
             FLOAT -> (collection as Collection<Float>).toFloatArray().asList()
+
             DOUBLE -> (collection as Collection<Double>).toDoubleArray().asList()
+
             CHAR -> (collection as Collection<Char>).toCharArray().asList()
+
             UBYTE -> (collection as Collection<UByte>).toUByteArray().asList()
+
             USHORT -> (collection as Collection<UShort>).toUShortArray().asList()
+
             UINT -> (collection as Collection<UInt>).toUIntArray().asList()
+
             ULONG -> (collection as Collection<ULong>).toULongArray().asList()
+
+            NULLABLE_BOOLEAN -> (collection as Collection<Boolean?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toBooleanArray()
+                .asList()
+
+            NULLABLE_BYTE -> (collection as Collection<Byte?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toByteArray()
+                .asList()
+
+            NULLABLE_SHORT -> (collection as Collection<Short?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toShortArray()
+                .asList()
+
+            NULLABLE_INT -> (collection as Collection<Int?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toIntArray()
+                .asList()
+
+            NULLABLE_LONG -> (collection as Collection<Long?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toLongArray()
+                .asList()
+
+            NULLABLE_FLOAT -> (collection as Collection<Float?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toFloatArray()
+                .asList()
+
+            NULLABLE_DOUBLE -> (collection as Collection<Double?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toDoubleArray()
+                .asList()
+
+            NULLABLE_CHAR -> (collection as Collection<Char?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toCharArray()
+                .asList()
+
+            NULLABLE_UBYTE -> (collection as Collection<UByte?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toUByteArray()
+                .asList()
+
+            NULLABLE_USHORT -> (collection as Collection<UShort?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toUShortArray()
+                .asList()
+
+            NULLABLE_UINT -> (collection as Collection<UInt?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toUIntArray()
+                .asList()
+
+            NULLABLE_ULONG -> (collection as Collection<ULong?>)
+                .toMutableList()
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toULongArray()
+                .asList()
+
             else -> collection.asList()
         } as List<T>
 
-        return ColumnDataHolderImpl(newList, distinct)
+        return ColumnDataHolderImpl(newList, distinct, nullIndices.toIntArray())
     } catch (e: Exception) {
         throw IllegalArgumentException("Can't create ColumnDataHolder from $collection and type $type", e)
     }
@@ -133,23 +349,96 @@ internal fun <T> ColumnDataHolder.Companion.ofBoxedArray(
     distinct: Lazy<Set<T>>? = null,
 ): ColumnDataHolder<T> {
     try {
+        val nullIndices = mutableListOf<Int>()
         val list = when (type) {
             BOOLEAN -> (array as Array<Boolean>).toBooleanArray().asList()
+
             BYTE -> (array as Array<Byte>).toByteArray().asList()
+
             SHORT -> (array as Array<Short>).toShortArray().asList()
+
             INT -> (array as Array<Int>).toIntArray().asList()
+
             LONG -> (array as Array<Long>).toLongArray().asList()
+
             FLOAT -> (array as Array<Float>).toFloatArray().asList()
+
             DOUBLE -> (array as Array<Double>).toDoubleArray().asList()
+
             CHAR -> (array as Array<Char>).toCharArray().asList()
+
             UBYTE -> (array as Array<UByte>).toUByteArray().asList()
+
             USHORT -> (array as Array<UShort>).toUShortArray().asList()
+
             UINT -> (array as Array<UInt>).toUIntArray().asList()
+
             ULONG -> (array as Array<ULong>).toULongArray().asList()
+
+            NULLABLE_BOOLEAN -> (array as Array<Boolean?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toBooleanArray()
+                .asList()
+
+            NULLABLE_BYTE -> (array as Array<Byte?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toByteArray()
+                .asList()
+
+            NULLABLE_SHORT -> (array as Array<Short?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toShortArray()
+                .asList()
+
+            NULLABLE_INT -> (array as Array<Int?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toIntArray()
+                .asList()
+
+            NULLABLE_LONG -> (array as Array<Long?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toLongArray()
+                .asList()
+
+            NULLABLE_FLOAT -> (array as Array<Float?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toFloatArray()
+                .asList()
+
+            NULLABLE_DOUBLE -> (array as Array<Double?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toDoubleArray()
+                .asList()
+
+            NULLABLE_CHAR -> (array as Array<Char?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toCharArray()
+                .asList()
+
+            NULLABLE_UBYTE -> (array as Array<UByte?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toUByteArray()
+                .asList()
+
+            NULLABLE_USHORT -> (array as Array<UShort?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toUShortArray()
+                .asList()
+
+            NULLABLE_UINT -> (array as Array<UInt?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toUIntArray()
+                .asList()
+
+            NULLABLE_ULONG -> (array as Array<ULong?>)
+                .fillNulls(zeroValueOf(type)!!, nullIndices)
+                .toULongArray()
+                .asList()
+
             else -> array.asList()
         } as List<T>
 
-        return ColumnDataHolderImpl(list, distinct)
+        return ColumnDataHolderImpl(list, distinct, nullIndices.toIntArray())
     } catch (e: Exception) {
         throw IllegalArgumentException(
             "Can't create ColumnDataHolder from $array and mismatching type $type",
@@ -202,7 +491,7 @@ internal fun <T> ColumnDataHolder.Companion.ofPrimitiveArray(
         )
     } as List<T>
 
-    return ColumnDataHolderImpl(newList, distinct)
+    return ColumnDataHolderImpl(newList, distinct, intArrayOf())
 }
 
 @Suppress("UNCHECKED_CAST")

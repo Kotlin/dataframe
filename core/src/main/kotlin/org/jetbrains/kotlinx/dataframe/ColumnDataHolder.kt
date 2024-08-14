@@ -15,27 +15,19 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.UBYTE
 import org.jetbrains.kotlinx.dataframe.impl.columns.UINT
 import org.jetbrains.kotlinx.dataframe.impl.columns.ULONG
 import org.jetbrains.kotlinx.dataframe.impl.columns.USHORT
-import org.jetbrains.kotlinx.dataframe.impl.columns.ofCollection
 import org.jetbrains.kotlinx.dataframe.impl.columns.ofBoxedArray
+import org.jetbrains.kotlinx.dataframe.impl.columns.ofCollection
 import org.jetbrains.kotlinx.dataframe.impl.columns.ofPrimitiveArray
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * Represents the contents of a column, however it may be implemented.
+ * Represents the contents of a column; however, it may be implemented.
  * The default implementation is found at [ColumnDataHolderImpl].
  */
-public interface ColumnDataHolder<T> : Iterable<T> {
-
-    public val size: Int
+public interface ColumnDataHolder<T> : List<T> {
 
     public fun toSet(): Set<T>
-
-    public fun toList(): List<T>
-
-    public fun contains(value: T): Boolean
-
-    public operator fun get(index: Int): T
 
     public operator fun get(range: IntRange): List<T>
 
