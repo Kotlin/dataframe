@@ -46,20 +46,20 @@ class ColumnDataHolder {
     )
 
     // ⌌-------------------------------------------------------------------⌍
-    // |  |                  type|   creation|  processing|            size|
-    // |--|----------------------|-----------|------------|----------------|
-    // | 0| BOXED_ARRAY_WITH_NULL| 1.668690ms| 40.072489ms| 14500481.813333|
-    // | 1|        LIST_WITH_NULL| 9.142612ms| 41.064332ms| 14509001.813333|
-    // | 2|                  LIST| 2.710987ms| 42.268814ms| 11496455.760000|
-    // | 3|           BOXED_ARRAY| 2.415740ms| 42.270087ms| 11502541.520000|
-    // | 4|          DOUBLE_ARRAY| 1.840757ms| 42.354001ms| 11499172.666667|
+    // |  |                  type|     creation|    processing|        size|
+    // |--|----------------------|-------------|--------------|------------|
+    // | 0|          DOUBLE_ARRAY| 452.407441ms| 10.661419664s| 250303579.2|
+    // | 1| BOXED_ARRAY_WITH_NULL| 1.246602198s| 10.876937912s| 250303867.2|
+    // | 2|                  LIST| 1.075708642s| 10.987466189s| 250303651.2|
+    // | 3|           BOXED_ARRAY| 1.109656324s| 11.206449292s| 250308171.2|
+    // | 4|        LIST_WITH_NULL| 1.878721075s| 11.211828024s| 250294786.4|
     // ⌎-------------------------------------------------------------------⌏
     @Test
     fun `measuring speed of ColumnDataHolder creation`() {
-        val size = 50_000
+        val size = 10_000_000
         val content = { i: Int -> Random.nextDouble() }
         val tests = buildList {
-            repeat(300) {
+            repeat(10) {
                 add(LIST)
                 add(LIST_WITH_NULL)
                 add(BOXED_ARRAY)
@@ -116,7 +116,11 @@ class ColumnDataHolder {
                     .add(d) { a() + b() + c() }
             }
 
-            val footprint = GraphLayout.parseInstance(df).toFootprint()
+            val footprint = try {
+                GraphLayout.parseInstance(df).toFootprint()
+            } catch (e: Throwable) {
+                throw Exception("failed test: $test", e)
+            }
             val size = footprint.lines()
                 .last { "total" in it }
                 .split(" ")
