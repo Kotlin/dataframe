@@ -1,27 +1,34 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.toColumnDataHolder
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 internal open class ValueColumnImpl<T>(
-    values: List<T>,
+    values: ColumnDataHolder<T>,
     name: String,
     type: KType,
     val defaultValue: T? = null,
-    distinct: Lazy<Set<T>>? = null,
-) : DataColumnImpl<T>(values, name, type, distinct),
+) : DataColumnImpl<T>(values, name, type),
     ValueColumn<T> {
 
-    override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, distinct)
+    override fun distinct() =
+        ValueColumnImpl(
+            values = toSet().toColumnDataHolder(type, distinct),
+            name = name,
+            type = type,
+            defaultValue = defaultValue,
+        )
 
-    override fun rename(newName: String) = ValueColumnImpl(values, newName, type, defaultValue, distinct)
+    override fun rename(newName: String) = ValueColumnImpl(values, newName, type, defaultValue)
 
-    override fun changeType(type: KType) = ValueColumnImpl(values, name, type, defaultValue, distinct)
+    override fun changeType(type: KType) = ValueColumnImpl(values, name, type, defaultValue)
 
     override fun addParent(parent: ColumnGroup<*>): DataColumn<T> = ValueColumnWithParent(parent, this)
 
