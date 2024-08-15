@@ -28,7 +28,7 @@ Here's a list of all APIs in order of increasing safety.
   Columns accessed by the [`KProperty`](https://kotlinlang.org/docs/reflection.html#property-references) of some class.
   The name and type of column should match the name and type of property, respectively.
 
-* [**Extension Properties API**](extensionPropertiesApi.md)
+* [**Extension Properties API**](extensionPropertiesApi.md) <br/>
   Extension access properties are generated based on the dataframe schema. The name and type of properties are inferred
   from the name and type of the corresponding columns.
 
@@ -114,7 +114,7 @@ val passengers = DataFrame.read("titanic.csv")
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df = DataFrame.read("titanic.csv")
+val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
 ```
 
 <!---END-->
