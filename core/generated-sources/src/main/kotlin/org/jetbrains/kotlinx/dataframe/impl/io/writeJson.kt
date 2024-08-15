@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.columns.CellKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -37,7 +38,10 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.TYPES
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.io.ARRAY_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
+import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.VALUE_COLUMN_NAME
+import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils
+import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.isDataframeConvertable
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -48,7 +52,7 @@ import java.io.IOException
 
 // See docs/serialization_format.md for a description of
 // serialization versions and format.
-internal const val SERIALIZATION_VERSION = "2.1.0"
+internal const val SERIALIZATION_VERSION = "2.1.1"
 
 internal object SerializationKeys {
     const val DATA = "data"
@@ -108,14 +112,14 @@ internal fun encodeRowWithMetadata(
     frame: ColumnsContainer<*>,
     index: Int,
     rowLimit: Int? = null,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+    customEncoders: List<CustomEncoder> = emptyList(),
 ): JsonElement? {
     val values: List<Pair<String, JsonElement>> = frame.columns().map { col ->
         when (col) {
             is ColumnGroup<*> -> {
                 val schema = col.schema()
                 buildJsonObject {
-                    put(DATA, encodeRowWithMetadata(col, index, rowLimit, imageEncodingOptions) ?: JsonPrimitive(null))
+                    put(DATA, encodeRowWithMetadata(col, index, rowLimit, customEncoders) ?: JsonPrimitive(null))
                     putJsonObject(METADATA) {
                         put(KIND, JsonPrimitive(ColumnKind.Group.toString()))
                         put(COLUMNS, Json.encodeToJsonElement(schema.columns.keys))
@@ -132,9 +136,9 @@ internal fun encodeRowWithMetadata(
 
             is FrameColumn<*> -> {
                 val data = if (rowLimit == null) {
-                    encodeFrameWithMetadata(col[index], null, imageEncodingOptions)
+                    encodeFrameWithMetadata(col[index], null, customEncoders)
                 } else {
-                    encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit, imageEncodingOptions)
+                    encodeFrameWithMetadata(col[index].take(rowLimit), rowLimit, customEncoders)
                 }
                 val schema = col.schema.value
                 buildJsonObject {
@@ -155,19 +159,19 @@ internal fun encodeRowWithMetadata(
                 }
             }
 
-            else -> encodeValue(col, index, imageEncodingOptions)
+            else -> encodeValue(col, index, customEncoders)
         }.let { col.name to it }
     }
     if (values.isEmpty()) return null
     return JsonObject(values.toMap())
 }
 
-internal fun encodeValue(
-    col: AnyCol,
-    index: Int,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null,
-): JsonElement =
+internal fun encodeValue(col: AnyCol, index: Int, customEncoders: List<CustomEncoder> = emptyList()): JsonElement =
     when {
+        customEncoders.any { it.canEncode(col[index]) } -> {
+            customEncoders.first { it.canEncode(col[index]) }.encode(col[index])
+        }
+
         col.isList() -> col[index]?.let { list ->
             val values = (list as List<*>).map { convert(it) }
             JsonArray(values)
@@ -175,35 +179,61 @@ internal fun encodeValue(
 
         col.typeClass in valueTypes -> convert(col[index])
 
-        col.typeClass == BufferedImage::class && imageEncodingOptions != null ->
-            col[index]?.let { image ->
-                JsonPrimitive(encodeBufferedImageAsBase64(image as BufferedImage, imageEncodingOptions))
-            } ?: JsonPrimitive("")
-
         else -> JsonPrimitive(col[index]?.toString())
     }
 
-private fun encodeBufferedImageAsBase64(
-    image: BufferedImage,
-    imageEncodingOptions: Base64ImageEncodingOptions = Base64ImageEncodingOptions(),
-): String? =
-    try {
-        val preparedImage = if (imageEncodingOptions.isLimitSizeOn) {
-            image.resizeKeepingAspectRatio(imageEncodingOptions.imageSizeLimit)
-        } else {
-            image
-        }
+internal class DataframeConvertableEncoder(
+    private val encoders: List<CustomEncoder>,
+    private val rowLimit: Int? = null,
+) : CustomEncoder {
+    override fun canEncode(input: Any?): Boolean = isDataframeConvertable(input)
 
-        val bytes = if (imageEncodingOptions.isGzipOn) {
-            preparedImage.toByteArray().encodeGzip()
-        } else {
-            preparedImage.toByteArray()
-        }
+    override fun encode(input: Any?): JsonElement =
+        input?.let {
+            val data = encodeFrameWithMetadata(
+                KotlinNotebookPluginUtils.convertToDataFrame(input),
+                rowLimit,
+                encoders,
+            )
+            buildJsonObject {
+                put(DATA, data)
+                putJsonObject(METADATA) {
+                    put(KIND, JsonPrimitive(CellKind.DataFrameConvertable.toString()))
+                }
+            }
+        } ?: JsonPrimitive(null)
+}
 
-        bytes.toBase64()
-    } catch (e: IOException) {
-        null
-    }
+internal class BufferedImageEncoder(private val options: Base64ImageEncodingOptions) : CustomEncoder {
+    override fun canEncode(input: Any?): Boolean = input is BufferedImage
+
+    override fun encode(input: Any?): JsonElement =
+        JsonPrimitive(
+            input?.let { image -> encodeBufferedImageAsBase64(image as BufferedImage, options) } ?: "",
+        )
+
+    private fun encodeBufferedImageAsBase64(
+        image: BufferedImage,
+        imageEncodingOptions: Base64ImageEncodingOptions = Base64ImageEncodingOptions(),
+    ): String =
+        try {
+            val preparedImage = if (imageEncodingOptions.isLimitSizeOn) {
+                image.resizeKeepingAspectRatio(imageEncodingOptions.imageSizeLimit)
+            } else {
+                image
+            }
+
+            val bytes = if (imageEncodingOptions.isGzipOn) {
+                preparedImage.toByteArray().encodeGzip()
+            } else {
+                preparedImage.toByteArray()
+            }
+
+            bytes.toBase64()
+        } catch (_: IOException) {
+            ""
+        }
+}
 
 private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject =
     JsonObject(
@@ -217,7 +247,7 @@ private fun createJsonTypeDescriptor(columnSchema: ColumnSchema): JsonObject =
 internal fun encodeFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int? = null,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+    customEncoders: List<CustomEncoder> = emptyList(),
 ): JsonArray {
     val valueColumn = frame.extractValueColumn()
     val arrayColumn = frame.extractArrayColumn()
@@ -231,13 +261,13 @@ internal fun encodeFrameWithMetadata(
                     encodeFrameWithMetadata(
                         it as AnyFrame,
                         rowLimit,
-                        imageEncodingOptions,
+                        customEncoders,
                     )
                 } else {
                     null
                 }
             }
-            ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, imageEncodingOptions)
+            ?: encodeRowWithMetadata(frame, rowIndex, rowLimit, customEncoders)
     }
 
     return buildJsonArray { addAll(data.map { convert(it) }) }
@@ -345,7 +375,7 @@ internal fun encodeDataFrameWithMetadata(
     frame: AnyFrame,
     rowLimit: Int,
     nestedRowLimit: Int? = null,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+    customEncoders: List<CustomEncoder> = emptyList(),
 ): JsonObject =
     buildJsonObject {
         put(VERSION, JsonPrimitive(SERIALIZATION_VERSION))
@@ -366,7 +396,7 @@ internal fun encodeDataFrameWithMetadata(
             encodeFrameWithMetadata(
                 frame = frame.take(rowLimit),
                 rowLimit = nestedRowLimit,
-                imageEncodingOptions = imageEncodingOptions,
+                customEncoders = customEncoders,
             ),
         )
     }

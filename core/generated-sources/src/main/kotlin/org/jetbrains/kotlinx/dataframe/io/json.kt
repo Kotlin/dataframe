@@ -22,8 +22,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.encodeDataFrameWithMetadata
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.encodeRow
 import org.jetbrains.kotlinx.dataframe.impl.io.readJson
-import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
-import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
@@ -303,7 +301,7 @@ public fun AnyFrame.toJsonWithMetadata(
     rowLimit: Int,
     nestedRowLimit: Int? = null,
     prettyPrint: Boolean = false,
-    imageEncodingOptions: Base64ImageEncodingOptions? = null,
+    customEncoders: List<CustomEncoder> = emptyList(),
 ): String {
     val json = Json {
         this.prettyPrint = prettyPrint
@@ -312,8 +310,29 @@ public fun AnyFrame.toJsonWithMetadata(
     }
     return json.encodeToString(
         JsonElement.serializer(),
-        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, imageEncodingOptions),
+        encodeDataFrameWithMetadata(this@toJsonWithMetadata, rowLimit, nestedRowLimit, customEncoders),
     )
+}
+
+/**
+ * Interface for defining a custom encoder. That applied to the value during dataframe JSON serialization
+ */
+public interface CustomEncoder {
+    /**
+     * Determines whether this encoder can encode the given input.
+     *
+     * @param input The input object to be checked for suitability.
+     * @return `true` if the input can be encoded, otherwise `false`.
+     */
+    public fun canEncode(input: Any?): Boolean
+
+    /**
+     * Encodes the provided input into a JSON element.
+     *
+     * @param input The input object to be encoded.
+     * @return A JsonElement representing the encoded input.
+     */
+    public fun encode(input: Any?): JsonElement
 }
 
 internal const val DEFAULT_IMG_SIZE = 600
