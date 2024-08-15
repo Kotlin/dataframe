@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -11,22 +12,21 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.toColumnDataHolder
 import kotlin.reflect.KType
 
-internal open class FrameColumnImpl<T> constructor(
+internal open class FrameColumnImpl<T>(
     name: String,
-    values: List<DataFrame<T>>,
+    values: ColumnDataHolder<DataFrame<T>>,
     columnSchema: Lazy<DataFrameSchema>? = null,
-    distinct: Lazy<Set<DataFrame<T>>>? = null,
 ) : DataColumnImpl<DataFrame<T>>(
         values = values,
         name = name,
         type = DataFrame::class.createStarProjectedType(false),
-        distinct = distinct,
     ),
     FrameColumn<T> {
 
-    override fun rename(newName: String) = FrameColumnImpl(newName, values, schema, distinct)
+    override fun rename(newName: String) = FrameColumnImpl(newName, values, schema)
 
     override fun defaultValue() = null
 
@@ -37,7 +37,12 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
 
-    override fun distinct() = FrameColumnImpl(name, distinct.value.toList(), schema, distinct)
+    override fun distinct() =
+        FrameColumnImpl(
+            name = name,
+            values = toSet().toColumnDataHolder(type, distinct),
+            columnSchema = schema,
+        )
 
     override val schema: Lazy<DataFrameSchema> = columnSchema ?: lazy {
         values.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
