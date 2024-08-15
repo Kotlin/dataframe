@@ -166,11 +166,11 @@ internal fun encodeRowWithMetadata(
     return JsonObject(values.toMap())
 }
 
-internal fun encodeValue(col: AnyCol, index: Int, customEncoders: List<CustomEncoder> = emptyList()): JsonElement =
-    when {
-        customEncoders.any { it.canEncode(col[index]) } -> {
-            customEncoders.first { it.canEncode(col[index]) }.encode(col[index])
-        }
+internal fun encodeValue(col: AnyCol, index: Int, customEncoders: List<CustomEncoder> = emptyList()): JsonElement {
+    val matchingEncoder = customEncoders.firstOrNull { it.canEncode(col[index]) }
+
+    return when {
+        matchingEncoder != null -> matchingEncoder.encode(col[index])
 
         col.isList() -> col[index]?.let { list ->
             val values = (list as List<*>).map { convert(it) }
@@ -181,6 +181,7 @@ internal fun encodeValue(col: AnyCol, index: Int, customEncoders: List<CustomEnc
 
         else -> JsonPrimitive(col[index]?.toString())
     }
+}
 
 internal class DataframeConvertableEncoder(
     private val encoders: List<CustomEncoder>,
