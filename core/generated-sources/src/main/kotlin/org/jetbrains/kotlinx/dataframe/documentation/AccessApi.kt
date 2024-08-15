@@ -120,7 +120,7 @@ internal interface AccessApi {
      *
      * For example:
      * ```kotlin
-     * val df = DataFrame.read("titanic.csv")
+     * val df /* : AnyFrame */ = DataFrame.read("titanic.csv")
      * ```
      */
     interface ExtensionPropertiesApi
