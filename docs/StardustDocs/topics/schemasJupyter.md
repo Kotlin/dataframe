@@ -9,7 +9,7 @@ After execution of cell
 ```kotlin
 val df = dataFrameOf("name", "age")(
     "Alice", 15,
-    "Bob", null
+    "Bob", null,
 )
 ```
 
