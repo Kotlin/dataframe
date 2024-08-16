@@ -79,11 +79,11 @@ df.groupBy { name }.concat()
 ```kotlin
 val x = dataFrameOf("a", "b")(
     1, 2,
-    3, 4
+    3, 4,
 )
 val y = dataFrameOf("b", "c")(
     5, 6,
-    7, 8
+    7, 8,
 )
 val frameColumn by columnOf(x, y)
 frameColumn.concat()
