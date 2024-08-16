@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 @OptIn(ExperimentalCompilerApi::class)
 class ExplainerComponentRegistrar : CompilerPluginRegistrar() {
     override val supportsK2: Boolean
-        get() = false
+        get() = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
         IrGenerationExtension.registerExtension(ExplainerIrGenerationExtension())
