@@ -2,6 +2,16 @@
 
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList
+import it.unimi.dsi.fastutil.bytes.ByteArrayList
+import it.unimi.dsi.fastutil.chars.CharArrayList
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList
+import it.unimi.dsi.fastutil.floats.FloatArrayList
+import it.unimi.dsi.fastutil.ints.IntAVLTreeSet
+import it.unimi.dsi.fastutil.ints.IntArrayList
+import it.unimi.dsi.fastutil.ints.IntSortedSet
+import it.unimi.dsi.fastutil.longs.LongArrayList
+import it.unimi.dsi.fastutil.shorts.ShortArrayList
 import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.isArray
@@ -61,10 +71,10 @@ import kotlin.reflect.typeOf
  *
  */
 internal class ColumnDataHolderImpl<T>(
-    private val list: List<T>,
+    private val list: MutableList<T>,
     distinct: Lazy<Set<T>>?,
-    private val nullIndices: SortedIntArray,
-//    private val nullIndices: MyBooleanArray,
+    private val zeroValue: T,
+    private val nullIndices: IntSortedSet = IntAVLTreeSet(),
 ) : ColumnDataHolder<T> {
 
     override val distinct = distinct ?: lazy {
@@ -72,7 +82,6 @@ internal class ColumnDataHolderImpl<T>(
             var anyNull = false
             for (i in list.indices) {
                 if (i in nullIndices) {
-//                if (nullIndices[i]) {
                     anyNull = true
                 } else {
                     add(list[i])
@@ -84,14 +93,21 @@ internal class ColumnDataHolderImpl<T>(
 
     override val size: Int get() = list.size
 
+    // override
+    override fun add(element: T): Boolean =
+        if (element == null) {
+            nullIndices += size
+            list.add(zeroValue)
+        } else {
+            list.add(element)
+        }
+
     override fun isEmpty(): Boolean = list.isEmpty()
 
     override fun indexOf(element: T): Int {
-        if (element == null) return nullIndices.first()
-//        if (element == null) return nullIndices.indexOf(true)
+        if (element == null) return nullIndices.firstInt()
         for (i in list.indices) {
             if (i in nullIndices) continue
-//            if (nullIndices[i]) continue
             if (list[i] == element) return i
         }
         return -1
@@ -103,18 +119,16 @@ internal class ColumnDataHolderImpl<T>(
 
     override fun get(index: Int): T =
         if (index in nullIndices) {
-//        if (nullIndices[index]) {
             null as T
         } else {
             list[index]
         }
 
-    override fun get(range: IntRange): List<T> {
+    override fun get(range: IntRange): MutableList<T> {
         val start = range.first
         val sublist = list.subList(start, range.last + 1).toMutableList()
         for (i in sublist.indices) {
             if (start + i in nullIndices) sublist[i] = null as T
-//            if (nullIndices[start + i]) sublist[i] = null as T
         }
         return sublist
     }
@@ -122,7 +136,6 @@ internal class ColumnDataHolderImpl<T>(
     override fun contains(element: T): Boolean =
         if (element == null) {
             nullIndices.isNotEmpty()
-//            true in nullIndices
         } else {
             element in list
         }
@@ -144,7 +157,6 @@ internal class ColumnDataHolderImpl<T>(
                 val i = nextIndex()
                 val res = iterator.next()
                 return if (i in nullIndices) null as T else res
-//                return if (nullIndices[i]) null as T else res
             }
 
             override fun nextIndex(): Int = iterator.nextIndex()
@@ -153,20 +165,17 @@ internal class ColumnDataHolderImpl<T>(
                 val i = previousIndex()
                 val res = iterator.previous()
                 return if (i in nullIndices) null as T else res
-//                return if (nullIndices[i]) null as T else res
             }
 
             override fun previousIndex(): Int = iterator.previousIndex()
         }
 
-    override fun subList(fromIndex: Int, toIndex: Int): List<T> = get(fromIndex..<toIndex)
+    override fun subList(fromIndex: Int, toIndex: Int): MutableList<T> = get(fromIndex..<toIndex)
 
     override fun lastIndexOf(element: T): Int {
-        if (element == null) return nullIndices.last()
-//        if (element == null) return nullIndices.lastIndexOf(true)
+        if (element == null) return nullIndices.lastInt()
         for (i in list.indices.reversed()) {
             if (i in nullIndices) continue
-//            if (nullIndices[i]) continue
             if (list[i] == element) return i
         }
         return -1
@@ -193,31 +202,6 @@ internal value class SortedIntArray(val array: IntArray = intArrayOf()) : Collec
     override fun containsAll(elements: Collection<Int>): Boolean = elements.all { contains(it) }
 
     override fun contains(element: Int): Boolean = array.binarySearch(element) >= 0
-}
-
-@JvmInline
-internal value class MyBooleanArray(val array: BooleanArray = booleanArrayOf()): Collection<Boolean> {
-
-    operator fun get(index: Int): Boolean =
-        if (isEmpty()) {
-            false
-        } else {
-            array[index]
-        }
-
-    operator fun set(index: Int, value: Boolean) {
-        array[index] = value
-    }
-
-    override val size: Int get() = array.size
-
-    override fun isEmpty(): Boolean = array.isEmpty()
-
-    override fun iterator(): Iterator<Boolean> = array.iterator()
-
-    override fun containsAll(elements: Collection<Boolean>): Boolean = elements.all { contains(it) }
-
-    override fun contains(element: Boolean): Boolean = element in array
 }
 
 internal val BOOLEAN = typeOf<Boolean>()
@@ -283,15 +267,12 @@ private fun <T> MutableList<T?>.fillNulls(zeroValue: Any, nullIndices: BooleanAr
     return this as List<T>
 }
 
-private fun BooleanArray.indicesWhereTrue(): SortedIntArray {
-    val array = IntArray(count { it })
-    var j = 0
+private fun BooleanArray.indicesWhereTrue(): IntSortedSet {
+    val set = IntAVLTreeSet()
     for (i in indices) {
-        if (this[i]) {
-            array[j++] = i
-        }
+        if (this[i]) set += i
     }
-    return SortedIntArray(array)
+    return set
 }
 
 /**
@@ -308,106 +289,114 @@ internal fun <T> ColumnDataHolder.Companion.ofCollection(
     try {
         val isNull = BooleanArray(collection.size)
         val newList = when (type) {
-            BOOLEAN -> (collection as Collection<Boolean>).toBooleanArray().asList()
+            BOOLEAN -> BooleanArrayList((collection as Collection<Boolean>).toBooleanArray()).asPrimitiveArrayList()
 
-            BYTE -> (collection as Collection<Byte>).toByteArray().asList()
+            BYTE -> ByteArrayList((collection as Collection<Byte>).toByteArray()).asPrimitiveArrayList()
 
-            SHORT -> (collection as Collection<Short>).toShortArray().asList()
+            SHORT -> ShortArrayList((collection as Collection<Short>).toShortArray()).asPrimitiveArrayList()
 
-            INT -> (collection as Collection<Int>).toIntArray().asList()
+            INT -> IntArrayList((collection as Collection<Int>).toIntArray()).asPrimitiveArrayList()
 
-            LONG -> (collection as Collection<Long>).toLongArray().asList()
+            LONG -> LongArrayList((collection as Collection<Long>).toLongArray()).asPrimitiveArrayList()
 
-            FLOAT -> (collection as Collection<Float>).toFloatArray().asList()
+            FLOAT -> FloatArrayList((collection as Collection<Float>).toFloatArray()).asPrimitiveArrayList()
 
-            DOUBLE -> (collection as Collection<Double>).toDoubleArray().asList()
+            DOUBLE -> DoubleArrayList((collection as Collection<Double>).toDoubleArray()).asPrimitiveArrayList()
 
-            CHAR -> (collection as Collection<Char>).toCharArray().asList()
+            CHAR -> CharArrayList((collection as Collection<Char>).toCharArray()).asPrimitiveArrayList()
 
-            UBYTE -> (collection as Collection<UByte>).toUByteArray().asList()
+//            UBYTE -> (collection as Collection<UByte>).toUByteArray().asList()
+//
+//            USHORT -> (collection as Collection<UShort>).toUShortArray().asList()
+//
+//            UINT -> (collection as Collection<UInt>).toUIntArray().asList()
+//
+//            ULONG -> (collection as Collection<ULong>).toULongArray().asList()
 
-            USHORT -> (collection as Collection<UShort>).toUShortArray().asList()
+            NULLABLE_BOOLEAN -> BooleanArrayList(
+                (collection as Collection<Boolean?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toBooleanArray(),
+            ).asPrimitiveArrayList()
 
-            UINT -> (collection as Collection<UInt>).toUIntArray().asList()
+            NULLABLE_BYTE -> ByteArrayList(
+                (collection as Collection<Byte?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toByteArray(),
+            ).asPrimitiveArrayList()
 
-            ULONG -> (collection as Collection<ULong>).toULongArray().asList()
+            NULLABLE_SHORT -> ShortArrayList(
+                (collection as Collection<Short?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toShortArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_BOOLEAN -> (collection as Collection<Boolean?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toBooleanArray()
-                .asList()
+            NULLABLE_INT -> IntArrayList(
+                (collection as Collection<Int?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toIntArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_BYTE -> (collection as Collection<Byte?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toByteArray()
-                .asList()
+            NULLABLE_LONG -> LongArrayList(
+                (collection as Collection<Long?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toLongArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_SHORT -> (collection as Collection<Short?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toShortArray()
-                .asList()
+            NULLABLE_FLOAT -> FloatArrayList(
+                (collection as Collection<Float?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toFloatArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_INT -> (collection as Collection<Int?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toIntArray()
-                .asList()
+            NULLABLE_DOUBLE -> DoubleArrayList(
+                (collection as Collection<Double?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toDoubleArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_LONG -> (collection as Collection<Long?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toLongArray()
-                .asList()
+            NULLABLE_CHAR -> CharArrayList(
+                (collection as Collection<Char?>)
+                    .toMutableList()
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toCharArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_FLOAT -> (collection as Collection<Float?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toFloatArray()
-                .asList()
+//            NULLABLE_UBYTE -> (collection as Collection<UByte?>)
+//                .toMutableList()
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toUByteArray()
+//                .asList()
+//
+//            NULLABLE_USHORT -> (collection as Collection<UShort?>)
+//                .toMutableList()
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toUShortArray()
+//                .asList()
+//
+//            NULLABLE_UINT -> (collection as Collection<UInt?>)
+//                .toMutableList()
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toUIntArray()
+//                .asList()
+//
+//            NULLABLE_ULONG -> (collection as Collection<ULong?>)
+//                .toMutableList()
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toULongArray()
+//                .asList()
 
-            NULLABLE_DOUBLE -> (collection as Collection<Double?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toDoubleArray()
-                .asList()
+            else -> collection.toMutableList()
+        } as MutableList<T>
 
-            NULLABLE_CHAR -> (collection as Collection<Char?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toCharArray()
-                .asList()
-
-            NULLABLE_UBYTE -> (collection as Collection<UByte?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toUByteArray()
-                .asList()
-
-            NULLABLE_USHORT -> (collection as Collection<UShort?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toUShortArray()
-                .asList()
-
-            NULLABLE_UINT -> (collection as Collection<UInt?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toUIntArray()
-                .asList()
-
-            NULLABLE_ULONG -> (collection as Collection<ULong?>)
-                .toMutableList()
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toULongArray()
-                .asList()
-
-            else -> collection.asList()
-        } as List<T>
-
-        return ColumnDataHolderImpl(newList, distinct, isNull.indicesWhereTrue())
+        return ColumnDataHolderImpl(newList, distinct, zeroValueOf(type) as T, isNull.indicesWhereTrue())
     } catch (e: Exception) {
         throw IllegalArgumentException("Can't create ColumnDataHolder from $collection and type $type", e)
     }
@@ -427,94 +416,102 @@ internal fun <T> ColumnDataHolder.Companion.ofBoxedArray(
     try {
         val isNull = BooleanArray(array.size)
         val list = when (type) {
-            BOOLEAN -> (array as Array<Boolean>).toBooleanArray().asList()
+            BOOLEAN -> BooleanArrayList((array as Array<Boolean>).toBooleanArray()).asPrimitiveArrayList()
 
-            BYTE -> (array as Array<Byte>).toByteArray().asList()
+            BYTE -> ByteArrayList((array as Array<Byte>).toByteArray()).asPrimitiveArrayList()
 
-            SHORT -> (array as Array<Short>).toShortArray().asList()
+            SHORT -> ShortArrayList((array as Array<Short>).toShortArray()).asPrimitiveArrayList()
 
-            INT -> (array as Array<Int>).toIntArray().asList()
+            INT -> IntArrayList((array as Array<Int>).toIntArray()).asPrimitiveArrayList()
 
-            LONG -> (array as Array<Long>).toLongArray().asList()
+            LONG -> LongArrayList((array as Array<Long>).toLongArray()).asPrimitiveArrayList()
 
-            FLOAT -> (array as Array<Float>).toFloatArray().asList()
+            FLOAT -> FloatArrayList((array as Array<Float>).toFloatArray()).asPrimitiveArrayList()
 
-            DOUBLE -> (array as Array<Double>).toDoubleArray().asList()
+            DOUBLE -> DoubleArrayList((array as Array<Double>).toDoubleArray()).asPrimitiveArrayList()
 
-            CHAR -> (array as Array<Char>).toCharArray().asList()
+            CHAR -> CharArrayList((array as Array<Char>).toCharArray()).asPrimitiveArrayList()
 
-            UBYTE -> (array as Array<UByte>).toUByteArray().asList()
+//            UBYTE -> (array as Array<UByte>).toUByteArray().asList()
+//
+//            USHORT -> (array as Array<UShort>).toUShortArray().asList()
+//
+//            UINT -> (array as Array<UInt>).toUIntArray().asList()
+//
+//            ULONG -> (array as Array<ULong>).toULongArray().asList()
 
-            USHORT -> (array as Array<UShort>).toUShortArray().asList()
+            NULLABLE_BOOLEAN -> BooleanArrayList(
+                (array as Array<Boolean?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toBooleanArray(),
+            ).asPrimitiveArrayList()
 
-            UINT -> (array as Array<UInt>).toUIntArray().asList()
+            NULLABLE_BYTE -> ByteArrayList(
+                (array as Array<Byte?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toByteArray(),
+            ).asPrimitiveArrayList()
 
-            ULONG -> (array as Array<ULong>).toULongArray().asList()
+            NULLABLE_SHORT -> ShortArrayList(
+                (array as Array<Short?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toShortArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_BOOLEAN -> (array as Array<Boolean?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toBooleanArray()
-                .asList()
+            NULLABLE_INT -> IntArrayList(
+                (array as Array<Int?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toIntArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_BYTE -> (array as Array<Byte?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toByteArray()
-                .asList()
+            NULLABLE_LONG -> LongArrayList(
+                (array as Array<Long?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toLongArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_SHORT -> (array as Array<Short?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toShortArray()
-                .asList()
+            NULLABLE_FLOAT -> FloatArrayList(
+                (array as Array<Float?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toFloatArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_INT -> (array as Array<Int?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toIntArray()
-                .asList()
+            NULLABLE_DOUBLE -> DoubleArrayList(
+                (array as Array<Double?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toDoubleArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_LONG -> (array as Array<Long?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toLongArray()
-                .asList()
+            NULLABLE_CHAR -> CharArrayList(
+                (array as Array<Char?>)
+                    .fillNulls(zeroValueOf(type)!!, isNull)
+                    .toCharArray(),
+            ).asPrimitiveArrayList()
 
-            NULLABLE_FLOAT -> (array as Array<Float?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toFloatArray()
-                .asList()
+//            NULLABLE_UBYTE -> (array as Array<UByte?>)
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toUByteArray()
+//                .asList()
+//
+//            NULLABLE_USHORT -> (array as Array<UShort?>)
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toUShortArray()
+//                .asList()
+//
+//            NULLABLE_UINT -> (array as Array<UInt?>)
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toUIntArray()
+//                .asList()
+//
+//            NULLABLE_ULONG -> (array as Array<ULong?>)
+//                .fillNulls(zeroValueOf(type)!!, isNull)
+//                .toULongArray()
+//                .asList()
 
-            NULLABLE_DOUBLE -> (array as Array<Double?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toDoubleArray()
-                .asList()
+            else -> array.toMutableList()
+        } as MutableList<T>
 
-            NULLABLE_CHAR -> (array as Array<Char?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toCharArray()
-                .asList()
-
-            NULLABLE_UBYTE -> (array as Array<UByte?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toUByteArray()
-                .asList()
-
-            NULLABLE_USHORT -> (array as Array<UShort?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toUShortArray()
-                .asList()
-
-            NULLABLE_UINT -> (array as Array<UInt?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toUIntArray()
-                .asList()
-
-            NULLABLE_ULONG -> (array as Array<ULong?>)
-                .fillNulls(zeroValueOf(type)!!, isNull)
-                .toULongArray()
-                .asList()
-
-            else -> array.asList()
-        } as List<T>
-
-        return ColumnDataHolderImpl(list, distinct, isNull.indicesWhereTrue())
+        return ColumnDataHolderImpl(list, distinct, zeroValueOf(type) as T, isNull.indicesWhereTrue())
     } catch (e: Exception) {
         throw IllegalArgumentException(
             "Can't create ColumnDataHolder from $array and mismatching type $type",
@@ -534,29 +531,29 @@ internal fun <T> ColumnDataHolder.Companion.ofPrimitiveArray(
     distinct: Lazy<Set<T>>? = null,
 ): ColumnDataHolder<T> {
     val newList = when {
-        type == BOOLEAN && primitiveArray is BooleanArray -> primitiveArray.asList()
+        type == BOOLEAN && primitiveArray is BooleanArray -> BooleanArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == BYTE && primitiveArray is ByteArray -> primitiveArray.asList()
+        type == BYTE && primitiveArray is ByteArray -> ByteArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == SHORT && primitiveArray is ShortArray -> primitiveArray.asList()
+        type == SHORT && primitiveArray is ShortArray -> ShortArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == INT && primitiveArray is IntArray -> primitiveArray.asList()
+        type == INT && primitiveArray is IntArray -> IntArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == LONG && primitiveArray is LongArray -> primitiveArray.asList()
+        type == LONG && primitiveArray is LongArray -> LongArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == FLOAT && primitiveArray is FloatArray -> primitiveArray.asList()
+        type == FLOAT && primitiveArray is FloatArray -> FloatArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == DOUBLE && primitiveArray is DoubleArray -> primitiveArray.asList()
+        type == DOUBLE && primitiveArray is DoubleArray -> DoubleArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == CHAR && primitiveArray is CharArray -> primitiveArray.asList()
+        type == CHAR && primitiveArray is CharArray -> CharArrayList(primitiveArray).asPrimitiveArrayList()
 
-        type == UBYTE && primitiveArray is UByteArray -> primitiveArray.asList()
-
-        type == USHORT && primitiveArray is UShortArray -> primitiveArray.asList()
-
-        type == UINT && primitiveArray is UIntArray -> primitiveArray.asList()
-
-        type == ULONG && primitiveArray is ULongArray -> primitiveArray.asList()
+//        type == UBYTE && primitiveArray is UByteArray -> primitiveArray.asList()
+//
+//        type == USHORT && primitiveArray is UShortArray -> primitiveArray.asList()
+//
+//        type == UINT && primitiveArray is UIntArray -> primitiveArray.asList()
+//
+//        type == ULONG && primitiveArray is ULongArray -> primitiveArray.asList()
 
         !primitiveArray.isPrimitiveArray -> throw IllegalArgumentException(
             "Can't create ColumnDataHolder from non primitive array $primitiveArray and type $type",
@@ -565,9 +562,9 @@ internal fun <T> ColumnDataHolder.Companion.ofPrimitiveArray(
         else -> throw IllegalArgumentException(
             "Can't create ColumnDataHolder from primitive array $primitiveArray and type $type",
         )
-    } as List<T>
+    } as MutableList<T>
 
-    return ColumnDataHolderImpl(newList, distinct, /*BooleanArray(newList.size)*/SortedIntArray())
+    return ColumnDataHolderImpl(newList, distinct, zeroValueOf(type) as T)
 }
 
 @Suppress("UNCHECKED_CAST")

@@ -31,6 +31,8 @@ public interface ColumnDataHolder<T> : List<T> {
 
     public operator fun get(range: IntRange): List<T>
 
+    public fun add(element: T): Boolean
+
     public val distinct: Lazy<Set<T>>
 
     public companion object
