@@ -26,6 +26,7 @@ val df = dataFrameOf("name", "lastName", "age")("John", "Doe", 21)
     .group("name", "lastName").into("fullName")
 
 data class FullName(val name: String, val lastName: String)
+
 data class Person(val fullName: FullName, val age: Int)
 
 val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]

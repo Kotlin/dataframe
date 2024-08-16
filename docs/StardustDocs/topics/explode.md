@@ -45,7 +45,7 @@ df.explode { b }
 ```kotlin
 val df = dataFrameOf("a", "b")(
     1, listOf(1, 2),
-    2, listOf(3, 4)
+    2, listOf(3, 4),
 )
 
 df.explode("b")
@@ -87,7 +87,7 @@ Explode [`FrameColumn`](DataColumn.md#framecolumn):
 ```kotlin
 val col by columnOf(
     dataFrameOf("a", "b")(1, 2, 3, 4),
-    dataFrameOf("a", "b")(5, 6, 7, 8)
+    dataFrameOf("a", "b")(5, 6, 7, 8),
 )
 
 col.explode()

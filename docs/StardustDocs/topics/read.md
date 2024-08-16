@@ -48,7 +48,7 @@ val df = DataFrame.readCSV(
     file,
     delimiter = '|',
     header = listOf("A", "B", "C", "D"),
-    parserOptions = ParserOptions(nullStrings = setOf("not assigned"))
+    parserOptions = ParserOptions(nullStrings = setOf("not assigned")),
 )
 ```
 
@@ -140,7 +140,7 @@ val df = DataFrame.readCSV(
 ```kotlin
 val df = DataFrame.readCSV(
     file,
-    colTypes = mapOf("colName" to ColType.String)
+    colTypes = mapOf("colName" to ColType.String),
 )
 ```
 

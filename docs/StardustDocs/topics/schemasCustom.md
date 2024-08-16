@@ -28,7 +28,7 @@ In Jupyter these functions will work automatically for any [`DataFrame`](DataFra
 ```kotlin
 val df = dataFrameOf("name", "age", "weight")(
     "Merton, Alice", 15, 60.0,
-    "Marley, Bob", 20, 73.5
+    "Marley, Bob", 20, 73.5,
 )
 ```
 
