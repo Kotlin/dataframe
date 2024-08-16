@@ -144,9 +144,7 @@ Consider this API:
 ```kotlin
 class CityInfo(val city: String?, val population: Int, val location: String)
 
-fun queryCityInfo(city: String?): CityInfo {
-    return CityInfo(city, city?.length ?: 0, "35.5 32.2")
-}
+fun queryCityInfo(city: String?): CityInfo = CityInfo(city, city?.length ?: 0, "35.5 32.2")
 ```
 
 <!---END-->
