@@ -452,4 +452,14 @@ class CreateDataFrameTests {
             df.participants[0].city
         }
     }
+
+    @Test
+    fun `convert type erased list to dataframe`() {
+        val data = listOf(Person("Alice", "Cooper", 15, "London"))
+        val erased: List<Any?> = data
+        val df = erased[0]?.let {
+            erased.toDataFrame(it::class)
+        }
+        df shouldBe data.toDataFrame()
+    }
 }
