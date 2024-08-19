@@ -28,6 +28,11 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
         properties()
     }
 
+public fun Iterable<*>.toDataFrame(klass: KClass<*>): DataFrame<*> =
+    createDataFrameImpl(klass) {
+        properties()
+    }
+
 @Refine
 @Interpretable("toDataFrameDsl")
 public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
