@@ -51,7 +51,7 @@ If selected columns belong to different column groups they will be reordered wit
 ```kotlin
 val df = dataFrameOf("c", "d", "a", "b")(
     3, 4, 1, 2,
-    1, 1, 1, 1
+    1, 1, 1, 1,
 )
 df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
 ```
