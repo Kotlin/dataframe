@@ -28,7 +28,11 @@ public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, 
 
 // region GroupClause
 
-public data class GroupClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
+public class GroupClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+    override fun toString(): String {
+        return "GroupClause(df=$df, columns=$columns)"
+    }
+}
 
 // region into
 

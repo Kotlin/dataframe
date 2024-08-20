@@ -28,8 +28,12 @@ public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split
 
 public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumnSet() }
 
-public data class Split<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C?>) {
+public class Split<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C?>) {
     public fun <P> cast(): Split<T, P> = this as Split<T, P>
+
+    override fun toString(): String {
+        return "Split(df=$df, columns=$columns)"
+    }
 }
 
 public data class SplitWithTransform<T, C, R>(

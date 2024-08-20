@@ -104,9 +104,13 @@ internal fun <T, G> GroupBy<T, G>.internal(): GroupByImpl<T, G> = this as GroupB
 
 public interface Grouped<out T> : Aggregatable<T>
 
-public data class ReducedGroupBy<T, G>(
+public class ReducedGroupBy<T, G>(
     @PublishedApi internal val groupBy: GroupBy<T, G>,
     @PublishedApi internal val reducer: Selector<DataFrame<G>, DataRow<G>?>,
-)
+) {
+    override fun toString(): String {
+        return "ReducedGroupBy(groupBy=$groupBy, reducer=$reducer)"
+    }
+}
 
 internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>) = ReducedGroupBy(this, reducer)
