@@ -2,11 +2,14 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.columns.empty
+import org.jetbrains.kotlinx.dataframe.impl.columns.emptyForType
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -28,7 +31,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
 
     override var hasNulls = false
 
-    override val data = ArrayList<T?>(initCapacity)
+    override val data = ColumnDataHolder.empty<T>(initCapacity)
 
     val values: List<T?>
         get() = data
@@ -62,13 +65,24 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
 
     internal val kclass = type.jvmErasure
 
+    override val data: ColumnDataHolder<T?> =
+        ColumnDataHolder.emptyForType(
+            type = type,
+            initCapacity = initCapacity,
+        )
+
     override fun add(value: T?) {
-        if (checkTypes && value != null && !value.javaClass.kotlin.isSubclassOf(kclass)) {
+        if (data.canAddPrimitively(value) ||
+            !checkTypes ||
+            value == null ||
+            value.javaClass.kotlin.isSubclassOf(kclass)
+        ) {
+            super.add(value)
+        } else {
             throw IllegalArgumentException(
                 "Can not add value of class ${value.javaClass.kotlin.qualifiedName} to column of type $type. Value = $value",
             )
         }
-        super.add(value)
     }
 
     override fun toColumn(name: String) = createColumn(name, type)

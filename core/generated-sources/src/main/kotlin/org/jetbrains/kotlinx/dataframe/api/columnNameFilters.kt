@@ -1,11 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import kotlin.reflect.KProperty
 
@@ -29,19 +34,19 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `text: `[`String`][String]
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `ignoreCase: `[`Boolean`][Boolean]
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `regex: `[`Regex`][Regex]
@@ -50,7 +55,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
      *
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`nameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
@@ -61,7 +66,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
@@ -74,7 +79,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
@@ -118,6 +123,10 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     }
 
     // region nameContains
+
+    
+
+    
 
     /**
      * ## (Cols) Name Contains
@@ -604,7 +613,11 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     // endregion
 
+    
+
     // region nameStartsWith
+
+    
 
     @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
     public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> = nameStartsWith(prefix)
@@ -849,6 +862,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     // endregion
 
     // region nameEndsWith
+
+    
 
     @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
     @Suppress("UNCHECKED_CAST")

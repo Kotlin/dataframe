@@ -9,12 +9,19 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar.ColumnGroupName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS
@@ -101,10 +108,14 @@ internal interface Select {
      * ```
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`(Person::length, Person::age)`
-     *
+     *  
      */
     interface SelectSelectingOptions
 }
+
+
+
+
 
 /**
  * ## The Select Operation
@@ -144,7 +155,7 @@ internal interface Select {
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
  *
- *
+ *  
  * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame].
  */
 @Refine
@@ -168,7 +179,7 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
  * ```
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`(Person::length, Person::age)`
- *
+ *  
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
@@ -188,7 +199,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
  * #### For example:
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`("length", "age")`
- *
+ *  
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
@@ -212,7 +223,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
  * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
  * `df.`[select][org.jetbrains.kotlinx.dataframe.api.select]`(length, age)`
- *
+ *  
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
 public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
@@ -239,11 +250,11 @@ public interface SelectColumnsSelectionDsl {
      *
      *  ### Definitions:
      *  `columnSet: `[`ColumnSet`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]`<*>`
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `columnGroup: `[`SingleColumn`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<* | `[`DataRow`][org.jetbrains.kotlinx.dataframe.DataRow]`<*>> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath]
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `colsSelector: `[`ColumnsSelector`][org.jetbrains.kotlinx.dataframe.ColumnsSelector]
@@ -256,7 +267,7 @@ public interface SelectColumnsSelectionDsl {
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
      *
-     *
+     *  
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]

@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowConditionLink
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueConditionLink
 import org.jetbrains.kotlinx.dataframe.index
 
 /**

@@ -31,9 +31,13 @@ public interface ColumnDataHolder<T> : List<T> {
 
     public operator fun get(range: IntRange): List<T>
 
-    public fun add(element: T): Boolean
+    public fun add(element: T)
+
+    public fun canAddPrimitively(element: Any?): Boolean
 
     public val distinct: Lazy<Set<T>>
+
+    public val usesPrimitiveArrayList: Boolean
 
     public companion object
 }

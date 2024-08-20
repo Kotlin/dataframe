@@ -44,10 +44,6 @@ import kotlin.reflect.typeOf
  * - [Array][Array]`<`[Float?][Float]`>`
  * - [Array][Array]`<`[Double?][Double]`>`
  * - [Array][Array]`<`[Char?][Char]`>`
- * - [Array][Array]`<`[UByte?][UByte]`>`
- * - [Array][Array]`<`[UShort?][UShort]`>`
- * - [Array][Array]`<`[UInt?][UInt]`>`
- * - [Array][Array]`<`[ULong?][ULong]`>`
  * - [Collection][Collection]`<`[Boolean?][Boolean]`>`
  * - [Collection][Collection]`<`[Byte?][Byte]`>`
  * - [Collection][Collection]`<`[Short?][Short]`>`
@@ -56,59 +52,102 @@ import kotlin.reflect.typeOf
  * - [Collection][Collection]`<`[Float?][Float]`>`
  * - [Collection][Collection]`<`[Double?][Double]`>`
  * - [Collection][Collection]`<`[Char?][Char]`>`
- * - [Collection][Collection]`<`[UByte?][UByte]`>`
- * - [Collection][Collection]`<`[UShort?][UShort]`>`
- * - [Collection][Collection]`<`[UInt?][UInt]`>`
- * - [Collection][Collection]`<`[ULong?][ULong]`>`
  *
  * Yes, as you can see, also nullable types are supported. The values are stored in primitive arrays,
- * and a separate array is used to store the indices of the null values.
+ * and a separate set is used to store the indices of the null values.
  *
  * Since, [ColumnDataHolder] can be used as a [List], this is invisible to the user.
  *
- * Store them as is:
- * - [Array][Array]`<`[Any?][Any]`>`
- * - [Collection][Collection]`<`[Any?][Any]`>`
- *
+ * @param T the type of the elements in the column
+ * @param list a [PrimitiveArrayList] or any other [MutableList] that can store the elements
+ * @param zeroValue When [list] is a [PrimitiveArrayList], this is the zero value for the primitive type
+ * @param nullIndices a set of indices where the null values are stored, only used if [list] is a [PrimitiveArrayList]
  */
 internal class ColumnDataHolderImpl<T>(
-    private val list: MutableList<T>,
-    distinct: Lazy<Set<T>>?,
-    private val zeroValue: T,
+    private var list: MutableList<T> = PrimitiveArrayList<Any>() as MutableList<T>,
+    distinct: Lazy<Set<T>>? = null,
+    private var zeroValue: Any? = Undefined,
     private val nullIndices: IntSortedSet = IntAVLTreeSet(),
 ) : ColumnDataHolder<T> {
 
+    private object Undefined
+
+    private fun IntSortedSet.fastContains(index: Int): Boolean =
+        when (size) {
+            0 -> false
+            1 -> firstInt() == index
+            2 -> firstInt() == index || lastInt() == index
+            else -> contains(index)
+        }
+
     override val distinct = distinct ?: lazy {
         buildSet {
-            var anyNull = false
-            for (i in list.indices) {
-                if (i in nullIndices) {
-                    anyNull = true
-                } else {
-                    add(list[i])
+            addAll(this@ColumnDataHolderImpl)
+        }.toMutableSet()
+    }
+
+    override val size: Int get() = leadingNulls + list.size
+
+    override var usesPrimitiveArrayList = list is PrimitiveArrayList<*>
+
+    override fun canAddPrimitively(element: Any?): Boolean =
+        when {
+            !usesPrimitiveArrayList -> false
+            element == null -> true
+            list is PrimitiveArrayList<*> -> (list as PrimitiveArrayList<*>).canAdd(element)
+            else -> false
+        }
+
+    // for when the list cannot be initialized yet, keeps track of potential leading null values
+    private var leadingNulls = 0
+
+    override fun add(element: T) {
+        // check if we need to switch to a boxed mutable list to add this element
+        if (usesPrimitiveArrayList &&
+            element != null &&
+            !(list as PrimitiveArrayList<*>).canAdd(element)
+        ) {
+            list = this.toMutableList()
+            leadingNulls = 0
+            usesPrimitiveArrayList = false
+            nullIndices.clear()
+        }
+
+        if (distinct.isInitialized()) {
+            distinct.value as MutableSet<T> += element
+        }
+
+        if (!usesPrimitiveArrayList) {
+            list += element
+        } else if (element == null) {
+            nullIndices += size
+            if (zeroValue is Undefined) {
+                leadingNulls++
+            } else {
+                list += zeroValue as T
+            }
+        } else {
+            // set a new zeroValue if the current one is unset
+            if (zeroValue is Undefined) {
+                zeroValue = zeroValueFor(element)
+                while (leadingNulls > 0) {
+                    list += zeroValue as T
+                    leadingNulls--
                 }
             }
-            if (anyNull) add(null as T)
+
+            list += element
         }
     }
 
-    override val size: Int get() = list.size
-
-    // override
-    override fun add(element: T): Boolean =
-        if (element == null) {
-            nullIndices += size
-            list.add(zeroValue)
-        } else {
-            list.add(element)
-        }
-
-    override fun isEmpty(): Boolean = list.isEmpty()
+    override fun isEmpty(): Boolean = size == 0
 
     override fun indexOf(element: T): Int {
+        if (!usesPrimitiveArrayList) return list.indexOf(element)
+
         if (element == null) return nullIndices.firstInt()
         for (i in list.indices) {
-            if (i in nullIndices) continue
+            if (nullIndices.fastContains(i)) continue
             if (list[i] == element) return i
         }
         return -1
@@ -119,23 +158,30 @@ internal class ColumnDataHolderImpl<T>(
     override fun toSet(): Set<T> = distinct.value
 
     override fun get(index: Int): T =
-        if (index in nullIndices) {
-            null as T
-        } else {
-            list[index]
+        when {
+            usesPrimitiveArrayList && nullIndices.fastContains(index) -> null as T
+            leadingNulls > 0 && index < leadingNulls -> null as T
+            else -> list[index]
         }
 
-    override fun get(range: IntRange): MutableList<T> {
+    override fun get(range: IntRange): List<T> {
+        if (!usesPrimitiveArrayList) {
+            return list.subList(range.first, range.last + 1)
+        }
+        if (leadingNulls > 0 && range.first >= 0 && range.last < leadingNulls) {
+            return List(range.last - range.first + 1) { null as T }
+        }
+
         val start = range.first
         val sublist = list.subList(start, range.last + 1).toMutableList()
         for (i in sublist.indices) {
-            if (start + i in nullIndices) sublist[i] = null as T
+            if (nullIndices.fastContains(start + i)) sublist[i] = null as T
         }
         return sublist
     }
 
     override fun contains(element: T): Boolean =
-        if (element == null) {
+        if (usesPrimitiveArrayList && element == null) {
             nullIndices.isNotEmpty()
         } else {
             element in list
@@ -146,37 +192,43 @@ internal class ColumnDataHolderImpl<T>(
     override fun listIterator(): ListIterator<T> = listIterator(0)
 
     override fun listIterator(index: Int): ListIterator<T> =
-        object : ListIterator<T> {
+        when {
+            !usesPrimitiveArrayList -> list.listIterator(index)
 
-            val iterator = list.listIterator(index)
+            leadingNulls > 0 -> List(leadingNulls) { null as T }.listIterator(index)
 
-            override fun hasNext(): Boolean = iterator.hasNext()
+            else -> object : ListIterator<T> {
 
-            override fun hasPrevious(): Boolean = iterator.hasNext()
+                val iterator = list.listIterator(index)
 
-            override fun next(): T {
-                val i = nextIndex()
-                val res = iterator.next()
-                return if (i in nullIndices) null as T else res
+                override fun hasNext(): Boolean = iterator.hasNext()
+
+                override fun hasPrevious(): Boolean = iterator.hasNext()
+
+                override fun next(): T {
+                    val i = nextIndex()
+                    val res = iterator.next()
+                    return if (nullIndices.fastContains(i)) null as T else res
+                }
+
+                override fun nextIndex(): Int = iterator.nextIndex()
+
+                override fun previous(): T {
+                    val i = previousIndex()
+                    val res = iterator.previous()
+                    return if (nullIndices.fastContains(i)) null as T else res
+                }
+
+                override fun previousIndex(): Int = iterator.previousIndex()
             }
-
-            override fun nextIndex(): Int = iterator.nextIndex()
-
-            override fun previous(): T {
-                val i = previousIndex()
-                val res = iterator.previous()
-                return if (i in nullIndices) null as T else res
-            }
-
-            override fun previousIndex(): Int = iterator.previousIndex()
         }
 
-    override fun subList(fromIndex: Int, toIndex: Int): MutableList<T> = get(fromIndex..<toIndex)
+    override fun subList(fromIndex: Int, toIndex: Int): List<T> = get(fromIndex..<toIndex)
 
     override fun lastIndexOf(element: T): Int {
         if (element == null) return nullIndices.lastInt()
         for (i in list.indices.reversed()) {
-            if (i in nullIndices) continue
+            if (nullIndices.fastContains(i)) continue
             if (list[i] == element) return i
         }
         return -1
@@ -189,20 +241,6 @@ internal class ColumnDataHolderImpl<T>(
 //    override fun hashCode(): Int = toList().hashCode()
 
     override fun toString(): String = (this as Iterable<T>).joinToString(prefix = "[", postfix = "]")
-}
-
-@JvmInline
-internal value class SortedIntArray(val array: IntArray = intArrayOf()) : Collection<Int> {
-
-    override val size: Int get() = array.size
-
-    override fun isEmpty(): Boolean = array.isEmpty()
-
-    override fun iterator(): Iterator<Int> = array.iterator()
-
-    override fun containsAll(elements: Collection<Int>): Boolean = elements.all { contains(it) }
-
-    override fun contains(element: Int): Boolean = array.binarySearch(element) >= 0
 }
 
 internal val BOOLEAN = typeOf<Boolean>()
@@ -247,6 +285,24 @@ internal fun zeroValueOf(type: KType): Any? =
         NULLABLE_USHORT, USHORT -> 0.toUShort()
         NULLABLE_UINT, UINT -> 0.toUInt()
         NULLABLE_ULONG, ULONG -> 0.toULong()
+        else -> null
+    }
+
+internal fun zeroValueFor(element: Any?): Any? =
+    when (element) {
+        null -> null
+        is Boolean -> false
+        is Byte -> 0.toByte()
+        is Short -> 0.toShort()
+        is Int -> 0
+        is Long -> 0L
+        is Float -> 0.0f
+        is Double -> 0.0
+        is Char -> 0.toChar()
+        is UByte -> 0.toUByte()
+        is UShort -> 0.toUShort()
+        is UInt -> 0.toUInt()
+        is ULong -> 0.toULong()
         else -> null
     }
 
@@ -396,10 +452,20 @@ internal fun <T> ColumnDataHolder.Companion.ofCollection(
 //                .toULongArray()
 //                .asList()
 
-            else -> collection.toMutableList()
+            else -> {
+                for ((i, it) in collection.withIndex()) {
+                    if (it == null) isNull[i] = true
+                }
+                collection.toMutableList()
+            }
         } as MutableList<T>
 
-        return ColumnDataHolderImpl(newList, distinct, zeroValueOf(type) as T, isNull.indicesWhereTrue())
+        return ColumnDataHolderImpl(
+            list = newList,
+            distinct = distinct,
+            zeroValue = zeroValueOf(type) as T,
+            nullIndices = if (newList is PrimitiveArrayList<*>) isNull.indicesWhereTrue() else IntAVLTreeSet(),
+        )
     } catch (e: Exception) {
         throw IllegalArgumentException("Can't create ColumnDataHolder from $collection and type $type", e)
     }
@@ -511,10 +577,20 @@ internal fun <T> ColumnDataHolder.Companion.ofBoxedArray(
 //                .toULongArray()
 //                .asList()
 
-            else -> array.toMutableList()
+            else -> {
+                for ((i, it) in array.withIndex()) {
+                    if (it == null) isNull[i] = true
+                }
+                array.toMutableList()
+            }
         } as MutableList<T>
 
-        return ColumnDataHolderImpl(list, distinct, zeroValueOf(type) as T, isNull.indicesWhereTrue())
+        return ColumnDataHolderImpl(
+            list = list,
+            distinct = distinct,
+            zeroValue = zeroValueOf(type),
+            nullIndices = if (list is PrimitiveArrayList<*>) isNull.indicesWhereTrue() else IntAVLTreeSet(),
+        )
     } catch (e: Exception) {
         throw IllegalArgumentException(
             "Can't create ColumnDataHolder from $array and mismatching type $type",
@@ -567,7 +643,11 @@ internal fun <T> ColumnDataHolder.Companion.ofPrimitiveArray(
         )
     } as MutableList<T>
 
-    return ColumnDataHolderImpl(newList, distinct, zeroValueOf(type) as T)
+    return ColumnDataHolderImpl(
+        list = newList,
+        distinct = distinct,
+        zeroValue = zeroValueOf(type),
+    )
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -578,18 +658,43 @@ internal fun <T> ColumnDataHolder.Companion.of(
 ): ColumnDataHolder<T> =
     when {
         any is ColumnDataHolder<*> -> any as ColumnDataHolder<T>
-        any.isPrimitiveArray -> ofPrimitiveArray(primitiveArray = any, type = type, distinct = distinct)
-        any.isArray -> ofBoxedArray(array = any as Array<T>, type = type, distinct = distinct)
-        any is Collection<*> -> ofCollection(collection = any as Collection<T>, type = type, distinct = distinct)
+
+        any.isPrimitiveArray -> ofPrimitiveArray(
+            primitiveArray = any,
+            type = type,
+            distinct = distinct,
+        )
+
+        any.isArray -> ofBoxedArray(
+            array = any as Array<T>,
+            type = type,
+            distinct = distinct,
+        )
+
+        any is Collection<*> -> ofCollection(
+            collection = any as Collection<T>,
+            type = type,
+            distinct = distinct,
+        )
+
         else -> throw IllegalArgumentException("Can't create ColumnDataHolder from $any and type $type")
     }
 
+internal fun <T> ColumnDataHolder.Companion.empty(initCapacity: Int = 0): ColumnDataHolder<T> =
+    ColumnDataHolderImpl(
+        list = PrimitiveArrayList<Any>(initCapacity) as MutableList<T>,
+    )
+
 internal fun <T> ColumnDataHolder.Companion.emptyForType(
     type: KType,
+    initCapacity: Int = 0,
     distinct: Lazy<Set<T>>? = null,
 ): ColumnDataHolder<T> =
     ColumnDataHolderImpl(
-        list = PrimitiveArrayList.forTypeOrNull(type.withNullability(false)) ?: mutableListOf(),
+        list = PrimitiveArrayList.forTypeOrNull<Any>(
+            kType = type.withNullability(false),
+            initCapacity = initCapacity,
+        ) as MutableList<T>? ?: mutableListOf(),
         distinct = distinct,
-        zeroValue = zeroValueOf(type) as T,
+        zeroValue = zeroValueOf(type),
     )
