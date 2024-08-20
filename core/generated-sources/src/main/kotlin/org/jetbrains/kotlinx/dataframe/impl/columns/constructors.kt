@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -92,7 +93,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
     var nullable = false
-    val list = ArrayList<R>(df.nrow)
+    val list = ColumnDataHolder.empty<R>(df.nrow)
     df.indices().forEach {
         val row = AddDataRowImpl(it, df, list)
         val value = expression(row, row)
