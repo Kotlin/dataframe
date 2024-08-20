@@ -40,13 +40,15 @@ import kotlin.reflect.KProperty
  *
  * For more information: {@include [DocumentationUrls.Update]}
  */
-public data class Update<T, C>(
-    val df: DataFrame<T>,
-    val filter: RowValueFilter<T, C>?,
-    val columns: ColumnsSelector<T, C>,
+public class Update<T, C>(
+    internal val df: DataFrame<T>,
+    internal val filter: RowValueFilter<T, C>?,
+    internal val columns: ColumnsSelector<T, C>,
 ) {
     public fun <R : C> cast(): Update<T, R> =
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
+
+    override fun toString(): String = "Update(df=$df, filter=$filter, columns=$columns)"
 
     /*
      * This argument providing the (clickable) name of the update-like function.
@@ -188,7 +190,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
  * @param [predicate] The [row value filter][RowValueFilter] to select the rows to update.
  */
 public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
-    copy(filter = filter and predicate)
+    Update(df = df, filter = filter and predicate, columns = columns)
 
 /** ## At
  * Only update the columns at certain given [row indices][CommonUpdateAtFunctionDoc.RowIndicesParam]:

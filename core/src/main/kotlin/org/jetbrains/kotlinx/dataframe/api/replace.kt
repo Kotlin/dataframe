@@ -33,7 +33,9 @@ public fun <T> DataFrame<T>.replaceAll(
     return update(columns).with { map[it] ?: it }
 }
 
-public data class ReplaceClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
+public class ReplaceClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+    override fun toString(): String = "ReplaceClause(df=$df, columns=$columns)"
+}
 
 public fun <T, C> ReplaceClause<T, C>.with(vararg columns: AnyCol): DataFrame<T> = with(columns.toList())
 

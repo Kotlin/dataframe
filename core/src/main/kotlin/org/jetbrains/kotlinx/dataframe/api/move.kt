@@ -150,6 +150,8 @@ public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
-public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
+public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+    override fun toString(): String = "MoveClause(df=$df, columns=$columns)"
+}
 
 // endregion
