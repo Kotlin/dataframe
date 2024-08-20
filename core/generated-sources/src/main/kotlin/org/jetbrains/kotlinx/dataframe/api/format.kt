@@ -42,7 +42,8 @@ public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>)
 public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> =
     formatImpl { row, col -> formatter(row[col]) }
 
-public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> = copy(filter = filter)
+public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
+    FormatClause(filter = filter, df = df, columns = columns, oldFormatter = oldFormatter)
 
 public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df, null, formatter)
 
@@ -129,12 +130,15 @@ public class FormattedFrame<T>(internal val df: DataFrame<T>, internal val forma
         configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)
 }
 
-public data class FormatClause<T, C>(
-    val df: DataFrame<T>,
-    val columns: ColumnsSelector<T, C>? = null,
-    val oldFormatter: RowColFormatter<T, C>? = null,
-    val filter: RowValueFilter<T, C> = { true },
-)
+public class FormatClause<T, C>(
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C>? = null,
+    internal val oldFormatter: RowColFormatter<T, C>? = null,
+    internal val filter: RowValueFilter<T, C> = { true },
+) {
+    override fun toString(): String =
+        "FormatClause(df=$df, columns=$columns, oldFormatter=$oldFormatter, filter=$filter)"
+}
 
 public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> =
     FormatClause(df, columns, formatter)
