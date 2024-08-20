@@ -45,7 +45,9 @@ public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
 
 @HasSchema(schemaArg = 0)
-public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
+public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+    override fun toString(): String = "RenameClause(df=$df, columns=$columns)"
+}
 
 /**
  * ## Rename to camelCase
