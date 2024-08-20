@@ -83,7 +83,8 @@ dependencies {
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
 
-    testImplementation("org.openjdk.jol:jol-core:0.10")
+//    testImplementation("org.openjdk.jol:jol-core:0.10")
+    implementation("org.openjdk.jol:jol-core:0.10")
     implementation("it.unimi.dsi:fastutil:8.5.14")
 }
 

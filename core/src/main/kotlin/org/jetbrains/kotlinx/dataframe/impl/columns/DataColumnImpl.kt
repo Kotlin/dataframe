@@ -12,7 +12,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
 internal abstract class DataColumnImpl<T>(
-    protected val values: ColumnDataHolder<T>,
+    internal val values: ColumnDataHolder<T>,
     val name: String,
     val type: KType,
 ) : DataColumn<T>,
