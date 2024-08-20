@@ -43,7 +43,11 @@ public inline fun <T, reified R> DataFrame<T>.insert(
 
 // endregion
 
-public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
+public class InsertClause<T>(internal val df: DataFrame<T>, internal val column: AnyCol) {
+    override fun toString(): String {
+        return "InsertClause(df=$df, column=$column)"
+    }
+}
 
 // region under
 

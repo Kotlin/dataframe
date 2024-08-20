@@ -91,11 +91,15 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
     }
 
 @HasSchema(schemaArg = 0)
-public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
+public class Convert<T, out C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
     @Interpretable("To0")
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
+
+    override fun toString(): String {
+        return "Convert(df=$df, columns=$columns)"
+    }
 }
 
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
