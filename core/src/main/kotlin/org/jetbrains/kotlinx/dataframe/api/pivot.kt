@@ -212,10 +212,12 @@ public interface Pivot<T> : Aggregatable<T>
 
 public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnsResolver<C>>
 
-public data class ReducedPivot<T>(
+public class ReducedPivot<T>(
     @PublishedApi internal val pivot: Pivot<T>,
     @PublishedApi internal val reducer: Selector<DataFrame<T>, DataRow<T>?>,
-)
+) {
+    override fun toString(): String = "ReducedPivot(pivot=$pivot, reducer=$reducer)"
+}
 
 internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>) = ReducedPivot(this, reducer)
 
@@ -230,10 +232,12 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
     public fun default(value: Any?): PivotGroupBy<T>
 }
 
-public data class ReducedPivotGroupBy<T>(
+public class ReducedPivotGroupBy<T>(
     @PublishedApi internal val pivot: PivotGroupBy<T>,
     @PublishedApi internal val reducer: Selector<DataFrame<T>, DataRow<T>?>,
-)
+) {
+    override fun toString(): String = "ReducedPivotGroupBy(pivot=$pivot, reducer=$reducer)"
+}
 
 @PublishedApi
 internal fun <T> PivotGroupBy<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): ReducedPivotGroupBy<T> =
