@@ -436,6 +436,8 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
                 collectionClasses.add(it.javaClass.kotlin)
             }
 
+            is Function<*> -> classes.add(Function::class)
+
             else -> classes.add(it.javaClass.kotlin)
         }
     }
