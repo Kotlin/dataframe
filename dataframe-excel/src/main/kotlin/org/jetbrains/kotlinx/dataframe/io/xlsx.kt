@@ -24,6 +24,8 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -143,6 +145,8 @@ public fun DataFrame.Companion.readExcel(
  * @param nameRepairStrategy handling of column names.
  * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
  */
+@Refine
+@Interpretable("ReadExcel")
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
     sheetName: String? = null,
@@ -209,7 +213,7 @@ public fun DataFrame.Companion.readExcel(
  * @param range comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  */
 @JvmInline
-public value class StringColumns(public val range: String)
+public value class StringColumns @Interpretable("StringColumns") constructor(public val range: String)
 
 public fun StringColumns.toFormattingOptions(formatter: DataFormatter = DataFormatter()): FormattingOptions =
     FormattingOptions(range, formatter)

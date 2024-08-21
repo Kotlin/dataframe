@@ -8,12 +8,12 @@ public annotation class HasSchema(val schemaArg: Int)
  * Needed because some function calls only serve as a part of overall compile time DataSchema evaluation
  * There's no need to update return type of such calls
  */
-internal annotation class Interpretable(val interpreter: String)
+public annotation class Interpretable(val interpreter: String)
 
 /**
  * Compiler plugin will replace return type of calls to the annotated function
  */
-internal annotation class Refine
+public annotation class Refine
 
 internal annotation class OptInRefine
 
