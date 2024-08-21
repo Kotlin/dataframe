@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
+import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
 import org.jetbrains.kotlinx.dataframe.values
+import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
@@ -272,21 +274,20 @@ public fun DataFrame.Companion.readDelim(
     duplicate: Boolean = true,
     charset: Charset = defaultCharset,
     parserOptions: ParserOptions? = null,
-): AnyFrame =
-    if (isCompressed) {
-        InputStreamReader(GZIPInputStream(inStream), charset)
-    } else {
-        BufferedReader(InputStreamReader(inStream, charset))
-    }.run {
-        readDelim(
-            this,
-            getFormat(csvType, delimiter, header, duplicate),
-            colTypes,
-            skipLines,
-            readLines,
-            parserOptions,
-        )
-    }
+): AnyFrame {
+    val bufferedInStream = BufferedInputStream(if (isCompressed) GZIPInputStream(inStream) else inStream)
+    val bomIn = BOMInputStream.builder().setInputStream(bufferedInStream).get()
+    val bufferedReader = BufferedReader(InputStreamReader(bomIn, charset))
+
+    return readDelim(
+        reader = bufferedReader,
+        format = getFormat(csvType, delimiter, header, duplicate),
+        colTypes = colTypes,
+        skipLines = skipLines,
+        readLines = readLines,
+        parserOptions = parserOptions,
+    )
+}
 
 public enum class ColType {
     Int,

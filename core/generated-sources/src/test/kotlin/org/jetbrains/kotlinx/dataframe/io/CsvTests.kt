@@ -276,10 +276,17 @@ class CsvTests {
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
 
+    @Test
+    fun `file with BOM`() {
+        val df = DataFrame.readCSV(withBomCsv, delimiter = ';')
+        df.columnNames() shouldBe listOf("Column1", "Column2")
+    }
+
     companion object {
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
         private val durationCsv = testCsv("duration")
+        private val withBomCsv = testCsv("with-bom")
     }
 }
