@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
+    implementation(libs.commonsIo)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
 
