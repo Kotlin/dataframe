@@ -31,7 +31,8 @@ that correspond to the columns of a data frame.
 In interactive notebooks like Jupyter or Datalore, the generation runs after each cell execution. 
 In IntelliJ IDEA there's a Gradle plugin for generation properties based on CSV file or JSON file. 
 Also, we’re working on a compiler plugin that infers and transforms [`DataFrame`](DataFrame.md) schema while typing.
-The generated properties ensures you’ll never misspell column name and don’t mess up with its type, and of course nullability is also preserved.
+You can now clone a [project with many examples](https://github.com/koperagen/df-plugin-demo) showcasing how it allows you to reliably use our most convenient extension properties API.
+The generated properties ensure you’ll never misspell column name and don’t mess up with its type, and of course nullability is also preserved.
 
 * **Generic** — columns can store objects of any type, not only numbers or strings.
 
