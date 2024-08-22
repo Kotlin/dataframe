@@ -59,9 +59,21 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("convert_to.kt")
+  public void testConvert_to() {
+    runTest("testData/box/convert_to.kt");
+  }
+
+  @Test
   @TestMetadata("dataFrameOf.kt")
   public void testDataFrameOf() {
     runTest("testData/box/dataFrameOf.kt");
+  }
+
+  @Test
+  @TestMetadata("dataFrameOf_vararg.kt")
+  public void testDataFrameOf_vararg() {
+    runTest("testData/box/dataFrameOf_vararg.kt");
   }
 
   @Test
@@ -128,6 +140,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("extractPluginSchemaWithUnfold.kt")
   public void testExtractPluginSchemaWithUnfold() {
     runTest("testData/box/extractPluginSchemaWithUnfold.kt");
+  }
+
+  @Test
+  @TestMetadata("fillNulls.kt")
+  public void testFillNulls() {
+    runTest("testData/box/fillNulls.kt");
+  }
+
+  @Test
+  @TestMetadata("flatten.kt")
+  public void testFlatten() {
+    runTest("testData/box/flatten.kt");
   }
 
   @Test
@@ -326,6 +350,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("toDataFrame.kt")
   public void testToDataFrame() {
     runTest("testData/box/toDataFrame.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrame_column.kt")
+  public void testToDataFrame_column() {
+    runTest("testData/box/toDataFrame_column.kt");
   }
 
   @Test

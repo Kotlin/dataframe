@@ -3,17 +3,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.*
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
 
-@DataSchema
-data class Record(
-    @ColumnName("a")
-    val abc: String,
-)
-
 fun box(): String {
-    val df = dataFrameOf("a")("1").cast<Record>()
-    df.abc
-
-    val df1 = df.add("b") { 1 }
-    df1.a
+    val df = dataFrameOf("a", "b")(1, null, null, "")
+    val df1 = df.fillNulls { b }.with { "empty" }
+    val b: DataColumn<String> = df1.b
     return "OK"
 }
