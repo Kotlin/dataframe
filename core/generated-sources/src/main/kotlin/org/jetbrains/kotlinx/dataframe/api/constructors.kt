@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -18,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.UNNAMED_COLUMN_PREFIX
+import org.jetbrains.kotlinx.dataframe.impl.api.withValuesImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
@@ -268,6 +271,7 @@ public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = Da
 
 public fun dataFrameOf(vararg columns: AnyBaseCol): AnyFrame = dataFrameOf(columns.asIterable())
 
+@Interpretable("DataFrameOf0")
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 
 public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): AnyFrame =
@@ -302,27 +306,15 @@ public class DataFrameBuilder(private val header: List<String>) {
         }.toDataFrame()
     }
 
+    @Refine
+    @Interpretable("DataFrameBuilderInvoke0")
     public operator fun invoke(vararg values: Any?): AnyFrame = withValues(values.asIterable())
 
     @JvmName("invoke1")
-    internal fun withValues(values: Iterable<Any?>): AnyFrame {
-        val list = values.asList()
-
-        val ncol = header.size
-
-        require(header.isNotEmpty() && list.size.rem(ncol) == 0) {
-            "Number of values ${list.size} is not divisible by number of columns $ncol"
-        }
-
-        val nrow = list.size / ncol
-
-        return (0 until ncol).map { col ->
-            val colValues = (0 until nrow).map { row ->
-                list[row * ncol + col]
-            }
-            DataColumn.createWithTypeInference(header[col], colValues)
+    internal fun withValues(values: Iterable<Any?>): AnyFrame =
+        withValuesImpl(header, values.asList()).map { (name, values) ->
+            DataColumn.createWithTypeInference(name, values)
         }.toDataFrame()
-    }
 
     public operator fun invoke(args: Sequence<Any?>): AnyFrame = invoke(*args.toList().toTypedArray())
 
