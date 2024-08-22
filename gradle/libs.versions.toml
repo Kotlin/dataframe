@@ -24,6 +24,7 @@ kover = "0.6.1"
 
 commonsCsv = "1.10.0"
 commonsCompress = "1.26.0"
+commonsIo = "2.16.1"
 serialization = "1.7.0"
 fuel = "2.3.1"
 poi = "5.2.5"
@@ -71,6 +72,7 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", vers
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
+commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
 # Serialization
 serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
