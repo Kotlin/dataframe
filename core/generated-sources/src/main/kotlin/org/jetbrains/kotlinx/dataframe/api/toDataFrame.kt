@@ -202,6 +202,13 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
 }
 
+@Refine
+@Interpretable("ToDataFrameColumn")
+public inline fun <reified T> Iterable<T>.toDataFrame(columnName: String): DataFrame<*> =
+    toDataFrame {
+        columnName from { it }
+    }
+
 // endregion
 
 // region toDataFrame overloads for built-in types
@@ -303,6 +310,8 @@ public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<Valu
 public interface ValueProperty<T> {
     public val value: T
 }
+
+// endregion
 
 // region Create DataFrame from Map
 

@@ -94,6 +94,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
 public class Convert<T, out C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
+    @Refine
     @Interpretable("To0")
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 
