@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Ignore
 import org.junit.Test
+import java.io.File
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -451,5 +452,12 @@ class CreateDataFrameTests {
             df.participants[0].firstName
             df.participants[0].city
         }
+    }
+
+    @Test
+    fun toDataFrameColumn() {
+        val files = listOf(File("data.csv"))
+        val df = files.toDataFrame(columnName = "files")
+        df["files"][0] shouldBe File("data.csv")
     }
 }

@@ -200,6 +200,7 @@ private interface SetFillNullsOperationArg
  *
  * @param [columns] The [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
+@Interpretable("FillNulls0")
 public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Update<T, C?> =
     update(columns).where { it == null }
 
