@@ -69,6 +69,7 @@ private interface CommonFillNullsFunctionDoc
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.DslParam]
  */
+@Interpretable("FillNulls0")
 public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Update<T, C?> =
     update(columns).where { it == null }
 

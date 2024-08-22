@@ -2,18 +2,10 @@ import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.annotations.*
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
-
-@DataSchema
-data class Record(
-    @ColumnName("a")
-    val abc: String,
-)
+import java.io.File
 
 fun box(): String {
-    val df = dataFrameOf("a")("1").cast<Record>()
-    df.abc
-
-    val df1 = df.add("b") { 1 }
-    df1.a
+    val df = listOf(File("abc.csv")).toDataFrame(columnName = "data")
+    val res: DataColumn<File> = df.data
     return "OK"
 }
