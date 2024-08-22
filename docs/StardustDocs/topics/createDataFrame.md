@@ -151,6 +151,19 @@ df.add("length") { value.length }
 
 <!---END-->
 
+Creates a [`DataFrame`](DataFrame.md) with one column
+made from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of values:
+
+<!---FUN toDataFrameColumn-->
+
+```kotlin
+val files = listOf(File("data.csv"), File("data1.csv"))
+val df = files.toDataFrame(columnName = "data")
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"/>
+<!---END-->
+
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
 
 <!---FUN readDataFrameFromObject-->

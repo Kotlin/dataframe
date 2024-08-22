@@ -218,6 +218,13 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `guess column type for type without classifier`() {
+        val df = dataFrameOf("a", "b")({ 1 }, 2)
+        df["a"].type() shouldBe typeOf<Function<*>>()
+        (df["a"][0] as () -> Int).invoke() shouldBe 1
+    }
+
+    @Test
     fun `create with columnOf`() {
         val col = columnOf("Alice", "Bob")
         val d = dataFrameOf("name")(col)

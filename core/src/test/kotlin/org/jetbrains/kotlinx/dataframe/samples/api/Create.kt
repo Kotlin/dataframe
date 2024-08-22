@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
+import java.io.File
 import kotlin.reflect.typeOf
 
 class Create : TestBase() {
@@ -454,6 +455,15 @@ class Create : TestBase() {
 
         val col by columnOf(1, 2, 3)
         peek(dataFrameOf(col), dataFrameOf(col))
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun toDataFrameColumn() {
+        // SampleStart
+        val files = listOf(File("data.csv"), File("data1.csv"))
+        val df = files.toDataFrame(columnName = "data")
         // SampleEnd
     }
 }

@@ -71,11 +71,19 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.All0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsAtAnyDepth0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FillNulls0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Flatten0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FlattenDefault
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FrameCols0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadExcel
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDefault
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDsl
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameFrom
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.UpdateWith0
 
 internal fun FirFunctionCall.loadInterpreter(session: FirSession): Interpreter<*>? {
     val symbol =
@@ -177,6 +185,15 @@ internal inline fun <reified T> String.load(): T {
         "toDataFrameDsl" -> ToDataFrameDsl()
         "toDataFrame" -> ToDataFrame()
         "toDataFrameDefault" -> ToDataFrameDefault()
+        "DataFrameOf0" -> DataFrameOf0()
+        "DataFrameBuilderInvoke0" -> DataFrameBuilderInvoke0()
+        "ToDataFrameColumn" -> ToDataFrameColumn()
+        "StringColumns" -> ToDataFrameColumn()
+        "ReadExcel" -> ReadExcel()
+        "FillNulls0" -> FillNulls0()
+        "UpdateWith0" -> UpdateWith0()
+        "Flatten0" -> Flatten0()
+        "FlattenDefault" -> FlattenDefault()
         else -> error("$this")
     } as T
 }
