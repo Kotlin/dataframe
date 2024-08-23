@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.FormatClause
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
@@ -25,13 +26,20 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
+import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.getValueOrNull
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.type
+import kotlin.collections.sortWith
+import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
+import kotlin.toString
 
 /**
  * A class with utility methods for Kotlin Notebook Plugin integration.
@@ -62,6 +70,7 @@ public object KotlinNotebookPluginUtils {
 
     /**
      * Sorts a dataframe-like object by multiple columns.
+     * If a column type is not comparable, sorting by string representation is applied instead.
      *
      * @param dataFrameLike The dataframe-like object to sort.
      * @param columnPaths The list of columns to sort by. Each element in the list represents a column path
@@ -79,27 +88,80 @@ public object KotlinNotebookPluginUtils {
         }
 
     /**
-     * Sorts the given data frame by the specified columns.
+     * Sorts a dataframe by multiple columns with specified sorting order for each column.
+     * If a column type is not comparable, sorting by string representation is applied instead.
      *
-     * @param df The data frame to be sorted.
-     * @param columnPaths The paths of the columns to be sorted. Each path is represented as a list of strings.
-     * @param isDesc A list of booleans indicating whether each column should be sorted in descending order.
-     *        The size of this list must be equal to the size of the columnPaths list.
-     * @return The sorted data frame.
+     * @param df The dataframe to be sorted.
+     * @param columnPaths A list of column paths where each path is a list of strings representing the hierarchical path of the column.
+     * @param isDesc A list of boolean values indicating whether each column should be sorted in descending order;
+     *               true for descending, false for ascending. The size of this list should match the size of `columnPaths`.
+     * @return The sorted dataframe.
      */
-    public fun sortByColumns(df: AnyFrame, columnPaths: List<List<String>>, isDesc: List<Boolean>): AnyFrame =
-        df.sortBy {
-            require(columnPaths.all { it.isNotEmpty() })
-            require(columnPaths.size == isDesc.size)
+    public fun sortByColumns(df: AnyFrame, columnPaths: List<List<String>>, isDesc: List<Boolean>): AnyFrame {
+        require(columnPaths.all { it.isNotEmpty() })
+        require(columnPaths.size == isDesc.size)
 
-            val sortKeys = columnPaths.map { path ->
-                ColumnPath(path)
-            }
-
-            (sortKeys zip isDesc).map { (key, desc) ->
-                if (desc) key.desc() else key
-            }.toColumnSet()
+        val sortKeys = columnPaths.map { path ->
+            ColumnPath(path)
         }
+
+        val comparator = createComparator(sortKeys, isDesc)
+
+        return df.sortWith(comparator)
+    }
+
+    private fun createComparator(sortKeys: List<ColumnPath>, isDesc: List<Boolean>): Comparator<DataRow<*>> {
+        return Comparator { row1, row2 ->
+            for ((key, desc) in sortKeys.zip(isDesc)) {
+                val comparisonResult = if (row1.df().getColumn(key).type.isComparable()) {
+                    compareComparableValues(row1, row2, key, desc)
+                } else {
+                    compareStringValues(row1, row2, key, desc)
+                }
+                // If a comparison result is non-zero, we have resolved the ordering
+                if (comparisonResult != 0) return@Comparator comparisonResult
+            }
+            // All comparisons are equal
+            0
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun compareComparableValues(
+        row1: DataRow<*>,
+        row2: DataRow<*>,
+        key: ColumnPath,
+        desc: Boolean,
+    ): Int {
+        val firstValue = row1.getValueOrNull(key) as Comparable<Any?>?
+        val secondValue = row2.getValueOrNull(key) as Comparable<Any?>?
+
+        return when {
+            firstValue == null && secondValue == null -> 0
+            firstValue == null -> if (desc) 1 else -1
+            secondValue == null -> if (desc) -1 else 1
+            desc -> secondValue.compareTo(firstValue)
+            else -> firstValue.compareTo(secondValue)
+        }
+    }
+
+    private fun compareStringValues(
+        row1: DataRow<*>,
+        row2: DataRow<*>,
+        key: ColumnPath,
+        desc: Boolean,
+    ): Int {
+        val firstValue = (row1.getValueOrNull(key)?.toString() ?: "")
+        val secondValue = (row2.getValueOrNull(key)?.toString() ?: "")
+
+        return if (desc) {
+            secondValue.compareTo(firstValue)
+        } else {
+            firstValue.compareTo(secondValue)
+        }
+    }
+
+    private fun KType.isComparable(): Boolean = this.isSubtypeOf(typeOf<Comparable<*>>())
 
     internal fun isDataframeConvertable(dataframeLike: Any?): Boolean =
         when (dataframeLike) {
