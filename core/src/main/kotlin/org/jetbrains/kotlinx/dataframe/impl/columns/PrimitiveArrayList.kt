@@ -171,16 +171,20 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
             private set
 
         private fun initializeArrayList(state: State) {
-            arrayList = when (state) {
-                BOOLEAN -> BooleanArrayList(initCapacity)
-                BYTE -> ByteArrayList(initCapacity)
-                CHAR -> CharArrayList(initCapacity)
-                SHORT -> ShortArrayList(initCapacity)
-                INT -> IntArrayList(initCapacity)
-                LONG -> LongArrayList(initCapacity)
-                FLOAT -> FloatArrayList(initCapacity)
-                DOUBLE -> DoubleArrayList(initCapacity)
-            } as List<T>
+            try {
+                arrayList = when (state) {
+                    BOOLEAN -> BooleanArrayList(initCapacity)
+                    BYTE -> ByteArrayList(initCapacity)
+                    CHAR -> CharArrayList(initCapacity)
+                    SHORT -> ShortArrayList(initCapacity)
+                    INT -> IntArrayList(initCapacity)
+                    LONG -> LongArrayList(initCapacity)
+                    FLOAT -> FloatArrayList(initCapacity)
+                    DOUBLE -> DoubleArrayList(initCapacity)
+                } as List<T>
+            } catch (e: Error) {
+                throw IllegalStateException("Failed to initialize $state ArrayList of capacity $initCapacity", e)
+            }
             this.state = state
         }
 

@@ -48,7 +48,7 @@ internal abstract class DataColumnImpl<T>(
 
     override fun name() = name
 
-    override fun values(): List<T> = values.toList()
+    override fun values(): List<T> = values.toList() // todo is heavy but tests break without it
 
     override fun type() = type
 
