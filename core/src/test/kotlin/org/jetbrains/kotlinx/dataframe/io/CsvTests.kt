@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.ncol
@@ -280,6 +281,40 @@ class CsvTests {
     fun `file with BOM`() {
         val df = DataFrame.readCSV(withBomCsv, delimiter = ';')
         df.columnNames() shouldBe listOf("Column1", "Column2")
+    }
+
+    @Test
+    fun `read empty delimStr or CSV`() {
+        val emptyDelimStr = DataFrame.readDelimStr("")
+        emptyDelimStr shouldBe DataFrame.empty()
+
+        val emptyDelimFile = DataFrame.readDelim(File.createTempFile("empty", "csv").reader())
+        emptyDelimFile shouldBe DataFrame.empty()
+
+        val emptyCsvFile = DataFrame.readCSV(File.createTempFile("empty", "csv"))
+        emptyCsvFile shouldBe DataFrame.empty()
+
+        val emptyCsvFileManualHeader = DataFrame.readCSV(
+            file = File.createTempFile("empty", "csv"),
+            header = listOf("a", "b", "c"),
+        )
+        emptyCsvFileManualHeader.apply {
+            isEmpty() shouldBe true
+            columnNames() shouldBe listOf("a", "b", "c")
+            columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        }
+
+        val emptyCsvFileWithHeader = DataFrame.readCSV(
+            file = File.createTempFile("empty", "csv").also { it.writeText("a,b,c") },
+        )
+        emptyCsvFileWithHeader.apply {
+            isEmpty() shouldBe true
+            columnNames() shouldBe listOf("a", "b", "c")
+            columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+        }
+
+        val emptyTsvStr = DataFrame.readTSV(File.createTempFile("empty", "tsv"))
+        emptyTsvStr shouldBe DataFrame.empty()
     }
 
     companion object {
