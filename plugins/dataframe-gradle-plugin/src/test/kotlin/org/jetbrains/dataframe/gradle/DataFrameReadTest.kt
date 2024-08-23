@@ -7,6 +7,8 @@ import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.SerializationException
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Test
@@ -42,9 +44,7 @@ class DataFrameReadTest {
     fun `file with invalid csv`() {
         val temp = Files.createTempDirectory("").toFile()
         val invalidCsv = File(temp, "test.csv").also { it.writeText("") }
-        shouldThrow<IndexOutOfBoundsException> {
-            DataFrame.read(invalidCsv)
-        }
+        DataFrame.read(invalidCsv).isEmpty() shouldBe true
     }
 
     @Test
