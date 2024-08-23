@@ -27,19 +27,13 @@ import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.getValueOrNull
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.type
-import kotlin.collections.sortWith
-import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
-import kotlin.toString
 
 /**
  * A class with utility methods for Kotlin Notebook Plugin integration.
@@ -113,7 +107,7 @@ public object KotlinNotebookPluginUtils {
     private fun createComparator(sortKeys: List<ColumnPath>, isDesc: List<Boolean>): Comparator<DataRow<*>> {
         return Comparator { row1, row2 ->
             for ((key, desc) in sortKeys.zip(isDesc)) {
-                val comparisonResult = if (row1.df().getColumn(key).type.isComparable()) {
+                val comparisonResult = if (row1.df().getColumn(key).isComparable()) {
                     compareComparableValues(row1, row2, key, desc)
                 } else {
                     compareStringValues(row1, row2, key, desc)
@@ -160,8 +154,6 @@ public object KotlinNotebookPluginUtils {
             firstValue.compareTo(secondValue)
         }
     }
-
-    private fun KType.isComparable(): Boolean = this.isSubtypeOf(typeOf<Comparable<*>>())
 
     internal fun isDataframeConvertable(dataframeLike: Any?): Boolean =
         when (dataframeLike) {

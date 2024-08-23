@@ -583,6 +583,29 @@ class RenderingTests : JupyterReplTestCase() {
         bFields shouldBe listOf(5, 4, 3, 2, 1)
     }
 
+    @Test
+    fun `test sortByColumns for column that contains string and int`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val df = dataFrameOf("mixed")(
+                5,
+                "10",
+                2,
+                "4",
+                "1"
+            )
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("mixed")), listOf(true))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<String>(0, "mixed") shouldBe "5"
+        json.extractColumn<String>(1, "mixed") shouldBe "4"
+        json.extractColumn<String>(2, "mixed") shouldBe "2"
+        json.extractColumn<String>(3, "mixed") shouldBe "10"
+        json.extractColumn<String>(4, "mixed") shouldBe "1"
+    }
+
     companion object {
         /**
          * Set the system property for the IDE version needed for specific serialization testing purposes.
