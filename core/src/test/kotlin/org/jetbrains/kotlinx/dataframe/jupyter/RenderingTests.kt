@@ -406,6 +406,206 @@ class RenderingTests : JupyterReplTestCase() {
         }
     }
 
+    @Test
+    fun `test sortByColumns by int column`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val df = dataFrameOf("nums")(5, 4, 3, 2, 1)
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("nums")), listOf(false))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        val rows = json[KOTLIN_DATAFRAME]!!.jsonArray
+        json.extractColumn<Int>(0, "nums") shouldBe 1
+        json.extractColumn<Int>(rows.size - 1, "nums") shouldBe 5
+    }
+
+    internal inline fun <reified T> JsonObject.extractColumn(index: Int, fieldName: String): T {
+        val element = this[KOTLIN_DATAFRAME]!!.jsonArray[index].jsonObject[fieldName]!!.jsonPrimitive
+        return when (T::class) {
+            String::class -> element.content as T
+            Int::class -> element.int as T
+            else -> throw IllegalArgumentException("Unsupported type")
+        }
+    }
+
+    @Test
+    fun `test sortByColumns by multiple int columns`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            data class Row(val a: Int, val b: Int)
+            val df = listOf(Row(1, 1), Row(1, 2), Row(2, 3), Row(2, 4), Row(3, 5), Row(3, 6)).toDataFrame()
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("a"), listOf("b")), listOf(true, false))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<Int>(0, "a") shouldBe 3
+        json.extractColumn<Int>(0, "b") shouldBe 5
+        json.extractColumn<Int>(5, "a") shouldBe 1
+        json.extractColumn<Int>(5, "b") shouldBe 2
+    }
+
+    @Test
+    fun `test sortByColumns by single string column`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val df = dataFrameOf("letters")("e", "d", "c", "b", "a")
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("letters")), listOf(true))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<String>(0, "letters") shouldBe "e"
+        json.extractColumn<String>(4, "letters") shouldBe "a"
+    }
+
+    @Test
+    fun `test sortByColumns by multiple string columns`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            data class Row(val first: String, val second: String)
+            val df = listOf(Row("a", "b"), Row("a", "a"), Row("b", "b"), Row("b", "a")).toDataFrame()
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("first"), listOf("second")), listOf(false, true))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<String>(0, "first") shouldBe "a"
+        json.extractColumn<String>(0, "second") shouldBe "b"
+        json.extractColumn<String>(3, "first") shouldBe "b"
+        json.extractColumn<String>(3, "second") shouldBe "a"
+    }
+
+    @Test
+    fun `test sortByColumns by mix of int and string columns`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            data class Row(val num: Int, val letter: String)
+            val df = listOf(Row(1, "a"), Row(1, "b"), Row(2, "a"), Row(2, "b"), Row(3, "a")).toDataFrame()
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("num"), listOf("letter")), listOf(true, false))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<Int>(0, "num") shouldBe 3
+        json.extractColumn<String>(0, "letter") shouldBe "a"
+        json.extractColumn<Int>(4, "num") shouldBe 1
+        json.extractColumn<String>(4, "letter") shouldBe "b"
+    }
+
+    @Test
+    fun `test sortByColumns by multiple non-comparable column`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            data class Person(val name: String, val age: Int) {
+                override fun toString(): String {
+                    return age.toString()
+                }
+            }
+            val df = dataFrameOf("urls", "person")(
+                URL("https://example.com/a"), Person("Alice", 10), 
+                URL("https://example.com/b"), Person("Bob", 11),
+                URL("https://example.com/a"), Person("Nick", 12),
+                URL("https://example.com/b"), Person("Guy", 13),
+            )
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("urls"), listOf("person")), listOf(false, true))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<Int>(0, "person") shouldBe 12
+        json.extractColumn<Int>(3, "person") shouldBe 11
+    }
+
+    @Test
+    fun `test sortByColumns by mix of comparable and non-comparable columns`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val df = dataFrameOf("urls", "id")(
+                URL("https://example.com/a"), 1, 
+                URL("https://example.com/b"), 2,
+                URL("https://example.com/a"), 2,
+                URL("https://example.com/b"), 1,
+            )
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("id"), listOf("urls")), listOf(true, true))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<String>(0, "urls") shouldBe "https://example.com/b"
+        json.extractColumn<Int>(0, "id") shouldBe 2
+        json.extractColumn<String>(3, "urls") shouldBe "https://example.com/a"
+        json.extractColumn<Int>(3, "id") shouldBe 1
+    }
+
+    @Test
+    fun `test sortByColumns by url column`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val df = dataFrameOf("urls")(
+                URL("https://example.com/a"),
+                URL("https://example.com/c"),
+                URL("https://example.com/b"),
+                URL("https://example.com/d")
+            )
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("urls")), listOf(false))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<String>(0, "urls") shouldBe "https://example.com/a"
+        json.extractColumn<String>(1, "urls") shouldBe "https://example.com/b"
+        json.extractColumn<String>(2, "urls") shouldBe "https://example.com/c"
+        json.extractColumn<String>(3, "urls") shouldBe "https://example.com/d"
+    }
+
+    @Test
+    fun `test sortByColumns by column group children`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val df = dataFrameOf(
+                "a" to listOf(5, 4, 3, 2, 1),
+                "b" to listOf(1, 2, 3, 4, 5)
+            )
+            val res = KotlinNotebookPluginUtils.sortByColumns(df.group("a", "b").into("c"), listOf(listOf("c", "a")), listOf(false))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        fun JsonObject.extractBFields(): List<Int> {
+            val dataframe = this[KOTLIN_DATAFRAME]!!.jsonArray
+            return dataframe.map { it.jsonObject["c"]!!.jsonObject["data"]!!.jsonObject["b"]!!.jsonPrimitive.int }
+        }
+
+        val bFields = json.extractBFields()
+        bFields shouldBe listOf(5, 4, 3, 2, 1)
+    }
+
+    @Test
+    fun `test sortByColumns for column that contains string and int`() {
+        val json = executeScriptAndParseDataframeResult(
+            """
+            val df = dataFrameOf("mixed")(
+                5,
+                "10",
+                2,
+                "4",
+                "1"
+            )
+            val res = KotlinNotebookPluginUtils.sortByColumns(df, listOf(listOf("mixed")), listOf(true))
+            KotlinNotebookPluginUtils.convertToDataFrame(res)
+            """.trimIndent(),
+        )
+
+        json.extractColumn<String>(0, "mixed") shouldBe "5"
+        json.extractColumn<String>(1, "mixed") shouldBe "4"
+        json.extractColumn<String>(2, "mixed") shouldBe "2"
+        json.extractColumn<String>(3, "mixed") shouldBe "10"
+        json.extractColumn<String>(4, "mixed") shouldBe "1"
+    }
+
     companion object {
         /**
          * Set the system property for the IDE version needed for specific serialization testing purposes.
