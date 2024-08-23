@@ -299,6 +299,11 @@ class CsvTests {
         )
         emptyCsvFileManualHeader shouldBe dataFrameOf("a", "b", "c").fill(0) { "" }
 
+        val emptyCsvFileWithHeader = DataFrame.readCSV(
+            file = File.createTempFile("empty", "csv").also { it.writeText("a,b,c") },
+        )
+        emptyCsvFileWithHeader shouldBe dataFrameOf("a", "b", "c").fill(0) { "" }
+
         val emptyTsvStr = DataFrame.readTSV(File.createTempFile("empty", "tsv"))
         emptyTsvStr shouldBe DataFrame.empty()
     }
