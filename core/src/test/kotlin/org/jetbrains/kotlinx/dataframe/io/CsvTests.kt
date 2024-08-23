@@ -282,6 +282,32 @@ class CsvTests {
         df.columnNames() shouldBe listOf("Column1", "Column2")
     }
 
+    @Test
+    fun `read empty delimStr or CSV`() {
+        val emptyDelimStr = DataFrame.readDelimStr("")
+        emptyDelimStr shouldBe DataFrame.empty()
+
+        val emptyDelimFile = DataFrame.readDelim(File.createTempFile("empty", "csv").reader())
+        emptyDelimFile shouldBe DataFrame.empty()
+
+        val emptyCsvFile = DataFrame.readCSV(File.createTempFile("empty", "csv"))
+        emptyCsvFile shouldBe DataFrame.empty()
+
+        val emptyCsvFileManualHeader = DataFrame.readCSV(
+            file = File.createTempFile("empty", "csv"),
+            header = listOf("a", "b", "c"),
+        )
+        emptyCsvFileManualHeader shouldBe dataFrameOf("a", "b", "c").fill(0) { "" }
+
+        val emptyCsvFileWithHeader = DataFrame.readCSV(
+            file = File.createTempFile("empty", "csv").also { it.writeText("a,b,c") },
+        )
+        emptyCsvFileWithHeader shouldBe dataFrameOf("a", "b", "c").fill(0) { "" }
+
+        val emptyTsvStr = DataFrame.readTSV(File.createTempFile("empty", "tsv"))
+        emptyTsvStr shouldBe DataFrame.empty()
+    }
+
     companion object {
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
