@@ -345,7 +345,7 @@ public fun DataFrame.Companion.readDelim(
     }
 
     val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
-        ?: (1..records[0].count()).map { index -> "X$index" }
+        ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
 
     val generator = ColumnNameGenerator()
     val uniqueNames = columnNames.map { generator.addUnique(it) }
