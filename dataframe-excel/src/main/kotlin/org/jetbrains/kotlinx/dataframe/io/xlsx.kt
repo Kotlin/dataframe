@@ -4,6 +4,7 @@ import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
+import org.apache.poi.ss.SpreadsheetVersion
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.DataFormatter
@@ -386,7 +387,8 @@ public fun <T> DataFrame<T>.writeExcel(
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
     keepFile: Boolean = false,
-): Unit = writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
+    unlimitedTextLength: Boolean = false,
+): Unit = writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile, unlimitedTextLength)
 
 public enum class WorkBookType {
     XLS,
@@ -400,6 +402,7 @@ public fun <T> DataFrame<T>.writeExcel(
     writeHeader: Boolean = true,
     workBookType: WorkBookType = WorkBookType.XLSX,
     keepFile: Boolean = false,
+    unlimitedTextLength: Boolean = false,
 ) {
     val factory =
         if (keepFile) {
@@ -414,7 +417,7 @@ public fun <T> DataFrame<T>.writeExcel(
             }
         }
     return file.outputStream().use {
-        writeExcel(it, columnsSelector, sheetName, writeHeader, factory)
+        writeExcel(it, columnsSelector, sheetName, writeHeader, factory, unlimitedTextLength)
     }
 }
 
@@ -424,9 +427,10 @@ public fun <T> DataFrame<T>.writeExcel(
     sheetName: String? = null,
     writeHeader: Boolean = true,
     factory: Workbook,
+    unlimitedTextLength: Boolean = false,
 ) {
     val wb: Workbook = factory
-    writeExcel(wb, columnsSelector, sheetName, writeHeader)
+    writeExcel(wb, columnsSelector, sheetName, writeHeader, unlimitedTextLength)
     wb.write(outputStream)
     wb.close()
 }
@@ -436,7 +440,35 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
+    unlimitedTextLength: Boolean = false,
 ): Sheet {
+    /**
+     * Override `maxTextLength` of given `spreadsheetVersion` via `reflection`.
+     */
+    fun overrideCellTextLengthLimit(spreadsheetVersion: SpreadsheetVersion, newMaxTextLength: Int = Int.MAX_VALUE) {
+        if (newMaxTextLength <= 0) {
+            return
+        }
+        val currMaxTextLength = spreadsheetVersion.javaClass.getDeclaredField("_maxTextLength")
+        currMaxTextLength.isAccessible = true
+        currMaxTextLength.set(spreadsheetVersion, newMaxTextLength)
+    }
+
+    /**
+     * Recover `maxTextLength` of given `spreadsheetVersion` to default value.
+     */
+    fun recoverCellTextLengthLimit(spreadsheetVersion: SpreadsheetVersion) {
+        overrideCellTextLengthLimit(spreadsheetVersion, 32767)
+    }
+
+    // detect the type of workbook and disable the cell text length limit
+    if (unlimitedTextLength) {
+        when (wb) {
+            is HSSFWorkbook -> overrideCellTextLengthLimit(SpreadsheetVersion.EXCEL97)
+            is XSSFWorkbook -> overrideCellTextLengthLimit(SpreadsheetVersion.EXCEL2007)
+        }
+    }
+
     val sheet = if (sheetName != null) {
         wb.createSheet(sheetName)
     } else {
@@ -504,6 +536,15 @@ public fun <T> DataFrame<T>.writeExcel(
         }
         i++
     }
+
+    // detect the type of workbook and recover the cell text length limit
+    if (unlimitedTextLength) {
+        when (wb) {
+            is HSSFWorkbook -> recoverCellTextLengthLimit(SpreadsheetVersion.EXCEL97)
+            is XSSFWorkbook -> recoverCellTextLengthLimit(SpreadsheetVersion.EXCEL2007)
+        }
+    }
+
     return sheet
 }
 
