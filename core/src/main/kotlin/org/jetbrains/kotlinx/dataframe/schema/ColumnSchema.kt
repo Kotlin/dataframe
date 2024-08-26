@@ -5,10 +5,10 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSupertypeOf
-import kotlin.reflect.typeOf
 
 public abstract class ColumnSchema {
 
@@ -53,7 +53,7 @@ public abstract class ColumnSchema {
 
         /** A column group is never null, instead, make the columns inside nullable. */
         override val nullable: Boolean = false
-        override val type: KType get() = typeOf<AnyRow>()
+        override val type: KType get() = TypeOf.ANY_ROW
 
         public fun compare(other: Group): CompareResult = schema.compare(other.schema)
     }
@@ -64,7 +64,7 @@ public abstract class ColumnSchema {
         override val contentType: KType?,
     ) : ColumnSchema() {
         public override val kind: ColumnKind = ColumnKind.Frame
-        override val type: KType get() = typeOf<AnyFrame>()
+        override val type: KType get() = TypeOf.ANY_FRAME
 
         public fun compare(other: Frame): CompareResult =
             schema.compare(other.schema).combine(CompareResult.compareNullability(nullable, other.nullable))

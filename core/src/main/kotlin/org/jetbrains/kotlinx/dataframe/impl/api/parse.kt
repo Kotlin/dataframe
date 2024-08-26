@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import java.net.URL
 import java.text.NumberFormat
 import java.text.ParsePosition
@@ -60,7 +61,7 @@ internal open class DelegatedStringParser<T>(override val type: KType, val handl
             if (str in nulls) {
                 null
             } else {
-                handle(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
+                handle(str) ?: throw TypeConversionException(it, TypeOf.STRING, type, null)
             }
         }
     }
@@ -80,7 +81,7 @@ internal class StringParserWithFormat<T>(
             if (str in nulls) {
                 null
             } else {
-                handler(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
+                handler(str) ?: throw TypeConversionException(it, TypeOf.STRING, type, null)
             }
         }
     }
