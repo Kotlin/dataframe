@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -18,6 +20,7 @@ import kotlin.reflect.KProperty
 
 // region move
 
+@Interpretable("Move0")
 public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<T, C> = MoveClause(this, columns)
 
 public fun <T> DataFrame<T>.move(vararg cols: String): MoveClause<T, Any?> = move { cols.toColumnSet() }
@@ -120,6 +123,8 @@ public fun <T, C> MoveClause<T, C>.under(
 
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
+@Refine
+@Interpretable("ToTop")
 public fun <T, C> MoveClause<T, C>.toTop(
     newColumnName: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String = { it.name() },
 ): DataFrame<T> = into { newColumnName(it).toColumnAccessor() }
