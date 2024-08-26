@@ -1,16 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
 import java.time.LocalTime
 import java.time.Month
 import java.util.Locale
-import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -27,7 +26,7 @@ class ParseTests {
 
             val parsed = date.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalDate>()
 
-            parsed.type() shouldBe typeOf<LocalDate>()
+            parsed.type() shouldBe TypeOf.LOCAL_DATE
             with(parsed[0]) {
                 month shouldBe Month.JANUARY
                 dayOfMonth shouldBe 1
@@ -62,7 +61,7 @@ class ParseTests {
 
             val parsed = dateTime.parse(ParserOptions(dateTimePattern = pattern, locale = locale)).cast<LocalDateTime>()
 
-            parsed.type() shouldBe typeOf<LocalDateTime>()
+            parsed.type() shouldBe TypeOf.LOCAL_DATE_TIME
             with(parsed[0]) {
                 month shouldBe Month.JUNE
                 dayOfMonth shouldBe 3
@@ -96,7 +95,7 @@ class ParseTests {
 
         val parsed = time.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalTime>()
 
-        parsed.type() shouldBe typeOf<LocalTime>()
+        parsed.type() shouldBe TypeOf.LOCAL_TIME
         with(parsed[0]) {
             hour shouldBe 13
             minute shouldBe 5
@@ -121,7 +120,7 @@ class ParseTests {
         val time by columnOf(" 2020-01-06", "2020-01-07 ")
         val df = dataFrameOf(time)
         val casted = df.convert(time).toLocalDate()
-        casted[time].type() shouldBe typeOf<LocalDate>()
+        casted[time].type() shouldBe TypeOf.LOCAL_DATE
     }
 
     @Test
@@ -136,10 +135,10 @@ class ParseTests {
 
     @Test
     fun `parse instant`() {
-        columnOf("2022-01-23T04:29:40Z").parse().type shouldBe typeOf<Instant>()
-        columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe typeOf<Instant>()
+        columnOf("2022-01-23T04:29:40Z").parse().type shouldBe TypeOf.INSTANT
+        columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe TypeOf.INSTANT
 
-        columnOf("2022-01-23T04:29:40").parse().type shouldBe typeOf<LocalDateTime>()
+        columnOf("2022-01-23T04:29:40").parse().type shouldBe TypeOf.LOCAL_DATE_TIME
     }
 
     @Test

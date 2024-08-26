@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
@@ -39,7 +40,7 @@ class CreateDataFrameTests {
         val df = listOf(Data()).toDataFrame()
         df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 1
-        df.columnTypes() shouldBe listOf(typeOf<IllegalStateException>(), typeOf<Int>())
+        df.columnTypes() shouldBe listOf(typeOf<IllegalStateException>(), TypeOf.INT)
         (df["a"][0] is IllegalStateException) shouldBe true
         df["b"][0] shouldBe 1
     }
@@ -55,11 +56,11 @@ class CreateDataFrameTests {
             "e" from { if (true) it else null }
         }
         res["a"].kind shouldBe ColumnKind.Value
-        res["a"].type() shouldBe typeOf<Int>()
+        res["a"].type() shouldBe TypeOf.INT
         res["b"].kind shouldBe ColumnKind.Frame
         res["c"].kind shouldBe ColumnKind.Group
-        res["d"].type() shouldBe typeOf<Int?>()
-        res["e"].type() shouldBe typeOf<Int>()
+        res["d"].type() shouldBe TypeOf.NULLABLE_INT
+        res["e"].type() shouldBe TypeOf.INT
     }
 
     @Test
@@ -70,10 +71,10 @@ class CreateDataFrameTests {
             expr(infer = Infer.Type) { it } into "d"
         }
 
-        res["e"].type() shouldBe typeOf<Int>()
+        res["e"].type() shouldBe TypeOf.INT
         res["e"].kind() shouldBe ColumnKind.Value
 
-        res["d"].type() shouldBe typeOf<Int>()
+        res["d"].type() shouldBe TypeOf.INT
         res["d"].kind() shouldBe ColumnKind.Value
     }
 
@@ -217,8 +218,8 @@ class CreateDataFrameTests {
         val df = functions.toDataFrame(maxDepth = 2)
 
         val col = df.getColumnGroup(DeserializedContainerSource::incompatibility)
-        col[IncompatibleVersionErrorData<*>::actual].type() shouldBe typeOf<Any>()
-        col[IncompatibleVersionErrorData<*>::expected].type() shouldBe typeOf<Any>()
+        col[IncompatibleVersionErrorData<*>::actual].type() shouldBe TypeOf.ANY
+        col[IncompatibleVersionErrorData<*>::expected].type() shouldBe TypeOf.ANY
     }
 
     interface Named {
@@ -388,10 +389,10 @@ class CreateDataFrameTests {
         // cannot read java constructor parameter names with reflection, so sort lexicographically
         listOf(JavaPojo(2.0, null, "bb", 1)).toDataFrame() shouldBe
             dataFrameOf(
-                DataColumn.createValueColumn("a", listOf(1), typeOf<Int>()),
-                DataColumn.createValueColumn("b", listOf("bb"), typeOf<String>()),
-                DataColumn.createValueColumn("c", listOf(null), typeOf<Int?>()),
-                DataColumn.createValueColumn("d", listOf(2.0), typeOf<Number>()),
+                DataColumn.createValueColumn("a", listOf(1), TypeOf.INT),
+                DataColumn.createValueColumn("b", listOf("bb"), TypeOf.STRING),
+                DataColumn.createValueColumn("c", listOf(null), TypeOf.NULLABLE_INT),
+                DataColumn.createValueColumn("d", listOf(2.0), TypeOf.NUMBER),
             )
 
         listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getA) } shouldBe
