@@ -47,8 +47,19 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                         }
                     }
                 }
-                val overriddenConfigs =
-                    target.properties.get("kotlin.dataframe.ksp.configs")?.let { (it as String)}?.split(",")
+                val customConfigsProp = "kotlin.dataframe.ksp.configs"
+                var overriddenConfigs =
+                    target.properties.get(customConfigsProp)?.let { (it as String)}?.split(",")
+                if (overriddenConfigs != null) {
+                    overriddenConfigs =
+                        target.extraProperties.get(customConfigsProp)?.let { (it as String)}?.split(",")
+                } else {
+                    if (customConfigsProp in target.extraProperties.properties) {
+                        target.logger.warn(
+                            "`$customConfigsProp` set as both a regular and an extra property. Only the regular property value is used.",
+                        )
+                    }
+                }
                 val configs = when {
                     overriddenConfigs != null -> overriddenConfigs
                     isMultiplatform -> listOf("kspJvm","kspJvmTest")
