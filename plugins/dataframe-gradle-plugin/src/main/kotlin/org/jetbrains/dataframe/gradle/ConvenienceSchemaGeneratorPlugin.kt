@@ -5,6 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.UnknownConfigurationException
 import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.gradle.plugin.extraProperties
 import java.util.Properties
 
 @Suppress("unused")
@@ -32,7 +33,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
         // configure it to depend on symbol-processor-all
         target.plugins.whenPluginAdded {
             if ("com.google.devtools.ksp" in this.javaClass.packageName) {
-                val isMultiplatform =
+                val isMultiplatform by lazy {
                     when {
                         target.plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> false
 
@@ -45,29 +46,26 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                             false
                         }
                     }
-                val mainKspCfg = if (isMultiplatform) "kspJvm" else "ksp"
-                val testKspCfg = if (isMultiplatform) "kspJvmTest" else "kspTest"
-                try {
-                    target.configurations.getByName(mainKspCfg).dependencies.add(
-                        target.dependencies.create(
-                            "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
-                        ),
-                    )
-                } catch (e: UnknownConfigurationException) {
-                    target.logger.warn(
-                        "Configuration '$mainKspCfg' not found. Please make sure the KSP plugin is applied.",
-                    )
                 }
-                try {
-                    target.configurations.getByName(testKspCfg).dependencies.add(
-                        target.dependencies.create(
-                            "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
-                        ),
-                    )
-                } catch (e: UnknownConfigurationException) {
-                    target.logger.warn(
-                        "Configuration '$testKspCfg' not found. Please make sure the KSP plugin is applied.",
-                    )
+                val overriddenConfigs =
+                    target.properties.get("kotlin.dataframe.ksp.configs")?.let { (it as String)}?.split(",")
+                val configs = when {
+                    overriddenConfigs != null -> overriddenConfigs
+                    isMultiplatform -> listOf("kspJvm","kspJvmTest")
+                    else -> listOf("ksp","kspTest")
+                }
+                configs.forEach { cfg ->
+                    try {
+                        target.configurations.getByName(cfg).dependencies.add(
+                            target.dependencies.create(
+                                "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
+                            ),
+                        )
+                    } catch (e: UnknownConfigurationException) {
+                        target.logger.warn(
+                            "Configuration '$cfg' not found. Please make sure the KSP plugin is applied.",
+                        )
+                    }
                 }
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
                 target.extensions.getByType<KspExtension>().arg(
