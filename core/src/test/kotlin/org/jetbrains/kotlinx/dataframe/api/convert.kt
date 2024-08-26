@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.junit.Test
 import java.time.LocalTime
 import kotlin.reflect.typeOf
@@ -98,7 +99,7 @@ class ConvertTests {
     fun `convert from value class exceptions`() {
         shouldThrow<TypeConversionException> {
             columnOf(StringClass("a")).convertTo<Int>()
-        }.from shouldBe typeOf<String>()
+        }.from shouldBe STRING
 
         shouldThrow<TypeConverterNotFoundException> {
             columnOf(IntClass(1)).convertTo<EnumClass>()

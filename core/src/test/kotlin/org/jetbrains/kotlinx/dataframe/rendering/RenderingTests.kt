@@ -32,11 +32,11 @@ import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.secondName
+import org.jetbrains.kotlinx.dataframe.util.URL
 import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
 import java.text.DecimalFormatSymbols
-import kotlin.reflect.typeOf
 
 class RenderingTests : TestBase() {
 
@@ -58,7 +58,7 @@ class RenderingTests : TestBase() {
     @Test
     fun `parse url`() {
         val df = dataFrameOf("url")("http://www.google.com").parse()
-        df["url"].type() shouldBe typeOf<URL>()
+        df["url"].type() shouldBe URL
     }
 
     @Test
