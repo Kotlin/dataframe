@@ -56,6 +56,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.jetbrains.kotlinx.dataframe.values
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
@@ -363,7 +364,7 @@ internal fun fromJsonListAnyColumns(
                         schema = lazy {
                             DataFrameSchemaImpl(
                                 columns = mapOf(
-                                    KeyValueProperty<*>::key.name to ColumnSchema.Value(typeOf<String>()),
+                                    KeyValueProperty<*>::key.name to ColumnSchema.Value(STRING),
                                     KeyValueProperty<*>::value.name to valueColumnSchema,
                                 ),
                             )

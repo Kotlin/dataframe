@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -19,7 +20,7 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
         df = this,
         columns = selector,
         filter = null,
-        keyType = typeOf<String>(),
+        keyType = STRING,
         keyTransform = { it },
         valueTransform = null,
     )

@@ -36,6 +36,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.path
+import org.jetbrains.kotlinx.dataframe.util.DOUBLE
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_DOUBLE
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_STRING
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
@@ -130,8 +134,8 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 public fun AnyCol.convertTo(newType: KType): AnyCol {
-    val isTypesAreCorrect = this.type().withNullability(true).isSubtypeOf(typeOf<String?>()) &&
-        newType.withNullability(true) == typeOf<Double?>()
+    val isTypesAreCorrect = this.type().withNullability(true).isSubtypeOf(NULLABLE_STRING) &&
+        newType.withNullability(true) == NULLABLE_DOUBLE
 
     if (isTypesAreCorrect) {
         return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)
@@ -208,8 +212,8 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
                 value?.let {
                     parser(value.trim()) ?: throw TypeConversionException(
                         value = value,
-                        from = typeOf<String>(),
-                        to = typeOf<Double>(),
+                        from = STRING,
+                        to = DOUBLE,
                         column = path,
                     )
                 }

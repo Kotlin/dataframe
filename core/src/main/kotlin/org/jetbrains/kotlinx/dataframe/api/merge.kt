@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -100,7 +101,7 @@ public fun <T, C, R> Merge<T, C, R>.by(
                 truncated = truncated,
             )
         },
-        resultType = typeOf<String>(),
+        resultType = STRING,
         infer = Infer.Nulls,
     )
 
