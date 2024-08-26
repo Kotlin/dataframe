@@ -19,6 +19,8 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.util.CHAR
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedInputStream
 import java.io.BufferedReader
@@ -40,7 +42,6 @@ import java.time.LocalTime
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
@@ -56,7 +57,7 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     override val testOrder: Int = 20000
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        val arguments = MethodArguments().add("delimiter", typeOf<Char>(), "'%L'", delimiter)
+        val arguments = MethodArguments().add("delimiter", CHAR, "'%L'", delimiter)
         return DefaultReadCsvMethod(pathRepresentation, arguments)
     }
 }
@@ -365,7 +366,7 @@ public fun DataFrame.Companion.readDelim(
                 null
             }
         }
-        val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
+        val column = DataColumn.createValueColumn(colName, values, STRING.withNullability(hasNulls))
         when (colType) {
             null -> column.tryParse(parserOptions)
 

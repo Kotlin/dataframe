@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -19,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
-import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.util.ANY_FRAME
 
 internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
     desc: Boolean,
@@ -62,7 +61,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                 var column = c.column
                 if (inFrameColumns && column.isFrameColumn()) {
                     column = column.asAnyFrameColumn()
-                        .map(typeOf<AnyFrame>()) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }
+                        .map(ANY_FRAME) { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }
                         .cast()
                 }
                 ColumnToInsert(path, column, src.treeNode)

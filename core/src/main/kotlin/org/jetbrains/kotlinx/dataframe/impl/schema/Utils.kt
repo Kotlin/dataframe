@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.ANY
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
@@ -55,7 +56,7 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
         val columnKinds = columnSchemas.map { it.kind }.distinct()
         val kind = columnKinds.first()
         when {
-            columnKinds.size > 1 -> ColumnSchema.Value(typeOf<Any>().withNullability(columnSchemas.any { it.nullable }))
+            columnKinds.size > 1 -> ColumnSchema.Value(ANY.withNullability(columnSchemas.any { it.nullable }))
 
             kind == ColumnKind.Value -> ColumnSchema.Value(
                 type = columnSchemas
