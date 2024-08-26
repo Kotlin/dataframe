@@ -19,8 +19,10 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.util.IMG
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_IMG
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class PlaylistJsonTest {
 
@@ -118,20 +120,20 @@ class PlaylistJsonTest {
     @Test
     fun `deep update`() {
         val updated = item.convert { snippet.thumbnails.default.url }.with { IMG(it) }
-        updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.default.url.type() shouldBe IMG
     }
 
     @Test
     fun `deep update group`() {
         val updated = item.convert { snippet.thumbnails.default }.with { it.url }
-        updated.snippet.thumbnails["default"].type() shouldBe typeOf<String>()
+        updated.snippet.thumbnails["default"].type() shouldBe STRING
     }
 
     @Test
     fun `deep batch update`() {
         val updated = item.convert { snippet.thumbnails.default.url and snippet.thumbnails.high.url }.with { IMG(it) }
-        updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
-        updated.snippet.thumbnails.high.url.type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.default.url.type() shouldBe IMG
+        updated.snippet.thumbnails.high.url.type() shouldBe IMG
     }
 
     @Test
@@ -139,11 +141,11 @@ class PlaylistJsonTest {
         val updated = item
             .convert { colsAtAnyDepth { it.name() == "url" } }
             .with { (it as? String)?.let { IMG(it) } }
-        updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
-        updated.snippet.thumbnails.maxres.url.type() shouldBe typeOf<IMG?>()
-        updated.snippet.thumbnails.standard.url.type() shouldBe typeOf<IMG?>()
-        updated.snippet.thumbnails.medium.url.type() shouldBe typeOf<IMG>()
-        updated.snippet.thumbnails.high.url.type() shouldBe typeOf<IMG>()
+        updated.snippet.thumbnails.default.url.type() shouldBe IMG
+        updated.snippet.thumbnails.maxres.url.type() shouldBe NULLABLE_IMG
+        updated.snippet.thumbnails.standard.url.type() shouldBe NULLABLE_IMG
+        updated.snippet.thumbnails.medium.url.type() shouldBe IMG
+        updated.snippet.thumbnails.high.url.type() shouldBe IMG
     }
 
     @Test

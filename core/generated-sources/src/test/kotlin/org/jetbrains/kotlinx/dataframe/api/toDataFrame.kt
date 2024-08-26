@@ -9,6 +9,11 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.ANY
+import org.jetbrains.kotlinx.dataframe.util.INT
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_INT
+import org.jetbrains.kotlinx.dataframe.util.NUMBER
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
@@ -39,7 +44,7 @@ class CreateDataFrameTests {
         val df = listOf(Data()).toDataFrame()
         df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 1
-        df.columnTypes() shouldBe listOf(typeOf<IllegalStateException>(), typeOf<Int>())
+        df.columnTypes() shouldBe listOf(typeOf<IllegalStateException>(), INT)
         (df["a"][0] is IllegalStateException) shouldBe true
         df["b"][0] shouldBe 1
     }
@@ -55,11 +60,11 @@ class CreateDataFrameTests {
             "e" from { if (true) it else null }
         }
         res["a"].kind shouldBe ColumnKind.Value
-        res["a"].type() shouldBe typeOf<Int>()
+        res["a"].type() shouldBe INT
         res["b"].kind shouldBe ColumnKind.Frame
         res["c"].kind shouldBe ColumnKind.Group
-        res["d"].type() shouldBe typeOf<Int?>()
-        res["e"].type() shouldBe typeOf<Int>()
+        res["d"].type() shouldBe NULLABLE_INT
+        res["e"].type() shouldBe INT
     }
 
     @Test
@@ -70,10 +75,10 @@ class CreateDataFrameTests {
             expr(infer = Infer.Type) { it } into "d"
         }
 
-        res["e"].type() shouldBe typeOf<Int>()
+        res["e"].type() shouldBe INT
         res["e"].kind() shouldBe ColumnKind.Value
 
-        res["d"].type() shouldBe typeOf<Int>()
+        res["d"].type() shouldBe INT
         res["d"].kind() shouldBe ColumnKind.Value
     }
 
@@ -217,8 +222,8 @@ class CreateDataFrameTests {
         val df = functions.toDataFrame(maxDepth = 2)
 
         val col = df.getColumnGroup(DeserializedContainerSource::incompatibility)
-        col[IncompatibleVersionErrorData<*>::actual].type() shouldBe typeOf<Any>()
-        col[IncompatibleVersionErrorData<*>::expected].type() shouldBe typeOf<Any>()
+        col[IncompatibleVersionErrorData<*>::actual].type() shouldBe ANY
+        col[IncompatibleVersionErrorData<*>::expected].type() shouldBe ANY
     }
 
     interface Named {
@@ -388,10 +393,10 @@ class CreateDataFrameTests {
         // cannot read java constructor parameter names with reflection, so sort lexicographically
         listOf(JavaPojo(2.0, null, "bb", 1)).toDataFrame() shouldBe
             dataFrameOf(
-                DataColumn.createValueColumn("a", listOf(1), typeOf<Int>()),
-                DataColumn.createValueColumn("b", listOf("bb"), typeOf<String>()),
-                DataColumn.createValueColumn("c", listOf(null), typeOf<Int?>()),
-                DataColumn.createValueColumn("d", listOf(2.0), typeOf<Number>()),
+                DataColumn.createValueColumn("a", listOf(1), INT),
+                DataColumn.createValueColumn("b", listOf("bb"), STRING),
+                DataColumn.createValueColumn("c", listOf(null), NULLABLE_INT),
+                DataColumn.createValueColumn("d", listOf(2.0), NUMBER),
             )
 
         listOf(KotlinPojo("bb", 1)).toDataFrame { properties(KotlinPojo::getA) } shouldBe
