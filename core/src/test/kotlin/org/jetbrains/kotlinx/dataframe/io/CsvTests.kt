@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDateTime
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -20,13 +19,12 @@ import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testResource
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
 import java.io.File
 import java.io.StringWriter
-import java.net.URL
 import java.util.Locale
 import kotlin.reflect.KClass
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class CsvTests {
@@ -42,9 +40,9 @@ class CsvTests {
         val df = DataFrame.readDelimStr(src)
         df.nrow shouldBe 2
         df.ncol shouldBe 2
-        df["first"].type() shouldBe typeOf<Int>()
+        df["first"].type() shouldBe TypeOf.INT
         df["second"].allNulls() shouldBe true
-        df["second"].type() shouldBe typeOf<String?>()
+        df["second"].type() shouldBe TypeOf.NULLABLE_STRING
     }
 
     @Test
@@ -70,9 +68,9 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
-        df["double"].type() shouldBe typeOf<Double?>()
-        df["time"].type() shouldBe typeOf<LocalDateTime>()
+        df["duplicate1"].type() shouldBe TypeOf.NULLABLE_STRING
+        df["double"].type() shouldBe TypeOf.NULLABLE_DOUBLE
+        df["time"].type() shouldBe TypeOf.LOCAL_DATE_TIME
 
         println(df)
     }
@@ -89,10 +87,10 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
-        df["double"].type() shouldBe typeOf<Double?>()
-        df["number"].type() shouldBe typeOf<Double>()
-        df["time"].type() shouldBe typeOf<LocalDateTime>()
+        df["duplicate1"].type() shouldBe TypeOf.NULLABLE_STRING
+        df["double"].type() shouldBe TypeOf.NULLABLE_DOUBLE
+        df["number"].type() shouldBe TypeOf.DOUBLE
+        df["time"].type() shouldBe TypeOf.LOCAL_DATE_TIME
 
         println(df)
     }
@@ -140,7 +138,7 @@ class CsvTests {
         val header = ('A'..'K').map { it.toString() }
         val df = DataFrame.readCSV(simpleCsv, header = header, skipLines = 1)
         df.columnNames() shouldBe header
-        df["B"].type() shouldBe typeOf<Int>()
+        df["B"].type() shouldBe TypeOf.INT
 
         val headerShort = ('A'..'E').map { it.toString() }
         val dfShort = DataFrame.readCSV(simpleCsv, header = headerShort, skipLines = 1)
@@ -178,8 +176,8 @@ class CsvTests {
     @Test
     fun `if string starts with a number, it should be parsed as a string anyway`() {
         val df = DataFrame.readCSV(durationCsv)
-        df["duration"].type() shouldBe typeOf<String>()
-        df["floatDuration"].type() shouldBe typeOf<String>()
+        df["duration"].type() shouldBe TypeOf.STRING
+        df["floatDuration"].type() shouldBe TypeOf.STRING
     }
 
     @Test
@@ -261,8 +259,7 @@ class CsvTests {
     fun `check integrity of example data`() {
         val df = DataFrame.readCSV("../data/jetbrains_repositories.csv")
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
-        df.columnTypes() shouldBe
-            listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
+        df.columnTypes() shouldBe listOf(TypeOf.STRING, TypeOf.URL, TypeOf.INT, TypeOf.STRING, TypeOf.INT)
         df shouldBe DataFrame.readCSV("../data/jetbrains repositories.csv")
     }
 
@@ -301,7 +298,7 @@ class CsvTests {
         emptyCsvFileManualHeader.apply {
             isEmpty() shouldBe true
             columnNames() shouldBe listOf("a", "b", "c")
-            columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+            columnTypes() shouldBe listOf(TypeOf.STRING, TypeOf.STRING, TypeOf.STRING)
         }
 
         val emptyCsvFileWithHeader = DataFrame.readCSV(
@@ -310,7 +307,7 @@ class CsvTests {
         emptyCsvFileWithHeader.apply {
             isEmpty() shouldBe true
             columnNames() shouldBe listOf("a", "b", "c")
-            columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
+            columnTypes() shouldBe listOf(TypeOf.STRING, TypeOf.STRING, TypeOf.STRING)
         }
 
         val emptyTsvStr = DataFrame.readTSV(File.createTempFile("empty", "tsv"))

@@ -122,7 +122,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -188,8 +187,8 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
-import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -275,8 +274,8 @@ class DataFrameTests : BaseTest() {
         df.ncol shouldBe 2
         df.nrow shouldBe 2
         df.columnNames() shouldBe listOf("name", "age")
-        df["name"].type() shouldBe typeOf<String>()
-        df["age"].type() shouldBe typeOf<Int?>()
+        df["name"].type() shouldBe TypeOf.STRING
+        df["age"].type() shouldBe TypeOf.NULLABLE_INT
     }
 
     @Test
@@ -947,7 +946,7 @@ class DataFrameTests : BaseTest() {
         val df = typed.add {
             expr(infer = Infer.Type) { f } into "f"
         }
-        df["f"].type() shouldBe typeOf<Int>()
+        df["f"].type() shouldBe TypeOf.INT
     }
 
     @Test
@@ -1033,11 +1032,11 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `union dataframes with different type of the same column`() {
         val df2 = dataFrameOf("age")(32.6, 56.3, null)
-        df2["age"].type() shouldBe typeOf<Double?>()
+        df2["age"].type() shouldBe TypeOf.NULLABLE_DOUBLE
         val merged = df.concat(df2)
-        merged["age"].type() shouldBe typeOf<Number?>()
+        merged["age"].type() shouldBe TypeOf.NULLABLE_NUMBER
         val updated = merged.convert("age") { "age"<Number?>()?.toDouble() }
-        updated["age"].type() shouldBe typeOf<Double?>()
+        updated["age"].type() shouldBe TypeOf.NULLABLE_DOUBLE
     }
 
     @Test
@@ -1064,10 +1063,10 @@ class DataFrameTests : BaseTest() {
     fun `addRow`() {
         val res = typed.append("Bob", null, "Paris", null)
         res.nrow shouldBe typed.nrow + 1
-        res.name.type() shouldBe typeOf<String>()
-        res.age.type() shouldBe typeOf<Int?>()
-        res.city.type() shouldBe typeOf<String?>()
-        res.weight.type() shouldBe typeOf<Int?>()
+        res.name.type() shouldBe TypeOf.STRING
+        res.age.type() shouldBe TypeOf.NULLABLE_INT
+        res.city.type() shouldBe TypeOf.NULLABLE_STRING
+        res.weight.type() shouldBe TypeOf.NULLABLE_INT
 
         val row = res.last()
         row.name shouldBe "Bob"
@@ -1563,7 +1562,7 @@ class DataFrameTests : BaseTest() {
         mean.ncol shouldBe 2
         mean.columnNames() shouldBe listOf("age", "weight")
         mean.columns().forEach {
-            it.type() shouldBe typeOf<Double>()
+            it.type() shouldBe TypeOf.DOUBLE
         }
     }
 
@@ -1572,8 +1571,8 @@ class DataFrameTests : BaseTest() {
         val d = typed.groupBy { name }.mean()
         d.columnNames() shouldBe listOf("name", "age", "weight")
         d.nrow shouldBe typed.name.countDistinct()
-        d["age"].type() shouldBe typeOf<Double>()
-        d["weight"].type() shouldBe typeOf<Double>()
+        d["age"].type() shouldBe TypeOf.DOUBLE
+        d["weight"].type() shouldBe TypeOf.DOUBLE
     }
 
     @Test
@@ -1888,7 +1887,7 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf('a'..'f').randomInt(3)
         df.nrow shouldBe 3
         df.ncol shouldBe ('a'..'f').count()
-        df.columns().forEach { it.type() shouldBe typeOf<Int>() }
+        df.columns().forEach { it.type() shouldBe TypeOf.INT }
     }
 
     @Test
@@ -1921,7 +1920,7 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf(names).nulls<Double>(10)
         df.nrow shouldBe 10
         df.ncol shouldBe 2
-        df.columns().forEach { col -> (col.type() == typeOf<Double?>() && col.allNulls()) shouldBe true }
+        df.columns().forEach { col -> (col.type() == TypeOf.NULLABLE_DOUBLE && col.allNulls()) shouldBe true }
     }
 
     @Test
@@ -1931,7 +1930,7 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf(first, second).fill(5) { true }
         df.nrow shouldBe 5
         df.ncol shouldBe 2
-        df.columns().forEach { col -> (col.type() == typeOf<Boolean>() && col.all { it == true }) shouldBe true }
+        df.columns().forEach { col -> (col.type() == TypeOf.BOOLEAN && col.all { it == true }) shouldBe true }
     }
 
     @Test
@@ -2095,7 +2094,7 @@ class DataFrameTests : BaseTest() {
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")
             group.columns().forEach {
-                it.type() shouldBe typeOf<Double?>()
+                it.type() shouldBe TypeOf.NULLABLE_DOUBLE
             }
         }
     }
@@ -2376,8 +2375,8 @@ class DataFrameTests : BaseTest() {
         val updated = typed
             .convert { weight }.toDouble()
             .update { colsOf<Number?>() }.where { name == "Charlie" }.withZero()
-        updated.age.type shouldBe typeOf<Int>()
-        updated["weight"].type shouldBe typeOf<Double>()
+        updated.age.type shouldBe TypeOf.INT
+        updated["weight"].type shouldBe TypeOf.DOUBLE
         val filtered = updated.filter { name == "Charlie" }
         filtered.nrow shouldBe 3
         filtered.age.forEach {
