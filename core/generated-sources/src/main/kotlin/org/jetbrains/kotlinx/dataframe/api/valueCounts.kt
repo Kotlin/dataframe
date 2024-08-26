@@ -7,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
+import org.jetbrains.kotlinx.dataframe.util.INT
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 // region DataSchema
 
@@ -42,7 +42,7 @@ public fun <T> DataColumn<T>.valueCounts(
     val nulls = if (dropNA) false else hasNulls()
     val values = DataColumn.create(name(), grouped.map { it.first }, type().withNullability(nulls))
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
-    val counts = DataColumn.create(countName, grouped.map { it.second }, typeOf<Int>())
+    val counts = DataColumn.create(countName, grouped.map { it.second }, INT)
     return dataFrameOf(values, counts).cast()
 }
 

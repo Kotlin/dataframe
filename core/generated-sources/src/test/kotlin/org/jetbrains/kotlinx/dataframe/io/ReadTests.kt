@@ -14,8 +14,8 @@ import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.util.INT
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class ReadTests {
 
@@ -105,6 +105,6 @@ class ReadTests {
         df.rowsCount() shouldBe 2
         df.columnsCount() shouldBe 3
         df.columnNames() shouldBe header
-        df.columnTypes() shouldBe List(3) { typeOf<Int>() }
+        df.columnTypes() shouldBe List(3) { INT }
     }
 }

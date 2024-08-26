@@ -14,15 +14,16 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.extractDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.getListType
-import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.util.ANY_FRAME
+import org.jetbrains.kotlinx.dataframe.util.LIST_ANY_FRAME
 
 internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
     groupBy { allExcept(columns) }.updateGroups {
         replace(columns).with { column ->
             val (value, type) = when (column.kind()) {
                 ColumnKind.Value -> (if (dropNA) column.dropNA() else column).toList() to getListType(column.type())
-                ColumnKind.Group -> column.asColumnGroup().extractDataFrame() to typeOf<AnyFrame>()
-                ColumnKind.Frame -> column.asAnyFrameColumn().concat() to typeOf<List<AnyFrame>>()
+                ColumnKind.Group -> column.asColumnGroup().extractDataFrame() to ANY_FRAME
+                ColumnKind.Frame -> column.asAnyFrameColumn().concat() to LIST_ANY_FRAME
             }
             var first = true
             column.map(type) {

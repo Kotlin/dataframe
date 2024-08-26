@@ -60,6 +60,8 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.BOOLEAN
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.junit.Test
 import java.util.AbstractSet
 import kotlin.reflect.KClass
@@ -135,9 +137,9 @@ class PivotTests {
             }.toSet()
 
         actual shouldBe expected
-        res["age"].type() shouldBe typeOf<Boolean>()
-        res["city"].type() shouldBe typeOf<Boolean>()
-        res["weight"].type() shouldBe typeOf<Boolean>()
+        res["age"].type() shouldBe BOOLEAN
+        res["city"].type() shouldBe BOOLEAN
+        res["weight"].type() shouldBe BOOLEAN
     }
 
     @Test
@@ -150,7 +152,7 @@ class PivotTests {
         val data = res.getColumnGroup("key")
 
         data["age"].type() shouldBe typeOf<List<Int>>()
-        data["city"].type() shouldBe typeOf<String>()
+        data["city"].type() shouldBe STRING
         data["weight"].type() shouldBe typeOf<Comparable<*>>() // Comparable<String + Int> -> Comparable<Nothing | *>
 
         res.renderToString(columnTypes = true, title = true) shouldBe
