@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
@@ -42,7 +43,6 @@ import org.jetbrains.kotlinx.dataframe.util.NULLABLE_STRING
 import org.jetbrains.kotlinx.dataframe.util.STRING
 import java.math.BigDecimal
 import java.net.URL
-import java.time.LocalTime
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

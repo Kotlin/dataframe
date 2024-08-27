@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
@@ -28,7 +29,6 @@ import org.jetbrains.kotlinx.dataframe.util.LOCAL_DATE_TIME
 import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.junit.Test
 import java.math.BigDecimal
-import java.time.LocalTime
 import java.util.Locale
 
 class ParserTests {
@@ -110,9 +110,9 @@ class ParserTests {
         )
         longCol.convertToLocalTime(TimeZone.UTC).shouldBe(
             columnOf(
-                LocalTime.of(0, 0, 1),
-                LocalTime.of(0, 1, 0),
-                LocalTime.of(1, 0, 0),
+                LocalTime(0, 0, 1),
+                LocalTime(0, 1, 0),
+                LocalTime(1, 0, 0),
             ),
         )
 
@@ -125,9 +125,9 @@ class ParserTests {
         )
         datetimeCol.convertToLocalTime().shouldBe(
             columnOf(
-                LocalTime.of(0, 0, 1),
-                LocalTime.of(0, 1, 0),
-                LocalTime.of(1, 0, 0),
+                LocalTime(0, 0, 1),
+                LocalTime(0, 1, 0),
+                LocalTime(1, 0, 0),
             ),
         )
     }
