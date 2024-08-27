@@ -9,8 +9,9 @@ import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.DOUBLE
+import org.jetbrains.kotlinx.dataframe.util.INT
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class StdTests {
 
@@ -21,11 +22,11 @@ class StdTests {
         val expected = 1.0
 
         value.values().std() shouldBe expected
-        value.values().std(typeOf<Int>()) shouldBe expected
+        value.values().std(INT) shouldBe expected
         value.std() shouldBe expected
         df[value].std() shouldBe expected
         df.std { value } shouldBe expected
-        df.std().columnTypes().single() shouldBe typeOf<Double>()
+        df.std().columnTypes().single() shouldBe DOUBLE
     }
 
     @Test
@@ -35,7 +36,7 @@ class StdTests {
         val expected = 1.0
 
         value.values().std() shouldBe expected
-        value.values().std(typeOf<Double>()) shouldBe expected
+        value.values().std(DOUBLE) shouldBe expected
         value.std() shouldBe expected
         df[value].std() shouldBe expected
         df.std { value } shouldBe expected

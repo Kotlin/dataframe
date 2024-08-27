@@ -22,9 +22,9 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.get
+import org.jetbrains.kotlinx.dataframe.util.BOOLEAN
 import org.junit.Test
 import java.text.DecimalFormatSymbols
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class BasicTests {
@@ -189,8 +189,8 @@ class BasicTests {
         val convertedDfAcc = df.convert { priority }.with { it == "yes" }
         val convertedDfStr = df.convert { "priority"<String>() }.with { it == "yes" }
 
-        convertedDfAcc[priority].type() shouldBe typeOf<Boolean>()
-        convertedDfAcc["priority"].type() shouldBe typeOf<Boolean>()
+        convertedDfAcc[priority].type() shouldBe BOOLEAN
+        convertedDfAcc["priority"].type() shouldBe BOOLEAN
 
         convertedDfStr[priority][5] shouldBe false
         convertedDfStr["priority"][5] shouldBe false

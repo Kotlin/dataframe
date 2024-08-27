@@ -10,8 +10,8 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.util.DOUBLE
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class AnimalsTests {
 
@@ -33,7 +33,7 @@ class AnimalsTests {
         mean.columnsCount() shouldBe 2
         mean.rowsCount() shouldBe 2
         mean.name.values() shouldBe listOf("age", "visits")
-        mean.value.type() shouldBe typeOf<Double>()
+        mean.value.type() shouldBe DOUBLE
     }
 
     @Test
