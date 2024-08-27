@@ -8,25 +8,25 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.math.cumSum
 import org.jetbrains.kotlinx.dataframe.math.defaultCumSumSkipNA
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import java.math.BigDecimal
 import kotlin.reflect.KProperty
-import kotlin.reflect.typeOf
 
 // region DataColumn
 
 public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> =
     when (type()) {
-        typeOf<Double>() -> cast<Double>().cumSum(skipNA).cast()
-        typeOf<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
-        typeOf<Float>() -> cast<Float>().cumSum(skipNA).cast()
-        typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
-        typeOf<Int>() -> cast<Int>().cumSum().cast()
-        typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
-        typeOf<Long>() -> cast<Long>().cumSum().cast()
-        typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
-        typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
-        typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
-        typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
+        TypeOf.DOUBLE -> cast<Double>().cumSum(skipNA).cast()
+        TypeOf.NULLABLE_DOUBLE -> cast<Double?>().cumSum(skipNA).cast()
+        TypeOf.FLOAT -> cast<Float>().cumSum(skipNA).cast()
+        TypeOf.NULLABLE_FLOAT -> cast<Float?>().cumSum(skipNA).cast()
+        TypeOf.INT -> cast<Int>().cumSum().cast()
+        TypeOf.NULLABLE_INT -> cast<Int?>().cumSum(skipNA).cast()
+        TypeOf.LONG -> cast<Long>().cumSum().cast()
+        TypeOf.NULLABLE_LONG -> cast<Long?>().cumSum(skipNA).cast()
+        TypeOf.BIG_DECIMAL -> cast<BigDecimal>().cumSum().cast()
+        TypeOf.NULLABLE_BIG_DECIMAL -> cast<BigDecimal?>().cumSum(skipNA).cast()
+        TypeOf.NUMBER, TypeOf.NULLABLE_NUMBER -> convertToDouble().cumSum(skipNA).cast()
         else -> error("Cumsum for type ${type()} is not supported")
     }
 

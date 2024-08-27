@@ -5,8 +5,8 @@ import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class ColsOfTests : ColumnsSelectionDslTests() {
 
@@ -31,12 +31,12 @@ class ColsOfTests : ColumnsSelectionDslTests() {
             df.select { name { firstName and lastName } },
             df.select { name.colsOf<String>() },
             df.select { name.colsOf<String> { "Name" in it.name } },
-            df.select { "name".colsOf<String>(typeOf<String>()) },
-            df.select { "name".colsOf<String>(typeOf<String>()) { "Name" in it.name } },
-            df.select { Person::name.colsOf<String>(typeOf<String>()) },
-            df.select { Person::name.colsOf<String>(typeOf<String>()) { "Name" in it.name } },
-            df.select { pathOf("name").colsOf<String>(typeOf<String>()) },
-            df.select { pathOf("name").colsOf<String>(typeOf<String>()) { "Name" in it.name } },
+            df.select { "name".colsOf<String>(TypeOf.STRING) },
+            df.select { "name".colsOf<String>(TypeOf.STRING) { "Name" in it.name } },
+            df.select { Person::name.colsOf<String>(TypeOf.STRING) },
+            df.select { Person::name.colsOf<String>(TypeOf.STRING) { "Name" in it.name } },
+            df.select { pathOf("name").colsOf<String>(TypeOf.STRING) },
+            df.select { pathOf("name").colsOf<String>(TypeOf.STRING) { "Name" in it.name } },
         ).shouldAllBeEqual()
     }
 }

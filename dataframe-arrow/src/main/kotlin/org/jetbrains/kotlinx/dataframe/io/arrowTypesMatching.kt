@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.apache.arrow.vector.types.DateUnit
 import org.apache.arrow.vector.types.FloatingPointPrecision
 import org.apache.arrow.vector.types.TimeUnit
@@ -9,11 +12,11 @@ import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.typeClass
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
 
 /**
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
@@ -80,23 +83,24 @@ public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit 
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<LocalDate?>()) ||
-            columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDate?>()) ->
+        columnType.isSubtypeOf(typeOf<JavaLocalDate?>()) ||
+            columnType.isSubtypeOf(typeOf<LocalDate?>()) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Date(DateUnit.DAY), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<LocalDateTime?>()) ||
-            columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDateTime?>()) ->
+        columnType.isSubtypeOf(typeOf<JavaLocalDateTime?>()) ||
+            columnType.isSubtypeOf(typeOf<LocalDateTime?>()) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<LocalTime?>()) ->
+        columnType.isSubtypeOf(typeOf<JavaLocalTime?>()) ||
+            columnType.isSubtypeOf(typeOf<LocalTime>()) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null),
