@@ -4,6 +4,9 @@ The [Kotlin Notebook Plugin for IntelliJ IDEA](https://plugins.jetbrains.com/plu
 
 - **Visual Data Exploration**: View and navigate through your data using paginated tables. Drill down into nested data if your DataFrame contains nested structures.
 - **Intuitive Sorting**: Sort data with a single click on column headers, facilitating rapid data organization and analysis.
+
+https://github.com/user-attachments/assets/aeae1c79-9755-4558-bac4-420bf1331f39
+
 - **Convenient Data Copying**: Copy data from tables for use in other tools or analyses.
 - **Export Functionality**: Export your data to various formats including CSV and Excel for further analysis in other applications.
 
