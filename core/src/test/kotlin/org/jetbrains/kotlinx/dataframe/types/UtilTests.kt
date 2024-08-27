@@ -10,15 +10,20 @@ import org.jetbrains.kotlinx.dataframe.impl.createType
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
-import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
 import java.io.Serializable
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+@Suppress("ktlint:standard:property-naming", "PrivatePropertyName")
 class UtilTests {
+
+    private val `List(Int)` = typeOf<List<Int>>()
+    private val `List(Int)?` = typeOf<List<Int>?>()
+    private val `List(Int?)` = typeOf<List<Int?>>()
 
     @OptIn(ExperimentalUnsignedTypes::class)
     @Test
@@ -97,23 +102,23 @@ class UtilTests {
 
     @Test
     fun `createType test`() {
-        emptyList<KClass<*>>().createType(nullable = false) shouldBe nothingType(nullable = false)
-        emptyList<KClass<*>>().createType(nullable = true) shouldBe nothingType(nullable = true)
+        emptyList<KClass<*>>().createType(nullable = false) shouldBe TypeOf.NOTHING
+        emptyList<KClass<*>>().createType(nullable = true) shouldBe TypeOf.NULLABLE_NOTHING
 
-        listOf(Nothing::class).createType(nullable = false) shouldBe nothingType(nullable = false)
-        listOf(Nothing::class).createType(nullable = true) shouldBe nothingType(nullable = true)
+        listOf(Nothing::class).createType(nullable = false) shouldBe TypeOf.NOTHING
+        listOf(Nothing::class).createType(nullable = true) shouldBe TypeOf.NULLABLE_NOTHING
     }
 
     @Test
     fun `commonType classes test`() {
-        emptyList<KClass<*>>().commonType(false, typeOf<List<Int>>()) shouldBe typeOf<List<Int>>()
-        emptyList<KClass<*>>().commonType(true, typeOf<List<Int>>()) shouldBe typeOf<List<Int>?>()
+        emptyList<KClass<*>>().commonType(false, `List(Int)`) shouldBe `List(Int)`
+        emptyList<KClass<*>>().commonType(true, `List(Int)`) shouldBe `List(Int)?`
 
-        listOf(Nothing::class).commonType(false) shouldBe nothingType(nullable = false)
-        listOf(Nothing::class).commonType(true) shouldBe nothingType(nullable = true)
+        listOf(Nothing::class).commonType(false) shouldBe TypeOf.NOTHING
+        listOf(Nothing::class).commonType(true) shouldBe TypeOf.NULLABLE_NOTHING
 
-        emptyList<KClass<*>>().commonType(false, null) shouldBe nothingType(nullable = false)
-        emptyList<KClass<*>>().commonType(true, null) shouldBe nothingType(nullable = true)
+        emptyList<KClass<*>>().commonType(false, null) shouldBe TypeOf.NOTHING
+        emptyList<KClass<*>>().commonType(true, null) shouldBe TypeOf.NULLABLE_NOTHING
     }
 
     val a = listOf(1, 2.0, "a")
@@ -123,54 +128,54 @@ class UtilTests {
 
     @Test
     fun `guessValueType no listification`() {
-        guessValueType(sequenceOf(1, 2)) shouldBe typeOf<Int>()
-        guessValueType(sequenceOf(1, 2, null)) shouldBe typeOf<Int?>()
+        guessValueType(sequenceOf(1, 2)) shouldBe TypeOf.INT
+        guessValueType(sequenceOf(1, 2, null)) shouldBe TypeOf.NULLABLE_INT
 
-        guessValueType(sequenceOf(1, 2.0)) shouldBe typeOf<Number>()
-        guessValueType(sequenceOf(1, 2.0, null)) shouldBe typeOf<Number?>()
+        guessValueType(sequenceOf(1, 2.0)) shouldBe TypeOf.NUMBER
+        guessValueType(sequenceOf(1, 2.0, null)) shouldBe TypeOf.NULLABLE_NUMBER
 
         guessValueType(sequenceOf(1, 2.0, "a")) shouldBe typeOf<Comparable<*>>()
         guessValueType(sequenceOf(1, 2.0, "a", null)) shouldBe typeOf<Comparable<*>?>()
 
-        guessValueType(sequenceOf(1, 2.0, "a", listOf(1, 2))) shouldBe typeOf<Any>()
-        guessValueType(sequenceOf(1, 2.0, "a", null, listOf(1, 2))) shouldBe typeOf<Any?>()
+        guessValueType(sequenceOf(1, 2.0, "a", listOf(1, 2))) shouldBe TypeOf.ANY
+        guessValueType(sequenceOf(1, 2.0, "a", null, listOf(1, 2))) shouldBe TypeOf.NULLABLE_ANY
 
-        guessValueType(sequenceOf(null, null)) shouldBe nothingType(nullable = true)
-        guessValueType(emptySequence()) shouldBe nothingType(nullable = false)
+        guessValueType(sequenceOf(null, null)) shouldBe TypeOf.NULLABLE_NOTHING
+        guessValueType(emptySequence()) shouldBe TypeOf.NOTHING
 
         guessValueType(sequenceOf(listOf<Int?>(null))) shouldBe typeOf<List<Nothing?>>()
         guessValueType(sequenceOf(emptyList<Int>())) shouldBe typeOf<List<Nothing>>()
         guessValueType(sequenceOf(listOf<Int?>(null), emptyList<Int>())) shouldBe typeOf<List<Nothing?>>()
         guessValueType(sequenceOf(emptyList<Int>(), null)) shouldBe typeOf<List<Nothing>?>()
 
-        guessValueType(sequenceOf(listOf(1), emptyList())) shouldBe typeOf<List<Int>>()
-        guessValueType(sequenceOf(listOf(1, null), emptyList())) shouldBe typeOf<List<Int?>>()
-        guessValueType(sequenceOf(listOf(1), listOf(null))) shouldBe typeOf<List<Int?>>()
+        guessValueType(sequenceOf(listOf(1), emptyList())) shouldBe `List(Int)`
+        guessValueType(sequenceOf(listOf(1, null), emptyList())) shouldBe `List(Int?)`
+        guessValueType(sequenceOf(listOf(1), listOf(null))) shouldBe `List(Int?)`
 
-        guessValueType(sequenceOf(1, emptyList<Any?>())) shouldBe typeOf<Any>()
+        guessValueType(sequenceOf(1, emptyList<Any?>())) shouldBe TypeOf.ANY
 
-        guessValueType(sequenceOf(1, 2, listOf(1), emptySet<Any>())) shouldBe typeOf<Any>()
+        guessValueType(sequenceOf(1, 2, listOf(1), emptySet<Any>())) shouldBe TypeOf.ANY
         guessValueType(sequenceOf(listOf(1), setOf(1.0, 2.0))) shouldBe typeOf<Collection<Number>>()
     }
 
     @Test
     fun `guessValueType with listification`() {
-        guessValueType(sequenceOf(1, 2), listifyValues = true) shouldBe typeOf<Int>()
-        guessValueType(sequenceOf(1, 2, null), listifyValues = true) shouldBe typeOf<Int?>()
+        guessValueType(sequenceOf(1, 2), listifyValues = true) shouldBe TypeOf.INT
+        guessValueType(sequenceOf(1, 2, null), listifyValues = true) shouldBe TypeOf.NULLABLE_INT
 
-        guessValueType(sequenceOf(1, 2.0), listifyValues = true) shouldBe typeOf<Number>()
-        guessValueType(sequenceOf(1, 2.0, null), listifyValues = true) shouldBe typeOf<Number?>()
+        guessValueType(sequenceOf(1, 2.0), listifyValues = true) shouldBe TypeOf.NUMBER
+        guessValueType(sequenceOf(1, 2.0, null), listifyValues = true) shouldBe TypeOf.NULLABLE_NUMBER
 
         guessValueType(sequenceOf(1, 2.0, "a"), listifyValues = true) shouldBe typeOf<Comparable<*>>()
         guessValueType(sequenceOf(1, 2.0, "a", null), listifyValues = true) shouldBe typeOf<Comparable<*>?>()
 
-        guessValueType(sequenceOf(1, 2, listOf(1)), listifyValues = true) shouldBe typeOf<List<Int>>()
-        guessValueType(sequenceOf(1, 2, listOf(1), null), listifyValues = true) shouldBe typeOf<List<Int>>()
-        guessValueType(sequenceOf(1, 2, listOf(1, null)), listifyValues = true) shouldBe typeOf<List<Int?>>()
-        guessValueType(sequenceOf(1, 2, listOf(1, null), null), listifyValues = true) shouldBe typeOf<List<Int?>>()
+        guessValueType(sequenceOf(1, 2, listOf(1)), listifyValues = true) shouldBe `List(Int)`
+        guessValueType(sequenceOf(1, 2, listOf(1), null), listifyValues = true) shouldBe `List(Int)`
+        guessValueType(sequenceOf(1, 2, listOf(1, null)), listifyValues = true) shouldBe `List(Int?)`
+        guessValueType(sequenceOf(1, 2, listOf(1, null), null), listifyValues = true) shouldBe `List(Int?)`
 
-        guessValueType(sequenceOf(1, 2, listOf(null)), listifyValues = true) shouldBe typeOf<List<Int?>>()
-        guessValueType(sequenceOf(1, 2, listOf(null), null), listifyValues = true) shouldBe typeOf<List<Int?>>()
+        guessValueType(sequenceOf(1, 2, listOf(null)), listifyValues = true) shouldBe `List(Int?)`
+        guessValueType(sequenceOf(1, 2, listOf(null), null), listifyValues = true) shouldBe `List(Int?)`
 
         guessValueType(sequenceOf(emptyList<Int>()), listifyValues = true) shouldBe typeOf<List<Nothing>>()
         guessValueType(sequenceOf(emptyList<Int>(), null), listifyValues = true) shouldBe typeOf<List<Nothing>>()
@@ -180,28 +185,28 @@ class UtilTests {
         guessValueType(
             values = sequenceOf(1, 2, listOf(1), emptySet<Any>()),
             listifyValues = true,
-        ) shouldBe typeOf<Any>()
+        ) shouldBe TypeOf.ANY
         guessValueType(
             values = sequenceOf(1, 2, listOf(1), null, emptySet<Any>()),
             listifyValues = true,
-        ) shouldBe typeOf<Any?>()
+        ) shouldBe TypeOf.NULLABLE_ANY
         guessValueType(
             values = sequenceOf(1, 2, listOf(1, null), emptySet<Any>()),
             listifyValues = true,
-        ) shouldBe typeOf<Any>()
+        ) shouldBe TypeOf.ANY
         guessValueType(
             values = sequenceOf(1, 2, listOf(1, null), null, emptySet<Any>()),
             listifyValues = true,
-        ) shouldBe typeOf<Any?>()
+        ) shouldBe TypeOf.NULLABLE_ANY
 
         guessValueType(
             values = sequenceOf(1, 2, listOf(null), emptySet<Any>()),
             listifyValues = true,
-        ) shouldBe typeOf<Any>()
+        ) shouldBe TypeOf.ANY
         guessValueType(
             values = sequenceOf(1, 2, listOf(null), null, emptySet<Any>()),
             listifyValues = true,
-        ) shouldBe typeOf<Any?>()
+        ) shouldBe TypeOf.NULLABLE_ANY
 
         guessValueType(
             values = sequenceOf(emptyList(), emptySet<Any>()),
@@ -250,28 +255,28 @@ class UtilTests {
     @Test
     fun `commonType KTypes test`() {
         // TODO issue #471: Type inference incorrect w.r.t. variance
-        listOf(null).commonType(false) shouldBe typeOf<Any?>()
+        listOf(null).commonType(false) shouldBe TypeOf.NULLABLE_ANY
 //        listOf(null).commonType(true) shouldBe null
-        listOf(typeOf<Int>(), typeOf<Any>()).commonType() shouldBe typeOf<Any>()
-        listOf(typeOf<Int>(), typeOf<List<Any>>()).commonType() shouldBe typeOf<Any>()
-        listOf(typeOf<Int>(), typeOf<List<Any>?>()).commonType() shouldBe typeOf<Any?>()
-        listOf(typeOf<Int>(), typeOf<Int>()).commonType() shouldBe typeOf<Int>()
-        listOf(typeOf<Int>(), typeOf<Int?>()).commonType() shouldBe typeOf<Int?>()
-        listOf(typeOf<Int>(), nothingType(true)).commonType() shouldBe typeOf<Int?>()
-        listOf(typeOf<Int>(), nothingType(false)).commonType() shouldBe typeOf<Int>()
+        listOf(TypeOf.INT, TypeOf.ANY).commonType() shouldBe TypeOf.ANY
+        listOf(TypeOf.INT, typeOf<List<Any>>()).commonType() shouldBe TypeOf.ANY
+        listOf(TypeOf.INT, typeOf<List<Any>?>()).commonType() shouldBe TypeOf.NULLABLE_ANY
+        listOf(TypeOf.INT, TypeOf.INT).commonType() shouldBe TypeOf.INT
+        listOf(TypeOf.INT, TypeOf.NULLABLE_INT).commonType() shouldBe TypeOf.NULLABLE_INT
+        listOf(TypeOf.INT, TypeOf.NULLABLE_NOTHING).commonType() shouldBe TypeOf.NULLABLE_INT
+        listOf(TypeOf.INT, TypeOf.NOTHING).commonType() shouldBe TypeOf.INT
         listOf(typeOf<Comparable<Int>>(), typeOf<Comparable<Int>>()).commonType() shouldBe typeOf<Comparable<Int>>()
 //        listOf(typeOf<Comparable<Int>>(), typeOf<Comparable<String>>()).commonType() shouldBe typeOf<Comparable<*>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType(false) shouldBe typeOf<List<Comparable<Nothing>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType() shouldBe typeOf<List<Comparable<*>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType(false) shouldBe typeOf<Collection<Comparable<Nothing>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType() shouldBe typeOf<Collection<Comparable<*>>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>>>()).commonType() shouldBe typeOf<List<Any>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType(false) shouldBe typeOf<List<Any?>>()
-//        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType() shouldBe typeOf<List<*>>()
+//        listOf(INT_LIST, typeOf<List<String>>()).commonType(false) shouldBe typeOf<List<Comparable<Nothing>>>()
+//        listOf(INT_LIST, typeOf<List<String>>()).commonType() shouldBe typeOf<List<Comparable<*>>>()
+//        listOf(INT_LIST, typeOf<Set<String>>()).commonType(false) shouldBe typeOf<Collection<Comparable<Nothing>>>()
+//        listOf(INT_LIST, typeOf<Set<String>>()).commonType() shouldBe typeOf<Collection<Comparable<*>>>()
+//        listOf(INT_LIST, typeOf<List<List<Any>>>()).commonType() shouldBe typeOf<List<Any>>()
+//        listOf(INT_LIST, typeOf<List<List<Any>?>>()).commonType(false) shouldBe typeOf<List<Any?>>()
+//        listOf(INT_LIST, typeOf<List<List<Any>?>>()).commonType() shouldBe typeOf<List<*>>()
 //        listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>()).commonType() shouldBe typeOf<Collection<Nothing>>()
-        listOf(nothingType(false)).commonType() shouldBe nothingType(false)
-        listOf(nothingType(true)).commonType() shouldBe nothingType(true)
-//        emptyList<KType>().commonType() shouldBe nothingType(false)
+        listOf(TypeOf.NOTHING).commonType() shouldBe TypeOf.NOTHING
+        listOf(TypeOf.NULLABLE_NOTHING).commonType() shouldBe TypeOf.NULLABLE_NOTHING
+//        emptyList<KType>().commonType() shouldBe NOTHING
         listOf(
             typeOf<AbstractType<Int>>(),
             typeOf<AbstractType<Int>>(),
@@ -294,65 +299,69 @@ class UtilTests {
 //            typeOf<AbstractType<Any>>()
 //        ).commonType() shouldBe typeOf<AbstractType<in Int>>()
 
-        listOf(typeOf<Int>(), typeOf<List<Any>>()).commonType() shouldBe typeOf<Any>()
-        listOf(typeOf<Int>(), typeOf<List<Any>?>()).commonType() shouldBe typeOf<Any?>()
-        listOf(typeOf<Int>(), typeOf<Int>()).commonType() shouldBe typeOf<Int>()
-        listOf(typeOf<Int>(), typeOf<Int?>()).commonType() shouldBe typeOf<Int?>()
-        listOf(typeOf<Int>(), nothingType(true)).commonType() shouldBe typeOf<Int?>()
-        listOf(typeOf<Int>(), nothingType(false)).commonType() shouldBe typeOf<Int>()
+        listOf(TypeOf.INT, typeOf<List<Any>>()).commonType() shouldBe TypeOf.ANY
+        listOf(TypeOf.INT, typeOf<List<Any>?>()).commonType() shouldBe TypeOf.NULLABLE_ANY
+        listOf(TypeOf.INT, TypeOf.INT).commonType() shouldBe TypeOf.INT
+        listOf(TypeOf.INT, TypeOf.NULLABLE_INT).commonType() shouldBe TypeOf.NULLABLE_INT
+        listOf(TypeOf.INT, TypeOf.NULLABLE_NOTHING).commonType() shouldBe TypeOf.NULLABLE_INT
+        listOf(TypeOf.INT, TypeOf.NOTHING).commonType() shouldBe TypeOf.INT
         listOf(
-            typeOf<List<Int>>(),
+            `List(Int)`,
             typeOf<List<String>>(),
         ).commonType(false) shouldBe typeOf<List<out Comparable<Nothing>>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<String>>()).commonType() shouldBe typeOf<List<out Comparable<*>>>()
+        listOf(`List(Int)`, typeOf<List<String>>()).commonType() shouldBe typeOf<List<out Comparable<*>>>()
         listOf(
-            typeOf<List<Int>>(),
+            `List(Int)`,
             typeOf<Set<String>>(),
         ).commonType(false) shouldBe typeOf<Collection<out Comparable<Nothing>>>()
-        listOf(typeOf<List<Int>>(), typeOf<Set<String>>()).commonType() shouldBe typeOf<Collection<out Comparable<*>>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>>>()).commonType() shouldBe typeOf<List<out Any>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType(false) shouldBe typeOf<List<out Any?>>()
-        listOf(typeOf<List<Int>>(), typeOf<List<List<Any>?>>()).commonType() shouldBe typeOf<List<*>>()
+        listOf(`List(Int)`, typeOf<Set<String>>()).commonType() shouldBe typeOf<Collection<out Comparable<*>>>()
+        listOf(`List(Int)`, typeOf<List<List<Any>>>()).commonType() shouldBe typeOf<List<out Any>>()
+        listOf(`List(Int)`, typeOf<List<List<Any>?>>()).commonType(false) shouldBe typeOf<List<out Any?>>()
+        listOf(`List(Int)`, typeOf<List<List<Any>?>>()).commonType() shouldBe typeOf<List<*>>()
         listOf(typeOf<List<Nothing>>(), typeOf<Set<Nothing>>()).commonType() shouldBe typeOf<Collection<out Nothing>>()
-        listOf(nothingType(false)).commonType() shouldBe nothingType(false)
-        listOf(nothingType(true)).commonType() shouldBe nothingType(true)
-        listOf<KType>().commonType() shouldBe typeOf<Any>()
+        listOf(TypeOf.NOTHING).commonType() shouldBe TypeOf.NOTHING
+        listOf(TypeOf.NULLABLE_NOTHING).commonType() shouldBe TypeOf.NULLABLE_NOTHING
+        listOf<KType>().commonType() shouldBe TypeOf.ANY
     }
 
     @Test
     fun `commonTypeListifyValues test`() {
         // TODO issue #471: Type inference incorrect w.r.t. variance
-        listOf<KType>().commonTypeListifyValues() shouldBe typeOf<Any>()
-        listOf(typeOf<Int>(), typeOf<Int>()).commonTypeListifyValues() shouldBe typeOf<Int>()
-        listOf(typeOf<Int>(), typeOf<Int?>()).commonTypeListifyValues() shouldBe typeOf<Int?>()
-        listOf(typeOf<Int>(), nothingType(true)).commonTypeListifyValues() shouldBe typeOf<Int?>()
-        listOf(typeOf<Int>(), nothingType(false)).commonTypeListifyValues() shouldBe typeOf<Int>()
-        listOf(typeOf<Int>(), typeOf<Double>(), nothingType(true)).commonTypeListifyValues() shouldBe typeOf<Number?>()
+        listOf<KType>().commonTypeListifyValues() shouldBe TypeOf.ANY
+        listOf(TypeOf.INT, TypeOf.INT).commonTypeListifyValues() shouldBe TypeOf.INT
+        listOf(TypeOf.INT, TypeOf.NULLABLE_INT).commonTypeListifyValues() shouldBe TypeOf.NULLABLE_INT
+        listOf(TypeOf.INT, TypeOf.NULLABLE_NOTHING).commonTypeListifyValues() shouldBe TypeOf.NULLABLE_INT
+        listOf(TypeOf.INT, TypeOf.NOTHING).commonTypeListifyValues() shouldBe TypeOf.INT
         listOf(
-            typeOf<List<Int>>(),
+            TypeOf.INT,
+            TypeOf.DOUBLE,
+            TypeOf.NULLABLE_NOTHING
+        ).commonTypeListifyValues() shouldBe TypeOf.NULLABLE_NUMBER
+        listOf(
+            `List(Int)`,
             typeOf<List<String>>(),
         ).commonTypeListifyValues() shouldBe typeOf<List<out Comparable<*>>>()
         listOf(
-            typeOf<List<Int>>(),
+            `List(Int)`,
             typeOf<Set<String>>(),
         ).commonTypeListifyValues() shouldBe typeOf<Collection<out Comparable<*>>>()
 
         listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Int>>()
+            TypeOf.INT,
+            `List(Int)`,
+        ).commonTypeListifyValues() shouldBe `List(Int)`
 
         listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Int>>()
+            TypeOf.INT,
+            `List(Int)`,
+            TypeOf.NULLABLE_NOTHING,
+        ).commonTypeListifyValues() shouldBe `List(Int)`
 
         listOf(
-            typeOf<Int>(),
-            typeOf<List<Int?>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<List<Int?>>()
+            TypeOf.INT,
+            `List(Int?)`,
+            TypeOf.NULLABLE_NOTHING,
+        ).commonTypeListifyValues() shouldBe `List(Int?)`
 
         listOf(
             typeOf<List<Nothing>>(),
@@ -361,21 +370,21 @@ class UtilTests {
 
         listOf(
             typeOf<List<Nothing>>(),
-            nothingType(true),
+            TypeOf.NULLABLE_NOTHING,
         ).commonTypeListifyValues() shouldBe typeOf<List<Nothing>>()
 
         listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
+            TypeOf.INT,
+            `List(Int)`,
             typeOf<Set<Any>>(),
-        ).commonTypeListifyValues() shouldBe typeOf<Any>()
+        ).commonTypeListifyValues() shouldBe TypeOf.ANY
 
         listOf(
-            typeOf<Int>(),
-            typeOf<List<Int>>(),
+            TypeOf.INT,
+            `List(Int)`,
             typeOf<Set<Any>>(),
-            nothingType(true),
-        ).commonTypeListifyValues() shouldBe typeOf<Any?>()
+            TypeOf.NULLABLE_NOTHING,
+        ).commonTypeListifyValues() shouldBe TypeOf.NULLABLE_ANY
 
         listOf(
             typeOf<List<Nothing>>(),
@@ -385,7 +394,7 @@ class UtilTests {
         listOf(
             typeOf<List<Nothing>>(),
             typeOf<Set<Nothing>>(),
-            nothingType(true),
+            TypeOf.NULLABLE_NOTHING,
         ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing>?>()
 
         listOf(
