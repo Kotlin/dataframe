@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KCallable
@@ -161,14 +162,14 @@ internal fun Iterable<KType?>.commonType(useStar: Boolean = true): KType {
     val distinct = distinct()
     val nullable = distinct.any { it?.isMarkedNullable ?: true }
     return when {
-        distinct.isEmpty() || distinct.contains(null) -> typeOf<Any>().withNullability(nullable)
+        distinct.isEmpty() || distinct.contains(null) -> TypeOf.ANY.withNullability(nullable)
 
         distinct.size == 1 -> distinct.single()!!
 
         else -> {
             // common parent class of all KTypes
             val kClass = commonParent(distinct.map { it!!.jvmErasure })
-                ?: return typeOf<Any>().withNullability(nullable)
+                ?: return TypeOf.ANY.withNullability(nullable)
 
             // all KTypes projected to the common parent class with filled-in generic type parameters (no <T>, but <UpperBound>)
             val projections = distinct

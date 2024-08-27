@@ -2,8 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class PivotTests {
@@ -46,7 +46,7 @@ class PivotTests {
         val cols = pivoted.getColumns { allExcept(a).colsAtAnyDepth { !it.isColumnGroup() } }
         cols.size shouldBe 4
         cols.forEach {
-            it.type() shouldBe typeOf<Char>()
+            it.type() shouldBe TypeOf.CHAR
         }
         pivoted["w"]["first"][0] shouldBe '-'
         pivoted["w"]["last"][0] shouldBe '?'
@@ -184,6 +184,6 @@ class PivotTests {
             .groupBy("name")
             .default(0)
             .min()
-        pivoted["city"]["London"]["isHappy"].type() shouldBe listOf(typeOf<Int>(), typeOf<Boolean>()).commonType()
+        pivoted["city"]["London"]["isHappy"].type() shouldBe listOf(TypeOf.INT, TypeOf.BOOLEAN).commonType()
     }
 }

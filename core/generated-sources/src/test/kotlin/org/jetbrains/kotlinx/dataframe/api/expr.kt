@@ -2,8 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.samples.api.age
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class ExprTests : ColumnsSelectionDslTests() {
 
@@ -28,17 +28,17 @@ class ExprTests : ColumnsSelectionDslTests() {
             }.toList() shouldBe listOf(1, 1, 2, 3, 5, 8, 13)
 
         df.select {
-            expr<_, Int?>(infer = Infer.None) { 1 }.type() shouldBe typeOf<Int?>()
-            expr<_, Int>(infer = Infer.None) { 1 }.type() shouldBe typeOf<Int>()
-            expr<_, Any?>(infer = Infer.None) { 1 }.type() shouldBe typeOf<Any?>()
+            expr<_, Int?>(infer = Infer.None) { 1 }.type() shouldBe TypeOf.NULLABLE_INT
+            expr<_, Int>(infer = Infer.None) { 1 }.type() shouldBe TypeOf.INT
+            expr<_, Any?>(infer = Infer.None) { 1 }.type() shouldBe TypeOf.NULLABLE_ANY
 
-            expr<_, Int?>(infer = Infer.Nulls) { 1 }.type() shouldBe typeOf<Int>()
-            expr<_, Int>(infer = Infer.Nulls) { 1 }.type() shouldBe typeOf<Int>()
-            expr<_, Any?>(infer = Infer.Nulls) { 1 }.type() shouldBe typeOf<Any>()
+            expr<_, Int?>(infer = Infer.Nulls) { 1 }.type() shouldBe TypeOf.INT
+            expr<_, Int>(infer = Infer.Nulls) { 1 }.type() shouldBe TypeOf.INT
+            expr<_, Any?>(infer = Infer.Nulls) { 1 }.type() shouldBe TypeOf.ANY
 
-            expr<_, Int?>(infer = Infer.Type) { 1 }.type() shouldBe typeOf<Int>()
-            expr<_, Int>(infer = Infer.Type) { 1 }.type() shouldBe typeOf<Int>()
-            expr<_, Any?>(infer = Infer.Type) { 1 }.type() shouldBe typeOf<Int>()
+            expr<_, Int?>(infer = Infer.Type) { 1 }.type() shouldBe TypeOf.INT
+            expr<_, Int>(infer = Infer.Type) { 1 }.type() shouldBe TypeOf.INT
+            expr<_, Any?>(infer = Infer.Type) { 1 }.type() shouldBe TypeOf.INT
 
             none()
         }

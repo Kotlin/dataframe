@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
@@ -265,7 +266,7 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
     val distinct = distinct()
     val nullable = distinct.any { it.isMarkedNullable }
     return when {
-        distinct.isEmpty() -> typeOf<Any>().withNullability(nullable)
+        distinct.isEmpty() -> TypeOf.ANY.withNullability(nullable)
 
         distinct.size == 1 -> distinct.single()
 
@@ -321,7 +322,7 @@ internal fun Iterable<KType>.commonTypeListifyValues(useStar: Boolean = true): K
 
                 else -> {
                     val kClass = commonParent(distinct.map { it.jvmErasure })
-                        ?: return typeOf<Any>().withNullability(nullable)
+                        ?: return TypeOf.ANY.withNullability(nullable)
                     val projections = distinct
                         .map { it.projectUpTo(kClass).replaceGenericTypeParametersWithUpperbound() }
                     require(projections.all { it.jvmErasure == kClass })
@@ -516,12 +517,7 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
 internal val KType.isNothing: Boolean
     get() = classifier == Nothing::class
 
-internal fun nothingType(nullable: Boolean): KType =
-    if (nullable) {
-        typeOf<List<Nothing?>>()
-    } else {
-        typeOf<List<Nothing>>()
-    }.arguments.first().type!!
+internal fun nothingType(nullable: Boolean): KType = if (nullable) TypeOf.NULLABLE_NOTHING else TypeOf.NOTHING
 
 @OptIn(ExperimentalUnsignedTypes::class)
 private val primitiveArrayClasses = setOf(
