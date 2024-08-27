@@ -9,8 +9,8 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class GatherTests {
@@ -152,7 +152,7 @@ class GatherTests {
             .gather { a and b }
             .into("key", "value")
 
-        gathered["value"].type() shouldBe typeOf<Int>()
+        gathered["value"].type() shouldBe TypeOf.INT
     }
 
     @Test

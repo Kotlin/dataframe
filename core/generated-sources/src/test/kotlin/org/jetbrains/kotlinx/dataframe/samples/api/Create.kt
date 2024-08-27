@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
 import java.io.File
 import kotlin.reflect.typeOf
@@ -346,8 +347,8 @@ class Create : TestBase() {
         // SampleEnd
         df.columnNames() shouldBe listOf("name", "age")
         df.rowsCount() shouldBe 3
-        df["name"].type() shouldBe typeOf<String>()
-        df["age"].type() shouldBe typeOf<Int>()
+        df["name"].type() shouldBe TypeOf.STRING
+        df["age"].type() shouldBe TypeOf.INT
     }
 
     @Test
@@ -373,8 +374,8 @@ class Create : TestBase() {
         // SampleEnd
         df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 3
-        df["name"].type() shouldBe typeOf<String>()
-        df["age"].type() shouldBe typeOf<Int>()
+        df["name"].type() shouldBe TypeOf.STRING
+        df["age"].type() shouldBe TypeOf.INT
     }
 
     @Test
@@ -397,7 +398,7 @@ class Create : TestBase() {
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
         df["name"].kind shouldBe ColumnKind.Group
-        df["name"]["firstName"].type() shouldBe typeOf<String>()
+        df["name"]["firstName"].type() shouldBe TypeOf.STRING
         df["scores"].kind shouldBe ColumnKind.Frame
     }
 

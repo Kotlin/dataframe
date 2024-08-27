@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
@@ -36,9 +37,9 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.path
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import java.math.BigDecimal
 import java.net.URL
-import java.time.LocalTime
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -130,8 +131,8 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
 public fun AnyCol.convertTo(newType: KType): AnyCol {
-    val isTypesAreCorrect = this.type().withNullability(true).isSubtypeOf(typeOf<String?>()) &&
-        newType.withNullability(true) == typeOf<Double?>()
+    val isTypesAreCorrect = this.type().withNullability(true).isSubtypeOf(TypeOf.NULLABLE_STRING) &&
+        newType.withNullability(true) == TypeOf.NULLABLE_DOUBLE
 
     if (isTypesAreCorrect) {
         return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)
@@ -208,8 +209,8 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
                 value?.let {
                     parser(value.trim()) ?: throw TypeConversionException(
                         value = value,
-                        from = typeOf<String>(),
-                        to = typeOf<Double>(),
+                        from = TypeOf.STRING,
+                        to = TypeOf.DOUBLE,
                         column = path,
                     )
                 }

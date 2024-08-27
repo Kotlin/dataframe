@@ -6,10 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import kotlin.reflect.KProperty
-import kotlin.reflect.typeOf
 
-internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typeOf<Boolean>()
+internal fun AnyCol.isSuitableForCorr() = isSubtypeOf(TypeOf.NUMBER) || type() == TypeOf.BOOLEAN
 
 // region DataFrame
 
