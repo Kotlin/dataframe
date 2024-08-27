@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
 import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
+import org.jetbrains.kotlinx.dataframe.util.ANY
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.time.temporal.Temporal
@@ -35,7 +36,6 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
-import kotlin.reflect.typeOf
 
 private val valueTypes = setOf(
     String::class,
@@ -245,7 +245,7 @@ internal fun convertToDataFrame(
             if (type.classifier is KClass<*>) {
                 type
             } else {
-                typeOf<Any>()
+                ANY
             }
         }
         val kClass = returnType.classifier as KClass<*>
