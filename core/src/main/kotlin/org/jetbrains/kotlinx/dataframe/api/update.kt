@@ -155,6 +155,7 @@ private interface UpdateWithNote
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetSelectingColumnsOperationArg]}
  * @include [Update.DslParam]
  */
+@Interpretable("Update0")
 public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> = Update(this, null, columns)
 
 /**
