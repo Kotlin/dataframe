@@ -56,6 +56,8 @@ public class JSON(
 
     override val testOrder: Int = 10_000
 
+    private val typeClashTacticType = typeOf<TypeClashTactic>()
+
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
         DefaultReadJsonMethod(
             path = pathRepresentation,
@@ -71,7 +73,7 @@ public class JSON(
                 )
                 .add(
                     "typeClashTactic",
-                    typeOf<TypeClashTactic>(),
+                    typeClashTacticType,
                     "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
                 ),
         )

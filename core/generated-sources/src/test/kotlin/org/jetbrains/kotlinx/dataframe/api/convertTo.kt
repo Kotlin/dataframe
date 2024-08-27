@@ -11,8 +11,8 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class ConvertToTests {
@@ -31,7 +31,7 @@ class ConvertToTests {
         val converted = df.convertTo<DataFrameSchema>()
 
         converted[groups].forEach {
-            it["a"].type() shouldBe typeOf<Int>()
+            it["a"].type() shouldBe TypeOf.INT
         }
     }
 
