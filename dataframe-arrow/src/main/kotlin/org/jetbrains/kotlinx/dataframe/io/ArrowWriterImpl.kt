@@ -54,9 +54,9 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.name
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.jetbrains.kotlinx.dataframe.values
 import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -85,7 +85,7 @@ internal class ArrowWriterImpl(
     private fun countTotalBytes(column: AnyCol): Long? {
         val columnType = column.type()
         return when {
-            columnType.isSubtypeOf(typeOf<String?>()) ->
+            columnType.isSubtypeOf(TypeOf.NULLABLE_STRING) ->
                 column.values.fold(0L) { totalBytes, value ->
                     totalBytes + value.toString().length * 4
                 }

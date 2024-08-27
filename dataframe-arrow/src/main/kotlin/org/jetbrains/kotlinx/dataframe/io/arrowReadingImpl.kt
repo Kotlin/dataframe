@@ -57,6 +57,7 @@ import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.channels.ReadableByteChannel
@@ -241,12 +242,7 @@ private fun LargeVarCharVector.values(range: IntRange): List<String?> =
         }
     }
 
-internal fun nothingType(nullable: Boolean): KType =
-    if (nullable) {
-        typeOf<List<Nothing?>>()
-    } else {
-        typeOf<List<Nothing>>()
-    }.arguments.first().type!!
+internal fun nothingType(nullable: Boolean): KType = if (nullable) TypeOf.NULLABLE_NOTHING else TypeOf.NOTHING
 
 private inline fun <reified T> List<T?>.withTypeNullable(
     expectedNulls: Boolean,

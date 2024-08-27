@@ -43,6 +43,7 @@ import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Assert
 import org.junit.Test
 import java.io.ByteArrayInputStream
@@ -52,7 +53,6 @@ import java.net.URL
 import java.nio.channels.Channels
 import java.sql.DriverManager
 import java.util.Locale
-import kotlin.reflect.typeOf
 
 internal class ArrowKtTest {
 
@@ -292,10 +292,10 @@ internal class ArrowKtTest {
             citiesDeserialized["area"] shouldBe citiesExampleFrame["area"]
             // cities["settled"].type() refers to FlexibleTypeImpl(LocalDate..LocalDate?)
             // and does not match typeOf<LocalDate>()
-            citiesDeserialized["settled"].type() shouldBe typeOf<LocalDate>()
+            citiesDeserialized["settled"].type() shouldBe TypeOf.LOCAL_DATE
             citiesDeserialized["settled"].values() shouldBe citiesExampleFrame["settled"].values()
             // cities["page_in_wiki"].type() is URI, not supported by Arrow directly
-            citiesDeserialized["page_in_wiki"].type() shouldBe typeOf<String>()
+            citiesDeserialized["page_in_wiki"].type() shouldBe TypeOf.STRING
             citiesDeserialized["page_in_wiki"].values() shouldBe
                 citiesExampleFrame["page_in_wiki"].values().map { it.toString() }
         }
@@ -313,9 +313,9 @@ internal class ArrowKtTest {
         val testFile = File.createTempFile("cities", "arrow")
         citiesExampleFrame.arrowWriter(Schema.fromJSON(citiesExampleSchema)).use { it.writeArrowFeather(testFile) }
         val citiesDeserialized = DataFrame.readArrowFeather(testFile, NullabilityOptions.Checking)
-        citiesDeserialized["population"].type() shouldBe typeOf<Long?>()
-        citiesDeserialized["area"].type() shouldBe typeOf<Float>()
-        citiesDeserialized["settled"].type() shouldBe typeOf<LocalDateTime>()
+        citiesDeserialized["population"].type() shouldBe TypeOf.NULLABLE_LONG
+        citiesDeserialized["area"].type() shouldBe TypeOf.FLOAT
+        citiesDeserialized["settled"].type() shouldBe TypeOf.LOCAL_DATE_TIME
         shouldThrow<IllegalArgumentException> { citiesDeserialized["page_in_wiki"] }
         citiesDeserialized["film_in_youtube"] shouldBe
             DataColumn.createValueColumn(
@@ -412,13 +412,13 @@ internal class ArrowKtTest {
             ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored(
                 "settled",
                 TypeConverterNotFoundException(
-                    typeOf<Boolean>(),
-                    typeOf<kotlinx.datetime.LocalDateTime?>(),
+                    TypeOf.BOOLEAN,
+                    TypeOf.NULLABLE_LOCAL_DATE_TIME,
                     pathOf("settled"),
                 ),
             ).toString(),
         )
-        DataFrame.readArrowFeather(testLoyalType)["settled"].type() shouldBe typeOf<Boolean>()
+        DataFrame.readArrowFeather(testLoyalType)["settled"].type() shouldBe TypeOf.BOOLEAN
     }
 
     @Test
@@ -451,7 +451,7 @@ internal class ArrowKtTest {
             warnings.add(warning)
         }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.NullableMismatch.NullValueIgnored("settled", 0))
-        DataFrame.readArrowFeather(testLoyalNullable)["settled"].type() shouldBe typeOf<LocalDateTime?>()
+        DataFrame.readArrowFeather(testLoyalNullable)["settled"].type() shouldBe TypeOf.NULLABLE_LOCAL_DATE_TIME
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].values() shouldBe
             arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList()
     }
