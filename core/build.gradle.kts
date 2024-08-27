@@ -367,7 +367,8 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
+        optIn.addAll("kotlin.RequiresOptIn")
+        freeCompilerArgs.addAll("-Xinline-classes")
     }
 }
 
