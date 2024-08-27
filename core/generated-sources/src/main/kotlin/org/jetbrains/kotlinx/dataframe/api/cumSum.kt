@@ -8,25 +8,36 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.math.cumSum
 import org.jetbrains.kotlinx.dataframe.math.defaultCumSumSkipNA
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.BIG_DECIMAL
+import org.jetbrains.kotlinx.dataframe.util.DOUBLE
+import org.jetbrains.kotlinx.dataframe.util.FLOAT
+import org.jetbrains.kotlinx.dataframe.util.INT
+import org.jetbrains.kotlinx.dataframe.util.LONG
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_BIG_DECIMAL
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_DOUBLE
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_FLOAT
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_INT
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_LONG
+import org.jetbrains.kotlinx.dataframe.util.NULLABLE_NUMBER
+import org.jetbrains.kotlinx.dataframe.util.NUMBER
 import java.math.BigDecimal
 import kotlin.reflect.KProperty
-import kotlin.reflect.typeOf
 
 // region DataColumn
 
 public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> =
     when (type()) {
-        typeOf<Double>() -> cast<Double>().cumSum(skipNA).cast()
-        typeOf<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
-        typeOf<Float>() -> cast<Float>().cumSum(skipNA).cast()
-        typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
-        typeOf<Int>() -> cast<Int>().cumSum().cast()
-        typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
-        typeOf<Long>() -> cast<Long>().cumSum().cast()
-        typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
-        typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
-        typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
-        typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
+        DOUBLE -> cast<Double>().cumSum(skipNA).cast()
+        NULLABLE_DOUBLE -> cast<Double?>().cumSum(skipNA).cast()
+        FLOAT -> cast<Float>().cumSum(skipNA).cast()
+        NULLABLE_FLOAT -> cast<Float?>().cumSum(skipNA).cast()
+        INT -> cast<Int>().cumSum().cast()
+        NULLABLE_INT -> cast<Int?>().cumSum(skipNA).cast()
+        LONG -> cast<Long>().cumSum().cast()
+        NULLABLE_LONG -> cast<Long?>().cumSum(skipNA).cast()
+        BIG_DECIMAL -> cast<BigDecimal>().cumSum().cast()
+        NULLABLE_BIG_DECIMAL -> cast<BigDecimal?>().cumSum(skipNA).cast()
+        NUMBER, NULLABLE_NUMBER -> convertToDouble().cumSum(skipNA).cast()
         else -> error("Cumsum for type ${type()} is not supported")
     }
 

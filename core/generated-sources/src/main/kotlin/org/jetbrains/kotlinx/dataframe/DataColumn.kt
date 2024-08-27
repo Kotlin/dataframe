@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.UNIT
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -115,7 +116,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
         public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
             create(name, values, typeOf<T>(), infer)
 
-        public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
+        public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), UNIT)
     }
 
     public fun hasNulls(): Boolean = type().isMarkedNullable
