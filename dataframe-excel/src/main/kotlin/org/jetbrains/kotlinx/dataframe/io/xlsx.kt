@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
@@ -37,10 +39,10 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.URL
 import java.nio.file.Files
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.Calendar
-import java.util.Date
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.util.Date as JavaDate
 
 public class Excel : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
@@ -474,15 +476,15 @@ public fun <T> DataFrame<T>.writeExcel(
                 cell.setCellValueByGuessedType(any)
 
                 when (any) {
-                    is LocalDate, is kotlinx.datetime.LocalDate -> {
+                    is JavaLocalDate, is LocalDate -> {
                         cell.cellStyle = cellStyleDate
                     }
 
-                    is Calendar, is Date -> {
+                    is Calendar, is JavaDate -> {
                         cell.cellStyle = cellStyleDateTime
                     }
 
-                    is LocalDateTime -> {
+                    is JavaLocalDateTime -> {
                         if (any.year < 1900) {
                             cell.cellStyle = cellStyleTime
                         } else {
@@ -490,7 +492,7 @@ public fun <T> DataFrame<T>.writeExcel(
                         }
                     }
 
-                    is kotlinx.datetime.LocalDateTime -> {
+                    is LocalDateTime -> {
                         if (any.year < 1900) {
                             cell.cellStyle = cellStyleTime
                         } else {
@@ -515,23 +517,23 @@ private fun Cell.setCellValueByGuessedType(any: Any) =
 
         is Number -> this.setCellValue(any.toDouble())
 
-        is LocalDate -> this.setCellValue(any)
+        is JavaLocalDate -> this.setCellValue(any)
 
-        is LocalDateTime -> this.setTime(any)
+        is JavaLocalDateTime -> this.setTime(any)
 
         is Boolean -> this.setCellValue(any)
 
         is Calendar -> this.setDate(any.time)
 
-        is Date -> this.setDate(any)
+        is JavaDate -> this.setDate(any)
 
         is RichTextString -> this.setCellValue(any)
 
         is String -> this.setCellValue(any)
 
-        is kotlinx.datetime.LocalDate -> this.setCellValue(any.toJavaLocalDate())
+        is LocalDate -> this.setCellValue(any.toJavaLocalDate())
 
-        is kotlinx.datetime.LocalDateTime -> this.setTime(any.toJavaLocalDateTime())
+        is LocalDateTime -> this.setTime(any.toJavaLocalDateTime())
 
         // Another option would be to serialize everything else to string,
         // but people can convert columns to string with any serialization framework they want
@@ -545,7 +547,7 @@ private fun Cell.setCellValueByGuessedType(any: Any) =
  * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
  * POI can not set 1899 year directly.
  */
-private fun Cell.setTime(localDateTime: LocalDateTime) {
+private fun Cell.setTime(localDateTime: JavaLocalDateTime) {
     this.setCellValue(DateUtil.getExcelDate(localDateTime.plusDays(1)) - 1.0)
 }
 
@@ -555,7 +557,7 @@ private fun Cell.setTime(localDateTime: LocalDateTime) {
  * are displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
  * POI can not set 1899 year directly.
  */
-private fun Cell.setDate(date: Date) {
+private fun Cell.setDate(date: JavaDate) {
     val calStart = LocaleUtil.getLocaleCalendar()
     calStart.time = date
     this.setTime(calStart.toInstant().atZone(getUserTimeZone().toZoneId()).toLocalDateTime())

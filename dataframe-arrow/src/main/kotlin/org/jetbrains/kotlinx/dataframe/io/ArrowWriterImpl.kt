@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toJavaLocalTime
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BaseFixedWidthVector
 import org.apache.arrow.vector.BaseVariableWidthVector
@@ -53,9 +54,9 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.name
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.jetbrains.kotlinx.dataframe.values
 import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.typeOf
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -84,7 +85,7 @@ internal class ArrowWriterImpl(
     private fun countTotalBytes(column: AnyCol): Long? {
         val columnType = column.type()
         return when {
-            columnType.isSubtypeOf(typeOf<String?>()) ->
+            columnType.isSubtypeOf(TypeOf.NULLABLE_STRING) ->
                 column.values.fold(0L) { totalBytes, value ->
                     totalBytes + value.toString().length * 4
                 }
@@ -226,8 +227,7 @@ internal class ArrowWriterImpl(
                     }
 
             is DateDayVector ->
-                column
-                    .convertToLocalDate()
+                column.convertToLocalDate()
                     .forEachIndexed { i, value ->
                         value?.also { vector.set(i, value.toJavaLocalDate().toEpochDay().toInt()) }
                             ?: vector.setNull(i)
@@ -243,29 +243,30 @@ internal class ArrowWriterImpl(
             is TimeNanoVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toNanoOfDay()) }
+                        value?.also { vector.set(i, value.toJavaLocalTime().toNanoOfDay()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMicroVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toNanoOfDay() / 1000) }
+                        value?.also { vector.set(i, value.toJavaLocalTime().toNanoOfDay() / 1000) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMilliVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()) }
+                        value?.also { vector.set(i, (value.toJavaLocalTime().toNanoOfDay() / 1000 / 1000).toInt()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeSecVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()) }
-                            ?: vector.setNull(i)
+                        value?.also {
+                            vector.set(i, (value.toJavaLocalTime().toNanoOfDay() / 1000 / 1000 / 1000).toInt())
+                        } ?: vector.setNull(i)
                     }
 
             else -> {

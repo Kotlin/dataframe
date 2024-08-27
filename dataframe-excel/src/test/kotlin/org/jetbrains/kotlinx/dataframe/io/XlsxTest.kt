@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.LocalDateTime
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -11,10 +10,10 @@ import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
 import java.net.URL
 import java.nio.file.Files
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class XlsxTest {
@@ -86,7 +85,7 @@ class XlsxTest {
     @Test
     fun `read date time`() {
         val df = DataFrame.read(testResource("datetime.xlsx"))
-        df["time"].type() shouldBe typeOf<LocalDateTime>()
+        df["time"].type() shouldBe TypeOf.LOCAL_DATE_TIME
     }
 
     @Test
@@ -196,7 +195,7 @@ class XlsxTest {
             testResource("mixed_column.xlsx"),
             stringColumns = StringColumns("A"),
         )
-        df["col1"].type() shouldBe typeOf<String>()
+        df["col1"].type() shouldBe TypeOf.STRING
         df shouldBe dataFrameOf("col1")("100", "A100", "B100", "C100")
     }
 }

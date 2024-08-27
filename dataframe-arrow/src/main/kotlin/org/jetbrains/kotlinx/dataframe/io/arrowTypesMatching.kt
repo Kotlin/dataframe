@@ -9,11 +9,12 @@ import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.typeClass
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
 
 /**
  * Create Arrow [Field] (note: this is part of [Schema], does not contain data itself) that has the same
@@ -24,79 +25,80 @@ public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit 
     val columnType = column.type()
     val nullable = columnType.isMarkedNullable
     return when {
-        columnType.isSubtypeOf(typeOf<String?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_STRING) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Utf8(), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<Boolean?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_BOOLEAN) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Bool(), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<Byte?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_BYTE) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Int(8, true), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<Short?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_SHORT) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Int(16, true), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<Int?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_INT) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Int(32, true), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<Long?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_LONG) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Int(64, true), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<Float?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_FLOAT) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<Double?>()) ->
+        columnType.isSubtypeOf(TypeOf.NULLABLE_DOUBLE) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<LocalDate?>()) ||
-            columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDate?>()) ->
+        columnType.isSubtypeOf(typeOfNullableJavaLocalDate) ||
+            columnType.isSubtypeOf(TypeOf.NULLABLE_LOCAL_DATE) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Date(DateUnit.DAY), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<LocalDateTime?>()) ||
-            columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDateTime?>()) ->
+        columnType.isSubtypeOf(typeOfNullableJavaLocalDateTime) ||
+            columnType.isSubtypeOf(TypeOf.NULLABLE_LOCAL_DATE_TIME) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null),
                 emptyList(),
             )
 
-        columnType.isSubtypeOf(typeOf<LocalTime?>()) ->
+        columnType.isSubtypeOf(typeOfNullableJavaLocalTime) ||
+            columnType.isSubtypeOf(TypeOf.NULLABLE_LOCAL_TIME) ->
             Field(
                 column.name(),
                 FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null),
@@ -109,6 +111,10 @@ public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit 
         }
     }
 }
+
+private val typeOfNullableJavaLocalDateTime = typeOf<JavaLocalDateTime?>()
+private val typeOfNullableJavaLocalDate = typeOf<JavaLocalDate?>()
+private val typeOfNullableJavaLocalTime = typeOf<JavaLocalTime?>()
 
 /**
  * Create Arrow [Schema] matching [this] actual data.
