@@ -8,3 +8,6 @@ The [Kotlin Notebook Plugin for IntelliJ IDEA](https://plugins.jetbrains.com/plu
 - **Export Functionality**: Export your data to various formats including CSV and Excel for further analysis in other applications.
 
 To get started, ensure you have the latest version of the Kotlin Notebook Plugin installed in IntelliJ IDEA, and begin exploring your data using Kotlin DataFrames in your notebook cells.
+
+For more information on using the Kotlin Notebook Plugin,
+refer to the [official documentation](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
