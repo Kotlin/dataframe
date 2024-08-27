@@ -13,7 +13,7 @@ repositories {
     mavenLocal() // in case of local dataframe development
 }
 
-application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.titanic.ml.TitanicKt")
+application.mainClass = "org.jetbrains.kotlinx.dataframe.examples.titanic.ml.TitanicKt"
 
 dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")

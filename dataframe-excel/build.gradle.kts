@@ -28,10 +28,10 @@ dependencies {
 
 kotlinPublications {
     publication {
-        publicationName.set("dataframeExcel")
-        artifactId.set(project.name)
-        description.set("Excel support for Kotlin Dataframe")
-        packageName.set(artifactId)
+        publicationName = "dataframeExcel"
+        artifactId = project.name
+        description = "Excel support for Kotlin Dataframe"
+        packageName = artifactId
     }
 }
 

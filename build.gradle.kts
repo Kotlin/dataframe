@@ -222,7 +222,7 @@ subprojects {
 }
 
 kotlinPublications {
-    fairDokkaJars.set(false)
+    fairDokkaJars = false
 
     sonatypeSettings(
         project.findProperty("kds.sonatype.user") as String?,
@@ -238,7 +238,7 @@ kotlinPublications {
 
     pom {
         githubRepo("Kotlin", "dataframe")
-        inceptionYear.set("2021")
+        inceptionYear = "2021"
         licenses {
             apache2()
         }
@@ -252,10 +252,10 @@ kotlinPublications {
     }
 
     publication {
-        publicationName.set("api")
-        artifactId.set(projectName)
-        description.set("Data processing in Kotlin")
-        packageName.set(artifactId)
+        publicationName = "api"
+        artifactId = projectName
+        description = "Data processing in Kotlin"
+        packageName = artifactId
     }
 
     localRepositories {

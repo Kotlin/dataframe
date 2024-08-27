@@ -61,7 +61,7 @@ sourceSets {
 
 tasks.create<JavaExec>("generateTests") {
     classpath = sourceSets.test.get().runtimeClasspath
-    mainClass.set("org.jetbrains.kotlinx.dataframe.GenerateTestsKt")
+    mainClass = "org.jetbrains.kotlinx.dataframe.GenerateTestsKt"
 }
 
 fun Test.setLibraryProperty(propName: String, jarName: String) {
