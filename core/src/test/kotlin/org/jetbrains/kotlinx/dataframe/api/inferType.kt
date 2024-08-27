@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -12,7 +13,7 @@ class InferTypeTests {
         col.type() shouldBe typeOf<Comparable<*>>()
         val filtered = col.filter { it is String }
         filtered.type() shouldBe typeOf<Comparable<*>>()
-        filtered.inferType().type() shouldBe typeOf<String>()
+        filtered.inferType().type() shouldBe STRING
     }
 
     open class A<T>(val value: T)

@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.util.INT
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class SplitTests {
@@ -47,7 +47,7 @@ class SplitTests {
             .parse()
         split.schema().print()
         split["title"].hasNulls shouldBe false
-        split["year"].type shouldBe typeOf<Int>()
+        split["year"].type shouldBe INT
     }
 
     @Test

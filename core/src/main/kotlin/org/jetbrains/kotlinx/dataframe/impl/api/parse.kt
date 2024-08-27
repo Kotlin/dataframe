@@ -1,8 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -28,12 +32,10 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.STRING
 import java.net.URL
 import java.text.NumberFormat
 import java.text.ParsePosition
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.util.Locale
@@ -43,6 +45,11 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
+import java.time.Duration as JavaDuration
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
 
 internal interface StringParser<T> {
     fun toConverter(options: ParserOptions?): TypeConverter
@@ -60,7 +67,7 @@ internal open class DelegatedStringParser<T>(override val type: KType, val handl
             if (str in nulls) {
                 null
             } else {
-                handle(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
+                handle(str) ?: throw TypeConversionException(it, STRING, type, null)
             }
         }
     }
@@ -80,7 +87,7 @@ internal class StringParserWithFormat<T>(
             if (str in nulls) {
                 null
             } else {
-                handler(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
+                handler(str) ?: throw TypeConversionException(it, STRING, type, null)
             }
         }
     }
@@ -132,17 +139,20 @@ internal object Parsers : GlobalParserOptions {
         resetToDefault()
     }
 
-    private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? {
+    private fun String.toJavaLocalDateTimeOrNull(formatter: DateTimeFormatter?): JavaLocalDateTime? {
         if (formatter != null) {
-            return catchSilent { java.time.LocalDateTime.parse(this, formatter) }
+            return catchSilent { JavaLocalDateTime.parse(this, formatter) }
         } else {
-            catchSilent { LocalDateTime.parse(this) }?.let { return it }
+            catchSilent { JavaLocalDateTime.parse(this) }?.let { return it }
             for (format in formatters) {
-                catchSilent { java.time.LocalDateTime.parse(this, format) }?.let { return it }
+                catchSilent { JavaLocalDateTime.parse(this, format) }?.let { return it }
             }
         }
         return null
     }
+
+    private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? =
+        toJavaLocalDateTimeOrNull(formatter)?.toKotlinLocalDateTime()
 
     private fun String.toUrlOrNull(): URL? = if (isURL(this)) catchSilent { URL(this) } else null
 
@@ -157,29 +167,35 @@ internal object Parsers : GlobalParserOptions {
             else -> null
         }
 
-    private fun String.toLocalDateOrNull(formatter: DateTimeFormatter?): LocalDate? {
+    private fun String.toJavaLocalDateOrNull(formatter: DateTimeFormatter?): JavaLocalDate? {
         if (formatter != null) {
-            return catchSilent { java.time.LocalDate.parse(this, formatter) }
+            return catchSilent { JavaLocalDate.parse(this, formatter) }
         } else {
-            catchSilent { LocalDate.parse(this) }?.let { return it }
+            catchSilent { JavaLocalDate.parse(this) }?.let { return it }
             for (format in formatters) {
-                catchSilent { java.time.LocalDate.parse(this, format) }?.let { return it }
+                catchSilent { JavaLocalDate.parse(this, format) }?.let { return it }
             }
         }
         return null
     }
 
-    private fun String.toLocalTimeOrNull(formatter: DateTimeFormatter?): LocalTime? {
+    private fun String.toLocalDateOrNull(formatter: DateTimeFormatter?): LocalDate? =
+        toJavaLocalDateOrNull(formatter)?.toKotlinLocalDate()
+
+    private fun String.toJavaLocalTimeOrNull(formatter: DateTimeFormatter?): JavaLocalTime? {
         if (formatter != null) {
-            return catchSilent { LocalTime.parse(this, formatter) }
+            return catchSilent { JavaLocalTime.parse(this, formatter) }
         } else {
-            catchSilent { LocalTime.parse(this) }?.let { return it }
+            catchSilent { JavaLocalTime.parse(this) }?.let { return it }
             for (format in formatters) {
-                catchSilent { LocalTime.parse(this, format) }?.let { return it }
+                catchSilent { JavaLocalTime.parse(this, format) }?.let { return it }
             }
         }
         return null
     }
+
+    private fun String.toLocalTimeOrNull(formatter: DateTimeFormatter?): LocalTime? =
+        toJavaLocalTimeOrNull(formatter)?.toKotlinLocalTime()
 
     private fun String.parseDouble(format: NumberFormat) =
         when (uppercase(Locale.getDefault())) {
@@ -234,39 +250,45 @@ internal object Parsers : GlobalParserOptions {
         // kotlinx.datetime.Instant
         stringParser { catchSilent { Instant.parse(it) } },
         // java.time.Instant
-        stringParser { catchSilent { java.time.Instant.parse(it) } },
+        stringParser { catchSilent { JavaInstant.parse(it) } },
         // kotlinx.datetime.LocalDateTime
-        stringParserWithOptions { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateTimeOrNull(formatter)?.toKotlinLocalDateTime() }
-            parser
-        },
-        // java.time.LocalDateTime
         stringParserWithOptions { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
             parser
         },
-        // kotlinx.datetime.LocalDate
+        // java.time.LocalDateTime
         stringParserWithOptions { options ->
             val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateOrNull(formatter)?.toKotlinLocalDate() }
+            val parser = { it: String -> it.toJavaLocalDateTimeOrNull(formatter) }
             parser
         },
-        // java.time.LocalDate
+        // kotlinx.datetime.LocalDate
         stringParserWithOptions { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalDateOrNull(formatter) }
             parser
         },
+        // java.time.LocalDate
+        stringParserWithOptions { options ->
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toJavaLocalDateOrNull(formatter) }
+            parser
+        },
         // kotlin.time.Duration
         stringParser { catchSilent { Duration.parse(it) } },
         // java.time.Duration
-        stringParser { catchSilent { java.time.Duration.parse(it) } },
-        // java.time.LocalTime
+        stringParser { catchSilent { JavaDuration.parse(it) } },
+        // kotlinx.datetime.LocalTime
         stringParserWithOptions { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalTimeOrNull(formatter) }
+            parser
+        },
+        // java.time.LocalTime
+        stringParserWithOptions { options ->
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toJavaLocalTimeOrNull(formatter) }
             parser
         },
         // java.net.URL
