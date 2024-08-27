@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
@@ -21,21 +22,20 @@ import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.times
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
 import java.math.BigDecimal
-import java.time.LocalTime
 import java.util.Locale
-import kotlin.reflect.typeOf
 
 class ParserTests {
 
     @Test
     fun `parse datetime with custom format`() {
         val col by columnOf("04.02.2021 -- 19:44:32")
-        col.tryParse().type() shouldBe typeOf<String>()
+        col.tryParse().type() shouldBe TypeOf.STRING
         DataFrame.parser.addDateTimePattern("dd.MM.uuuu -- HH:mm:ss")
         val parsed = col.parse()
-        parsed.type() shouldBe typeOf<LocalDateTime>()
+        parsed.type() shouldBe TypeOf.LOCAL_DATE_TIME
         parsed.cast<LocalDateTime>()[0].year shouldBe 2021
         DataFrame.parser.resetToDefault()
     }
@@ -62,7 +62,7 @@ class ParserTests {
     fun `convert mixed column`() {
         val col by columnOf(1.0, "1")
         val converted = col.convertTo<Int>()
-        converted.type() shouldBe typeOf<Int>()
+        converted.type() shouldBe TypeOf.INT
         converted[0] shouldBe 1
         converted[1] shouldBe 1
     }
@@ -71,7 +71,7 @@ class ParserTests {
     fun `convert BigDecimal column`() {
         val col by columnOf(BigDecimal(1.0), BigDecimal(0.321))
         val converted = col.convertTo<Float>()
-        converted.type() shouldBe typeOf<Float>()
+        converted.type() shouldBe TypeOf.FLOAT
         converted[0] shouldBe 1.0f
         converted[1] shouldBe 0.321f
     }
@@ -80,7 +80,7 @@ class ParserTests {
     fun `convert to Boolean`() {
         val col by columnOf(BigDecimal(1.0), BigDecimal(0.0), 0, 1, 10L, 0.0, 0.1)
         col.convertTo<Boolean>().shouldBe(
-            DataColumn.createValueColumn("col", listOf(true, false, false, true, true, false, true), typeOf<Boolean>()),
+            DataColumn.createValueColumn("col", listOf(true, false, false, true, true, false, true), TypeOf.BOOLEAN),
         )
     }
 
@@ -106,9 +106,9 @@ class ParserTests {
         )
         longCol.convertToLocalTime(TimeZone.UTC).shouldBe(
             columnOf(
-                LocalTime.of(0, 0, 1),
-                LocalTime.of(0, 1, 0),
-                LocalTime.of(1, 0, 0),
+                LocalTime(0, 0, 1),
+                LocalTime(0, 1, 0),
+                LocalTime(1, 0, 0),
             ),
         )
 
@@ -121,9 +121,9 @@ class ParserTests {
         )
         datetimeCol.convertToLocalTime().shouldBe(
             columnOf(
-                LocalTime.of(0, 0, 1),
-                LocalTime.of(0, 1, 0),
-                LocalTime.of(1, 0, 0),
+                LocalTime(0, 0, 1),
+                LocalTime(0, 1, 0),
+                LocalTime(1, 0, 0),
             ),
         )
     }
