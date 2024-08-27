@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.apache.commons.io.input.BOMInputStream
@@ -35,9 +38,6 @@ import java.io.StringWriter
 import java.math.BigDecimal
 import java.net.URL
 import java.nio.charset.Charset
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.full.withNullability

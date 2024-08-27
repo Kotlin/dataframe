@@ -5,6 +5,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalTime
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -14,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.util.TypeOf
 import org.junit.Test
-import java.time.LocalTime
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.hours
 
@@ -25,7 +25,7 @@ class ConvertTests {
         val time by columnOf("11?22?33", null)
         val converted = time.toDataFrame().convert { time }.toLocalTime("HH?mm?ss")[time]
         converted.hasNulls shouldBe true
-        converted[0] shouldBe LocalTime.of(11, 22, 33)
+        converted[0] shouldBe LocalTime(11, 22, 33)
     }
 
     @Test
