@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVRecord
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -95,7 +94,7 @@ public fun DataFrame.Companion.readDelimStr(
             .setHeader()
             .setDelimiter(delimiter)
             .build()
-        readDelim(it, format, colTypes, skipLines, readLines)
+        readDelim({ it }, format, colTypes, skipLines, readLines)
     }
 
 public fun DataFrame.Companion.read(
@@ -110,7 +109,7 @@ public fun DataFrame.Companion.read(
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
-            it,
+            { it },
             delimiter,
             header,
             isCompressed(fileOrUrl),
@@ -138,7 +137,7 @@ public fun DataFrame.Companion.readCSV(
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
-            it,
+            { it },
             delimiter,
             header,
             isCompressed(fileOrUrl),
@@ -164,7 +163,7 @@ public fun DataFrame.Companion.readCSV(
     parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readDelim(
-        FileInputStream(file),
+        { FileInputStream(file) },
         delimiter,
         header,
         isCompressed(file),
@@ -214,7 +213,7 @@ public fun DataFrame.Companion.readCSV(
     parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readDelim(
-        stream,
+        { stream },
         delimiter,
         header,
         isCompressed,
@@ -261,7 +260,7 @@ private fun getFormat(
         .build()
 
 public fun DataFrame.Companion.readDelim(
-    inStream: InputStream,
+    inStream: () -> InputStream,
     delimiter: Char = ',',
     header: List<String> = listOf(),
     isCompressed: Boolean = false,
@@ -273,20 +272,20 @@ public fun DataFrame.Companion.readDelim(
     charset: Charset = defaultCharset,
     parserOptions: ParserOptions? = null,
 ): AnyFrame =
-    if (isCompressed) {
-        InputStreamReader(GZIPInputStream(inStream), charset)
-    } else {
-        BufferedReader(InputStreamReader(inStream, charset))
-    }.run {
-        readDelim(
-            this,
-            getFormat(csvType, delimiter, header, duplicate),
-            colTypes,
-            skipLines,
-            readLines,
-            parserOptions,
-        )
-    }
+    readDelim(
+        {
+            if (isCompressed) {
+                InputStreamReader(GZIPInputStream(inStream()), charset)
+            } else {
+                BufferedReader(InputStreamReader(inStream(), charset))
+            }
+        },
+        getFormat(csvType, delimiter, header, duplicate),
+        colTypes,
+        skipLines,
+        readLines,
+        parserOptions,
+    )
 
 public enum class ColType {
     Int,
@@ -314,7 +313,7 @@ public fun ColType.toType(): KClass<out Any> =
     }
 
 public fun DataFrame.Companion.readDelim(
-    reader: Reader,
+    getReader: () -> Reader,
     format: CSVFormat = CSVFormat.DEFAULT.builder()
         .setHeader()
         .build(),
@@ -323,32 +322,45 @@ public fun DataFrame.Companion.readDelim(
     readLines: Int? = null,
     parserOptions: ParserOptions? = null,
 ): AnyFrame {
-    var reader = reader
+    var getReader = getReader
     if (skipLines > 0) {
-        reader = BufferedReader(reader)
-        repeat(skipLines) { reader.readLine() }
+        getReader = {
+            BufferedReader(getReader()).also {
+                val reader = it
+                repeat(skipLines) { reader.readLine() }
+            }
+        }
     }
 
-    val csvParser = format.parse(reader)
-    val records = if (readLines == null) {
-        csvParser.records
-    } else {
-        require(readLines >= 0) { "`readLines` must not be negative" }
-        val records = ArrayList<CSVRecord>(readLines)
-        val iter = csvParser.iterator()
-        var count = readLines ?: 0
-        while (iter.hasNext() && 0 < count--) {
-            records.add(iter.next())
+    var csvParser = format.parse(getReader())
+    var i = 0
+    val records = sequence {
+        csvParser = format.parse(getReader())
+        if (readLines == null) {
+            csvParser.forEachIndexed { i, it ->
+                // println("read line $i")
+                yield(it)
+            }
+        } else {
+            require(readLines >= 0) { "`readLines` must not be negative" }
+            val iter = csvParser.iterator()
+            var count = readLines ?: 0
+
+            while (iter.hasNext() && 0 < count--) {
+                yield(iter.next())
+            }
         }
-        records
+
+        println("read file ${++i} times entirely")
     }
 
     val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
-        ?: (1..records[0].count()).map { index -> "X$index" }
+        ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
 
     val generator = ColumnNameGenerator()
     val uniqueNames = columnNames.map { generator.addUnique(it) }
 
+    var size: Int? = null
     val cols = uniqueNames.mapIndexed { colIndex, colName ->
         val defaultColType = colTypes[".default"]
         val colType = colTypes[colName] ?: defaultColType
@@ -364,7 +376,14 @@ public fun DataFrame.Companion.readDelim(
                 null
             }
         }
-        val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
+        val column = DataColumn.createValueColumn(
+            name = colName,
+            values = values,
+            type = typeOf<String>().withNullability(hasNulls),
+            size = size,
+        )
+        size = column.size()
+
         when (colType) {
             null -> column.tryParse(parserOptions)
 
@@ -374,6 +393,7 @@ public fun DataFrame.Companion.readDelim(
             }
         }
     }
+
     return cols.toDataFrame()
 }
 

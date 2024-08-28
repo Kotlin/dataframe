@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.asList
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
@@ -178,7 +179,7 @@ internal fun AnyFrame.toHtmlData(
             column = col,
             nested = if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it, rowsLimit) } else emptyList(),
             rightAlign = col.isSubtypeOf<Number?>(),
-            values = contents,
+            values = contents.asList(),
         )
     }
 

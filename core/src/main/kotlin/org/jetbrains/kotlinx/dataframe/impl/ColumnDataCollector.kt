@@ -2,12 +2,13 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnDataHolderImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.empty
 import org.jetbrains.kotlinx.dataframe.impl.columns.emptyForType
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
@@ -31,7 +32,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
 
     override var hasNulls = false
 
-    override val data = ColumnDataHolder.empty<T>(initCapacity)
+    override val data = ColumnDataHolder.empty<T>(initCapacity) as ColumnDataHolderImpl<T>
 
     val values: List<T?>
         get() = data
@@ -65,11 +66,11 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
 
     internal val kclass = type.jvmErasure
 
-    override val data: ColumnDataHolder<T?> =
-        ColumnDataHolder.emptyForType(
+    override val data =
+        ColumnDataHolder.emptyForType<T?>(
             type = type,
             initCapacity = initCapacity,
-        )
+        ) as ColumnDataHolderImpl<T?>
 
     override fun add(value: T?) {
         if (data.canAddPrimitively(value) ||

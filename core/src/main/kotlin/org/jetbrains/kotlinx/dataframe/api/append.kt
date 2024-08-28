@@ -15,7 +15,7 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     }
     val newRows = values.size / ncol
     return columns().mapIndexed { colIndex, col ->
-        val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
+        val newValues = (0 until newRows).asSequence().map { values[colIndex + it * ncol] }
         col.updateWith(col.values + newValues)
     }.toDataFrame().cast()
 }

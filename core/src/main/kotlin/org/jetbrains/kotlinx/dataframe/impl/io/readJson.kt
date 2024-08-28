@@ -35,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.splitInto
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.asList
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
 import org.jetbrains.kotlinx.dataframe.impl.asList

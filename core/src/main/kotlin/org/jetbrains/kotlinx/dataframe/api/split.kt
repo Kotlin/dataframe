@@ -127,7 +127,7 @@ internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> =
     by {
         when (it) {
             is List<*> -> it
-            is AnyFrame -> it.rows()
+            is AnyFrame -> it.rows().asIterable()
             else -> listOf(it)
         }
     }.into()
@@ -170,7 +170,7 @@ public fun <T, C : Iterable<*>> Split<T, C>.into(
 public fun <T, C> Split<T, DataFrame<C>>.into(
     vararg names: String,
     extraNamesGenerator: ColumnNamesGenerator<DataFrame<C>>? = null,
-): DataFrame<T> = by { it.rows() }.into(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it.rows().asIterable() }.into(names.toList(), extraNamesGenerator)
 
 public fun <T, A, B> Split<T, Pair<A, B>>.into(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.into(firstCol, secondCol)
@@ -219,7 +219,7 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
 public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
     vararg names: String,
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
-): DataFrame<T> = by { it.rows() }.inward(names.toList(), extraNamesGenerator)
+): DataFrame<T> = by { it.rows().asIterable() }.inward(names.toList(), extraNamesGenerator)
 
 public fun <T, A, B> Split<T, Pair<A, B>>.inward(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
@@ -259,7 +259,7 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
 
 @JvmName("intoRowsFrame")
 public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
-    by { it.rows() }.intoRows(dropEmpty)
+    by { it.rows().asIterable() }.intoRows(dropEmpty)
 
 internal fun <T, C, R> Convert<T, C?>.splitInplace(type: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
     withRowCellImpl(getListType(type), Infer.None) { if (it == null) emptyList() else transform(it).asList() }

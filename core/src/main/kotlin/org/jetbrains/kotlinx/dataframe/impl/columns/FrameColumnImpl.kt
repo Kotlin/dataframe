@@ -1,18 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.toColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.dataframe.toColumnDataHolder
 import kotlin.reflect.KType
 
 internal open class FrameColumnImpl<T>(
@@ -35,13 +35,17 @@ internal open class FrameColumnImpl<T>(
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) =
         DataColumn.createFrameColumn(name, values)
 
+    override fun createWithValues(values: Sequence<DataFrame<T>>, hasNulls: Boolean?) =
+        DataColumn.createFrameColumn(name, values)
+
     override fun changeType(type: KType) = throw UnsupportedOperationException()
 
-    override fun distinct() = FrameColumnImpl(
-        name = name,
-        values = toSet().toColumnDataHolder(type, distinct),
-        columnSchema = schema
-    )
+    override fun distinct() =
+        FrameColumnImpl(
+            name = name,
+            values = toSet().toColumnDataHolder(type, distinct),
+            columnSchema = schema,
+        )
 
     override val schema: Lazy<DataFrameSchema> = columnSchema ?: lazy {
         values.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()

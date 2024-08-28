@@ -114,7 +114,7 @@ public fun <T> DataFrame<T>.sortBy(vararg cols: KProperty<Comparable<*>?>): Data
 
 public fun <T> DataFrame<T>.sortWith(comparator: Comparator<DataRow<T>>): DataFrame<T> {
     val permutation = rows().sortedWith(comparator).map { it.index }
-    return this[permutation]
+    return this[permutation.asIterable()]
 }
 
 public fun <T> DataFrame<T>.sortWith(comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> =

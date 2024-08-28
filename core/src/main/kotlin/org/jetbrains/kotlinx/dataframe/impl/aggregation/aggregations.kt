@@ -39,6 +39,20 @@ internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
     }
 }
 
+@PublishedApi
+internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
+    path: ColumnPath,
+    values: Sequence<V>,
+    type: KType,
+    default: V? = null,
+) {
+    when {
+        values.none() -> yield(path, null, type.withNullability(true), default)
+        values.singleOrNull() != null -> yield(path, values.single(), type, default)
+        else -> yield(path, values, getListType(type), default)
+    }
+}
+
 @JvmName("toColumnSetForAggregate")
 internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> =
     toColumnSet {
@@ -62,10 +76,10 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
         val effectiveDropNA = if (dropNA) col.canHaveNA else false
         // TODO: use Set for distinct values
         val values = when {
-            effectiveDropNA && distinct -> col.asSequence().filter { !it.isNA }.distinct().toList()
+            effectiveDropNA && distinct -> col.asSequence().filter { !it.isNA }.distinct()
             effectiveDropNA && !distinct -> col.values.filter { !it.isNA }
             distinct -> col.values().distinct()
-            else -> col.toList()
+            else -> col.values
         }
 
         if (forceYieldLists) {

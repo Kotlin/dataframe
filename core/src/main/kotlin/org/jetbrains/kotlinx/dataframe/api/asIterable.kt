@@ -4,6 +4,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.asIterable(): Iterable<T> = values()
+public fun <T> DataColumn<T>.asIterable(): Iterable<T> = values().asIterable()
 
 // endregion

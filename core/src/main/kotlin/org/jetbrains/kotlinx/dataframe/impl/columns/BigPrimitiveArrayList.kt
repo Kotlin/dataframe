@@ -28,28 +28,20 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.BigPrimitiveArrayList.State.
 import org.jetbrains.kotlinx.dataframe.impl.columns.BigPrimitiveArrayList.State.SHORT
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-import org.jetbrains.kotlinx.dataframe.impl.columns.BOOLEAN as BOOLEAN_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.BYTE as BYTE_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.CHAR as CHAR_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.DOUBLE as DOUBLE_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.FLOAT as FLOAT_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.INT as INT_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.LONG as LONG_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.SHORT as SHORT_TYPE
 
 internal class BigPrimitiveArrayList<T : Any> private constructor(arrayList: BigList<T>?, state: State?) : BigList<T> {
 
     companion object {
         fun <T : Any> forTypeOrNull(kType: KType, initCapacity: Long = 0): BigPrimitiveArrayList<T>? {
             return when (kType) {
-                BOOLEAN_TYPE -> BigPrimitiveArrayList<Boolean>(BOOLEAN, initCapacity)
-                BYTE_TYPE -> BigPrimitiveArrayList<Byte>(BYTE, initCapacity)
-                CHAR_TYPE -> BigPrimitiveArrayList<Char>(CHAR, initCapacity)
-                SHORT_TYPE -> BigPrimitiveArrayList<Short>(SHORT, initCapacity)
-                INT_TYPE -> BigPrimitiveArrayList<Int>(INT, initCapacity)
-                LONG_TYPE -> BigPrimitiveArrayList<Long>(LONG, initCapacity)
-                FLOAT_TYPE -> BigPrimitiveArrayList<Float>(FLOAT, initCapacity)
-                DOUBLE_TYPE -> BigPrimitiveArrayList<Double>(DOUBLE, initCapacity)
+                typeOf<Boolean>() -> BigPrimitiveArrayList<Boolean>(BOOLEAN, initCapacity)
+                typeOf<Byte>() -> BigPrimitiveArrayList<Byte>(BYTE, initCapacity)
+                typeOf<Char>() -> BigPrimitiveArrayList<Char>(CHAR, initCapacity)
+                typeOf<Short>() -> BigPrimitiveArrayList<Short>(SHORT, initCapacity)
+                typeOf<Int>() -> BigPrimitiveArrayList<Int>(INT, initCapacity)
+                typeOf<Long>() -> BigPrimitiveArrayList<Long>(LONG, initCapacity)
+                typeOf<Float>() -> BigPrimitiveArrayList<Float>(FLOAT, initCapacity)
+                typeOf<Double>() -> BigPrimitiveArrayList<Double>(DOUBLE, initCapacity)
                 else -> return null
             } as BigPrimitiveArrayList<T>
         }

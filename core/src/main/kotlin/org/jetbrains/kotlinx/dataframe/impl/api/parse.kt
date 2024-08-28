@@ -333,26 +333,26 @@ internal object Parsers : GlobalParserOptions {
 
 internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColumn<*> {
     var parserId = 0
-    val parsedValues = mutableListOf<Any?>()
+    var parsedValues = 0
     var hasNulls: Boolean
     var hasNotNulls: Boolean
     var nullStringParsed: Boolean
     val nulls = options?.nullStrings ?: Parsers.nulls
     do {
         val parser = Parsers[parserId].applyOptions(options)
-        parsedValues.clear()
+        parsedValues = 0
         hasNulls = false
         hasNotNulls = false
         nullStringParsed = false
         for (str in values) {
             when {
                 str == null -> {
-                    parsedValues.add(null)
+                    parsedValues++
                     hasNulls = true
                 }
 
                 nulls.contains(str) -> {
-                    parsedValues.add(null)
+                    parsedValues++
                     hasNulls = true
                     nullStringParsed = true
                 }
@@ -364,17 +364,39 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
                         parserId++
                         break
                     }
-                    parsedValues.add(res)
+                    parsedValues++
                     hasNotNulls = true
                 }
             }
         }
-    } while (parserId < Parsers.size && parsedValues.size != size)
+    } while (parserId < Parsers.size && parsedValues != size)
     check(parserId < Parsers.size) { "Valid parser not found" }
 
     val type = (if (hasNotNulls) Parsers[parserId].type else this.type()).withNullability(hasNulls)
     if (type.jvmErasure == String::class && !nullStringParsed) return this // nothing parsed
-    return DataColumn.create(name(), parsedValues, type)
+
+    val seq = sequence {
+        val parser = Parsers[parserId].applyOptions(options)
+        for (str in values) {
+            when {
+                str == null -> {
+                    yield(null)
+                }
+
+                nulls.contains(str) -> {
+                    yield(null)
+                }
+
+                else -> {
+                    val trimmed = str.trim()
+                    val res = parser(trimmed) ?: break
+                    yield(res)
+                }
+            }
+        }
+    }
+
+    return DataColumn.create(name(), seq, type)
 }
 
 internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: ParserOptions?): DataColumn<T?> {
@@ -384,7 +406,12 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
             handler(it.trim()) ?: throw IllegalStateException("Couldn't parse '$it' into type ${parser.type}")
         }
     }
-    return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
+    return DataColumn.createValueColumn(
+        name = name(),
+        values = parsedValues,
+        size = size,
+        type = parser.type.withNullability(hasNulls),
+    ) as DataColumn<T?>
 }
 
 internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>) =

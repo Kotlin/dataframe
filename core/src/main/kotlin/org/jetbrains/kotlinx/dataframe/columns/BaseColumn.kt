@@ -80,9 +80,9 @@ public interface BaseColumn<out T> :
 
     // region values
 
-    public fun values(): Iterable<T>
+    public fun values(): Sequence<T>
 
-    public fun toList(): List<T> = values().asList()
+    public fun toList(): List<T> = SequenceAsList(values())
 
     public fun toSet(): Set<T>
 
@@ -100,6 +100,6 @@ public interface BaseColumn<out T> :
         (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
 }
 
-internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
+internal val <T> BaseColumn<T>.values: Sequence<T> get() = values()
 
 internal val AnyBaseCol.size: Int get() = size()

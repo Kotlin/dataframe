@@ -21,7 +21,7 @@ internal fun <T> Aggregatable<T>.numberColumns() = remainingColumns { it.isNumbe
 internal fun NamedValue.toColumnWithPath() =
     path to guessColumnType(
         name = path.last(),
-        values = listOf(value),
+        values = sequenceOf(value),
         suggestedType = type,
         suggestedTypeIsUpperBound = guessType,
         defaultValue = default,

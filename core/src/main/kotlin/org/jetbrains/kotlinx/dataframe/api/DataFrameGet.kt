@@ -122,8 +122,8 @@ public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean 
 
 // region rows
 
-public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> =
-    object : Iterable<DataRow<T>> {
+public fun <T> DataFrame<T>.rows(): Sequence<DataRow<T>> =
+    object : Sequence<DataRow<T>> {
         override fun iterator() =
             object : Iterator<DataRow<T>> {
                 var nextRow = 0
@@ -137,8 +137,8 @@ public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> =
             }
     }
 
-public fun <T> DataFrame<T>.rowsReversed(): Iterable<DataRow<T>> =
-    object : Iterable<DataRow<T>> {
+public fun <T> DataFrame<T>.rowsReversed(): Sequence<DataRow<T>> =
+    object : Sequence<DataRow<T>> {
         override fun iterator() =
             object : Iterator<DataRow<T>> {
                 var nextRow = nrow - 1

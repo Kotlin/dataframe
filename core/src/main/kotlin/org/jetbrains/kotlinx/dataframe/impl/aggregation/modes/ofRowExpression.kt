@@ -22,6 +22,12 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
+    values: Sequence<C>,
+    noinline transform: (C) -> V,
+): R? = aggregate(values.map(transform).asIterable(), typeOf<V>())
+
+@PublishedApi
+internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     column: DataColumn<C>,
     noinline transform: (C) -> V,
 ): R? = aggregateOf(column.values(), transform)

@@ -1,20 +1,12 @@
 @file:OptIn(ExperimentalUnsignedTypes::class)
 
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.columns
 
-import org.jetbrains.kotlinx.dataframe.impl.columns.BOOLEAN
-import org.jetbrains.kotlinx.dataframe.impl.columns.BYTE
-import org.jetbrains.kotlinx.dataframe.impl.columns.CHAR
+import org.jetbrains.kotlinx.dataframe.UBYTE
+import org.jetbrains.kotlinx.dataframe.UINT
+import org.jetbrains.kotlinx.dataframe.ULONG
+import org.jetbrains.kotlinx.dataframe.USHORT
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnDataHolderImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.DOUBLE
-import org.jetbrains.kotlinx.dataframe.impl.columns.FLOAT
-import org.jetbrains.kotlinx.dataframe.impl.columns.INT
-import org.jetbrains.kotlinx.dataframe.impl.columns.LONG
-import org.jetbrains.kotlinx.dataframe.impl.columns.SHORT
-import org.jetbrains.kotlinx.dataframe.impl.columns.UBYTE
-import org.jetbrains.kotlinx.dataframe.impl.columns.UINT
-import org.jetbrains.kotlinx.dataframe.impl.columns.ULONG
-import org.jetbrains.kotlinx.dataframe.impl.columns.USHORT
 import org.jetbrains.kotlinx.dataframe.impl.columns.ofBoxedArray
 import org.jetbrains.kotlinx.dataframe.impl.columns.ofCollection
 import org.jetbrains.kotlinx.dataframe.impl.columns.ofPrimitiveArray
@@ -29,15 +21,11 @@ public interface ColumnDataHolder<T> : List<T> {
 
     public fun toSet(): Set<T>
 
-    public operator fun get(range: IntRange): List<T>
-
-    public fun add(element: T)
-
-    public fun canAddPrimitively(element: Any?): Boolean
+    public operator fun get(range: IntRange): Sequence<T>
 
     public val distinct: Lazy<Set<T>>
 
-    public val usesPrimitiveArrayList: Boolean
+    public fun add(value: T)
 
     public companion object
 }
@@ -55,28 +43,28 @@ public inline fun <reified T> Array<T>.toColumnDataHolder(distinct: Lazy<Set<T>>
     this.toColumnDataHolder(typeOf<T>(), distinct)
 
 public fun BooleanArray.asColumnDataHolder(distinct: Lazy<Set<Boolean>>? = null): ColumnDataHolder<Boolean> =
-    ColumnDataHolder.ofPrimitiveArray(this, BOOLEAN, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Boolean>(), distinct)
 
 public fun ByteArray.asColumnDataHolder(distinct: Lazy<Set<Byte>>? = null): ColumnDataHolder<Byte> =
-    ColumnDataHolder.ofPrimitiveArray(this, BYTE, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Byte>(), distinct)
 
 public fun ShortArray.asColumnDataHolder(distinct: Lazy<Set<Short>>? = null): ColumnDataHolder<Short> =
-    ColumnDataHolder.ofPrimitiveArray(this, SHORT, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Short>(), distinct)
 
 public fun IntArray.asColumnDataHolder(distinct: Lazy<Set<Int>>? = null): ColumnDataHolder<Int> =
-    ColumnDataHolder.ofPrimitiveArray(this, INT, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Int>(), distinct)
 
 public fun LongArray.asColumnDataHolder(distinct: Lazy<Set<Long>>? = null): ColumnDataHolder<Long> =
-    ColumnDataHolder.ofPrimitiveArray(this, LONG, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Long>(), distinct)
 
 public fun FloatArray.asColumnDataHolder(distinct: Lazy<Set<Float>>? = null): ColumnDataHolder<Float> =
-    ColumnDataHolder.ofPrimitiveArray(this, FLOAT, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Float>(), distinct)
 
 public fun DoubleArray.asColumnDataHolder(distinct: Lazy<Set<Double>>? = null): ColumnDataHolder<Double> =
-    ColumnDataHolder.ofPrimitiveArray(this, DOUBLE, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Double>(), distinct)
 
 public fun CharArray.asColumnDataHolder(distinct: Lazy<Set<Char>>? = null): ColumnDataHolder<Char> =
-    ColumnDataHolder.ofPrimitiveArray(this, CHAR, distinct)
+    ColumnDataHolder.ofPrimitiveArray(this, typeOf<Char>(), distinct)
 
 public fun UByteArray.asColumnDataHolder(distinct: Lazy<Set<UByte>>? = null): ColumnDataHolder<UByte> =
     ColumnDataHolder.ofPrimitiveArray(this, UBYTE, distinct)

@@ -26,14 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.PrimitiveArrayList.State.LON
 import org.jetbrains.kotlinx.dataframe.impl.columns.PrimitiveArrayList.State.SHORT
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-import org.jetbrains.kotlinx.dataframe.impl.columns.BOOLEAN as BOOLEAN_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.BYTE as BYTE_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.CHAR as CHAR_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.DOUBLE as DOUBLE_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.FLOAT as FLOAT_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.INT as INT_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.LONG as LONG_TYPE
-import org.jetbrains.kotlinx.dataframe.impl.columns.SHORT as SHORT_TYPE
 
 /**
  * Universal wrapper around [BooleanArrayList], [ByteArrayList], [CharArrayList],
@@ -47,14 +39,14 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
         companion object {
             fun <T : Any> forTypeOrNull(kType: KType, initCapacity: Int = 0): PrimitiveArrayList<T>? {
                 return when (kType) {
-                    BOOLEAN_TYPE -> PrimitiveArrayList<Boolean>(BOOLEAN, initCapacity)
-                    BYTE_TYPE -> PrimitiveArrayList<Byte>(BYTE, initCapacity)
-                    CHAR_TYPE -> PrimitiveArrayList<Char>(CHAR, initCapacity)
-                    SHORT_TYPE -> PrimitiveArrayList<Short>(SHORT, initCapacity)
-                    INT_TYPE -> PrimitiveArrayList<Int>(INT, initCapacity)
-                    LONG_TYPE -> PrimitiveArrayList<Long>(LONG, initCapacity)
-                    FLOAT_TYPE -> PrimitiveArrayList<Float>(FLOAT, initCapacity)
-                    DOUBLE_TYPE -> PrimitiveArrayList<Double>(DOUBLE, initCapacity)
+                    typeOf<Boolean>() -> PrimitiveArrayList<Boolean>(BOOLEAN, initCapacity)
+                    typeOf<Byte>() -> PrimitiveArrayList<Byte>(BYTE, initCapacity)
+                    typeOf<Char>() -> PrimitiveArrayList<Char>(CHAR, initCapacity)
+                    typeOf<Short>() -> PrimitiveArrayList<Short>(SHORT, initCapacity)
+                    typeOf<Int>() -> PrimitiveArrayList<Int>(INT, initCapacity)
+                    typeOf<Long>() -> PrimitiveArrayList<Long>(LONG, initCapacity)
+                    typeOf<Float>() -> PrimitiveArrayList<Float>(FLOAT, initCapacity)
+                    typeOf<Double>() -> PrimitiveArrayList<Double>(DOUBLE, initCapacity)
                     else -> return null
                 } as PrimitiveArrayList<T>
             }

@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -93,7 +93,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
     var nullable = false
-    val list = ColumnDataHolder.empty<R>(df.nrow)
+    val list = ColumnDataHolder.empty<R>(df.nrow) as ColumnDataHolderImpl<R>
     df.indices().forEach {
         val row = AddDataRowImpl(it, df, list)
         val value = expression(row, row)
@@ -132,7 +132,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
         guessType ->
             guessColumnType(
                 name = "",
-                values = values.asList(),
+                values = values.asSequence(),
                 suggestedType = suggestedType,
                 suggestedTypeIsUpperBound = true,
             ).cast()
@@ -218,12 +218,14 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
 
 // endregion
 
-internal fun <T> guessColumnType(name: String, values: List<T>) = guessColumnType(name, values, null)
+internal fun <T> guessColumnType(name: String, values: List<T>) = guessColumnType(name, values.asSequence(), null)
+
+internal fun <T> guessColumnType(name: String, values: Sequence<T>) = guessColumnType(name, values, null)
 
 @PublishedApi
 internal fun <T> guessColumnType(
     name: String,
-    values: List<T>,
+    values: Sequence<T>,
     suggestedType: KType? = null,
     suggestedTypeIsUpperBound: Boolean = false,
     defaultValue: T? = null,
@@ -232,7 +234,7 @@ internal fun <T> guessColumnType(
     val detectType = suggestedType == null || suggestedTypeIsUpperBound
     val type = if (detectType) {
         guessValueType(
-            values = values.asSequence(),
+            values = values,
             upperBound = suggestedType,
             listifyValues = false,
         )

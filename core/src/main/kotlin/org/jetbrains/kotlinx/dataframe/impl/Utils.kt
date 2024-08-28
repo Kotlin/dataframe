@@ -99,6 +99,9 @@ internal fun <T> Iterable<T>.equalsByElement(other: Iterable<T>): Boolean {
     return true
 }
 
+internal fun <T> Sequence<T>.equalsByElement(other: Sequence<T>): Boolean =
+    asIterable().equalsByElement(other.asIterable())
+
 internal fun <T> Iterable<T>.rollingHash(): Int {
     val i = iterator()
     var hash = 0
@@ -108,6 +111,8 @@ internal fun <T> Iterable<T>.rollingHash(): Int {
     return hash
 }
 
+internal fun <T> Sequence<T>.rollingHash(): Int = asIterable().rollingHash()
+
 public fun <T> Iterable<T>.asList(): List<T> =
     when (this) {
         is List<T> -> this
@@ -116,6 +121,9 @@ public fun <T> Iterable<T>.asList(): List<T> =
 
 @PublishedApi
 internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
+
+@PublishedApi
+internal fun <T> Sequence<T>.anyNull(): Boolean = any { it == null }
 
 @PublishedApi
 internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())

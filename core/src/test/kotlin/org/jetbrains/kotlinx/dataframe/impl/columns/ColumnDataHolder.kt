@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
@@ -81,7 +81,7 @@ class ColumnDataHolderTests {
     // | 2|  NON_PRIMITIVE| 595.397324ms| 3.481924785s| 250,349,159|
     // | 3|           LIST| 483.394463ms| 8.160207220s| 430,403,480|
     // ⌎-----------------------------------------------------------⌏
-    @Ignore
+    // @Ignore
     @Test
     fun `measuring speed of ColumnDataHolder creation`() {
         val size = 5e6.toInt()
@@ -274,7 +274,7 @@ class ColumnDataHolderTests {
 
     @Test
     fun `create typed ColumnDataHolder by collecting values`() {
-        val holder = ColumnDataHolder.emptyForType<Int?>(NULLABLE_INT)
+        val holder = ColumnDataHolder.emptyForType<Int?>(NULLABLE_INT) as ColumnDataHolderImpl<Int?>
         holder.canAddPrimitively(3.0) shouldBe false
         holder.add(1)
         holder.add(2)
@@ -286,61 +286,61 @@ class ColumnDataHolderTests {
 
     @Test
     fun `create untyped ColumnDataHolder by collecting values`() {
-        val holder = ColumnDataHolder.empty<Any?>()
+        val holder = ColumnDataHolder.empty<Any?>() as ColumnDataHolderImpl<Any?>
         holder.add(1)
         holder.add(2)
-        holder.usesPrimitiveArrayList shouldBe true
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe true
         holder.add(null)
-        holder.usesPrimitiveArrayList shouldBe true
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe true
         holder.canAddPrimitively(3.0) shouldBe false
         holder.add(3.0) // should switch to mutableList here
-        holder.usesPrimitiveArrayList shouldBe false
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe false
         holder.canAddPrimitively(3.0) shouldBe false
         holder.add(3)
-        holder.usesPrimitiveArrayList shouldBe false
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe false
         holder.add(null)
         holder shouldContainInOrder listOf(1, 2, null, 3, null)
     }
 
     @Test
     fun `just nulls`() {
-        val holder = ColumnDataHolder.empty<Any?>()
+        val holder = ColumnDataHolder.empty<Any?>() as ColumnDataHolderImpl<Any?>
         holder.add(null)
         holder.add(null)
         holder.add(null)
-        holder.usesPrimitiveArrayList shouldBe true
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe true
         holder shouldContainInOrder listOf(null, null, null)
 
         holder.add(1)
-        holder.usesPrimitiveArrayList shouldBe true
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe true
         holder shouldContainInOrder listOf(null, null, null, 1)
     }
 
     @Test
     fun `just nulls non-primitive type`() {
-        val holder = ColumnDataHolder.empty<Any?>()
+        val holder = ColumnDataHolder.empty<Any?>() as ColumnDataHolderImpl<Any?>
         holder.add(null)
         holder.add(null)
         holder.add(null)
-        holder.usesPrimitiveArrayList shouldBe true
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe true
         holder shouldContainInOrder listOf(null, null, null)
 
         holder.add(1 to 2)
-        holder.usesPrimitiveArrayList shouldBe false
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe false
         holder shouldContainInOrder listOf(null, null, null, 1 to 2)
     }
 
     @Test
     fun `just nulls typed`() {
-        val holder = ColumnDataHolder.emptyForType<Int?>(typeOf<Int>())
+        val holder = ColumnDataHolder.emptyForType<Int?>(typeOf<Int>()) as ColumnDataHolderImpl<Int?>
         holder.add(null)
         holder.add(null)
         holder.add(null)
-        holder.usesPrimitiveArrayList shouldBe true
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe true
         holder shouldContainInOrder listOf(null, null, null)
 
         holder.add(1)
-        holder.usesPrimitiveArrayList shouldBe true
+        (holder as ColumnDataHolderImpl<*>).usesPrimitiveArrayList shouldBe true
         holder shouldContainInOrder listOf(null, null, null, 1)
     }
 

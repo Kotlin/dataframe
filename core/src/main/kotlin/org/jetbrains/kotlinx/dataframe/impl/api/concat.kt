@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.asList
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.commonType
@@ -75,7 +76,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
         }
         return guessColumnType(
             name = name,
-            values = list,
+            values = list.asSequence(),
             suggestedType = tartypeOf,
             suggestedTypeIsUpperBound = guessType,
             defaultValue = defaultValue,
@@ -96,6 +97,28 @@ internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     val sizes = dataFrames.map { it.nrow }
     val columns = columnNames.map { name ->
         concatImpl(name, dataFrames.map { it.getColumnOrNull(name) }, sizes)
+    }
+    return if (columns.isEmpty()) {
+        // make sure the number of rows translate correctly if there are no columns
+        DataFrame.empty(nrow = sizes.sum())
+    } else {
+        dataFrameOf(columns)
+    }.cast()
+}
+
+internal fun <T> concatImpl(dataFrames: Sequence<DataFrame<T>>): DataFrame<T> {
+    when {
+        dataFrames.none() -> return emptyDataFrame()
+        dataFrames.singleOrNull() != null -> return dataFrames.first()
+    }
+
+    // collect column names preserving original order
+    val columnNames = dataFrames
+        .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) }
+
+    val sizes = dataFrames.map { it.nrow }
+    val columns = columnNames.map { name ->
+        concatImpl(name, dataFrames.map { it.getColumnOrNull(name) }.asList(), sizes.asList())
     }
     return if (columns.isEmpty()) {
         // make sure the number of rows translate correctly if there are no columns

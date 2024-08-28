@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.toColumnDataHolder
+import org.jetbrains.kotlinx.dataframe.columns.toColumnDataHolder
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -33,6 +33,11 @@ internal open class ValueColumnImpl<T>(
     override fun addParent(parent: ColumnGroup<*>): DataColumn<T> = ValueColumnWithParent(parent, this)
 
     override fun createWithValues(values: List<T>, hasNulls: Boolean?): ValueColumn<T> {
+        val nulls = hasNulls ?: values.any { it == null }
+        return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
+    }
+
+    override fun createWithValues(values: Sequence<T>, hasNulls: Boolean?): ValueColumn<T> {
         val nulls = hasNulls ?: values.any { it == null }
         return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }

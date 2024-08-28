@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KProperty
 
-public fun AnyCol.inferType(): DataColumn<*> = guessColumnType(name, toList(), type, true)
+public fun AnyCol.inferType(): DataColumn<*> = guessColumnType(name, values(), type, true)
 
 // region DataFrame
 

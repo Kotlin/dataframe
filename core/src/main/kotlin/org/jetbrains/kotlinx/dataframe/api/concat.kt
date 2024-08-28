@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.columns.asList
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.api.concatImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -13,7 +14,7 @@ public fun <T> DataColumn<T>.concat(vararg other: DataColumn<T>): DataColumn<T> 
 
 public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat()
 
-public fun <T> DataColumn<Collection<T>>.concat(): List<T> = values.flatten()
+public fun <T> DataColumn<Collection<T>>.concat(): Sequence<T> = values.flatten()
 
 // endregion
 
@@ -46,14 +47,20 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
 
 public fun <T> Iterable<DataFrame<T>>.concat(): DataFrame<T> = concatImpl(asList())
 
+public fun <T> Sequence<DataFrame<T>>.concat(): DataFrame<T> = concatImpl(asList())
+
 public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
     val list = asList()
     if (list.isEmpty()) return DataColumn.empty().cast()
     return concatImpl(list[0].name(), list)
 }
 
-@JvmName("concatRows")
+@JvmName("concatRowsIterable")
 public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> =
+    concatImpl(map { it?.toDataFrame() ?: DataFrame.empty(1).cast() })
+
+@JvmName("concatRowsSequence")
+public fun <T> Sequence<DataRow<T>?>.concat(): DataFrame<T> =
     concatImpl(map { it?.toDataFrame() ?: DataFrame.empty(1).cast() })
 
 // endregion

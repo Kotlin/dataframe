@@ -47,8 +47,11 @@ public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = int
 
 public fun <T, C, R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
 
-public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
+public fun <T, C, R> Merge<T, C, R>.intoSequence(): Sequence<R> =
     df.select(selector).rows().map { transform(it, it.values() as List<C>) }
+
+public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
+    df.select(selector).rows().map { transform(it, it.values() as List<C>) }.toList()
 
 public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // If target path exists, merge into temp path

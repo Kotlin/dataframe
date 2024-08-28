@@ -41,7 +41,7 @@ public fun DataFrame.Companion.readTSV(
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
-            it,
+            { it },
             TAB_CHAR,
             header,
             isCompressed(fileOrUrl),
@@ -65,7 +65,7 @@ public fun DataFrame.Companion.readTSV(
     charset: Charset = Charsets.UTF_8,
 ): DataFrame<*> =
     readDelim(
-        FileInputStream(file),
+        { FileInputStream(file) },
         TAB_CHAR,
         header,
         isCompressed(file),
@@ -111,7 +111,7 @@ public fun DataFrame.Companion.readTSV(
     parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readDelim(
-        stream,
+        { stream },
         TAB_CHAR,
         header,
         isCompressed,

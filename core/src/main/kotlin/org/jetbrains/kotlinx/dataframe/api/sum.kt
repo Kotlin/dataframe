@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.asList
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -29,10 +30,10 @@ import kotlin.reflect.typeOf
 // region DataColumn
 
 @JvmName("sumT")
-public fun <T : Number> DataColumn<T>.sum(): T = values.sum(type())
+public fun <T : Number> DataColumn<T>.sum(): T = values.asIterable().sum(type())
 
 @JvmName("sumTNullable")
-public fun <T : Number> DataColumn<T?>.sum(): T = values.sum(type())
+public fun <T : Number> DataColumn<T?>.sum(): T = values.asIterable().sum(type())
 
 public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expression: (T) -> R): R? =
     (Aggregators.sum as Aggregator<*, *>).cast<R>().of(this, expression)
@@ -74,7 +75,7 @@ public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProp
     sum { columns.toColumnSet() }
 
 public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): C =
-    rows().sumOf(typeOf<C>()) { expression(it, it) }
+    rows().asIterable().sumOf(typeOf<C>()) { expression(it, it) }
 
 // endregion
 

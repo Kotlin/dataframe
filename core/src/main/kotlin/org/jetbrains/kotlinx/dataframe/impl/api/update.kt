@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -90,6 +91,7 @@ private fun <C, R> ColumnGroup<C>.replaceRowsIf(
 ): ColumnGroup<C> =
     values()
         .map { if (condition(it)) from[it.index] else it }
+        .asIterable()
         .toColumn(name)
         .asColumnGroup()
         .cast()
@@ -99,8 +101,32 @@ internal fun <T, C> DataColumn<C>.updateImpl(
     filter: RowValueFilter<T, C>?,
     expression: (AddDataRow<T>, DataColumn<C>, C) -> C?,
 ): DataColumn<C> {
-    val collector = createDataCollector<C>(size, type)
+    // TODO create sequence
+
     val src = this
+//    val sequence = sequence {
+//        if (filter == null) {
+//            df.forEach {
+//                val rowIndex = it.index()
+//                val row = AddDataRowImpl(rowIndex, df, collector.values)
+//                collector.add(expression(row, src, src[rowIndex]))
+//            }
+//        } else {
+//            df.forEach { rowIndex ->
+//                val row = AddDataRowImpl(rowIndex, df, collector.values)
+//                val currentValue = row[src]
+//                val newValue =
+//                    if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
+//                collector.add(newValue)
+//            }
+//        }
+//    }
+
+
+
+
+    val collector = createDataCollector<C>(size, type)
+//    val src = this
     if (filter == null) {
         df.indices().forEach { rowIndex ->
             val row = AddDataRowImpl(rowIndex, df, collector.values)
@@ -121,13 +147,13 @@ internal fun <T, C> DataColumn<C>.updateImpl(
 /**
  * Replaces all values in column asserting that new values are compatible with current column kind
  */
-internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> =
+internal fun <T> DataColumn<T>.updateWith(values: Sequence<T>): DataColumn<T> =
     when (this) {
         is FrameColumn<*> -> {
             values.forEach {
                 require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
             }
-            val groups = (values as List<AnyFrame>)
+            val groups = (values as Sequence<AnyFrame>)
             DataColumn.createFrameColumn(name, groups) as DataColumn<T>
         }
 

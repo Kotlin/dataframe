@@ -61,7 +61,7 @@ public fun <T, R> DataColumn<T>.mapIndexed(
 
 // region DataFrame
 
-public fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
+public fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): Sequence<R> = rows().map { transform(it, it) }
 
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
@@ -112,7 +112,7 @@ public fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
 
 // region GroupBy
 
-public fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
+public fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): Sequence<R & Any> =
     keys.rows().mapIndexedNotNull { index, row ->
         val group = groups[index]
         val g = GroupWithKey(row, group)

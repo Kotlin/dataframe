@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.columns.asList
 import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -91,7 +92,7 @@ internal fun AnyFrame.renderToString(
         if (borders) sb.append("|")
         for (col in values.indices) {
             val len = columnLengths[col]
-            val str = values[col][row]
+            val str = values[col].asList()[row]
             val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
             sb.append(padded)
             if (borders) sb.append("|")

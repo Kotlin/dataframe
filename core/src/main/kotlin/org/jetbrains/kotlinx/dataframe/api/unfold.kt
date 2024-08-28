@@ -19,6 +19,7 @@ public inline fun <reified T> DataColumn<T>.unfold(): AnyCol =
             isPrimitive() -> this
 
             else -> values()
+                .asIterable()
                 .createDataFrameImpl(typeClass) { (this as CreateDataFrameDsl<T>).properties() }
                 .asColumnGroup(name())
                 .asDataColumn()

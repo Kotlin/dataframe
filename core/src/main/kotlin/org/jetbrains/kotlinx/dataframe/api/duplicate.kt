@@ -12,6 +12,6 @@ public fun <T> DataFrame<T>.duplicate(n: Int): FrameColumn<T> = List(n) { this }
 public fun <T> DataFrame<T>.duplicateRows(n: Int): DataFrame<T> = duplicateRowsImpl(n)
 
 public fun <T> DataFrame<T>.duplicateRows(n: Int, filter: RowFilter<T>): DataFrame<T> =
-    duplicateRowsImpl(n, rows().filter { filter(it, it) }.map { it.index() })
+    duplicateRowsImpl(n, rows().filter { filter(it, it) }.map { it.index() }.asIterable())
 
 public fun <T> DataRow<T>.duplicate(n: Int): DataFrame<T> = duplicateImpl(n)

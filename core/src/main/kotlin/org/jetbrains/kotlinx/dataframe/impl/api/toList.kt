@@ -79,5 +79,5 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
             .map { row[it] }
             .toTypedArray()
         constructor.call(*parameters)
-    }
+    }.toList()
 }

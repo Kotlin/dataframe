@@ -315,6 +315,19 @@ public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataCol
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.create(ref.name(), asList()).forceResolve()
 
+public inline fun <reified T> Sequence<T>.toColumn(name: String = "", infer: Infer = Infer.Nulls): DataColumn<T> =
+    if (infer == Infer.Type) {
+        DataColumn.createWithTypeInference(name, this)
+    } else {
+        DataColumn.create(name, this, typeOf<T>(), null, infer)
+    }.forceResolve()
+
+public inline fun <reified T> Sequence<*>.toColumnOf(name: String = ""): DataColumn<T> =
+    DataColumn.create(name, this as Sequence<T>, typeOf<T>()).forceResolve()
+
+public inline fun <reified T> Sequence<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
+    DataColumn.create(ref.name(), this).forceResolve()
+
 public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
     DataColumn.create(property.columnName, asList()).forceResolve()
 

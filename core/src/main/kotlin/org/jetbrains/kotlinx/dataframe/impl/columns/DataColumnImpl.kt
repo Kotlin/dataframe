@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.BuildConfig
-import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
 import org.jetbrains.kotlinx.dataframe.kind
@@ -48,7 +48,7 @@ internal abstract class DataColumnImpl<T>(
 
     override fun name() = name
 
-    override fun values(): List<T> = values.toList() // todo is heavy but tests break without it
+    override fun values() = values.asSequence() // todo is heavy but tests break without it
 
     override fun type() = type
 
@@ -74,4 +74,6 @@ internal abstract class DataColumnImpl<T>(
     override operator fun get(range: IntRange) = createWithValues(values[range])
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
+
+    protected abstract fun createWithValues(values: Sequence<T>, hasNulls: Boolean? = null): DataColumn<T>
 }

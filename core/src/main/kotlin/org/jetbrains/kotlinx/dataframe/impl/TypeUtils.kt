@@ -383,6 +383,14 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
         Infer.None -> type
     }
 
+@PublishedApi
+internal fun <T> getValuesType(values: Sequence<T>, type: KType, infer: Infer): KType =
+    when (infer) {
+        Infer.Nulls -> type.withNullability(values.anyNull())
+        Infer.Type -> guessValueType(values, type)
+        Infer.None -> type
+    }
+
 /**
  * Returns the value type of the given [values] sequence.
  *

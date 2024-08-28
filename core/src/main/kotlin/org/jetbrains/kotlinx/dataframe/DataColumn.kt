@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -16,13 +17,16 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.columns.asColumnDataHolder
+import org.jetbrains.kotlinx.dataframe.columns.ofSequence
+import org.jetbrains.kotlinx.dataframe.columns.toColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
-import org.jetbrains.kotlinx.dataframe.impl.columns.ofCollection
 import org.jetbrains.kotlinx.dataframe.impl.columns.ofBoxedArray
+import org.jetbrains.kotlinx.dataframe.impl.columns.ofCollection
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
@@ -138,6 +142,50 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
         public fun <T> createValueColumn(
             name: String,
+            values: Sequence<T>,
+            type: KType,
+            size: Int? = null,
+            infer: Infer = Infer.None,
+            defaultValue: T? = null,
+        ): ValueColumn<T> {
+            val valueType = getValuesType(values, type, infer)
+            return createValueColumn(
+                name = name,
+                values = ColumnDataHolder.ofSequence(values, size),
+                type = valueType,
+                defaultValue = defaultValue,
+            )
+        }
+
+        /**
+         * Creates [ValueColumn] using given [name], [values] and reified column [type].
+         *
+         * Note, that column [type] will be defined at compile-time using [T] argument
+         *
+         * @param T type of the column
+         * @param name name of the column
+         * @param values list of column values
+         * @param infer column type inference mode
+         */
+        public inline fun <reified T> createValueColumn(
+            name: String,
+            values: Sequence<T>,
+            size: Int? = null,
+            infer: Infer = Infer.None,
+        ): ValueColumn<T> =
+            createValueColumn(
+                name = name,
+                values = values,
+                type = getValuesType(
+                    values = values,
+                    type = typeOf<T>(),
+                    infer = infer,
+                ),
+                size = size,
+            )
+
+        public fun <T> createValueColumn(
+            name: String,
             values: Array<T>,
             type: KType,
             infer: Infer = Infer.None,
@@ -178,9 +226,21 @@ public interface DataColumn<out T> : BaseColumn<T> {
             schema: Lazy<DataFrameSchema>? = null,
         ): FrameColumn<T> = FrameColumnImpl(name, groups.toColumnDataHolder(), schema)
 
+        public fun <T> createFrameColumn(
+            name: String,
+            groups: Sequence<DataFrame<T>>,
+            schema: Lazy<DataFrameSchema>? = null,
+        ): FrameColumn<T> = FrameColumnImpl(name, groups.toColumnDataHolder(), schema)
+
         public fun <T> createWithTypeInference(
             name: String,
             values: List<T>,
+            nullable: Boolean? = null,
+        ): DataColumn<T> = guessColumnType(name, values.asSequence(), nullable = nullable)
+
+        public fun <T> createWithTypeInference(
+            name: String,
+            values: Sequence<T>,
             nullable: Boolean? = null,
         ): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
 
@@ -196,8 +256,33 @@ public interface DataColumn<out T> : BaseColumn<T> {
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
 
+        public fun <T> create(
+            name: String,
+            values: Sequence<T>,
+            type: KType,
+            size: Int? = null,
+            infer: Infer = Infer.None,
+        ): DataColumn<T> =
+            when (type.toColumnKind()) {
+                ColumnKind.Value -> createValueColumn(name, values, type, size, infer)
+
+                ColumnKind.Group -> createColumnGroup(
+                    name,
+                    (values as Sequence<AnyRow?>).concat(),
+                ).asDataColumn().cast()
+
+                ColumnKind.Frame -> createFrameColumn(name, values as Sequence<AnyFrame>).asDataColumn().cast()
+            }
+
         public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
             create(name, values, typeOf<T>(), infer)
+
+        public inline fun <reified T> create(
+            name: String,
+            values: Sequence<T>,
+            size: Int? = null,
+            infer: Infer = Infer.None,
+        ): DataColumn<T> = create(name, values, typeOf<T>(), size, infer)
 
         public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
     }
@@ -223,7 +308,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
 public val AnyCol.name: String get() = name()
 public val AnyCol.path: ColumnPath get() = path()
 
-public val <T> DataColumn<T>.values: Iterable<T> get() = values()
+public val <T> DataColumn<T>.values: Sequence<T> get() = values()
 public val AnyCol.hasNulls: Boolean get() = hasNulls()
 public val AnyCol.size: Int get() = size()
 public val AnyCol.indices: IntRange get() = indices()
