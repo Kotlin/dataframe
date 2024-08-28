@@ -186,5 +186,8 @@
         </toc-element>
     </toc-element>
     <toc-element topic="gradleReference.md"/>
+    <toc-element topic="Usage-with-Kotlin-Notebook-Plugin.md">
+        <toc-element topic="Trobleshooting.md"/>
+    </toc-element>
     <toc-element href="https://github.com/Kotlin/dataframe/tree/master/examples" toc-title="Examples"/>
 </instance-profile>
