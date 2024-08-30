@@ -22,6 +22,7 @@ internal fun NamedValue.toColumnWithPath() =
     path to guessColumnType(
         name = path.last(),
         values = sequenceOf(value),
+        size = 1,
         suggestedType = type,
         suggestedTypeIsUpperBound = guessType,
         defaultValue = default,

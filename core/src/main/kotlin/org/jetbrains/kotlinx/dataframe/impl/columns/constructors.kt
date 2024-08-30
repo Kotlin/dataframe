@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -22,28 +21,28 @@ import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.indices
+import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.ofSequence
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
-import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 // region create DataColumn
 
-internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: List<*>) :
+internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: ColumnDataHolder<*>) :
     DataRowImpl<T>(index, owner),
     AddDataRow<T> {
 
@@ -93,9 +92,10 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
     var nullable = false
-    val list = ColumnDataHolder.empty<R>(df.nrow) as ColumnDataHolderImpl<R>
-    df.indices().forEach {
-        val row = AddDataRowImpl(it, df, list)
+//    val list = ColumnDataHolder.empty<R>(df.nrow) as ColumnDataHolderImpl<R>
+    val list = ColumnDataHolder.ofSequence(emptySequence<R>())
+    df.forEach {
+        val row = AddDataRowImpl(it.index(), df, list)
         val value = expression(row, row)
         if (value == null) nullable = true
         list.add(value)
@@ -105,7 +105,12 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> =
+internal fun <T> createColumn(
+    values: Iterable<T>,
+    suggestedType: KType,
+    size: Int? = null,
+    guessType: Boolean = false,
+): DataColumn<T> =
     when {
         // values is a non-empty list of AnyRows
         values.any() && values.all { it is AnyRow } ->
@@ -133,6 +138,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
             guessColumnType(
                 name = "",
                 values = values.asSequence(),
+                size = size,
                 suggestedType = suggestedType,
                 suggestedTypeIsUpperBound = true,
             ).cast()
@@ -226,6 +232,7 @@ internal fun <T> guessColumnType(name: String, values: Sequence<T>) = guessColum
 internal fun <T> guessColumnType(
     name: String,
     values: Sequence<T>,
+    size: Int?,
     suggestedType: KType? = null,
     suggestedTypeIsUpperBound: Boolean = false,
     defaultValue: T? = null,
@@ -258,7 +265,7 @@ internal fun <T> guessColumnType(
                     else -> throw IllegalStateException()
                 }
             }
-            DataColumn.createFrameColumn(name, frames).asDataColumn().cast()
+            DataColumn.createFrameColumn(name, frames, size = size).asDataColumn().cast()
         }
 
         List::class -> {
@@ -287,9 +294,9 @@ internal fun <T> guessColumnType(
                         (it as List<AnyRow>).concat()
                     }
                 }
-                DataColumn.createFrameColumn(name, frames).cast()
+                DataColumn.createFrameColumn(name, frames, size = size).cast()
             } else {
-                DataColumn.createValueColumn(name, lists, type, defaultValue = defaultValue).cast()
+                DataColumn.createValueColumn(name, lists, type, size = size, defaultValue = defaultValue).cast()
             }
         }
 
@@ -299,6 +306,7 @@ internal fun <T> guessColumnType(
                     name = name,
                     values = values,
                     type = type,
+                    size = size,
                     infer = if (detectType) Infer.None else Infer.Nulls,
                     defaultValue = defaultValue,
                 )
@@ -306,6 +314,7 @@ internal fun <T> guessColumnType(
                 DataColumn.createValueColumn(
                     name = name,
                     values = values,
+                    size = size,
                     type = type.withNullability(nullable),
                     defaultValue = defaultValue,
                 )

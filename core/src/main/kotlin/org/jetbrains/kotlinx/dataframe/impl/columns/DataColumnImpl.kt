@@ -71,9 +71,13 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override operator fun get(range: IntRange) = createWithValues(values[range])
+    override operator fun get(range: IntRange) = createWithValues(values[range], range.last - range.first + 1)
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
 
-    protected abstract fun createWithValues(values: Sequence<T>, hasNulls: Boolean? = null): DataColumn<T>
+    protected abstract fun createWithValues(
+        values: Sequence<T>,
+        size: Int? = null,
+        hasNulls: Boolean? = null,
+    ): DataColumn<T>
 }

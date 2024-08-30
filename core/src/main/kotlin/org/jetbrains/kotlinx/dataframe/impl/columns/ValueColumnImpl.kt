@@ -37,19 +37,19 @@ internal open class ValueColumnImpl<T>(
         return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }
 
-    override fun createWithValues(values: Sequence<T>, hasNulls: Boolean?): ValueColumn<T> {
+    override fun createWithValues(values: Sequence<T>, size: Int?, hasNulls: Boolean?): ValueColumn<T> {
         val nulls = hasNulls ?: values.any { it == null }
-        return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
+        return DataColumn.createValueColumn(name, values, type.withNullability(nulls), size)
     }
 
     override fun get(indices: Iterable<Int>): ValueColumn<T> {
         var nullable = false
-        val newValues = indices.map {
+        val newValues = indices.asSequence().map {
             val value = values[it]
             if (value == null) nullable = true
             value
         }
-        return createWithValues(newValues, nullable)
+        return createWithValues(newValues, null, nullable)
     }
 
     override fun get(columnName: String) =

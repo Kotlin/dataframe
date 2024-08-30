@@ -229,20 +229,22 @@ public interface DataColumn<out T> : BaseColumn<T> {
         public fun <T> createFrameColumn(
             name: String,
             groups: Sequence<DataFrame<T>>,
+            size: Int? = null,
             schema: Lazy<DataFrameSchema>? = null,
-        ): FrameColumn<T> = FrameColumnImpl(name, groups.toColumnDataHolder(), schema)
+        ): FrameColumn<T> = FrameColumnImpl(name, groups.toColumnDataHolder(size), schema)
 
         public fun <T> createWithTypeInference(
             name: String,
             values: List<T>,
             nullable: Boolean? = null,
-        ): DataColumn<T> = guessColumnType(name, values.asSequence(), nullable = nullable)
+        ): DataColumn<T> = guessColumnType(name, values.asSequence(), size = values.size, nullable = nullable)
 
         public fun <T> createWithTypeInference(
             name: String,
             values: Sequence<T>,
+            size: Int? = null,
             nullable: Boolean? = null,
-        ): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
+        ): DataColumn<T> = guessColumnType(name, values, size = size, nullable = nullable)
 
         public fun <T> create(
             name: String,

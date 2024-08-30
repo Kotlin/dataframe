@@ -35,8 +35,8 @@ internal open class FrameColumnImpl<T>(
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?) =
         DataColumn.createFrameColumn(name, values)
 
-    override fun createWithValues(values: Sequence<DataFrame<T>>, hasNulls: Boolean?) =
-        DataColumn.createFrameColumn(name, values)
+    override fun createWithValues(values: Sequence<DataFrame<T>>, size: Int?, hasNulls: Boolean?) =
+        DataColumn.createFrameColumn(name, values, size)
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
 

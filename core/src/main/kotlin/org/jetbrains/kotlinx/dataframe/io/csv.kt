@@ -338,7 +338,6 @@ public fun DataFrame.Companion.readDelim(
         csvParser = format.parse(getReader())
         if (readLines == null) {
             csvParser.forEachIndexed { i, it ->
-                // println("read line $i")
                 yield(it)
             }
         } else {
@@ -352,6 +351,8 @@ public fun DataFrame.Companion.readDelim(
         }
 
         println("read file ${++i} times entirely")
+
+        // if (i == 7) throw Exception("read file $i times entirely")
     }
 
     val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }

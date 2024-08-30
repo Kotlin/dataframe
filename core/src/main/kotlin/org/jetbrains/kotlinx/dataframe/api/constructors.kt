@@ -220,7 +220,7 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 // region create DataColumn
 
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
-    createColumn(values.asIterable(), typeOf<T>(), true).forceResolve()
+    createColumn(values.asIterable(), typeOf<T>(), values.size, true).forceResolve()
 
 public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
@@ -241,7 +241,7 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
     ).forceResolve()
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
-    createColumn(values, typeOf<T>(), false).forceResolve()
+    createColumn(values, typeOf<T>(), null, false).forceResolve()
 
 // endregion
 

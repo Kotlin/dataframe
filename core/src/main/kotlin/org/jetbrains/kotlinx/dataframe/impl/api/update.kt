@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.replace
@@ -23,9 +22,8 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.columns.toColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.impl.columns.AddDataRowImpl
-import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.isSubclassOf
@@ -104,44 +102,49 @@ internal fun <T, C> DataColumn<C>.updateImpl(
     // TODO create sequence
 
     val src = this
-//    val sequence = sequence {
-//        if (filter == null) {
-//            df.forEach {
-//                val rowIndex = it.index()
-//                val row = AddDataRowImpl(rowIndex, df, collector.values)
-//                collector.add(expression(row, src, src[rowIndex]))
-//            }
-//        } else {
-//            df.forEach { rowIndex ->
-//                val row = AddDataRowImpl(rowIndex, df, collector.values)
-//                val currentValue = row[src]
-//                val newValue =
-//                    if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
-//                collector.add(newValue)
-//            }
-//        }
-//    }
-
-
-
-
-    val collector = createDataCollector<C>(size, type)
-//    val src = this
-    if (filter == null) {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            collector.add(expression(row, src, src[rowIndex]))
-        }
-    } else {
-        df.indices().forEach { rowIndex ->
-            val row = AddDataRowImpl(rowIndex, df, collector.values)
-            val currentValue = row[src]
-            val newValue =
-                if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
-            collector.add(newValue)
+    var sequence: Sequence<C?>? = null
+    val sequenceUpTo: (Int) -> Sequence<C?> = { index -> sequence!!.take(index) }
+    sequence = sequence {
+        if (filter == null) {
+            df.forEach {
+                val rowIndex = it.index()
+                val row = AddDataRowImpl(rowIndex, df, sequenceUpTo(rowIndex).toColumnDataHolder())
+                yield(expression(row, src, src[rowIndex]))
+            }
+        } else {
+            df.forEach {
+                val rowIndex = it.index()
+                val row = AddDataRowImpl(rowIndex, df, sequenceUpTo(rowIndex).toColumnDataHolder())
+                val currentValue = row[src]
+                val newValue = if (filter.invoke(row, currentValue)) {
+                    expression(row, src, currentValue)
+                } else {
+                    currentValue
+                }
+                yield(newValue)
+            }
         }
     }
-    return collector.toColumn(src.name).cast()
+
+    return DataColumn.create(src.name, sequence, type).cast()
+
+//    val collector = createDataCollector<C>(size, type)
+// //    val src = this
+//    if (filter == null) {
+//        df.indices().forEach { rowIndex ->
+//            val row = AddDataRowImpl(rowIndex, df, collector.values)
+//            collector.add(expression(row, src, src[rowIndex]))
+//        }
+//    } else {
+//        df.indices().forEach { rowIndex ->
+//            val row = AddDataRowImpl(rowIndex, df, collector.values)
+//            val currentValue = row[src]
+//            val newValue =
+//                if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
+//            collector.add(newValue)
+//        }
+//    }
+//    return collector.toColumn(src.name).cast()
 }
 
 /**
