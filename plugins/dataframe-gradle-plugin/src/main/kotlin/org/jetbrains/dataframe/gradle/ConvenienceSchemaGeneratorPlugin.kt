@@ -5,14 +5,25 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.UnknownConfigurationException
 import org.gradle.kotlin.dsl.getByType
-import org.jetbrains.kotlin.gradle.plugin.extraProperties
 import java.util.Properties
 
 @Suppress("unused")
 class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
+    companion object {
+        /**
+         * (boolean, default `true`) whether to add KSP plugin
+         */
+        const val PROP_ADD_KSP = "kotlin.dataframe.add.ksp"
+
+        /**
+         * (string, default `null`) comma-delimited list of configurations to add KSP processing to.
+         * Defaults to guessing configurations based on which kotlin plugin is applied (jvm or multiplatform)
+         */
+        const val PROP_KSP_CONFIGS = "kotlin.dataframe.ksp.configs"
+    }
+
     override fun apply(target: Project) {
-        val name = "kotlin.dataframe.add.ksp"
-        val property = target.findProperty(name)?.toString()
+        val property = target.findProperty(PROP_ADD_KSP)?.toString()
         var addKsp = true
 
         if (property != null) {
@@ -20,7 +31,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 addKsp = property.toBoolean()
             } else {
                 target.logger.warn(
-                    "Invalid value '$property' for '$name' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.",
+                    "Invalid value '$property' for '$PROP_ADD_KSP' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.",
                 )
             }
         }
@@ -47,23 +58,11 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                         }
                     }
                 }
-                val customConfigsProp = "kotlin.dataframe.ksp.configs"
-                var overriddenConfigs =
-                    target.properties.get(customConfigsProp)?.let { (it as String)}?.split(",")
-                if (overriddenConfigs != null) {
-                    overriddenConfigs =
-                        target.extraProperties.get(customConfigsProp)?.let { (it as String)}?.split(",")
-                } else {
-                    if (customConfigsProp in target.extraProperties.properties) {
-                        target.logger.warn(
-                            "`$customConfigsProp` set as both a regular and an extra property. Only the regular property value is used.",
-                        )
-                    }
-                }
+                val overriddenConfigs = target.findProperty(PROP_KSP_CONFIGS)?.let { (it as String) }?.split(",")
                 val configs = when {
                     overriddenConfigs != null -> overriddenConfigs
-                    isMultiplatform -> listOf("kspJvm","kspJvmTest")
-                    else -> listOf("ksp","kspTest")
+                    isMultiplatform -> listOf("kspJvm", "kspJvmTest")
+                    else -> listOf("ksp", "kspTest")
                 }
                 configs.forEach { cfg ->
                     try {
