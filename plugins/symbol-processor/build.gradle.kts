@@ -1,4 +1,6 @@
-import org.jetbrains.kotlinx.publisher.PomUtilKt
+import org.jetbrains.kotlinx.publisher.apache2
+import org.jetbrains.kotlinx.publisher.developer
+import org.jetbrains.kotlinx.publisher.githubRepo
 
 plugins {
     alias(libs.plugins.shadow)
@@ -9,8 +11,8 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url = "https://jitpack.io" }
-    maven { url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" }
+    maven(url = "https://jitpack.io")
+    maven(url = "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
@@ -34,23 +36,21 @@ dependencies {
 
 kotlinPublications {
     pom {
-        use(PomUtilKt) {
-            githubRepo("Kotlin", "dataframe")
-            inceptionYear.set("2021")
-            licenses {
-                apache2()
-            }
-            developers {
-                developer("koperagen", "Nikita Klimenko", "nikita.klimenko@jetbrains.com")
-            }
+        githubRepo("Kotlin", "dataframe")
+        inceptionYear = "2021"
+        licenses {
+            apache2()
+        }
+        developers {
+            developer("koperagen", "Nikita Klimenko", "nikita.klimenko@jetbrains.com")
         }
     }
 
     publication {
-        groupId.set("org.jetbrains.kotlinx.dataframe")
-        publicationName.set("maven")
-        artifactId.set("symbol-processor-all")
-        description.set("Annotation preprocessor for DataFrame")
-        packageName.set(artifactId)
+        groupId = "org.jetbrains.kotlinx.dataframe"
+        publicationName = "maven"
+        artifactId = "symbol-processor-all"
+        description = "Annotation preprocessor for DataFrame"
+        packageName = artifactId
     }
 }

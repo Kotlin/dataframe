@@ -34,10 +34,10 @@ dependencies {
 
 kotlinPublications {
     publication {
-        publicationName.set("dataframeArrow")
-        artifactId.set(project.name)
-        description.set("Apache Arrow support for Kotlin Dataframe")
-        packageName.set(artifactId)
+        publicationName = "dataframeArrow"
+        artifactId = project.name
+        description = "Apache Arrow support for Kotlin Dataframe"
+        packageName = artifactId
     }
 }
 

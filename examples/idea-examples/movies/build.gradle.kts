@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -15,7 +16,7 @@ repositories {
     mavenLocal() // in case of local dataframe development
 }
 
-application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.movies.MoviesWithDataClassKt")
+application.mainClass = "org.jetbrains.kotlinx.dataframe.examples.movies.MoviesWithDataClassKt"
 
 dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
@@ -23,5 +24,5 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 }

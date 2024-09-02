@@ -40,10 +40,10 @@ dependencies {
 
 kotlinPublications {
     publication {
-        publicationName.set("dataframeOpenApi")
-        artifactId.set(project.name)
-        description.set("OpenAPI support for Kotlin Dataframe")
-        packageName.set(artifactId)
+        publicationName = "dataframeOpenApi"
+        artifactId = project.name
+        description = "OpenAPI support for Kotlin Dataframe"
+        packageName = artifactId
     }
 }
 

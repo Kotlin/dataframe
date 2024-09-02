@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     id("java")
     kotlin("jvm")
@@ -67,10 +70,14 @@ tasks.test {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs += listOf("-Xfriend-paths=${project(":core").projectDir}")
-        freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
-        freeCompilerArgs += "-Xcontext-receivers"
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xfriend-paths=${project(":core").projectDir}",
+            "-Xcontext-receivers",
+        )
+        optIn.addAll(
+            "org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi",
+        )
     }
 }
 
@@ -80,22 +87,22 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.compileKotlin {
-    kotlinOptions {
-        languageVersion = "2.0"
-        jvmTarget = "1.8"
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_0
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }
 
 tasks.compileTestKotlin {
-    kotlinOptions {
-        languageVersion = "2.0"
-        jvmTarget = "1.8"
+    compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_0
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }
 
 tasks.create<JavaExec>("generateTests") {
     classpath = sourceSets.test.get().runtimeClasspath
-    mainClass.set("org.jetbrains.kotlin.fir.dataframe.GenerateTestsKt")
+    mainClass = "org.jetbrains.kotlin.fir.dataframe.GenerateTestsKt"
 }
 
 fun Test.setLibraryProperty(propName: String, jarName: String) {
@@ -109,11 +116,11 @@ fun Test.setLibraryProperty(propName: String, jarName: String) {
 }
 
 kotlinPublications {
-    fairDokkaJars.set(false)
+    fairDokkaJars = false
     publication {
-        publicationName.set("api")
-        artifactId.set("compiler-plugin-all")
-        description.set("Data processing in Kotlin")
-        packageName.set(artifactId)
+        publicationName = "api"
+        artifactId = "compiler-plugin-all"
+        description = "Data processing in Kotlin"
+        packageName = artifactId
     }
 }
