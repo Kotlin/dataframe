@@ -2,8 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toJavaLocalDate
-import kotlinx.datetime.toJavaLocalTime
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BaseFixedWidthVector
 import org.apache.arrow.vector.BaseVariableWidthVector
@@ -229,7 +227,7 @@ internal class ArrowWriterImpl(
             is DateDayVector ->
                 column.convertToLocalDate()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toJavaLocalDate().toEpochDay().toInt()) }
+                        value?.also { vector.set(i, value.toEpochDays()) }
                             ?: vector.setNull(i)
                     }
 
@@ -243,21 +241,21 @@ internal class ArrowWriterImpl(
             is TimeNanoVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toJavaLocalTime().toNanoOfDay()) }
+                        value?.also { vector.set(i, value.toNanosecondOfDay()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMicroVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toJavaLocalTime().toNanoOfDay() / 1000) }
+                        value?.also { vector.set(i, value.toNanosecondOfDay() / 1000) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMilliVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, (value.toJavaLocalTime().toNanoOfDay() / 1000 / 1000).toInt()) }
+                        value?.also { vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000).toInt()) }
                             ?: vector.setNull(i)
                     }
 
@@ -265,7 +263,7 @@ internal class ArrowWriterImpl(
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
                         value?.also {
-                            vector.set(i, (value.toJavaLocalTime().toNanoOfDay() / 1000 / 1000 / 1000).toInt())
+                            vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000 / 1000).toInt())
                         } ?: vector.setNull(i)
                     }
 
