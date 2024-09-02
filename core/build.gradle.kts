@@ -28,6 +28,8 @@ plugins {
         alias(ksp)
     }
     idea
+
+    id("org.jetbrains.kotlinx.benchmark") version "0.4.11"
 }
 
 group = "org.jetbrains.kotlinx"
@@ -69,6 +71,7 @@ dependencies {
     implementation(libs.commonsIo)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
+    implementation("de.siegmar:fastcsv:2.2.2")
 
     implementation(libs.fuel)
 
@@ -83,6 +86,17 @@ dependencies {
     }
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.11")
+    implementation("com.jsoizo:kotlin-csv:1.10.0")
+    implementation("io.deephaven:deephaven-csv:0.14.0")
+}
+
+benchmark {
+    targets {
+        register("test") {
+        }
+    }
 }
 
 val samplesImplementation by configurations.getting {
@@ -415,4 +429,8 @@ dataframes {
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
     }
+}
+
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs = listOf("-Xms4g", "-Xmx20g")
 }

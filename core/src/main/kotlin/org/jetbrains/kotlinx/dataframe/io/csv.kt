@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.setNullable
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedInputStream
 import java.io.BufferedReader
@@ -314,6 +316,7 @@ public fun ColType.toType(): KClass<out Any> =
         ColType.String -> String::class
     }
 
+
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
     format: CSVFormat = CSVFormat.DEFAULT.builder()
@@ -367,6 +370,94 @@ public fun DataFrame.Companion.readDelim(
         }
         val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
         when (colType) {
+            null -> column.tryParse(parserOptions)
+
+            else -> {
+                val parser = Parsers[colType.toType()]!!
+                column.parse(parser, parserOptions)
+            }
+        }
+    }
+    return cols.toDataFrame()
+}
+
+public fun DataFrame.Companion.readDelimApacheSequential(
+    reader: Reader,
+    format: CSVFormat = CSVFormat.DEFAULT.builder()
+        .setHeader()
+        .build(),
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0,
+    readLines: Int? = null,
+    parserOptions: ParserOptions? = null,
+): AnyFrame {
+    var reader = reader
+    if (skipLines > 0) {
+        reader = BufferedReader(reader)
+        repeat(skipLines) { reader.readLine() }
+    }
+
+    val csvParser = format.parse(reader)
+    val records = if (readLines == null) {
+        csvParser.iterator()
+    } else {
+        require(readLines >= 0) { "`readLines` must not be negative" }
+        val iter = csvParser.iterator()
+        var count = readLines ?: 0
+        iterator {
+            while (iter.hasNext() && 0 < count--) {
+                yield(iter.next())
+            }
+        }
+    }
+
+    var firstRow = if (records.hasNext()) records.next() else null
+    val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
+        ?: (1..(firstRow?.count() ?: 0)).map { index -> "X$index" }
+
+    val generator = ColumnNameGenerator()
+    val uniqueNames = columnNames.map { generator.addUnique(it) }
+
+    val columnCollectors = uniqueNames.map { _ ->
+        createDataCollector<String?>(type = typeOf<String?>())
+    }
+
+    if (firstRow != null)  {
+        for ((i, col) in columnCollectors.withIndex()) {
+            if (firstRow.isSet(i)) {
+                val value = firstRow[i]
+                if (value.isEmpty()) {
+                    col.add(null)
+                } else {
+                    col.add(value)
+                }
+            } else {
+                col.add(null)
+            }
+        }
+    }
+    while (records.hasNext()) {
+        val row = records.next()
+        for ((i, col) in columnCollectors.withIndex()) {
+            if (row.isSet(i)) {
+                val value = row[i]
+                if (value.isEmpty()) {
+                    col.add(null)
+                } else {
+                    col.add(value)
+                }
+            } else {
+                col.add(null)
+            }
+        }
+    }
+
+    val defaultColType = colTypes[".default"]
+    val cols = columnCollectors.mapIndexed { i, col ->
+        val colName = uniqueNames[i]
+        val column = col.toColumn(colName) // already infers nullability
+
+        when (val colType = colTypes[colName] ?: defaultColType) {
             null -> column.tryParse(parserOptions)
 
             else -> {
