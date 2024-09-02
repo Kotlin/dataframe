@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDate
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import java.net.URL
-import java.time.LocalDate
 
 /**
  * DataFrame to be saved in Apache Arrow
@@ -67,12 +67,12 @@ val citiesExampleFrame = dataFrameOf(
     DataColumn.createValueColumn(
         "settled",
         listOf(
-            LocalDate.of(1237, 1, 1),
-            LocalDate.of(1189, 5, 7),
-            LocalDate.of(1624, 1, 1),
-            LocalDate.of(1790, 7, 16),
-            LocalDate.of(1703, 5, 27),
-            LocalDate.of(1929, 2, 11),
+            LocalDate(1237, 1, 1),
+            LocalDate(1189, 5, 7),
+            LocalDate(1624, 1, 1),
+            LocalDate(1790, 7, 16),
+            LocalDate(1703, 5, 27),
+            LocalDate(1929, 2, 11),
         ),
     ),
     DataColumn.createValueColumn(
