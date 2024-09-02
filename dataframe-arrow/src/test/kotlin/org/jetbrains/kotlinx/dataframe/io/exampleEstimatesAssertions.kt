@@ -1,18 +1,24 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import java.math.BigInteger
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.ZoneOffset
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
 
 /**
  * Assert that we have got the same data that was originally saved on example creation.
@@ -133,7 +139,7 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
     val dateCol = exampleFrame["date32"] as DataColumn<LocalDate?>
     dateCol.type() shouldBe typeOf<LocalDate>().withNullability(expectedNullable)
     dateCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, LocalDate.ofEpochDay(iBatch(i).toLong() * 30))
+        assertValueOrNull(iBatch(i), element, JavaLocalDate.ofEpochDay(iBatch(i).toLong() * 30).toKotlinLocalDate())
     }
 
     val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDateTime?>
@@ -142,32 +148,38 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
         assertValueOrNull(
             rowNumber = iBatch(i),
             actual = element,
-            expected = LocalDateTime.ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC),
+            expected = JavaLocalDateTime
+                .ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC)
+                .toKotlinLocalDateTime(),
         )
     }
 
     val timeSecCol = exampleFrame["time32_seconds"] as DataColumn<LocalTime?>
     timeSecCol.type() shouldBe typeOf<LocalTime>().withNullability(expectedNullable)
     timeSecCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, LocalTime.ofSecondOfDay(iBatch(i).toLong()))
+        assertValueOrNull(iBatch(i), element, JavaLocalTime.ofSecondOfDay(iBatch(i).toLong()).toKotlinLocalTime())
     }
 
     val timeMilliCol = exampleFrame["time32_milli"] as DataColumn<LocalTime?>
     timeMilliCol.type() shouldBe typeOf<LocalTime>().withNullability(expectedNullable)
     timeMilliCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, LocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000_000))
+        assertValueOrNull(
+            rowNumber = iBatch(i),
+            actual = element,
+            expected = JavaLocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000_000).toKotlinLocalTime(),
+        )
     }
 
     val timeMicroCol = exampleFrame["time64_micro"] as DataColumn<LocalTime?>
     timeMicroCol.type() shouldBe typeOf<LocalTime>().withNullability(expectedNullable)
     timeMicroCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, LocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000))
+        assertValueOrNull(iBatch(i), element, JavaLocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000).toKotlinLocalTime())
     }
 
     val timeNanoCol = exampleFrame["time64_nano"] as DataColumn<LocalTime?>
     timeNanoCol.type() shouldBe typeOf<LocalTime>().withNullability(expectedNullable)
     timeNanoCol.forEachIndexed { i, element ->
-        assertValueOrNull(iBatch(i), element, LocalTime.ofNanoOfDay(iBatch(i).toLong()))
+        assertValueOrNull(iBatch(i), element, JavaLocalTime.ofNanoOfDay(iBatch(i).toLong()).toKotlinLocalTime())
     }
 
     exampleFrame.getColumnOrNull("nulls")?.let { nullCol ->
