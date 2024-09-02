@@ -5,7 +5,7 @@ plugins {
     id("java")
     kotlin("jvm")
     kotlin("libs.publisher")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     kotlin("plugin.serialization")
 }
 
@@ -42,12 +42,12 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":dataframe-excel"))
     api(libs.kotlinLogging)
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
 
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-compiler-internal-test-framework:$kotlinVersion")
 
-    testImplementation(platform("org.junit:junit-bom:5.8.0"))
+    testImplementation(platform("org.junit:junit-bom:5.11.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.junit.platform:junit-platform-commons")
     testImplementation("org.junit.platform:junit-platform-launcher")
