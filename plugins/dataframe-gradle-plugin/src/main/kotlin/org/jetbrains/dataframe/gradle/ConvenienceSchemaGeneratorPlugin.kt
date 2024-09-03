@@ -58,7 +58,10 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                         }
                     }
                 }
-                val overriddenConfigs = target.findProperty(PROP_KSP_CONFIGS)?.let { (it as String) }?.split(",")
+                val overriddenConfigs = target.findProperty(PROP_KSP_CONFIGS)
+                    ?.let { (it as String) }
+                    ?.split(",")
+                    ?.map { it.trim() }
                 val configs = when {
                     overriddenConfigs != null -> overriddenConfigs
                     isMultiplatform -> listOf("kspJvm", "kspJvmTest")
