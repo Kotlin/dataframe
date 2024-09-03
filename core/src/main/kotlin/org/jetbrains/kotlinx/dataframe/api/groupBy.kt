@@ -29,6 +29,7 @@ import kotlin.reflect.KProperty
  *
  * `df.add("columnName") { "someColumn"<Int>() + 15 }.groupBy("columnName")`
  */
+@Refine
 @Interpretable("DataFrameGroupBy")
 public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> =
     groupByImpl(moveToTop, cols)
