@@ -207,6 +207,7 @@ public class AddDsl<T>(
 
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
 
+    @Interpretable("AddDslStringInvoke")
     public operator fun String.invoke(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
     public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
