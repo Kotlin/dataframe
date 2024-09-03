@@ -10,7 +10,7 @@ class PrimitiveArrayListTests {
     fun `test primitive array list`() {
         val list = PrimitiveArrayList<Int>(PrimitiveArrayList.State.INT) as PrimitiveArrayList<Any>
         list.add(1)
-        shouldThrow<ClassCastException> { list.remove(2.0) }
+        list.remove(2.0) shouldBe false
         list.addAll(listOf(2, 3))
 
         (list as PrimitiveArrayList<Int>).toIntArray() shouldBe intArrayOf(1, 2, 3)
@@ -29,7 +29,7 @@ class PrimitiveArrayListTests {
         list.canAdd(1) shouldBe true
         list.canAdd(1.0) shouldBe false
 
-        shouldThrow<ClassCastException> { list.add(1.0) }
+        shouldThrow<IllegalArgumentException> { list.add(1.0) }
 
         list.isEmpty() shouldBe false
         list.size shouldBe 1

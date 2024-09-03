@@ -291,6 +291,7 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
 
         override fun iterator(): MutableIterator<T> = listIterator()
 
+        /** Prefer the primitive overloads! */
         override fun lastIndexOf(element: T): Int =
             when (state) {
                 BOOLEAN -> (arrayList as BooleanArrayList).lastIndexOf(element as Boolean)
@@ -304,6 +305,55 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 null -> error("List is not initialized")
             }
 
+        fun lastIndexOf(element: Boolean) =
+            when (state) {
+                BOOLEAN -> (arrayList as BooleanArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        fun lastIndexOf(element: Byte) =
+            when (state) {
+                BYTE -> (arrayList as ByteArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        fun lastIndexOf(element: Char) =
+            when (state) {
+                CHAR -> (arrayList as CharArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        fun lastIndexOf(element: Short) =
+            when (state) {
+                SHORT -> (arrayList as ShortArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        fun lastIndexOf(element: Int) =
+            when (state) {
+                INT -> (arrayList as IntArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        fun lastIndexOf(element: Long) =
+            when (state) {
+                LONG -> (arrayList as LongArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        fun lastIndexOf(element: Float) =
+            when (state) {
+                FLOAT -> (arrayList as FloatArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        fun lastIndexOf(element: Double) =
+            when (state) {
+                DOUBLE -> (arrayList as DoubleArrayList).lastIndexOf(element)
+                else -> -1
+            }
+
+        /** Prefer the primitive overloads! */
         @Suppress("UNCHECKED_CAST")
         override fun add(element: T): Boolean =
             when (state) {
@@ -339,6 +389,111 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 }
             }
 
+        fun add(element: Boolean) {
+            when (state) {
+                BOOLEAN -> (arrayList as BooleanArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(BOOLEAN)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(element: Byte) {
+            when (state) {
+                BYTE -> (arrayList as ByteArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(BYTE)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(element: Char) {
+            when (state) {
+                CHAR -> (arrayList as CharArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(CHAR)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(element: Short) {
+            when (state) {
+                SHORT -> (arrayList as ShortArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(SHORT)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(element: Int) {
+            when (state) {
+                INT -> (arrayList as IntArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(INT)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(element: Long) {
+            when (state) {
+                LONG -> (arrayList as LongArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(LONG)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(element: Float) {
+            when (state) {
+                FLOAT -> (arrayList as FloatArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(FLOAT)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(element: Double) {
+            when (state) {
+                DOUBLE -> (arrayList as DoubleArrayList).add(element)
+
+                null -> {
+                    initializeArrayList(DOUBLE)
+                    add(element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        /** Prefer the primitive overloads! */
         override fun add(index: Int, element: T) {
             when (state) {
                 BOOLEAN -> (arrayList as BooleanArrayList).add(index, element as Boolean)
@@ -371,6 +526,110 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                     }
                     add(index, element)
                 }
+            }
+        }
+
+        fun add(index: Int, element: Boolean) {
+            when (state) {
+                BOOLEAN -> (arrayList as BooleanArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(BOOLEAN)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(index: Int, element: Byte) {
+            when (state) {
+                BYTE -> (arrayList as ByteArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(BYTE)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(index: Int, element: Char) {
+            when (state) {
+                CHAR -> (arrayList as CharArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(CHAR)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(index: Int, element: Short) {
+            when (state) {
+                SHORT -> (arrayList as ShortArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(SHORT)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(index: Int, element: Int) {
+            when (state) {
+                INT -> (arrayList as IntArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(INT)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(index: Int, element: Long) {
+            when (state) {
+                LONG -> (arrayList as LongArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(LONG)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(index: Int, element: Float) {
+            when (state) {
+                FLOAT -> (arrayList as FloatArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(FLOAT)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
+            }
+        }
+
+        fun add(index: Int, element: Double) {
+            when (state) {
+                DOUBLE -> (arrayList as DoubleArrayList).add(index, element)
+
+                null -> {
+                    initializeArrayList(DOUBLE)
+                    add(index, element)
+                }
+
+                else -> throw IllegalArgumentException("Unsupported element type: ${element::class}")
             }
         }
 
@@ -473,6 +732,7 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 }
             }
 
+        /** Prefer the primitive overloads! */
         fun canAdd(element: Any): Boolean =
             when (state) {
                 BOOLEAN -> element is Boolean
@@ -502,12 +762,29 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                         element is Double
             }
 
+        fun canAdd(element: Boolean) = state == BOOLEAN || state == null
+
+        fun canAdd(element: Byte) = state == BYTE || state == null
+
+        fun canAdd(element: Char) = state == CHAR || state == null
+
+        fun canAdd(element: Short) = state == SHORT || state == null
+
+        fun canAdd(element: Int) = state == INT || state == null
+
+        fun canAdd(element: Long) = state == LONG || state == null
+
+        fun canAdd(element: Float) = state == FLOAT || state == null
+
+        fun canAdd(element: Double) = state == DOUBLE || state == null
+
         override val size: Int
             get() = arrayList?.size ?: 0
 
         @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
         override fun clear() = (arrayList as java.util.Collection<*>).clear()
 
+        /** Prefer the primitive overloads! */
         @Suppress("UNCHECKED_CAST")
         override fun get(index: Int): T =
             when (state) {
@@ -522,8 +799,25 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 else -> throw IndexOutOfBoundsException("Index: $index, Size: $size")
             } as T
 
+        fun getBoolean(index: Int): Boolean = (arrayList as BooleanArrayList).getBoolean(index)
+
+        fun getByte(index: Int): Byte = (arrayList as ByteArrayList).getByte(index)
+
+        fun getChar(index: Int): Char = (arrayList as CharArrayList).getChar(index)
+
+        fun getShort(index: Int): Short = (arrayList as ShortArrayList).getShort(index)
+
+        fun getInt(index: Int): Int = (arrayList as IntArrayList).getInt(index)
+
+        fun getLong(index: Int): Long = (arrayList as LongArrayList).getLong(index)
+
+        fun getFloat(index: Int): Float = (arrayList as FloatArrayList).getFloat(index)
+
+        fun getDouble(index: Int): Double = (arrayList as DoubleArrayList).getDouble(index)
+
         override fun isEmpty(): Boolean = arrayList?.isEmpty() ?: true
 
+        /** Prefer the primitive overloads! */
         override fun indexOf(element: T): Int =
             when (state) {
                 BOOLEAN -> (arrayList as BooleanArrayList).indexOf(element as Boolean)
@@ -535,6 +829,54 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 FLOAT -> (arrayList as FloatArrayList).indexOf(element as Float)
                 DOUBLE -> (arrayList as DoubleArrayList).indexOf(element as Double)
                 null -> -1
+            }
+
+        fun indexOf(element: Boolean): Int =
+            when (state) {
+                BOOLEAN -> (arrayList as BooleanArrayList).indexOf(element)
+                else -> -1
+            }
+
+        fun indexOf(element: Byte): Int =
+            when (state) {
+                BYTE -> (arrayList as ByteArrayList).indexOf(element)
+                else -> -1
+            }
+
+        fun indexOf(element: Char): Int =
+            when (state) {
+                CHAR -> (arrayList as CharArrayList).indexOf(element)
+                else -> -1
+            }
+
+        fun indexOf(element: Short): Int =
+            when (state) {
+                SHORT -> (arrayList as ShortArrayList).indexOf(element)
+                else -> -1
+            }
+
+        fun indexOf(element: Int): Int =
+            when (state) {
+                INT -> (arrayList as IntArrayList).indexOf(element)
+                else -> -1
+            }
+
+        fun indexOf(element: Long): Int =
+            when (state) {
+                LONG -> (arrayList as LongArrayList).indexOf(element)
+                else -> -1
+            }
+
+        fun indexOf(element: Float): Int =
+            when (state) {
+                FLOAT -> (arrayList as FloatArrayList).indexOf(element)
+                else -> -1
+            }
+
+        fun indexOf(element: Double): Int =
+            when (state) {
+                DOUBLE -> (arrayList as DoubleArrayList).indexOf(element)
+                else -> -1
             }
 
         @Suppress("UNCHECKED_CAST")
@@ -551,6 +893,7 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 null -> elements.isEmpty()
             }
 
+        /** Prefer the primitive overloads! */
         override fun contains(element: T): Boolean =
             when (state) {
                 BOOLEAN -> (arrayList as BooleanArrayList).contains(element as Boolean)
@@ -564,6 +907,55 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 null -> false
             }
 
+        operator fun contains(element: Boolean): Boolean =
+            when (state) {
+                BOOLEAN -> (arrayList as BooleanArrayList).contains(element)
+                else -> false
+            }
+
+        operator fun contains(element: Byte): Boolean =
+            when (state) {
+                BYTE -> (arrayList as ByteArrayList).contains(element)
+                else -> false
+            }
+
+        operator fun contains(element: Char): Boolean =
+            when (state) {
+                CHAR -> (arrayList as CharArrayList).contains(element)
+                else -> false
+            }
+
+        operator fun contains(element: Short): Boolean =
+            when (state) {
+                SHORT -> (arrayList as ShortArrayList).contains(element)
+                else -> false
+            }
+
+        operator fun contains(element: Int): Boolean =
+            when (state) {
+                INT -> (arrayList as IntArrayList).contains(element)
+                else -> false
+            }
+
+        operator fun contains(element: Long): Boolean =
+            when (state) {
+                LONG -> (arrayList as LongArrayList).contains(element)
+                else -> false
+            }
+
+        operator fun contains(element: Float): Boolean =
+            when (state) {
+                FLOAT -> (arrayList as FloatArrayList).contains(element)
+                else -> false
+            }
+
+        operator fun contains(element: Double): Boolean =
+            when (state) {
+                DOUBLE -> (arrayList as DoubleArrayList).contains(element)
+                else -> false
+            }
+
+        /** Prefer the primitive overloads! */
         @Suppress("UNCHECKED_CAST")
         override fun removeAt(index: Int): T =
             when (state) {
@@ -578,8 +970,24 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 null -> error("List is not initialized")
             } as T
 
+        fun removeBooleanAt(index: Int): Boolean = (arrayList as BooleanArrayList).removeBoolean(index)
+
+        fun removeByteAt(index: Int): Byte = (arrayList as ByteArrayList).removeByte(index)
+
+        fun removeCharAt(index: Int): Char = (arrayList as CharArrayList).removeChar(index)
+
+        fun removeShortAt(index: Int): Short = (arrayList as ShortArrayList).removeShort(index)
+
+        fun removeIntAt(index: Int): Int = (arrayList as IntArrayList).removeInt(index)
+
+        fun removeLongAt(index: Int): Long = (arrayList as LongArrayList).removeLong(index)
+
+        fun removeFloatAt(index: Int): Float = (arrayList as FloatArrayList).removeFloat(index)
+
+        fun removeDoubleAt(index: Int): Double = (arrayList as DoubleArrayList).removeDouble(index)
+
         @Suppress("UNCHECKED_CAST")
-        override fun subList(fromIndex: Int, toIndex: Int): MutableList<T> =
+        override fun subList(fromIndex: Int, toIndex: Int): PrimitiveArrayList<T> =
             when (state) {
                 BOOLEAN -> BooleanArrayList(
                     (arrayList as BooleanArrayList).subList(fromIndex, toIndex),
@@ -616,6 +1024,7 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 null -> error("List is not initialized")
             } as PrimitiveArrayList<T>
 
+        /** Prefer the primitive overloads! */
         @Suppress("UNCHECKED_CAST")
         override fun set(index: Int, element: T): T =
             when (state) {
@@ -651,6 +1060,102 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 }
             } as T
 
+        operator fun set(index: Int, element: Boolean): Boolean =
+            when (state) {
+                BOOLEAN -> (arrayList as BooleanArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(BOOLEAN)
+                    set(index, element)
+                }
+
+                else -> false
+            }
+
+        operator fun set(index: Int, element: Byte): Byte =
+            when (state) {
+                BYTE -> (arrayList as ByteArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(BYTE)
+                    set(index, element)
+                }
+
+                else -> 0
+            }
+
+        operator fun set(index: Int, element: Char): Char =
+            when (state) {
+                CHAR -> (arrayList as CharArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(CHAR)
+                    set(index, element)
+                }
+
+                else -> 0.toChar()
+            }
+
+        operator fun set(index: Int, element: Short): Short =
+            when (state) {
+                SHORT -> (arrayList as ShortArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(SHORT)
+                    set(index, element)
+                }
+
+                else -> 0
+            }
+
+        operator fun set(index: Int, element: Int): Int =
+            when (state) {
+                INT -> (arrayList as IntArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(INT)
+                    set(index, element)
+                }
+
+                else -> 0
+            }
+
+        operator fun set(index: Int, element: Long): Long =
+            when (state) {
+                LONG -> (arrayList as LongArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(LONG)
+                    set(index, element)
+                }
+
+                else -> 0
+            }
+
+        operator fun set(index: Int, element: Float): Float =
+            when (state) {
+                FLOAT -> (arrayList as FloatArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(FLOAT)
+                    set(index, element)
+                }
+
+                else -> 0f
+            }
+
+        operator fun set(index: Int, element: Double): Double =
+            when (state) {
+                DOUBLE -> (arrayList as DoubleArrayList).set(index, element)
+
+                null -> {
+                    initializeArrayList(DOUBLE)
+                    set(index, element)
+                }
+
+                else -> 0.0
+            }
+
         @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
         override fun retainAll(elements: Collection<T>): Boolean =
             (arrayList as java.util.Collection<*>?)?.retainAll(elements) ?: false
@@ -659,6 +1164,7 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
         override fun removeAll(elements: Collection<T>): Boolean =
             (arrayList as java.util.Collection<*>?)?.removeAll(elements) ?: false
 
+        /** Prefer the primitive overloads! */
         override fun remove(element: T): Boolean =
             when (state) {
                 BOOLEAN -> (arrayList as BooleanArrayList).rem(element as Boolean)
@@ -670,6 +1176,54 @@ internal class PrimitiveArrayList<T : Any> private constructor(arrayList: List<T
                 FLOAT -> (arrayList as FloatArrayList).rem(element as Float)
                 DOUBLE -> (arrayList as DoubleArrayList).rem(element as Double)
                 null -> false
+            }
+
+        fun remove(element: Boolean): Boolean =
+            when (state) {
+                BOOLEAN -> (arrayList as BooleanArrayList).rem(element)
+                else -> false
+            }
+
+        fun remove(element: Byte): Boolean =
+            when (state) {
+                BYTE -> (arrayList as ByteArrayList).rem(element)
+                else -> false
+            }
+
+        fun remove(element: Char): Boolean =
+            when (state) {
+                CHAR -> (arrayList as CharArrayList).rem(element)
+                else -> false
+            }
+
+        fun remove(element: Short): Boolean =
+            when (state) {
+                SHORT -> (arrayList as ShortArrayList).rem(element)
+                else -> false
+            }
+
+        fun remove(element: Int): Boolean =
+            when (state) {
+                INT -> (arrayList as IntArrayList).rem(element)
+                else -> false
+            }
+
+        fun remove(element: Long): Boolean =
+            when (state) {
+                LONG -> (arrayList as LongArrayList).rem(element)
+                else -> false
+            }
+
+        fun remove(element: Float): Boolean =
+            when (state) {
+                FLOAT -> (arrayList as FloatArrayList).rem(element)
+                else -> false
+            }
+
+        fun remove(element: Double): Boolean =
+            when (state) {
+                DOUBLE -> (arrayList as DoubleArrayList).rem(element)
+                else -> false
             }
     }
 
