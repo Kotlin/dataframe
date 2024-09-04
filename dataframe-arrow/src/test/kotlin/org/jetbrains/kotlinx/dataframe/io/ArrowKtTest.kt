@@ -499,6 +499,28 @@ internal class ArrowKtTest {
     }
 
     @Test
+    fun testBigMixedColumn() {
+        val dataFrame = dataFrameOf(bigMixedColumn)
+        val warnings = ArrayList<ConvertingMismatch>()
+        val writer = dataFrame.arrowWriter(
+            targetSchema = Schema(listOf(
+                Field("bigMixedColumn", FieldType.nullable(ArrowType.Int(64, true)), emptyList())
+            )),
+            mode = ArrowWriter.Mode.LOYAL
+        ) {
+            warnings.add(it)
+        }
+        val stream = ByteArrayOutputStream()
+        writer.writeArrowFeather(stream)
+        val data = stream.toByteArray()
+
+        assert(warnings.filterIsInstance<ConvertingMismatch.TypeConversionFail.ConversionFailIgnored>().size == 1)
+        assert(warnings.filterIsInstance<ConvertingMismatch.SavedAsString>().size == 1)
+
+        DataFrame.readArrowFeather(data)["bigMixedColumn"] shouldBe dataFrame[bigMixedColumn].map { it.toString()}
+    }
+
+    @Test
     fun testTimeStamp() {
         val dates = listOf(
             LocalDateTime(2023, 11, 23, 9, 30, 25),
