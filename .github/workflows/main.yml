@@ -27,7 +27,7 @@ jobs:
       artifact: ${{ steps.generate-artifact.outputs.artifact }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Prepare for build
         run: |
           apt-get update
@@ -44,13 +44,13 @@ jobs:
 #          zip -r $ARTIFACT sitemap.xml
         working-directory: ${{ github.workspace }}
       - name: Upload modified documentation artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: help
           path: artifacts/${{ env.ARTIFACT }}
           retention-days: 7
       - name: Upload algolia-indexes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: algolia-indexes
           path: artifacts/${{ env.ALGOLIA_ARTIFACT }}
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: help
       - name: Unzip artifact
@@ -73,14 +73,14 @@ jobs:
         with:
           args: unzip -qq ${{ env.ARTIFACT }} -d dir
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dir
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
 
   publish-indexes:
     # Requires the build-job results
@@ -90,8 +90,8 @@ jobs:
         image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-2
 
     steps:
-        - uses: actions/checkout@v3
-        - uses: actions/download-artifact@v3
+        - uses: actions/checkout@v4
+        - uses: actions/download-artifact@v4
           with:
               name: algolia-indexes
         - uses: montudor/action-zip@v1
