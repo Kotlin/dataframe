@@ -11,6 +11,8 @@ import io.deephaven.csv.sinks.Source
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList
 import it.unimi.dsi.fastutil.ints.IntAVLTreeSet
 import it.unimi.dsi.fastutil.ints.IntSortedSet
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -61,10 +63,6 @@ public fun main() {
 
     val df1 = DataFrame.readDelimDeephavenCsv(file.inputStream())
         .also { it.print(borders = true, columnTypes = true, rowsLimit = 20) }
-    val df2 = DataFrame.readDelimDeephavenCsv(file.inputStream())
-        .also { it.print(borders = true, columnTypes = true, rowsLimit = 20) }
-    val df3 = DataFrame.readDelimDeephavenCsv(file.inputStream())
-        .also { it.print(borders = true, columnTypes = true, rowsLimit = 20) }
 }
 
 public fun DataFrame.Companion.readDelimDeephavenCsv(
@@ -73,7 +71,7 @@ public fun DataFrame.Companion.readDelimDeephavenCsv(
     colTypes: Map<String, ColType> = mapOf(),
     firstLineIsHeader: Boolean = true,
     readLines: Long? = null,
-    parserOptions: ParserOptions? = null,
+    parserOptions: ParserOptions = ParserOptions(),
 ): AnyFrame {
     val specs = CsvSpecs.builder()
         .hasHeaderRow(firstLineIsHeader)
@@ -89,6 +87,23 @@ public fun DataFrame.Companion.readDelimDeephavenCsv(
             }
         }
         .build()
+
+    val parserOptions = parserOptions.copy(
+        parsersToSkip = parserOptions.parsersToSkip +
+            listOf(
+                typeOf<Double>(),
+                typeOf<Float>(),
+                typeOf<Int>(),
+                typeOf<Long>(),
+                typeOf<Short>(),
+                typeOf<Byte>(),
+                typeOf<Boolean>(),
+                typeOf<Char>(),
+                typeOf<LocalDate>(),
+                typeOf<LocalDateTime>(),
+                typeOf<Instant>(),
+            ),
+    )
 
     val result = CsvReader.read(specs, inputStream, DeepHavenColumnDataHolderImpl.sinkFactory)
 

@@ -44,8 +44,6 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
-import java.time.Duration as JavaDuration
-import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
@@ -355,12 +353,17 @@ internal object Parsers : GlobalParserOptions {
 internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColumn<*> {
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
-    var hasNulls: Boolean
-    var hasNotNulls: Boolean
-    var nullStringParsed: Boolean
+    var hasNulls: Boolean = false
+    var hasNotNulls: Boolean = false
+    var nullStringParsed: Boolean = false
     val nulls = options?.nullStrings ?: Parsers.nulls
     do {
-        val parser = Parsers[parserId].applyOptions(options)
+        val retrievedParser = Parsers[parserId]
+        if (options?.parsersToSkip?.contains(retrievedParser.type) == true) {
+            parserId++
+            continue
+        }
+        val parser = retrievedParser.applyOptions(options)
         parsedValues.clear()
         hasNulls = false
         hasNotNulls = false
