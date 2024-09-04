@@ -33,6 +33,40 @@ public interface ColumnDataHolder<T> : List<T> {
 
     public fun add(element: T)
 
+    public fun add(boolean: Boolean)
+
+    public fun add(byte: Byte)
+
+    public fun add(short: Short)
+
+    public fun add(int: Int)
+
+    public fun add(long: Long)
+
+    public fun add(float: Float)
+
+    public fun add(double: Double)
+
+    public fun add(char: Char)
+
+    public operator fun set(index: Int, value: T)
+
+    public operator fun set(index: Int, value: Boolean)
+
+    public operator fun set(index: Int, value: Byte)
+
+    public operator fun set(index: Int, value: Short)
+
+    public operator fun set(index: Int, value: Int)
+
+    public operator fun set(index: Int, value: Long)
+
+    public operator fun set(index: Int, value: Float)
+
+    public operator fun set(index: Int, value: Double)
+
+    public operator fun set(index: Int, value: Char)
+
     public fun canAddPrimitively(element: Any?): Boolean
 
     public val distinct: Lazy<Set<T>>

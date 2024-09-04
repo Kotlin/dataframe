@@ -24,6 +24,22 @@ internal interface DataCollector<T> {
 
     public fun add(value: T)
 
+    public fun add(element: Boolean)
+
+    public fun add(element: Byte)
+
+    public fun add(element: Short)
+
+    public fun add(element: Int)
+
+    public fun add(element: Long)
+
+    public fun add(element: Float)
+
+    public fun add(element: Double)
+
+    public fun add(element: Char)
+
     public fun toColumn(name: String): DataColumn<T>
 }
 
@@ -40,6 +56,22 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
         if (value == null) hasNulls = true
         data.add(value)
     }
+
+    override fun add(element: Boolean) = data.add(element)
+
+    override fun add(element: Byte) = data.add(element)
+
+    override fun add(element: Short) = data.add(element)
+
+    override fun add(element: Int) = data.add(element)
+
+    override fun add(element: Long) = data.add(element)
+
+    override fun add(element: Float) = data.add(element)
+
+    override fun add(element: Double) = data.add(element)
+
+    override fun add(element: Char) = data.add(element)
 
     protected fun createColumn(name: String, type: KType): DataColumn<T> {
         val classifier = type.classifier as KClass<*>

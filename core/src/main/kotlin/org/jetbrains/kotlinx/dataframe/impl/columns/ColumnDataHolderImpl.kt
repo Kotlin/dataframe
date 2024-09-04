@@ -63,16 +63,16 @@ import kotlin.reflect.typeOf
  * @param zeroValue When [list] is a [PrimitiveArrayList], this is the zero value for the primitive type
  * @param nullIndices a set of indices where the null values are stored, only used if [list] is a [PrimitiveArrayList]
  */
-internal class ColumnDataHolderImpl<T>(
+internal open class ColumnDataHolderImpl<T>(
     private var list: MutableList<T> = PrimitiveArrayList<Any>() as MutableList<T>,
     distinct: Lazy<Set<T>>? = null,
     private var zeroValue: Any? = Undefined,
     private val nullIndices: IntSortedSet = IntAVLTreeSet(),
 ) : ColumnDataHolder<T> {
 
-    private object Undefined
+    protected object Undefined
 
-    private fun IntSortedSet.fastContains(index: Int): Boolean =
+    protected fun IntSortedSet.fastContains(index: Int): Boolean =
         when (size) {
             0 -> false
             1 -> firstInt() == index
@@ -86,7 +86,12 @@ internal class ColumnDataHolderImpl<T>(
         }.toMutableSet()
     }
 
-    override val size: Int get() = leadingNulls + list.size
+    override val size: Int
+        get() = if (zeroValue is Undefined) {
+            nullIndices.size
+        } else {
+            list.size
+        }
 
     override var usesPrimitiveArrayList = list is PrimitiveArrayList<*>
 
@@ -98,46 +103,644 @@ internal class ColumnDataHolderImpl<T>(
             else -> false
         }
 
-    // for when the list cannot be initialized yet, keeps track of potential leading null values
-    private var leadingNulls = 0
-
-    override fun add(element: T) {
+    private inline fun addingElement(
+        elementIsNull: Boolean,
+        listCanAddElement: Boolean,
+        addElementToDistinctSet: () -> Unit,
+        addElementToList: () -> Unit,
+        addZeroValueToList: () -> Unit,
+        setZeroValue: () -> Unit,
+    ) {
         // check if we need to switch to a boxed mutable list to add this element
         if (usesPrimitiveArrayList &&
-            element != null &&
-            !(list as PrimitiveArrayList<*>).canAdd(element)
+            !elementIsNull &&
+            !listCanAddElement
         ) {
-            list = this.toMutableList()
-            leadingNulls = 0
-            usesPrimitiveArrayList = false
-            nullIndices.clear()
+            switchToBoxedList()
         }
 
         if (distinct.isInitialized()) {
-            distinct.value as MutableSet<T> += element
+            addElementToDistinctSet()
         }
 
         if (!usesPrimitiveArrayList) {
-            list += element
-        } else if (element == null) {
+            addElementToList()
+        } else if (elementIsNull) {
             nullIndices += size
-            if (zeroValue is Undefined) {
-                leadingNulls++
-            } else {
-                list += zeroValue as T
+            if (zeroValue !is Undefined) {
+                addZeroValueToList()
             }
         } else {
             // set a new zeroValue if the current one is unset
             if (zeroValue is Undefined) {
-                zeroValue = zeroValueFor(element)
-                while (leadingNulls > 0) {
-                    list += zeroValue as T
-                    leadingNulls--
+                setZeroValue()
+                nullIndices.forEach { _ ->
+                    addZeroValueToList()
                 }
             }
 
-            list += element
+            addElementToList()
         }
+    }
+
+    private fun switchToBoxedList() {
+        list = this.toMutableList()
+        usesPrimitiveArrayList = false
+        nullIndices.clear()
+    }
+
+    override fun add(boolean: Boolean) {
+        val zeroValue = zeroValueFor(boolean)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(boolean),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Boolean>) += boolean },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(boolean)
+                } else {
+                    list.add(boolean as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(byte: Byte) {
+        val zeroValue = zeroValueFor(byte)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(byte),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Byte>) += byte },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(byte)
+                } else {
+                    list.add(byte as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(short: Short) {
+        val zeroValue = zeroValueFor(short)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(short),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Short>) += short },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(short)
+                } else {
+                    list.add(short as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(int: Int) {
+        val zeroValue = zeroValueFor(int)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(int),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Int>) += int },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(int)
+                } else {
+                    list.add(int as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(long: Long) {
+        val zeroValue = zeroValueFor(long)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(long),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Long>) += long },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(long)
+                } else {
+                    list.add(long as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(float: Float) {
+        val zeroValue = zeroValueFor(float)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(float),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Float>) += float },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(float)
+                } else {
+                    list.add(float as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(double: Double) {
+        val zeroValue = zeroValueFor(double)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(double),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Double>) += double },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(double)
+                } else {
+                    list.add(double as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(char: Char) {
+        val zeroValue = zeroValueFor(char)
+        addingElement(
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(char),
+            addElementToDistinctSet = { (distinct.value as MutableSet<Char>) += char },
+            addElementToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(char)
+                } else {
+                    list.add(char as T)
+                }
+            },
+            addZeroValueToList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                } else {
+                    list.add(zeroValue as T)
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun add(element: T) {
+        addingElement(
+            elementIsNull = element == null,
+            listCanAddElement = element != null && (list as PrimitiveArrayList<*>).canAdd(element),
+            addElementToDistinctSet = { (distinct.value as MutableSet<T>) += element },
+            addElementToList = { list.add(element) },
+            addZeroValueToList = { list.add(zeroValue as T) },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValueFor(element) },
+        )
+    }
+
+    private inline fun settingElement(
+        index: Int,
+        elementIsNull: Boolean,
+        listCanAddElement: Boolean,
+        updateDistinctSet: () -> Unit,
+        setElementInList: () -> Unit,
+        setZeroValueInList: () -> Unit,
+        setZeroValue: () -> Unit,
+    ) {
+        // check if we need to switch to a boxed mutable list to add this element
+        if (usesPrimitiveArrayList &&
+            !elementIsNull &&
+            !listCanAddElement
+        ) {
+            switchToBoxedList()
+        }
+
+        if (distinct.isInitialized()) {
+            updateDistinctSet()
+        }
+
+        if (!usesPrimitiveArrayList) {
+            setElementInList()
+        } else if (elementIsNull) {
+            nullIndices += index
+            if (zeroValue is Undefined) {
+                setZeroValueInList() // might be out of bounds and crash
+            }
+        } else {
+            // set a new zeroValue if the current one is unset
+            if (zeroValue is Undefined) {
+                setZeroValue()
+                nullIndices.forEach { _ ->
+                    setZeroValueInList()
+                }
+            }
+
+            setElementInList()
+            nullIndices -= index
+        }
+    }
+
+    override fun set(index: Int, value: Boolean) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getBoolean(index)
+                } else {
+                    list[index] as Boolean?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getBoolean(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Boolean>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: Byte) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getByte(index)
+                } else {
+                    list[index] as Byte?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getByte(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Byte>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: Short) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getShort(index)
+                } else {
+                    list[index] as Short?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getShort(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Short>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: Int) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getInt(index)
+                } else {
+                    list[index] as Int?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getInt(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Int>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: Long) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getLong(index)
+                } else {
+                    list[index] as Long?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getLong(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Long>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: Float) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getFloat(index)
+                } else {
+                    list[index] as Float?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getFloat(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Float>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: Double) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getDouble(index)
+                } else {
+                    list[index] as Double?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getDouble(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Double>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: Char) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = false,
+            listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>).getChar(index)
+                } else {
+                    list[index] as Char?
+                }
+                val countOfPrevValue = (0..<size).count {
+                    if (usesPrimitiveArrayList) {
+                        (list as PrimitiveArrayList<*>).getChar(it) == prevValue
+                    } else {
+                        list[it] == prevValue
+                    }
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<Char>).remove(prevValue)
+                }
+            },
+            setElementInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = value
+                } else {
+                    list[index] = value as T
+                }
+            },
+            setZeroValueInList = {
+                if (usesPrimitiveArrayList) {
+                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                } else {
+                    list[index] = zeroValue as T
+                }
+            },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
+    }
+
+    override fun set(index: Int, value: T) {
+        val zeroValue = zeroValueFor(value)
+        settingElement(
+            index = index,
+            elementIsNull = value == null,
+            listCanAddElement = value != null && (list as PrimitiveArrayList<*>).canAdd(value),
+            updateDistinctSet = {
+                val prevValue = list[index]
+                val countOfPrevValue = (0..<size).count {
+                    list[it] == prevValue
+                }
+                if (countOfPrevValue <= 1 && value != prevValue) {
+                    (distinct.value as MutableSet<T>).remove(prevValue)
+                }
+            },
+            setElementInList = { list[index] = value },
+            setZeroValueInList = { list[index] = zeroValue as T },
+            setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
+        )
     }
 
     override fun isEmpty(): Boolean = size == 0
@@ -160,7 +763,7 @@ internal class ColumnDataHolderImpl<T>(
     override fun get(index: Int): T =
         when {
             usesPrimitiveArrayList && nullIndices.fastContains(index) -> null as T
-            leadingNulls > 0 && index < leadingNulls -> null as T
+            zeroValue is Undefined && index < nullIndices.size -> null as T
             else -> list[index]
         }
 
@@ -168,7 +771,7 @@ internal class ColumnDataHolderImpl<T>(
         if (!usesPrimitiveArrayList) {
             return list.subList(range.first, range.last + 1)
         }
-        if (leadingNulls > 0 && range.first >= 0 && range.last < leadingNulls) {
+        if (zeroValue is Undefined && range.first >= 0 && range.last < nullIndices.size) {
             return List(range.last - range.first + 1) { null as T }
         }
 
@@ -195,7 +798,7 @@ internal class ColumnDataHolderImpl<T>(
         when {
             !usesPrimitiveArrayList -> list.listIterator(index)
 
-            leadingNulls > 0 -> List(leadingNulls) { null as T }.listIterator(index)
+            zeroValue is Undefined -> List(nullIndices.size) { null as T }.listIterator(index)
 
             else -> object : ListIterator<T> {
 
@@ -305,6 +908,54 @@ internal fun zeroValueFor(element: Any?): Any? =
         is ULong -> 0.toULong()
         else -> null
     }
+
+internal fun zeroValueFor(element: Boolean): Boolean = false
+
+internal fun zeroValueFor(element: Boolean?): Boolean? = if (element == null) null else false
+
+internal fun zeroValueFor(element: Byte): Byte = 0.toByte()
+
+internal fun zeroValueFor(element: Byte?): Byte? = if (element == null) null else 0.toByte()
+
+internal fun zeroValueFor(element: Short): Short = 0.toShort()
+
+internal fun zeroValueFor(element: Short?): Short? = if (element == null) null else 0.toShort()
+
+internal fun zeroValueFor(element: Int): Int = 0
+
+internal fun zeroValueFor(element: Int?): Int? = if (element == null) null else 0
+
+internal fun zeroValueFor(element: Long): Long = 0L
+
+internal fun zeroValueFor(element: Long?): Long? = if (element == null) null else 0L
+
+internal fun zeroValueFor(element: Float): Float = 0.0f
+
+internal fun zeroValueFor(element: Float?): Float? = if (element == null) null else 0.0f
+
+internal fun zeroValueFor(element: Double): Double = 0.0
+
+internal fun zeroValueFor(element: Double?): Double? = if (element == null) null else 0.0
+
+internal fun zeroValueFor(element: Char): Char = 0.toChar()
+
+internal fun zeroValueFor(element: Char?): Char? = if (element == null) null else 0.toChar()
+
+internal fun zeroValueFor(element: UByte): UByte = 0.toUByte()
+
+internal fun zeroValueFor(element: UByte?): UByte? = if (element == null) null else 0.toUByte()
+
+internal fun zeroValueFor(element: UShort): UShort = 0.toUShort()
+
+internal fun zeroValueFor(element: UShort?): UShort? = if (element == null) null else 0.toUShort()
+
+internal fun zeroValueFor(element: UInt): UInt = 0.toUInt()
+
+internal fun zeroValueFor(element: UInt?): UInt? = if (element == null) null else 0.toUInt()
+
+internal fun zeroValueFor(element: ULong): ULong = 0.toULong()
+
+internal fun zeroValueFor(element: ULong?): ULong? = if (element == null) null else 0.toULong()
 
 private fun <T> Array<T?>.fillNulls(zeroValue: Any, nullIndices: BooleanArray): Array<T> {
     for (i in indices) {

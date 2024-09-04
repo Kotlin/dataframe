@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
@@ -342,6 +343,26 @@ class ColumnDataHolderTests {
         holder.add(1)
         holder.usesPrimitiveArrayList shouldBe true
         holder shouldContainInOrder listOf(null, null, null, 1)
+    }
+
+    @Test
+    fun `setting test`() {
+        val holder = ColumnDataHolder.empty<Any?>()
+        shouldThrow<IndexOutOfBoundsException> { holder[0] = 1.0 }
+        holder.size shouldBe 0
+        holder.usesPrimitiveArrayList shouldBe true
+        holder.add(null)
+        holder.size shouldBe 1
+        holder.usesPrimitiveArrayList shouldBe true
+        holder[0] = 1.0
+        holder.size shouldBe 1
+        holder.usesPrimitiveArrayList shouldBe true
+        holder.add(2.0)
+        holder.size shouldBe 2
+        holder.usesPrimitiveArrayList shouldBe true
+        holder[0] = 1
+        holder.size shouldBe 2
+        holder.usesPrimitiveArrayList shouldBe false
     }
 
     @Test
