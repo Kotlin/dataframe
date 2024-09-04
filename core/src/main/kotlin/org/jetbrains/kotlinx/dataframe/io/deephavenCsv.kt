@@ -26,13 +26,9 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnDataHolderImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.PrimitiveArrayList
-import org.jetbrains.kotlinx.dataframe.impl.columns.asByteArrayList
-import org.jetbrains.kotlinx.dataframe.impl.columns.asIntArrayList
-import org.jetbrains.kotlinx.dataframe.impl.columns.asLongArrayList
-import org.jetbrains.kotlinx.dataframe.impl.columns.asShortArrayList
-import org.jetbrains.kotlinx.dataframe.impl.columns.zeroValueFor
 import org.jetbrains.kotlinx.dataframe.io.DeepHavenColumnDataHolderImpl.SinkState.BOOLEAN
 import org.jetbrains.kotlinx.dataframe.io.DeepHavenColumnDataHolderImpl.SinkState.BYTE
 import org.jetbrains.kotlinx.dataframe.io.DeepHavenColumnDataHolderImpl.SinkState.CHAR
@@ -58,8 +54,8 @@ public fun main() {
     val mediumFile = File(folder, "DimenLookupArea8277.csv")
     val largeFile = File(folder, "Data8277.csv")
 
-//    val file = mediumFile
-    val file = largeFile
+    val file = mediumFile
+//    val file = largeFile
 
     val df1 = DataFrame.readDelimDeephavenCsv(file.inputStream())
         .also { it.print(borders = true, columnTypes = true, rowsLimit = 20) }
@@ -154,7 +150,7 @@ public fun DataFrame.Companion.readDelimDeephavenCsv(
                 data
             }
 
-            DataType.DATETIME_AS_LONG, DataType.TIMESTAMP_AS_LONG -> {
+            DataType.DATETIME_AS_LONG, DataType.TIMESTAMP_AS_LONG -> { // TODO
                 data.replaceList {
                     it as PrimitiveArrayList<Long>
                     it.mapIndexed { index, long ->
@@ -395,7 +391,6 @@ internal class DeepHavenColumnDataHolderImpl<T>(
         }
     }
 
-    // TODO could be even more optimized with array copy
     override fun write(
         src: Any,
         isNull: BooleanArray,
@@ -404,10 +399,14 @@ internal class DeepHavenColumnDataHolderImpl<T>(
         appending: Boolean,
     ) {
         if (destBegin == destEnd) return
+        val destBeginAsInt = destBegin.toInt()
+        val destEndAsInt = destEnd.toInt()
+        val destSize = (destEnd - destBegin).toInt()
         if (appending) {
             while (size < destBegin) {
                 add(null as T)
             }
+            // TODO could be even more optimized with array copy
             for ((srcIndex, _) in (destBegin..<destEnd).withIndex()) {
                 if (isNull[srcIndex]) {
                     add(null as T)
@@ -427,21 +426,53 @@ internal class DeepHavenColumnDataHolderImpl<T>(
             }
         } else {
             // replacing
+            when (sinkState) {
+                BOOLEAN -> (list as PrimitiveArrayList<Boolean>)
+                    .asBooleanArrayList()
+                    .setElements(destBeginAsInt, src as BooleanArray, 0, destSize)
+
+                BYTE -> (list as PrimitiveArrayList<Byte>)
+                    .asByteArrayList()
+                    .setElements(destBeginAsInt, src as ByteArray, 0, destSize)
+
+                SHORT -> (list as PrimitiveArrayList<Short>)
+                    .asShortArrayList()
+                    .setElements(destBeginAsInt, src as ShortArray, 0, destSize)
+
+                INT -> (list as PrimitiveArrayList<Int>)
+                    .asIntArrayList()
+                    .setElements(destBeginAsInt, src as IntArray, 0, destSize)
+
+                LONG -> (list as PrimitiveArrayList<Long>)
+                    .asLongArrayList()
+                    .setElements(destBeginAsInt, src as LongArray, 0, destSize)
+
+                FLOAT -> (list as PrimitiveArrayList<Float>)
+                    .asFloatArrayList()
+                    .setElements(destBeginAsInt, src as FloatArray, 0, destSize)
+
+                DOUBLE -> (list as PrimitiveArrayList<Double>)
+                    .asDoubleArrayList()
+                    .setElements(destBeginAsInt, src as DoubleArray, 0, destSize)
+
+                CHAR -> (list as PrimitiveArrayList<Char>)
+                    .asCharArrayList()
+                    .setElements(destBeginAsInt, src as CharArray, 0, destSize)
+
+                else -> (list as MutableList<Any?>).let {
+                    for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
+                        if (isNull[srcIndex]) {
+                            it[destIndex.toInt()] = null
+                        } else {
+                            it[destIndex.toInt()] = (src as Array<Any?>)[srcIndex]
+                        }
+                    }
+                }
+            }
+
             for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
                 if (isNull[srcIndex]) {
                     set(destIndex.toInt(), null as T)
-                } else {
-                    when (sinkState) {
-                        BOOLEAN -> set(destIndex.toInt(), (src as BooleanArray)[srcIndex])
-                        BYTE -> set(destIndex.toInt(), (src as ByteArray)[srcIndex])
-                        SHORT -> set(destIndex.toInt(), (src as ShortArray)[srcIndex])
-                        INT -> set(destIndex.toInt(), (src as IntArray)[srcIndex])
-                        LONG -> set(destIndex.toInt(), (src as LongArray)[srcIndex])
-                        FLOAT -> set(destIndex.toInt(), (src as FloatArray)[srcIndex])
-                        DOUBLE -> set(destIndex.toInt(), (src as DoubleArray)[srcIndex])
-                        CHAR -> set(destIndex.toInt(), (src as CharArray)[srcIndex])
-                        STRING -> set(destIndex.toInt(), (src as Array<String>)[srcIndex] as T)
-                    }
                 }
             }
         }
