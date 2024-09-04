@@ -64,10 +64,10 @@ import kotlin.reflect.typeOf
  * @param nullIndices a set of indices where the null values are stored, only used if [list] is a [PrimitiveArrayList]
  */
 internal open class ColumnDataHolderImpl<T>(
-    private var list: MutableList<T> = PrimitiveArrayList<Any>() as MutableList<T>,
+    protected var list: MutableList<T> = PrimitiveArrayList<Any>() as MutableList<T>,
     distinct: Lazy<Set<T>>? = null,
-    private var zeroValue: Any? = Undefined,
-    private val nullIndices: IntSortedSet = IntAVLTreeSet(),
+    protected var zeroValue: Any? = Undefined,
+    protected val nullIndices: IntSortedSet = IntAVLTreeSet(),
 ) : ColumnDataHolder<T> {
 
     protected object Undefined
@@ -143,7 +143,7 @@ internal open class ColumnDataHolderImpl<T>(
         }
     }
 
-    private fun switchToBoxedList() {
+    internal fun switchToBoxedList() {
         list = this.toMutableList()
         usesPrimitiveArrayList = false
         nullIndices.clear()
@@ -344,7 +344,7 @@ internal open class ColumnDataHolderImpl<T>(
     override fun add(element: T) {
         addingElement(
             elementIsNull = element == null,
-            listCanAddElement = element != null && (list as PrimitiveArrayList<*>).canAdd(element),
+            listCanAddElement = element != null && (list as? PrimitiveArrayList<*>)?.canAdd(element) ?: true,
             addElementToDistinctSet = { (distinct.value as MutableSet<T>) += element },
             addElementToList = { list.add(element) },
             addZeroValueToList = { list.add(zeroValue as T) },
@@ -721,6 +721,20 @@ internal open class ColumnDataHolderImpl<T>(
             setZeroValue = { this@ColumnDataHolderImpl.zeroValue = zeroValue },
         )
     }
+
+    override fun isNull(index: Int): Boolean =
+        if (usesPrimitiveArrayList) {
+            nullIndices.fastContains(index)
+        } else {
+            list[index] == null
+        }
+
+    override fun hasNulls(): Boolean =
+        if (usesPrimitiveArrayList) {
+            nullIndices.isNotEmpty()
+        } else {
+            list.any { it == null }
+        }
 
     override fun set(index: Int, value: T) {
         val zeroValue = zeroValueFor(value)

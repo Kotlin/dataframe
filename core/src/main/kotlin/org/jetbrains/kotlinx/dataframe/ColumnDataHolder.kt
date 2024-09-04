@@ -67,6 +67,10 @@ public interface ColumnDataHolder<T> : List<T> {
 
     public operator fun set(index: Int, value: Char)
 
+    public fun isNull(index: Int): Boolean
+
+    public fun hasNulls(): Boolean
+
     public fun canAddPrimitively(element: Any?): Boolean
 
     public val distinct: Lazy<Set<T>>

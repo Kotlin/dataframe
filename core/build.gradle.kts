@@ -86,6 +86,7 @@ dependencies {
 //    testImplementation("org.openjdk.jol:jol-core:0.10")
     implementation("org.openjdk.jol:jol-core:0.10")
     implementation("it.unimi.dsi:fastutil:8.5.14")
+    implementation("io.deephaven:deephaven-csv:0.14.0")
 }
 
 val samplesImplementation by configurations.getting {
