@@ -192,3 +192,15 @@ val bigStringColumn = run {
     }
     DataColumn.createValueColumn("bigStringColumn", list)
 }
+
+val bigMixedColumn = run {
+    val list = ArrayList<Any>()
+    for (i in 0..32768) {
+        list.add(i * i)
+    }
+    list.add("Dirty data")
+    for (i in 32768 downTo 0) {
+        list.add(i * i)
+    }
+    DataColumn.createValueColumn("bigMixedColumn", list)
+}
