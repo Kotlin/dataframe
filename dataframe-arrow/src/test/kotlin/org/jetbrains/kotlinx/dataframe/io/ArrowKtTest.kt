@@ -503,10 +503,12 @@ internal class ArrowKtTest {
         val dataFrame = dataFrameOf(bigMixedColumn)
         val warnings = ArrayList<ConvertingMismatch>()
         val writer = dataFrame.arrowWriter(
-            targetSchema = Schema(listOf(
-                Field("bigMixedColumn", FieldType.nullable(ArrowType.Int(64, true)), emptyList())
-            )),
-            mode = ArrowWriter.Mode.LOYAL
+            targetSchema = Schema(
+                listOf(
+                    Field("bigMixedColumn", FieldType.nullable(ArrowType.Int(64, true)), emptyList()),
+                ),
+            ),
+            mode = ArrowWriter.Mode.LOYAL,
         ) {
             warnings.add(it)
         }
@@ -517,7 +519,7 @@ internal class ArrowKtTest {
         assert(warnings.filterIsInstance<ConvertingMismatch.TypeConversionFail.ConversionFailIgnored>().size == 1)
         assert(warnings.filterIsInstance<ConvertingMismatch.SavedAsString>().size == 1)
 
-        DataFrame.readArrowFeather(data)["bigMixedColumn"] shouldBe dataFrame[bigMixedColumn].map { it.toString()}
+        DataFrame.readArrowFeather(data)["bigMixedColumn"] shouldBe dataFrame[bigMixedColumn].map { it.toString() }
     }
 
     @Test

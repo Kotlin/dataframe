@@ -195,7 +195,7 @@ val bigStringColumn = run {
 
 val bigMixedColumn = run {
     val list = ArrayList<Any>()
-    for (i in 0 .. 32768) {
+    for (i in 0..32768) {
         list.add(i * i)
     }
     list.add("Dirty data")
