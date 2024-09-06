@@ -279,6 +279,8 @@ public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) 
 
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
+@Refine
+@Interpretable("DataFrameOf3")
 public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): DataFrame<*> =
     columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
 
