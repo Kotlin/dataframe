@@ -847,6 +847,7 @@ private fun extractNewRowFromResultSetAndAddToData(
         data[i].add(
             try {
                 rs.getObject(i + 1)
+                // TODO: add a special handler for Blob via Streams
             } catch (_: Throwable) {
                 val kType = kotlinTypesForSqlColumns[i]!!
                 // TODO: expand for all the types like in generateKType function
@@ -900,7 +901,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.DISTINCT to Any::class,
         Types.STRUCT to Any::class,
         Types.ARRAY to Array<Any>::class,
-        Types.BLOB to Blob::class,
+        Types.BLOB to ByteArray::class,
         Types.CLOB to Clob::class,
         Types.REF to Ref::class,
         Types.DATALINK to Any::class,
@@ -922,7 +923,11 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
                 "[B" -> ByteArray::class
                 else -> Any::class
             }
+            tableColumnMetadata.jdbcType == Types.BLOB && tableColumnMetadata.javaClassName == "java.sql.Blob" -> Blob::class
             tableColumnMetadata.jdbcType == Types.BINARY && tableColumnMetadata.javaClassName == "java.util.UUID" -> UUID::class
+            tableColumnMetadata.jdbcType == Types.REAL && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+            tableColumnMetadata.jdbcType == Types.FLOAT && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+            tableColumnMetadata.jdbcType == Types.NUMERIC && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
             else -> jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
         }
     }

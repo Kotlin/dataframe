@@ -396,11 +396,11 @@ class MariadbH2Test {
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
 
         schema.columns["tinyintcol"]!!.type shouldBe typeOf<Int>()
-        schema.columns["smallintcol"]!!.type shouldBe typeOf<Short?>()
+        schema.columns["smallintcol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["mediumintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["mediumintunsignedcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintcol"]!!.type shouldBe typeOf<Long>()
-        schema.columns["floatcol"]!!.type shouldBe typeOf<Float>()
+        schema.columns["floatcol"]!!.type shouldBe typeOf<Double>()
         schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
         schema.columns["decimalcol"]!!.type shouldBe typeOf<BigDecimal>()
     }
