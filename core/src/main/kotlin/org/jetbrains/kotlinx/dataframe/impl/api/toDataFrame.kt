@@ -251,11 +251,8 @@ internal fun convertToDataFrame(
         val kClass = returnType.classifier as KClass<*>
         val fieldKind = returnType.getFieldKind()
 
-        val shouldCreateValueCol = (
-            maxDepth <= 0 &&
-                !fieldKind.shouldBeConvertedToFrameColumn &&
-                !fieldKind.shouldBeConvertedToColumnGroup
-        ) ||
+        val keepSubtree = maxDepth <= 0 && !fieldKind.shouldBeConvertedToFrameColumn && !fieldKind.shouldBeConvertedToColumnGroup
+        val shouldCreateValueCol = keepSubtree ||
             kClass == Any::class ||
             kClass in preserveClasses ||
             property in preserveProperties ||
