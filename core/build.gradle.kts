@@ -374,11 +374,17 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
-    extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
-        excludes = listOf(
-            "org.jetbrains.kotlinx.dataframe.jupyter.*",
-            "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
-        )
+    kover{
+        reports{
+            total{
+                filters{
+                    excludes {
+                        classes("org.jetbrains.kotlinx.dataframe.jupyter.*")
+                        classes("org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests")
+                    }
+                }
+            }
+        }
     }
 }
 
