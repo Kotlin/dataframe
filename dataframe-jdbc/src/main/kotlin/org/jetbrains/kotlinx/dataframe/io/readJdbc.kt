@@ -820,9 +820,16 @@ private fun fetchAndConvertDataFromResultSet(
     }
 
     val dataFrame = data.mapIndexed { index, values ->
+        val correctedValues = if (kotlinTypesForSqlColumns[index]!!.classifier == Array::class) {
+            values.map { (it as java.sql.Array).array ?: emptyArray<Any>() }
+        } else {
+            values
+        }
+
+
         DataColumn.createValueColumn(
             name = tableColumns[index].name,
-            values = values,
+            values = correctedValues,
             infer = convertNullabilityInference(inferNullability),
             type = kotlinTypesForSqlColumns[index]!!,
         )
@@ -900,7 +907,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.JAVA_OBJECT to Any::class,
         Types.DISTINCT to Any::class,
         Types.STRUCT to Any::class,
-        Types.ARRAY to Array<Any>::class,
+        Types.ARRAY to java.sql.Array::class,
         Types.BLOB to ByteArray::class,
         Types.CLOB to Clob::class,
         Types.REF to Ref::class,
@@ -923,6 +930,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
                 "[B" -> ByteArray::class
                 else -> Any::class
             }
+
             tableColumnMetadata.jdbcType == Types.BLOB && tableColumnMetadata.javaClassName == "java.sql.Blob" -> Blob::class
             tableColumnMetadata.jdbcType == Types.BINARY && tableColumnMetadata.javaClassName == "java.util.UUID" -> UUID::class
             tableColumnMetadata.jdbcType == Types.REAL && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
@@ -933,7 +941,8 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
     }
 
     val kClass: KClass<*> = determineKotlinClass(tableColumnMetadata)
-    return kClass.createType(nullable = tableColumnMetadata.isNullable)
+    val kType = kClass.createType(nullable = tableColumnMetadata.isNullable)
+    return kType
 }
 
 

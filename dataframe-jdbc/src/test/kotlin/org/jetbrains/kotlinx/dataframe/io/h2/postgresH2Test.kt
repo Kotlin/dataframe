@@ -17,6 +17,7 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Array
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -90,7 +91,8 @@ class PostgresH2Test {
                 charCol char not null,
                 dateCol date not null,
                 doubleCol double precision not null,
-                integerCol integer
+                integerCol integer,
+                intArrayCol integer array
             )
             """
             connection.createStatement().execute(createTableStatement.trimIndent())
@@ -120,8 +122,8 @@ class PostgresH2Test {
                 bigintCol, smallintCol, bigserialCol,  booleanCol, 
                 byteaCol, characterCol, characterNCol, charCol, 
                 dateCol, doubleCol, 
-                integerCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                integerCol, intArrayCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
 
             @Language("SQL")
@@ -135,6 +137,7 @@ class PostgresH2Test {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
 
+            val array = connection.createArrayOf("INTEGER", arrayOf(1, 2, 3))
             connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
                 for (i in 1..3) {
@@ -149,6 +152,7 @@ class PostgresH2Test {
                     st.setDate(9, java.sql.Date.valueOf("2023-08-01"))
                     st.setDouble(10, 12.34)
                     st.setInt(11, 12345 * i)
+                    st.setArray(12, array)
                     st.executeUpdate()
                 }
             }
@@ -191,11 +195,16 @@ class PostgresH2Test {
 
         result[0][0] shouldBe 1
         result[0][8] shouldBe "A"
+        val sqlArray = result[0][12] as? java.sql.Array
+        val array = sqlArray?.array
+        val intArrayCasted = (array as kotlin.Array<Object>).map { it as Int }.toTypedArray()
+        intArrayCasted shouldBe arrayOf(1, 2, 3)
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["intarraycol"]!!.type shouldBe typeOf<java.sql.Array?>()
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()
