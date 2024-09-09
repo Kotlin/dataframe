@@ -32,6 +32,7 @@ import java.util.Date
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.cast
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
 import kotlin.reflect.full.starProjectedType
@@ -779,6 +780,13 @@ private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, In
     return name
 }
 
+
+// Utility function to cast arrays based on the type of elements
+public fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> {
+    return array.map { elementType.cast(it) }
+}
+
+
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
  *
@@ -821,7 +829,7 @@ private fun fetchAndConvertDataFromResultSet(
 
     val dataFrame = data.mapIndexed { index, values ->
         val correctedValues = if (kotlinTypesForSqlColumns[index]!!.classifier == Array::class) {
-            values.map { (it as java.sql.Array).array ?: emptyArray<Any>() }
+            handleArrayValues(values)
         } else {
             values
         }
@@ -840,6 +848,25 @@ private fun fetchAndConvertDataFromResultSet(
     }
 
     return dataFrame
+}
+
+private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
+    // Intermediate variable for the first mapping
+    val sqlArrays = values.map {
+        (it as java.sql.Array).array ?: emptyArray<Any>()
+    }
+
+    // Determine the type based on the first element
+    val firstArray = sqlArrays.firstOrNull()
+    val firstElementType = firstArray?.javaClass?.componentType?.kotlin ?: Any::class
+
+    // Cast arrays to the detected type
+    return if (firstArray != null && firstArray is Array<*>) {
+        val castedArrays = sqlArrays.map { castArray(it as Array<*>, firstElementType).toTypedArray() }
+        castedArrays
+    } else {
+        sqlArrays
+    }
 }
 
 private fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
@@ -907,7 +934,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.JAVA_OBJECT to Any::class,
         Types.DISTINCT to Any::class,
         Types.STRUCT to Any::class,
-        Types.ARRAY to java.sql.Array::class,
+        Types.ARRAY to Array::class,
         Types.BLOB to ByteArray::class,
         Types.CLOB to Clob::class,
         Types.REF to Ref::class,
@@ -940,8 +967,20 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         }
     }
 
+    fun createArrayTypeIfNeeded(kClass: KClass<*>, isNullable: Boolean): KType {
+        return if (kClass == Array::class) {
+            val typeParam = kClass.typeParameters[0].createType()
+            kClass.createType(
+                arguments = listOf(kotlin.reflect.KTypeProjection.invariant(typeParam)),
+                nullable = isNullable
+            )
+        } else {
+            kClass.createType(nullable = isNullable)
+        }
+    }
+
     val kClass: KClass<*> = determineKotlinClass(tableColumnMetadata)
-    val kType = kClass.createType(nullable = tableColumnMetadata.isNullable)
+    val kType = createArrayTypeIfNeeded(kClass, tableColumnMetadata.isNullable)
     return kType
 }
 
