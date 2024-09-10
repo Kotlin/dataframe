@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -111,7 +112,9 @@ internal fun <T, C, R> Split<T, C>.by(
 
 // region match
 
-public fun <T, C : String?> Split<T, C>.match(regex: String): SplitWithTransform<T, C, String?> = match(regex.toRegex())
+public fun <T, C : String?> Split<T, C>.match(
+    @Language("RegExp") regex: String,
+): SplitWithTransform<T, C, String?> = match(regex.toRegex())
 
 public fun <T, C : String?> Split<T, C>.match(regex: Regex): SplitWithTransform<T, C, String?> =
     by {
