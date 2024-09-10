@@ -4,6 +4,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromStream
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -254,7 +255,7 @@ public fun DataRow.Companion.readJson(
 @Refine
 @Interpretable("ReadJsonStr")
 public fun DataFrame.Companion.readJsonStr(
-    text: String,
+    @Language("json") text: String,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
@@ -269,7 +270,7 @@ public fun DataFrame.Companion.readJsonStr(
  * @return [DataRow] from the given [text].
  */
 public fun DataRow.Companion.readJsonStr(
-    text: String,
+    @Language("json") text: String,
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
