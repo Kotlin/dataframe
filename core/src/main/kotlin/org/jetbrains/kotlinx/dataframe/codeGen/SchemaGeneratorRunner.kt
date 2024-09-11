@@ -14,6 +14,18 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Modifier
+import kotlin.reflect.KClass
+import kotlin.reflect.jvm.kotlinFunction
+
+public interface Transformer<I, O> {
+    public fun transform(value: I): DataFrame<O>
+}
+
+public fun <I, O> transform(f: (I) -> DataFrame<O>): Transformer<I, O> = object : Transformer<I, O> {
+    override fun transform(value: I): DataFrame<O> {
+        return f(value)
+    }
+}
 
 internal object SchemaGeneratorRunner {
     @JvmStatic
@@ -111,6 +123,15 @@ internal object SchemaGeneratorRunner {
                         File(src, "$className.kt").writeText(code.toStandaloneSnippet("dataframe", listOf("import ${function.name}")))
 
                         println("Result from ${function.name}: $result")
+                    }
+                    Transformer::class.java -> {
+                        val classifier =
+                            (function.kotlinFunction!!.returnType.arguments[1].type?.classifier as? KClass<*>)!!
+
+                        val marker = MarkersExtractor.get(classifier)
+                        val className = function.name.replaceFirstChar { it.uppercase() }
+                        val code = generator.generate(marker.schema, className, true, false, false, readDfMethod = null)
+                        File(src, "$className.kt").writeText(code.toStandaloneSnippet("dataframe", listOf("import ${function.name}")))
                     }
                 }
             }

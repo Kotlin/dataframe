@@ -44,7 +44,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
             val sourceSets = project.extensions.getByType<SourceSetContainer>()
             if (extension.schemaSourceSet) {
-                sourceSets.toList().map { sourceSet ->
+                sourceSets.toList().forEach { sourceSet ->
                     // Create a new source set for each existing Kotlin source set
                     val schemasSourceSet = "${sourceSet.name}Schemas"
                     val customSourceSet = sourceSets.create(schemasSourceSet) {
@@ -69,6 +69,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                         group = GROUP
                         dependsOn(schemasCompileTask)
                         classpath = customSourceSet.runtimeClasspath
+                        jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005")
+
                         mainClass.set("org.jetbrains.kotlinx.dataframe.codeGen.SchemaGeneratorRunner")
                         workingDir(projectDir)
 
@@ -79,7 +81,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                         }
 
                         args(schemasCompileTask.get().destinationDirectory.asFileTree.filter {
-                            it.extension == "class" && !it.name.contains("$") && !it.name.contains("__GENERATED_DECLARATIONS__")
+                            it.extension == "class" && !it.name.contains("$") /*&& !it.name.contains("__GENERATED_DECLARATIONS__")*/
                         }.map { it.name })
                     }
 
@@ -88,10 +90,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                         dependsOn(copy)
                     }
                 }
-            } else {
-                null
             }
-
             val generationTasks = extension.schemas.map {
                 createTask(target, extension, appliedPlugin, it)
             }
