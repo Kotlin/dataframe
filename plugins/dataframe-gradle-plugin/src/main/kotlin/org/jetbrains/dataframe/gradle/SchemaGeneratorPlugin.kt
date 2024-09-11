@@ -69,8 +69,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                         group = GROUP
                         dependsOn(schemasCompileTask)
                         classpath = customSourceSet.runtimeClasspath
-                        jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005")
-
+//                        jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005")
+//
                         mainClass.set("org.jetbrains.kotlinx.dataframe.codeGen.SchemaGeneratorRunner")
                         workingDir(projectDir)
 

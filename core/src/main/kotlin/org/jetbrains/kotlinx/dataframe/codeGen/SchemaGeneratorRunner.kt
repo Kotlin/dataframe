@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.codeGen
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
@@ -34,8 +35,8 @@ internal object SchemaGeneratorRunner {
         val src = System.getenv("DATAFRAME_GENERATED_SRC")
         args.forEach {
             val cl = this::class.java.classLoader.loadClass(it.replace(".class", ""))
-            val generators = cl.methods.filter {
-                it.parameterCount == 0 /*&& it.returnType == String::class.java*/ && Modifier.isStatic(it.modifiers)
+            val generators = cl.declaredMethods.filter {
+                it.parameterCount == 0 && Modifier.isStatic(it.modifiers)
             }
             val generator = CodeGenerator.create(useFqNames = true)
             generators.forEach { function ->
@@ -128,10 +129,41 @@ internal object SchemaGeneratorRunner {
                         val classifier =
                             (function.kotlinFunction!!.returnType.arguments[1].type?.classifier as? KClass<*>)!!
 
+                        val classifier0 =
+                            (function.kotlinFunction!!.returnType.arguments[0].type?.classifier as? KClass<*>)!!
+
+                        val factory = object : DefaultReadDfMethod {
+                            override val additionalImports: List<String> = listOf(function.name)
+
+                            override fun toDeclaration(
+                                marker: Marker,
+                                visibility: String
+                            ): String {
+                                val type =
+                                    DataFrame::class.asClassName().parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
+                                val format = """
+                            val factory = this::class.java.classLoader.loadClass("${it.replace(".class", "")}").getDeclaredMethod("${function.name}")
+                            factory.isAccessible = true
+                            return ((factory.invoke(null) as Transformer<${classifier0.simpleName}, *>).transform(v) as DataFrame<*>).cast()
+                            """.trimIndent()
+                                val typeSpec = TypeSpec.companionObjectBuilder()
+                                    .addFunction(
+                                        FunSpec.builder("convert")
+                                            .addParameter(
+                                                ParameterSpec.builder("v", classifier0).build()
+                                            )
+                                            .returns(type)
+                                            .addCode(format)
+                                            .build(),
+                                    ).build()
+                                return typeSpec.toString()
+                            }
+                        }
                         val marker = MarkersExtractor.get(classifier)
                         val className = function.name.replaceFirstChar { it.uppercase() }
-                        val code = generator.generate(marker.schema, className, true, false, false, readDfMethod = null)
-                        File(src, "$className.kt").writeText(code.toStandaloneSnippet("dataframe", listOf("import ${function.name}")))
+                        val code = generator.generate(marker.schema, className, true, false, false, readDfMethod = factory)
+                        File(src, "$className.kt").writeText(code.toStandaloneSnippet("dataframe", listOf("import org.jetbrains.kotlinx.dataframe.codeGen.Transformer")))
+                        println("Result from ${function.name}: ${marker.schema}")
                     }
                 }
             }
