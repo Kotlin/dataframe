@@ -43,7 +43,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
             val sourceSets = project.extensions.getByType<SourceSetContainer>()
-            val generateTask = if (extension.schemaSourceSet) {
+            if (extension.schemaSourceSet) {
                 sourceSets.toList().map { sourceSet ->
                     // Create a new source set for each existing Kotlin source set
                     val schemasSourceSet = "${sourceSet.name}Schemas"
@@ -51,31 +51,23 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                         extensions.getByName<SourceDirectorySet>("kotlin").srcDir("src/${sourceSet.name}/schemas")
                     }
 
-                    // Set up a custom configuration for each source set
-                    val customSourceSetImplementation = configurations.getByName("${schemasSourceSet}Implementation") {
-
+                    configurations.getByName(customSourceSet.implementationConfigurationName) {
                         extendsFrom(configurations.getByName(sourceSet.implementationConfigurationName))
                     }
 
-                    // Create compile task dynamically
-                    val compileTaskName = "compile${schemasSourceSet.capitalize()}Kotlin"
-                    val compileTask = tasks.named(compileTaskName, KotlinCompile::class.java) {
-                        dependsOn(tasks.named(sourceSet.getCompileTaskName("kotlin")))
-                    }
-
-                    // Create a task to copy files for each source set
-                    tasks.create<Copy>("copy${schemasSourceSet.capitalize()}Files") {
+                    val copy = tasks.create<Copy>("copy${schemasSourceSet.capitalize()}Files") {
                         from(customSourceSet.extensions.getByName<SourceDirectorySet>("kotlin"))
                         into("${buildDir}/generated/dataframe/${sourceSet.name}/kotlin")
                         include("**/*.kt")
                         duplicatesStrategy = DuplicatesStrategy.INCLUDE
                     }
 
-                    // Create a task to generate functions dynamically
-                    tasks.create<JavaExec>("generate${sourceSet.name.capitalize()}Functions") {
+                    val compileTaskName = sourceSet.getCompileTaskName("kotlin")
+                    val schemasCompileTask = tasks.named(customSourceSet.getCompileTaskName("kotlin"), KotlinCompile::class.java)
+
+                    val generate = tasks.create<JavaExec>("generate${sourceSet.name.capitalize()}Functions") {
                         group = GROUP
-                        dependsOn(compileTask)
-                        dependsOn("copy${schemasSourceSet.capitalize()}Files")
+                        dependsOn(schemasCompileTask)
                         classpath = customSourceSet.runtimeClasspath
                         mainClass.set("org.jetbrains.kotlinx.dataframe.codeGen.SchemaGeneratorRunner")
                         workingDir(projectDir)
@@ -86,7 +78,14 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                             outputDir.mkdirs()
                         }
 
-                        args(compileTask.get().destinationDirectory.asFileTree.filter { it.extension == "class" && !it.name.contains("$") }.map { it.name })
+                        args(schemasCompileTask.get().destinationDirectory.asFileTree.filter {
+                            it.extension == "class" && !it.name.contains("$") && !it.name.contains("__GENERATED_DECLARATIONS__")
+                        }.map { it.name })
+                    }
+
+                    tasks.named(compileTaskName, KotlinCompile::class.java) {
+                        dependsOn(generate)
+                        dependsOn(copy)
                     }
                 }
             } else {
@@ -104,9 +103,6 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 dependsOn(generateAll)
             }
             tasks.withType<KotlinCompile> {
-                if (!this.name.contains("custom", ignoreCase = true)) {
-                    generateTask?.let { dependsOn(it) }
-                }
                 dependsOn(generateAll)
             }
         }
