@@ -16,6 +16,7 @@ open class SchemaGeneratorExtension {
     var packageName: String? = null
     var sourceSet: String? = null
     var visibility: DataSchemaVisibility? = null
+    var schemaSourceSet: Boolean = false
     internal var defaultPath: Boolean? = null
     internal var withNormalizationBy: Set<Char>? = null
 
