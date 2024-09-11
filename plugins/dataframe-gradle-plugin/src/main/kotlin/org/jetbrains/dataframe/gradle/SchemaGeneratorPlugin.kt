@@ -21,7 +21,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.net.URL
@@ -43,39 +42,52 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
-
+            val sourceSets = project.extensions.getByType<SourceSetContainer>()
             val generateTask = if (extension.schemaSourceSet) {
-                val sourceSets = target.extensions.getByType<SourceSetContainer>()
-                val sourceSet = sourceSets.create("customSourceSet") {
-                    extensions.getByName<SourceDirectorySet>("kotlin").srcDir("src/main/schemas")
-                }
-
-                val customSourceSetImplementation by configurations.getting {
-                    extendsFrom(configurations.getByName("implementation"))
-                }
-                val compileTask = target.tasks.getByName<KotlinCompile>("compileCustomSourceSetKotlin")
-                val copyFiles = tasks.create<Copy>("copyKotlinFiles") {
-                    from(sourceSets["customSourceSet"].extensions.getByName<SourceDirectorySet>("kotlin"))
-                    into("${buildDir}/generated/dataframe/main/kotlin")
-                    include("**/*.kt")
-                    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-                }
-
-                target.tasks.create<JavaExec>("generateFunctions") {
-                    group = GROUP
-                    dependsOn("compileCustomSourceSetKotlin")
-                    dependsOn(copyFiles)
-                    classpath = sourceSet.runtimeClasspath
-                    mainClass.set("org.jetbrains.kotlinx.dataframe.codeGen.SchemaGeneratorRunner")
-                    workingDir(projectDir)
-//                    jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005")
-                    val get = layout.buildDirectory.dir("generated/dataframe/main/kotlin/").get().asFile
-                    environment("DATAFRAME_GENERATED_SRC", get.absolutePath)
-                    doFirst {
-                        get.mkdirs()
+                sourceSets.toList().map { sourceSet ->
+                    // Create a new source set for each existing Kotlin source set
+                    val schemasSourceSet = "${sourceSet.name}Schemas"
+                    val customSourceSet = sourceSets.create(schemasSourceSet) {
+                        extensions.getByName<SourceDirectorySet>("kotlin").srcDir("src/${sourceSet.name}/schemas")
                     }
-                    // what about packages?
-                    args(compileTask.destinationDirectory.asFileTree.filter { it.extension == "class" && !it.name.contains("$") }.map { it.name })
+
+                    // Set up a custom configuration for each source set
+                    val customSourceSetImplementation = configurations.getByName("${schemasSourceSet}Implementation") {
+
+                        extendsFrom(configurations.getByName(sourceSet.implementationConfigurationName))
+                    }
+
+                    // Create compile task dynamically
+                    val compileTaskName = "compile${schemasSourceSet.capitalize()}Kotlin"
+                    val compileTask = tasks.named(compileTaskName, KotlinCompile::class.java) {
+                        dependsOn(tasks.named(sourceSet.getCompileTaskName("kotlin")))
+                    }
+
+                    // Create a task to copy files for each source set
+                    tasks.create<Copy>("copy${schemasSourceSet.capitalize()}Files") {
+                        from(customSourceSet.extensions.getByName<SourceDirectorySet>("kotlin"))
+                        into("${buildDir}/generated/dataframe/${sourceSet.name}/kotlin")
+                        include("**/*.kt")
+                        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+                    }
+
+                    // Create a task to generate functions dynamically
+                    tasks.create<JavaExec>("generate${sourceSet.name.capitalize()}Functions") {
+                        group = GROUP
+                        dependsOn(compileTask)
+                        dependsOn("copy${schemasSourceSet.capitalize()}Files")
+                        classpath = customSourceSet.runtimeClasspath
+                        mainClass.set("org.jetbrains.kotlinx.dataframe.codeGen.SchemaGeneratorRunner")
+                        workingDir(projectDir)
+
+                        val outputDir = layout.buildDirectory.dir("generated/dataframe/${sourceSet.name}/kotlin/").get().asFile
+                        environment("DATAFRAME_GENERATED_SRC", outputDir.absolutePath)
+                        doFirst {
+                            outputDir.mkdirs()
+                        }
+
+                        args(compileTask.get().destinationDirectory.asFileTree.filter { it.extension == "class" && !it.name.contains("$") }.map { it.name })
+                    }
                 }
             } else {
                 null
