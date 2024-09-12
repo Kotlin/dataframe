@@ -468,7 +468,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach { itMarker ->
             val declaration = if (asDataClass) {
-                generateClasses(itMarker)
+                generateClasses(itMarker, readDfMethod.takeIf { marker == itMarker })
             } else {
                 generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker })
             }
@@ -526,7 +526,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         return resultDeclarations.join()
     }
 
-    private fun generateClasses(marker: Marker): Code {
+    private fun generateClasses(marker: Marker, factory: DefaultReadDfMethod?): Code {
         val annotationName = DataSchema::class.simpleName
 
         val visibility = renderTopLevelDeclarationVisibility(marker)
@@ -539,6 +539,17 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             appendLine(header)
             appendLine(fieldsDeclaration)
             append(")")
+            if (factory != null) {
+                append(" {\n")
+                val companionObject = buildCodeBlock {
+                    add("    ")
+                    indent()
+                    indent()
+                    add(factory.toDeclaration(marker, propertyVisibility))
+                }
+                append(companionObject.toString())
+                append("\n}")
+            }
         }
     }
 
