@@ -22,9 +22,9 @@ public interface Transformer<I, O> {
     public fun transform(value: I): DataFrame<O>
 }
 
-public fun <I, O> transform(f: (I) -> DataFrame<O>): Transformer<I, O> = object : Transformer<I, O> {
-    override fun transform(value: I): DataFrame<O> {
-        return f(value)
+public fun <I, O> transform(f: (I) -> DataFrame<O>): Transformer<I, O> {
+    return object : Transformer<I, O> {
+        override fun transform(value: I): DataFrame<O> = f(value)
     }
 }
 
@@ -33,8 +33,8 @@ internal object SchemaGeneratorRunner {
     fun main(args: Array<String>) {
         // SchemaGeneratorRunner.class.classLoader.loadClass("SchemasKt")
         val src = System.getenv("DATAFRAME_GENERATED_SRC")
-        args.forEach {
-            val cl = this::class.java.classLoader.loadClass(it.replace(".class", ""))
+        args.forEach { classFile ->
+            val cl = this::class.java.classLoader.loadClass(classFile.replace(".class", ""))
             val generators = cl.declaredMethods.filter {
                 it.parameterCount == 0 && Modifier.isStatic(it.modifiers)
             }
@@ -53,6 +53,7 @@ internal object SchemaGeneratorRunner {
                         get.writeText(code.toStandaloneSnippet("", emptyList()))
                         println(get)
                     }
+
                     DataFrame::class.java -> {
                         val result = try {
                             function.invoke(null) as DataFrame<*>
@@ -63,32 +64,34 @@ internal object SchemaGeneratorRunner {
                         val factory = object : DefaultReadDfMethod {
                             override val additionalImports: List<String> = listOf(function.name)
 
-                            override fun toDeclaration(
-                                marker: Marker,
-                                visibility: String
-                            ): String {
-                                val type =
-                                    DataFrame::class.asClassName().parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
-                                val format = """
-                            val df = ${function.name}()
-                            return df.cast()
-                            """.trimIndent()
+                            override fun toDeclaration(marker: Marker, visibility: String): String {
+                                val type = DataFrame::class.asClassName()
+                                    .parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
+
+                                val format =
+                                    """
+                                    val df = ${function.name}()
+                                    return df.cast()
+                                    """.trimIndent()
                                 val typeSpec = TypeSpec.companionObjectBuilder()
                                     .addFunction(
                                         FunSpec.builder("sample")
                                             .returns(type)
                                             .addCode(format)
-                                            .build(),
+                                            .build()
                                     ).build()
                                 return typeSpec.toString()
                             }
                         }
                         val className = function.name.replaceFirstChar { it.uppercase() }
-                        val code = generator.generate(result.schema(), className, true, false, false, readDfMethod = factory)
-                        File(src, "$className.kt").writeText(code.toStandaloneSnippet("dataframe", listOf("import ${function.name}")))
+                        val code = generator
+                            .generate(result.schema(), className, true, false, false, readDfMethod = factory)
+                            .toStandaloneSnippet("dataframe", listOf("import ${function.name}"))
+                        File(src, "$className.kt").writeText(code)
 
                         println("Result from ${function.name}: $result")
                     }
+
                     DataRow::class.java -> {
                         val result = try {
                             function.invoke(null) as DataRow<*>
@@ -99,32 +102,34 @@ internal object SchemaGeneratorRunner {
                         val factory = object : DefaultReadDfMethod {
                             override val additionalImports: List<String> = listOf(function.name)
 
-                            override fun toDeclaration(
-                                marker: Marker,
-                                visibility: String
-                            ): String {
-                                val type =
-                                    DataRow::class.asClassName().parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
-                                val format = """
-                            val df = ${function.name}()
-                            return df.cast()
-                            """.trimIndent()
+                            override fun toDeclaration(marker: Marker, visibility: String): String {
+                                val type = DataRow::class.asClassName()
+                                    .parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
+
+                                val format =
+                                    """
+                                    val df = ${function.name}()
+                                    return df.cast()
+                                    """.trimIndent()
                                 val typeSpec = TypeSpec.companionObjectBuilder()
                                     .addFunction(
                                         FunSpec.builder("sample")
                                             .returns(type)
                                             .addCode(format)
-                                            .build(),
+                                            .build()
                                     ).build()
                                 return typeSpec.toString()
                             }
                         }
                         val className = function.name.replaceFirstChar { it.uppercase() }
-                        val code = generator.generate(result.schema(), className, true, false, false, readDfMethod = factory)
-                        File(src, "$className.kt").writeText(code.toStandaloneSnippet("dataframe", listOf("import ${function.name}")))
+                        val code = generator
+                            .generate(result.schema(), className, true, false, false, readDfMethod = factory)
+                            .toStandaloneSnippet("dataframe", listOf("import ${function.name}"))
+                        File(src, "$className.kt").writeText(code)
 
                         println("Result from ${function.name}: $result")
                     }
+
                     Transformer::class.java -> {
                         val classifier =
                             (function.kotlinFunction!!.returnType.arguments[1].type?.classifier as? KClass<*>)!!
@@ -135,17 +140,16 @@ internal object SchemaGeneratorRunner {
                         val factory = object : DefaultReadDfMethod {
                             override val additionalImports: List<String> = listOf(function.name)
 
-                            override fun toDeclaration(
-                                marker: Marker,
-                                visibility: String
-                            ): String {
-                                val type =
-                                    DataFrame::class.asClassName().parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
-                                val format = """
-                            val factory = this::class.java.classLoader.loadClass("${it.replace(".class", "")}").getDeclaredMethod("${function.name}")
-                            factory.isAccessible = true
-                            return ((factory.invoke(null) as Transformer<${classifier0.simpleName}, *>).transform(v) as DataFrame<*>).cast()
-                            """.trimIndent()
+                            override fun toDeclaration(marker: Marker, visibility: String): String {
+                                val type = DataFrame::class.asClassName()
+                                    .parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
+                                val name = classFile.replace(".class", "")
+                                val format =
+                                    """
+                                    val factory = this::class.java.classLoader.loadClass("$name").getDeclaredMethod("${function.name}")
+                                    factory.isAccessible = true
+                                    return ((factory.invoke(null) as Transformer<${classifier0.simpleName}, *>).transform(v) as DataFrame<*>).cast()
+                                    """.trimIndent()
                                 val typeSpec = TypeSpec.companionObjectBuilder()
                                     .addFunction(
                                         FunSpec.builder("convert")
@@ -154,15 +158,20 @@ internal object SchemaGeneratorRunner {
                                             )
                                             .returns(type)
                                             .addCode(format)
-                                            .build(),
+                                            .build()
                                     ).build()
                                 return typeSpec.toString()
                             }
                         }
                         val marker = MarkersExtractor.get(classifier)
                         val className = function.name.replaceFirstChar { it.uppercase() }
-                        val code = generator.generate(marker.schema, className, true, false, false, readDfMethod = factory)
-                        File(src, "$className.kt").writeText(code.toStandaloneSnippet("dataframe", listOf("import org.jetbrains.kotlinx.dataframe.codeGen.Transformer")))
+                        val code = generator
+                            .generate(marker.schema, className, true, false, false, readDfMethod = factory)
+                            .toStandaloneSnippet(
+                                "dataframe",
+                                listOf("import org.jetbrains.kotlinx.dataframe.codeGen.Transformer")
+                            )
+                        File(src, "$className.kt").writeText(code)
                         println("Result from ${function.name}: ${marker.schema}")
                     }
                 }

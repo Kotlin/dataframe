@@ -13,8 +13,9 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.internal.logging.services.DefaultLoggingManager
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.getting
-import org.gradle.kotlin.dsl.*
+import org.gradle.kotlin.dsl.getByName
+import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
@@ -22,6 +23,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.utils.named
 import java.io.File
 import java.net.URL
 import java.nio.file.Path
@@ -57,13 +59,14 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
                     val copy = tasks.create<Copy>("copy${schemasSourceSet.capitalize()}Files") {
                         from(customSourceSet.extensions.getByName<SourceDirectorySet>("kotlin"))
-                        into("${buildDir}/generated/dataframe/${sourceSet.name}/kotlin")
+                        into("$buildDir/generated/dataframe/${sourceSet.name}/kotlin")
                         include("**/*.kt")
                         duplicatesStrategy = DuplicatesStrategy.INCLUDE
                     }
 
                     val compileTaskName = sourceSet.getCompileTaskName("kotlin")
-                    val schemasCompileTask = tasks.named(customSourceSet.getCompileTaskName("kotlin"), KotlinCompile::class.java)
+                    val schemasCompileTask =
+                        tasks.named<KotlinCompile>(customSourceSet.getCompileTaskName("kotlin"))
 
                     val generate = tasks.create<JavaExec>("generate${sourceSet.name.capitalize()}Functions") {
                         group = GROUP
@@ -74,15 +77,17 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                         mainClass.set("org.jetbrains.kotlinx.dataframe.codeGen.SchemaGeneratorRunner")
                         workingDir(projectDir)
 
-                        val outputDir = layout.buildDirectory.dir("generated/dataframe/${sourceSet.name}/kotlin/").get().asFile
+                        val outputDir = layout.buildDirectory
+                            .dir("generated/dataframe/${sourceSet.name}/kotlin/").get().asFile
                         environment("DATAFRAME_GENERATED_SRC", outputDir.absolutePath)
                         doFirst {
                             outputDir.mkdirs()
                         }
 
-                        args(schemasCompileTask.get().destinationDirectory.asFileTree.filter {
-                            it.extension == "class" && !it.name.contains("$") /*&& !it.name.contains("__GENERATED_DECLARATIONS__")*/
-                        }.map { it.name })
+                        val compiledClassNames = schemasCompileTask.get().destinationDirectory.asFileTree
+                            .filter { it.extension == "class" && !it.name.contains("$") }
+                            .map { it.name }
+                        args(compiledClassNames)
                     }
 
                     tasks.named(compileTaskName, KotlinCompile::class.java) {
