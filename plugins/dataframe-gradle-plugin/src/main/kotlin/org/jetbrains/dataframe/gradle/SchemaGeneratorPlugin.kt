@@ -71,6 +71,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                     val generate = tasks.create<JavaExec>("generate${sourceSet.name.capitalize()}Functions") {
                         group = GROUP
                         dependsOn(schemasCompileTask)
+                        dependsOn(copy)
                         classpath = customSourceSet.runtimeClasspath
 //                        jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005")
 //
@@ -79,8 +80,12 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
                         val outputDir = layout.buildDirectory
                             .dir("generated/dataframe/${sourceSet.name}/kotlin/").get().asFile
+                        outputs.dir(outputDir)
                         environment("DATAFRAME_GENERATED_SRC", outputDir.absolutePath)
                         doFirst {
+                            if (outputDir.exists()) {
+                                outputDir.deleteRecursively()
+                            }
                             outputDir.mkdirs()
                         }
 
