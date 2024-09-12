@@ -13,8 +13,8 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.internal.logging.services.DefaultLoggingManager
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.getByName
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.provideDelegate
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
@@ -44,8 +44,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
-            val sourceSets = project.extensions.getByType<SourceSetContainer>()
-            if (extension.schemaSourceSet) {
+            val sourceSets = project.extensions.findByType<SourceSetContainer>()
+            if (extension.schemaSourceSet && sourceSets != null) {
                 sourceSets.toList().forEach { sourceSet ->
                     // Create a new source set for each existing Kotlin source set
                     val schemasSourceSet = "${sourceSet.name}Schemas"
