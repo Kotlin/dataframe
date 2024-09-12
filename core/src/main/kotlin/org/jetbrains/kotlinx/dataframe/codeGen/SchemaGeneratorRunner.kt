@@ -22,8 +22,16 @@ public interface Transformer<I, O> {
     public fun transform(value: I): DataFrame<O>
 }
 
+public interface DataClassTransformer<I, O> : Transformer<I, O>
+
 public fun <I, O> transform(f: (I) -> DataFrame<O>): Transformer<I, O> {
     return object : Transformer<I, O> {
+        override fun transform(value: I): DataFrame<O> = f(value)
+    }
+}
+
+public fun <I, O> transformDataClass(f: (I) -> DataFrame<O>): DataClassTransformer<I, O> {
+    return object : DataClassTransformer<I, O> {
         override fun transform(value: I): DataFrame<O> = f(value)
     }
 }
@@ -170,6 +178,62 @@ internal object SchemaGeneratorRunner {
                             .toStandaloneSnippet(
                                 "dataframe",
                                 listOf("import org.jetbrains.kotlinx.dataframe.codeGen.Transformer")
+                            )
+                        File(src, "$className.kt").writeText(code)
+                        println("Result from ${function.name}: ${marker.schema}")
+                    }
+
+                    DataClassTransformer::class.java -> {
+                        val classifier =
+                            (function.kotlinFunction!!.returnType.arguments[1].type?.classifier as? KClass<*>)!!
+
+                        val classifier0 =
+                            (function.kotlinFunction!!.returnType.arguments[0].type?.classifier as? KClass<*>)!!
+
+                        val factory = object : DefaultReadDfMethod {
+                            override val additionalImports: List<String> = listOf(function.name)
+
+                            override fun toDeclaration(marker: Marker, visibility: String): String {
+                                val type = List::class.asClassName()
+                                    .parameterizedBy(ClassName(packageName = "", listOf(marker.shortName)))
+                                val name = classFile.replace(".class", "")
+                                val format =
+                                    """
+                                    val factory = this::class.java.classLoader.loadClass("$name").getDeclaredMethod("${function.name}")
+                                    factory.isAccessible = true
+                                    return ((factory.invoke(null) as Transformer<${classifier0.simpleName}, *>).transform(v) as DataFrame<*>).toListOf()
+                                    """.trimIndent()
+                                val typeSpec = TypeSpec.companionObjectBuilder()
+                                    .addFunction(
+                                        FunSpec.builder("convert")
+                                            .addParameter(
+                                                ParameterSpec.builder("v", classifier0).build()
+                                            )
+                                            .returns(type)
+                                            .addCode(format)
+                                            .build()
+                                    ).build()
+                                return typeSpec.toString()
+                            }
+                        }
+                        val marker = MarkersExtractor.get(classifier)
+                        val className = function.name.replaceFirstChar { it.uppercase() }
+                        val code = generator
+                            .generate(
+                                marker.schema,
+                                className,
+                                true,
+                                false,
+                                false,
+                                readDfMethod = factory,
+                                asDataClass = true
+                            )
+                            .toStandaloneSnippet(
+                                "dataframe",
+                                listOf(
+                                    "import org.jetbrains.kotlinx.dataframe.codeGen.Transformer",
+                                    "import org.jetbrains.kotlinx.dataframe.api.toListOf",
+                                )
                             )
                         File(src, "$className.kt").writeText(code)
                         println("Result from ${function.name}: ${marker.schema}")
