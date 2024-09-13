@@ -20,6 +20,7 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.Date
 import kotlin.reflect.typeOf
 
 // NOTE: the names of testing databases should be different to avoid collisions and should not contain the system names itself
@@ -306,6 +307,15 @@ class MySqlH2Test {
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String>()
+        schema.columns["datecol"]!!.type shouldBe typeOf<Date>()
+        schema.columns["datetimecol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["timestampcol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["timecol"]!!.type shouldBe typeOf<java.sql.Time>()
+        schema.columns["yearcol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["varbinarycol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["binarycol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["longblobcol"]!!.type shouldBe typeOf<java.sql.Blob>()
+        schema.columns["tinyblobcol"]!!.type shouldBe typeOf<java.sql.Blob>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
         val result2 = df2.filter { it[Table2MySql::id] == 1 }

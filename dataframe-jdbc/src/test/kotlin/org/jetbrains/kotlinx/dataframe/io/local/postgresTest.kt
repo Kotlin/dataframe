@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
-import org.jetbrains.kotlinx.dataframe.io.local.PostgresTest.Companion.connection
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
@@ -99,7 +98,6 @@ internal fun createTestData(connection: Connection) {
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table1") }
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 
-    @Language("SQL")
     val createTableStatement = """
         CREATE TABLE IF NOT EXISTS table1 (
         id serial PRIMARY KEY,
@@ -118,12 +116,16 @@ internal fun createTestData(connection: Connection) {
         integerCol integer,
         intervalCol interval not null,
         jsonCol json not null,
-        jsonbCol jsonb not null
+        jsonbCol jsonb not null,
+        intArrayCol integer[],
+        doubleArrayCol double precision array,
+        dateArrayCol date array,
+        textArrayCol text array,
+        booleanArrayCol boolean array
         )
         """
     connection.createStatement().execute(createTableStatement.trimIndent())
 
-    @Language("SQL")
     val createTableQuery = """
         CREATE TABLE IF NOT EXISTS table2 (
         id serial PRIMARY KEY,
@@ -156,8 +158,9 @@ internal fun createTestData(connection: Connection) {
             bigintCol, smallintCol, bigserialCol,  booleanCol, 
             boxCol, byteaCol, characterCol, characterNCol, charCol, 
             circleCol, dateCol, doubleCol, 
-            integerCol, intervalCol, jsonCol, jsonbCol
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            integerCol, intervalCol, jsonCol, jsonbCol, intArrayCol,
+            doubleArrayCol, dateArrayCol, textArrayCol, booleanArrayCol
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
 
     @Language("SQL")
@@ -170,6 +173,12 @@ internal fun createTestData(connection: Connection) {
             uuidCol, xmlCol
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
+
+    val intArray = connection.createArrayOf("INTEGER", arrayOf(1, 2, 3))
+    val doubleArray = connection.createArrayOf("DOUBLE", arrayOf(1.1, 2.2, 3.3))
+    val dateArray = connection.createArrayOf("DATE", arrayOf(Date.valueOf("2023-08-01"), Date.valueOf("2023-08-02")))
+    val textArray = connection.createArrayOf("TEXT", arrayOf("Hello", "World"))
+    val booleanArray = connection.createArrayOf("BOOLEAN", arrayOf(true, false, true))
 
     connection.prepareStatement(insertData1).use { st ->
         // Insert data into table1
@@ -195,6 +204,11 @@ internal fun createTestData(connection: Connection) {
 
             st.setObject(15, jsonbObject)
             st.setObject(16, jsonbObject)
+            st.setArray(17, intArray)
+            st.setArray(18, doubleArray)
+            st.setArray(19, dateArray)
+            st.setArray(20, textArray)
+            st.setArray(21, booleanArray)
             st.executeUpdate()
         }
     }
@@ -274,12 +288,22 @@ class PostgresTest {
 
         result[0][2] shouldBe 11
         result[0][13] shouldBe 12345
+        result[0][17] shouldBe arrayOf(1, 2, 3)
+        result[0][18] shouldBe arrayOf(1.1, 2.2, 3.3)
+        result[0][19] shouldBe arrayOf(Date.valueOf("2023-08-01"), Date.valueOf("2023-08-02"))
+        result[0][20] shouldBe arrayOf("Hello", "World")
+        result[0][21] shouldBe arrayOf(true, false, true)
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["circlecol"]!!.type shouldBe typeOf<Any>()
+        schema.columns["intarraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["doublearraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["datearraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["textarraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["booleanarraycol"]!!.type.classifier shouldBe kotlin.Array::class
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()

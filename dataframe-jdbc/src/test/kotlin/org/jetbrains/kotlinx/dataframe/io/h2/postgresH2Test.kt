@@ -17,7 +17,6 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
-import java.sql.Array
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException

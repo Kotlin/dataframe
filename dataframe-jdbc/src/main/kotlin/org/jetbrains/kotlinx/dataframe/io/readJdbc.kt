@@ -26,6 +26,7 @@ import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
 import java.sql.Types
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.OffsetTime
 import java.util.Date
@@ -958,7 +959,9 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
                 else -> Any::class
             }
 
-            tableColumnMetadata.jdbcType == Types.BLOB && tableColumnMetadata.javaClassName == "java.sql.Blob" -> Blob::class
+            tableColumnMetadata.javaClassName == "[B" -> ByteArray::class
+            tableColumnMetadata.javaClassName == "java.sql.Blob" -> Blob::class
+            tableColumnMetadata.jdbcType == Types.TIMESTAMP && tableColumnMetadata.javaClassName == "java.time.LocalDateTime" -> LocalDateTime::class
             tableColumnMetadata.jdbcType == Types.BINARY && tableColumnMetadata.javaClassName == "java.util.UUID" -> UUID::class
             tableColumnMetadata.jdbcType == Types.REAL && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
             tableColumnMetadata.jdbcType == Types.FLOAT && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
