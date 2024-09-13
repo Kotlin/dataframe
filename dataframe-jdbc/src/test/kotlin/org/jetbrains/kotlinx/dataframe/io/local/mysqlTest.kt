@@ -15,14 +15,13 @@ import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.AfterClass
 import org.junit.BeforeClass
+import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
-import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.util.Date
-import org.junit.Ignore
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:mysql://localhost:3306"

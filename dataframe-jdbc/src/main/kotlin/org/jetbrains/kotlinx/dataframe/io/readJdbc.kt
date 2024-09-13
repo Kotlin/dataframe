@@ -781,12 +781,8 @@ private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, In
     return name
 }
 
-
 // Utility function to cast arrays based on the type of elements
-public fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> {
-    return array.map { elementType.cast(it) }
-}
-
+public fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> = array.map { elementType.cast(it) }
 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
@@ -834,7 +830,6 @@ private fun fetchAndConvertDataFromResultSet(
         } else {
             values
         }
-
 
         DataColumn.createValueColumn(
             name = tableColumns[index].name,
@@ -952,39 +947,47 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.TIMESTAMP_WITH_TIMEZONE to OffsetDateTime::class,
     )
 
-    fun determineKotlinClass(tableColumnMetadata: TableColumnMetadata): KClass<*> {
-        return when {
+    fun determineKotlinClass(tableColumnMetadata: TableColumnMetadata): KClass<*> =
+        when {
             tableColumnMetadata.jdbcType == Types.OTHER -> when (tableColumnMetadata.javaClassName) {
                 "[B" -> ByteArray::class
                 else -> Any::class
             }
 
             tableColumnMetadata.javaClassName == "[B" -> ByteArray::class
+
             tableColumnMetadata.javaClassName == "java.sql.Blob" -> Blob::class
-            tableColumnMetadata.jdbcType == Types.TIMESTAMP && tableColumnMetadata.javaClassName == "java.time.LocalDateTime" -> LocalDateTime::class
-            tableColumnMetadata.jdbcType == Types.BINARY && tableColumnMetadata.javaClassName == "java.util.UUID" -> UUID::class
-            tableColumnMetadata.jdbcType == Types.REAL && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
-            tableColumnMetadata.jdbcType == Types.FLOAT && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
-            tableColumnMetadata.jdbcType == Types.NUMERIC && tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+
+            tableColumnMetadata.jdbcType == Types.TIMESTAMP &&
+                tableColumnMetadata.javaClassName == "java.time.LocalDateTime" -> LocalDateTime::class
+
+            tableColumnMetadata.jdbcType == Types.BINARY &&
+                tableColumnMetadata.javaClassName == "java.util.UUID" -> UUID::class
+
+            tableColumnMetadata.jdbcType == Types.REAL &&
+                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+
+            tableColumnMetadata.jdbcType == Types.FLOAT &&
+                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+
+            tableColumnMetadata.jdbcType == Types.NUMERIC &&
+                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+
             else -> jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
         }
-    }
 
-    fun createArrayTypeIfNeeded(kClass: KClass<*>, isNullable: Boolean): KType {
-        return if (kClass == Array::class) {
+    fun createArrayTypeIfNeeded(kClass: KClass<*>, isNullable: Boolean): KType =
+        if (kClass == Array::class) {
             val typeParam = kClass.typeParameters[0].createType()
             kClass.createType(
                 arguments = listOf(kotlin.reflect.KTypeProjection.invariant(typeParam)),
-                nullable = isNullable
+                nullable = isNullable,
             )
         } else {
             kClass.createType(nullable = isNullable)
         }
-    }
 
     val kClass: KClass<*> = determineKotlinClass(tableColumnMetadata)
     val kType = createArrayTypeIfNeeded(kClass, tableColumnMetadata.isNullable)
     return kType
 }
-
-

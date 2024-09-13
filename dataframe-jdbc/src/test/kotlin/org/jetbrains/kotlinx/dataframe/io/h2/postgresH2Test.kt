@@ -143,7 +143,10 @@ class PostgresH2Test {
 
             val intArray = connection.createArrayOf("INTEGER", arrayOf(1, 2, 3))
             val doubleArray = connection.createArrayOf("DOUBLE", arrayOf(1.1, 2.2, 3.3))
-            val dateArray = connection.createArrayOf("DATE", arrayOf(java.sql.Date.valueOf("2023-08-01"), java.sql.Date.valueOf("2023-08-02")))
+            val dateArray = connection.createArrayOf(
+                "DATE",
+                arrayOf(java.sql.Date.valueOf("2023-08-01"), java.sql.Date.valueOf("2023-08-02")),
+            )
             val textArray = connection.createArrayOf("TEXT", arrayOf("Hello", "World"))
             val booleanArray = connection.createArrayOf("BOOLEAN", arrayOf(true, false, true))
 
