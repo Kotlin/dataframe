@@ -55,6 +55,13 @@ dependencies {
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
     api(project(":dataframe-jdbc"))
+
+    kover(project(":core"))
+    kover(project(":dataframe-arrow"))
+    kover(project(":dataframe-excel"))
+    kover(project(":dataframe-openapi"))
+    kover(project(":dataframe-jdbc"))
+    kover(project(":plugins:kotlin-dataframe"))
 }
 
 enum class Version : Comparable<Version> {
@@ -166,25 +173,6 @@ allprojects {
             }
         } catch (_: UnknownDomainObjectException) {
             logger.warn("Could not set buildConfig on :${this.name}")
-        }
-    }
-}
-
-koverMerged {
-    enable()
-    filters {
-        projects {
-            excludes += listOf(
-                ":examples:idea-examples:youtube",
-                ":examples:idea-examples:titanic",
-                ":examples:idea-examples:movies",
-                ":examples:idea-examples",
-                ":examples",
-                ":plugins",
-                ":plugins:dataframe-gradle-plugin",
-                ":plugins:symbol-processor",
-                ":plugins:dataframe-gradle-plugin",
-            )
         }
     }
 }

@@ -16,10 +16,7 @@ libsPublisher = "1.9.23-dev-45"
 dataframe = "0.13.1"
 korro = "0.1.6"
 
-# TODO Requires more work to be updated to 0.7.0+
-# https://github.com/Kotlin/dataframe/issues/594
-kover = "0.6.1"
-
+kover = "0.8.3"
 commonsCsv = "1.11.0"
 commonsCompress = "1.27.1"
 commonsIo = "2.16.1"
