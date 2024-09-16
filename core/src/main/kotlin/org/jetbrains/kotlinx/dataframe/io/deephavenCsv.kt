@@ -8,7 +8,6 @@ import io.deephaven.csv.reading.CsvReader
 import io.deephaven.csv.sinks.Sink
 import io.deephaven.csv.sinks.SinkFactory
 import io.deephaven.csv.sinks.Source
-import it.unimi.dsi.fastutil.booleans.BooleanArrayList
 import it.unimi.dsi.fastutil.ints.IntAVLTreeSet
 import it.unimi.dsi.fastutil.ints.IntSortedSet
 import kotlinx.datetime.Instant
@@ -25,9 +24,11 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
-import org.jetbrains.kotlinx.dataframe.impl.columns.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnDataHolderImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.PrimitiveArrayList
+import org.jetbrains.kotlinx.dataframe.impl.columns.get
+import org.jetbrains.kotlinx.dataframe.impl.columns.getArrayList
+import org.jetbrains.kotlinx.dataframe.impl.columns.zeroValueFor
 import org.jetbrains.kotlinx.dataframe.io.DeepHavenColumnDataHolderImpl.SinkState.BOOLEAN
 import org.jetbrains.kotlinx.dataframe.io.DeepHavenColumnDataHolderImpl.SinkState.BYTE
 import org.jetbrains.kotlinx.dataframe.io.DeepHavenColumnDataHolderImpl.SinkState.CHAR
@@ -85,7 +86,7 @@ public fun DataFrame.Companion.readDelimDeephavenCsv(
 
     val parserOptions = parserOptions.copy(
         parsersToSkip = parserOptions.parsersToSkip +
-            listOf(
+            setOf(
                 typeOf<Double>(),
                 typeOf<Float>(),
                 typeOf<Int>(),
@@ -337,6 +338,20 @@ internal class DeepHavenColumnDataHolderImpl<T>(
         DOUBLE,
         CHAR,
         STRING,
+        ;
+
+        fun matches(primitiveArrayListState: PrimitiveArrayList.State?) =
+            when (this) {
+                BOOLEAN -> primitiveArrayListState == PrimitiveArrayList.State.BOOLEAN
+                BYTE -> primitiveArrayListState == PrimitiveArrayList.State.BYTE
+                SHORT -> primitiveArrayListState == PrimitiveArrayList.State.SHORT
+                INT -> primitiveArrayListState == PrimitiveArrayList.State.INT
+                LONG -> primitiveArrayListState == PrimitiveArrayList.State.LONG
+                FLOAT -> primitiveArrayListState == PrimitiveArrayList.State.FLOAT
+                DOUBLE -> primitiveArrayListState == PrimitiveArrayList.State.DOUBLE
+                CHAR -> primitiveArrayListState == PrimitiveArrayList.State.CHAR
+                STRING -> false
+            }
     }
 
     /**
@@ -361,22 +376,22 @@ internal class DeepHavenColumnDataHolderImpl<T>(
         when (sinkState) {
             BYTE ->
                 (list as PrimitiveArrayList<Byte>)
-                    .asArrayList()
+                    .getArrayList()
                     .getElements(srcBeginAsInt, dest as ByteArray, 0, srcSize)
 
             SHORT ->
                 (list as PrimitiveArrayList<Short>)
-                    .asArrayList()
+                    .getArrayList()
                     .getElements(srcBeginAsInt, dest as ShortArray, 0, srcSize)
 
             INT ->
                 (list as PrimitiveArrayList<Int>)
-                    .asArrayList()
+                    .getArrayList()
                     .getElements(srcBeginAsInt, dest as IntArray, 0, srcSize)
 
             LONG ->
                 (list as PrimitiveArrayList<Long>)
-                    .asArrayList()
+                    .getArrayList()
                     .getElements(srcBeginAsInt, dest as LongArray, 0, srcSize)
 
             else -> error("Unsupported as source")
@@ -397,13 +412,88 @@ internal class DeepHavenColumnDataHolderImpl<T>(
     ) {
         if (destBegin == destEnd) return
         val destBeginAsInt = destBegin.toInt()
-        val destEndAsInt = destEnd.toInt()
         val destSize = (destEnd - destBegin).toInt()
         if (appending) {
-            while (size < destBegin) {
-                add(null as T)
+            writeAppending(destBegin, destEnd, isNull, src, destBeginAsInt, destSize)
+        } else {
+            writeReplacing(destBeginAsInt, src, destSize, destBegin, destEnd, isNull)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun writeReplacing(
+        destBeginAsInt: Int,
+        src: Any,
+        destSize: Int,
+        destBegin: Long,
+        destEnd: Long,
+        isNull: BooleanArray,
+    ) {
+        when (sinkState) {
+            BOOLEAN -> (list as PrimitiveArrayList<Boolean>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as BooleanArray, 0, destSize)
+
+            BYTE -> (list as PrimitiveArrayList<Byte>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as ByteArray, 0, destSize)
+
+            SHORT -> (list as PrimitiveArrayList<Short>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as ShortArray, 0, destSize)
+
+            INT -> (list as PrimitiveArrayList<Int>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as IntArray, 0, destSize)
+
+            LONG -> (list as PrimitiveArrayList<Long>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as LongArray, 0, destSize)
+
+            FLOAT -> (list as PrimitiveArrayList<Float>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as FloatArray, 0, destSize)
+
+            DOUBLE -> (list as PrimitiveArrayList<Double>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as DoubleArray, 0, destSize)
+
+            CHAR -> (list as PrimitiveArrayList<Char>)
+                .getArrayList()
+                .setElements(destBeginAsInt, src as CharArray, 0, destSize)
+
+            else -> (list as MutableList<Any?>).let {
+                for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
+                    if (isNull[srcIndex]) {
+                        it[destIndex.toInt()] = null
+                    } else {
+                        it[destIndex.toInt()] = (src as Array<Any?>)[srcIndex]
+                    }
+                }
             }
-            // TODO could be even more optimized with array copy
+        }
+
+        for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
+            if (isNull[srcIndex]) {
+                set(destIndex.toInt(), null as T)
+            }
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun writeAppending(
+        destBegin: Long,
+        destEnd: Long,
+        isNull: BooleanArray,
+        src: Any,
+        destBeginAsInt: Int,
+        destSize: Int,
+    ) {
+        while (size < destBegin) {
+            add(null as T)
+        }
+        // cannot use array copy
+        if (!usesPrimitiveArrayList || !sinkState.matches((list as PrimitiveArrayList<*>).state)) {
             for ((srcIndex, _) in (destBegin..<destEnd).withIndex()) {
                 if (isNull[srcIndex]) {
                     add(null as T)
@@ -421,47 +511,47 @@ internal class DeepHavenColumnDataHolderImpl<T>(
                     }
                 }
             }
-        } else {
-            // replacing
+            return
+        } else { // can use array copy
             when (sinkState) {
                 BOOLEAN -> (list as PrimitiveArrayList<Boolean>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as BooleanArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as BooleanArray, 0, destSize)
 
                 BYTE -> (list as PrimitiveArrayList<Byte>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as ByteArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as ByteArray, 0, destSize)
 
                 SHORT -> (list as PrimitiveArrayList<Short>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as ShortArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as ShortArray, 0, destSize)
 
                 INT -> (list as PrimitiveArrayList<Int>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as IntArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as IntArray, 0, destSize)
 
                 LONG -> (list as PrimitiveArrayList<Long>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as LongArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as LongArray, 0, destSize)
 
                 FLOAT -> (list as PrimitiveArrayList<Float>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as FloatArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as FloatArray, 0, destSize)
 
                 DOUBLE -> (list as PrimitiveArrayList<Double>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as DoubleArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as DoubleArray, 0, destSize)
 
                 CHAR -> (list as PrimitiveArrayList<Char>)
-                    .asArrayList()
-                    .setElements(destBeginAsInt, src as CharArray, 0, destSize)
+                    .getArrayList()
+                    .addElements(destBeginAsInt, src as CharArray, 0, destSize)
 
                 else -> (list as MutableList<Any?>).let {
-                    for ((srcIndex, destIndex) in (destBegin..<destEnd).withIndex()) {
+                    for ((srcIndex, _) in (destBegin..<destEnd).withIndex()) {
                         if (isNull[srcIndex]) {
-                            it[destIndex.toInt()] = null
+                            it.add(null)
                         } else {
-                            it[destIndex.toInt()] = (src as Array<Any?>)[srcIndex]
+                            it.add((src as Array<String>)[srcIndex])
                         }
                     }
                 }

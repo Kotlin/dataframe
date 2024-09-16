@@ -775,21 +775,21 @@ internal fun FloatArrayList.asPrimitiveArrayList(): PrimitiveArrayList<Float> = 
 
 internal fun DoubleArrayList.asPrimitiveArrayList(): PrimitiveArrayList<Double> = PrimitiveArrayList(this)
 
-internal fun PrimitiveArrayList<Boolean>.asArrayList(): BooleanArrayList = arrayList as BooleanArrayList
+internal fun PrimitiveArrayList<Boolean>.getArrayList(): BooleanArrayList = arrayList as BooleanArrayList
 
-internal fun PrimitiveArrayList<Byte>.asArrayList(): ByteArrayList = arrayList as ByteArrayList
+internal fun PrimitiveArrayList<Byte>.getArrayList(): ByteArrayList = arrayList as ByteArrayList
 
-internal fun PrimitiveArrayList<Char>.asArrayList(): CharArrayList = arrayList as CharArrayList
+internal fun PrimitiveArrayList<Char>.getArrayList(): CharArrayList = arrayList as CharArrayList
 
-internal fun PrimitiveArrayList<Short>.asArrayList(): ShortArrayList = arrayList as ShortArrayList
+internal fun PrimitiveArrayList<Short>.getArrayList(): ShortArrayList = arrayList as ShortArrayList
 
-internal fun PrimitiveArrayList<Int>.asArrayList(): IntArrayList = arrayList as IntArrayList
+internal fun PrimitiveArrayList<Int>.getArrayList(): IntArrayList = arrayList as IntArrayList
 
-internal fun PrimitiveArrayList<Long>.asArrayList(): LongArrayList = arrayList as LongArrayList
+internal fun PrimitiveArrayList<Long>.getArrayList(): LongArrayList = arrayList as LongArrayList
 
-internal fun PrimitiveArrayList<Float>.asArrayList(): FloatArrayList = arrayList as FloatArrayList
+internal fun PrimitiveArrayList<Float>.getArrayList(): FloatArrayList = arrayList as FloatArrayList
 
-internal fun PrimitiveArrayList<Double>.asArrayList(): DoubleArrayList = arrayList as DoubleArrayList
+internal fun PrimitiveArrayList<Double>.getArrayList(): DoubleArrayList = arrayList as DoubleArrayList
 
 // region get
 

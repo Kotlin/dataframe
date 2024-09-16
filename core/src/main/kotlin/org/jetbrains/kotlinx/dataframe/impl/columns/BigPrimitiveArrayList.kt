@@ -689,20 +689,20 @@ internal fun FloatBigArrayBigList.asBigPrimitiveArrayList(): BigPrimitiveArrayLi
 internal fun DoubleBigArrayBigList.asBigPrimitiveArrayList(): BigPrimitiveArrayList<Double> =
     BigPrimitiveArrayList(this)
 
-internal fun BigPrimitiveArrayList<Boolean>.asArrayList(): BooleanBigArrayBigList =
+internal fun BigPrimitiveArrayList<Boolean>.getArrayList(): BooleanBigArrayBigList =
     arrayList as BooleanBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Byte>.asArrayList(): ByteBigArrayBigList = arrayList as ByteBigArrayBigList
+internal fun BigPrimitiveArrayList<Byte>.getArrayList(): ByteBigArrayBigList = arrayList as ByteBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Char>.asArrayList(): CharBigArrayBigList = arrayList as CharBigArrayBigList
+internal fun BigPrimitiveArrayList<Char>.getArrayList(): CharBigArrayBigList = arrayList as CharBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Short>.asArrayList(): ShortBigArrayBigList = arrayList as ShortBigArrayBigList
+internal fun BigPrimitiveArrayList<Short>.getArrayList(): ShortBigArrayBigList = arrayList as ShortBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Int>.asArrayList(): IntBigArrayBigList = arrayList as IntBigArrayBigList
+internal fun BigPrimitiveArrayList<Int>.getArrayList(): IntBigArrayBigList = arrayList as IntBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Long>.asArrayList(): LongBigArrayBigList = arrayList as LongBigArrayBigList
+internal fun BigPrimitiveArrayList<Long>.getArrayList(): LongBigArrayBigList = arrayList as LongBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Float>.asArrayList(): FloatBigArrayBigList = arrayList as FloatBigArrayBigList
+internal fun BigPrimitiveArrayList<Float>.getArrayList(): FloatBigArrayBigList = arrayList as FloatBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Double>.asArrayList(): DoubleBigArrayBigList =
+internal fun BigPrimitiveArrayList<Double>.getArrayList(): DoubleBigArrayBigList =
     arrayList as DoubleBigArrayBigList
