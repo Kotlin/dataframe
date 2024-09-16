@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.kind
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 
 internal abstract class DataColumnImpl<T>(
     protected val values: List<T>,
@@ -21,6 +23,9 @@ internal abstract class DataColumnImpl<T>(
     private infix fun <T> T?.matches(type: KType) =
         when {
             this == null -> type.isMarkedNullable
+
+            // special case since functions are often stored as a $$Lambda$... class, the subClassOf check would fail
+            this is Function<*> && type.isSubtypeOf(typeOf<Function<*>?>()) -> true
 
             this.isPrimitiveArray ->
                 type.isPrimitiveArray &&
