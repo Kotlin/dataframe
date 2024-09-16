@@ -90,7 +90,12 @@ class PostgresH2Test {
                 charCol char not null,
                 dateCol date not null,
                 doubleCol double precision not null,
-                integerCol integer
+                integerCol integer,
+                intArrayCol integer array,
+                doubleArrayCol double precision array,
+                dateArrayCol date array,
+                textArrayCol text array,
+                booleanArrayCol boolean array
             )
             """
             connection.createStatement().execute(createTableStatement.trimIndent())
@@ -120,8 +125,9 @@ class PostgresH2Test {
                 bigintCol, smallintCol, bigserialCol,  booleanCol, 
                 byteaCol, characterCol, characterNCol, charCol, 
                 dateCol, doubleCol, 
-                integerCol
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                integerCol, intArrayCol,
+                doubleArrayCol, dateArrayCol, textArrayCol, booleanArrayCol
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
 
             @Language("SQL")
@@ -134,6 +140,15 @@ class PostgresH2Test {
                 uuidCol
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
+
+            val intArray = connection.createArrayOf("INTEGER", arrayOf(1, 2, 3))
+            val doubleArray = connection.createArrayOf("DOUBLE", arrayOf(1.1, 2.2, 3.3))
+            val dateArray = connection.createArrayOf(
+                "DATE",
+                arrayOf(java.sql.Date.valueOf("2023-08-01"), java.sql.Date.valueOf("2023-08-02")),
+            )
+            val textArray = connection.createArrayOf("TEXT", arrayOf("Hello", "World"))
+            val booleanArray = connection.createArrayOf("BOOLEAN", arrayOf(true, false, true))
 
             connection.prepareStatement(insertData1).use { st ->
                 // Insert data into table1
@@ -149,6 +164,11 @@ class PostgresH2Test {
                     st.setDate(9, java.sql.Date.valueOf("2023-08-01"))
                     st.setDouble(10, 12.34)
                     st.setInt(11, 12345 * i)
+                    st.setArray(12, intArray)
+                    st.setArray(13, doubleArray)
+                    st.setArray(14, dateArray)
+                    st.setArray(15, textArray)
+                    st.setArray(16, booleanArray)
                     st.executeUpdate()
                 }
             }
@@ -191,11 +211,21 @@ class PostgresH2Test {
 
         result[0][0] shouldBe 1
         result[0][8] shouldBe "A"
+        result[0][12] shouldBe arrayOf(1, 2, 3)
+        result[0][13] shouldBe arrayOf(1.1, 2.2, 3.3)
+        result[0][14] shouldBe arrayOf(java.sql.Date.valueOf("2023-08-01"), java.sql.Date.valueOf("2023-08-02"))
+        result[0][15] shouldBe arrayOf("Hello", "World")
+        result[0][16] shouldBe arrayOf(true, false, true)
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName1)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["integercol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallintcol"]!!.type shouldBe typeOf<Int>()
+        schema.columns["intarraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["doublearraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["datearraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["textarraycol"]!!.type.classifier shouldBe kotlin.Array::class
+        schema.columns["booleanarraycol"]!!.type.classifier shouldBe kotlin.Array::class
 
         val tableName2 = "table2"
         val df2 = DataFrame.readSqlTable(connection, tableName2).cast<Table2>()

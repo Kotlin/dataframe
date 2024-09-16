@@ -18,12 +18,14 @@ import org.junit.BeforeClass
 import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.Date
 import kotlin.reflect.typeOf
 
-private const val URL = "jdbc:mariadb://localhost:3306"
+private const val URL = "jdbc:mariadb://localhost:3307"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
@@ -335,10 +337,21 @@ class MariadbTest {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
         val result = df1.filter { it[Table1MariaDb::id] == 1 }
         result[0][26] shouldBe "textValue1"
+        val byteArray = "tinyblobValue".toByteArray()
+        (result[0][22] as Blob).getBytes(1, byteArray.size) contentEquals byteArray
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
+        schema.columns["varbinaryCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["binaryCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["longblobCol"]!!.type shouldBe typeOf<Blob>()
+        schema.columns["tinyblobCol"]!!.type shouldBe typeOf<Blob>()
+        schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
+        schema.columns["datetimeCol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["timestampCol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["timeCol"]!!.type shouldBe typeOf<java.sql.Time>()
+        schema.columns["yearCol"]!!.type shouldBe typeOf<Date>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MariaDb>()
         val result2 = df2.filter { it[Table2MariaDb::id] == 1 }
@@ -368,8 +381,8 @@ class MariadbTest {
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
-        schema.columns["enumCol"]!!.type shouldBe typeOf<Char>()
-        schema.columns["setCol"]!!.type shouldBe typeOf<Char?>()
+        schema.columns["enumCol"]!!.type shouldBe typeOf<String>()
+        schema.columns["setCol"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test

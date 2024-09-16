@@ -17,9 +17,11 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.math.BigDecimal
+import java.sql.Blob
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.Date
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=MariaDB;DATABASE_TO_LOWER=TRUE"
@@ -303,10 +305,21 @@ class MariadbH2Test {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MariaDb>()
         val result = df1.filter { it[Table1MariaDb::id] == 1 }
         result[0][26] shouldBe "textValue1"
+        val byteArray = "tinyblobValue".toByteArray()
+        (result[0][22] as Blob).getBytes(1, byteArray.size) contentEquals byteArray
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textcol"]!!.type shouldBe typeOf<String>()
+        schema.columns["varbinarycol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["binarycol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["longblobcol"]!!.type shouldBe typeOf<Blob>()
+        schema.columns["tinyblobcol"]!!.type shouldBe typeOf<Blob>()
+        schema.columns["datecol"]!!.type shouldBe typeOf<Date>()
+        schema.columns["datetimecol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["timestampcol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["timecol"]!!.type shouldBe typeOf<java.sql.Time>()
+        schema.columns["yearcol"]!!.type shouldBe typeOf<Int>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MariaDb>()
         val result2 = df2.filter { it[Table2MariaDb::id] == 1 }
@@ -396,11 +409,11 @@ class MariadbH2Test {
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
 
         schema.columns["tinyintcol"]!!.type shouldBe typeOf<Int>()
-        schema.columns["smallintcol"]!!.type shouldBe typeOf<Short?>()
+        schema.columns["smallintcol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["mediumintcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["mediumintunsignedcol"]!!.type shouldBe typeOf<Int>()
         schema.columns["bigintcol"]!!.type shouldBe typeOf<Long>()
-        schema.columns["floatcol"]!!.type shouldBe typeOf<Float>()
+        schema.columns["floatcol"]!!.type shouldBe typeOf<Double>()
         schema.columns["doublecol"]!!.type shouldBe typeOf<Double>()
         schema.columns["decimalcol"]!!.type shouldBe typeOf<BigDecimal>()
     }
