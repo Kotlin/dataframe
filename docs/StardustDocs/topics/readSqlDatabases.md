@@ -3,15 +3,15 @@
 These functions allow you to interact with an SQL database using a Kotlin DataFrame library.
 
 There are two main blocks of available functionality:
-* reading data from a database
+* Methods for reading data from a database
   *  ```readSqlTable``` reads specific database table
   *  ```readSqlQuery``` executes SQL query
   *  ```readResultSet``` reads from created earlier ResultSet
   *  ```readAllSqlTables``` reads all tables (all non-system tables)
-* schema retrieval
+* Methods for reading table schemas
   * ```getSchemaForSqlTable``` for specific tables
   * ```getSchemaForSqlQuery``` for result of executing SQL queries
-  * ```getSchemaForResultSet``` for rows reading through the given ResultSet
+  * ```getSchemaForResultSet``` for created earlier `ResultSet`
   * ```getSchemaForAllSqlTables``` for all non-system tables
 
 All methods above can be accessed like `DataFrame.getSchemaFor...()` via a companion for `DataFrame`.
@@ -19,14 +19,14 @@ All methods above can be accessed like `DataFrame.getSchemaFor...()` via a compa
 Also, there are a few **extension functions** available on `Connection`,
 `ResultSet`, and `DbConnectionConfig` objects.
 
-* reading data from a database
+* Methods for reading data from a database
     *  ```readDataFrame``` on `Connection` or `DbConnectionConfig` 
-  converts the result of an SQL query or SQL table (by name) to a dataframe
+  converts the result of an SQL query or SQL table to a `DataFrame` object.
     *  ```readDataFrame``` on `ResultSet` reads from created earlier `ResultSet`
-* reading schema from a database
+* Methods for reading table schemas from a database
     * ```getDataFrameSchema``` on `Connection` or `DbConnectionConfig`
   for an SQL query result or the SQL table
-    * ```getDataFrameSchema``` on `ResultSet` for rows reading through the given `ResultSet`
+    * ```getDataFrameSchema``` on `ResultSet` for created earlier `ResultSet`
 
 
 **NOTE:** This is an experimental module, and for now, 
@@ -46,23 +46,29 @@ implementation("org.jetbrains.kotlinx:dataframe-jdbc:$dataframe_version")
 
 after that, you need to add a dependency for a JDBC driver for the used database, for example
 
-For MariaDB:
+For **MariaDB**:
 
 ```kotlin
 implementation("org.mariadb.jdbc:mariadb-java-client:$version")
 ```
 
-For PostgreSQL:
+Maven Central version could be found [here](https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client).
+
+For **PostgreSQL**:
 
 ```kotlin
 implementation("org.postgresql:postgresql:$version")
 ```
 
-For MySQL:
+Maven Central version could be found [here](https://mvnrepository.com/artifact/org.postgresql/postgresql).
+
+For **MySQL**:
 
 ```kotlin
 implementation("com.mysql:mysql-connector-j:$version")
 ```
+
+Maven Central version could be found [here](https://mvnrepository.com/artifact/com.mysql/mysql-connector-j).
 
 For SQLite:
 
@@ -70,11 +76,15 @@ For SQLite:
 implementation("org.xerial:sqlite-jdbc:$version")
 ```
 
+Maven Central version could be found [here](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc).
+
 For MS SQL:
 
 ```kotlin
 implementation("com.microsoft.sqlserver:mssql-jdbc:$version")
 ```
+
+Maven Central version could be found [here](https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc).
 
 In the second, be sure that you can establish a connection to the database.
 
@@ -130,17 +140,18 @@ Find a full example Notebook [here](https://github.com/zaleslaw/KotlinDataFrame-
 
 ## Nullability Inference
 
-Each method has an important parameter called `inferNullability`.
+Each method has an important parameter called `inferNullability`. 
 
 By default, this parameter is set to `true`, 
-indicating that the method should inherit the `NOT NULL` constraints from the SQL table definition. 
-However, if you prefer to ignore the SQL constraints
-and determine nullability solely based on the presence of null values in the data, 
-set this parameter to `false`.
+indicating that the method should inherit the `NOT NULL` constraints 
+from the SQL table definition. 
 
-When `inferNullability` is set to `false`, 
-the nullability of the column type will be defined based on the number of null values present in the extracted data. 
-If the data contains zero null values, the column will be treated as non-nullable in Kotlin DataFrame.
+However, if you prefer to ignore the SQL constraints 
+and determine nullability solely based on the presence of null values in the data, 
+set this parameter to `false`. 
+
+In this case, the column will be considered nullable if there is at least one null value in the data; 
+otherwise, it will be considered non-nullable for the newly created `DataFrame` object.
 
 ## Reading Specific Tables
 
