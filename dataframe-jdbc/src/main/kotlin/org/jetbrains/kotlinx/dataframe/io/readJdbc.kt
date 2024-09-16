@@ -33,7 +33,6 @@ import java.util.Date
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.cast
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
 import kotlin.reflect.full.safeCast
@@ -783,7 +782,8 @@ private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, In
 }
 
 // Utility function to cast arrays based on the type of elements
-private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> = array.mapNotNull { elementType.safeCast(it) }
+private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
+    array.mapNotNull { elementType.safeCast(it) }
 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
@@ -861,9 +861,9 @@ private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
 
     // Find distinct types and ensure there's only one distinct type
     val commonElementType = allElementTypes
-        .distinct()     // Get unique element types
+        .distinct() // Get unique element types
         .singleOrNull() // Ensure there's only one unique element type, otherwise return null
-        ?: Any::class   // Fallback to Any::class if multiple distinct types or no elements found
+        ?: Any::class // Fallback to Any::class if multiple distinct types or no elements found
 
     return if (commonElementType != Any::class) {
         sqlArrays.map { castArray(it, commonElementType).toTypedArray() }
