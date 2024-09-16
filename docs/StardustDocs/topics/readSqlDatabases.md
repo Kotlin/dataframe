@@ -3,7 +3,7 @@
 These functions allow you to interact with an SQL database using a Kotlin DataFrame library.
 
 There are two main blocks of available functionality:
-* reading data from the database
+* reading data from a database
   *  ```readSqlTable``` reads specific database table
   *  ```readSqlQuery``` executes SQL query
   *  ```readResultSet``` reads from created earlier ResultSet
@@ -14,19 +14,19 @@ There are two main blocks of available functionality:
   * ```getSchemaForResultSet``` for rows reading through the given ResultSet
   * ```getSchemaForAllSqlTables``` for all non-system tables
 
-All methods above are available in the ```DataFrame``` class. 
+All methods above can be accessed like `DataFrame.getSchemaFor...()` via a companion for `DataFrame`.
 
-Also, there are a few **extension functions** available on Connection, 
-ResultSet, and DbConnectionConfig objects.
+Also, there are a few **extension functions** available on `Connection`,
+`ResultSet`, and `DbConnectionConfig` objects.
 
-* reading data from the database
-    *  ```readDataFrame``` on ```Connection``` or ```DbConnectionConfig``` 
-  converts the result of an SQL query or SQL table (by name) to the DataFrame
-    *  ```readDataFrame``` on ```ResultSet``` reads from created earlier ResultSet
-* schema retrieval
-    * ```getDataFrameSchema``` on ```Connection``` or ```DbConnectionConfig```
+* reading data from a database
+    *  ```readDataFrame``` on `Connection` or `DbConnectionConfig` 
+  converts the result of an SQL query or SQL table (by name) to a dataframe
+    *  ```readDataFrame``` on `ResultSet` reads from created earlier `ResultSet`
+* reading schema from a database
+    * ```getDataFrameSchema``` on `Connection` or `DbConnectionConfig`
   for an SQL query result or the SQL table
-    * ```getDataFrameSchema``` on ```ResultSet``` for rows reading through the given ResultSet
+    * ```getDataFrameSchema``` on `ResultSet` for rows reading through the given `ResultSet`
 
 
 **NOTE:** This is an experimental module, and for now, 
@@ -140,7 +140,7 @@ set this parameter to `false`.
 
 When `inferNullability` is set to `false`, 
 the nullability of the column type will be defined based on the number of null values present in the extracted data. 
-If the data contains zero null values, the column will be treated as non-nullable in the Kotlin DataFrame.
+If the data contains zero null values, the column will be treated as non-nullable in Kotlin DataFrame.
 
 ## Reading Specific Tables
 
@@ -149,7 +149,7 @@ Variants with a limit parameter restrict how many rows will be read from the tab
 
 **readSqlTable(dbConfig: DbConnectionConfig, tableName: String, limit: Int, inferNullability: Boolean): AnyFrame**
 
-Read all data from a specific table in the SQL database and transform it into an AnyFrame object.
+Read all data from a specific table in the SQL database and transform it into an `AnyFrame` object.
 
 The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection, 
 created under the hood and managed by the library.
@@ -201,7 +201,7 @@ connection.close()
 
 **Connection.readDataFrame(sqlQueryOrTableName: String, limit: Int, inferNullability: Boolean): AnyFrame**
 
-Read all data from a specific table in the SQL database and transform it into an AnyFrame object.
+Read all data from a specific table in the SQL database and transform it into an `AnyFrame` object.
 
 `sqlQueryOrTableName:String` is the SQL query to execute or name of the SQL table. 
 
@@ -219,7 +219,7 @@ you can delegate the creation of the connection to `DbConnectionConfig`.
 
 ## Executing SQL Queries
 
-These functions execute an SQL query on the database and convert the result into a DataFrame. 
+These functions execute an SQL query on the database and convert the result into a `DataFrame` object. 
 If a limit is provided, only that many rows will be returned from the result.
 
 **readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, limit: Int, inferNullability: Boolean): AnyFrame**
@@ -270,21 +270,21 @@ connection.close()
 
 ## Reading from ResultSet
 
-These functions read data from a ResultSet object and convert it into a DataFrame. 
+These functions read data from a `ResultSet` object and convert it into a `DataFrame`. 
 The versions with a limit parameter will only read up to the specified number of rows.
 
 **readResultSet(resultSet: ResultSet, dbType: DbType, limit: Int, inferNullability: Boolean): AnyFrame**
 
-This function allows reading a ResultSet object from your SQL database 
-and transforms it into an AnyFrame object. 
+This function allows reading a `ResultSet` object from your SQL database 
+and transforms it into an `AnyFrame` object. 
 
 A ResultSet object maintains a cursor pointing to its current row of data. 
-By default, a ResultSet object is not updatable and has a cursor that moves forward only. 
+By default, a `ResultSet` object is not updatable and has a cursor that moves forward only. 
 Therefore, you can iterate it only once and only from the first row to the last row. 
 
-More details about ResultSet can be found in the [official Java documentation](https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html).
+More details about `ResultSet` can be found in the [official Java documentation](https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html).
 
-Note that reading from the ResultSet could potentially change its state.
+Note that reading from the `ResultSet` could potentially change its state.
 
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.), 
 supported by a library. 
@@ -313,7 +313,7 @@ val df = DataFrame.readResultSet(resultSet, connection)
 connection.close()
 ```
 
-### Extension functions for reading a result of an SQL query
+### Extension functions for reading a result of the SQL query
 
 The same example, rewritten with the extension function:
 
@@ -331,7 +331,7 @@ connection.close()
 
 **ResultSet.readDataFrame(connection: Connection, limit: Int, inferNullability: Boolean): AnyFrame**
 
-Reads the data from a `ResultSet` and converts it into a DataFrame.
+Reads the data from a `ResultSet` and converts it into a `DataFrame`.
 
 `connection` is the connection to the database (it's required to extract the database type) 
 that the `ResultSet` belongs to.
@@ -343,7 +343,7 @@ Variants with a limit parameter restrict how many rows will be read from each ta
 
 **readAllSqlTables(dbConfig: DbConnectionConfig, limit: Int, inferNullability: Boolean): Map\<String, AnyFrame>**
 
-Retrieves data from all the non-system tables in the SQL database and returns them as a map of table names to AnyFrame objects.
+Retrieves data from all the non-system tables in the SQL database and returns them as a map of table names to `AnyFrame` objects.
 
 The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection,
 created under the hood and managed by the library.
@@ -372,7 +372,7 @@ val dataframes = DataFrame.readAllSqlTables(connection)
 connection.close()
 ```
 
-## Schema retrieval for a specific SQL table
+## Schema reading for a specific SQL table
 
 The purpose of these functions is to facilitate the retrieval of table schema. 
 By providing a table name and either a database configuration or connection, 
@@ -409,7 +409,7 @@ val schema = DataFrame.getSchemaForSqlTable(connection, "Users")
 connection.close()
 ```
 
-## Schema retrieval from SQL query
+## Schema reading from an SQL query
 
 These functions return the schema of an SQL query result. 
 
@@ -447,7 +447,7 @@ val schema = DataFrame.getSchemaForSqlQuery(connection, "SELECT * FROM Users WHE
 connection.close()
 ```
 
-### Extension functions for schema retrieval from an SQL query or SQL table
+### Extension functions for schema reading from an SQL query or an SQL table
 
 The same example, rewritten with the extension function:
 
@@ -463,11 +463,11 @@ connection.close()
 ```
 **Connection.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema**
 
-Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
+Retrieves the schema of an SQL query result or an SQL table using the provided database configuration.
 
 **DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema**
 
-Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
+Retrieves the schema of an SQL query result or an SQL table using the provided database configuration.
 
 The `dbConfig: DbConnectionConfig` represents the configuration for a database connection,
 created under the hood and managed by the library.
@@ -481,16 +481,16 @@ val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWO
 val schema = dbConfig.getDataFrameSchema("SELECT * FROM Users WHERE age > 35")
 ```
 
-## Schema retrieval from ResultSet
+## Schema reading from ResultSet
 
-These functions return the schema from a ResultSet provided by the user. 
+These functions return the schema from a `ResultSet` provided by the user. 
 
 This can help developers infer the structure of the result set, 
 which is quite essential for data transformation and mapping purposes.
 
 **getSchemaForResultSet(resultSet: ResultSet, dbType: DbType): DataFrameSchema**
 
-This function reads the schema from a ResultSet object provided by the user.
+This function reads the schema from a `ResultSet` object provided by the user.
 
 The `dbType: DbType` parameter specifies the type of our database (e.g., PostgreSQL, MySQL, etc.),
 supported by a library.
@@ -518,7 +518,7 @@ val schema = DataFrame.getSchemaForResultSet(resultSet, connection)
 connection.close()
 ```
 
-### Extension functions for schema retrieval from the ResultSet
+### Extension functions for schema reading from the ResultSet
 
 The same example, rewritten with the extension function:
 
@@ -550,7 +550,7 @@ based on
 
 **ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema**
 
-## Schema retrieval for all non-system tables
+## Schema reading for all non-system tables
 
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
