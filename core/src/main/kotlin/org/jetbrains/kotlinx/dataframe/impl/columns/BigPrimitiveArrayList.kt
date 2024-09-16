@@ -689,20 +689,20 @@ internal fun FloatBigArrayBigList.asBigPrimitiveArrayList(): BigPrimitiveArrayLi
 internal fun DoubleBigArrayBigList.asBigPrimitiveArrayList(): BigPrimitiveArrayList<Double> =
     BigPrimitiveArrayList(this)
 
-internal fun BigPrimitiveArrayList<Boolean>.asBooleanArrayList(): BooleanBigArrayBigList =
+internal fun BigPrimitiveArrayList<Boolean>.asArrayList(): BooleanBigArrayBigList =
     arrayList as BooleanBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Byte>.asByteArrayList(): ByteBigArrayBigList = arrayList as ByteBigArrayBigList
+internal fun BigPrimitiveArrayList<Byte>.asArrayList(): ByteBigArrayBigList = arrayList as ByteBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Char>.asCharArrayList(): CharBigArrayBigList = arrayList as CharBigArrayBigList
+internal fun BigPrimitiveArrayList<Char>.asArrayList(): CharBigArrayBigList = arrayList as CharBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Short>.asShortArrayList(): ShortBigArrayBigList = arrayList as ShortBigArrayBigList
+internal fun BigPrimitiveArrayList<Short>.asArrayList(): ShortBigArrayBigList = arrayList as ShortBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Int>.asIntArrayList(): IntBigArrayBigList = arrayList as IntBigArrayBigList
+internal fun BigPrimitiveArrayList<Int>.asArrayList(): IntBigArrayBigList = arrayList as IntBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Long>.asLongArrayList(): LongBigArrayBigList = arrayList as LongBigArrayBigList
+internal fun BigPrimitiveArrayList<Long>.asArrayList(): LongBigArrayBigList = arrayList as LongBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Float>.asFloatArrayList(): FloatBigArrayBigList = arrayList as FloatBigArrayBigList
+internal fun BigPrimitiveArrayList<Float>.asArrayList(): FloatBigArrayBigList = arrayList as FloatBigArrayBigList
 
-internal fun BigPrimitiveArrayList<Double>.asDoubleArrayList(): DoubleBigArrayBigList =
+internal fun BigPrimitiveArrayList<Double>.asArrayList(): DoubleBigArrayBigList =
     arrayList as DoubleBigArrayBigList

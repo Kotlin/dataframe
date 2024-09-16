@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnDataHolder
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
@@ -112,9 +111,7 @@ public fun DataFrame.Companion.readDelimDeephavenCsv(
                 data.replaceList {
                     it as PrimitiveArrayList<Byte>
                     val oneByte = 1.toByte()
-                    PrimitiveArrayList<Boolean>(
-                        BooleanArrayList(BooleanArray(it.size) { i -> it.getByte(i) == oneByte }),
-                    )
+                    PrimitiveArrayList(BooleanArray(it.size) { i -> it[i] == oneByte })
                 }
                 type = typeOf<Boolean>()
                 data
@@ -364,22 +361,22 @@ internal class DeepHavenColumnDataHolderImpl<T>(
         when (sinkState) {
             BYTE ->
                 (list as PrimitiveArrayList<Byte>)
-                    .asByteArrayList()
+                    .asArrayList()
                     .getElements(srcBeginAsInt, dest as ByteArray, 0, srcSize)
 
             SHORT ->
                 (list as PrimitiveArrayList<Short>)
-                    .asShortArrayList()
+                    .asArrayList()
                     .getElements(srcBeginAsInt, dest as ShortArray, 0, srcSize)
 
             INT ->
                 (list as PrimitiveArrayList<Int>)
-                    .asIntArrayList()
+                    .asArrayList()
                     .getElements(srcBeginAsInt, dest as IntArray, 0, srcSize)
 
             LONG ->
                 (list as PrimitiveArrayList<Long>)
-                    .asLongArrayList()
+                    .asArrayList()
                     .getElements(srcBeginAsInt, dest as LongArray, 0, srcSize)
 
             else -> error("Unsupported as source")
@@ -428,35 +425,35 @@ internal class DeepHavenColumnDataHolderImpl<T>(
             // replacing
             when (sinkState) {
                 BOOLEAN -> (list as PrimitiveArrayList<Boolean>)
-                    .asBooleanArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as BooleanArray, 0, destSize)
 
                 BYTE -> (list as PrimitiveArrayList<Byte>)
-                    .asByteArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as ByteArray, 0, destSize)
 
                 SHORT -> (list as PrimitiveArrayList<Short>)
-                    .asShortArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as ShortArray, 0, destSize)
 
                 INT -> (list as PrimitiveArrayList<Int>)
-                    .asIntArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as IntArray, 0, destSize)
 
                 LONG -> (list as PrimitiveArrayList<Long>)
-                    .asLongArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as LongArray, 0, destSize)
 
                 FLOAT -> (list as PrimitiveArrayList<Float>)
-                    .asFloatArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as FloatArray, 0, destSize)
 
                 DOUBLE -> (list as PrimitiveArrayList<Double>)
-                    .asDoubleArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as DoubleArray, 0, destSize)
 
                 CHAR -> (list as PrimitiveArrayList<Char>)
-                    .asCharArrayList()
+                    .asArrayList()
                     .setElements(destBeginAsInt, src as CharArray, 0, destSize)
 
                 else -> (list as MutableList<Any?>).let {

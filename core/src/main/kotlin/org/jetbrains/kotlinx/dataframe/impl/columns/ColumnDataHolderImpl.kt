@@ -157,14 +157,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Boolean>) += boolean },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(boolean)
+                    (list as PrimitiveArrayList<Boolean>).add(boolean)
                 } else {
                     list.add(boolean as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Boolean>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -181,14 +181,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Byte>) += byte },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(byte)
+                    (list as PrimitiveArrayList<Byte>).add(byte)
                 } else {
                     list.add(byte as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Byte>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -205,14 +205,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Short>) += short },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(short)
+                    (list as PrimitiveArrayList<Short>).add(short)
                 } else {
                     list.add(short as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Short>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -229,14 +229,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Int>) += int },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(int)
+                    (list as PrimitiveArrayList<Int>).add(int)
                 } else {
                     list.add(int as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Int>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -253,14 +253,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Long>) += long },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(long)
+                    (list as PrimitiveArrayList<Long>).add(long)
                 } else {
                     list.add(long as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Long>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -277,14 +277,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Float>) += float },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(float)
+                    (list as PrimitiveArrayList<Float>).add(float)
                 } else {
                     list.add(float as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Float>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -301,14 +301,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Double>) += double },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(double)
+                    (list as PrimitiveArrayList<Double>).add(double)
                 } else {
                     list.add(double as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Double>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -325,14 +325,14 @@ internal open class ColumnDataHolderImpl<T>(
             addElementToDistinctSet = { (distinct.value as MutableSet<Char>) += char },
             addElementToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(char)
+                    (list as PrimitiveArrayList<Char>).add(char)
                 } else {
                     list.add(char as T)
                 }
             },
             addZeroValueToList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).add(zeroValue)
+                    (list as PrimitiveArrayList<Char>).add(zeroValue)
                 } else {
                     list.add(zeroValue as T)
                 }
@@ -402,13 +402,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getBoolean(index)
+                    (list as PrimitiveArrayList<Boolean>)[index]
                 } else {
                     list[index] as Boolean?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getBoolean(it) == prevValue
+                        (list as PrimitiveArrayList<Boolean>)[index] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -419,14 +419,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Boolean>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Boolean>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
@@ -443,13 +443,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getByte(index)
+                    (list as PrimitiveArrayList<Byte>)[index]
                 } else {
                     list[index] as Byte?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getByte(it) == prevValue
+                        (list as PrimitiveArrayList<Byte>)[it] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -460,14 +460,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Byte>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Byte>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
@@ -484,13 +484,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getShort(index)
+                    (list as PrimitiveArrayList<Short>)[index]
                 } else {
                     list[index] as Short?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getShort(it) == prevValue
+                        (list as PrimitiveArrayList<Short>)[it] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -501,14 +501,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Short>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Short>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
@@ -525,13 +525,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getInt(index)
+                    (list as PrimitiveArrayList<Int>)[index]
                 } else {
                     list[index] as Int?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getInt(it) == prevValue
+                        (list as PrimitiveArrayList<Int>)[it] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -542,14 +542,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Int>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Int>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
@@ -566,13 +566,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getLong(index)
+                    (list as PrimitiveArrayList<Long>)[index]
                 } else {
                     list[index] as Long?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getLong(it) == prevValue
+                        (list as PrimitiveArrayList<Long>)[it] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -583,14 +583,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Long>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Long>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
@@ -607,13 +607,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getFloat(index)
+                    (list as PrimitiveArrayList<Float>)[index]
                 } else {
                     list[index] as Float?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getFloat(it) == prevValue
+                        (list as PrimitiveArrayList<Float>)[it] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -624,14 +624,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Float>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Float>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
@@ -648,13 +648,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getDouble(index)
+                    (list as PrimitiveArrayList<Double>)[index]
                 } else {
                     list[index] as Double?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getDouble(it) == prevValue
+                        (list as PrimitiveArrayList<Double>)[it] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -665,14 +665,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Double>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Double>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
@@ -689,13 +689,13 @@ internal open class ColumnDataHolderImpl<T>(
             listCanAddElement = !usesPrimitiveArrayList || (list as PrimitiveArrayList<*>).canAdd(value),
             updateDistinctSet = {
                 val prevValue = if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>).getChar(index)
+                    (list as PrimitiveArrayList<Char>)[index]
                 } else {
                     list[index] as Char?
                 }
                 val countOfPrevValue = (0..<size).count {
                     if (usesPrimitiveArrayList) {
-                        (list as PrimitiveArrayList<*>).getChar(it) == prevValue
+                        (list as PrimitiveArrayList<Char>)[it] == prevValue
                     } else {
                         list[it] == prevValue
                     }
@@ -706,14 +706,14 @@ internal open class ColumnDataHolderImpl<T>(
             },
             setElementInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = value
+                    (list as PrimitiveArrayList<Char>)[index] = value
                 } else {
                     list[index] = value as T
                 }
             },
             setZeroValueInList = {
                 if (usesPrimitiveArrayList) {
-                    (list as PrimitiveArrayList<*>)[index] = zeroValue
+                    (list as PrimitiveArrayList<Char>)[index] = zeroValue
                 } else {
                     list[index] = zeroValue as T
                 }
