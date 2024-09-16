@@ -36,6 +36,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.cast
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
+import kotlin.reflect.full.safeCast
 import kotlin.reflect.full.starProjectedType
 
 private val logger = KotlinLogging.logger {}
@@ -782,7 +783,7 @@ private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, In
 }
 
 // Utility function to cast arrays based on the type of elements
-public fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> = array.map { elementType.cast(it) }
+private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> = array.mapNotNull { elementType.safeCast(it) }
 
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
@@ -848,18 +849,24 @@ private fun fetchAndConvertDataFromResultSet(
 
 private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
     // Intermediate variable for the first mapping
-    val sqlArrays = values.map {
-        (it as java.sql.Array).array ?: emptyArray<Any>()
+    val sqlArrays = values.mapNotNull {
+        (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }
     }
 
-    // Determine the type based on the first element
-    val firstArray = sqlArrays.firstOrNull()
-    val firstElementType = firstArray?.javaClass?.componentType?.kotlin ?: Any::class
+    // Flatten the arrays to iterate through all elements and filter out null values, then map to component types
+    val allElementTypes = sqlArrays
+        .flatMap { array ->
+            (array.javaClass.componentType?.kotlin?.let { listOf(it) } ?: emptyList())
+        } // Get the component type of each array and convert it to a Kotlin class, if available
 
-    // Cast arrays to the detected type
-    return if (firstArray != null && firstArray is Array<*>) {
-        val castedArrays = sqlArrays.map { castArray(it as Array<*>, firstElementType).toTypedArray() }
-        castedArrays
+    // Find distinct types and ensure there's only one distinct type
+    val commonElementType = allElementTypes
+        .distinct()     // Get unique element types
+        .singleOrNull() // Ensure there's only one unique element type, otherwise return null
+        ?: Any::class   // Fallback to Any::class if multiple distinct types or no elements found
+
+    return if (commonElementType != Any::class) {
+        sqlArrays.map { castArray(it, commonElementType).toTypedArray() }
     } else {
         sqlArrays
     }
