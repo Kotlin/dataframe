@@ -374,10 +374,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
-    kover{
-        reports{
-            total{
-                filters{
+    kover {
+        reports {
+            total {
+                filters {
                     excludes {
                         classes("org.jetbrains.kotlinx.dataframe.jupyter.*")
                         classes("org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests")
