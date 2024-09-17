@@ -14,15 +14,31 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import java.io.File
 import java.io.InputStream
 import java.time.ZoneOffset
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.nanoseconds
 import java.time.LocalDateTime as JavaLocalDateTime
+
+public fun main() {
+    val folder = File(
+        "/mnt/data/Download/Age-sex-by-ethnic-group-grouped-total-responses-census-usually-resident-population-counts-2006-2013-2018-Censuses-RC-TA-SA2-DHB",
+    )
+    val mediumFile = File(folder, "DimenLookupArea8277.csv")
+    val largeFile = File(folder, "Data8277.csv")
+
+//    val file = mediumFile
+    val file = largeFile
+
+    val df1 = DataFrame.readDelimDeephavenCsv(file.inputStream())
+        .also { it.print(borders = true, columnTypes = true, rowsLimit = 20) }
+}
 
 public fun DataFrame.Companion.readDelimDeephavenCsv(
     inputStream: InputStream,

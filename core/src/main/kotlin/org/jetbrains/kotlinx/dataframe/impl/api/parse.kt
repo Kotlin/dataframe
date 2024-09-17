@@ -344,7 +344,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
         hasNulls = false
         hasNotNulls = false
         nullStringParsed = false
-        for (str in values) {
+        for (str in this) {
             when {
                 str == null -> {
                     parsedValues.add(null)
