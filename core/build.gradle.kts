@@ -375,6 +375,9 @@ tasks.withType<KotlinCompile> {
 tasks.test {
     maxHeapSize = "2048m"
     kover {
+        currentProject {
+            instrumentation { disabledForTestTasks.addAll("samplesTest") }
+        }
         reports {
             total {
                 filters {
