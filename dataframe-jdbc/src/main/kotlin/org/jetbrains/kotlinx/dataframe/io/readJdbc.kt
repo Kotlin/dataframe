@@ -120,9 +120,10 @@ public fun DataFrame.Companion.readSqlTable(
     tableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, tableName, limit, inferNullability)
+        return readSqlTable(connection, tableName, limit, inferNullability, dbType)
     }
 }
 
@@ -142,12 +143,13 @@ public fun DataFrame.Companion.readSqlTable(
     tableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): AnyFrame {
     val url = connection.metaData.url
-    val dbType = extractDBTypeFromConnection(connection)
+    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     val selectAllQuery = if (limit > 0) {
-        dbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
+        determinedDbType.sqlQueryLimit("SELECT * FROM $tableName", limit)
     } else {
         "SELECT * FROM $tableName"
     }
@@ -157,7 +159,7 @@ public fun DataFrame.Companion.readSqlTable(
 
         st.executeQuery(selectAllQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
-            return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit, inferNullability)
+            return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
     }
 }
@@ -179,9 +181,10 @@ public fun DataFrame.Companion.readSqlQuery(
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlQuery(connection, sqlQuery, limit, inferNullability)
+        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType)
     }
 }
 
@@ -204,22 +207,23 @@ public fun DataFrame.Companion.readSqlQuery(
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): AnyFrame {
     require(isValid(sqlQuery)) {
         "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
             "Also it should not contain any separators like `;`."
     }
 
-    val dbType = extractDBTypeFromConnection(connection)
+    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    val internalSqlQuery = if (limit > 0) dbType.sqlQueryLimit(sqlQuery, limit) else sqlQuery
+    val internalSqlQuery = if (limit > 0) determinedDbType.sqlQueryLimit(sqlQuery, limit) else sqlQuery
 
     logger.debug { "Executing SQL query: $internalSqlQuery" }
 
     connection.createStatement().use { st ->
         st.executeQuery(internalSqlQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
-            return fetchAndConvertDataFromResultSet(tableColumns, rs, dbType, limit, inferNullability)
+            return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
     }
 }
@@ -239,6 +243,7 @@ public fun DbConnectionConfig.readDataFrame(
     sqlQueryOrTableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -246,6 +251,7 @@ public fun DbConnectionConfig.readDataFrame(
             sqlQueryOrTableName,
             limit,
             inferNullability,
+            dbType,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -253,6 +259,7 @@ public fun DbConnectionConfig.readDataFrame(
             sqlQueryOrTableName,
             limit,
             inferNullability,
+            dbType,
         )
 
         else -> throw IllegalArgumentException(
@@ -286,6 +293,7 @@ public fun Connection.readDataFrame(
     sqlQueryOrTableName: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -293,6 +301,7 @@ public fun Connection.readDataFrame(
             sqlQueryOrTableName,
             limit,
             inferNullability,
+            dbType,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -300,6 +309,7 @@ public fun Connection.readDataFrame(
             sqlQueryOrTableName,
             limit,
             inferNullability,
+            dbType,
         )
 
         else -> throw IllegalArgumentException(
@@ -395,10 +405,11 @@ public fun DataFrame.Companion.readResultSet(
     connection: Connection,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): AnyFrame {
-    val dbType = extractDBTypeFromConnection(connection)
+    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    return readResultSet(resultSet, dbType, limit, inferNullability)
+    return readResultSet(resultSet, determinedDbType, limit, inferNullability)
 }
 
 /**
@@ -424,7 +435,8 @@ public fun ResultSet.readDataFrame(
     connection: Connection,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
-): AnyFrame = DataFrame.Companion.readResultSet(this, connection, limit, inferNullability)
+    dbType: DbType? = null,
+): AnyFrame = DataFrame.Companion.readResultSet(this, connection, limit, inferNullability, dbType)
 
 /**
  * Reads all non-system tables from a database and returns them
@@ -441,9 +453,10 @@ public fun DataFrame.Companion.readAllSqlTables(
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): Map<String, AnyFrame> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readAllSqlTables(connection, catalogue, limit, inferNullability)
+        return readAllSqlTables(connection, catalogue, limit, inferNullability, dbType)
     }
 }
 
@@ -464,9 +477,10 @@ public fun DataFrame.Companion.readAllSqlTables(
     catalogue: String? = null,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
+    dbType: DbType? = null,
 ): Map<String, AnyFrame> {
     val metaData = connection.metaData
-    val dbType = extractDBTypeFromConnection(connection)
+    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     // exclude a system and other tables without data, but it looks like it is supported badly for many databases
     val tables = metaData.getTables(catalogue, null, null, arrayOf("TABLE"))
@@ -474,8 +488,8 @@ public fun DataFrame.Companion.readAllSqlTables(
     val dataFrames = mutableMapOf<String, AnyFrame>()
 
     while (tables.next()) {
-        val table = dbType.buildTableMetadata(tables)
-        if (!dbType.isSystemTable(table)) {
+        val table = determinedDbType.buildTableMetadata(tables)
+        if (!determinedDbType.isSystemTable(table)) {
             // we filter here a second time because of specific logic with SQLite and possible issues with future databases
             val tableName = when {
                 catalogue != null && table.schemaName != null -> "$catalogue.${table.schemaName}.${table.name}"
