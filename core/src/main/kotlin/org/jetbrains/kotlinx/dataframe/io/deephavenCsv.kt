@@ -54,8 +54,8 @@ public fun main() {
     val mediumFile = File(folder, "DimenLookupArea8277.csv")
     val largeFile = File(folder, "Data8277.csv")
 
-    val file = mediumFile
-//    val file = largeFile
+//    val file = mediumFile
+    val file = largeFile
 
     val df1 = DataFrame.readDelimDeephavenCsv(file.inputStream())
         .also { it.print(borders = true, columnTypes = true, rowsLimit = 20) }
@@ -190,7 +190,6 @@ public fun DataFrame.Companion.readDelimDeephavenCsv(
         if (it.dataType() == DataType.STRING) {
             column as ValueColumn<String>
             when (colType) {
-                // TODO try to get the parsers already in the csv reader as DataType.CUSTOM
                 null -> column.tryParse(parserOptions)
 
                 else -> {

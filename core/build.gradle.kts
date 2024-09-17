@@ -26,8 +26,17 @@ plugins {
 
         // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
         alias(ksp)
+
+        id("org.jetbrains.kotlinx.benchmark") version "0.4.11"
     }
     idea
+}
+
+benchmark {
+    targets {
+        register("test") {
+        }
+    }
 }
 
 group = "org.jetbrains.kotlinx"
@@ -87,6 +96,7 @@ dependencies {
     implementation("org.openjdk.jol:jol-core:0.10")
     implementation("it.unimi.dsi:fastutil:8.5.14")
     implementation("io.deephaven:deephaven-csv:0.14.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.11")
 }
 
 val samplesImplementation by configurations.getting {

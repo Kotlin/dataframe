@@ -50,6 +50,8 @@ internal abstract class DataColumnImpl<T>(
 
     override fun values(): List<T> = values.toList() // todo is heavy but tests break without it
 
+    override fun iterator(): Iterator<T> = values.iterator()
+
     override fun type() = type
 
     override fun toSet() = distinct.value
