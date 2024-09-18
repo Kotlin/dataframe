@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrErrorCallExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
@@ -40,6 +41,7 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.symbols.IrValueSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrSimpleType
+import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.classOrFail
 import org.jetbrains.kotlin.ir.types.classifierOrNull
@@ -218,16 +220,33 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
         return declaration
     }
 
-    @OptIn(UnsafeDuringIrConstructionAPI::class)
+    // org.jetbrains.kotlin.fir.backend.generators.CallAndReferenceGenerator#applyReceivers
+    override fun visitTypeOperator(expression: IrTypeOperatorCall): IrExpression {
+        if (isScope(expression.typeOperand)) {
+            return expression.replaceWithConstructorCall()
+        }
+        return super.visitTypeOperator(expression)
+    }
+
     override fun visitErrorCallExpression(expression: IrErrorCallExpression): IrExpression {
-        val origin = (expression.type.classifierOrNull?.owner as? IrClass)?.origin ?: return expression
-        val fromPlugin = origin is IrDeclarationOrigin.GeneratedByPlugin && origin.pluginKey is DataFramePlugin
-        val scopeReference = expression.type.classFqName?.shortName()?.asString()?.startsWith("Scope") ?: false
-        if (!(fromPlugin || scopeReference)) {
+        if (!isScope(expression.type)) {
             return expression
         }
-        val constructor = expression.type.getClass()!!.constructors.toList().single()
-        val type = expression.type
+        return expression.replaceWithConstructorCall()
+    }
+
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
+    private fun isScope(type: IrType): Boolean {
+        val origin = (type.classifierOrNull?.owner as? IrClass)?.origin ?: return false
+        val fromPlugin = origin is IrDeclarationOrigin.GeneratedByPlugin && origin.pluginKey is DataFramePlugin
+        val scopeReference = type.classFqName?.shortName()?.asString()?.startsWith("Scope") ?: false
+        return fromPlugin || scopeReference
+    }
+
+    @OptIn(UnsafeDuringIrConstructionAPI::class)
+    private fun IrExpression.replaceWithConstructorCall(): IrConstructorCallImpl {
+        val constructor = type.getClass()!!.constructors.toList().single()
+        val type = type
         return IrConstructorCallImpl(-1, -1, type, constructor.symbol, 0, 0, 0)
     }
 }
