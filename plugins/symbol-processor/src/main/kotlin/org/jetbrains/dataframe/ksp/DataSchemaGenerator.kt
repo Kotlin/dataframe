@@ -39,6 +39,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.sql.Connection
 import java.sql.DriverManager
+import org.jetbrains.kotlinx.dataframe.io.db.DbType
 
 @OptIn(KspExperimental::class)
 class DataSchemaGenerator(
@@ -170,9 +171,20 @@ class DataSchemaGenerator(
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
 
-            // Force classloading
-            // TODO: probably will not work for the H2
-            Class.forName(driverClassNameFromUrl(url))
+
+            var dbTypeClassName = importStatement.jdbcOptions.dbTypeClassName
+
+            val dbType: DbType? = if(dbTypeClassName.isNotEmpty()) {
+                val clazz = Class.forName(dbTypeClassName)
+                val dbType: DbType = clazz.getDeclaredConstructor().newInstance() as DbType
+                Class.forName(dbType.driverClassName)
+                dbType
+            } else {
+                // Force classloading
+                // TODO: probably will not work for the H2
+                Class.forName(driverClassNameFromUrl(url))
+                null
+            }
 
             var userName = importStatement.jdbcOptions.user
             var password = importStatement.jdbcOptions.password
@@ -190,7 +202,7 @@ class DataSchemaGenerator(
             )
 
             connection.use {
-                val schema = generateSchemaForImport(importStatement, connection)
+                val schema = generateSchemaForImport(importStatement, connection, dbType)
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
@@ -287,6 +299,7 @@ class DataSchemaGenerator(
     private fun generateSchemaForImport(
         importStatement: ImportDataSchemaStatement,
         connection: Connection,
+        dbType: DbType?,
     ): DataFrameSchema {
         logger.info("Table name: ${importStatement.jdbcOptions.tableName}")
         logger.info("SQL query: ${importStatement.jdbcOptions.sqlQuery}")
@@ -295,8 +308,8 @@ class DataSchemaGenerator(
         val sqlQuery = importStatement.jdbcOptions.sqlQuery
 
         return when {
-            isTableNameNotBlankAndQueryBlank(tableName, sqlQuery) -> generateSchemaForTable(connection, tableName)
-            isQueryNotBlankAndTableBlank(tableName, sqlQuery) -> generateSchemaForQuery(connection, sqlQuery)
+            isTableNameNotBlankAndQueryBlank(tableName, sqlQuery) -> generateSchemaForTable(connection, tableName, dbType)
+            isQueryNotBlankAndTableBlank(tableName, sqlQuery) -> generateSchemaForQuery(connection, sqlQuery, dbType)
             areBothNotBlank(tableName, sqlQuery) -> throwBothFieldsFilledException(tableName, sqlQuery)
             else -> throwBothFieldsEmptyException(tableName, sqlQuery)
         }
@@ -310,11 +323,11 @@ class DataSchemaGenerator(
 
     private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
 
-    private fun generateSchemaForTable(connection: Connection, tableName: String) =
-        DataFrame.getSchemaForSqlTable(connection, tableName)
+    private fun generateSchemaForTable(connection: Connection, tableName: String, dbType: DbType?) =
+        DataFrame.getSchemaForSqlTable(connection, tableName, dbType)
 
-    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
-        DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
+    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String, dbType: DbType?) =
+        DataFrame.getSchemaForSqlQuery(connection, sqlQuery, dbType)
 
     private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(

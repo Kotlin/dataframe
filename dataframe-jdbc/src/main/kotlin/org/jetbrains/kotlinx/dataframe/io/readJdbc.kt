@@ -518,9 +518,9 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
  * @return the [DataFrameSchema] object representing the schema of the SQL table
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String, dbType: DbType? = null,): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForSqlTable(connection, tableName)
+        return getSchemaForSqlTable(connection, tableName, dbType)
     }
 }
 
@@ -533,16 +533,16 @@ public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DbConnectionConfig
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tableName: String): DataFrameSchema {
-    val dbType = extractDBTypeFromConnection(connection)
+public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tableName: String, dbType: DbType? = null,): DataFrameSchema {
+    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     val sqlQuery = "SELECT * FROM $tableName"
-    val selectFirstRowQuery = dbType.sqlQueryLimit(sqlQuery, limit = 1)
+    val selectFirstRowQuery = determinedDbType.sqlQueryLimit(sqlQuery, limit = 1)
 
     connection.createStatement().use { st ->
         st.executeQuery(selectFirstRowQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
-            return buildSchemaByTableColumns(tableColumns, dbType)
+            return buildSchemaByTableColumns(tableColumns, determinedDbType)
         }
     }
 }
@@ -554,9 +554,9 @@ public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tabl
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, dbType: DbType? = null,): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForSqlQuery(connection, sqlQuery)
+        return getSchemaForSqlQuery(connection, sqlQuery, dbType)
     }
 }
 
@@ -569,13 +569,13 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DbConnectionConfig
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema {
-    val dbType = extractDBTypeFromConnection(connection)
+public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String, dbType: DbType? = null,): DataFrameSchema {
+    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     connection.createStatement().use { st ->
         st.executeQuery(sqlQuery).use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
-            return buildSchemaByTableColumns(tableColumns, dbType)
+            return buildSchemaByTableColumns(tableColumns, determinedDbType)
         }
     }
 }
@@ -586,11 +586,11 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQ
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema =
+public fun DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null,): DataFrameSchema =
     when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
 
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName, dbType)
 
         else -> throw IllegalArgumentException(
             "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
@@ -603,11 +603,11 @@ public fun DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String): D
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema =
+public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null,): DataFrameSchema =
     when {
-        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName)
+        isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
 
-        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName)
+        isSqlTableName(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlTable(this, sqlQueryOrTableName, dbType)
 
         else -> throw IllegalArgumentException(
             "$sqlQueryOrTableName should be SQL query or name of one of the existing SQL tables!",
@@ -639,42 +639,14 @@ public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, dbTyp
 public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataFrame.getSchemaForResultSet(this, dbType)
 
 /**
- * Retrieves the schema from [ResultSet].
- *
- * NOTE: [connection] is required to extract the database type.
- * This function will not close connection and result set and not retrieve data from the result set.
- *
- * @param [resultSet] the [ResultSet] obtained from executing a database query.
- * @param [connection] the connection to the database (it's required to extract the database type).
- * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
- */
-public fun DataFrame.Companion.getSchemaForResultSet(resultSet: ResultSet, connection: Connection): DataFrameSchema {
-    val dbType = extractDBTypeFromConnection(connection)
-
-    val tableColumns = getTableColumnsMetadata(resultSet)
-    return buildSchemaByTableColumns(tableColumns, dbType)
-}
-
-/**
- * Retrieves the schema from [ResultSet].
- *
- * NOTE: This function will not close connection and result set and not retrieve data from the result set.
- *
- * @param [connection] the connection to the database (it's required to extract the database type).
- * @return the schema of the [ResultSet] as a [DataFrameSchema] object.
- */
-public fun ResultSet.getDataFrameSchema(connection: Connection): DataFrameSchema =
-    DataFrame.getSchemaForResultSet(this, connection)
-
-/**
  * Retrieves the schemas of all non-system tables in the database using the provided database configuration.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DbConnectionConfig): Map<String, DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DbConnectionConfig, dbType: DbType? = null,): Map<String, DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return getSchemaForAllSqlTables(connection)
+        return getSchemaForAllSqlTables(connection, dbType)
     }
 }
 
@@ -684,9 +656,9 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DbConnectionCo
  * @param [connection] the database connection.
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection): Map<String, DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection, dbType: DbType? = null,): Map<String, DataFrameSchema> {
     val metaData = connection.metaData
-    val dbType = extractDBTypeFromConnection(connection)
+    val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     val tableTypes = arrayOf("TABLE")
     // exclude a system and other tables without data
@@ -695,11 +667,11 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection):
     val dataFrameSchemas = mutableMapOf<String, DataFrameSchema>()
 
     while (tables.next()) {
-        val jdbcTable = dbType.buildTableMetadata(tables)
-        if (!dbType.isSystemTable(jdbcTable)) {
+        val jdbcTable = determinedDbType.buildTableMetadata(tables)
+        if (!determinedDbType.isSystemTable(jdbcTable)) {
             // we filter her a second time because of specific logic with SQLite and possible issues with future databases
             val tableName = jdbcTable.name
-            val dataFrameSchema = getSchemaForSqlTable(connection, tableName)
+            val dataFrameSchema = getSchemaForSqlTable(connection, tableName, determinedDbType)
             dataFrameSchemas += tableName to dataFrameSchema
         }
     }
