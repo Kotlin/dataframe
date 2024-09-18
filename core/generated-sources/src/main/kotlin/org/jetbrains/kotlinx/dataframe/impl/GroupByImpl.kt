@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -30,13 +31,25 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.values
 
 /**
+ * Internal implementation interface for [GroupBy].
+ *
+ * While [df] should be hidden in the [GroupBy] DSL, it must be accessible when running
+ * [GroupBy.toDataFrame].
+ *
+ * This interface is public to allow Kandy to implement it.
+ */
+public interface GroupByInternal<T, G> : GroupBy<T, G> {
+    public val df: DataFrame<T>
+}
+
+/**
  * @property df DataFrame containing [groups] column and key columns. Represents GroupBy.
  */
 internal class GroupByImpl<T, G>(
-    val df: DataFrame<T>,
+    override val df: DataFrame<T>,
     override val groups: FrameColumn<G>,
     internal val keyColumnsInGroups: ColumnsSelector<G, *>,
-) : GroupBy<T, G>,
+) : GroupByInternal<T, G>,
     AggregatableInternal<G> {
 
     override val keys by lazy { df - groups }

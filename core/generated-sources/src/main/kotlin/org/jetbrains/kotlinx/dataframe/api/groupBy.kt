@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
+import org.jetbrains.kotlinx.dataframe.impl.GroupByInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.getPivotColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl
@@ -101,7 +101,7 @@ public fun <T, G> GroupBy<T, G>.toDataFrame(groupedColumnName: String? = null): 
         internal().df.rename(groups).into(groupedColumnName)
     }
 
-internal fun <T, G> GroupBy<T, G>.internal(): GroupByImpl<T, G> = this as GroupByImpl<T, G>
+internal fun <T, G> GroupBy<T, G>.internal(): GroupByInternal<T, G> = this as GroupByInternal<T, G>
 
 public interface Grouped<out T> : Aggregatable<T>
 
