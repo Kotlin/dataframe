@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
@@ -163,6 +164,32 @@ internal object Parsers : GlobalParserOptions {
         return null
     }
 
+    private fun String.toInstantOrNull(): Instant? {
+        // Default format used by Instant.parse
+        val format = DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET
+        return catchSilent {
+            // low chance throwing exception, thanks to using parseOrNull instead of parse
+            format.parseOrNull(this)?.toInstantUsingOffset()
+        }
+            // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
+            ?: toJavaInstantOrNull()?.toKotlinInstant()
+    }
+
+    private fun String.toJavaInstantOrNull(): JavaInstant? {
+        // Default format used by java.time.Instant.parse
+        val format = DateTimeFormatter.ISO_INSTANT
+        return catchSilent {
+            // low chance throwing exception, thanks to using parseUnresolved instead of parse
+            val parsePosition = ParsePosition(0)
+            val accessor = format.parseUnresolved(this, parsePosition)
+            if (accessor != null && parsePosition.errorIndex == -1) {
+                JavaInstant.from(accessor)
+            } else {
+                null
+            }
+        }
+    }
+
     private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? =
         toJavaLocalDateTimeOrNull(formatter)?.toKotlinLocalDateTime()
 
@@ -276,13 +303,19 @@ internal object Parsers : GlobalParserOptions {
         // Long
         stringParser<Long> { it.toLongOrNull() },
         // kotlinx.datetime.Instant
-        stringParser<Instant>(catch = true) {
-            // same as Instant.parse(it), but with one fewer potential exception thrown/caught
-            val format = DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET
-            format.parse(it).toInstantUsingOffset()
+        stringParser<Instant> {
+            it.toInstantOrNull()
         },
+//        stringParser<Instant>(true) {
+//            Instant.parse(it)
+//        }, // TODO remove
         // java.time.Instant, will be skipped if kotlinx.datetime.Instant is already checked
-        stringParser<JavaInstant>(catch = true, coveredBy = setOf(typeOf<Instant>())) { JavaInstant.parse(it) },
+        stringParser<JavaInstant>(coveredBy = setOf(typeOf<Instant>())) {
+            it.toJavaInstantOrNull()
+        },
+//        stringParser<JavaInstant>(catch = true /*coveredBy = setOf(typeOf<Instant>())*/) {
+//            JavaInstant.parse(it)
+//        }, // TODO remove
         // kotlinx.datetime.LocalDateTime
         stringParserWithOptions<LocalDateTime> { options ->
             val formatter = options?.getDateTimeFormatter()
@@ -308,9 +341,19 @@ internal object Parsers : GlobalParserOptions {
             parser
         },
         // kotlin.time.Duration
-        stringParser<Duration> { it.toDurationOrNull() },
+        stringParser<Duration> {
+            it.toDurationOrNull()
+        },
+//        stringParser<Duration>(true) {
+//            Duration.parse(it)
+//        }, // TODO remove
         // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
-        stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) { it.toJavaDurationOrNull() },
+        stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) {
+            it.toJavaDurationOrNull()
+        },
+//        stringParser<JavaDuration>(true/*coveredBy = setOf(typeOf<Duration>())*/) {
+//            JavaDuration.parse(it)
+//        }, // TODO remove
         // kotlinx.datetime.LocalTime
         stringParserWithOptions<LocalTime> { options ->
             val formatter = options?.getDateTimeFormatter()

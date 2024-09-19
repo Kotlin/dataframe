@@ -1,20 +1,30 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.plus
+import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.toKotlinInstant
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
+import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.util.Locale
+import kotlin.random.Random
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import java.time.Instant as JavaInstant
 
 class ParseTests {
     @Test
@@ -143,8 +153,76 @@ class ParseTests {
     }
 
     @Test
+    fun `can parse instants`() {
+        val instantParser = Parsers[typeOf<Instant>()]!!
+        val javaInstantParser = Parsers[typeOf<JavaInstant>()]!!
+
+        // from the kotlinx-datetime tests, java instants treat leap seconds etc. like this
+        fun parseInstantLikeJavaDoesOrNull(input: String): Instant? = catchSilent {
+            DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET.parseOrNull(input)?.apply {
+                when {
+                    hour == 24 && minute == 0 && second == 0 && nanosecond == 0 -> {
+                        setDate(toLocalDate().plus(1, DateTimeUnit.DAY))
+                        hour = 0
+                    }
+
+                    hour == 23 && minute == 59 && second == 60 -> second = 59
+                }
+            }?.toInstantUsingOffset()
+        }
+
+        fun formatTwoDigits(i: Int) = if (i < 10) "0$i" else "$i"
+
+        for (hour in 23..25) {
+            for (minute in listOf(0..5, 58..62).flatten()) {
+                for (second in listOf(0..5, 58..62).flatten()) {
+                    val input = "2020-03-16T$hour:${formatTwoDigits(minute)}:${formatTwoDigits(second)}Z"
+
+                    val myParserRes = instantParser.applyOptions(null)(input) as Instant?
+                    val myJavaParserRes = javaInstantParser.applyOptions(null)(input) as JavaInstant?
+                    val instantRes = catchSilent { Instant.parse(input) }
+                    val instantLikeJava = parseInstantLikeJavaDoesOrNull(input)
+                    val javaInstantRes = catchSilent { JavaInstant.parse(input) }
+
+                    // our parser has a fallback mechanism built in, like this
+                    myParserRes shouldBe (instantRes ?: javaInstantRes?.toKotlinInstant())
+                    myParserRes shouldBe instantLikeJava
+
+                    myJavaParserRes shouldBe javaInstantRes
+
+                    myParserRes?.toJavaInstant() shouldBe instantLikeJava?.toJavaInstant()
+                    instantLikeJava?.toJavaInstant() shouldBe myJavaParserRes
+                    myJavaParserRes shouldBe javaInstantRes
+                }
+            }
+        }
+    }
+
+    @Test
     fun `parse duration`() {
         columnOf("1d 15m", "20h 35m 11s").parse() shouldBe
             columnOf(1.days + 15.minutes, 20.hours + 35.minutes + 11.seconds)
+    }
+
+    @Test
+    fun `Parse normal string column`() {
+        val df = dataFrameOf(List(5_000) { "_$it" }).fill(100) {
+            Random.nextInt().toChar().toString() + Random.nextInt().toChar()
+        }
+
+        df.parse()
+    }
+
+    /**
+     * Asserts that all elements of the iterable are equal to each other
+     */
+    private fun <T> Iterable<T>.shouldAllBeEqual(): Iterable<T> {
+        this should {
+            it.reduce { a, b ->
+                a shouldBe b
+                b
+            }
+        }
+        return this
     }
 }
