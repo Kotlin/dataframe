@@ -29,8 +29,10 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -207,6 +209,20 @@ internal object Parsers : GlobalParserOptions {
     private fun String.toLocalTimeOrNull(formatter: DateTimeFormatter?): LocalTime? =
         toJavaLocalTimeOrNull(formatter)?.toKotlinLocalTime()
 
+    private fun String.toJavaDurationOrNull(): JavaDuration? =
+        if (javaDurationCanParse(this)) {
+            catchSilent { JavaDuration.parse(this) } // will likely succeed
+        } else {
+            null
+        }
+
+    private fun String.toDurationOrNull(): Duration? =
+        if (Duration.canParse(this)) {
+            catchSilent { Duration.parse(this) } // will likely succeed
+        } else {
+            null
+        }
+
     private fun String.parseDouble(format: NumberFormat) =
         when (uppercase(Locale.getDefault())) {
             "NAN" -> Double.NaN
@@ -292,9 +308,9 @@ internal object Parsers : GlobalParserOptions {
             parser
         },
         // kotlin.time.Duration
-        stringParser<Duration>(catch = true) { Duration.parse(it) },
+        stringParser<Duration> { it.toDurationOrNull() },
         // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
-        stringParser<JavaDuration>(catch = true, coveredBy = setOf(typeOf<Duration>())) { JavaDuration.parse(it) },
+        stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) { it.toJavaDurationOrNull() },
         // kotlinx.datetime.LocalTime
         stringParserWithOptions<LocalTime> { options ->
             val formatter = options?.getDateTimeFormatter()
