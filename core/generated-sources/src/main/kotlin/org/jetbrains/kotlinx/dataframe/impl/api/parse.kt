@@ -4,10 +4,12 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -27,11 +29,14 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.typeClass
+import java.math.BigDecimal
 import java.net.URL
 import java.text.NumberFormat
 import java.text.ParsePosition
@@ -55,10 +60,17 @@ internal interface StringParser<T> {
 
     fun applyOptions(options: ParserOptions?): (String) -> T?
 
+    /** If a parser with one of these types is run, this parser can be skipped. */
+    val coveredBy: Collection<KType>
+
     val type: KType
 }
 
-internal open class DelegatedStringParser<T>(override val type: KType, val handle: (String) -> T?) : StringParser<T> {
+internal open class DelegatedStringParser<T>(
+    override val type: KType,
+    override val coveredBy: Collection<KType>,
+    val handle: (String) -> T?,
+) : StringParser<T> {
     override fun toConverter(options: ParserOptions?): TypeConverter {
         val nulls = options?.nullStrings ?: Parsers.nulls
         return {
@@ -76,6 +88,7 @@ internal open class DelegatedStringParser<T>(override val type: KType, val handl
 
 internal class StringParserWithFormat<T>(
     override val type: KType,
+    override val coveredBy: Collection<KType>,
     val getParser: (ParserOptions?) -> ((String) -> T?),
 ) : StringParser<T> {
     override fun toConverter(options: ParserOptions?): TypeConverter {
@@ -150,6 +163,30 @@ internal object Parsers : GlobalParserOptions {
         return null
     }
 
+    private fun String.toInstantOrNull(): Instant? {
+        // Default format used by Instant.parse
+        val format = DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET
+        return catchSilent {
+            // low chance throwing exception, thanks to using parseOrNull instead of parse
+            format.parseOrNull(this)?.toInstantUsingOffset()
+        }
+    }
+
+    private fun String.toJavaInstantOrNull(): JavaInstant? {
+        // Default format used by java.time.Instant.parse
+        val format = DateTimeFormatter.ISO_INSTANT
+        return catchSilent {
+            // low chance throwing exception, thanks to using parseUnresolved instead of parse
+            val parsePosition = ParsePosition(0)
+            val accessor = format.parseUnresolved(this, parsePosition)
+            if (accessor != null && parsePosition.errorIndex == -1) {
+                JavaInstant.from(accessor)
+            } else {
+                null
+            }
+        }
+    }
+
     private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? =
         toJavaLocalDateTimeOrNull(formatter)?.toKotlinLocalDateTime()
 
@@ -196,6 +233,20 @@ internal object Parsers : GlobalParserOptions {
     private fun String.toLocalTimeOrNull(formatter: DateTimeFormatter?): LocalTime? =
         toJavaLocalTimeOrNull(formatter)?.toKotlinLocalTime()
 
+    private fun String.toJavaDurationOrNull(): JavaDuration? =
+        if (javaDurationCanParse(this)) {
+            catchSilent { JavaDuration.parse(this) } // will likely succeed
+        } else {
+            null
+        }
+
+    private fun String.toDurationOrNull(): Duration? =
+        if (Duration.canParse(this)) {
+            catchSilent { Duration.parse(this) } // will likely succeed
+        } else {
+            null
+        }
+
     private fun String.parseDouble(format: NumberFormat) =
         when (uppercase(Locale.getDefault())) {
             "NAN" -> Double.NaN
@@ -219,21 +270,23 @@ internal object Parsers : GlobalParserOptions {
             }
         }
 
-    inline fun <reified T : Any> stringParser(catch: Boolean = false, noinline body: (String) -> T?): StringParser<T> =
+    inline fun <reified T : Any> stringParser(
+        catch: Boolean = false,
+        coveredBy: Set<KType> = emptySet(),
+        noinline body: (String) -> T?,
+    ): StringParser<T> =
         if (catch) {
-            DelegatedStringParser(typeOf<T>()) {
-                try {
-                    body(it)
-                } catch (e: Throwable) {
-                    null
-                }
+            DelegatedStringParser(typeOf<T>(), coveredBy) {
+                catchSilent { body(it) }
             }
         } else {
-            DelegatedStringParser(typeOf<T>(), body)
+            DelegatedStringParser(typeOf<T>(), coveredBy, body)
         }
 
-    inline fun <reified T : Any> stringParserWithOptions(noinline body: (ParserOptions?) -> ((String) -> T?)) =
-        StringParserWithFormat(typeOf<T>(), body)
+    inline fun <reified T : Any> stringParserWithOptions(
+        coveredBy: Set<KType> = emptySet(),
+        noinline body: (ParserOptions?) -> ((String) -> T?),
+    ): StringParserWithFormat<T> = StringParserWithFormat(typeOf<T>(), coveredBy, body)
 
     private val parserToDoubleWithOptions = stringParserWithOptions { options ->
         val numberFormat = NumberFormat.getInstance(options?.locale ?: Locale.getDefault())
@@ -243,69 +296,107 @@ internal object Parsers : GlobalParserOptions {
 
     private val parsersOrder = listOf(
         // Int
-        stringParser { it.toIntOrNull() },
+        stringParser<Int> { it.toIntOrNull() },
         // Long
-        stringParser { it.toLongOrNull() },
+        stringParser<Long> { it.toLongOrNull() },
         // kotlinx.datetime.Instant
-        stringParser { catchSilent { Instant.parse(it) } },
-        // java.time.Instant
-        stringParser { catchSilent { JavaInstant.parse(it) } },
+        stringParser<Instant> {
+            it.toInstantOrNull()
+        },
+//        stringParser<Instant>(true) {
+//            Instant.parse(it)
+//        }, // TODO remove
+        // java.time.Instant, will be skipped if kotlinx.datetime.Instant is already checked
+        stringParser<JavaInstant>(coveredBy = setOf(typeOf<Instant>())) {
+            it.toJavaInstantOrNull()
+        },
+//        stringParser<JavaInstant>(catch = true /*coveredBy = setOf(typeOf<Instant>())*/) {
+//            JavaInstant.parse(it)
+//        }, // TODO remove
         // kotlinx.datetime.LocalDateTime
-        stringParserWithOptions { options ->
+        stringParserWithOptions<LocalDateTime> { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
             parser
         },
-        // java.time.LocalDateTime
-        stringParserWithOptions { options ->
+        // java.time.LocalDateTime, will be skipped if kotlinx.datetime.LocalDateTime is already checked
+        stringParserWithOptions<JavaLocalDateTime>(coveredBy = setOf(typeOf<LocalDateTime>())) { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toJavaLocalDateTimeOrNull(formatter) }
             parser
         },
         // kotlinx.datetime.LocalDate
-        stringParserWithOptions { options ->
+        stringParserWithOptions<LocalDate> { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalDateOrNull(formatter) }
             parser
         },
-        // java.time.LocalDate
-        stringParserWithOptions { options ->
+        // java.time.LocalDate, will be skipped if kotlinx.datetime.LocalDate is already checked
+        stringParserWithOptions<JavaLocalDate>(coveredBy = setOf(typeOf<LocalDate>())) { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toJavaLocalDateOrNull(formatter) }
             parser
         },
         // kotlin.time.Duration
-        stringParser { catchSilent { Duration.parse(it) } },
-        // java.time.Duration
-        stringParser { catchSilent { JavaDuration.parse(it) } },
+        stringParser<Duration> {
+            it.toDurationOrNull()
+        },
+//        stringParser<Duration>(true) {
+//            Duration.parse(it)
+//        }, // TODO remove
+        // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
+        stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) {
+            it.toJavaDurationOrNull()
+        },
+//        stringParser<JavaDuration>(true/*coveredBy = setOf(typeOf<Duration>())*/) {
+//            JavaDuration.parse(it)
+//        }, // TODO remove
         // kotlinx.datetime.LocalTime
-        stringParserWithOptions { options ->
+        stringParserWithOptions<LocalTime> { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalTimeOrNull(formatter) }
             parser
         },
-        // java.time.LocalTime
-        stringParserWithOptions { options ->
+        // java.time.LocalTime, will be skipped if kotlinx.datetime.LocalTime is already checked
+        stringParserWithOptions<JavaLocalTime>(coveredBy = setOf(typeOf<LocalTime>())) { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toJavaLocalTimeOrNull(formatter) }
             parser
         },
         // java.net.URL
-        stringParser { it.toUrlOrNull() },
+        stringParser<URL> { it.toUrlOrNull() },
         // Double, with explicit number format or taken from current locale
         parserToDoubleWithOptions,
         // Double, with POSIX format
-        stringParser { it.parseDouble(NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))) },
+        stringParser<Double> { it.parseDouble(NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))) },
         // Boolean
-        stringParser { it.toBooleanOrNull() },
+        stringParser<Boolean> { it.toBooleanOrNull() },
         // BigDecimal
-        stringParser { it.toBigDecimalOrNull() },
-        stringParser(catch = true) { if (it.startsWith("[")) DataFrame.readJsonStr(it) else null },
-        stringParser(catch = true) { if (it.startsWith("{")) DataFrame.readJsonStr(it).single() else null },
-        stringParser { it }, // must be last in the list of parsers to return original unparsed string
+        stringParser<BigDecimal> { it.toBigDecimalOrNull() },
+        // JSON array as DataFrame<*>
+        stringParser<AnyFrame>(catch = true) {
+            val trimmed = it.trim()
+            if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+                DataFrame.readJsonStr(it)
+            } else {
+                null
+            }
+        },
+        // JSON object as DataRow<*>
+        stringParser<AnyRow>(catch = true) {
+            val trimmed = it.trim()
+            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+                DataFrame.readJsonStr(it).single()
+            } else {
+                null
+            }
+        },
+        // No parser found, return as String
+        // must be last in the list of parsers to return original unparsed string
+        stringParser<String> { it },
     )
 
-    private val parsersMap = parsersOrder.associateBy { it.type }
+    internal val parsersMap = parsersOrder.associateBy { it.type }
 
     val size: Int = parsersOrder.size
 
@@ -352,49 +443,76 @@ internal object Parsers : GlobalParserOptions {
     }
 }
 
+/**
+ * Tries to parse a column of strings into a column of a different type.
+ * Each parser in [Parsers] is run in order until a valid parser is found,
+ * a.k.a. that parser was able to parse all values in the column successfully. If a parser
+ * fails to parse any value, the next parser is tried. If all the others fail, the final parser
+ * simply returns the original string, leaving the column unchanged.
+ *
+ * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
+ *
+ * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @throws IllegalStateException if no valid parser is found (unlikely, unless the `String` parser is disabled)
+ * @return a new column with parsed values
+ */
 internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColumn<*> {
-    var parserId = 0
-    val parsedValues = mutableListOf<Any?>()
-    var hasNulls: Boolean
-    var hasNotNulls: Boolean
-    var nullStringParsed: Boolean
+    val columnSize = size
+    val parsedValues = ArrayList<Any?>(columnSize)
+    var hasNulls: Boolean = false
+    var hasNotNulls: Boolean = false
+    var nullStringParsed: Boolean = false
     val nulls = options?.nullStrings ?: Parsers.nulls
-    do {
-        val parser = Parsers[parserId].applyOptions(options)
+
+    val parsersToCheck = Parsers.parsersMap
+    val parserTypesToCheck = parsersToCheck.keys
+
+    var correctParser: StringParser<*>? = null
+    for ((_, parser) in parsersToCheck) {
+        if (parser.coveredBy.any { it in parserTypesToCheck }) continue
+
+        val parserWithOptions = parser.applyOptions(options)
         parsedValues.clear()
         hasNulls = false
         hasNotNulls = false
         nullStringParsed = false
-        for (str in values) {
+        for (str in this) {
             when {
                 str == null -> {
-                    parsedValues.add(null)
+                    parsedValues += null
                     hasNulls = true
                 }
 
-                nulls.contains(str) -> {
-                    parsedValues.add(null)
+                str in nulls -> {
+                    parsedValues += null
                     hasNulls = true
                     nullStringParsed = true
                 }
 
                 else -> {
                     val trimmed = str.trim()
-                    val res = parser(trimmed)
+                    val res = parserWithOptions(trimmed)
                     if (res == null) {
-                        parserId++
-                        break
+                        continue
                     }
-                    parsedValues.add(res)
+                    parsedValues += res
                     hasNotNulls = true
                 }
             }
         }
-    } while (parserId < Parsers.size && parsedValues.size != size)
-    check(parserId < Parsers.size) { "Valid parser not found" }
 
-    val type = (if (hasNotNulls) Parsers[parserId].type else this.type()).withNullability(hasNulls)
-    if (type.jvmErasure == String::class && !nullStringParsed) return this // nothing parsed
+        // break when everything is parsed
+        if (parsedValues.size >= columnSize) {
+            correctParser = parser
+            break
+        }
+    }
+    check(correctParser != null) { "Valid parser not found" }
+
+    val type = (if (hasNotNulls) correctParser.type else this.type()).withNullability(hasNulls)
+    if (type.jvmErasure == String::class && !nullStringParsed) {
+        return this // nothing parsed
+    }
     return DataColumn.create(name(), parsedValues, type)
 }
 
