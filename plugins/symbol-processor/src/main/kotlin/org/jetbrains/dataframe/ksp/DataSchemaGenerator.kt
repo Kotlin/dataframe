@@ -39,7 +39,10 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.sql.Connection
 import java.sql.DriverManager
+import java.util.ServiceLoader
 import org.jetbrains.kotlinx.dataframe.io.db.DbType
+import org.jetbrains.kotlinx.dataframe.io.db.DbTypeProvider
+import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 
 @OptIn(KspExperimental::class)
 class DataSchemaGenerator(
@@ -171,20 +174,35 @@ class DataSchemaGenerator(
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
 
+            //val dbTypeKClass = importStatement.jdbcOptions.dbTypeKClass
 
-            var dbTypeClassName = importStatement.jdbcOptions.dbTypeClassName
+          /*  println("Class loader: ${dbTypeKClass.java.classLoader}")
+            println("Class name: ${dbTypeKClass.qualifiedName}")
+            val clazz = Class.forName(dbTypeKClass.qualifiedName)
+            println("Class found: $clazz")*/
 
-            val dbType: DbType? = if(dbTypeClassName.isNotEmpty()) {
-                val clazz = Class.forName(dbTypeClassName)
-                val dbType: DbType = clazz.getDeclaredConstructor().newInstance() as DbType
-                Class.forName(dbType.driverClassName)
-                dbType
-            } else {
-                // Force classloading
-                // TODO: probably will not work for the H2
-                Class.forName(driverClassNameFromUrl(url))
-                null
+            val loader = ServiceLoader.load(DbTypeProvider::class.java)
+            var dbType = loader.firstOrNull()?.getDbType()
+            if(dbType == null) {
+               dbType = extractDBTypeFromUrl(url)
             }
+            Class.forName(dbType.driverClassName)
+            /*val dbType: DbType? = if (DbType::class.java.isAssignableFrom(dbTypeKClass.java)) {
+                val dbTypeInstance = dbTypeKClass.objectInstance
+                if (dbTypeInstance != null) {
+                    dbTypeInstance as DbType
+                } else {
+                    println("The provided class is not an object or is not a DbType")
+                    null
+                }
+            } else {
+                try {
+                    Class.forName(driverClassNameFromUrl(url))
+                } catch (e: ClassNotFoundException) {
+                    println("Driver class not found for URL: $url")
+                }
+                null
+            }*/
 
             var userName = importStatement.jdbcOptions.user
             var password = importStatement.jdbcOptions.password
