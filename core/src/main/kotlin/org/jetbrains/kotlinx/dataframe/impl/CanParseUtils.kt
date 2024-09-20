@@ -94,8 +94,8 @@ internal fun javaDurationCanParse(value: String): Boolean = isoDurationRegex.mat
  * regex from [java.time.Duration.Lazy.PATTERN], it represents the ISO-8601 duration format.
  */
 private val isoDurationRegex = Regex(
-    pattern = "[-+]?P?:[-+]?[0-9]+D?T?:[-+]?[0-9]+H??:[-+]?[0-9]+M??:[-+]?[0-9]+?:[.,][0-9]{0,9}?S??",
-    option = RegexOption.IGNORE_CASE,
+    """([-+]?)P(?:([-+]?[0-9]+)D)?(T(?:([-+]?[0-9]+)H)?(?:([-+]?[0-9]+)M)?(?:([-+]?[0-9]+)(?:[.,]([0-9]{0,9}))?S)?)?""",
+    RegexOption.IGNORE_CASE,
 )
 
 /**
@@ -121,7 +121,6 @@ private fun durationUnitByIsoCharOrNull(isoChar: Char, isTimeComponent: Boolean)
         !isTimeComponent -> {
             when (isoChar) {
                 'D' -> DurationUnit.DAYS
-
                 else -> null
             }
         }
