@@ -24,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -331,16 +330,10 @@ internal object Parsers : GlobalParserOptions {
         stringParser<Instant> {
             it.toInstantOrNull()
         },
-//        stringParser<Instant>(true) {
-//            Instant.parse(it)
-//        }, // TODO remove
         // java.time.Instant, will be skipped if kotlinx.datetime.Instant is already checked
         stringParser<JavaInstant>(coveredBy = setOf(typeOf<Instant>())) {
             it.toJavaInstantOrNull()
         },
-//        stringParser<JavaInstant>(catch = true /*coveredBy = setOf(typeOf<Instant>())*/) {
-//            JavaInstant.parse(it)
-//        }, // TODO remove
         // kotlinx.datetime.LocalDateTime
         stringParserWithOptions<LocalDateTime> { options ->
             val formatter = options?.getDateTimeFormatter()
@@ -369,16 +362,10 @@ internal object Parsers : GlobalParserOptions {
         stringParser<Duration> {
             it.toDurationOrNull()
         },
-//        stringParser<Duration>(true) {
-//            Duration.parse(it)
-//        }, // TODO remove
         // java.time.Duration, will be skipped if kotlin.time.Duration is already checked
         stringParser<JavaDuration>(coveredBy = setOf(typeOf<Duration>())) {
             it.toJavaDurationOrNull()
         },
-//        stringParser<JavaDuration>(true/*coveredBy = setOf(typeOf<Duration>())*/) {
-//            JavaDuration.parse(it)
-//        }, // TODO remove
         // kotlinx.datetime.LocalTime
         stringParserWithOptions<LocalTime> { options ->
             val formatter = options?.getDateTimeFormatter()
