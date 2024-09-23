@@ -67,19 +67,23 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                     isMultiplatform -> listOf("kspJvm", "kspJvmTest")
                     else -> listOf("ksp", "kspTest")
                 }
+
+                val cfgsToAdd = configs.toMutableSet()
+
                 configs.forEach { cfg ->
-                    try {
-                        target.configurations.getByName(cfg).dependencies.add(
-                            target.dependencies.create(
-                                "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
-                            ),
-                        )
-                    } catch (e: UnknownConfigurationException) {
-                        target.logger.warn(
-                            "Configuration '$cfg' not found. Please make sure the KSP plugin is applied.",
+                    target.configurations.named { it == cfg }.configureEach {
+                        cfgsToAdd.remove(cfg)
+                        dependencies.add(
+                            target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
                         )
                     }
                 }
+                target.gradle.projectsEvaluated {
+                    cfgsToAdd.forEach { cfg ->
+                        target.logger.warn("Configuration '$cfg' was never found. Please make sure the KSP plugin is applied.")
+                    }
+                }
+
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
                 target.extensions.getByType<KspExtension>().arg(
                     "dataframe.resolutionDir",
