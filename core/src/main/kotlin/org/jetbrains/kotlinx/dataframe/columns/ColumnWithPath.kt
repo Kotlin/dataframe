@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.depth
-import org.jetbrains.kotlinx.dataframe.util.COLUMN_WITH_PATH_MESSAGE
 import kotlin.reflect.KProperty
 
 public interface ColumnWithPath<out T> : DataColumn<T> {
@@ -59,45 +58,6 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
     override fun path(): ColumnPath = path
 
     override fun rename(newName: String): ColumnWithPath<T>
-
-    // region deprecated
-
-    @Deprecated(
-        message = COLUMN_WITH_PATH_MESSAGE,
-        replaceWith = ReplaceWith("getCol(accessor)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <C> getChild(accessor: ColumnReference<C>): ColumnWithPath<C>? = getCol(accessor)
-
-    @Deprecated(
-        message = COLUMN_WITH_PATH_MESSAGE,
-        replaceWith = ReplaceWith("getCol(name)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun getChild(name: String): ColumnWithPath<Any?>? = getCol(name)
-
-    @Deprecated(
-        message = COLUMN_WITH_PATH_MESSAGE,
-        replaceWith = ReplaceWith("getCol(index)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun getChild(index: Int): ColumnWithPath<Any?>? = getCol(index)
-
-    @Deprecated(
-        message = COLUMN_WITH_PATH_MESSAGE,
-        replaceWith = ReplaceWith("getCol(accessor)"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <C> getChild(accessor: KProperty<C>): ColumnWithPath<C>? = getCol(accessor)
-
-    @Deprecated(
-        message = COLUMN_WITH_PATH_MESSAGE,
-        replaceWith = ReplaceWith("cols()"),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun children(): List<ColumnWithPath<Any?>> = cols()
-
-    // endregion
 }
 
 public val <T> ColumnWithPath<T>.depth: Int get() = path.depth()
