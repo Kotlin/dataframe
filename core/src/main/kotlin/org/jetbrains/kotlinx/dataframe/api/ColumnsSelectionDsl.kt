@@ -1,9 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -16,9 +19,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE
 import kotlin.reflect.KProperty
 
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
@@ -379,22 +379,6 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      */
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnsResolver<C> =
         this@invoke(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
-
-    /**
-     * ## Deprecated: Columns by Index Range from List of Columns
-     * Helper function to create a [ColumnSet] from a list of columns by specifying a range of indices.
-     *
-     * ### Deprecated
-     *
-     * Deprecated because it's too niche. Let us know if you have a good use for it!
-     */
-    @Deprecated(
-        message = COL_SELECT_DSL_LIST_DATACOLUMN_GET,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_LIST_DATACOLUMN_GET_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
-        ColumnsList(subList(range.first, range.last + 1))
 
     // region select
     // NOTE: due to invoke conflicts these cannot be moved out of the interface
