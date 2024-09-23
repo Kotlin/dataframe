@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -413,7 +414,7 @@ internal object Parsers : GlobalParserOptions {
         stringParser<AnyRow>(catch = true) {
             val trimmed = it.trim()
             if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-                DataFrame.readJsonStr(it).single()
+                DataRow.readJsonStr(it)
             } else {
                 null
             }
