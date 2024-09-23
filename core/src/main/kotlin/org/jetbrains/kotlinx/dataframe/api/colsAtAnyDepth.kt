@@ -17,11 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.atAnyDepthImpl
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_AT_ANY_DEPTH
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -178,26 +174,6 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      */
     public fun ColumnPath.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
-
-    // endregion
-
-    // region deprecated recursively
-
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
-    public fun <C> TransformableColumnSet<C>.recursively(): ColumnSet<C> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
-
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
-    public fun <C> TransformableColumnSet<C>.rec(): ColumnSet<C> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
-
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
-    public fun TransformableSingleColumn<*>.recursively(): SingleColumn<*> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
-
-    @Deprecated(COL_SELECT_DSL_AT_ANY_DEPTH, ReplaceWith(COL_SELECT_DSL_AT_ANY_DEPTH_REPLACE), DeprecationLevel.ERROR)
-    public fun TransformableSingleColumn<*>.rec(): SingleColumn<*> =
-        atAnyDepthImpl(includeTopLevel = true, includeGroups = true)
 
     // endregion
 }
