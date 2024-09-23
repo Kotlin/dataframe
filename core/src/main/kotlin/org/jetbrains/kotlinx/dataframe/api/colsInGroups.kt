@@ -17,10 +17,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_CHILDREN
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_CHILDREN_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_CHILDREN_SINGLE_COL
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -176,46 +172,6 @@ public interface ColsInGroupsColumnsSelectionDsl {
      */
     public fun ColumnPath.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
-
-    // region deprecated
-
-    @Deprecated(COL_SELECT_DSL_CHILDREN, ReplaceWith(COL_SELECT_DSL_CHILDREN_REPLACE), level = DeprecationLevel.ERROR)
-    public fun ColumnSet<*>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        colsInGroups(predicate)
-
-    @Deprecated(
-        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
-        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        ensureIsColumnGroup().colsInternal(predicate)
-
-    @Deprecated(
-        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
-        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun String.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
-
-    @Deprecated(
-        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
-        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun KProperty<DataRow<*>>.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
-
-    @Deprecated(
-        COL_SELECT_DSL_CHILDREN_SINGLE_COL,
-        ReplaceWith(COL_SELECT_DSL_CHILDREN_SINGLE_COL_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnPath.children(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
-        columnGroup(this).ensureIsColumnGroup().colsInternal(predicate)
-
-    // endregion
 }
 
 // endregion
