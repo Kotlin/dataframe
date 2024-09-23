@@ -17,8 +17,6 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SELECT_COLS_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -362,7 +360,7 @@ public interface SelectColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -407,7 +405,7 @@ public interface SelectColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -452,7 +450,7 @@ public interface SelectColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -500,7 +498,7 @@ public interface SelectColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * See also [except][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
+     * See also [except][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]/[allExcept][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.allColsExcept] for the inverted operation of this function.
      *
      * @param [selector] The [ColumnsSelector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] to use for the selection.
      * @receiver The [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] to select from.
@@ -509,34 +507,6 @@ public interface SelectColumnsSelectionDsl {
      * @see [SingleColumn.except]
      */
     public fun <R> ColumnPath.select(selector: ColumnsSelector<*, R>): ColumnSet<R> = columnGroup(this).select(selector)
-
-    // region deprecated
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SELECT_COLS,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.select(vararg columns: String): ColumnSet<*> =
-        selectInternal { columns.toColumnSet() }
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SELECT_COLS,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: ColumnReference<R>): ColumnSet<R> =
-        selectInternal { columns.toColumnSet() }
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SELECT_COLS,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SELECT_COLS_REPLACE),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <R> SingleColumn<DataRow<*>>.select(vararg columns: KProperty<R>): ColumnSet<R> =
-        selectInternal { columns.toColumnSet() }
-
-    // endregion
 }
 
 internal fun <C, R> SingleColumn<DataRow<C>>.selectInternal(selector: ColumnsSelector<C, R>): ColumnSet<R> =
