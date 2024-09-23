@@ -43,6 +43,8 @@ import java.text.NumberFormat
 import java.text.ParsePosition
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.Temporal
+import java.time.temporal.TemporalQuery
 import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -152,46 +154,60 @@ internal object Parsers : GlobalParserOptions {
         resetToDefault()
     }
 
+    /**
+     * Parses a [string][str] using the given [java formatter][DateTimeFormatter] and [query]
+     * while avoiding exceptions. This avoidance is achieved by first trying to parse the string _unresovled_.
+     * If this is unsuccessful, we can simply return `null` without throwing an exception. Only if the string can
+     * successfully be parsed unresolved, we try to parse it _resolved_.
+     *
+     * See more about resolved and unresolved parsing in the [DateTimeFormatter] documentation.
+     */
+    private fun <T : Temporal> DateTimeFormatter.parseOrNull(str: String, query: TemporalQuery<T>): T? =
+        catchSilent {
+            // first try to parse unresolved, since it doesn't throw exceptions on invalid values
+            val parsePosition = ParsePosition(0)
+            if (parseUnresolved(str, parsePosition) != null && parsePosition.errorIndex == -1) {
+                // do the parsing again, but now resolved, since the chance of exception is low
+                parse(str, query)
+            } else {
+                null
+            }
+        }
+
+    private fun String.toInstantOrNull(): Instant? =
+        // low chance throwing exception, thanks to using parseOrNull instead of parse
+        catchSilent {
+            // Default format used by Instant.parse
+            DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET
+                .parseOrNull(this)
+                ?.toInstantUsingOffset()
+        }
+            // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
+            ?: toJavaInstantOrNull()?.toKotlinInstant()
+
+    private fun String.toJavaInstantOrNull(): JavaInstant? =
+        // Default format used by java.time.Instant.parse
+        DateTimeFormatter.ISO_INSTANT
+            .parseOrNull(this, JavaInstant::from)
+
     private fun String.toJavaLocalDateTimeOrNull(formatter: DateTimeFormatter?): JavaLocalDateTime? {
         if (formatter != null) {
-            return catchSilent { JavaLocalDateTime.parse(this, formatter) }
+            return formatter.parseOrNull(this, JavaLocalDateTime::from)
         } else {
-            catchSilent { JavaLocalDateTime.parse(this) }?.let { return it }
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                .parseOrNull(this, JavaLocalDateTime::from)
+                ?.let { return it }
             for (format in formatters) {
-                catchSilent { JavaLocalDateTime.parse(this, format) }?.let { return it }
+                format.parseOrNull(this, JavaLocalDateTime::from)
+                    ?.let { return it }
             }
         }
         return null
     }
 
-    private fun String.toInstantOrNull(): Instant? {
-        // Default format used by Instant.parse
-        val format = DateTimeComponents.Formats.ISO_DATE_TIME_OFFSET
-        return catchSilent {
-            // low chance throwing exception, thanks to using parseOrNull instead of parse
-            format.parseOrNull(this)?.toInstantUsingOffset()
-        }
-            // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
-            ?: toJavaInstantOrNull()?.toKotlinInstant()
-    }
-
-    private fun String.toJavaInstantOrNull(): JavaInstant? {
-        // Default format used by java.time.Instant.parse
-        val format = DateTimeFormatter.ISO_INSTANT
-        return catchSilent {
-            // low chance throwing exception, thanks to using parseUnresolved instead of parse
-            val parsePosition = ParsePosition(0)
-            val accessor = format.parseUnresolved(this, parsePosition)
-            if (accessor != null && parsePosition.errorIndex == -1) {
-                JavaInstant.from(accessor)
-            } else {
-                null
-            }
-        }
-    }
-
     private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? =
-        toJavaLocalDateTimeOrNull(formatter)?.toKotlinLocalDateTime()
+        toJavaLocalDateTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
+            ?.toKotlinLocalDateTime()
 
     private fun String.toUrlOrNull(): URL? = if (isURL(this)) catchSilent { URL(this) } else null
 
@@ -208,33 +224,41 @@ internal object Parsers : GlobalParserOptions {
 
     private fun String.toJavaLocalDateOrNull(formatter: DateTimeFormatter?): JavaLocalDate? {
         if (formatter != null) {
-            return catchSilent { JavaLocalDate.parse(this, formatter) }
+            return formatter.parseOrNull(this, JavaLocalDate::from)
         } else {
-            catchSilent { JavaLocalDate.parse(this) }?.let { return it }
+            DateTimeFormatter.ISO_LOCAL_DATE
+                .parseOrNull(this, JavaLocalDate::from)
+                ?.let { return it }
             for (format in formatters) {
-                catchSilent { JavaLocalDate.parse(this, format) }?.let { return it }
+                format.parseOrNull(this, JavaLocalDate::from)
+                    ?.let { return it }
             }
         }
         return null
     }
 
     private fun String.toLocalDateOrNull(formatter: DateTimeFormatter?): LocalDate? =
-        toJavaLocalDateOrNull(formatter)?.toKotlinLocalDate()
+        toJavaLocalDateOrNull(formatter) // since we accept a Java DateTimeFormatter
+            ?.toKotlinLocalDate()
 
     private fun String.toJavaLocalTimeOrNull(formatter: DateTimeFormatter?): JavaLocalTime? {
         if (formatter != null) {
-            return catchSilent { JavaLocalTime.parse(this, formatter) }
+            return formatter.parseOrNull(this, JavaLocalTime::from)
         } else {
-            catchSilent { JavaLocalTime.parse(this) }?.let { return it }
+            DateTimeFormatter.ISO_LOCAL_TIME
+                .parseOrNull(this, JavaLocalTime::from)
+                ?.let { return it }
             for (format in formatters) {
-                catchSilent { JavaLocalTime.parse(this, format) }?.let { return it }
+                format.parseOrNull(this, JavaLocalTime::from)
+                    ?.let { return it }
             }
         }
         return null
     }
 
     private fun String.toLocalTimeOrNull(formatter: DateTimeFormatter?): LocalTime? =
-        toJavaLocalTimeOrNull(formatter)?.toKotlinLocalTime()
+        toJavaLocalTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
+            ?.toKotlinLocalTime()
 
     private fun String.toJavaDurationOrNull(): JavaDuration? =
         if (javaDurationCanParse(this)) {
