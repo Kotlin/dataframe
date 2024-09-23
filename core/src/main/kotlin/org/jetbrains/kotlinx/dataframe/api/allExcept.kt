@@ -24,15 +24,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE_VARARG
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_EXCEPT
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_EXCEPT_REPLACE_SELECTOR
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVERS
-import org.jetbrains.kotlinx.dataframe.util.COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_SELECTOR
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -1015,110 +1006,6 @@ public interface AllExceptColumnsSelectionDsl {
     @ExperimentalExceptCsDsl
     public fun ColumnPath.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    // endregion
-
-    // region deprecated
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_SELECTOR),
-        level = DeprecationLevel.ERROR,
-    )
-    public infix fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> =
-        allColsExcept(selector)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.ERROR,
-    )
-    public infix fun SingleColumn<DataRow<*>>.except(other: ColumnsResolver<*>): ColumnSet<*> = allColsExcept { other }
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_RESOLVERS),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> =
-        allColsExcept { others.toColumnSet() }
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
-        level = DeprecationLevel.ERROR,
-    )
-    public infix fun SingleColumn<DataRow<*>>.except(other: String): ColumnSet<*> = allColsExcept(other)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.except(vararg others: String): ColumnSet<*> = allColsExcept(*others)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
-        level = DeprecationLevel.ERROR,
-    )
-    public infix fun SingleColumn<DataRow<*>>.except(other: KProperty<*>): ColumnSet<*> = allColsExcept(other)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.except(vararg others: KProperty<*>): ColumnSet<*> = allColsExcept(*others)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHER),
-        level = DeprecationLevel.ERROR,
-    )
-    public infix fun SingleColumn<DataRow<*>>.except(other: ColumnPath): ColumnSet<*> = allColsExcept(other)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_SINGLE_COL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_SINGLE_COL_EXCEPT_REPLACE_OTHERS),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun SingleColumn<DataRow<*>>.except(vararg others: ColumnPath): ColumnSet<*> = allColsExcept(*others)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_SELECTOR),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun <C> ColumnsSelectionDsl<C>.except(selector: ColumnsSelector<C, *>): ColumnSet<*> = allExcept(selector)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnsResolver<*>): ColumnSet<*> = allExcept(*others)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: String): ColumnSet<*> = allExcept(*others)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: KProperty<*>): ColumnSet<*> = allExcept(*others)
-
-    @Deprecated(
-        message = COL_SELECT_DSL_EXCEPT,
-        replaceWith = ReplaceWith(COL_SELECT_DSL_EXCEPT_REPLACE_RESOLVER),
-        level = DeprecationLevel.ERROR,
-    )
-    public fun ColumnsSelectionDsl<*>.except(vararg others: ColumnPath): ColumnSet<*> = allExcept(*others)
 
     // endregion
 }
