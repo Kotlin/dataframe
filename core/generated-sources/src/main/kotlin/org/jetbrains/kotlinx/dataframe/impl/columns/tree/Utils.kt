@@ -85,11 +85,10 @@ internal fun Iterable<ColumnWithPath<*>>.flattenRecursively(): List<ColumnWithPa
         cols.forEach {
             result.add(it)
             val path = it.path
-            if (it.data.isColumnGroup()) {
+            val data = it.data
+            if (data.isColumnGroup()) {
                 flattenRecursively(
-                    it.data.asColumnGroup()
-                        .columns()
-                        .map { it.addPath(path + it.name()) },
+                    data.columns().map { it.addPath(path + it.name()) },
                 )
             }
         }
