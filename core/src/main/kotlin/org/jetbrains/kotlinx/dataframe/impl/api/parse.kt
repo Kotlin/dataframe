@@ -22,9 +22,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
-import org.jetbrains.kotlinx.dataframe.api.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -561,7 +559,7 @@ private suspend fun <T> DataFrame<T>.parseParallel(
             async {
                 when {
                     it.isFrameColumn() ->
-                        it.asFrameColumn().values.map {
+                        it.values.map {
                             async {
                                 it.parseParallel(options) {
                                     colsAtAnyDepth { !it.isColumnGroup() }
@@ -570,9 +568,8 @@ private suspend fun <T> DataFrame<T>.parseParallel(
                         }.awaitAll()
                             .toColumn(it.name)
 
-
                     it.isColumnGroup() ->
-                        it.asColumnGroup().parseParallel(options) { all() }
+                        it.parseParallel(options) { all() }
                             .asColumnGroup(it.name())
                             .asDataColumn()
 

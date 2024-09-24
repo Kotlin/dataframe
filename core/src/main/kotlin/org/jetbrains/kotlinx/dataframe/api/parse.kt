@@ -58,7 +58,7 @@ public data class ParserOptions(
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
-    parseImpl(options) {
+    parse(options) {
         colsAtAnyDepth { !it.isColumnGroup() }
     }
 
