@@ -357,6 +357,6 @@ public interface ValueColsColumnsSelectionDsl {
  * @return A [TransformableColumnSet] containing the value columns that satisfy the filter.
  */
 internal fun ColumnsResolver<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
-    colsInternal { it.isValueColumn() && filter(it.asValueColumn()) }
+    colsInternal { it.isValueColumn() && filter(it) }
 
 // endregion
