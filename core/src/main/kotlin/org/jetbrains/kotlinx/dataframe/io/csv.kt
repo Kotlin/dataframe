@@ -291,6 +291,7 @@ public fun DataFrame.Companion.readDelim(
     )
 }
 
+// TODO byte?
 public enum class ColType {
     Int,
     Long,
