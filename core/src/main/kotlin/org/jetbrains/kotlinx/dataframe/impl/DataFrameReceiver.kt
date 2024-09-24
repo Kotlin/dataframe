@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -78,7 +77,9 @@ internal open class DataFrameReceiver<T>(
         DataColumn.createColumnGroup("", df).addPath(emptyPath())
 
     override fun columns() =
-        df.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it.asColumnGroup()) else it }
+        df.columns().map {
+            if (it.isColumnGroup()) ColumnGroupWithParent(null, it) else it
+        }
 
     override fun columnNames() = df.columnNames()
 
