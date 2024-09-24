@@ -41,6 +41,7 @@ public interface GlobalParserOptions {
 
 public data class ParserOptions(
     val locale: Locale? = null,
+    // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
@@ -57,7 +58,7 @@ public data class ParserOptions(
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
-    parse(options) {
+    parseImpl(options) {
         colsAtAnyDepth { !it.isColumnGroup() }
     }
 
