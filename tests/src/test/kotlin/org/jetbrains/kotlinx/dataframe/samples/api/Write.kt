@@ -54,7 +54,7 @@ class Write : TestBase() {
         csvStr shouldStartWith """
             name;age;city;weight;isHappy
             "{""firstName"":""Alice"",""lastName"":""Cooper""}";15;London;54;true
-        """.rejoinWithSystemLineSeparator()
+        """.trimIndent().lines().joinToString(System.lineSeparator())
     }
 
     @Test
@@ -73,7 +73,7 @@ class Write : TestBase() {
                     "city": "London",
                     "weight": 54,
                     "isHappy": true
-        """.rejoinWithSystemLineSeparator()
+        """.trimIndent()
     }
 
     @Test
@@ -215,7 +215,7 @@ class Write : TestBase() {
                 // Specify mismatch subscriber
                 mismatchSubscriber = writeMismatchMessage,
 
-            ).use { writer: ArrowWriter ->
+                ).use { writer: ArrowWriter ->
 
                 // Save to any format and sink, like in the previous example
                 writer.writeArrowFeather(file)
@@ -241,10 +241,6 @@ class Write : TestBase() {
     }
 
     companion object {
-        private fun String.rejoinWithSystemLineSeparator() = rejoinWithLineSeparator(System.lineSeparator())
-
-        private fun String.rejoinWithLineSeparator(separator: String) = trimIndent().lines().joinToString(separator)
-
         private fun useTempFile(action: (File) -> Unit) {
             val file = kotlin.io.path.createTempFile("dataframeWriteTest")
             action(file.toFile())

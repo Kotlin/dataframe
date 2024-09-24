@@ -561,7 +561,7 @@ private suspend fun <T> DataFrame<T>.parseParallel(
             async {
                 when {
                     it.isFrameColumn() ->
-                        it.asFrameColumn().values.map {
+                        it.values.map {
                             async {
                                 it.parseParallel(options) {
                                     colsAtAnyDepth { !it.isColumnGroup() }
@@ -572,7 +572,7 @@ private suspend fun <T> DataFrame<T>.parseParallel(
 
 
                     it.isColumnGroup() ->
-                        it.asColumnGroup().parseParallel(options) { all() }
+                        it.parseParallel(options) { all() }
                             .asColumnGroup(it.name())
                             .asDataColumn()
 

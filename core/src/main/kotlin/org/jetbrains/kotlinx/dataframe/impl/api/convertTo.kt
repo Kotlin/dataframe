@@ -15,10 +15,10 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -197,14 +197,12 @@ internal fun AnyFrame.convertToImpl(
 
                                     else -> originalColumn
                                 }
-                                require(column.kind == ColumnKind.Group) {
+                                require(column.isColumnGroup()) {
                                     "Column `${column.name}` is ${column.kind} and can not be converted to `ColumnGroup`"
                                 }
-                                val columnGroup = column.asColumnGroup()
-
                                 DataColumn.createColumnGroup(
                                     name = column.name(),
-                                    df = columnGroup.convertToSchema(
+                                    df = column.convertToSchema(
                                         schema = (targetSchema as ColumnSchema.Group).schema,
                                         path = columnPath,
                                     ),
