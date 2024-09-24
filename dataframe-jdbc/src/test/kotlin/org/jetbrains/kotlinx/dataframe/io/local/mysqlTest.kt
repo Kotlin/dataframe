@@ -21,12 +21,14 @@ import java.math.BigDecimal
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.Date
 import kotlin.reflect.typeOf
 
 private const val URL = "jdbc:mysql://localhost:3306"
 private const val USER_NAME = "root"
 private const val PASSWORD = "pass"
 private const val TEST_DATABASE_NAME = "testKDFdatabase"
+private const val TIMESTAMP = 1726246245460
 
 @DataSchema
 interface Table1MySql {
@@ -254,10 +256,10 @@ class MySqlTest {
                     st.setFloat(10, i * 10.0f)
                     st.setDouble(11, i * 10.0)
                     st.setBigDecimal(12, BigDecimal(i * 10))
-                    st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTime(16, java.sql.Time(System.currentTimeMillis()))
+                    st.setDate(13, java.sql.Date(TIMESTAMP))
+                    st.setTimestamp(14, java.sql.Timestamp(TIMESTAMP))
+                    st.setTimestamp(15, java.sql.Timestamp(TIMESTAMP))
+                    st.setTime(16, java.sql.Time(TIMESTAMP))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
                     st.setString(19, "charValue$i")
@@ -292,10 +294,10 @@ class MySqlTest {
                     st.setFloat(10, i * 20.0f)
                     st.setDouble(11, i * 20.0)
                     st.setBigDecimal(12, BigDecimal(i * 20))
-                    st.setDate(13, java.sql.Date(System.currentTimeMillis()))
-                    st.setTimestamp(14, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTimestamp(15, java.sql.Timestamp(System.currentTimeMillis()))
-                    st.setTime(16, java.sql.Time(System.currentTimeMillis()))
+                    st.setDate(13, java.sql.Date(TIMESTAMP))
+                    st.setTimestamp(14, java.sql.Timestamp(TIMESTAMP))
+                    st.setTimestamp(15, java.sql.Timestamp(TIMESTAMP))
+                    st.setTime(16, java.sql.Time(TIMESTAMP))
                     st.setInt(17, 2023)
                     st.setString(18, "varcharValue$i")
                     st.setString(19, "charValue$i")
@@ -335,10 +337,21 @@ class MySqlTest {
         val df1 = DataFrame.readSqlTable(connection, "table1").cast<Table1MySql>()
         val result = df1.filter { it[Table1MySql::id] == 1 }
         result[0][26] shouldBe "textValue1"
+        result[0][22] shouldBe "tinyblobValue".toByteArray()
 
         val schema = DataFrame.getSchemaForSqlTable(connection, "table1")
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
         schema.columns["textCol"]!!.type shouldBe typeOf<String>()
+        schema.columns["dateCol"]!!.type shouldBe typeOf<Date>()
+        schema.columns["datetimeCol"]!!.type shouldBe typeOf<java.time.LocalDateTime>()
+        schema.columns["timestampCol"]!!.type shouldBe typeOf<java.sql.Timestamp>()
+        schema.columns["timeCol"]!!.type shouldBe typeOf<java.sql.Time>()
+        schema.columns["yearCol"]!!.type shouldBe typeOf<Date>()
+        schema.columns["textCol"]!!.type shouldBe typeOf<String>()
+        schema.columns["varbinaryCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["binaryCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["longblobCol"]!!.type shouldBe typeOf<ByteArray>()
+        schema.columns["tinyblobCol"]!!.type shouldBe typeOf<ByteArray>()
 
         val df2 = DataFrame.readSqlTable(connection, "table2").cast<Table2MySql>()
         val result2 = df2.filter { it[Table2MySql::id] == 1 }
@@ -368,8 +381,8 @@ class MySqlTest {
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
         schema.columns["id"]!!.type shouldBe typeOf<Int>()
-        schema.columns["enumCol"]!!.type shouldBe typeOf<Char>()
-        schema.columns["setCol"]!!.type shouldBe typeOf<Char?>()
+        schema.columns["enumCol"]!!.type shouldBe typeOf<String>()
+        schema.columns["setCol"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test

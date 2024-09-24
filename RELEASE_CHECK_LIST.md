@@ -27,8 +27,8 @@
     - Check for Android with a test project (TODO: add link).
     - Check for ServerSide with a test project (TODO: add link).
 15. Publish Documentation from [GitHub Action](https://github.com/Kotlin/dataframe/actions/workflows/main.yml)
-16. Prepare and publish the Release Notes. **RC**
-17. Create a Release from the release tag on GitHub. **RC**
+16. Prepare and publish the Release Notes.
+17. Create a Release from the release tag on GitHub.
 18. Update a KDF version in the [Kotlin Jupyter Descriptor](https://github.com/Kotlin/kotlin-jupyter-libraries/blob/master/dataframe.json). Now the Renovate bot does this.
 19. Update the DataFrame version in the `gradle.properties` file for the next release cycle (i.e. 0.10.0 -> 0.11.0)
 20. Update deprecated functions in [deprecationMessages.kt](/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/util/deprecationMessages.kt)

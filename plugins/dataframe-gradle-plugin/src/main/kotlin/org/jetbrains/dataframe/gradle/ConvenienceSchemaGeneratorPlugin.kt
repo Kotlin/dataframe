@@ -9,9 +9,21 @@ import java.util.Properties
 
 @Suppress("unused")
 class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
+    companion object {
+        /**
+         * (boolean, default `true`) whether to add KSP plugin
+         */
+        const val PROP_ADD_KSP = "kotlin.dataframe.add.ksp"
+
+        /**
+         * (string, default `null`) comma-delimited list of configurations to add KSP processing to.
+         * Defaults to guessing configurations based on which kotlin plugin is applied (jvm or multiplatform)
+         */
+        const val PROP_KSP_CONFIGS = "kotlin.dataframe.ksp.configs"
+    }
+
     override fun apply(target: Project) {
-        val name = "kotlin.dataframe.add.ksp"
-        val property = target.findProperty(name)?.toString()
+        val property = target.findProperty(PROP_ADD_KSP)?.toString()
         var addKsp = true
 
         if (property != null) {
@@ -19,7 +31,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 addKsp = property.toBoolean()
             } else {
                 target.logger.warn(
-                    "Invalid value '$property' for '$name' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.",
+                    "Invalid value '$property' for '$PROP_ADD_KSP' property. Defaulting to '$addKsp'. Please use 'true' or 'false'.",
                 )
             }
         }
@@ -32,7 +44,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
         // configure it to depend on symbol-processor-all
         target.plugins.whenPluginAdded {
             if ("com.google.devtools.ksp" in this.javaClass.packageName) {
-                val isMultiplatform =
+                val isMultiplatform by lazy {
                     when {
                         target.plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> false
 
@@ -45,29 +57,28 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                             false
                         }
                     }
-                val mainKspCfg = if (isMultiplatform) "kspJvm" else "ksp"
-                val testKspCfg = if (isMultiplatform) "kspJvmTest" else "kspTest"
-                try {
-                    target.configurations.getByName(mainKspCfg).dependencies.add(
-                        target.dependencies.create(
-                            "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
-                        ),
-                    )
-                } catch (e: UnknownConfigurationException) {
-                    target.logger.warn(
-                        "Configuration '$mainKspCfg' not found. Please make sure the KSP plugin is applied.",
-                    )
                 }
-                try {
-                    target.configurations.getByName(testKspCfg).dependencies.add(
-                        target.dependencies.create(
-                            "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
-                        ),
-                    )
-                } catch (e: UnknownConfigurationException) {
-                    target.logger.warn(
-                        "Configuration '$testKspCfg' not found. Please make sure the KSP plugin is applied.",
-                    )
+                val overriddenConfigs = target.findProperty(PROP_KSP_CONFIGS)
+                    ?.let { (it as String) }
+                    ?.split(",")
+                    ?.map { it.trim() }
+                val configs = when {
+                    overriddenConfigs != null -> overriddenConfigs
+                    isMultiplatform -> listOf("kspJvm", "kspJvmTest")
+                    else -> listOf("ksp", "kspTest")
+                }
+                configs.forEach { cfg ->
+                    try {
+                        target.configurations.getByName(cfg).dependencies.add(
+                            target.dependencies.create(
+                                "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
+                            ),
+                        )
+                    } catch (e: UnknownConfigurationException) {
+                        target.logger.warn(
+                            "Configuration '$cfg' not found. Please make sure the KSP plugin is applied.",
+                        )
+                    }
                 }
                 target.logger.info("Added DataFrame dependency to the KSP plugin.")
                 target.extensions.getByType<KspExtension>().arg(

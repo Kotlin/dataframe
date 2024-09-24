@@ -3,6 +3,11 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toJavaInstant
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.TimeStampMicroVector
 import org.apache.arrow.vector.TimeStampMilliVector
@@ -46,9 +51,6 @@ import java.io.File
 import java.net.URL
 import java.nio.channels.Channels
 import java.sql.DriverManager
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.Locale
 import kotlin.reflect.typeOf
 
@@ -497,11 +499,35 @@ internal class ArrowKtTest {
     }
 
     @Test
+    fun testBigMixedColumn() {
+        val dataFrame = dataFrameOf(bigMixedColumn)
+        val warnings = ArrayList<ConvertingMismatch>()
+        val writer = dataFrame.arrowWriter(
+            targetSchema = Schema(
+                listOf(
+                    Field("bigMixedColumn", FieldType.nullable(ArrowType.Int(64, true)), emptyList()),
+                ),
+            ),
+            mode = ArrowWriter.Mode.LOYAL,
+        ) {
+            warnings.add(it)
+        }
+        val stream = ByteArrayOutputStream()
+        writer.writeArrowFeather(stream)
+        val data = stream.toByteArray()
+
+        assert(warnings.filterIsInstance<ConvertingMismatch.TypeConversionFail.ConversionFailIgnored>().size == 1)
+        assert(warnings.filterIsInstance<ConvertingMismatch.SavedAsString>().size == 1)
+
+        DataFrame.readArrowFeather(data)["bigMixedColumn"] shouldBe dataFrame[bigMixedColumn].map { it.toString() }
+    }
+
+    @Test
     fun testTimeStamp() {
         val dates = listOf(
-            LocalDateTime.of(2023, 11, 23, 9, 30, 25),
-            LocalDateTime.of(2015, 5, 25, 14, 20, 13),
-            LocalDateTime.of(2013, 6, 19, 11, 20, 13),
+            LocalDateTime(2023, 11, 23, 9, 30, 25),
+            LocalDateTime(2015, 5, 25, 14, 20, 13),
+            LocalDateTime(2013, 6, 19, 11, 20, 13),
         )
 
         val dataFrame = dataFrameOf(
@@ -554,7 +580,7 @@ internal class ArrowKtTest {
                 timeStampSecVector.allocateNew(dates.size)
 
                 dates.forEachIndexed { index, localDateTime ->
-                    val instant = localDateTime.toInstant(ZoneOffset.UTC)
+                    val instant = localDateTime.toInstant(UtcOffset.ZERO).toJavaInstant()
                     timeStampNanoVector[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
                     timeStampMicroVector[index] = instant.toEpochMilli() * 1_000L
                     timeStampMilliVector[index] = instant.toEpochMilli()
@@ -580,10 +606,10 @@ internal class ArrowKtTest {
 
     private fun expectedSimpleDataFrame(): AnyFrame {
         val dates = listOf(
-            LocalDateTime.of(2020, 11, 23, 9, 30, 25),
-            LocalDateTime.of(2015, 5, 25, 14, 20, 13),
-            LocalDateTime.of(2013, 6, 19, 11, 20, 13),
-            LocalDateTime.of(2000, 1, 1, 0, 0, 0),
+            LocalDateTime(2020, 11, 23, 9, 30, 25),
+            LocalDateTime(2015, 5, 25, 14, 20, 13),
+            LocalDateTime(2013, 6, 19, 11, 20, 13),
+            LocalDateTime(2000, 1, 1, 0, 0, 0),
         )
 
         return dataFrameOf(

@@ -36,10 +36,10 @@ dependencies {
 
 kotlinPublications {
     publication {
-        publicationName.set("dataframeJDBC")
-        artifactId.set(project.name)
-        description.set("JDBC support for Kotlin Dataframe")
-        packageName.set(artifactId)
+        publicationName = "dataframeJDBC"
+        artifactId = project.name
+        description = "JDBC support for Kotlin Dataframe"
+        packageName = artifactId
     }
 }
 

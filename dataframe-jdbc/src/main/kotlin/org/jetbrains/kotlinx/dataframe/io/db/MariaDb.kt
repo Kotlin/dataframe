@@ -18,7 +18,7 @@ public object MariaDb : DbType("mariadb") {
         get() = "org.mariadb.jdbc.Driver"
 
     override fun convertSqlTypeToColumnSchemaValue(tableColumnMetadata: TableColumnMetadata): ColumnSchema? {
-        if (tableColumnMetadata.sqlTypeName == "SMALLINT") {
+        if (tableColumnMetadata.sqlTypeName == "SMALLINT" && tableColumnMetadata.javaClassName == "java.lang.Short") {
             val kType = Short::class.createType(nullable = tableColumnMetadata.isNullable)
             return ColumnSchema.Value(kType)
         }
@@ -35,7 +35,7 @@ public object MariaDb : DbType("mariadb") {
         )
 
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? {
-        if (tableColumnMetadata.sqlTypeName == "SMALLINT") {
+        if (tableColumnMetadata.sqlTypeName == "SMALLINT" && tableColumnMetadata.javaClassName == "java.lang.Short") {
             return Short::class.createType(nullable = tableColumnMetadata.isNullable)
         }
         return null

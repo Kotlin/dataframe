@@ -145,7 +145,8 @@ class SqliteTest {
         val schema = DataFrame.getSchemaForSqlTable(connection, customerTableName)
         schema.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema.columns["name"]!!.type shouldBe typeOf<String?>()
-        schema.columns["salary"]!!.type shouldBe typeOf<Float>()
+        schema.columns["salary"]!!.type shouldBe typeOf<Double>()
+        schema.columns["profilePicture"]!!.type shouldBe typeOf<ByteArray?>()
 
         val orderTableName = "Orders"
         val df2 = DataFrame.readSqlTable(connection, orderTableName).cast<OrderSQLite>()
@@ -155,7 +156,7 @@ class SqliteTest {
         val schema2 = DataFrame.getSchemaForSqlTable(connection, orderTableName)
         schema2.columns["id"]!!.type shouldBe typeOf<Int?>()
         schema2.columns["customerName"]!!.type shouldBe typeOf<String?>()
-        schema2.columns["totalAmount"]!!.type shouldBe typeOf<java.math.BigDecimal>()
+        schema2.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
     }
 
     @Test
@@ -181,10 +182,10 @@ class SqliteTest {
         result[0][3] shouldBe 2500.5
 
         val schema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery = sqlQuery)
-        schema.columns["customerId"]!!.type shouldBe typeOf<kotlin.Int?>()
+        schema.columns["customerId"]!!.type shouldBe typeOf<Int?>()
         schema.columns["customerName"]!!.type shouldBe typeOf<String?>()
         schema.columns["customerAge"]!!.type shouldBe typeOf<Int?>()
-        schema.columns["totalAmount"]!!.type shouldBe typeOf<java.math.BigDecimal>()
+        schema.columns["totalAmount"]!!.type shouldBe typeOf<Double>()
     }
 
     @Test

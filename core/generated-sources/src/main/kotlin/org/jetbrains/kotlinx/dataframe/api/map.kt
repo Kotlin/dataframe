@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -102,6 +104,8 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.columnName, type, infer, body)
 
+@Refine
+@Interpretable("MapToFrame")
 public fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
     body(dsl)

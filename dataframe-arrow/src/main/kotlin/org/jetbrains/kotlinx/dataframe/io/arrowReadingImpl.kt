@@ -1,5 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.datetime.toKotlinLocalTime
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
@@ -31,6 +37,8 @@ import org.apache.arrow.vector.UInt8Vector
 import org.apache.arrow.vector.VarBinaryVector
 import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
+import org.apache.arrow.vector.ViewVarBinaryVector
+import org.apache.arrow.vector.ViewVarCharVector
 import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowReader
@@ -55,13 +63,12 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
-import java.time.Duration
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
+import kotlin.time.toKotlinDuration
+import java.time.LocalTime as JavaLocalTime
 
 /**
  * same as [Iterable<DataFrame<T>>.concat()] without internal type guessing (all batches should have the same schema)
@@ -108,7 +115,7 @@ private fun Float4Vector.values(range: IntRange): List<Float?> = range.map { get
 
 private fun Float8Vector.values(range: IntRange): List<Double?> = range.map { getObject(it) }
 
-private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it) }
+private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it).toKotlinDuration() }
 
 private fun DateDayVector.values(range: IntRange): List<LocalDate?> =
     range.map {
@@ -117,17 +124,19 @@ private fun DateDayVector.values(range: IntRange): List<LocalDate?> =
         } else {
             DateUtility.getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
                 .toLocalDate()
+                .toKotlinLocalDate()
         }
     }
 
-private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map { getObject(it) }
+private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> =
+    range.map { getObject(it)?.toKotlinLocalDateTime() }
 
 private fun TimeNanoVector.values(range: IntRange): List<LocalTime?> =
     range.mapIndexed { i, it ->
         if (isNull(i)) {
             null
         } else {
-            LocalTime.ofNanoOfDay(get(it))
+            JavaLocalTime.ofNanoOfDay(get(it)).toKotlinLocalTime()
         }
     }
 
@@ -136,7 +145,7 @@ private fun TimeMicroVector.values(range: IntRange): List<LocalTime?> =
         if (isNull(i)) {
             null
         } else {
-            LocalTime.ofNanoOfDay(getObject(it) * 1000)
+            JavaLocalTime.ofNanoOfDay(getObject(it) * 1000).toKotlinLocalTime()
         }
     }
 
@@ -145,19 +154,19 @@ private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> =
         if (isNull(i)) {
             null
         } else {
-            LocalTime.ofNanoOfDay(get(it).toLong() * 1000_000)
+            JavaLocalTime.ofNanoOfDay(get(it).toLong() * 1000_000).toKotlinLocalTime()
         }
     }
 
 private fun TimeSecVector.values(range: IntRange): List<LocalTime?> =
-    range.map { getObject(it)?.let { LocalTime.ofSecondOfDay(it.toLong()) } }
+    range.map { getObject(it)?.let { JavaLocalTime.ofSecondOfDay(it.toLong()).toKotlinLocalTime() } }
 
 private fun TimeStampNanoVector.values(range: IntRange): List<LocalDateTime?> =
     range.mapIndexed { i, it ->
         if (isNull(i)) {
             null
         } else {
-            getObject(it)
+            getObject(it).toKotlinLocalDateTime()
         }
     }
 
@@ -166,7 +175,7 @@ private fun TimeStampMicroVector.values(range: IntRange): List<LocalDateTime?> =
         if (isNull(i)) {
             null
         } else {
-            getObject(it)
+            getObject(it).toKotlinLocalDateTime()
         }
     }
 
@@ -175,7 +184,7 @@ private fun TimeStampMilliVector.values(range: IntRange): List<LocalDateTime?> =
         if (isNull(i)) {
             null
         } else {
-            getObject(it)
+            getObject(it).toKotlinLocalDateTime()
         }
     }
 
@@ -184,7 +193,7 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
         if (isNull(i)) {
             null
         } else {
-            getObject(it)
+            getObject(it).toKotlinLocalDateTime()
         }
     }
 
@@ -199,6 +208,24 @@ private fun NullVector.values(range: IntRange): List<Nothing?> =
     }
 
 private fun VarCharVector.values(range: IntRange): List<String?> =
+    range.map {
+        if (isNull(it)) {
+            null
+        } else {
+            String(get(it))
+        }
+    }
+
+private fun LargeVarCharVector.values(range: IntRange): List<String?> =
+    range.map {
+        if (isNull(it)) {
+            null
+        } else {
+            String(get(it))
+        }
+    }
+
+private fun ViewVarCharVector.values(range: IntRange): List<String?> =
     range.map {
         if (isNull(it)) {
             null
@@ -225,12 +252,12 @@ private fun LargeVarBinaryVector.values(range: IntRange): List<ByteArray?> =
         }
     }
 
-private fun LargeVarCharVector.values(range: IntRange): List<String?> =
+private fun ViewVarBinaryVector.values(range: IntRange): List<ByteArray?> =
     range.map {
         if (isNull(it)) {
             null
         } else {
-            String(get(it))
+            get(it)
         }
     }
 
@@ -266,9 +293,13 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
 
             is LargeVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
+            is ViewVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
             is VarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is LargeVarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is ViewVarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is BitVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 

@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.getPivotColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl
@@ -29,6 +28,7 @@ import kotlin.reflect.KProperty
  *
  * `df.add("columnName") { "someColumn"<Int>() + 15 }.groupBy("columnName")`
  */
+@Refine
 @Interpretable("DataFrameGroupBy")
 public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> =
     groupByImpl(moveToTop, cols)
@@ -84,23 +84,16 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>
 
+    @Refine
+    @Interpretable("GroupByToDataFrame")
+    public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
+
     public data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 
     public companion object {
         internal val groupedColumnAccessor = column<AnyFrame>("group")
     }
 }
-
-@Refine
-@Interpretable("GroupByToDataFrame")
-public fun <T, G> GroupBy<T, G>.toDataFrame(groupedColumnName: String? = null): DataFrame<T> =
-    if (groupedColumnName == null || groupedColumnName == groups.name()) {
-        internal().df
-    } else {
-        internal().df.rename(groups).into(groupedColumnName)
-    }
-
-internal fun <T, G> GroupBy<T, G>.internal(): GroupByImpl<T, G> = this as GroupByImpl<T, G>
 
 public interface Grouped<out T> : Aggregatable<T>
 

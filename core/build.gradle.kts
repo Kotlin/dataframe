@@ -109,7 +109,7 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
         libraries.from(it.libraries)
     }
     source(sourceSets["test"].kotlin)
-    destinationDirectory.set(layout.buildDirectory.dir("classes/testWithOutputs/kotlin"))
+    destinationDirectory = layout.buildDirectory.dir("classes/testWithOutputs/kotlin")
 }
 
 tasks.withType<KspTask> {
@@ -161,14 +161,14 @@ val clearSamplesOutputs by tasks.creating {
 }
 
 val addSamplesToGit by tasks.creating(GitTask::class) {
-    directory.set(file("."))
-    command.set("add")
-    args.set(listOf("-A", "../docs/StardustDocs/snippets"))
+    directory = file(".")
+    command = "add"
+    args = listOf("-A", "../docs/StardustDocs/snippets")
 }
 
 val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     group = "documentation"
-    mainClass.set("org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt")
+    mainClass = "org.jetbrains.kotlinx.dataframe.explainer.SampleAggregatorKt"
 
     dependsOn(clearSamplesOutputs)
     dependsOn(samplesTest)
@@ -319,8 +319,8 @@ korro {
 
     groupSamples {
 
-        beforeSample.set("<tab title=\"NAME\">\n")
-        afterSample.set("\n</tab>")
+        beforeSample = "<tab title=\"NAME\">\n"
+        afterSample = "\n</tab>"
 
         funSuffix("_properties") {
             replaceText("NAME", "Properties")
@@ -331,8 +331,8 @@ korro {
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
         }
-        beforeGroup.set("<tabs>\n")
-        afterGroup.set("</tabs>")
+        beforeGroup = "<tabs>\n"
+        afterGroup = "</tabs>"
     }
 }
 
@@ -380,20 +380,28 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
+    compilerOptions {
+        optIn.addAll("kotlin.RequiresOptIn")
+        freeCompilerArgs.addAll("-Xinline-classes")
     }
 }
 
 tasks.test {
     maxHeapSize = "2048m"
-    extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
-        excludes.set(
-            listOf(
-                "org.jetbrains.kotlinx.dataframe.jupyter.*",
-                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests",
-            ),
-        )
+    kover {
+        currentProject {
+            instrumentation { disabledForTestTasks.addAll("samplesTest") }
+        }
+        reports {
+            total {
+                filters {
+                    excludes {
+                        classes("org.jetbrains.kotlinx.dataframe.jupyter.*")
+                        classes("org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests")
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -403,10 +411,10 @@ tasks.processJupyterApiResources {
 
 kotlinPublications {
     publication {
-        publicationName.set("core")
-        artifactId.set("dataframe-core")
-        description.set("Dataframe core API")
-        packageName.set(artifactId)
+        publicationName = "core"
+        artifactId = "dataframe-core"
+        description = "Dataframe core API"
+        packageName = artifactId
     }
 }
 

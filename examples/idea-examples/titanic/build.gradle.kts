@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     application
     kotlin("jvm")
@@ -13,7 +15,7 @@ repositories {
     mavenLocal() // in case of local dataframe development
 }
 
-application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.titanic.ml.TitanicKt")
+application.mainClass = "org.jetbrains.kotlinx.dataframe.examples.titanic.ml.TitanicKt"
 
 dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
@@ -35,7 +37,7 @@ dataframes {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+    compilerOptions.jvmTarget = JvmTarget.JVM_11
 }
 
 tasks.withType<JavaCompile> {

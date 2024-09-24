@@ -54,8 +54,8 @@ korro {
 
     groupSamples {
 
-        beforeSample.set("<tab title=\"NAME\">\n")
-        afterSample.set("\n</tab>")
+        beforeSample = "<tab title=\"NAME\">\n"
+        afterSample = "\n</tab>"
 
         funSuffix("_properties") {
             replaceText("NAME", "Properties")
@@ -66,8 +66,8 @@ korro {
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
         }
-        beforeGroup.set("<tabs>\n")
-        afterGroup.set("</tabs>")
+        beforeGroup = "<tabs>\n"
+        afterGroup = "</tabs>"
     }
 }
 

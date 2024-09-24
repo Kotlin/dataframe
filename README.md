@@ -1,7 +1,7 @@
 # Kotlin DataFrame: typesafe in-memory structured data processing for JVM
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component alpha stability](https://img.shields.io/badge/project-alpha-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.9.22-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.0.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bnot%28contains%28text%28%29%2C%22dev%22%29%29%5D%5Blast%28%29%5D&label=Release%20version)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bcontains%28text%28%29%2C%22dev%22%29%5D%5Blast%28%29%5D&label=Dev%20version&color=yellow
 )](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
@@ -41,18 +41,18 @@ You could find the following articles there:
 Check out this [notebook with new features](examples/notebooks/feature_overviews/0.14.0/new_features.ipynb) in development for the next release.
 
 The DataFrame compiler plugin has reached public preview!
-Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-demo) that works with IntelliJ IDEA 2024.2.
+Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-demo) that works with [IntelliJ IDEA](https://www.jetbrains.com/idea/) 2024.2.
 
 ## Setup
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:0.13.1")
+implementation("org.jetbrains.kotlinx:dataframe:0.14.0")
 ```
 
 Optional Gradle plugin for enhanced type safety and schema generation
 https://kotlin.github.io/dataframe/schemasgradle.html
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.13.1"
+id("org.jetbrains.kotlinx.dataframe") version "0.14.0"
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
@@ -77,7 +77,7 @@ df.filter { "stargazers_count"<Int>() > 50 }.print()
 
 Requires Gradle plugin to work
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.13.1"
+id("org.jetbrains.kotlinx.dataframe") version "0.14.0"
 ```
 
 Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
@@ -228,6 +228,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 3.0.0           | 15.0.0               |
+| 0.14.0                   | 8                    | 2.0.20         | 0.12.0-139             | 3.0.0           | 17.0.0               |
 
 ## Code of Conduct
 

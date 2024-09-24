@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toJavaLocalDate
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BaseFixedWidthVector
 import org.apache.arrow.vector.BaseVariableWidthVector
@@ -146,6 +145,16 @@ internal class ArrowWriterImpl(
         }
     }
 
+    private fun convertColumnToCompatible(column: AnyCol): Pair<AnyCol, Field> {
+        val actualField = column.toArrowField(mismatchSubscriber)
+        val result = try {
+            convertColumnToTarget(column, actualField.type)!!
+        } catch (e: Exception) {
+            column
+        }
+        return result to actualField
+    }
+
     private fun infillVector(vector: FieldVector, column: AnyCol) {
         when (vector) {
             is VarCharVector ->
@@ -226,10 +235,9 @@ internal class ArrowWriterImpl(
                     }
 
             is DateDayVector ->
-                column
-                    .convertToLocalDate()
+                column.convertToLocalDate()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toJavaLocalDate().toEpochDay().toInt()) }
+                        value?.also { vector.set(i, value.toEpochDays()) }
                             ?: vector.setNull(i)
                     }
 
@@ -243,29 +251,30 @@ internal class ArrowWriterImpl(
             is TimeNanoVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toNanoOfDay()) }
+                        value?.also { vector.set(i, value.toNanosecondOfDay()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMicroVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, value.toNanoOfDay() / 1000) }
+                        value?.also { vector.set(i, value.toNanosecondOfDay() / 1000) }
                             ?: vector.setNull(i)
                     }
 
             is TimeMilliVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()) }
+                        value?.also { vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000).toInt()) }
                             ?: vector.setNull(i)
                     }
 
             is TimeSecVector ->
                 column.convertToLocalTime()
                     .forEachIndexed { i, value ->
-                        value?.also { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()) }
-                            ?: vector.setNull(i)
+                        value?.also {
+                            vector.set(i, (value.toNanosecondOfDay() / 1000 / 1000 / 1000).toInt())
+                        } ?: vector.setNull(i)
                     }
 
             else -> {
@@ -307,7 +316,7 @@ internal class ArrowWriterImpl(
                         cause = e,
                     ),
                 )
-                column to column!!.toArrowField(mismatchSubscriber)
+                convertColumnToCompatible(column!!)
             }
         } catch (e: TypeConverterNotFoundException) {
             if (strictType) {
@@ -318,7 +327,7 @@ internal class ArrowWriterImpl(
             } else {
                 // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
                 mismatchSubscriber(ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored(field.name, e))
-                column to column!!.toArrowField(mismatchSubscriber)
+                convertColumnToCompatible(column!!)
             }
         }
 

@@ -165,7 +165,7 @@ class JdbcTest {
 
         val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 2
-        dataSchema.columns["characterCol"]!!.type shouldBe typeOf<Char?>()
+        dataSchema.columns["characterCol"]!!.type shouldBe typeOf<String?>()
     }
 
     @Test
@@ -291,6 +291,7 @@ class JdbcTest {
 
         val schema = DataFrame.getSchemaForSqlTable(connection, tableName)
 
+        schema.columns["characterCol"]!!.type shouldBe typeOf<String?>()
         schema.columns["tinyIntCol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["smallIntCol"]!!.type shouldBe typeOf<Int?>()
         schema.columns["bigIntCol"]!!.type shouldBe typeOf<Long?>()

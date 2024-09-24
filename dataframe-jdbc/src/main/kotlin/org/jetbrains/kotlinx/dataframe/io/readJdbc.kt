@@ -26,10 +26,16 @@ import java.sql.SQLXML
 import java.sql.Time
 import java.sql.Timestamp
 import java.sql.Types
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.OffsetTime
 import java.util.Date
+import java.util.UUID
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSupertypeOf
+import kotlin.reflect.full.safeCast
 import kotlin.reflect.full.starProjectedType
 
 private val logger = KotlinLogging.logger {}
@@ -775,6 +781,10 @@ private fun manageColumnNameDuplication(columnNameCounter: MutableMap<String, In
     return name
 }
 
+// Utility function to cast arrays based on the type of elements
+private fun <T : Any> castArray(array: Array<*>, elementType: KClass<T>): List<T> =
+    array.mapNotNull { elementType.safeCast(it) }
+
 /**
  * Fetches and converts data from a ResultSet into a mutable map.
  *
@@ -816,9 +826,15 @@ private fun fetchAndConvertDataFromResultSet(
     }
 
     val dataFrame = data.mapIndexed { index, values ->
+        val correctedValues = if (kotlinTypesForSqlColumns[index]!!.classifier == Array::class) {
+            handleArrayValues(values)
+        } else {
+            values
+        }
+
         DataColumn.createValueColumn(
             name = tableColumns[index].name,
-            values = values,
+            values = correctedValues,
             infer = convertNullabilityInference(inferNullability),
             type = kotlinTypesForSqlColumns[index]!!,
         )
@@ -829,6 +845,31 @@ private fun fetchAndConvertDataFromResultSet(
     }
 
     return dataFrame
+}
+
+private fun handleArrayValues(values: MutableList<Any?>): List<Any> {
+    // Intermediate variable for the first mapping
+    val sqlArrays = values.mapNotNull {
+        (it as? java.sql.Array)?.array?.let { array -> array as? Array<*> }
+    }
+
+    // Flatten the arrays to iterate through all elements and filter out null values, then map to component types
+    val allElementTypes = sqlArrays
+        .flatMap { array ->
+            (array.javaClass.componentType?.kotlin?.let { listOf(it) } ?: emptyList())
+        } // Get the component type of each array and convert it to a Kotlin class, if available
+
+    // Find distinct types and ensure there's only one distinct type
+    val commonElementType = allElementTypes
+        .distinct() // Get unique element types
+        .singleOrNull() // Ensure there's only one unique element type, otherwise return null
+        ?: Any::class // Fallback to Any::class if multiple distinct types or no elements found
+
+    return if (commonElementType != Any::class) {
+        sqlArrays.map { castArray(it, commonElementType).toTypedArray() }
+    } else {
+        sqlArrays
+    }
 }
 
 private fun convertNullabilityInference(inferNullability: Boolean) = if (inferNullability) Infer.Nulls else Infer.None
@@ -843,6 +884,7 @@ private fun extractNewRowFromResultSetAndAddToData(
         data[i].add(
             try {
                 rs.getObject(i + 1)
+                // TODO: add a special handler for Blob via Streams
             } catch (_: Throwable) {
                 val kType = kotlinTypesForSqlColumns[i]!!
                 // TODO: expand for all the types like in generateKType function
@@ -868,7 +910,7 @@ private fun generateKType(dbType: DbType, tableColumnMetadata: TableColumnMetada
  * Creates a mapping between common SQL types and their corresponding KTypes.
  *
  * @param tableColumnMetadata The metadata of the table column.
- * @return The KType associated with the SQL type, or a default type if no mapping is found.
+ * @return The KType associated with the SQL type or a default type if no mapping is found.
  */
 private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata): KType {
     val jdbcTypeToKTypeMapping = mapOf(
@@ -882,7 +924,7 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.DOUBLE to Double::class,
         Types.NUMERIC to BigDecimal::class,
         Types.DECIMAL to BigDecimal::class,
-        Types.CHAR to Char::class,
+        Types.CHAR to String::class,
         Types.VARCHAR to String::class,
         Types.LONGVARCHAR to String::class,
         Types.DATE to Date::class,
@@ -892,27 +934,67 @@ private fun makeCommonSqlToKTypeMapping(tableColumnMetadata: TableColumnMetadata
         Types.VARBINARY to ByteArray::class,
         Types.LONGVARBINARY to ByteArray::class,
         Types.NULL to String::class,
-        Types.OTHER to Any::class,
         Types.JAVA_OBJECT to Any::class,
         Types.DISTINCT to Any::class,
         Types.STRUCT to Any::class,
-        Types.ARRAY to Array<Any>::class,
-        Types.BLOB to Blob::class,
+        Types.ARRAY to Array::class,
+        Types.BLOB to ByteArray::class,
         Types.CLOB to Clob::class,
         Types.REF to Ref::class,
         Types.DATALINK to Any::class,
         Types.BOOLEAN to Boolean::class,
         Types.ROWID to RowId::class,
-        Types.NCHAR to Char::class,
+        Types.NCHAR to String::class,
         Types.NVARCHAR to String::class,
         Types.LONGNVARCHAR to String::class,
         Types.NCLOB to NClob::class,
         Types.SQLXML to SQLXML::class,
         Types.REF_CURSOR to Ref::class,
-        Types.TIME_WITH_TIMEZONE to Time::class,
-        Types.TIMESTAMP_WITH_TIMEZONE to Timestamp::class,
+        Types.TIME_WITH_TIMEZONE to OffsetTime::class,
+        Types.TIMESTAMP_WITH_TIMEZONE to OffsetDateTime::class,
     )
-    // TODO: check mapping of JDBC types and classes correctly
-    val kClass = jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
-    return kClass.createType(nullable = tableColumnMetadata.isNullable)
+
+    fun determineKotlinClass(tableColumnMetadata: TableColumnMetadata): KClass<*> =
+        when {
+            tableColumnMetadata.jdbcType == Types.OTHER -> when (tableColumnMetadata.javaClassName) {
+                "[B" -> ByteArray::class
+                else -> Any::class
+            }
+
+            tableColumnMetadata.javaClassName == "[B" -> ByteArray::class
+
+            tableColumnMetadata.javaClassName == "java.sql.Blob" -> Blob::class
+
+            tableColumnMetadata.jdbcType == Types.TIMESTAMP &&
+                tableColumnMetadata.javaClassName == "java.time.LocalDateTime" -> LocalDateTime::class
+
+            tableColumnMetadata.jdbcType == Types.BINARY &&
+                tableColumnMetadata.javaClassName == "java.util.UUID" -> UUID::class
+
+            tableColumnMetadata.jdbcType == Types.REAL &&
+                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+
+            tableColumnMetadata.jdbcType == Types.FLOAT &&
+                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+
+            tableColumnMetadata.jdbcType == Types.NUMERIC &&
+                tableColumnMetadata.javaClassName == "java.lang.Double" -> Double::class
+
+            else -> jdbcTypeToKTypeMapping[tableColumnMetadata.jdbcType] ?: String::class
+        }
+
+    fun createArrayTypeIfNeeded(kClass: KClass<*>, isNullable: Boolean): KType =
+        if (kClass == Array::class) {
+            val typeParam = kClass.typeParameters[0].createType()
+            kClass.createType(
+                arguments = listOf(kotlin.reflect.KTypeProjection.invariant(typeParam)),
+                nullable = isNullable,
+            )
+        } else {
+            kClass.createType(nullable = isNullable)
+        }
+
+    val kClass: KClass<*> = determineKotlinClass(tableColumnMetadata)
+    val kType = createArrayTypeIfNeeded(kClass, tableColumnMetadata.isNullable)
+    return kType
 }

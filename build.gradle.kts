@@ -1,5 +1,6 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gmazzo.buildconfig.BuildConfigExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -54,6 +55,13 @@ dependencies {
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
     api(project(":dataframe-jdbc"))
+
+    kover(project(":core"))
+    kover(project(":dataframe-arrow"))
+    kover(project(":dataframe-excel"))
+    kover(project(":dataframe-openapi"))
+    kover(project(":dataframe-jdbc"))
+    kover(project(":plugins:kotlin-dataframe"))
 }
 
 enum class Version : Comparable<Version> {
@@ -85,8 +93,6 @@ val dependencyUpdateExclusions = listOf(
     libs.kotestAssertions.get().name,
     // Can't be updated to 7.4.0+ due to Java 8 compatibility
     libs.android.gradle.api.get().group,
-    // TODO 0.1.6 broke kotlinter, https://github.com/Kotlin/dataframe/issues/598
-    libs.plugins.korro.get().pluginId,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
 )
@@ -133,8 +139,8 @@ kotlin.jvmToolchain(11)
 
 allprojects {
     tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "1.8"
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_1_8
         }
     }
 
@@ -171,25 +177,6 @@ allprojects {
     }
 }
 
-koverMerged {
-    enable()
-    filters {
-        projects {
-            excludes += listOf(
-                ":examples:idea-examples:youtube",
-                ":examples:idea-examples:titanic",
-                ":examples:idea-examples:movies",
-                ":examples:idea-examples",
-                ":examples",
-                ":plugins",
-                ":plugins:dataframe-gradle-plugin",
-                ":plugins:symbol-processor",
-                ":plugins:dataframe-gradle-plugin",
-            )
-        }
-    }
-}
-
 group = "org.jetbrains.kotlinx"
 
 fun detectVersion(): String {
@@ -222,7 +209,7 @@ subprojects {
 }
 
 kotlinPublications {
-    fairDokkaJars.set(false)
+    fairDokkaJars = false
 
     sonatypeSettings(
         project.findProperty("kds.sonatype.user") as String?,
@@ -238,7 +225,7 @@ kotlinPublications {
 
     pom {
         githubRepo("Kotlin", "dataframe")
-        inceptionYear.set("2021")
+        inceptionYear = "2021"
         licenses {
             apache2()
         }
@@ -252,10 +239,10 @@ kotlinPublications {
     }
 
     publication {
-        publicationName.set("api")
-        artifactId.set(projectName)
-        description.set("Data processing in Kotlin")
-        packageName.set(artifactId)
+        publicationName = "api"
+        artifactId = projectName
+        description = "Data processing in Kotlin"
+        packageName = artifactId
     }
 
     localRepositories {

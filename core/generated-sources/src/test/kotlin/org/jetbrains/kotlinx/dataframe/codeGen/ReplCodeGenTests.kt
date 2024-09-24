@@ -81,12 +81,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected =
             """
             @DataSchema
-            interface $marker {
-                val age: Int
-                val city: String?
-                val name: String
-                val weight: Int?
-            }
+            interface $marker { }
             
             val $dfName<$marker>.age: $dataCol<$intName> @JvmName("${marker}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$marker>.age: $intName @JvmName("${marker}_age") get() = this["age"] as $intName
@@ -108,9 +103,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected3 =
             """
             @DataSchema
-            interface $marker3 : $markerFull {
-                override val city: String
-            }
+            interface $marker3 : $markerFull { }
             
             val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
             val $dfRowName<$marker3>.city: $stringName @JvmName("${marker3}_city") get() = this["city"] as $stringName
@@ -127,9 +120,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected5 =
             """
             @DataSchema
-            interface $marker5 : $markerFull {
-                override val weight: Int
-            }
+            interface $marker5 : $markerFull { }
             
             val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
             val $dfRowName<$marker5>.weight: $intName @JvmName("${marker5}_weight") get() = this["weight"] as $intName
@@ -172,10 +163,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected =
             """
             @DataSchema
-            interface $marker : ${Test2._DataFrameType::class.qualifiedName} {
-                val city: String?
-                val weight: Int?
-            }
+            interface $marker : ${Test2._DataFrameType::class.qualifiedName} { }
             
             val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?

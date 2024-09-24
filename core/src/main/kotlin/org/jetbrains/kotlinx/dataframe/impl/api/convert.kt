@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.atTime
@@ -10,6 +11,7 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toJavaLocalTime
 import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
@@ -38,7 +40,6 @@ import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.net.URL
-import java.time.LocalTime
 import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -49,6 +50,10 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
+import java.time.Instant as JavaInstant
+import java.time.LocalDate as JavaLocalDate
+import java.time.LocalDateTime as JavaLocalDateTime
+import java.time.LocalTime as JavaLocalTime
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
@@ -299,13 +304,19 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone) }
 
-                java.time.LocalDateTime::class -> convert<Long> {
-                    it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                LocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
+
+                Instant::class -> convert<Int> { Instant.fromEpochMilliseconds(it.toLong()) }
+
+                JavaLocalDateTime::class -> convert<Int> {
+                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
                 }
 
-                java.time.LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                JavaLocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
 
-                LocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
+                JavaLocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                JavaInstant::class -> convert<Int> { JavaInstant.ofEpochMilli(it.toLong()) }
 
                 else -> null
             }
@@ -341,13 +352,15 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 Instant::class -> convert<Long> { Instant.fromEpochMilliseconds(it) }
 
-                java.time.LocalDateTime::class -> convert<Long> {
+                JavaLocalDateTime::class -> convert<Long> {
                     it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
                 }
 
-                java.time.LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                JavaLocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
 
-                LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
+                JavaLocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                JavaInstant::class -> convert<Long> { JavaInstant.ofEpochMilli(it) }
 
                 else -> null
             }
@@ -359,39 +372,45 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone) }
 
-                java.time.LocalDateTime::class -> convert<Instant> {
+                LocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone) }
+
+                JavaLocalDateTime::class -> convert<Instant> {
                     it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
                 }
 
-                java.time.LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                JavaLocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
 
-                java.time.Instant::class -> convert<Instant> { it.toJavaInstant() }
+                JavaInstant::class -> convert<Instant> { it.toJavaInstant() }
 
-                LocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone) }
+                JavaLocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone).toJavaLocalTime() }
 
                 else -> null
             }
 
-            java.time.Instant::class -> when (toClass) {
-                Long::class -> convert<java.time.Instant> { it.toEpochMilli() }
+            JavaInstant::class -> when (toClass) {
+                Long::class -> convert<JavaInstant> { it.toEpochMilli() }
 
-                LocalDateTime::class -> convert<java.time.Instant> {
+                LocalDateTime::class -> convert<JavaInstant> {
                     it.toKotlinInstant().toLocalDateTime(defaultTimeZone)
                 }
 
-                LocalDate::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDate(defaultTimeZone) }
+                LocalDate::class -> convert<JavaInstant> { it.toKotlinInstant().toLocalDate(defaultTimeZone) }
 
-                java.time.LocalDateTime::class -> convert<java.time.Instant> {
+                LocalTime::class -> convert<JavaInstant> { it.toKotlinInstant().toLocalTime(defaultTimeZone) }
+
+                Instant::class -> convert<JavaInstant> { it.toKotlinInstant() }
+
+                JavaLocalDateTime::class -> convert<JavaInstant> {
                     it.toKotlinInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
                 }
 
-                java.time.LocalDate::class -> convert<java.time.Instant> {
+                JavaLocalDate::class -> convert<JavaInstant> {
                     it.toKotlinInstant().toLocalDate(defaultTimeZone).toJavaLocalDate()
                 }
 
-                Instant::class -> convert<java.time.Instant> { it.toKotlinInstant() }
-
-                LocalTime::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalTime(defaultTimeZone) }
+                JavaLocalTime::class -> convert<JavaInstant> {
+                    it.toKotlinInstant().toLocalTime(defaultTimeZone).toJavaLocalTime()
+                }
 
                 else -> null
             }
@@ -417,30 +436,38 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
             LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<LocalDateTime> { it.date }
+                LocalTime::class -> convert<LocalDateTime> { it.time }
                 Instant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
                 Long::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toEpochMilliseconds() }
-                java.time.LocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
-                java.time.LocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
-                java.time.LocalTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime().toLocalTime() }
+                JavaLocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
+                JavaLocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
+                JavaLocalTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime().toLocalTime() }
+                JavaInstant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toJavaInstant() }
                 else -> null
             }
 
-            java.time.LocalDateTime::class -> when (toClass) {
-                LocalDate::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().date }
+            JavaLocalDateTime::class -> when (toClass) {
+                LocalDate::class -> convert<JavaLocalDateTime> { it.toKotlinLocalDateTime().date }
 
-                LocalDateTime::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime() }
+                LocalTime::class -> convert<JavaLocalDateTime> { it.toKotlinLocalDateTime().time }
 
-                Instant::class -> convert<java.time.LocalDateTime> {
+                LocalDateTime::class -> convert<JavaLocalDateTime> { it.toKotlinLocalDateTime() }
+
+                Instant::class -> convert<JavaLocalDateTime> {
                     it.toKotlinLocalDateTime().toInstant(defaultTimeZone)
                 }
 
-                Long::class -> convert<java.time.LocalDateTime> {
+                Long::class -> convert<JavaLocalDateTime> {
                     it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toEpochMilliseconds()
                 }
 
-                java.time.LocalDate::class -> convert<java.time.LocalDateTime> { it.toLocalDate() }
+                JavaLocalDate::class -> convert<JavaLocalDateTime> { it.toLocalDate() }
 
-                java.time.LocalTime::class -> convert<java.time.LocalDateTime> { it.toLocalTime() }
+                JavaLocalTime::class -> convert<JavaLocalDateTime> { it.toLocalTime() }
+
+                JavaInstant::class -> convert<JavaLocalDateTime> {
+                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toJavaInstant()
+                }
 
                 else -> null
             }
@@ -449,25 +476,30 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0) }
                 Instant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
                 Long::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone).toEpochMilliseconds() }
-                java.time.LocalDate::class -> convert<LocalDate> { it.toJavaLocalDate() }
-                java.time.LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0).toJavaLocalDateTime() }
+                JavaLocalDate::class -> convert<LocalDate> { it.toJavaLocalDate() }
+                JavaLocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0).toJavaLocalDateTime() }
+                JavaInstant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone).toJavaInstant() }
                 else -> null
             }
 
-            java.time.LocalDate::class -> when (toClass) {
-                LocalDate::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate() }
+            JavaLocalDate::class -> when (toClass) {
+                LocalDate::class -> convert<JavaLocalDate> { it.toKotlinLocalDate() }
 
-                LocalDateTime::class -> convert<java.time.LocalDate> { it.atTime(0, 0).toKotlinLocalDateTime() }
+                LocalDateTime::class -> convert<JavaLocalDate> { it.atTime(0, 0).toKotlinLocalDateTime() }
 
-                Instant::class -> convert<java.time.LocalDate> {
+                Instant::class -> convert<JavaLocalDate> {
                     it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone)
                 }
 
-                Long::class -> convert<java.time.LocalDate> {
+                Long::class -> convert<JavaLocalDate> {
                     it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toEpochMilliseconds()
                 }
 
-                java.time.LocalDateTime::class -> convert<java.time.LocalDate> { it.atStartOfDay() }
+                JavaLocalDateTime::class -> convert<JavaLocalDate> { it.atStartOfDay() }
+
+                JavaInstant::class -> convert<JavaLocalDate> {
+                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toJavaInstant()
+                }
 
                 else -> null
             }
@@ -488,12 +520,10 @@ internal fun Long.toLocalDateTime(zone: TimeZone = defaultTimeZone) =
 
 internal fun Long.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
 
-internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) =
-    toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
+internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
 internal fun Instant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
 
-internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) =
-    toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
+internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
 internal val defaultTimeZone = TimeZone.currentSystemDefault()

@@ -8,7 +8,6 @@ import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.api.provider.Provider
 import org.gradle.build.event.BuildEventsListenerRegistry
 import org.gradle.internal.service.DefaultServiceRegistry
-import org.gradle.internal.service.scopes.ProjectScopeServices
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.tooling.events.OperationCompletionListener
 import java.lang.reflect.Field
@@ -26,8 +25,8 @@ internal fun makeProject(): ProjectInternal {
  */
 internal fun addBuildEventsListenerRegistryMock(project: Project) {
     try {
-        val projectScopeServices = (project as DefaultProject).services as ProjectScopeServices
-        val state: Field = ProjectScopeServices::class.java.superclass.getDeclaredField("state")
+        val projectScopeServices = (project as DefaultProject).services as DefaultServiceRegistry
+        val state: Field = DefaultServiceRegistry::class.java.getDeclaredField("state")
         state.isAccessible = true
         @Suppress("UNCHECKED_CAST")
         val stateValue: AtomicReference<Any> = state.get(projectScopeServices) as AtomicReference<Any>
