@@ -1,11 +1,18 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.projectTo
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
@@ -13,11 +20,20 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
-public fun AnyCol.isColumnGroup(): Boolean = kind() == ColumnKind.Group
+public fun AnyCol.isColumnGroup(): Boolean {
+    contract { returns(true) implies (this@isColumnGroup is ColumnGroup<*>) }
+    return kind() == ColumnKind.Group
+}
 
-public fun AnyCol.isFrameColumn(): Boolean = kind() == ColumnKind.Frame
+public fun AnyCol.isFrameColumn(): Boolean {
+    contract { returns(true) implies (this@isFrameColumn is FrameColumn<*>) }
+    return kind() == ColumnKind.Frame
+}
 
-public fun AnyCol.isValueColumn(): Boolean = kind() == ColumnKind.Value
+public fun AnyCol.isValueColumn(): Boolean {
+    contract { returns(true) implies (this@isValueColumn is ValueColumn<*>) }
+    return kind() == ColumnKind.Value
+}
 
 public fun AnyCol.isSubtypeOf(type: KType): Boolean =
     this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
