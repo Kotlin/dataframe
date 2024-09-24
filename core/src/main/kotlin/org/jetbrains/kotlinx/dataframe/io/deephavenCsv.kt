@@ -20,6 +20,9 @@ import io.deephaven.csv.reading.CsvReader
 import io.deephaven.csv.sinks.Sink
 import io.deephaven.csv.sinks.SinkFactory
 import io.deephaven.csv.sinks.Source
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -36,8 +39,8 @@ import java.io.InputStream
 import java.time.ZoneOffset
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.nanoseconds
-import java.time.LocalDateTime as JavaLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers as DfParsers
+import java.time.LocalDateTime as JavaLocalDateTime
 
 public fun main() {
     val folder = File(
@@ -52,6 +55,19 @@ public fun main() {
     val df1 = DataFrame.readDelimDeephavenCsv(file.inputStream())
         .also { it.print(borders = true, columnTypes = true, rowsLimit = 20) }
 }
+
+private val typesDeephavenAlreadyParses = setOf(
+    typeOf<Boolean>(),
+    typeOf<Byte>(),
+    typeOf<Short>(),
+    typeOf<Int>(),
+    typeOf<Long>(),
+    typeOf<Float>(),
+    typeOf<Double>(),
+    typeOf<LocalDateTime>(),
+    typeOf<JavaLocalDateTime>(),
+    typeOf<Char>(),
+)
 
 public fun DataFrame.Companion.readDelimDeephavenCsv(
     inputStream: InputStream,
@@ -77,44 +93,55 @@ public fun DataFrame.Companion.readDelimDeephavenCsv(
         }
         .build()
 
+    // edit the parser options to skip types that are already parsed by deephaven
+    var parserOptions = parserOptions ?: ParserOptions()
+    parserOptions = parserOptions.copy(
+        skipTypes = parserOptions.skipTypes + typesDeephavenAlreadyParses,
+    )
+
     val result = CsvReader.read(specs, inputStream, ListSink.sinkFactory)
-    val cols = result.map {
-        val (columnData, type) =
-            when (it.dataType()) {
-                BOOLEAN_AS_BYTE -> (it.data() as List<Boolean>) to typeOf<Boolean>()
-                BYTE -> (it.data() as List<Byte>) to typeOf<Byte>()
-                SHORT -> (it.data() as List<Short>) to typeOf<Short>()
-                INT -> (it.data() as List<Int>) to typeOf<Int>()
-                LONG -> (it.data() as List<Long>) to typeOf<Long>()
-                FLOAT -> (it.data() as List<Float>) to typeOf<Float>()
-                DOUBLE -> (it.data() as List<Double>) to typeOf<Double>()
-                DATETIME_AS_LONG -> (it.data() as List<LocalDateTime>) to typeOf<LocalDateTime>()
-                CHAR -> (it.data() as List<Char>) to typeOf<Char>()
-                STRING -> (it.data() as List<String>) to typeOf<String>()
-                TIMESTAMP_AS_LONG -> (it.data() as List<LocalDateTime>) to typeOf<LocalDateTime>()
-                CUSTOM -> TODO()
-                null -> error("null data type")
-            }
+    val cols =
+        runBlocking {
+            result.map {
+                async {
+                    val (columnData, type) =
+                        when (it.dataType()) {
+                            BOOLEAN_AS_BYTE -> (it.data() as List<Boolean>) to typeOf<Boolean>()
+                            BYTE -> (it.data() as List<Byte>) to typeOf<Byte>()
+                            SHORT -> (it.data() as List<Short>) to typeOf<Short>()
+                            INT -> (it.data() as List<Int>) to typeOf<Int>()
+                            LONG -> (it.data() as List<Long>) to typeOf<Long>()
+                            FLOAT -> (it.data() as List<Float>) to typeOf<Float>()
+                            DOUBLE -> (it.data() as List<Double>) to typeOf<Double>()
+                            DATETIME_AS_LONG -> (it.data() as List<LocalDateTime>) to typeOf<LocalDateTime>()
+                            CHAR -> (it.data() as List<Char>) to typeOf<Char>()
+                            STRING -> (it.data() as List<String>) to typeOf<String>()
+                            TIMESTAMP_AS_LONG -> (it.data() as List<LocalDateTime>) to typeOf<LocalDateTime>()
+                            CUSTOM -> TODO()
+                            null -> error("null data type")
+                        }
 
-        val defaultColType = colTypes[".default"]
-        val colType = colTypes[it.name()] ?: defaultColType
+                    val defaultColType = colTypes[".default"]
+                    val colType = colTypes[it.name()] ?: defaultColType
 
-        val column = DataColumn.createValueColumn(it.name(), columnData, type)
+                    val column = DataColumn.createValueColumn(it.name(), columnData, type)
 
-        if (it.dataType() == STRING) {
-            column as ValueColumn<String>
-            when (colType) {
-                null -> column.tryParse(parserOptions)
+                    if (it.dataType() == STRING) {
+                        column as ValueColumn<String>
+                        when (colType) {
+                            null -> column.tryParse(parserOptions)
 
-                else -> {
-                    val parser = DfParsers[colType.toType()]!!
-                    column.parse(parser, parserOptions)
+                            else -> {
+                                val parser = DfParsers[colType.toType()]!!
+                                column.parse(parser, parserOptions)
+                            }
+                        }
+                    } else {
+                        column
+                    }
                 }
-            }
-        } else {
-            column
+            }.awaitAll()
         }
-    }
     return cols.toDataFrame()
 }
 
