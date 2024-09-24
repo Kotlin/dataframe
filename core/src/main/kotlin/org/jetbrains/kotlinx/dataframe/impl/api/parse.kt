@@ -1,5 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -18,13 +22,16 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
+import org.jetbrains.kotlinx.dataframe.api.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -37,6 +44,7 @@ import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
 import java.net.URL
 import java.text.NumberFormat
@@ -541,19 +549,39 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
     return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
 }
 
-internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>) =
-    convert(columns).to {
-        when {
-            it.isFrameColumn() -> it.cast<AnyFrame?>().parse(options)
+internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
+    runBlocking { parseParallel(options, columns) }
 
-            it.isColumnGroup() ->
-                it.asColumnGroup()
-                    .parse(options) { all() }
-                    .asColumnGroup(it.name())
-                    .asDataColumn()
+private suspend fun <T> DataFrame<T>.parseParallel(
+    options: ParserOptions?,
+    columns: ColumnsSelector<T, Any?>,
+): DataFrame<T> =
+    coroutineScope {
+        getColumns(columns).map {
+            async {
+                when {
+                    it.isFrameColumn() ->
+                        it.asFrameColumn().values.map {
+                            async {
+                                it.parseParallel(options) {
+                                    colsAtAnyDepth { !it.isColumnGroup() }
+                                }
+                            }
+                        }.awaitAll()
+                            .toColumn(it.name)
 
-            it.typeClass == String::class -> it.cast<String?>().tryParse(options)
 
-            else -> it
-        }
+                    it.isColumnGroup() ->
+                        it.asColumnGroup().parseParallel(options) { all() }
+                            .asColumnGroup(it.name())
+                            .asDataColumn()
+
+                    it.typeClass == String::class -> it.cast<String?>().tryParse(options)
+
+                    else -> it
+                }
+            }
+        }.awaitAll()
+            .toDataFrame()
+            .cast()
     }
