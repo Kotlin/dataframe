@@ -414,8 +414,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
             it.isFrameColumn() -> it.cast<AnyFrame?>().parse(options)
 
             it.isColumnGroup() ->
-                it.asColumnGroup()
-                    .parse(options) { all() }
+                it.parse(options) { all() }
                     .asColumnGroup(it.name())
                     .asDataColumn()
 
