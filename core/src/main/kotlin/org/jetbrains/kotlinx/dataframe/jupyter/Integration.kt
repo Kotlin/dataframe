@@ -28,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.api.ReplaceClause
 import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.Update
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -163,7 +162,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         codeGen: ReplCodeGenerator,
     ): VariableName? =
         if (col.isColumnGroup()) {
-            val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
+            val codeWithConverter = codeGen.process(col.asDataFrame(), property).let { c ->
                 CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
             }
             execute(
