@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.impl.columns.simplify
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
-import org.jetbrains.kotlinx.dataframe.util.TOP_MESSAGE
 
 // region ColumnsSelectionDsl
 
@@ -86,13 +85,6 @@ public interface SimplifyColumnsSelectionDsl {
      */
     @Suppress("UNCHECKED_CAST")
     public fun <C> ColumnSet<C>.simplify(): ColumnSet<C> = simplifyInternal() as ColumnSet<C>
-
-    // region deprecated
-
-    @Deprecated(TOP_MESSAGE, ReplaceWith("simplify()"), DeprecationLevel.ERROR)
-    public fun <C> ColumnSet<C>.roots(): ColumnSet<C> = simplify()
-
-    // endregion
 }
 
 /**
