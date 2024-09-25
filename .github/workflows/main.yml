@@ -21,7 +21,7 @@ env:
 
 jobs:
   build-job:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container: registry.jetbrains.team/p/writerside/builder/writerside-builder:2.1.1481-p3872-df
     outputs:
       artifact: ${{ steps.generate-artifact.outputs.artifact }}
@@ -62,7 +62,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     # Requires the build-job results
     needs: build-job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -85,13 +85,13 @@ jobs:
   publish-indexes:
     # Requires the build-job results
     needs: build-job
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container:
         image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-2
 
-    steps: # Using v3 for compatibility with algolia-indexes
-        - uses: actions/checkout@v3
-        - uses: actions/download-artifact@v3
+    steps:
+        - uses: actions/checkout@v4
+        - uses: actions/download-artifact@v4
           with:
               name: algolia-indexes
         - uses: montudor/action-zip@v1
