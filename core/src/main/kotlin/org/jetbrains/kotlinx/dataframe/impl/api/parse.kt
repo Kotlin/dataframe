@@ -24,15 +24,14 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.canParse
@@ -41,7 +40,6 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
-import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
 import java.net.URL
@@ -557,30 +555,36 @@ private suspend fun <T> DataFrame<T>.parseParallel(
     columns: ColumnsSelector<T, Any?>,
 ): DataFrame<T> =
     coroutineScope {
-        getColumns(columns).map {
+        val convertedCols = getColumnsWithPaths(columns).map { col ->
             async {
                 when {
-                    it.isFrameColumn() ->
-                        it.values.map {
+                    // when a frame column is requested to be parsed,
+                    // parse each value/frame column at any depth inside each DataFrame in the frame column
+                    col.isFrameColumn() ->
+                        col.values.map {
                             async {
                                 it.parseParallel(options) {
                                     colsAtAnyDepth { !it.isColumnGroup() }
                                 }
                             }
                         }.awaitAll()
-                            .toColumn(it.name)
+                            .toColumn(col.name)
 
-                    it.isColumnGroup() ->
-                        it.parseParallel(options) { all() }
-                            .asColumnGroup(it.name())
+                    // when a column group is requested to be parsed,
+                    // parse each column in the group
+                    col.isColumnGroup() ->
+                        col.parseParallel(options) { all() }
+                            .asColumnGroup(col.name())
                             .asDataColumn()
 
-                    it.typeClass == String::class -> it.cast<String?>().tryParse(options)
+                    // Base case, parse the column if it's a `String?` column
+                    col.isSubtypeOf<String?>() ->
+                        col.cast<String?>().tryParse(options)
 
-                    else -> it
-                }
+                    else -> col
+                }.let { ColumnToInsert(col.path, it) }
             }
         }.awaitAll()
-            .toDataFrame()
-            .cast()
+
+        emptyDataFrame<T>().insertImpl(convertedCols)
     }
