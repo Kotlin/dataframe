@@ -222,8 +222,7 @@ internal fun <C, R> SingleColumn<DataRow<C>>.selectInternal(selector: ColumnsSel
                 "Column ${col.path} is not a ColumnGroup and can thus not be selected from."
             }
 
-            col.asColumnGroup()
-                .getColumnsWithPaths(selector as ColumnsSelector<*, R>)
+            col.getColumnsWithPaths(selector as ColumnsSelector<*, R>)
                 .map { it.changePath(col.path + it.path) }
         } ?: emptyList()
     }
