@@ -89,9 +89,9 @@ jobs:
     container:
         image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-2
 
-    steps:
-        - uses: actions/checkout@v4
-        - uses: actions/download-artifact@v4
+    steps: # Using v3 for compatibility with algolia-indexes
+        - uses: actions/checkout@v3
+        - uses: actions/download-artifact@v3
           with:
               name: algolia-indexes
         - uses: montudor/action-zip@v1
