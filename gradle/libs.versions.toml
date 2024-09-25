@@ -13,7 +13,7 @@ libsPublisher = "1.9.23-dev-45"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "0.14.0-RC1"
+dataframe = "0.14.1"
 korro = "0.1.6"
 
 kover = "0.8.3"
