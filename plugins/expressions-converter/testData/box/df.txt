@@ -45,7 +45,7 @@ package org {
 
                     public final class Wrapper {
                         public constructor Wrapper()
-                        public final val df: org.jetbrains.kotlinx.dataframe.AnyFrame /* = org.jetbrains.kotlinx.dataframe.DataFrame<*> */
+                        public final val df: org.jetbrains.kotlinx.dataframe.DataFrame<*>
                         public final val typed: org.jetbrains.kotlinx.dataframe.DataFrame<org.jetbrains.kotlinx.dataframe.explainer.Person>
                         public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
                         @org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions public final fun ff(): kotlin.Unit
