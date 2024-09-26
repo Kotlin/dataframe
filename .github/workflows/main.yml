@@ -31,7 +31,9 @@ jobs:
       - name: Prepare for build
         run: |
           apt-get update
-          apt-get install -y zip
+          apt-get install -y zip curl
+          curl -fsSL https://deb.nodesource.com/setup_20.x | -E bash -
+          apt-get install -y nodejs
           mkdir -p artifacts
       - name: Build docs # and include sitemap.xml TODO: uncomment when sitemap.xml is available
         run: |
