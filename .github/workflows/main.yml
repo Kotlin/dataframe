@@ -75,7 +75,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dir
       - name: Deploy to GitHub Pages
@@ -87,11 +87,11 @@ jobs:
     needs: build-job
     runs-on: ubuntu-latest
     container:
-        image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-2
+        image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-3
 
     steps: # Using v3 for compatibility with algolia-indexes
-        - uses: actions/checkout@v3
-        - uses: actions/download-artifact@v3
+        - uses: actions/checkout@v4
+        - uses: actions/download-artifact@v4
           with:
               name: algolia-indexes
         - uses: montudor/action-zip@v1
