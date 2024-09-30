@@ -3,7 +3,6 @@ package org.jetbrains.dataframe.gradle
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.UnknownConfigurationException
 import org.gradle.kotlin.dsl.getByType
 import java.util.Properties
 
@@ -74,13 +73,17 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                     target.configurations.named { it == cfg }.configureEach {
                         cfgsToAdd.remove(cfg)
                         dependencies.add(
-                            target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
+                            target.dependencies.create(
+                                "org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion",
+                            ),
                         )
                     }
                 }
                 target.gradle.projectsEvaluated {
                     cfgsToAdd.forEach { cfg ->
-                        target.logger.warn("Configuration '$cfg' was never found. Please make sure the KSP plugin is applied.")
+                        target.logger.warn(
+                            "Configuration '$cfg' was never found. Please make sure the KSP plugin is applied.",
+                        )
                     }
                 }
 
