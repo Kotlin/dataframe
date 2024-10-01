@@ -317,6 +317,7 @@ public enum class ColType {
     Url,
     JsonArray,
     JsonObject,
+    Char,
 }
 
 public fun ColType.toType(): KType =
@@ -335,6 +336,7 @@ public fun ColType.toType(): KType =
         ColType.Url -> typeOf<URL>()
         ColType.JsonArray -> typeOf<DataFrame<*>>()
         ColType.JsonObject -> typeOf<DataRow<*>>()
+        ColType.Char -> typeOf<String>() // note!
     }
 
 public fun DataFrame.Companion.readDelim(
