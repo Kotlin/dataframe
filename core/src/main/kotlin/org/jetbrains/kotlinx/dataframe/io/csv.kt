@@ -22,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
+import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedInputStream
 import java.io.BufferedReader
@@ -100,6 +102,11 @@ public fun DataFrame.Companion.readDelimStr(
         readDelim(it, format, colTypes, skipLines, readLines)
     }
 
+@Deprecated(
+    message = DF_READ_NO_CSV,
+    replaceWith = ReplaceWith(DF_READ_NO_CSV_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
     delimiter: Char,
