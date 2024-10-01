@@ -112,7 +112,16 @@ public fun DataFrame.Companion.readExcel(
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(url.openStream())
     return wb.use {
-        readExcel(wb, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy, withDefaultHeader)
+        readExcel(
+            wb,
+            sheetName,
+            skipRows,
+            columns,
+            stringColumns?.toFormattingOptions(),
+            rowsCount,
+            nameRepairStrategy,
+            withDefaultHeader,
+        )
     }
 }
 
@@ -143,7 +152,16 @@ public fun DataFrame.Companion.readExcel(
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(file)
     return wb.use {
-        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy, withDefaultHeader)
+        readExcel(
+            it,
+            sheetName,
+            skipRows,
+            columns,
+            stringColumns?.toFormattingOptions(),
+            rowsCount,
+            nameRepairStrategy,
+            withDefaultHeader,
+        )
     }
 }
 
@@ -172,7 +190,17 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     withDefaultHeader: Boolean = false,
-): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, withDefaultHeader)
+): AnyFrame =
+    readExcel(
+        asURL(fileOrUrl),
+        sheetName,
+        skipRows,
+        columns,
+        stringColumns,
+        rowsCount,
+        nameRepairStrategy,
+        withDefaultHeader,
+    )
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -201,7 +229,16 @@ public fun DataFrame.Companion.readExcel(
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(inputStream)
     return wb.use {
-        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy, withDefaultHeader)
+        readExcel(
+            it,
+            sheetName,
+            skipRows,
+            columns,
+            stringColumns?.toFormattingOptions(),
+            rowsCount,
+            nameRepairStrategy,
+            withDefaultHeader,
+        )
     }
 }
 
@@ -279,15 +316,17 @@ public fun DataFrame.Companion.readExcel(
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
     withDefaultHeader: Boolean = false,
 ): AnyFrame {
-    val columnIndexes: Iterable<Int> = when{
+    val columnIndexes: Iterable<Int> = when {
         withDefaultHeader -> {
             val notEmptyRow = sheet.rowIterator().asSequence().find { it != null }
-            checkNotNull(notEmptyRow){
+            checkNotNull(notEmptyRow) {
                 "There are no defined cells"
             }
             notEmptyRow.firstCellNum until notEmptyRow.lastCellNum
         }
+
         columns != null -> getColumnIndices(columns)
+
         else -> {
             val headerRow = checkNotNull(sheet.getRow(skipRows)) {
                 "Row number ${skipRows + 1} (1-based index) is not defined on the sheet ${sheet.sheetName}"
@@ -300,10 +339,10 @@ public fun DataFrame.Companion.readExcel(
         }
     }
 
-    val headerRow: Row? = if(withDefaultHeader){
+    val headerRow: Row? = if (withDefaultHeader) {
         sheet.shiftRows(0, sheet.lastRowNum, 1)
         sheet.createRow(0)
-    }else{
+    } else {
         sheet.getRow(skipRows)
     }
 
@@ -324,7 +363,7 @@ public fun DataFrame.Companion.readExcel(
         val name = repairNameIfRequired(
             nameFromCell,
             columnNameCounters,
-            if (withDefaultHeader) NameRepairStrategy.MAKE_UNIQUE else nameRepairStrategy
+            if (withDefaultHeader) NameRepairStrategy.MAKE_UNIQUE else nameRepairStrategy,
         )
         columnNameCounters[nameFromCell] =
             columnNameCounters.getOrDefault(nameFromCell, 0) + 1 // increase the counter for specific column name
