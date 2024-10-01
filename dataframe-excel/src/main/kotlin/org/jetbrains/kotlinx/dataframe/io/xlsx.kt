@@ -93,7 +93,11 @@ private fun setWorkbookTempDirectory() {
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
+ * @param withDefaultHeader make default header
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
+ * However, when withDefaultHeader is set to true,
+ * it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * ensuring unique column names are generated for unstructured data.
  */
 public fun DataFrame.Companion.readExcel(
     url: URL,
@@ -103,11 +107,12 @@ public fun DataFrame.Companion.readExcel(
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    withDefaultHeader: Boolean = false,
 ): AnyFrame {
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(url.openStream())
     return wb.use {
-        readExcel(wb, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy)
+        readExcel(wb, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy, withDefaultHeader)
     }
 }
 
@@ -119,7 +124,11 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
+ * @param withDefaultHeader make default header
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
+ * However, when withDefaultHeader is set to true,
+ * it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * ensuring unique column names are generated for unstructured data.
  */
 public fun DataFrame.Companion.readExcel(
     file: File,
@@ -129,11 +138,12 @@ public fun DataFrame.Companion.readExcel(
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    withDefaultHeader: Boolean = false,
 ): AnyFrame {
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(file)
     return wb.use {
-        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy)
+        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy, withDefaultHeader)
     }
 }
 
@@ -145,7 +155,11 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
+ * @param withDefaultHeader make default header
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
+ * However, when withDefaultHeader is set to true,
+ * it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * ensuring unique column names are generated for unstructured data.
  */
 @Refine
 @Interpretable("ReadExcel")
@@ -157,7 +171,8 @@ public fun DataFrame.Companion.readExcel(
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
-): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy)
+    withDefaultHeader: Boolean = false,
+): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, stringColumns, rowsCount, nameRepairStrategy, withDefaultHeader)
 
 /**
  * @param sheetName sheet to read. By default, the first sheet in the document
@@ -167,7 +182,11 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
+ * @param withDefaultHeader make default header
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
+ * However, when withDefaultHeader is set to true,
+ * it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * ensuring unique column names are generated for unstructured data.
  */
 public fun DataFrame.Companion.readExcel(
     inputStream: InputStream,
@@ -177,11 +196,12 @@ public fun DataFrame.Companion.readExcel(
     stringColumns: StringColumns? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    withDefaultHeader: Boolean = false,
 ): AnyFrame {
     setWorkbookTempDirectory()
     val wb = WorkbookFactory.create(inputStream)
     return wb.use {
-        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy)
+        readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy, withDefaultHeader)
     }
 }
 
@@ -194,7 +214,11 @@ public fun DataFrame.Companion.readExcel(
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
+ * @param withDefaultHeader make default header
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
+ * However, when withDefaultHeader is set to true,
+ * it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * ensuring unique column names are generated for unstructured data.
  */
 public fun DataFrame.Companion.readExcel(
     wb: Workbook,
@@ -204,11 +228,12 @@ public fun DataFrame.Companion.readExcel(
     formattingOptions: FormattingOptions? = null,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    withDefaultHeader: Boolean = false,
 ): AnyFrame {
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
         ?: wb.getSheetAt(0)
-    return readExcel(sheet, columns, formattingOptions, skipRows, rowsCount, nameRepairStrategy)
+    return readExcel(sheet, columns, formattingOptions, skipRows, rowsCount, nameRepairStrategy, withDefaultHeader)
 }
 
 /**
@@ -239,7 +264,11 @@ public class FormattingOptions(range: String, public val formatter: DataFormatte
  * @param skipRows number of rows before header
  * @param rowsCount number of rows to read.
  * @param nameRepairStrategy handling of column names.
- * The default behavior is [NameRepairStrategy.CHECK_UNIQUE]
+ * @param withDefaultHeader make default header
+ * The default behavior is [NameRepairStrategy.CHECK_UNIQUE].
+ * However, when withDefaultHeader is set to true,
+ * it operates as [NameRepairStrategy.MAKE_UNIQUE],
+ * ensuring unique column names are generated for unstructured data.
  */
 public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
@@ -248,21 +277,36 @@ public fun DataFrame.Companion.readExcel(
     skipRows: Int = 0,
     rowsCount: Int? = null,
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+    withDefaultHeader: Boolean = false,
 ): AnyFrame {
-    val columnIndexes: Iterable<Int> = if (columns != null) {
-        getColumnIndices(columns)
-    } else {
-        val headerRow = checkNotNull(sheet.getRow(skipRows)) {
-            "Row number ${skipRows + 1} (1-based index) is not defined on the sheet ${sheet.sheetName}"
+    val columnIndexes: Iterable<Int> = when{
+        withDefaultHeader -> {
+            val notEmptyRow = sheet.rowIterator().asSequence().find { it != null }
+            checkNotNull(notEmptyRow){
+                "There are no defined cells"
+            }
+            notEmptyRow.firstCellNum until notEmptyRow.lastCellNum
         }
-        val firstCellNum = headerRow.firstCellNum
-        check(firstCellNum != (-1).toShort()) {
-            "There are no defined cells on header row number ${skipRows + 1} (1-based index). Pass `columns` argument to specify what columns to read or make sure the index is correct"
+        columns != null -> getColumnIndices(columns)
+        else -> {
+            val headerRow = checkNotNull(sheet.getRow(skipRows)) {
+                "Row number ${skipRows + 1} (1-based index) is not defined on the sheet ${sheet.sheetName}"
+            }
+            val firstCellNum = headerRow.firstCellNum
+            check(firstCellNum != (-1).toShort()) {
+                "There are no defined cells on header row number ${skipRows + 1} (1-based index). Pass `columns` argument to specify what columns to read or make sure the index is correct"
+            }
+            headerRow.firstCellNum until headerRow.lastCellNum
         }
-        headerRow.firstCellNum until headerRow.lastCellNum
     }
 
-    val headerRow: Row? = sheet.getRow(skipRows)
+    val headerRow: Row? = if(withDefaultHeader){
+        sheet.shiftRows(0, sheet.lastRowNum, 1)
+        sheet.createRow(0)
+    }else{
+        sheet.getRow(skipRows)
+    }
+
     val first = skipRows + 1
     val last = rowsCount?.let { first + it - 1 } ?: sheet.lastRowNum
     val valueRowsRange = (first..last)
@@ -277,7 +321,11 @@ public fun DataFrame.Companion.readExcel(
                 ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
 
-        val name = repairNameIfRequired(nameFromCell, columnNameCounters, nameRepairStrategy)
+        val name = repairNameIfRequired(
+            nameFromCell,
+            columnNameCounters,
+            if (withDefaultHeader) NameRepairStrategy.MAKE_UNIQUE else nameRepairStrategy
+        )
         columnNameCounters[nameFromCell] =
             columnNameCounters.getOrDefault(nameFromCell, 0) + 1 // increase the counter for specific column name
         val getCellValue: (Cell?) -> Any? = when {
