@@ -204,40 +204,24 @@ class XlsxTest {
     fun `read with default header unstructured excel file`() {
         val df = DataFrame.readExcel(
             testResource("unstructured_example.xlsx"),
-            withDefaultHeader = true,
+            firstRowIsHeader = false,
         )
-        df.columnNames() shouldBe
-            listOf(
-                "A",
-                "B",
-                "C",
-                "D",
-                "E",
-                "F",
-                "G",
-                "H",
-                "I",
-            )
+        df.columnNames() shouldBe listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
     }
 
     @Test
     fun `should work read with default header unstructured excel file with skipRow params`() {
         val df = DataFrame.readExcel(
             testResource("unstructured_example.xlsx"),
-            withDefaultHeader = true,
-            skipRows = 1,
+            firstRowIsHeader = false,
+            skipRows = 2,
+            rowsCount = 1,
         )
-        df.columnNames() shouldBe
-            listOf(
-                "A",
-                "B",
-                "C",
-                "D",
-                "E",
-                "F",
-                "G",
-                "H",
-                "I",
-            )
+
+        df shouldBe dataFrameOf(
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+        )(
+            "Field 3: ", "", "TEAM 1", "", "", "", "", "Staff Code:", "Staff 1", "",
+        )
     }
 }

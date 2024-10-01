@@ -331,7 +331,7 @@ public fun DataFrame.Companion.readExcel(
         }
 
         else -> {
-            val notEmptyRow = sheet.rowIterator().asSequence().find { it != null }
+            val notEmptyRow = sheet.rowIterator().asSequence().maxByOrNull { it.lastCellNum }
             checkNotNull(notEmptyRow) {
                 "There are no defined cells"
             }
