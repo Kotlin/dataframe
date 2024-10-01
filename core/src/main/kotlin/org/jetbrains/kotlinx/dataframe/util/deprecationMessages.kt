@@ -12,7 +12,8 @@ package org.jetbrains.kotlinx.dataframe.util
 private const val MESSAGE_0_16 = "Will be removed in 0.16."
 
 internal const val DF_READ_NO_CSV = "This function is deprecated and should be replaced with `readCSV`. $MESSAGE_0_16"
-internal const val DF_READ_NO_CSV_REPLACE = "this.readCSV(fileOrUrl, delimiter, header, colTypes, skipLines, readLines, duplicate, charset)"
+internal const val DF_READ_NO_CSV_REPLACE =
+    "this.readCSV(fileOrUrl, delimiter, header, colTypes, skipLines, readLines, duplicate, charset)"
 
 // endregion
 
