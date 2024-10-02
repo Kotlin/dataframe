@@ -17,8 +17,8 @@ Operations likely to be split off in the future include:
 ### Korro code samples
 
 Code samples for the documentation website reside
-in [core/.../test/.../samples/api](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api),
-and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api)
+in [core/.../test/.../samples/api](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples that depend solely on `dataframe-core`),
+and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples can depend on other I/O modules)
 and they are copied over to Markdown files in [docs/StardustDocs/topics](../docs/StardustDocs/topics)
 by [Korro](https://github.com/devcrocod/korro).
 

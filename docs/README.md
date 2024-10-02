@@ -28,8 +28,9 @@ Elements annotated with `@ExportAsHtml` will have their generated content be cop
 [docs/StardustDocs/snippets/kdocs](./StardustDocs/snippets/kdocs).
 
 ### Korro code samples
-Code samples for the documentation website reside in [core/.../test/.../samples/api](../core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api),
-and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api)
+Code samples for the documentation website reside in [core/.../test/.../samples/api](../core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api)
+(for samples that depend solely on `dataframe-core`),
+and [tests/.../samples/api](../tests/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api) (for samples can depend on other I/O modules)
 and they are copied over to Markdown files in [docs/StardustDocs/topics](./StardustDocs/topics)
 by [Korro](https://github.com/devcrocod/korro).
 
