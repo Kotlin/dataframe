@@ -336,7 +336,7 @@ public fun ColType.toType(): KType =
         ColType.Url -> typeOf<URL>()
         ColType.JsonArray -> typeOf<DataFrame<*>>()
         ColType.JsonObject -> typeOf<DataRow<*>>()
-        ColType.Char -> typeOf<String>() // note!
+        ColType.Char -> typeOf<Char>()
     }
 
 public fun DataFrame.Companion.readDelim(

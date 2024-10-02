@@ -242,6 +242,8 @@ internal object Parsers : GlobalParserOptions {
     }
 
     private val parsersOrder = listOf(
+        // Char
+        stringParser { it.singleOrNull() },
         // Int
         stringParser { it.toIntOrNull() },
         // Long
