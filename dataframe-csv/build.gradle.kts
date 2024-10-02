@@ -32,6 +32,8 @@ dependencies {
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
+    implementation(libs.kotlin.coroutinesCore)
+    implementation(libs.fuel) // for httpGet requests
 
     testApi(project(":core"))
     testImplementation(libs.junit)
@@ -148,4 +150,9 @@ kotlinPublications {
 
 kotlin {
     explicitApi()
+    sourceSets.all {
+        languageSettings {
+            enableLanguageFeature("ExplicitBackingFields")
+        }
+    }
 }
