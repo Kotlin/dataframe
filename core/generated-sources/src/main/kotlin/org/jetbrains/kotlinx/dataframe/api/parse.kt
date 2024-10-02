@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.typeClass
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
@@ -45,6 +46,7 @@ public data class ParserOptions(
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
+    val skipTypes: Set<KType> = emptySet(),
 ) {
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {
