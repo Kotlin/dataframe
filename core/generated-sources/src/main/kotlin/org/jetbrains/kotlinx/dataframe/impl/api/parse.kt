@@ -326,8 +326,6 @@ internal object Parsers : GlobalParserOptions {
     }
 
     private val parsersOrder = listOf(
-        // Char
-        stringParser { it.singleOrNull() },
         // Int
         stringParser<Int> { it.toIntOrNull() },
         // Long
@@ -412,6 +410,8 @@ internal object Parsers : GlobalParserOptions {
                 null
             }
         },
+        // Char
+        stringParser<Char> { it.singleOrNull() },
         // No parser found, return as String
         // must be last in the list of parsers to return original unparsed string
         stringParser<String> { it },
@@ -485,7 +485,9 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     var nullStringParsed: Boolean = false
     val nulls = options?.nullStrings ?: Parsers.nulls
 
+    val parserTypesToSkip = options?.skipTypes ?: emptySet()
     val parsersToCheck = Parsers.parsersMap
+        .filterNot { it.key in parserTypesToSkip }
     val parserTypesToCheck = parsersToCheck.keys
 
     var correctParser: StringParser<*>? = null
