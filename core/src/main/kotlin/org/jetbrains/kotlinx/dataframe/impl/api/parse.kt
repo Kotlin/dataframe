@@ -326,8 +326,6 @@ internal object Parsers : GlobalParserOptions {
     }
 
     private val parsersOrder = listOf(
-        // Char
-        stringParser<Char> { it.singleOrNull() },
         // Int
         stringParser<Int> { it.toIntOrNull() },
         // Long
@@ -412,6 +410,8 @@ internal object Parsers : GlobalParserOptions {
                 null
             }
         },
+        // Char
+        stringParser<Char> { it.singleOrNull() },
         // No parser found, return as String
         // must be last in the list of parsers to return original unparsed string
         stringParser<String> { it },
