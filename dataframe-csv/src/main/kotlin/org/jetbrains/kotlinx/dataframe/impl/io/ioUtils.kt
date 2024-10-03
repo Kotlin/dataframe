@@ -2,10 +2,8 @@ package org.jetbrains.kotlinx.dataframe.impl.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import org.jetbrains.kotlinx.dataframe.io.readJsonStr
+import sun.net.www.protocol.file.FileURLConnection
 import java.io.File
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -18,7 +16,10 @@ internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extens
 internal fun isCompressed(url: URL) = isCompressed(url.path)
 
 internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFrame {
-    val connection = url.openConnection() as HttpURLConnection
+    val connection = url.openConnection()
+    if (connection !is HttpURLConnection) {
+        return connection.inputStream.use(body)
+    }
     try {
         connection.connect()
         val code = connection.responseCode
@@ -35,10 +36,4 @@ internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFr
     } finally {
         connection.disconnect()
     }
-}
-
-public fun main() {
-    catchHttpResponse(URL("https://api.binance.com/api/v3/klines?symbol=BTCUSDT")) {
-        DataFrame.readJson(it)
-    }.print()
 }
