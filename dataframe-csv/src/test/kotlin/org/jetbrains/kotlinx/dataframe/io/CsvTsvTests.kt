@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -23,11 +24,13 @@ import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
+@OptIn(ExperimentalCsv::class)
 @Suppress("ktlint:standard:argument-list-wrapping")
-class CsvTests {
+class CsvTsvTests {
 
     @Test
     fun readNulls() {
+        @Language("CSV")
         val src =
             """
             first,second
@@ -65,7 +68,7 @@ class CsvTests {
         df.rowsCount() shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
@@ -84,7 +87,7 @@ class CsvTests {
         df.rowsCount() shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["number"].type() shouldBe typeOf<Double>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
@@ -179,6 +182,7 @@ class CsvTests {
 
     @Test
     fun `if record has fewer columns than header then pad it with nulls`() {
+        @Language("CSV")
         val csvContent =
             """
             col1,col2,col3
@@ -204,8 +208,8 @@ class CsvTests {
             2, 1, 3,
         )
         val grouped = df.groupBy("a").into("g")
-        val str = grouped.toCsvStr()
-        val res = DataFrame.readCsvStr(str)
+        val str = grouped.toCsvStr(escapeChar = null)
+        val res = DataFrame.readCsvStr(str, quote = '"')
         res shouldBe grouped
     }
 
@@ -263,6 +267,7 @@ class CsvTests {
 
     @Test
     fun `readCsvStr delimiter`() {
+        @Language("TSV")
         val tsv =
             """
             a	b	c
@@ -305,8 +310,21 @@ class CsvTests {
             columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
         }
 
-        val emptyTsvStr = DataFrame.readTSV(File.createTempFile("empty", "tsv"))
+        val emptyTsvStr = DataFrame.readTsv(File.createTempFile("empty", "tsv"))
         emptyTsvStr shouldBe DataFrame.empty()
+    }
+
+    @Test
+    fun `read Csv with comments`() {
+        @Language("CSV")
+        val csv =
+            """
+            # This is a comment
+            a,b,c
+            1,2,3
+            """.trimIndent()
+        val df = DataFrame.readCsvStr(csv)
+        df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
 
     companion object {
@@ -318,6 +336,6 @@ class CsvTests {
     }
 }
 
-fun testResource(resourcePath: String): URL = CsvTests::class.java.classLoader.getResource(resourcePath)!!
+fun testResource(resourcePath: String): URL = CsvTsvTests::class.java.classLoader.getResource(resourcePath)!!
 
 fun testCsv(csvName: String) = testResource("$csvName.csv")

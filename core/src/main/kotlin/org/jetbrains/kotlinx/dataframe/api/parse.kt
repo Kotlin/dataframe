@@ -48,6 +48,14 @@ public data class ParserOptions(
     val nullStrings: Set<String>? = null,
     val skipTypes: Set<KType> = emptySet(),
 ) {
+    public companion object {
+        /**
+         * Small helper function to get all types except the ones specified.
+         * Useful in combination with the [skipTypes] parameter.
+         */
+        public fun allTypesExcept(vararg types: KType): Set<KType> = Parsers.parsersMap.keys - types.toSet()
+    }
+
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {
             dateTimeFormatter != null -> dateTimeFormatter

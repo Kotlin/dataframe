@@ -8,9 +8,9 @@ import java.io.File
 import java.io.FileWriter
 
 @ExperimentalCsv
-public fun AnyFrame.writeCsv(
+public fun AnyFrame.writeTsv(
     file: File,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     includeHeader: Boolean = CsvTsvParams.INCLUDE_HEADER,
     quote: Char? = CsvTsvParams.QUOTE,
     quoteMode: QuoteMode = CsvTsvParams.QUOTE_MODE,
@@ -33,9 +33,9 @@ public fun AnyFrame.writeCsv(
     )
 
 @ExperimentalCsv
-public fun AnyFrame.writeCsv(
+public fun AnyFrame.writeTsv(
     path: String,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     includeHeader: Boolean = CsvTsvParams.INCLUDE_HEADER,
     quote: Char? = CsvTsvParams.QUOTE,
     quoteMode: QuoteMode = CsvTsvParams.QUOTE_MODE,
@@ -59,9 +59,9 @@ public fun AnyFrame.writeCsv(
 
 // only one with additionalCsvFormat
 @ExperimentalCsv
-public fun AnyFrame.writeCsv(
+public fun AnyFrame.writeTsv(
     writer: Appendable,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     includeHeader: Boolean = CsvTsvParams.INCLUDE_HEADER,
     quote: Char? = CsvTsvParams.QUOTE,
     quoteMode: QuoteMode = CsvTsvParams.QUOTE_MODE,
@@ -86,9 +86,9 @@ public fun AnyFrame.writeCsv(
     )
 
 @ExperimentalCsv
-public fun AnyFrame.toCsvStr(
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+public fun AnyFrame.toTsvStr(
     includeHeader: Boolean = CsvTsvParams.INCLUDE_HEADER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     quote: Char? = CsvTsvParams.QUOTE,
     quoteMode: QuoteMode = CsvTsvParams.QUOTE_MODE,
     escapeChar: Char? = CsvTsvParams.ESCAPE_CHAR,
@@ -98,7 +98,7 @@ public fun AnyFrame.toCsvStr(
 ): String =
     buildString {
         writeCsvOrTsvImpl(
-            df = this@toCsvStr,
+            df = this@toTsvStr,
             writer = this,
             delimiter = delimiter,
             includeHeader = includeHeader,

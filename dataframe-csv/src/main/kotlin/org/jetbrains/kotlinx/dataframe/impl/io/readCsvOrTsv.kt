@@ -20,10 +20,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
+import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.tryParse
@@ -31,7 +31,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
-import org.jetbrains.kotlinx.dataframe.io.toType
+import org.jetbrains.kotlinx.dataframe.io.toKType
 import java.io.InputStream
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KType
@@ -40,46 +40,55 @@ import kotlin.reflect.typeOf
 
 /**
  *
- * @include [CsvParams.INPUT_STREAM]
- * @include [CsvParams.DELIMITER]
- * @include [CsvParams.HEADER]
- * @include [CsvParams.IS_COMPRESSED]
- * @include [CsvParams.COL_TYPES]
- * @include [CsvParams.SKIP_LINES]
- * @include [CsvParams.READ_LINES]
- * @include [CsvParams.PARSER_OPTIONS]
- * @include [CsvParams.IGNORE_EMPTY_LINES]
- * @include [CsvParams.ALLOW_MISSING_COLUMNS]
- * @include [CsvParams.IGNORE_EXCESS_COLUMNS]
- * @include [CsvParams.QUOTE]
- * @include [CsvParams.IGNORE_SURROUNDING_SPACES]
- * @include [CsvParams.TRIM_INSIDE_QUOTED]
- * @include [CsvParams.PARSE_PARALLEL]
- * @include [CsvParams.ADDITIONAL_CSV_SPECS]
+ * @include [CsvTsvParams.INPUT_STREAM]
+ * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
+ * @include [CsvTsvParams.HEADER]
+ * @include [CsvTsvParams.IS_COMPRESSED]
+ * @include [CsvTsvParams.COL_TYPES]
+ * @include [CsvTsvParams.SKIP_LINES]
+ * @include [CsvTsvParams.READ_LINES]
+ * @include [CsvTsvParams.PARSER_OPTIONS]
+ * @include [CsvTsvParams.IGNORE_EMPTY_LINES]
+ * @include [CsvTsvParams.ALLOW_MISSING_COLUMNS]
+ * @include [CsvTsvParams.IGNORE_EXCESS_COLUMNS]
+ * @include [CsvTsvParams.QUOTE]
+ * @include [CsvTsvParams.IGNORE_SURROUNDING_SPACES]
+ * @include [CsvTsvParams.TRIM_INSIDE_QUOTED]
+ * @include [CsvTsvParams.PARSE_PARALLEL]
+ * @include [CsvTsvParams.ADDITIONAL_CSV_SPECS]
  */
-internal fun readCsvImpl(
+internal fun readCsvOrTsvImpl(
     inputStream: InputStream,
-    delimiter: Char = CsvParams.DELIMITER,
-    header: List<String> = CsvParams.HEADER,
-    isCompressed: Boolean = CsvParams.IS_COMPRESSED,
-    colTypes: Map<String, ColType> = CsvParams.COL_TYPES,
-    skipLines: Long = CsvParams.SKIP_LINES,
-    readLines: Long? = CsvParams.READ_LINES,
-    parserOptions: ParserOptions = CsvParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = CsvParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = CsvParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = CsvParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = CsvParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = CsvParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = CsvParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = CsvParams.PARSE_PARALLEL,
-    additionalCsvSpecs: CsvSpecs = CsvParams.ADDITIONAL_CSV_SPECS,
+    delimiter: Char,
+    header: List<String> = CsvTsvParams.HEADER,
+    isCompressed: Boolean = CsvTsvParams.IS_COMPRESSED,
+    colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
+    skipLines: Long = CsvTsvParams.SKIP_LINES,
+    readLines: Long? = CsvTsvParams.READ_LINES,
+    parserOptions: ParserOptions = CsvTsvParams.PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = CsvTsvParams.IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = CsvTsvParams.ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = CsvTsvParams.IGNORE_EXCESS_COLUMNS,
+    quote: Char = CsvTsvParams.QUOTE,
+    ignoreSurroundingSpaces: Boolean = CsvTsvParams.IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
+    additionalCsvSpecs: CsvSpecs = CsvTsvParams.ADDITIONAL_CSV_SPECS,
 ): DataFrame<*> {
+    // edit the parser options to skip types that are already parsed by deephaven
+    // and add the correct nullStrings
+    @Suppress("NAME_SHADOWING")
+    val parserOptions = parserOptions.copy(
+        skipTypes = parserOptions.skipTypes + typesDeephavenAlreadyParses,
+        nullStrings = (parserOptions.nullStrings ?: emptySet()) + defaultNullStrings,
+    )
+
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {
         from(additionalCsvSpecs)
         parsers(Parsers.DEFAULT) // BOOLEAN, INT, LONG, DOUBLE, DATETIME, CHAR, STRING
-        nullValueLiterals(parserOptions.nullStrings ?: defaultNullStrings)
+        customDoubleParser(DoubleParser)
+        nullValueLiterals(parserOptions.nullStrings!!)
         headerLegalizer(::legalizeHeader)
         numRows(readLines ?: Long.MAX_VALUE)
         ignoreEmptyLines(ignoreEmptyLines)
@@ -100,16 +109,18 @@ internal fun readCsvImpl(
         colTypes(colTypes, useDeepHavenLocalDateTime) // this function must be last, so the return value is used
     }.build()
 
-    // edit the parser options to skip types that are already parsed by deephaven
-    @Suppress("NAME_SHADOWING")
-    val parserOptions = parserOptions.copy(
-        skipTypes = parserOptions.skipTypes + typesDeephavenAlreadyParses,
-    )
+    val adjustedInputStream = inputStream
+        .let { if (isCompressed) GZIPInputStream(it) else it }
+        .let { BOMInputStream.builder().setInputStream(it).get() }
+
+    if (adjustedInputStream.available() <= 0) {
+        return DataFrame.empty()
+    }
 
     // read the csv
     val csvReaderResult = CsvReader.read(
         csvSpecs,
-        if (isCompressed) GZIPInputStream(inputStream) else inputStream,
+        adjustedInputStream,
         ListSink.SINK_FACTORY,
     )
 
@@ -164,7 +175,11 @@ private fun CsvReader.ResultColumn.toDataColumn(
     return if (desiredColType == null) {
         column.tryParse(parserOptions)
     } else {
-        parseColumnWithType(column, desiredColType.toType(), parserOptions)
+        column.tryParse(
+            parserOptions.copy(
+                skipTypes = ParserOptions.allTypesExcept(desiredColType.toKType()),
+            ),
+        )
     }
 }
 
@@ -249,22 +264,6 @@ private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
 
 /**
  * TODO
- * Small hacky reflection-based solution to get the internal
- * [org.jetbrains.kotlinx.dataframe.impl.api.Parsers.nulls]
- */
-internal val defaultNullStrings: Set<String>
-    get() {
-        val clazz = Class.forName("org.jetbrains.kotlinx.dataframe.impl.api.Parsers")
-        val objectInstanceField = clazz.getDeclaredField("INSTANCE")
-        objectInstanceField.isAccessible = true
-        val parsersObjectInstance = objectInstanceField.get(null)
-        val nullsGetter = clazz.getMethod("getNulls")
-        val nulls = nullsGetter.invoke(parsersObjectInstance) as Set<String>
-        return nulls
-    }
-
-/**
- * TODO
  * Hacky reflection-based solution to call internal functions:
  * ```kt
  * val parser = Parsers[type]!!
@@ -309,13 +308,19 @@ internal fun ColType.toCsvParser(useDeepHavenLocalDateTime: Boolean): Parser<*> 
 /**
  * Types that Deephaven already parses, so we can skip them.
  */
-private val typesDeephavenAlreadyParses =
+internal val typesDeephavenAlreadyParses =
     setOf(
         typeOf<Int>(),
         typeOf<Long>(),
         typeOf<Double>(),
         typeOf<Char>(),
         typeOf<Boolean>(),
-        typeOf<LocalDateTime>(),
-        typeOf<java.time.LocalDateTime>(),
+//        typeOf<LocalDateTime>(), it cannot recognize all formats
+//        typeOf<java.time.LocalDateTime>(),
     )
+
+/**
+ * Default strings that are considered null.
+ */
+internal val defaultNullStrings: Set<String> =
+    setOf("", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil")

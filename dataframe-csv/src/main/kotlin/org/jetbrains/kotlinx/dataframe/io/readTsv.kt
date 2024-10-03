@@ -12,16 +12,10 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 
-/**
- * You can add a default column type to the `colTypes` parameter
- * by setting the key to [DEFAULT_COL_TYPE] and the value to the desired type.
- */
-public const val DEFAULT_COL_TYPE: String = ".default"
-
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readTsv(
     file: File,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     header: List<String> = CsvTsvParams.HEADER,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
     skipLines: Long = CsvTsvParams.SKIP_LINES,
@@ -56,9 +50,9 @@ public fun DataFrame.Companion.readCsv(
     }
 
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readTsv(
     url: URL,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     header: List<String> = CsvTsvParams.HEADER,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
     skipLines: Long = CsvTsvParams.SKIP_LINES,
@@ -93,9 +87,9 @@ public fun DataFrame.Companion.readCsv(
     }
 
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readTsv(
     fileOrUrl: String,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     header: List<String> = CsvTsvParams.HEADER,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
     skipLines: Long = CsvTsvParams.SKIP_LINES,
@@ -131,9 +125,9 @@ public fun DataFrame.Companion.readCsv(
 
 // the only one with additionalCsvSpecs
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readTsv(
     inputStream: InputStream,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     header: List<String> = CsvTsvParams.HEADER,
     isCompressed: Boolean = CsvTsvParams.IS_COMPRESSED,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
@@ -169,9 +163,9 @@ public fun DataFrame.Companion.readCsv(
     )
 
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsvStr(
+public fun DataFrame.Companion.readTsvStr(
     text: String,
-    delimiter: Char = CsvTsvParams.CSV_DELIMITER,
+    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     header: List<String> = CsvTsvParams.HEADER,
     isCompressed: Boolean = CsvTsvParams.IS_COMPRESSED,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,

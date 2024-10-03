@@ -320,7 +320,7 @@ public enum class ColType {
     Char,
 }
 
-public fun ColType.toType(): KType =
+public fun ColType.toKType(): KType =
     when (this) {
         ColType.Int -> typeOf<Int>()
         ColType.Long -> typeOf<Long>()
@@ -395,7 +395,7 @@ public fun DataFrame.Companion.readDelim(
             null -> column.tryParse(parserOptions)
 
             else -> {
-                val parser = Parsers[colType.toType()]!!
+                val parser = Parsers[colType.toKType()]!!
                 column.parse(parser, parserOptions)
             }
         }

@@ -28,7 +28,11 @@ repositories {
 dependencies {
     implementation(project(":core"))
 
+    // for csv reading
     implementation(libs.deephavenCsv)
+    // for csv writing
+    implementation(libs.commonsCsv)
+    implementation(libs.commonsIo)
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
