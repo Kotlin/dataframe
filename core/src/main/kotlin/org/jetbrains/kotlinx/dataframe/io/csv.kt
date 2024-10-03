@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -10,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
@@ -22,6 +24,8 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
+import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedInputStream
 import java.io.BufferedReader
@@ -38,9 +42,10 @@ import java.math.BigDecimal
 import java.net.URL
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
-import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
@@ -100,6 +105,11 @@ public fun DataFrame.Companion.readDelimStr(
         readDelim(it, format, colTypes, skipLines, readLines)
     }
 
+@Deprecated(
+    message = DF_READ_NO_CSV,
+    replaceWith = ReplaceWith(DF_READ_NO_CSV_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
     delimiter: Char,
@@ -289,6 +299,9 @@ public fun DataFrame.Companion.readDelim(
     )
 }
 
+/**
+ * Column types that DataFrame can [parse] from a [String].
+ */
 public enum class ColType {
     Int,
     Long,
@@ -299,19 +312,31 @@ public enum class ColType {
     LocalTime,
     LocalDateTime,
     String,
+    Instant,
+    Duration,
+    Url,
+    JsonArray,
+    JsonObject,
+    Char,
 }
 
-public fun ColType.toType(): KClass<out Any> =
+public fun ColType.toType(): KType =
     when (this) {
-        ColType.Int -> Int::class
-        ColType.Long -> Long::class
-        ColType.Double -> Double::class
-        ColType.Boolean -> Boolean::class
-        ColType.BigDecimal -> BigDecimal::class
-        ColType.LocalDate -> LocalDate::class
-        ColType.LocalTime -> LocalTime::class
-        ColType.LocalDateTime -> LocalDateTime::class
-        ColType.String -> String::class
+        ColType.Int -> typeOf<Int>()
+        ColType.Long -> typeOf<Long>()
+        ColType.Double -> typeOf<Double>()
+        ColType.Boolean -> typeOf<Boolean>()
+        ColType.BigDecimal -> typeOf<BigDecimal>()
+        ColType.LocalDate -> typeOf<LocalDate>()
+        ColType.LocalTime -> typeOf<LocalTime>()
+        ColType.LocalDateTime -> typeOf<LocalDateTime>()
+        ColType.String -> typeOf<String>()
+        ColType.Instant -> typeOf<Instant>()
+        ColType.Duration -> typeOf<Duration>()
+        ColType.Url -> typeOf<URL>()
+        ColType.JsonArray -> typeOf<DataFrame<*>>()
+        ColType.JsonObject -> typeOf<DataRow<*>>()
+        ColType.Char -> typeOf<Char>()
     }
 
 public fun DataFrame.Companion.readDelim(
