@@ -7,15 +7,13 @@ package org.jetbrains.kotlinx.dataframe.util
  * Level.ERROR -> Remove
  */
 
-// region WARNING in 0.14, ERROR in 0.15
-
-private const val MESSAGE_0_15 = "Will be removed in 0.15."
-
-// endregion
-
 // region WARNING in 0.15, ERROR in 0.16
 
 private const val MESSAGE_0_16 = "Will be removed in 0.16."
+
+internal const val DF_READ_NO_CSV = "This function is deprecated and should be replaced with `readCSV`. $MESSAGE_0_16"
+internal const val DF_READ_NO_CSV_REPLACE =
+    "this.readCSV(fileOrUrl, delimiter, header, colTypes, skipLines, readLines, duplicate, charset)"
 
 // endregion
 

@@ -55,12 +55,14 @@ dependencies {
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
     api(project(":dataframe-jdbc"))
+    api(project(":dataframe-csv"))
 
     kover(project(":core"))
     kover(project(":dataframe-arrow"))
     kover(project(":dataframe-excel"))
     kover(project(":dataframe-openapi"))
     kover(project(":dataframe-jdbc"))
+    kover(project(":dataframe-csv"))
     kover(project(":plugins:kotlin-dataframe"))
 }
 
