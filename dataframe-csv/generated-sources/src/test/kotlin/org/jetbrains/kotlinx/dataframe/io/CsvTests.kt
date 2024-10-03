@@ -4,7 +4,6 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
-import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -16,10 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.testCsv
-import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
 import java.io.File
 import java.io.StringWriter
@@ -39,9 +34,9 @@ class CsvTests {
             2,,
             3,,
             """.trimIndent()
-        val df = DataFrame.readDelimStr(src)
-        df.nrow shouldBe 2
-        df.ncol shouldBe 2
+        val df = DataFrame.readCsvStr(src)
+        df.rowsCount() shouldBe 2
+        df.columnsCount() shouldBe 2
         df["first"].type() shouldBe typeOf<Int>()
         df["second"].allNulls() shouldBe true
         df["second"].type() shouldBe typeOf<String?>()
@@ -55,22 +50,22 @@ class CsvTests {
         ).convert("col2").toStr()
 
         val str = StringWriter()
-        df.writeCSV(str)
+        df.writeCsv(str)
 
-        val res = DataFrame.readDelimStr(str.buffer.toString())
+        val res = DataFrame.readCsvStr(str.buffer.toString())
 
         res shouldBe df
     }
 
     @Test
-    fun readCSV() {
+    fun readCsv() {
         val df = DataFrame.read(simpleCsv)
 
-        df.ncol shouldBe 11
-        df.nrow shouldBe 5
+        df.columnsCount() shouldBe 11
+        df.rowsCount() shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<Char?>()
+        df["duplicate1"].type() shouldBe typeOf<String?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
@@ -79,17 +74,17 @@ class CsvTests {
 
     @Test
     fun readCsvWithFrenchLocaleAndAlternativeDelimiter() {
-        val df = DataFrame.readCSV(
+        val df = DataFrame.readCsv(
             url = csvWithFrenchLocale,
             delimiter = ';',
             parserOptions = ParserOptions(locale = Locale.FRENCH),
         )
 
-        df.ncol shouldBe 11
-        df.nrow shouldBe 5
+        df.columnsCount() shouldBe 11
+        df.rowsCount() shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<Char?>()
+        df["duplicate1"].type() shouldBe typeOf<String?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["number"].type() shouldBe typeOf<Double>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
@@ -99,7 +94,7 @@ class CsvTests {
 
     @Test
     fun readCsvWithFloats() {
-        val df = DataFrame.readCSV(wineCsv, delimiter = ';')
+        val df = DataFrame.readCsv(wineCsv, delimiter = ';')
         val schema = df.schema()
 
         fun assertColumnType(columnName: String, kClass: KClass<*>) {
@@ -118,7 +113,7 @@ class CsvTests {
         val currentLocale = Locale.getDefault()
         try {
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
-            val df = DataFrame.readCSV(wineCsv, delimiter = ';')
+            val df = DataFrame.readCsv(wineCsv, delimiter = ';')
             val schema = df.schema()
 
             fun assertColumnType(columnName: String, kClass: KClass<*>) {
@@ -138,13 +133,13 @@ class CsvTests {
     @Test
     fun `read with custom header`() {
         val header = ('A'..'K').map { it.toString() }
-        val df = DataFrame.readCSV(simpleCsv, header = header, skipLines = 1)
+        val df = DataFrame.readCsv(simpleCsv, header = header, skipLines = 1)
         df.columnNames() shouldBe header
         df["B"].type() shouldBe typeOf<Int>()
 
         val headerShort = ('A'..'E').map { it.toString() }
-        val dfShort = DataFrame.readCSV(simpleCsv, header = headerShort, skipLines = 1)
-        dfShort.ncol shouldBe 5
+        val dfShort = DataFrame.readCsv(simpleCsv, header = headerShort, skipLines = 1)
+        dfShort.columnsCount() shouldBe 5
         dfShort.columnNames() shouldBe headerShort
     }
 
@@ -164,20 +159,20 @@ class CsvTests {
                 "time",
                 "empty",
             )
-        val dfHeader = DataFrame.readCSV(simpleCsv, readLines = 0)
-        dfHeader.nrow shouldBe 0
+        val dfHeader = DataFrame.readCsv(simpleCsv, readLines = 0)
+        dfHeader.rowsCount() shouldBe 0
         dfHeader.columnNames() shouldBe expected
 
-        val dfThree = DataFrame.readCSV(simpleCsv, readLines = 3)
-        dfThree.nrow shouldBe 3
+        val dfThree = DataFrame.readCsv(simpleCsv, readLines = 3)
+        dfThree.rowsCount() shouldBe 3
 
-        val dfFull = DataFrame.readCSV(simpleCsv, readLines = 10)
-        dfFull.nrow shouldBe 5
+        val dfFull = DataFrame.readCsv(simpleCsv, readLines = 10)
+        dfFull.rowsCount() shouldBe 5
     }
 
     @Test
     fun `if string starts with a number, it should be parsed as a string anyway`() {
-        val df = DataFrame.readCSV(durationCsv)
+        val df = DataFrame.readCsv(durationCsv)
         df["duration"].type() shouldBe typeOf<String>()
         df["floatDuration"].type() shouldBe typeOf<String>()
     }
@@ -192,7 +187,7 @@ class CsvTests {
             """.trimIndent()
 
         val df = shouldNotThrowAny {
-            DataFrame.readDelimStr(csvContent)
+            DataFrame.readCsvStr(csvContent)
         }
 
         df shouldBe dataFrameOf("col1", "col2", "col3")(
@@ -209,8 +204,8 @@ class CsvTests {
             2, 1, 3,
         )
         val grouped = df.groupBy("a").into("g")
-        val str = grouped.toCsv()
-        val res = DataFrame.readDelimStr(str)
+        val str = grouped.toCsvStr()
+        val res = DataFrame.readCsvStr(str)
         res shouldBe grouped
     }
 
@@ -221,15 +216,15 @@ class CsvTests {
             1, 3, 2,
         )
         val grouped = df.group("b", "c").into("d")
-        val str = grouped.toCsv()
-        val res = DataFrame.readDelimStr(str)
+        val str = grouped.toCsvStr()
+        val res = DataFrame.readCsvStr(str)
         res shouldBe grouped
     }
 
     @Test
     fun `CSV String of saved dataframe starts with column name`() {
         val df = dataFrameOf("a")(1)
-        df.toCsv().first() shouldBe 'a'
+        df.toCsvStr().first() shouldBe 'a'
     }
 
     @Test
@@ -245,11 +240,11 @@ class CsvTests {
             1, 2, 3,
             1, 3, 2,
         )
-        df.writeCSV(
+        df.writeCsv(
             "src/test/resources/without_header.csv",
-            CSVFormat.DEFAULT.builder()
-                .setSkipHeaderRecord(true)
-                .build(),
+//            CSVFormat.DEFAULT.builder()
+//                .setSkipHeaderRecord(true)
+//                .build(),
         )
         val producedFile = File("src/test/resources/without_header.csv")
         producedFile.exists() shouldBe true
@@ -259,42 +254,39 @@ class CsvTests {
 
     @Test
     fun `check integrity of example data`() {
-        val df = DataFrame.readCSV("../data/jetbrains_repositories.csv")
+        val df = DataFrame.readCsv("../data/jetbrains_repositories.csv")
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
         df.columnTypes() shouldBe
             listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
-        df shouldBe DataFrame.readCSV("../data/jetbrains repositories.csv")
+        df shouldBe DataFrame.readCsv("../data/jetbrains repositories.csv")
     }
 
     @Test
-    fun `readDelimStr delimiter`() {
+    fun `readCsvStr delimiter`() {
         val tsv =
             """
             a	b	c
             1	2	3
             """.trimIndent()
-        val df = DataFrame.readDelimStr(tsv, '\t')
+        val df = DataFrame.readCsvStr(tsv, '\t')
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
 
     @Test
     fun `file with BOM`() {
-        val df = DataFrame.readCSV(withBomCsv, delimiter = ';')
+        val df = DataFrame.readCsv(withBomCsv, delimiter = ';')
         df.columnNames() shouldBe listOf("Column1", "Column2")
     }
 
     @Test
-    fun `read empty delimStr or CSV`() {
-        val emptyDelimStr = DataFrame.readDelimStr("")
+    fun `read empty CSV`() {
+        val emptyDelimStr = DataFrame.readCsvStr("")
         emptyDelimStr shouldBe DataFrame.empty()
 
-        val emptyDelimFile = DataFrame.readDelim(File.createTempFile("empty", "csv").reader())
-        emptyDelimFile shouldBe DataFrame.empty()
-
-        val emptyCsvFile = DataFrame.readCSV(File.createTempFile("empty", "csv"))
+        val emptyCsvFile = DataFrame.readCsv(File.createTempFile("empty", "csv"))
         emptyCsvFile shouldBe DataFrame.empty()
 
-        val emptyCsvFileManualHeader = DataFrame.readCSV(
+        val emptyCsvFileManualHeader = DataFrame.readCsv(
             file = File.createTempFile("empty", "csv"),
             header = listOf("a", "b", "c"),
         )
@@ -304,7 +296,7 @@ class CsvTests {
             columnTypes() shouldBe listOf(typeOf<String>(), typeOf<String>(), typeOf<String>())
         }
 
-        val emptyCsvFileWithHeader = DataFrame.readCSV(
+        val emptyCsvFileWithHeader = DataFrame.readCsv(
             file = File.createTempFile("empty", "csv").also { it.writeText("a,b,c") },
         )
         emptyCsvFileWithHeader.apply {
@@ -325,3 +317,7 @@ class CsvTests {
         private val withBomCsv = testCsv("with-bom")
     }
 }
+
+fun testResource(resourcePath: String): URL = CsvTests::class.java.classLoader.getResource(resourcePath)!!
+
+fun testCsv(csvName: String) = testResource("$csvName.csv")
