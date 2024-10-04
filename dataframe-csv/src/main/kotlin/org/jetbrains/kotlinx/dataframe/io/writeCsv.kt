@@ -17,7 +17,7 @@ public fun AnyFrame.writeCsv(
     escapeChar: Char? = CsvTsvParams.ESCAPE_CHAR,
     commentChar: Char? = CsvTsvParams.COMMENT_CHAR,
     headerComments: List<String> = CsvTsvParams.HEADER_COMMENTS,
-    recordSeparator: Char = CsvTsvParams.RECORD_SEPARATOR,
+    recordSeparator: String = CsvTsvParams.RECORD_SEPARATOR,
 ): Unit =
     writeCsvOrTsvImpl(
         df = this,
@@ -42,7 +42,7 @@ public fun AnyFrame.writeCsv(
     escapeChar: Char? = CsvTsvParams.ESCAPE_CHAR,
     commentChar: Char? = CsvTsvParams.COMMENT_CHAR,
     headerComments: List<String> = CsvTsvParams.HEADER_COMMENTS,
-    recordSeparator: Char = CsvTsvParams.RECORD_SEPARATOR,
+    recordSeparator: String = CsvTsvParams.RECORD_SEPARATOR,
 ): Unit =
     writeCsvOrTsvImpl(
         df = this,
@@ -68,7 +68,7 @@ public fun AnyFrame.writeCsv(
     escapeChar: Char? = CsvTsvParams.ESCAPE_CHAR,
     commentChar: Char? = CsvTsvParams.COMMENT_CHAR,
     headerComments: List<String> = CsvTsvParams.HEADER_COMMENTS,
-    recordSeparator: Char = CsvTsvParams.RECORD_SEPARATOR,
+    recordSeparator: String = CsvTsvParams.RECORD_SEPARATOR,
     additionalCsvFormat: CSVFormat = CsvTsvParams.ADDITIONAL_CSV_FORMAT,
 ): Unit =
     writeCsvOrTsvImpl(
@@ -94,7 +94,7 @@ public fun AnyFrame.toCsvStr(
     escapeChar: Char? = CsvTsvParams.ESCAPE_CHAR,
     commentChar: Char? = CsvTsvParams.COMMENT_CHAR,
     headerComments: List<String> = CsvTsvParams.HEADER_COMMENTS,
-    recordSeparator: Char = CsvTsvParams.RECORD_SEPARATOR,
+    recordSeparator: String = CsvTsvParams.RECORD_SEPARATOR,
 ): String =
     buildString {
         writeCsvOrTsvImpl(

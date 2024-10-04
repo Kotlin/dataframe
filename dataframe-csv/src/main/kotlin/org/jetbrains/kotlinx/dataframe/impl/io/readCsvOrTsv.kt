@@ -23,7 +23,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -34,11 +33,11 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.ColType
+import org.jetbrains.kotlinx.dataframe.io.CsvCompression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
 import java.io.InputStream
 import java.math.BigDecimal
 import java.net.URL
-import java.util.zip.GZIPInputStream
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -49,7 +48,7 @@ import kotlin.time.Duration
  * @include [CsvTsvParams.INPUT_STREAM]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
  * @include [CsvTsvParams.HEADER]
- * @include [CsvTsvParams.IS_COMPRESSED]
+ * @include [CsvTsvParams.COMPRESSION]
  * @include [CsvTsvParams.COL_TYPES]
  * @include [CsvTsvParams.SKIP_LINES]
  * @include [CsvTsvParams.READ_LINES]
@@ -67,7 +66,7 @@ internal fun readCsvOrTsvImpl(
     inputStream: InputStream,
     delimiter: Char,
     header: List<String> = CsvTsvParams.HEADER,
-    isCompressed: Boolean = CsvTsvParams.IS_COMPRESSED,
+    compression: CsvCompression<*> = CsvTsvParams.COMPRESSION,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
     skipLines: Long = CsvTsvParams.SKIP_LINES,
     readLines: Long? = CsvTsvParams.READ_LINES,
@@ -115,32 +114,30 @@ internal fun readCsvOrTsvImpl(
         colTypes(colTypes, useDeepHavenLocalDateTime) // this function must be last, so the return value is used
     }.build()
 
-    val adjustedInputStream = inputStream
-        .let { if (isCompressed) GZIPInputStream(it) else it }
-        .let { BOMInputStream.builder().setInputStream(it).get() }
-
-    if (adjustedInputStream.available() <= 0) {
-        return if (header.isEmpty()) {
-            DataFrame.empty()
-        } else {
-            dataFrameOf(
-                header.map {
-                    DataColumn.createValueColumn(
-                        name = it,
-                        values = emptyList<String>(),
-                        type = typeOf<String>(),
-                    )
-                },
-            )
+    val csvReaderResult = inputStream.useSafely(compression) { safeInputStream ->
+        if (safeInputStream.available() <= 0) {
+            return if (header.isEmpty()) {
+                DataFrame.empty()
+            } else {
+                dataFrameOf(
+                    header.map {
+                        DataColumn.createValueColumn(
+                            name = it,
+                            values = emptyList<String>(),
+                            type = typeOf<String>(),
+                        )
+                    },
+                )
+            }
         }
-    }
 
-    // read the csv
-    val csvReaderResult = CsvReader.read(
-        csvSpecs,
-        adjustedInputStream,
-        ListSink.SINK_FACTORY,
-    )
+        // read the csv
+        CsvReader.read(
+            csvSpecs,
+            safeInputStream,
+            ListSink.SINK_FACTORY,
+        )
+    }
 
     val defaultColType = colTypes[DEFAULT_COL_TYPE]
 
