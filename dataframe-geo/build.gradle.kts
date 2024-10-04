@@ -51,6 +51,15 @@ tasks.withType<KotlinCompile>().configureEach {
     (this as BaseKotlinCompile).friendPaths.from(jarPath)
 }
 
+kotlinPublications {
+    publication {
+        publicationName = "dataframeGeo"
+        artifactId = "dataframe-geo"
+        description = "GeoDataFrame API"
+        packageName = artifactId
+    }
+}
+
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.IntegrationGeo")
 }
