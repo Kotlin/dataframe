@@ -325,7 +325,7 @@ internal object Parsers : GlobalParserOptions {
         parser
     }
 
-    private val parsersOrder = listOf(
+    internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
         // Long
@@ -417,7 +417,7 @@ internal object Parsers : GlobalParserOptions {
         stringParser<String> { it },
     )
 
-    internal val parsersMap = parsersOrder.associateBy { it.type }
+    private val parsersMap = parsersOrder.associateBy { it.type }
 
     val size: Int = parsersOrder.size
 
@@ -480,18 +480,18 @@ internal object Parsers : GlobalParserOptions {
 internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColumn<*> {
     val columnSize = size
     val parsedValues = ArrayList<Any?>(columnSize)
-    var hasNulls: Boolean = false
-    var hasNotNulls: Boolean = false
-    var nullStringParsed: Boolean = false
+    var hasNulls = false
+    var hasNotNulls = false
+    var nullStringParsed = false
     val nulls = options?.nullStrings ?: Parsers.nulls
 
     val parserTypesToSkip = options?.skipTypes ?: emptySet()
-    val parsersToCheck = Parsers.parsersMap
-        .filterNot { it.key in parserTypesToSkip }
-    val parserTypesToCheck = parsersToCheck.keys
+    val parsersToCheck = Parsers.parsersOrder
+        .filterNot { it.type in parserTypesToSkip }
+    val parserTypesToCheck = parsersToCheck.map { it.type }.toSet()
 
     var correctParser: StringParser<*>? = null
-    for ((_, parser) in parsersToCheck) {
+    for (parser in parsersToCheck) {
         if (parser.coveredBy.any { it in parserTypesToCheck }) continue
 
         val parserWithOptions = parser.applyOptions(options)
@@ -500,13 +500,13 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
         hasNotNulls = false
         nullStringParsed = false
         for (str in this) {
-            when {
-                str == null -> {
+            when (str) {
+                null -> {
                     parsedValues += null
                     hasNulls = true
                 }
 
-                str in nulls -> {
+                in nulls -> {
                     parsedValues += null
                     hasNulls = true
                     nullStringParsed = true
@@ -514,10 +514,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
 
                 else -> {
                     val trimmed = str.trim()
-                    val res = parserWithOptions(trimmed)
-                    if (res == null) {
-                        continue
-                    }
+                    val res = parserWithOptions(trimmed) ?: continue
                     parsedValues += res
                     hasNotNulls = true
                 }
