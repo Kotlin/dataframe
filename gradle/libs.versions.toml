@@ -18,6 +18,7 @@ korro = "0.1.6"
 
 kover = "0.8.3"
 deephavenCsv = "0.14.0"
+fastDoubleParser = "1.0.1"
 commonsCsv = "1.11.0"
 commonsCompress = "1.27.1"
 commonsIo = "2.16.1"
@@ -68,6 +69,7 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
 deephavenCsv = { group = "io.deephaven", name = "deephaven-csv", version.ref = "deephavenCsv" }
+fastDoubleParser = { group = "ch.randelshofer", name = "fastdoubleparser", version.ref = "fastDoubleParser" }
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
