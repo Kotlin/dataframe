@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.setNullable
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
@@ -317,7 +316,6 @@ public fun ColType.toType(): KClass<out Any> =
         ColType.String -> String::class
     }
 
-
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
     format: CSVFormat = CSVFormat.DEFAULT.builder()
@@ -423,7 +421,7 @@ public fun DataFrame.Companion.readDelimApacheSequential(
         createDataCollector<String?>(type = typeOf<String?>())
     }
 
-    if (firstRow != null)  {
+    if (firstRow != null) {
         for ((i, col) in columnCollectors.withIndex()) {
             if (firstRow.isSet(i)) {
                 val value = firstRow[i]

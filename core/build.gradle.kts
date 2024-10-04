@@ -91,6 +91,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.11")
     implementation("com.jsoizo:kotlin-csv:1.10.0")
     implementation("io.deephaven:deephaven-csv:0.14.0")
+    runtimeOnly("io.deephaven:deephaven-csv-fast-double-parser:0.14.0")
 }
 
 benchmark {

@@ -39,8 +39,8 @@ import java.io.InputStream
 import java.time.ZoneOffset
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.nanoseconds
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers as DfParsers
 import java.time.LocalDateTime as JavaLocalDateTime
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers as DfParsers
 
 public fun main() {
     val folder = File(
@@ -159,39 +159,41 @@ internal fun ColType.toParser(): Parser<*> =
         ColType.String -> Parsers.STRING
     }
 
+internal interface SinkSource<T : Any> :
+    Sink<T>,
+    Source<T>
+
 /**
  * Implementation of [Sink] and [Source] that stores data in an [ArrayList].
  *
  * If we ever store column data unboxed, this needs to be modified.
  */
-private class ListSink(val columnIndex: Int, val dataType: DataType) :
-    Sink<Any>,
-    Source<Any> {
+private class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSource<Any> {
 
     companion object {
-        val sinkFactory = SinkFactory.ofSimple(
+        val sinkFactory = SinkFactory.of(
             // byteSinkSupplier =
-            { ListSink(it, BYTE) as Sink<ByteArray> },
+            { ListSink(it, BYTE) as SinkSource<ByteArray> },
             // shortSinkSupplier =
-            { ListSink(it, SHORT) as Sink<ShortArray> },
+            { ListSink(it, SHORT) as SinkSource<ShortArray> },
             // intSinkSupplier =
-            { ListSink(it, INT) as Sink<IntArray> },
+            { ListSink(it, INT) as SinkSource<IntArray> },
             // longSinkSupplier =
-            { ListSink(it, LONG) as Sink<LongArray> },
+            { ListSink(it, LONG) as SinkSource<LongArray> },
             // floatSinkSupplier =
-            { ListSink(it, FLOAT) as Sink<FloatArray> }, // unused in Parsers.COMPLETE
+            { ListSink(it, FLOAT) as SinkSource<FloatArray> }, // unused in Parsers.COMPLETE
             // doubleSinkSupplier =
-            { ListSink(it, DOUBLE) as Sink<DoubleArray> },
+            { ListSink(it, DOUBLE) as SinkSource<DoubleArray> },
             // booleanAsByteSinkSupplier =
-            { ListSink(it, BOOLEAN_AS_BYTE) as Sink<ByteArray> },
+            { ListSink(it, BOOLEAN_AS_BYTE) as SinkSource<ByteArray> },
             // charSinkSupplier =
-            { ListSink(it, CHAR) as Sink<CharArray> },
+            { ListSink(it, CHAR) as SinkSource<CharArray> },
             // stringSinkSupplier =
-            { ListSink(it, STRING) as Sink<Array<String>> },
+            { ListSink(it, STRING) as SinkSource<Array<String>> },
             // dateTimeAsLongSinkSupplier =
-            { ListSink(it, DATETIME_AS_LONG) as Sink<LongArray> },
+            { ListSink(it, DATETIME_AS_LONG) as SinkSource<LongArray> },
             // timestampAsLongSinkSupplier =
-            { ListSink(it, TIMESTAMP_AS_LONG) as Sink<LongArray> }, // unused in Parsers.COMPLETE
+            { ListSink(it, TIMESTAMP_AS_LONG) as SinkSource<LongArray> }, // unused in Parsers.COMPLETE
         )
     }
 
