@@ -227,6 +227,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("inventNamesForLocalClasses.kt")
+  public void testInventNamesForLocalClasses() {
+    runTest("testData/box/inventNamesForLocalClasses.kt");
+  }
+
+  @Test
   @TestMetadata("join.kt")
   public void testJoin() {
     runTest("testData/box/join.kt");
@@ -440,6 +446,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("update.kt")
   public void testUpdate() {
     runTest("testData/box/update.kt");
+  }
+
+  @Test
+  @TestMetadata("wrongReceiver.kt")
+  public void testWrongReceiver() {
+    runTest("testData/box/wrongReceiver.kt");
   }
 
   @Nested
