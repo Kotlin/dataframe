@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.typeClass
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
@@ -41,10 +42,20 @@ public interface GlobalParserOptions {
 
 public data class ParserOptions(
     val locale: Locale? = null,
+    // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
+    val skipTypes: Set<KType> = emptySet(),
 ) {
+    public companion object {
+        /**
+         * Small helper function to get all types except the ones specified.
+         * Useful in combination with the [skipTypes] parameter.
+         */
+        public fun allTypesExcept(vararg types: KType): Set<KType> = Parsers.parsersMap.keys - types.toSet()
+    }
+
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {
             dateTimeFormatter != null -> dateTimeFormatter
