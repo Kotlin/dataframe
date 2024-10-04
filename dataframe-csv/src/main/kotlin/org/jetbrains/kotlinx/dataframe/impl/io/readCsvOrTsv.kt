@@ -19,10 +19,14 @@ import io.deephaven.csv.reading.CsvReader
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.parse
@@ -31,12 +35,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
-import org.jetbrains.kotlinx.dataframe.io.toKType
 import java.io.InputStream
+import java.math.BigDecimal
+import java.net.URL
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 
 /**
  *
@@ -87,7 +93,7 @@ internal fun readCsvOrTsvImpl(
     val csvSpecs = with(CsvSpecs.builder()) {
         from(additionalCsvSpecs)
         parsers(Parsers.DEFAULT) // BOOLEAN, INT, LONG, DOUBLE, DATETIME, CHAR, STRING
-        customDoubleParser(DoubleParser)
+        customDoubleParser(FastDoubleParser(parserOptions))
         nullValueLiterals(parserOptions.nullStrings!!)
         headerLegalizer(::legalizeHeader)
         numRows(readLines ?: Long.MAX_VALUE)
@@ -114,7 +120,19 @@ internal fun readCsvOrTsvImpl(
         .let { BOMInputStream.builder().setInputStream(it).get() }
 
     if (adjustedInputStream.available() <= 0) {
-        return DataFrame.empty()
+        return if (header.isEmpty()) {
+            DataFrame.empty()
+        } else {
+            dataFrameOf(
+                header.map {
+                    DataColumn.createValueColumn(
+                        name = it,
+                        values = emptyList<String>(),
+                        type = typeOf<String>(),
+                    )
+                },
+            )
+        }
     }
 
     // read the csv
@@ -324,3 +342,23 @@ internal val typesDeephavenAlreadyParses =
  */
 internal val defaultNullStrings: Set<String> =
     setOf("", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil")
+
+// has issues when calling to :core
+internal fun ColType.toKType(): KType =
+    when (this) {
+        ColType.Int -> typeOf<Int>()
+        ColType.Long -> typeOf<Long>()
+        ColType.Double -> typeOf<Double>()
+        ColType.Boolean -> typeOf<Boolean>()
+        ColType.BigDecimal -> typeOf<BigDecimal>()
+        ColType.LocalDate -> typeOf<LocalDate>()
+        ColType.LocalTime -> typeOf<LocalTime>()
+        ColType.LocalDateTime -> typeOf<LocalDateTime>()
+        ColType.String -> typeOf<String>()
+        ColType.Instant -> typeOf<Instant>()
+        ColType.Duration -> typeOf<Duration>()
+        ColType.Url -> typeOf<URL>()
+        ColType.JsonArray -> typeOf<DataFrame<*>>()
+        ColType.JsonObject -> typeOf<DataRow<*>>()
+        ColType.Char -> typeOf<Char>()
+    }

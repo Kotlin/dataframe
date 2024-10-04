@@ -2,8 +2,8 @@ package org.jetbrains.kotlinx.dataframe.impl.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import sun.net.www.protocol.file.FileURLConnection
 import java.io.File
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -37,3 +37,10 @@ internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFr
         connection.disconnect()
     }
 }
+
+public fun asURL(fileOrUrl: String): URL =
+    if (isURL(fileOrUrl)) {
+        URL(fileOrUrl).toURI()
+    } else {
+        File(fileOrUrl).toURI()
+    }.toURL()

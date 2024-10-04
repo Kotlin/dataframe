@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.junit.Test
@@ -70,9 +71,10 @@ class CsvTsvTests {
         df.columnNames()[6] shouldBe "duplicate11"
         df["duplicate1"].type() shouldBe typeOf<Char?>()
         df["double"].type() shouldBe typeOf<Double?>()
+        df["number"].type() shouldBe typeOf<Double>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
-        println(df)
+        df.print(columnTypes = true, borders = true, title = true)
     }
 
     @Test
@@ -260,8 +262,13 @@ class CsvTsvTests {
     fun `check integrity of example data`() {
         val df = DataFrame.readCsv("../data/jetbrains_repositories.csv")
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
-        df.columnTypes() shouldBe
-            listOf(typeOf<String>(), typeOf<URL>(), typeOf<Int>(), typeOf<String>(), typeOf<Int>())
+        df.columnTypes() shouldBe listOf(
+            typeOf<String>(),
+            typeOf<URL>(),
+            typeOf<Int>(),
+            typeOf<String>(),
+            typeOf<Int>(),
+        )
         df shouldBe DataFrame.readCsv("../data/jetbrains repositories.csv")
     }
 
@@ -323,7 +330,7 @@ class CsvTsvTests {
             a,b,c
             1,2,3
             """.trimIndent()
-        val df = DataFrame.readCsvStr(csv)
+        val df = DataFrame.readCsvStr(csv, skipLines = 1L)
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
 

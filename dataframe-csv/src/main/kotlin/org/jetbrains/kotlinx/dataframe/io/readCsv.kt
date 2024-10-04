@@ -4,6 +4,7 @@ import io.deephaven.csv.CsvSpecs
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.impl.io.CsvTsvParams
+import org.jetbrains.kotlinx.dataframe.impl.io.asURL
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
 import org.jetbrains.kotlinx.dataframe.impl.io.isCompressed
 import org.jetbrains.kotlinx.dataframe.impl.io.readCsvOrTsvImpl
@@ -109,7 +110,7 @@ public fun DataFrame.Companion.readCsv(
     trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
 ): DataFrame<*> =
-    catchHttpResponse(asURL(fileOrUrl)) {
+    catchHttpResponse(asURL(fileOrUrl = fileOrUrl)) {
         readCsvOrTsvImpl(
             inputStream = it,
             delimiter = delimiter,
