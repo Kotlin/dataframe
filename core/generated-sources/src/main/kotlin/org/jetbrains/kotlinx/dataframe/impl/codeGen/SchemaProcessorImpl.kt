@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
+import com.squareup.kotlinpoet.asTypeName
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
@@ -66,7 +67,7 @@ internal class SchemaProcessorImpl(
         fun getFieldType(columnSchema: ColumnSchema): FieldType =
             when (columnSchema) {
                 is ColumnSchema.Value ->
-                    FieldType.ValueFieldType(columnSchema.type.toString())
+                    FieldType.ValueFieldType(columnSchema.type.asTypeName().toString())
 
                 is ColumnSchema.Group ->
                     FieldType.GroupFieldType(
