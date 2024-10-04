@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
+import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -55,6 +56,7 @@ public data class ParserOptions(
         }
 }
 
+/** @include [tryParseImpl] */
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
@@ -62,6 +64,21 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> 
         colsAtAnyDepth { !it.isColumnGroup() }
     }
 
+/**
+ * Tries to parse a column of strings into a column of a different type.
+ * Each parser in [Parsers] is run in order until a valid parser is found,
+ * a.k.a. that parser was able to parse all values in the column successfully. If a parser
+ * fails to parse any value, the next parser is tried.
+ *
+ * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
+ * use [tryParse] instead.
+ *
+ * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
+ *
+ * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @throws IllegalStateException if no valid parser is found
+ * @return a new column with parsed values
+ */
 public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> =
     tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
 
