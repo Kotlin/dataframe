@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
@@ -75,6 +76,43 @@ class CsvTsvTests {
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
         df.print(columnTypes = true, borders = true, title = true)
+    }
+
+    @Test
+    fun `read ZIP Csv`() {
+        val df = DataFrame.readCsv(simpleCsvZip)
+
+        df.columnsCount() shouldBe 11
+        df.rowsCount() shouldBe 5
+        df.columnNames()[5] shouldBe "duplicate1"
+        df.columnNames()[6] shouldBe "duplicate11"
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
+        df["double"].type() shouldBe typeOf<Double?>()
+        df["number"].type() shouldBe typeOf<Double>()
+        df["time"].type() shouldBe typeOf<LocalDateTime>()
+
+        df.print(columnTypes = true, borders = true, title = true)
+    }
+
+    @Test
+    fun `read GZ Csv`() {
+        val df = DataFrame.readCsv(simpleCsvGz)
+
+        df.columnsCount() shouldBe 11
+        df.rowsCount() shouldBe 5
+        df.columnNames()[5] shouldBe "duplicate1"
+        df.columnNames()[6] shouldBe "duplicate11"
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
+        df["double"].type() shouldBe typeOf<Double?>()
+        df["number"].type() shouldBe typeOf<Double>()
+        df["time"].type() shouldBe typeOf<LocalDateTime>()
+
+        df.print(columnTypes = true, borders = true, title = true)
+    }
+
+    @Test
+    fun `read 2 compressed Csv`() {
+        shouldThrow<IllegalArgumentException> { DataFrame.readCsv(twoCsvsZip) }
     }
 
     @Test
@@ -247,10 +285,9 @@ class CsvTsvTests {
             1, 3, 2,
         )
         df.writeCsv(
-            "src/test/resources/without_header.csv",
-//            CSVFormat.DEFAULT.builder()
-//                .setSkipHeaderRecord(true)
-//                .build(),
+            path = "src/test/resources/without_header.csv",
+            includeHeader = false,
+            recordSeparator = "\r\n",
         )
         val producedFile = File("src/test/resources/without_header.csv")
         producedFile.exists() shouldBe true
@@ -260,7 +297,10 @@ class CsvTsvTests {
 
     @Test
     fun `check integrity of example data`() {
-        val df = DataFrame.readCsv("../data/jetbrains_repositories.csv")
+        val df = DataFrame.readCsv(
+            "../data/jetbrains_repositories.csv",
+            skipLines = 1, // now needs this, ignoreEmptyLines cannot catch it
+        )
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
         df.columnTypes() shouldBe listOf(
             typeOf<String>(),
@@ -269,7 +309,10 @@ class CsvTsvTests {
             typeOf<String>(),
             typeOf<Int>(),
         )
-        df shouldBe DataFrame.readCsv("../data/jetbrains repositories.csv")
+        df shouldBe DataFrame.readCsv(
+            "../data/jetbrains repositories.csv",
+            skipLines = 1, // now needs this, ignoreEmptyLines cannot catch it
+        )
     }
 
     @Test
@@ -334,8 +377,17 @@ class CsvTsvTests {
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
     }
 
+    @Test
+    fun `don't read folder`() {
+        shouldThrow<IllegalArgumentException> { DataFrame.readCsv("") }
+        shouldThrow<IllegalArgumentException> { DataFrame.readCsv("NON EXISTENT FILE") }
+    }
+
     companion object {
         private val simpleCsv = testCsv("testCSV")
+        private val simpleCsvZip = testResource("testCSV.zip")
+        private val twoCsvsZip = testResource("two csvs.zip")
+        private val simpleCsvGz = testResource("testCSV.csv.gz")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
         private val durationCsv = testCsv("duration")

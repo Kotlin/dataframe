@@ -4,6 +4,7 @@ import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.io.ColType
+import org.jetbrains.kotlinx.dataframe.io.CsvCompression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 
@@ -31,10 +32,11 @@ internal object CsvTsvParams {
     val HEADER: List<String> = emptyList()
 
     /**
-     * @param isCompressed If `true`, the input stream is compressed and will be decompressed before reading.
-     *   The default is `false`.
+     * @param compression Determines the compression of the CSV file.
+     *   If a ZIP file contains multiple files, an [IllegalArgumentException] is thrown.
+     *   The default is [CsvCompression.NONE].
      */
-    const val IS_COMPRESSED: Boolean = false
+    val COMPRESSION: CsvCompression<*> = CsvCompression.NONE
 
     /**
      * @param colTypes A map of column names to their expected [ColType]s. Can be supplied to force
@@ -70,7 +72,7 @@ internal object CsvTsvParams {
     )
 
     /**
-     * @param ignoreEmptyLines If `true`, empty lines will be skipped.
+     * @param ignoreEmptyLines If `true`, intermediate empty lines will be skipped.
      *   The default is `false`.
      */
     const val IGNORE_EMPTY_LINES: Boolean = false
@@ -79,9 +81,9 @@ internal object CsvTsvParams {
      * @param allowMissingColumns If this set to `true`, then rows that are too short
      *   (that have fewer columns than the header row) will be interpreted as if the missing columns contained
      *   the empty string.
-     *   The default is `false`.
+     *   The default is `true`.
      */
-    const val ALLOW_MISSING_COLUMNS: Boolean = false
+    const val ALLOW_MISSING_COLUMNS: Boolean = true
 
     /**
      * @param ignoreExcessColumns If this set to `true`, then rows that are too long
@@ -158,7 +160,7 @@ internal object CsvTsvParams {
      * @param recordSeparator The character that separates records in a CSV/TSV file.
      *   The default is `'\n'`.
      */
-    const val RECORD_SEPARATOR: Char = '\n'
+    const val RECORD_SEPARATOR: String = "\n"
 
     /**
      * @param headerComments A list of comments to include at the beginning of the CSV/TSV file.

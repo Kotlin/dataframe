@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.impl.io.CsvTsvParams
 import org.jetbrains.kotlinx.dataframe.impl.io.asURL
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
-import org.jetbrains.kotlinx.dataframe.impl.io.isCompressed
+import org.jetbrains.kotlinx.dataframe.impl.io.compressionStateOf
 import org.jetbrains.kotlinx.dataframe.impl.io.readCsvOrTsvImpl
 import java.io.File
 import java.io.FileInputStream
@@ -35,7 +35,7 @@ public fun DataFrame.Companion.readTsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
-            isCompressed = isCompressed(file),
+            compression = compressionStateOf(file),
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -72,7 +72,7 @@ public fun DataFrame.Companion.readTsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
-            isCompressed = isCompressed(url),
+            compression = compressionStateOf(url),
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -109,7 +109,7 @@ public fun DataFrame.Companion.readTsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
-            isCompressed = isCompressed(fileOrUrl),
+            compression = compressionStateOf(fileOrUrl),
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -130,7 +130,7 @@ public fun DataFrame.Companion.readTsv(
     inputStream: InputStream,
     delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     header: List<String> = CsvTsvParams.HEADER,
-    isCompressed: Boolean = CsvTsvParams.IS_COMPRESSED,
+    compression: CsvCompression<*> = CsvTsvParams.COMPRESSION,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
     skipLines: Long = CsvTsvParams.SKIP_LINES,
     readLines: Long? = CsvTsvParams.READ_LINES,
@@ -148,7 +148,7 @@ public fun DataFrame.Companion.readTsv(
         inputStream = inputStream,
         delimiter = delimiter,
         header = header,
-        isCompressed = isCompressed,
+        compression = compression,
         colTypes = colTypes,
         skipLines = skipLines,
         readLines = readLines,
@@ -168,7 +168,7 @@ public fun DataFrame.Companion.readTsvStr(
     text: String,
     delimiter: Char = CsvTsvParams.TSV_DELIMITER,
     header: List<String> = CsvTsvParams.HEADER,
-    isCompressed: Boolean = CsvTsvParams.IS_COMPRESSED,
+    compression: CsvCompression<*> = CsvTsvParams.COMPRESSION,
     colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
     skipLines: Long = CsvTsvParams.SKIP_LINES,
     readLines: Long? = CsvTsvParams.READ_LINES,
@@ -185,7 +185,7 @@ public fun DataFrame.Companion.readTsvStr(
         inputStream = text.byteInputStream(),
         delimiter = delimiter,
         header = header,
-        isCompressed = isCompressed,
+        compression = compression,
         colTypes = colTypes,
         skipLines = skipLines,
         readLines = readLines,
