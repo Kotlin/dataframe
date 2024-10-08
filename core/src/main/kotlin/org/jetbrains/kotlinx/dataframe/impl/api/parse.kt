@@ -16,6 +16,7 @@ import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.CoroutineProvider
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -542,10 +543,18 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
     return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
 }
 
-internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
-    runBlocking { parseParallel(options, columns) }
+@PublishedApi
+internal inline fun <T> DataFrame<T>.parseImpl(
+    options: ParserOptions?,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    noinline columns: ColumnsSelector<T, Any?>,
+): DataFrame<T> =
+    runInCoroutine {
+        parseParallel(options, columns)
+    }
 
-private suspend fun <T> DataFrame<T>.parseParallel(
+@PublishedApi
+internal suspend fun <T> DataFrame<T>.parseParallel(
     options: ParserOptions?,
     columns: ColumnsSelector<T, Any?>,
 ): DataFrame<T> =

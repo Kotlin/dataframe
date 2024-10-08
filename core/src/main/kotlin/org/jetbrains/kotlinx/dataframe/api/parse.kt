@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.CoroutineProvider
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -17,17 +19,29 @@ import kotlin.reflect.KProperty
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
-    parseImpl(options, columns)
+public inline fun <T> DataFrame<T>.parse(
+    options: ParserOptions? = null,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    noinline columns: ColumnsSelector<T, Any?> = { colsAtAnyDepth { !it.isColumnGroup() } },
+): DataFrame<T> = parseImpl(options, runInCoroutine, columns)
 
-public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumnSet() }
+public inline fun <T> DataFrame<T>.parse(
+    vararg columns: String,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    options: ParserOptions? = null,
+): DataFrame<T> = parse(options, runInCoroutine) { columns.toColumnSet() }
 
-public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumnSet() }
+public inline fun <T, C> DataFrame<T>.parse(
+    vararg columns: ColumnReference<C>,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    options: ParserOptions? = null,
+): DataFrame<T> = parse(options, runInCoroutine) { columns.toColumnSet() }
 
-public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumnSet() }
+public inline fun <T, C> DataFrame<T>.parse(
+    vararg columns: KProperty<C>,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    options: ParserOptions? = null,
+): DataFrame<T> = parse(options, runInCoroutine) { columns.toColumnSet() }
 
 public interface GlobalParserOptions {
 
@@ -58,11 +72,6 @@ public data class ParserOptions(
 
 /** @include [tryParseImpl] */
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
-
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
-    parse(options) {
-        colsAtAnyDepth { !it.isColumnGroup() }
-    }
 
 /**
  * Tries to parse a column of strings into a column of a different type.
