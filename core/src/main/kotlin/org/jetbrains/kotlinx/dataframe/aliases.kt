@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -209,3 +210,23 @@ public typealias AnyRow = DataRow<*>
 public typealias AnyBaseCol = BaseColumn<*>
 
 // endregion
+
+/**
+ * Tells the function how to run a certain block of code in a coroutine scope you provide.
+ * Allows a function to be called within and outside a suspend context.
+ *
+ * For instance:
+ *
+ * ```kotlin
+ * suspend fun myFunction() = coroutineScope {
+ *     someFunction(something, runInCoroutine = { async(Dispatchers.IO) { it() }.await() })
+ * }
+ * ```
+ * or
+ * ```kotlin
+ * fun myFunction() {
+ *     someFunction(something, runInCoroutine = { runBlocking(block = it) })
+ * }
+ * ```
+ */
+public typealias CoroutineProvider<T> = (suspend CoroutineScope.() -> T) -> T

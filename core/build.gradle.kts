@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.fuel)
 
     api(libs.kotlin.datetimeJvm)
+    implementation(libs.kotlin.coroutinesCore)
     implementation(libs.kotlinpoet)
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)

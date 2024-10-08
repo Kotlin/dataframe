@@ -1,12 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.CoroutineProvider
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
+import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -16,17 +19,29 @@ import kotlin.reflect.KProperty
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
-    parseImpl(options, columns)
+public inline fun <T> DataFrame<T>.parse(
+    options: ParserOptions? = null,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    noinline columns: ColumnsSelector<T, Any?> = { colsAtAnyDepth { !it.isColumnGroup() } },
+): DataFrame<T> = parseImpl(options, runInCoroutine, columns)
 
-public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumnSet() }
+public inline fun <T> DataFrame<T>.parse(
+    vararg columns: String,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    options: ParserOptions? = null,
+): DataFrame<T> = parse(options, runInCoroutine) { columns.toColumnSet() }
 
-public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumnSet() }
+public inline fun <T, C> DataFrame<T>.parse(
+    vararg columns: ColumnReference<C>,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    options: ParserOptions? = null,
+): DataFrame<T> = parse(options, runInCoroutine) { columns.toColumnSet() }
 
-public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> =
-    parse(options) { columns.toColumnSet() }
+public inline fun <T, C> DataFrame<T>.parse(
+    vararg columns: KProperty<C>,
+    runInCoroutine: CoroutineProvider<DataFrame<T>> = { runBlocking(block = it) },
+    options: ParserOptions? = null,
+): DataFrame<T> = parse(options, runInCoroutine) { columns.toColumnSet() }
 
 public interface GlobalParserOptions {
 
@@ -41,6 +56,7 @@ public interface GlobalParserOptions {
 
 public data class ParserOptions(
     val locale: Locale? = null,
+    // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
@@ -54,13 +70,24 @@ public data class ParserOptions(
         }
 }
 
+/** @include [tryParseImpl] */
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
-public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
-    parse(options) {
-        colsAtAnyDepth { !it.isColumnGroup() }
-    }
-
+/**
+ * Tries to parse a column of strings into a column of a different type.
+ * Each parser in [Parsers] is run in order until a valid parser is found,
+ * a.k.a. that parser was able to parse all values in the column successfully. If a parser
+ * fails to parse any value, the next parser is tried.
+ *
+ * If all fail [IllegalStateException] is thrown. If you don't want this exception to be thrown,
+ * use [tryParse] instead.
+ *
+ * Parsers that are [covered by][StringParser.coveredBy] other parsers are skipped.
+ *
+ * @param options options for parsing, like providing a locale or a custom date-time formatter
+ * @throws IllegalStateException if no valid parser is found
+ * @return a new column with parsed values
+ */
 public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> =
     tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
 
