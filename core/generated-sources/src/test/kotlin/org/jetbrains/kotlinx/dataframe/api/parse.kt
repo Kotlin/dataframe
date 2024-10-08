@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -479,6 +482,17 @@ class ParseTests {
         }
 
         df.parse()
+    }
+
+    @Test
+    fun `Parse with different coroutine scope or context`() {
+        val df = dataFrameOf(List(5_000) { "_$it" }).fill(100) {
+            Random.nextInt().toChar().toString() + Random.nextInt().toChar()
+        }
+
+        runBlocking(Dispatchers.IO) {
+            df.parse(runInCoroutine = { async(block = it).await() })
+        }
     }
 
     /**
