@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.io.JSON
+import kotlin.reflect.KClass
 
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
@@ -66,6 +67,7 @@ public annotation class JdbcOptions(
     public val extractCredFromEnv: Boolean = false,
     public val tableName: String = "",
     public val sqlQuery: String = "",
+    public val dbTypeKClass: KClass<*> = String::class,
 )
 
 public annotation class JsonOptions(
