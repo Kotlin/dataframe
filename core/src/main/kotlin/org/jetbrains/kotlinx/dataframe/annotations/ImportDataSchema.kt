@@ -67,7 +67,6 @@ public annotation class JdbcOptions(
     public val extractCredFromEnv: Boolean = false,
     public val tableName: String = "",
     public val sqlQuery: String = "",
-    public val dbTypeKClass: KClass<*> = String::class,
 )
 
 public annotation class JsonOptions(

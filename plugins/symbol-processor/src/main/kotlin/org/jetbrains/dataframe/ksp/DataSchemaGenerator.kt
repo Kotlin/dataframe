@@ -39,10 +39,6 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.sql.Connection
 import java.sql.DriverManager
-import java.util.ServiceLoader
-import org.jetbrains.kotlinx.dataframe.io.db.DbType
-import org.jetbrains.kotlinx.dataframe.io.db.DbTypeProvider
-import org.jetbrains.kotlinx.dataframe.io.db.extractDBTypeFromUrl
 
 @OptIn(KspExperimental::class)
 class DataSchemaGenerator(
@@ -174,35 +170,9 @@ class DataSchemaGenerator(
         if (importStatement.isJdbc) {
             val url = importStatement.dataSource.pathRepresentation
 
-            //val dbTypeKClass = importStatement.jdbcOptions.dbTypeKClass
-
-          /*  println("Class loader: ${dbTypeKClass.java.classLoader}")
-            println("Class name: ${dbTypeKClass.qualifiedName}")
-            val clazz = Class.forName(dbTypeKClass.qualifiedName)
-            println("Class found: $clazz")*/
-
-            val loader = ServiceLoader.load(DbTypeProvider::class.java)
-            var dbType = loader.firstOrNull()?.getDbType()
-            if(dbType == null) {
-               dbType = extractDBTypeFromUrl(url)
-            }
-            Class.forName(dbType.driverClassName)
-            /*val dbType: DbType? = if (DbType::class.java.isAssignableFrom(dbTypeKClass.java)) {
-                val dbTypeInstance = dbTypeKClass.objectInstance
-                if (dbTypeInstance != null) {
-                    dbTypeInstance as DbType
-                } else {
-                    println("The provided class is not an object or is not a DbType")
-                    null
-                }
-            } else {
-                try {
-                    Class.forName(driverClassNameFromUrl(url))
-                } catch (e: ClassNotFoundException) {
-                    println("Driver class not found for URL: $url")
-                }
-                null
-            }*/
+            // Force classloading
+            // TODO: probably will not work for the H2
+            Class.forName(driverClassNameFromUrl(url))
 
             var userName = importStatement.jdbcOptions.user
             var password = importStatement.jdbcOptions.password
@@ -220,7 +190,7 @@ class DataSchemaGenerator(
             )
 
             connection.use {
-                val schema = generateSchemaForImport(importStatement, connection, dbType)
+                val schema = generateSchemaForImport(importStatement, connection)
 
                 val codeGenerator = CodeGenerator.create(useFqNames = false)
 
@@ -317,7 +287,6 @@ class DataSchemaGenerator(
     private fun generateSchemaForImport(
         importStatement: ImportDataSchemaStatement,
         connection: Connection,
-        dbType: DbType?,
     ): DataFrameSchema {
         logger.info("Table name: ${importStatement.jdbcOptions.tableName}")
         logger.info("SQL query: ${importStatement.jdbcOptions.sqlQuery}")
@@ -326,8 +295,8 @@ class DataSchemaGenerator(
         val sqlQuery = importStatement.jdbcOptions.sqlQuery
 
         return when {
-            isTableNameNotBlankAndQueryBlank(tableName, sqlQuery) -> generateSchemaForTable(connection, tableName, dbType)
-            isQueryNotBlankAndTableBlank(tableName, sqlQuery) -> generateSchemaForQuery(connection, sqlQuery, dbType)
+            isTableNameNotBlankAndQueryBlank(tableName, sqlQuery) -> generateSchemaForTable(connection, tableName)
+            isQueryNotBlankAndTableBlank(tableName, sqlQuery) -> generateSchemaForQuery(connection, sqlQuery)
             areBothNotBlank(tableName, sqlQuery) -> throwBothFieldsFilledException(tableName, sqlQuery)
             else -> throwBothFieldsEmptyException(tableName, sqlQuery)
         }
@@ -341,11 +310,11 @@ class DataSchemaGenerator(
 
     private fun areBothNotBlank(tableName: String, sqlQuery: String) = sqlQuery.isNotBlank() && tableName.isNotBlank()
 
-    private fun generateSchemaForTable(connection: Connection, tableName: String, dbType: DbType?) =
-        DataFrame.getSchemaForSqlTable(connection, tableName, dbType)
+    private fun generateSchemaForTable(connection: Connection, tableName: String) =
+        DataFrame.getSchemaForSqlTable(connection, tableName)
 
-    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String, dbType: DbType?) =
-        DataFrame.getSchemaForSqlQuery(connection, sqlQuery, dbType)
+    private fun generateSchemaForQuery(connection: Connection, sqlQuery: String) =
+        DataFrame.getSchemaForSqlQuery(connection, sqlQuery)
 
     private fun throwBothFieldsFilledException(tableName: String, sqlQuery: String): Nothing =
         throw RuntimeException(
