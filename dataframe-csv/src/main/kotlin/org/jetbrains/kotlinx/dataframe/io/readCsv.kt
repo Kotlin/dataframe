@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.deephaven.csv.CsvSpecs
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.CsvDocs
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.CommonParams
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.impl.io.asURL
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
@@ -13,6 +15,12 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 
+/**
+ * @include [CsvDocs]
+ * @include [DelimParams.FILE]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [CommonParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
     file: File,
@@ -51,6 +59,12 @@ public fun DataFrame.Companion.readCsv(
         )
     }
 
+/**
+ * @include [CsvDocs]
+ * @include [DelimParams.URL]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [CommonParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
     url: URL,
@@ -89,6 +103,12 @@ public fun DataFrame.Companion.readCsv(
         )
     }
 
+/**
+ * @include [CsvDocs]
+ * @include [DelimParams.FILE_OR_URL]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [CommonParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
     fileOrUrl: String,
