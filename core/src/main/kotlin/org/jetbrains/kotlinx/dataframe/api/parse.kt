@@ -44,8 +44,9 @@ public interface GlobalParserOptions {
  * ### Options for parsing [String]`?` columns
  *
  * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
- *   If specified instead of [dateTimeFormatter], it will be used (in combination with the optional [dateTimePattern])
- *   to create a [DateTimeFormatter].
+ *   If specified instead of [dateTimeFormatter], it will be used in combination with [dateTimePattern]
+ *   to create a [DateTimeFormatter]. Just providing [locale] will not allow you to parse
+ *   locale-specific dates!
  * @param dateTimeFormatter a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
  *   from [dateTimePattern] and [locale]. If neither [dateTimeFormatter] nor [dateTimePattern] are specified,
  *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
