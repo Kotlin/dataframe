@@ -31,6 +31,7 @@ postgresql = "42.7.4"
 sqlite = "3.46.1.0"
 jtsCore = "1.19.0"
 kotlinDatetime = "0.6.1"
+coroutines = "1.9.0"
 openapi = "2.1.22"
 kotlinLogging = "7.0.0"
 sl4j = "2.0.16"
@@ -84,6 +85,7 @@ jts = { group = "org.locationtech.jts", name = "jts-core", version.ref = "jtsCor
 
 poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "poi" }
 kotlin-datetimeJvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
+kotlin-coroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
