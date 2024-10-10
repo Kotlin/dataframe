@@ -521,8 +521,6 @@ class DelimCsvTsvTests {
                 locale = Locale.GERMAN,
             ),
         )
-
-        df.print(borders = true, title = true, columnTypes = true)
     }
 
     companion object {

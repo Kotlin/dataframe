@@ -3,13 +3,13 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.impl.io.CsvTsvParams
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import java.io.File
 import java.io.InputStream
 import kotlin.reflect.typeOf
 
 @ExperimentalCsv
-public class Tsv(private val delimiter: Char = CsvTsvParams.TSV_DELIMITER) : SupportedDataFrameFormat {
+public class Tsv(private val delimiter: Char = DelimParams.TSV_DELIMITER) : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): DataFrame<*> =
         DataFrame.readTsv(inputStream = stream, header = header)
 

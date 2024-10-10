@@ -13,8 +13,14 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 
+/*
+ * TODO these currently clash with :core's readDelim(Str) functions.
+ *   When those are deprecated, we can let the users fall-back to these.
+ *   They do the same as readCsv(Str).
+ */
+
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readDelim(
     file: File,
     delimiter: Char = DelimParams.CSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
@@ -52,7 +58,7 @@ public fun DataFrame.Companion.readCsv(
     }
 
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readDelim(
     url: URL,
     delimiter: Char = DelimParams.CSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
@@ -90,7 +96,7 @@ public fun DataFrame.Companion.readCsv(
     }
 
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readDelim(
     fileOrUrl: String,
     delimiter: Char = DelimParams.CSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
@@ -129,7 +135,7 @@ public fun DataFrame.Companion.readCsv(
 
 // the only one with additionalCsvSpecs
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsv(
+public fun DataFrame.Companion.readDelim(
     inputStream: InputStream,
     delimiter: Char = DelimParams.CSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
@@ -167,7 +173,7 @@ public fun DataFrame.Companion.readCsv(
     )
 
 @ExperimentalCsv
-public fun DataFrame.Companion.readCsvStr(
+public fun DataFrame.Companion.readDelimStr(
     text: String,
     delimiter: Char = DelimParams.CSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,

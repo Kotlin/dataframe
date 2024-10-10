@@ -45,40 +45,40 @@ import kotlin.time.Duration
 
 /**
  *
- * @include [CsvTsvParams.INPUT_STREAM]
+ * @include [DelimParams.INPUT_STREAM]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
- * @include [CsvTsvParams.HEADER]
- * @include [CsvTsvParams.COMPRESSION]
- * @include [CsvTsvParams.COL_TYPES]
- * @include [CsvTsvParams.SKIP_LINES]
- * @include [CsvTsvParams.READ_LINES]
- * @include [CsvTsvParams.PARSER_OPTIONS]
- * @include [CsvTsvParams.IGNORE_EMPTY_LINES]
- * @include [CsvTsvParams.ALLOW_MISSING_COLUMNS]
- * @include [CsvTsvParams.IGNORE_EXCESS_COLUMNS]
- * @include [CsvTsvParams.QUOTE]
- * @include [CsvTsvParams.IGNORE_SURROUNDING_SPACES]
- * @include [CsvTsvParams.TRIM_INSIDE_QUOTED]
- * @include [CsvTsvParams.PARSE_PARALLEL]
- * @include [CsvTsvParams.ADDITIONAL_CSV_SPECS]
+ * @include [DelimParams.HEADER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [DelimParams.COL_TYPES]
+ * @include [DelimParams.SKIP_LINES]
+ * @include [DelimParams.READ_LINES]
+ * @include [DelimParams.PARSER_OPTIONS]
+ * @include [DelimParams.IGNORE_EMPTY_LINES]
+ * @include [DelimParams.ALLOW_MISSING_COLUMNS]
+ * @include [DelimParams.IGNORE_EXCESS_COLUMNS]
+ * @include [DelimParams.QUOTE]
+ * @include [DelimParams.IGNORE_SURROUNDING_SPACES]
+ * @include [DelimParams.TRIM_INSIDE_QUOTED]
+ * @include [DelimParams.PARSE_PARALLEL]
+ * @include [DelimParams.ADDITIONAL_CSV_SPECS]
  */
-internal fun readCsvOrTsvImpl(
+internal fun readDelimImpl(
     inputStream: InputStream,
     delimiter: Char,
-    header: List<String> = CsvTsvParams.HEADER,
-    compression: CsvCompression<*> = CsvTsvParams.COMPRESSION,
-    colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
-    skipLines: Long = CsvTsvParams.SKIP_LINES,
-    readLines: Long? = CsvTsvParams.READ_LINES,
-    parserOptions: ParserOptions = CsvTsvParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = CsvTsvParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = CsvTsvParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = CsvTsvParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = CsvTsvParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = CsvTsvParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
-    additionalCsvSpecs: CsvSpecs = CsvTsvParams.ADDITIONAL_CSV_SPECS,
+    header: List<String> = DelimParams.HEADER,
+    compression: CsvCompression<*> = DelimParams.COMPRESSION,
+    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
+    skipLines: Long = DelimParams.SKIP_LINES,
+    readLines: Long? = DelimParams.READ_LINES,
+    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
+    quote: Char = DelimParams.QUOTE,
+    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
+    additionalCsvSpecs: CsvSpecs = DelimParams.ADDITIONAL_CSV_SPECS,
 ): DataFrame<*> {
     // edit the parser options to skip types that are already parsed by deephaven
     // and add the correct nullStrings
@@ -276,33 +276,6 @@ private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
         hasHeaderRow(false)
             .headers(header)
     }
-
-/**
- * TODO
- * Hacky reflection-based solution to call internal functions:
- * ```kt
- * val parser = Parsers[type]!!
- * column.parse(parser, options)
- * ```
- */
-internal fun parseColumnWithType(column: DataColumn<String?>, type: KType, options: ParserOptions?): DataColumn<*> {
-    val clazz = Class.forName("org.jetbrains.kotlinx.dataframe.impl.api.Parsers")
-    val objectInstanceField = clazz.getDeclaredField("INSTANCE")
-    val parsersObjectInstance = objectInstanceField.get(null)
-    val getFunction = clazz.getMethod("get", KType::class.java)
-    val stringParser = getFunction.invoke(parsersObjectInstance, type)
-
-    val parseClass = Class.forName("org.jetbrains.kotlinx.dataframe.impl.api.ParseKt")
-    val parseMethod = parseClass.getMethod(
-        "parse",
-        DataColumn::class.java,
-        Class.forName("org.jetbrains.kotlinx.dataframe.impl.api.StringParser"),
-        ParserOptions::class.java,
-    )
-
-    val parsedCol = parseMethod.invoke(null, column, stringParser, options) as DataColumn<*>
-    return parsedCol
-}
 
 /**
  * Converts a [ColType] to a [Parser] from the Deephaven CSV library.

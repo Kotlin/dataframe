@@ -12,9 +12,9 @@ import org.jetbrains.kotlinx.dataframe.io.QuoteMode
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
  */
 @Suppress("ktlint:standard:class-naming", "ClassName", "KDocUnresolvedReference")
-internal object CsvTsvParams {
+internal object DelimParams {
 
-    /** @param inputStream Represents the CSV file to read. */
+    /** @param inputStream Represents the file to read. */
     interface INPUT_STREAM
 
     /** @param delimiter The field delimiter character. The default is ',' for CSV. */

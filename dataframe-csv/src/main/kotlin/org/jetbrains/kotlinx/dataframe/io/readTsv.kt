@@ -3,11 +3,11 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.deephaven.csv.CsvSpecs
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.impl.io.CsvTsvParams
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.impl.io.asURL
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
 import org.jetbrains.kotlinx.dataframe.impl.io.compressionStateOf
-import org.jetbrains.kotlinx.dataframe.impl.io.readCsvOrTsvImpl
+import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -16,23 +16,23 @@ import java.net.URL
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     file: File,
-    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
-    header: List<String> = CsvTsvParams.HEADER,
+    delimiter: Char = DelimParams.TSV_DELIMITER,
+    header: List<String> = DelimParams.HEADER,
     compression: CsvCompression<*> = compressionStateOf(file),
-    colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
-    skipLines: Long = CsvTsvParams.SKIP_LINES,
-    readLines: Long? = CsvTsvParams.READ_LINES,
-    parserOptions: ParserOptions = CsvTsvParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = CsvTsvParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = CsvTsvParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = CsvTsvParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = CsvTsvParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = CsvTsvParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
+    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
+    skipLines: Long = DelimParams.SKIP_LINES,
+    readLines: Long? = DelimParams.READ_LINES,
+    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
+    quote: Char = DelimParams.QUOTE,
+    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
 ): DataFrame<*> =
     FileInputStream(file).use {
-        readCsvOrTsvImpl(
+        readDelimImpl(
             inputStream = it,
             delimiter = delimiter,
             header = header,
@@ -54,23 +54,23 @@ public fun DataFrame.Companion.readTsv(
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     url: URL,
-    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
-    header: List<String> = CsvTsvParams.HEADER,
+    delimiter: Char = DelimParams.TSV_DELIMITER,
+    header: List<String> = DelimParams.HEADER,
     compression: CsvCompression<*> = compressionStateOf(url),
-    colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
-    skipLines: Long = CsvTsvParams.SKIP_LINES,
-    readLines: Long? = CsvTsvParams.READ_LINES,
-    parserOptions: ParserOptions = CsvTsvParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = CsvTsvParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = CsvTsvParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = CsvTsvParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = CsvTsvParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = CsvTsvParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
+    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
+    skipLines: Long = DelimParams.SKIP_LINES,
+    readLines: Long? = DelimParams.READ_LINES,
+    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
+    quote: Char = DelimParams.QUOTE,
+    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
 ): DataFrame<*> =
     catchHttpResponse(url) {
-        readCsvOrTsvImpl(
+        readDelimImpl(
             inputStream = it,
             delimiter = delimiter,
             header = header,
@@ -92,23 +92,23 @@ public fun DataFrame.Companion.readTsv(
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     fileOrUrl: String,
-    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
-    header: List<String> = CsvTsvParams.HEADER,
+    delimiter: Char = DelimParams.TSV_DELIMITER,
+    header: List<String> = DelimParams.HEADER,
     compression: CsvCompression<*> = compressionStateOf(fileOrUrl),
-    colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
-    skipLines: Long = CsvTsvParams.SKIP_LINES,
-    readLines: Long? = CsvTsvParams.READ_LINES,
-    parserOptions: ParserOptions = CsvTsvParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = CsvTsvParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = CsvTsvParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = CsvTsvParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = CsvTsvParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = CsvTsvParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
+    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
+    skipLines: Long = DelimParams.SKIP_LINES,
+    readLines: Long? = DelimParams.READ_LINES,
+    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
+    quote: Char = DelimParams.QUOTE,
+    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
-        readCsvOrTsvImpl(
+        readDelimImpl(
             inputStream = it,
             delimiter = delimiter,
             header = header,
@@ -131,23 +131,23 @@ public fun DataFrame.Companion.readTsv(
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     inputStream: InputStream,
-    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
-    header: List<String> = CsvTsvParams.HEADER,
-    compression: CsvCompression<*> = CsvTsvParams.COMPRESSION,
-    colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
-    skipLines: Long = CsvTsvParams.SKIP_LINES,
-    readLines: Long? = CsvTsvParams.READ_LINES,
-    parserOptions: ParserOptions = CsvTsvParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = CsvTsvParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = CsvTsvParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = CsvTsvParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = CsvTsvParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = CsvTsvParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
-    additionalCsvSpecs: CsvSpecs = CsvTsvParams.ADDITIONAL_CSV_SPECS,
+    delimiter: Char = DelimParams.TSV_DELIMITER,
+    header: List<String> = DelimParams.HEADER,
+    compression: CsvCompression<*> = DelimParams.COMPRESSION,
+    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
+    skipLines: Long = DelimParams.SKIP_LINES,
+    readLines: Long? = DelimParams.READ_LINES,
+    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
+    quote: Char = DelimParams.QUOTE,
+    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
+    additionalCsvSpecs: CsvSpecs = DelimParams.ADDITIONAL_CSV_SPECS,
 ): DataFrame<*> =
-    readCsvOrTsvImpl(
+    readDelimImpl(
         inputStream = inputStream,
         delimiter = delimiter,
         header = header,
@@ -169,22 +169,22 @@ public fun DataFrame.Companion.readTsv(
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsvStr(
     text: String,
-    delimiter: Char = CsvTsvParams.TSV_DELIMITER,
-    header: List<String> = CsvTsvParams.HEADER,
-    compression: CsvCompression<*> = CsvTsvParams.COMPRESSION,
-    colTypes: Map<String, ColType> = CsvTsvParams.COL_TYPES,
-    skipLines: Long = CsvTsvParams.SKIP_LINES,
-    readLines: Long? = CsvTsvParams.READ_LINES,
-    parserOptions: ParserOptions = CsvTsvParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = CsvTsvParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = CsvTsvParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = CsvTsvParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = CsvTsvParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = CsvTsvParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = CsvTsvParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = CsvTsvParams.PARSE_PARALLEL,
+    delimiter: Char = DelimParams.TSV_DELIMITER,
+    header: List<String> = DelimParams.HEADER,
+    compression: CsvCompression<*> = DelimParams.COMPRESSION,
+    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
+    skipLines: Long = DelimParams.SKIP_LINES,
+    readLines: Long? = DelimParams.READ_LINES,
+    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
+    quote: Char = DelimParams.QUOTE,
+    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
 ): DataFrame<*> =
-    readCsvOrTsvImpl(
+    readDelimImpl(
         inputStream = text.byteInputStream(),
         delimiter = delimiter,
         header = header,

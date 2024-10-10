@@ -8,18 +8,18 @@ import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
 
-internal fun writeCsvOrTsvImpl(
+internal fun writeDelimImpl(
     df: AnyFrame,
     writer: Appendable,
     delimiter: Char,
-    includeHeader: Boolean = CsvTsvParams.INCLUDE_HEADER,
-    quote: Char? = CsvTsvParams.QUOTE,
-    quoteMode: QuoteMode = CsvTsvParams.QUOTE_MODE,
-    escapeChar: Char? = CsvTsvParams.ESCAPE_CHAR,
-    commentChar: Char? = CsvTsvParams.COMMENT_CHAR,
-    headerComments: List<String> = CsvTsvParams.HEADER_COMMENTS,
-    recordSeparator: String = CsvTsvParams.RECORD_SEPARATOR,
-    additionalCsvFormat: CSVFormat = CsvTsvParams.ADDITIONAL_CSV_FORMAT,
+    includeHeader: Boolean = DelimParams.INCLUDE_HEADER,
+    quote: Char? = DelimParams.QUOTE,
+    quoteMode: QuoteMode = DelimParams.QUOTE_MODE,
+    escapeChar: Char? = DelimParams.ESCAPE_CHAR,
+    commentChar: Char? = DelimParams.COMMENT_CHAR,
+    headerComments: List<String> = DelimParams.HEADER_COMMENTS,
+    recordSeparator: String = DelimParams.RECORD_SEPARATOR,
+    additionalCsvFormat: CSVFormat = DelimParams.ADDITIONAL_CSV_FORMAT,
 ) {
     val format = with(CSVFormat.Builder.create(additionalCsvFormat)) {
         setDelimiter(delimiter)
