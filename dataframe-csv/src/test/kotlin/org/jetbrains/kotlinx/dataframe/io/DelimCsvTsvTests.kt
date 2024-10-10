@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -29,7 +30,7 @@ import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalCsv::class)
 @Suppress("ktlint:standard:argument-list-wrapping")
-class CsvTsvTests {
+class DelimCsvTsvTests {
 
     @Test
     fun readNulls() {
@@ -403,6 +404,127 @@ class CsvTsvTests {
         shouldThrow<IllegalArgumentException> { DataFrame.readCsv("NON EXISTENT FILE") }
     }
 
+    @Test
+    fun `parse with other locales`() {
+        @Language("csv")
+        val frenchCsv =
+            """
+            name; price; date;
+            a;12,45; 05/06/2021;
+            b;-13,35;14/07/2025;
+            c;100 123,35;;
+            d;-204 235,23;;
+            e;NaN;;
+            f;null;;
+            """.trimIndent()
+
+        val frenchDf = DataFrame.readCsvStr(
+            text = frenchCsv,
+            delimiter = ';',
+            parserOptions = ParserOptions(
+                dateTimePattern = "dd/MM/yyyy",
+                locale = Locale.FRENCH,
+            ),
+        )
+
+        frenchDf["price"].type() shouldBe typeOf<Double?>()
+        frenchDf["date"].type() shouldBe typeOf<LocalDate?>()
+
+        @Language("csv")
+        val dutchCsv =
+            """
+            name; price;
+            a;12,45;
+            b;-13,35;
+            c;100.123,35;
+            d;-204.235,23;
+            e;NaN;
+            f;null;
+            """.trimIndent()
+
+        val dutchDf = DataFrame.readCsvStr(
+            text = dutchCsv,
+            delimiter = ';',
+            parserOptions = ParserOptions(
+                locale = Locale.forLanguageTag("nl-NL"),
+            ),
+        )
+
+        dutchDf["price"].type() shouldBe typeOf<Double?>()
+
+        // while negative numbers in RTL languages cannot be parsed, thanks to Java, others work
+        @Language("csv")
+        val arabicCsv =
+            """
+            الاسم; السعر;
+            أ;١٢٫٤٥;
+            ب;١٣٫٣٥;
+            ج;١٠٠٫١٢٣;
+            د;٢٠٤٫٢٣٥;
+            هـ;ليس رقم;
+            و;null;
+            """.trimIndent()
+
+        val easternArabicDf = DataFrame.readCsvStr(
+            arabicCsv,
+            delimiter = ';',
+            parserOptions = ParserOptions(
+                locale = Locale.forLanguageTag("ar-001"),
+            ),
+        )
+
+        easternArabicDf["السعر"].type() shouldBe typeOf<Double?>()
+        easternArabicDf["الاسم"].type() shouldBe typeOf<String>() // apparently not a char
+    }
+
+    @Test
+    fun `handle slightly mixed locales`() {
+        @Language("csv")
+        val estonianWrongMinus =
+            """
+            name; price;
+            a;12,45;
+            b;-13,35;
+            c;100 123,35;
+            d;-204 235,23;
+            e;NaN;
+            f;null;
+            """.trimIndent()
+
+        val estonianDf = DataFrame.readCsvStr(
+            text = estonianWrongMinus,
+            delimiter = ';',
+            parserOptions = ParserOptions(
+                locale = Locale.forLanguageTag("et-EE"),
+            ),
+        )
+
+        estonianDf["price"].type() shouldBe typeOf<Double?>()
+    }
+
+    @Test
+    fun `parse with wrong locales`() {
+        @Language("csv")
+        val csv =
+            """
+            name; price;
+            a;12,45;
+            b;-13,35;
+            c;100.123,35;
+            d;-204.235,23;
+            """.trimIndent()
+
+        val df = DataFrame.readCsvStr(
+            text = csv,
+            delimiter = ';',
+            parserOptions = ParserOptions(
+                locale = Locale.GERMAN,
+            ),
+        )
+
+        df.print(borders = true, title = true, columnTypes = true)
+    }
+
     companion object {
         private val simpleCsv = testCsv("testCSV")
         private val simpleCsvZip = testResource("testCSV.zip")
@@ -415,6 +537,6 @@ class CsvTsvTests {
     }
 }
 
-fun testResource(resourcePath: String): URL = CsvTsvTests::class.java.classLoader.getResource(resourcePath)!!
+fun testResource(resourcePath: String): URL = DelimCsvTsvTests::class.java.classLoader.getResource(resourcePath)!!
 
 fun testCsv(csvName: String) = testResource("$csvName.csv")
