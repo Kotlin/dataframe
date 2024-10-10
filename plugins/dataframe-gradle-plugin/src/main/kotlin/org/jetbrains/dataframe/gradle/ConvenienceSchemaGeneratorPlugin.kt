@@ -70,7 +70,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
                 val cfgsToAdd = configs.toMutableSet()
 
                 configs.forEach { cfg ->
-                    target.configurations.named { it == cfg }.configureEach {
+                    target.configurations.findByName(cfg)?.apply {
                         cfgsToAdd.remove(cfg)
                         dependencies.add(
                             target.dependencies.create(

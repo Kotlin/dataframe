@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     api(project(":core"))
+    api(project(":dataframe-openapi-runtime"))
 
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
@@ -42,7 +43,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeOpenApi"
         artifactId = project.name
-        description = "OpenAPI support for Kotlin Dataframe"
+        description = "OpenAPI code generation support for Kotlin Dataframe"
         packageName = artifactId
     }
 }

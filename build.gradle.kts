@@ -53,7 +53,7 @@ dependencies {
     api(project(":core"))
     api(project(":dataframe-arrow"))
     api(project(":dataframe-excel"))
-    api(project(":dataframe-openapi"))
+    api(project(":dataframe-openapi-runtime"))
     api(project(":dataframe-jdbc"))
 
     kover(project(":core"))

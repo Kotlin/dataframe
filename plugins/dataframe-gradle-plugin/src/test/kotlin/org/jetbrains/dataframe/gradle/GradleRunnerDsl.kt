@@ -22,6 +22,9 @@ fun runGradleBuild(
 fun gradleRunner(buildDir: File, task: String): GradleRunner =
     GradleRunner.create()
         .withProjectDir(buildDir)
+        // if we use api from the newest Gradle release, a user project will fail with NoSuchMethod
+        // testing compatibility with an older Gradle version ensures our plugin can run on as many versions as possible
+        .withGradleVersion("8.5")
         .withPluginClasspath()
         .withArguments(task, "--stacktrace", "--info")
         .withDebug(true)

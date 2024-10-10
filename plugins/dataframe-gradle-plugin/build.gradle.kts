@@ -117,6 +117,7 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":dataframe-excel:publishToMavenLocal")
     dependsOn(":dataframe-jdbc:publishToMavenLocal")
     dependsOn(":dataframe-openapi:publishToMavenLocal")
+    dependsOn(":dataframe-openapi-runtime:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")

@@ -266,8 +266,10 @@ tasks.withType<Jar> {
 }
 
 // modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
-tasks.named { it.startsWith("publish") }.configureEach {
-    dependsOn(processKDocsMain, changeJarTask)
+tasks.configureEach {
+    if (name.startsWith("publish")) {
+        dependsOn(processKDocsMain, changeJarTask)
+    }
 }
 
 // Exclude the generated/processed sources from the IDE
