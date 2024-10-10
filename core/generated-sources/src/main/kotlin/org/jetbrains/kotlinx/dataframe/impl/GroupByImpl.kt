@@ -13,9 +13,11 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -56,6 +58,13 @@ internal class GroupByImpl<T, G>(
         }
         return df[indices].asGroupBy(groups)
     }
+
+    override fun toDataFrame(groupedColumnName: String?): DataFrame<T> =
+        if (groupedColumnName == null || groupedColumnName == groups.name()) {
+            df
+        } else {
+            df.rename(groups).into(groupedColumnName)
+        }
 }
 
 internal fun <T, G, R> aggregateGroupBy(

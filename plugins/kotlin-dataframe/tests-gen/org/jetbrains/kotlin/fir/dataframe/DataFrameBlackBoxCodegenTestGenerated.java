@@ -125,6 +125,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("duplicatedSignature1.kt")
+  public void testDuplicatedSignature1() {
+    runTest("testData/box/duplicatedSignature1.kt");
+  }
+
+  @Test
   @TestMetadata("explode.kt")
   public void testExplode() {
     runTest("testData/box/explode.kt");
@@ -218,6 +224,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("insert.kt")
   public void testInsert() {
     runTest("testData/box/insert.kt");
+  }
+
+  @Test
+  @TestMetadata("inventNamesForLocalClasses.kt")
+  public void testInventNamesForLocalClasses() {
+    runTest("testData/box/inventNamesForLocalClasses.kt");
   }
 
   @Test
@@ -434,6 +446,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("update.kt")
   public void testUpdate() {
     runTest("testData/box/update.kt");
+  }
+
+  @Test
+  @TestMetadata("wrongReceiver.kt")
+  public void testWrongReceiver() {
+    runTest("testData/box/wrongReceiver.kt");
   }
 
   @Nested

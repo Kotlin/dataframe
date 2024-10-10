@@ -17,7 +17,7 @@ env:
   ALGOLIA_INDEX_NAME: prod_DATAFRAME_HELP
   ALGOLIA_KEY: ${{ secrets.ALGOLIA_KEY }}
   CONFIG_JSON_PRODUCT: Dataframe
-  CONFIG_JSON_VERSION: '0.13'
+  CONFIG_JSON_VERSION: '0.14'
 
 jobs:
   build-job:
@@ -87,9 +87,9 @@ jobs:
     needs: build-job
     runs-on: ubuntu-latest
     container:
-        image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-2
+        image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-3
 
-    steps:
+    steps: # Using v3 for compatibility with algolia-indexes
         - uses: actions/checkout@v4
         - uses: actions/download-artifact@v4
           with:

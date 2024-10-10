@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.toPath
@@ -29,7 +28,7 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
                         "Column '${path.subList(0, i + 1).joinToString(".")}' is not a column group.",
                 )
             } else {
-                col.asColumnGroup()
+                col
             }
         }
             // resolve the last column of the path

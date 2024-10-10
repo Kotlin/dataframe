@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.JoinDsl
 import org.jetbrains.kotlinx.dataframe.api.JoinType
 import org.jetbrains.kotlinx.dataframe.api.allowLeftNulls
 import org.jetbrains.kotlinx.dataframe.api.allowRightNulls
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -86,9 +85,11 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val leftCol = leftJoinColumns[i]
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
-            val leftColumns = getColumnsWithPaths { leftCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() } }
+            val leftColumns = getColumnsWithPaths {
+                leftCol.colsAtAnyDepth { !it.isColumnGroup() }
+            }
             val rightColumns = other.getColumnsWithPaths {
-                rightCol.asColumnGroup().colsAtAnyDepth { !it.isColumnGroup() }
+                rightCol.colsAtAnyDepth { !it.isColumnGroup() }
             }
 
             val leftPrefixLength = leftCol.path.size

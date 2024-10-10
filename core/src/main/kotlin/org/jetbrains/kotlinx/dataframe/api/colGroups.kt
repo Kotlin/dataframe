@@ -19,8 +19,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
-import org.jetbrains.kotlinx.dataframe.util.COLS_SELECT_DSL_GROUP
-import org.jetbrains.kotlinx.dataframe.util.COLS_SELECT_DSL_GROUP_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -171,36 +169,6 @@ public interface ColGroupsColumnsSelectionDsl {
      */
     public fun ColumnPath.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         columnGroup(this).colGroups(filter)
-
-    // region deprecated
-
-    @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun ColumnSet<*>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        columnGroupsInternal(filter)
-
-    @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun SingleColumn<DataRow<*>>.groups(
-        filter: Predicate<ColumnGroup<*>> = { true },
-    ): TransformableColumnSet<AnyRow> = this.ensureIsColumnGroup().columnGroupsInternal(filter)
-
-    @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun ColumnsSelectionDsl<*>.groups(
-        filter: Predicate<ColumnGroup<*>> = { true },
-    ): TransformableColumnSet<AnyRow> = this.asSingleColumn().columnGroupsInternal(filter)
-
-    @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun String.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        columnGroup(this).colGroups(filter)
-
-    @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun KProperty<*>.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        columnGroup(this).colGroups(filter)
-
-    @Deprecated(COLS_SELECT_DSL_GROUP, ReplaceWith(COLS_SELECT_DSL_GROUP_REPLACE), DeprecationLevel.ERROR)
-    public fun ColumnPath.groups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
-        columnGroup(this).colGroups(filter)
-
-    // endregion
 }
 
 /**
@@ -212,7 +180,6 @@ public interface ColGroupsColumnsSelectionDsl {
 @Suppress("UNCHECKED_CAST")
 internal fun ColumnsResolver<*>.columnGroupsInternal(
     filter: (ColumnGroup<*>) -> Boolean,
-): TransformableColumnSet<AnyRow> =
-    colsInternal { it.isColumnGroup() && filter(it.asColumnGroup()) } as TransformableColumnSet<AnyRow>
+): TransformableColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) } as TransformableColumnSet<AnyRow>
 
 // endregion

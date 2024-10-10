@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.pathOf
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
+@HasSchema(schemaArg = 0)
 public abstract class AggregateDsl<out T> :
     DataFrame<T>,
     ColumnSelectionDsl<T> {
