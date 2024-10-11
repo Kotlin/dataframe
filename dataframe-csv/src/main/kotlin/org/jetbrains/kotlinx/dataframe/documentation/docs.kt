@@ -3,7 +3,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.FileExtensionArg
 import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.FileTypeArg
 import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.FileTypeTitleArg
 import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.FunctionLinkArg
@@ -34,9 +33,9 @@ import java.net.URL
  *
  * ZIP (.zip) or GZIP (.gz) files are supported by default. \[compression\] is automatically detected.
  *
- * You can also read "raw" $[FileTypeArg] data from a [String] using:
+ * You can also read "raw" $[FileTypeArg] data from a [String] like this:
  *
- * $[StrFunctionLinkArg]`("")`
+ * $[StrFunctionLinkArg]`("a,b,c", delimiter = ",")`
  *
  * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old $[OldFunctionLinkArg]`()` functions.
  * They'll hopefully be faster and better. Until they are proven to be so,
@@ -118,13 +117,13 @@ internal interface ReadDelim {
     // Like "CSV" or "TSV"
     interface FileTypeArg
 
-    // like csv or txt
+    // like "csv" or "txt"
     interface FileExtensionArg
 
-    // Function name
+    // Function name, like "readCsv"
     interface FunctionNameArg
 
-    // Old function name
+    // Old function name, like "readCSV"
     interface OldFunctionNameArg
 
     // A link to the main function, set by ReadDelim itself
