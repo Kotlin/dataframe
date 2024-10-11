@@ -16,6 +16,7 @@ import io.deephaven.csv.parsers.DataType.TIMESTAMP_AS_LONG
 import io.deephaven.csv.parsers.Parser
 import io.deephaven.csv.parsers.Parsers
 import io.deephaven.csv.reading.CsvReader
+import io.deephaven.csv.util.CsvReaderException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
@@ -33,8 +34,9 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.ColType
-import org.jetbrains.kotlinx.dataframe.io.CsvCompression
+import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
+import org.jetbrains.kotlinx.dataframe.io.defaultNullStrings
 import java.io.InputStream
 import java.math.BigDecimal
 import java.net.URL
@@ -66,7 +68,7 @@ internal fun readDelimImpl(
     inputStream: InputStream,
     delimiter: Char,
     header: List<String> = DelimParams.HEADER,
-    compression: CsvCompression<*> = DelimParams.COMPRESSION,
+    compression: Compression<*> = DelimParams.COMPRESSION,
     colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
     skipLines: Long = DelimParams.SKIP_LINES,
     readLines: Long? = DelimParams.READ_LINES,
@@ -78,22 +80,13 @@ internal fun readDelimImpl(
     ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
-    additionalCsvSpecs: CsvSpecs = DelimParams.ADDITIONAL_CSV_SPECS,
+    additionalCsvSpecs: CsvSpecs? = DelimParams.ADDITIONAL_CSV_SPECS,
 ): DataFrame<*> {
-    // edit the parser options to skip types that are already parsed by deephaven
-    // and add the correct nullStrings
-    @Suppress("NAME_SHADOWING")
-    val parserOptions = parserOptions.copy(
-        skipTypes = parserOptions.skipTypes + typesDeephavenAlreadyParses,
-        nullStrings = (parserOptions.nullStrings ?: emptySet()) + defaultNullStrings,
-    )
-
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {
-        from(additionalCsvSpecs)
-        parsers(Parsers.DEFAULT) // BOOLEAN, INT, LONG, DOUBLE, DATETIME, CHAR, STRING
+        if (additionalCsvSpecs != null) from(additionalCsvSpecs)
         customDoubleParser(FastDoubleParser(parserOptions))
-        nullValueLiterals(parserOptions.nullStrings!!)
+        nullValueLiterals(parserOptions.nullStrings ?: defaultNullStrings)
         headerLegalizer(::legalizeHeader)
         numRows(readLines ?: Long.MAX_VALUE)
         ignoreEmptyLines(ignoreEmptyLines)
@@ -103,6 +96,7 @@ internal fun readDelimImpl(
         quote(quote)
         ignoreSurroundingSpaces(ignoreSurroundingSpaces)
         trim(trimInsideQuoted)
+        concurrent(parseParallel)
 
         header(header)
 
@@ -111,6 +105,8 @@ internal fun readDelimImpl(
         val useDeepHavenLocalDateTime = with(parserOptions) {
             locale == null && dateTimePattern == null && dateTimeFormatter == null
         }
+        parsersWithOptions(parserOptions, useDeepHavenLocalDateTime)
+
         colTypes(colTypes, useDeepHavenLocalDateTime) // this function must be last, so the return value is used
     }.build()
 
@@ -132,11 +128,15 @@ internal fun readDelimImpl(
         }
 
         // read the csv
-        CsvReader.read(
-            csvSpecs,
-            safeInputStream,
-            ListSink.SINK_FACTORY,
-        )
+        try {
+            CsvReader.read(
+                csvSpecs,
+                safeInputStream,
+                ListSink.SINK_FACTORY,
+            )
+        } catch (e: CsvReaderException) {
+            throw IllegalStateException("Could not read delimiter-separated data", e)
+        }
     }
 
     val defaultColType = colTypes[DEFAULT_COL_TYPE]
@@ -188,7 +188,11 @@ private fun CsvReader.ResultColumn.toDataColumn(
     column as ValueColumn<String?>
 
     return if (desiredColType == null) {
-        column.tryParse(parserOptions)
+        // no need to check for types that Deephaven already parses
+        val adjustedParserOptions = parserOptions.copy(
+            skipTypes = parserOptions.skipTypes + typesDeephavenAlreadyParses,
+        )
+        column.tryParse(adjustedParserOptions)
     } else {
         column.tryParse(
             parserOptions.copy(
@@ -268,6 +272,24 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
         skipRows(skipLines)
     }
 
+/**
+ * Sets the correct parsers for the csv, based on the [ParserOptions.skipTypes].
+ */
+private fun CsvSpecs.Builder.parsersWithOptions(
+    parserOptions: ParserOptions,
+    useDeepHavenLocalDateTime: Boolean,
+): CsvSpecs.Builder =
+    if (parserOptions.skipTypes.isEmpty()) {
+        parsers(Parsers.DEFAULT) // BOOLEAN, INT, LONG, DOUBLE, DATETIME, CHAR, STRING
+    } else {
+        parsers(
+            Parsers.DEFAULT.toSet() -
+                parserOptions.skipTypes
+                    .mapNotNull { it.toColType().toCsvParserOrNull(useDeepHavenLocalDateTime) }
+                    .toSet(),
+        )
+    }
+
 private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
     if (header.isEmpty()) {
         // take header from csv
@@ -277,11 +299,7 @@ private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
             .headers(header)
     }
 
-/**
- * Converts a [ColType] to a [Parser] from the Deephaven CSV library.
- * If no direct [Parser] exists, it defaults to [Parsers.STRING] so that [DataFrame.parse] can handle it.
- */
-internal fun ColType.toCsvParser(useDeepHavenLocalDateTime: Boolean): Parser<*> =
+internal fun ColType.toCsvParserOrNull(useDeepHavenLocalDateTime: Boolean): Parser<*>? =
     when (this) {
         ColType.Int -> Parsers.INT
         ColType.Long -> Parsers.LONG
@@ -289,29 +307,16 @@ internal fun ColType.toCsvParser(useDeepHavenLocalDateTime: Boolean): Parser<*> 
         ColType.Char -> Parsers.CHAR
         ColType.Boolean -> Parsers.BOOLEAN
         ColType.String -> Parsers.STRING
-        ColType.LocalDateTime -> if (useDeepHavenLocalDateTime) Parsers.DATETIME else Parsers.STRING
-        else -> Parsers.STRING
+        ColType.LocalDateTime -> if (useDeepHavenLocalDateTime) Parsers.DATETIME else null
+        else -> null
     }
 
 /**
- * Types that Deephaven already parses, so we can skip them.
+ * Converts a [ColType] to a [Parser] from the Deephaven CSV library.
+ * If no direct [Parser] exists, it defaults to [Parsers.STRING] so that [DataFrame.parse] can handle it.
  */
-internal val typesDeephavenAlreadyParses =
-    setOf(
-        typeOf<Int>(),
-        typeOf<Long>(),
-        typeOf<Double>(),
-        typeOf<Char>(),
-        typeOf<Boolean>(),
-//        typeOf<LocalDateTime>(), it cannot recognize all formats
-//        typeOf<java.time.LocalDateTime>(),
-    )
-
-/**
- * Default strings that are considered null.
- */
-internal val defaultNullStrings: Set<String> =
-    setOf("", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil")
+internal fun ColType.toCsvParser(useDeepHavenLocalDateTime: Boolean): Parser<*> =
+    toCsvParserOrNull(useDeepHavenLocalDateTime) ?: Parsers.STRING
 
 // has issues when calling to :core
 internal fun ColType.toKType(): KType =
@@ -332,3 +337,38 @@ internal fun ColType.toKType(): KType =
         ColType.JsonObject -> typeOf<DataRow<*>>()
         ColType.Char -> typeOf<Char>()
     }
+
+internal fun KType.toColType(): ColType =
+    when (this.withNullability(false)) {
+        typeOf<Int>() -> ColType.Int
+        typeOf<Long>() -> ColType.Long
+        typeOf<Double>() -> ColType.Double
+        typeOf<Boolean>() -> ColType.Boolean
+        typeOf<BigDecimal>() -> ColType.BigDecimal
+        typeOf<LocalDate>() -> ColType.LocalDate
+        typeOf<LocalTime>() -> ColType.LocalTime
+        typeOf<LocalDateTime>() -> ColType.LocalDateTime
+        typeOf<String>() -> ColType.String
+        typeOf<Instant>() -> ColType.Instant
+        typeOf<Duration>() -> ColType.Duration
+        typeOf<URL>() -> ColType.Url
+        typeOf<DataFrame<*>>() -> ColType.JsonArray
+        typeOf<DataRow<*>>() -> ColType.JsonObject
+        typeOf<Char>() -> ColType.Char
+        else -> ColType.String
+    }
+
+/**
+ * Types that Deephaven already parses, so we can skip them when
+ * defaulting to DataFrame's String parsers.
+ */
+internal val typesDeephavenAlreadyParses: Set<KType> =
+    setOf(
+        typeOf<Int>(),
+        typeOf<Long>(),
+        typeOf<Double>(),
+        typeOf<Char>(),
+        typeOf<Boolean>(),
+//        typeOf<LocalDateTime>(), it cannot recognize all formats
+//        typeOf<java.time.LocalDateTime>(), it cannot recognize all formats
+    )

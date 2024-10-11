@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
@@ -33,9 +34,3 @@ private const val READ_CSV = "readCsv"
 
 internal class DefaultReadCsvMethod(path: String?, arguments: MethodArguments) :
     AbstractDefaultReadMethod(path, arguments, READ_CSV)
-
-/**
- * You can add a default column type to the `colTypes` parameter
- * by setting the key to [DEFAULT_COL_TYPE] and the value to the desired type.
- */
-public const val DEFAULT_COL_TYPE: String = ".default"

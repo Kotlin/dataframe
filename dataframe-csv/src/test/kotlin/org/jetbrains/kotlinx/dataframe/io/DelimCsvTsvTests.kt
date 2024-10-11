@@ -116,7 +116,7 @@ class DelimCsvTsvTests {
     fun `read custom compression Csv`() {
         val df = DataFrame.readCsv(
             simpleCsvGz,
-            compression = CsvCompression.Custom { GZIPInputStream(it) },
+            compression = Compression.Custom { GZIPInputStream(it) },
         )
 
         df.columnsCount() shouldBe 11
@@ -396,6 +396,32 @@ class DelimCsvTsvTests {
             """.trimIndent()
         val df = DataFrame.readCsvStr(csv, skipLines = 1L)
         df shouldBe dataFrameOf("a", "b", "c")(1, 2, 3)
+    }
+
+    @Test
+    fun `csv with empty lines`() {
+        @Language("CSV")
+        val csv =
+            """
+            a,b,c
+            1,2,3
+            
+            4,5,6
+            """.trimIndent()
+        val df1 = DataFrame.readCsvStr(csv)
+        df1 shouldBe dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            null, null, null,
+            4, 5, 6,
+        )
+
+        val df2 = DataFrame.readCsvStr(csv, ignoreEmptyLines = true)
+        df2 shouldBe dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            4, 5, 6,
+        )
+
+        shouldThrow<IllegalStateException> { DataFrame.readCsvStr(csv, allowMissingColumns = false) }
     }
 
     @Test

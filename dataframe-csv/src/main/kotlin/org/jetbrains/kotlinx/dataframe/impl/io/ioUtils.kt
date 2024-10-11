@@ -3,34 +3,40 @@ package org.jetbrains.kotlinx.dataframe.impl.io
 import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.io.CsvCompression
-import org.jetbrains.kotlinx.dataframe.io.CsvCompression.Custom
-import org.jetbrains.kotlinx.dataframe.io.CsvCompression.Gzip
-import org.jetbrains.kotlinx.dataframe.io.CsvCompression.None
-import org.jetbrains.kotlinx.dataframe.io.CsvCompression.Zip
+import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import java.io.File
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.zip.GZIPInputStream
+import java.util.zip.InflaterInputStream
 import java.util.zip.ZipInputStream
 
-internal fun compressionStateOf(fileOrUrl: String): CsvCompression<*> =
+internal fun compressionStateOf(fileOrUrl: String): Compression<*> =
     when (fileOrUrl.split(".").last()) {
-        "gz" -> CsvCompression.Gzip
-        "zip" -> CsvCompression.Zip
-        else -> CsvCompression.None
+        "gz" -> Compression.Gzip
+        "zip" -> Compression.Zip
+        else -> Compression.None
     }
 
-internal fun compressionStateOf(file: File): CsvCompression<*> =
+internal fun compressionStateOf(file: File): Compression<*> =
     when (file.extension) {
-        "gz" -> CsvCompression.Gzip
-        "zip" -> CsvCompression.Zip
-        else -> CsvCompression.None
+        "gz" -> Compression.Gzip
+        "zip" -> Compression.Zip
+        else -> Compression.None
     }
 
-internal fun compressionStateOf(url: URL): CsvCompression<*> = compressionStateOf(url.path)
+internal fun compressionStateOf(inputStream: InputStream): Compression<*> =
+    when (inputStream) {
+        is GZIPInputStream -> Compression.Gzip
+        is ZipInputStream -> Compression.Zip
+        is InflaterInputStream -> error("Please supply compression = CsvCompression.Custom to read this input stream.")
+        else -> Compression.None
+    }
+
+internal fun compressionStateOf(url: URL): Compression<*> = compressionStateOf(url.path)
 
 internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFrame {
     val connection = url.openConnection()
@@ -71,25 +77,13 @@ public fun asURL(fileOrUrl: String): URL =
  *
  * Also closes the stream after the block is executed.
  */
-internal inline fun <T> InputStream.useSafely(compression: CsvCompression<*>, block: (InputStream) -> T): T {
-    var zipInputStream: ZipInputStream? = null
-
+internal inline fun <T, I : InputStream> InputStream.useSafely(
+    compression: Compression<I>,
+    block: (InputStream) -> T,
+): T {
     // first wrap the stream in the compression algorithm
-    val unpackedStream = when (compression) {
-        None -> this
-
-        Zip -> compression(this).also {
-            it as ZipInputStream
-            // make sure to call nextEntry once to prepare the stream
-            if (it.nextEntry == null) error("No entries in zip file")
-
-            zipInputStream = it
-        }
-
-        Gzip -> compression(this)
-
-        is Custom<*> -> compression(this)
-    }
+    val unpackedStream = compression(this)
+    compression.doFirst(unpackedStream)
 
     val bomSafeStream = BOMInputStream.builder()
         .setInputStream(unpackedStream)
@@ -98,11 +92,6 @@ internal inline fun <T> InputStream.useSafely(compression: CsvCompression<*>, bl
     try {
         return block(bomSafeStream)
     } finally {
-        close()
-        // if we were reading from a ZIP, make sure there was only one entry, as to
-        // warn the user of potential issues
-        if (compression == Zip && zipInputStream!!.nextEntry != null) {
-            throw IllegalArgumentException("Zip file contains more than one entry")
-        }
+        compression.doFinally(unpackedStream)
     }
 }
