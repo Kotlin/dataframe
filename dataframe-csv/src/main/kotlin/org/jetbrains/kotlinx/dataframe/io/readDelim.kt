@@ -3,6 +3,9 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.deephaven.csv.CsvSpecs
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.CommonReadParams
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.DelimDocs
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.impl.io.asURL
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
@@ -19,6 +22,15 @@ import java.net.URL
  *   They do the same as readCsv(Str).
  */
 
+/**
+ * @include [DelimDocs]
+ * @set [ReadDelim.DataTitleArg] File
+ * @set [ReadDelim.DataArg] file
+ * @include [DelimParams.FILE]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     file: File,
@@ -57,6 +69,15 @@ public fun DataFrame.Companion.readDelim(
         )
     }
 
+/**
+ * @include [DelimDocs]
+ * @set [ReadDelim.DataTitleArg] Url
+ * @set [ReadDelim.DataArg] url
+ * @include [DelimParams.URL]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     url: URL,
@@ -95,6 +116,15 @@ public fun DataFrame.Companion.readDelim(
         )
     }
 
+/**
+ * @include [DelimDocs]
+ * @set [ReadDelim.DataTitleArg] File or URL
+ * @set [ReadDelim.DataArg] file or url
+ * @include [DelimParams.FILE_OR_URL]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     fileOrUrl: String,
@@ -133,13 +163,23 @@ public fun DataFrame.Companion.readDelim(
         )
     }
 
-// the only one with additionalCsvSpecs
+/**
+ * {@comment the only one with additionalCsvSpecs}
+ * @include [DelimDocs]
+ * @set [ReadDelim.DataTitleArg] InputStream
+ * @set [ReadDelim.DataArg] input stream
+ * @include [DelimParams.INPUT_STREAM]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ * @include [DelimParams.ADDITIONAL_CSV_SPECS]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     inputStream: InputStream,
     delimiter: Char = DelimParams.CSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
-    compression: Compression<*> = compressionStateOf(inputStream),
+    compression: Compression<*> = DelimParams.COMPRESSION,
     colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
     skipLines: Long = DelimParams.SKIP_LINES,
     readLines: Long? = DelimParams.READ_LINES,
@@ -172,12 +212,19 @@ public fun DataFrame.Companion.readDelim(
         additionalCsvSpecs = additionalCsvSpecs,
     )
 
+/**
+ * @include [DelimDocs]
+ * @set [ReadDelim.DataTitleArg] String
+ * @set [ReadDelim.DataArg] [String]
+ * @include [DelimParams.TEXT]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelimStr(
     text: String,
     delimiter: Char = DelimParams.CSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
-    compression: Compression<*> = DelimParams.COMPRESSION,
     colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
     skipLines: Long = DelimParams.SKIP_LINES,
     readLines: Long? = DelimParams.READ_LINES,
@@ -194,7 +241,7 @@ public fun DataFrame.Companion.readDelimStr(
         inputStream = text.byteInputStream(),
         delimiter = delimiter,
         header = header,
-        compression = compression,
+        compression = Compression.None, // of course
         colTypes = colTypes,
         skipLines = skipLines,
         readLines = readLines,

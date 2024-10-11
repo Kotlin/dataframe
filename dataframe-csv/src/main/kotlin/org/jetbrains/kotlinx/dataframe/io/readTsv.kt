@@ -3,6 +3,9 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.deephaven.csv.CsvSpecs
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.CommonReadParams
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.TsvDocs
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.impl.io.asURL
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
@@ -13,6 +16,15 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 
+/**
+ * @include [TsvDocs]
+ * @set [ReadDelim.DataTitleArg] File
+ * @set [ReadDelim.DataArg] file
+ * @include [DelimParams.FILE]
+ * @include [DelimParams.TSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     file: File,
@@ -51,6 +63,15 @@ public fun DataFrame.Companion.readTsv(
         )
     }
 
+/**
+ * @include [TsvDocs]
+ * @set [ReadDelim.DataTitleArg] Url
+ * @set [ReadDelim.DataArg] url
+ * @include [DelimParams.URL]
+ * @include [DelimParams.TSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     url: URL,
@@ -89,6 +110,15 @@ public fun DataFrame.Companion.readTsv(
         )
     }
 
+/**
+ * @include [TsvDocs]
+ * @set [ReadDelim.DataTitleArg] File or URL
+ * @set [ReadDelim.DataArg] file or url
+ * @include [DelimParams.FILE_OR_URL]
+ * @include [DelimParams.TSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     fileOrUrl: String,
@@ -107,7 +137,7 @@ public fun DataFrame.Companion.readTsv(
     trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
 ): DataFrame<*> =
-    catchHttpResponse(asURL(fileOrUrl)) {
+    catchHttpResponse(asURL(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
             inputStream = it,
             delimiter = delimiter,
@@ -127,13 +157,23 @@ public fun DataFrame.Companion.readTsv(
         )
     }
 
-// the only one with additionalCsvSpecs
+/**
+ * {@comment the only one with additionalCsvSpecs}
+ * @include [TsvDocs]
+ * @set [ReadDelim.DataTitleArg] InputStream
+ * @set [ReadDelim.DataArg] input stream
+ * @include [DelimParams.INPUT_STREAM]
+ * @include [DelimParams.TSV_DELIMITER]
+ * @include [DelimParams.COMPRESSION]
+ * @include [CommonReadParams]
+ * @include [DelimParams.ADDITIONAL_CSV_SPECS]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsv(
     inputStream: InputStream,
     delimiter: Char = DelimParams.TSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
-    compression: Compression<*> = compressionStateOf(inputStream),
+    compression: Compression<*> = DelimParams.COMPRESSION,
     colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
     skipLines: Long = DelimParams.SKIP_LINES,
     readLines: Long? = DelimParams.READ_LINES,
@@ -166,12 +206,19 @@ public fun DataFrame.Companion.readTsv(
         additionalCsvSpecs = additionalCsvSpecs,
     )
 
+/**
+ * @include [TsvDocs]
+ * @set [ReadDelim.DataTitleArg] String
+ * @set [ReadDelim.DataArg] [String]
+ * @include [DelimParams.TEXT]
+ * @include [DelimParams.TSV_DELIMITER]
+ * @include [CommonReadParams]
+ */
 @ExperimentalCsv
 public fun DataFrame.Companion.readTsvStr(
     text: String,
     delimiter: Char = DelimParams.TSV_DELIMITER,
     header: List<String> = DelimParams.HEADER,
-    compression: Compression<*> = DelimParams.COMPRESSION,
     colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
     skipLines: Long = DelimParams.SKIP_LINES,
     readLines: Long? = DelimParams.READ_LINES,
@@ -188,7 +235,7 @@ public fun DataFrame.Companion.readTsvStr(
         inputStream = text.byteInputStream(),
         delimiter = delimiter,
         header = header,
-        compression = compression,
+        compression = Compression.None, // of course
         colTypes = colTypes,
         skipLines = skipLines,
         readLines = readLines,

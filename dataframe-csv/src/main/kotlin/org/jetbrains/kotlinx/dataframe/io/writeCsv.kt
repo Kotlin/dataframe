@@ -2,11 +2,17 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.CommonWriteParams
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 import java.io.File
 import java.io.FileWriter
 
+/**
+ * TODO
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [CommonWriteParams]
+ */
 @ExperimentalCsv
 public fun AnyFrame.writeCsv(
     file: File,
