@@ -50,7 +50,7 @@ Thus,
 **Basics:**
 
 ```kotlin
-val df = DataFrame.read("titanic.csv", delimiter = ';')
+val df = DataFrame.readCSV("titanic.csv", delimiter = ';')
 ```
 
 ```kotlin

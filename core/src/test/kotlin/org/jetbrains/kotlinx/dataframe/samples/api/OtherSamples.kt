@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
-import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import org.junit.Test

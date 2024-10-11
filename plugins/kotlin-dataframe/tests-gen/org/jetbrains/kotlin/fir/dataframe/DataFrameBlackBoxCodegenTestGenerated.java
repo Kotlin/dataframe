@@ -83,6 +83,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("dataFrameOf_to.kt")
+  public void testDataFrameOf_to() {
+    runTest("testData/box/dataFrameOf_to.kt");
+  }
+
+  @Test
   @TestMetadata("dataFrameOf_vararg.kt")
   public void testDataFrameOf_vararg() {
     runTest("testData/box/dataFrameOf_vararg.kt");
@@ -224,6 +230,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("insert.kt")
   public void testInsert() {
     runTest("testData/box/insert.kt");
+  }
+
+  @Test
+  @TestMetadata("inventNamesForLocalClasses.kt")
+  public void testInventNamesForLocalClasses() {
+    runTest("testData/box/inventNamesForLocalClasses.kt");
   }
 
   @Test
@@ -431,6 +443,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("trimIndent.kt")
+  public void testTrimIndent() {
+    runTest("testData/box/trimIndent.kt");
+  }
+
+  @Test
+  @TestMetadata("trimMargin.kt")
+  public void testTrimMargin() {
+    runTest("testData/box/trimMargin.kt");
+  }
+
+  @Test
   @TestMetadata("ungroup.kt")
   public void testUngroup() {
     runTest("testData/box/ungroup.kt");
@@ -440,6 +464,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("update.kt")
   public void testUpdate() {
     runTest("testData/box/update.kt");
+  }
+
+  @Test
+  @TestMetadata("wrongReceiver.kt")
+  public void testWrongReceiver() {
+    runTest("testData/box/wrongReceiver.kt");
   }
 
   @Nested
