@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.FLATTEN_DEFAULT_SEPARATOR
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.into
@@ -15,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 internal fun <T, C> DataFrame<T>.flattenImpl(
     columns: ColumnsSelector<T, C>,
     keepParentNameForColumns: Boolean = false,
-    separator: String = ".",
+    separator: String = FLATTEN_DEFAULT_SEPARATOR,
 ): DataFrame<T> {
     val rootColumns = getColumnsWithPaths {
         columns.toColumnSet().filter { it.isColumnGroup() }.simplify()
