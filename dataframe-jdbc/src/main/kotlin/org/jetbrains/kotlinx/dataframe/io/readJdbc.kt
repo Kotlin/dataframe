@@ -512,7 +512,7 @@ public fun DataFrame.Companion.readAllSqlTables(
             // could be Dialect/Database specific
             logger.debug { "Reading table: $tableName" }
 
-            val dataFrame = readSqlTable(connection, tableName, limit, inferNullability)
+            val dataFrame = readSqlTable(connection, tableName, limit, inferNullability, dbType)
             dataFrames += tableName to dataFrame
             logger.debug { "Finished reading table: $tableName" }
         }
