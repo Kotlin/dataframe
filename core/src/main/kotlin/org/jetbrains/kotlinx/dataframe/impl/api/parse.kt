@@ -1,9 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -50,6 +46,7 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalQuery
 import java.util.Locale
+import java.util.stream.Collectors
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -543,43 +540,38 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
 }
 
 internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
-    runBlocking { parseParallel(options, columns) }
+    parseParallel(options, columns)
 
-private suspend fun <T> DataFrame<T>.parseParallel(
-    options: ParserOptions?,
-    columns: ColumnsSelector<T, Any?>,
-): DataFrame<T> =
-    coroutineScope {
-        val convertedCols = getColumnsWithPaths(columns).map { col ->
-            async {
-                when {
-                    // when a frame column is requested to be parsed,
-                    // parse each value/frame column at any depth inside each DataFrame in the frame column
-                    col.isFrameColumn() ->
-                        col.values.map {
-                            async {
-                                it.parseParallel(options) {
-                                    colsAtAnyDepth { !it.isColumnGroup() }
-                                }
-                            }
-                        }.awaitAll()
-                            .toColumn(col.name)
+/**
+ * Parses a [DataFrame] in parallel using java parallel streams.
+ */
+private fun <T> DataFrame<T>.parseParallel(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> {
+    val convertedCols = getColumnsWithPaths(columns).stream().parallel().map { col ->
+        when {
+            // when a frame column is requested to be parsed,
+            // parse each value/frame column at any depth inside each DataFrame in the frame column
+            col.isFrameColumn() ->
+                col.toList().stream().parallel().map {
+                    it.parseParallel(options) {
+                        colsAtAnyDepth { !it.isColumnGroup() }
+                    }
+                }.collect(Collectors.toList())
+                    .toColumn(col.name)
 
-                    // when a column group is requested to be parsed,
-                    // parse each column in the group
-                    col.isColumnGroup() ->
-                        col.parseParallel(options) { all() }
-                            .asColumnGroup(col.name())
-                            .asDataColumn()
+            // when a column group is requested to be parsed,
+            // parse each column in the group
+            col.isColumnGroup() ->
+                col.parseParallel(options) { all() }
+                    .asColumnGroup(col.name())
+                    .asDataColumn()
 
-                    // Base case, parse the column if it's a `String?` column
-                    col.isSubtypeOf<String?>() ->
-                        col.cast<String?>().tryParse(options)
+            // Base case, parse the column if it's a `String?` column
+            col.isSubtypeOf<String?>() ->
+                col.cast<String?>().tryParse(options)
 
-                    else -> col
-                }.let { ColumnToInsert(col.path, it) }
-            }
-        }.awaitAll()
+            else -> col
+        }.let { ColumnToInsert(col.path, it) }
+    }.collect(Collectors.toList())
 
-        emptyDataFrame<T>().insertImpl(convertedCols)
-    }
+    return emptyDataFrame<T>().insertImpl(convertedCols)
+}
