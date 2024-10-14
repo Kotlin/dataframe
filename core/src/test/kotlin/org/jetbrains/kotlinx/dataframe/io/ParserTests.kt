@@ -9,6 +9,7 @@ import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertTo
@@ -126,6 +127,17 @@ class ParserTests {
                 LocalTime(1, 0, 0),
             ),
         )
+    }
+
+    @Test
+    fun `custom nullStrings`() {
+        val col by columnOf("1", "2", "null", "3", "NA", "nothing", "4.0", "5.0")
+
+        val parsed = col.tryParse(
+            ParserOptions(nullStrings = setOf("null", "NA", "nothing")),
+        )
+        parsed.type() shouldBe typeOf<Double?>()
+        parsed.toList() shouldBe listOf(1, 2, null, 3, null, null, 4.0, 5.0)
     }
 
     @Test

@@ -69,10 +69,12 @@ dependencies {
     implementation(libs.commonsIo)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
+    implementation(libs.fastDoubleParser)
 
     implementation(libs.fuel)
 
     api(libs.kotlin.datetimeJvm)
+    implementation(libs.kotlin.coroutinesCore)
     implementation(libs.kotlinpoet)
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
