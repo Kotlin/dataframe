@@ -1,9 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -50,6 +46,7 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalQuery
 import java.util.Locale
+import java.util.stream.Collectors
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -325,7 +322,7 @@ internal object Parsers : GlobalParserOptions {
         parser
     }
 
-    private val parsersOrder = listOf(
+    internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
         // Long
@@ -415,7 +412,7 @@ internal object Parsers : GlobalParserOptions {
         stringParser<String> { it },
     )
 
-    internal val parsersMap = parsersOrder.associateBy { it.type }
+    private val parsersMap = parsersOrder.associateBy { it.type }
 
     val size: Int = parsersOrder.size
 
@@ -478,16 +475,16 @@ internal object Parsers : GlobalParserOptions {
 internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColumn<*> {
     val columnSize = size
     val parsedValues = ArrayList<Any?>(columnSize)
-    var hasNulls: Boolean = false
-    var hasNotNulls: Boolean = false
-    var nullStringParsed: Boolean = false
+    var hasNulls = false
+    var hasNotNulls = false
+    var nullStringParsed = false
     val nulls = options?.nullStrings ?: Parsers.nulls
 
-    val parsersToCheck = Parsers.parsersMap
-    val parserTypesToCheck = parsersToCheck.keys
+    val parsersToCheck = Parsers.parsersOrder
+    val parserTypesToCheck = parsersToCheck.map { it.type }.toSet()
 
     var correctParser: StringParser<*>? = null
-    for ((_, parser) in parsersToCheck) {
+    for (parser in parsersToCheck) {
         if (parser.coveredBy.any { it in parserTypesToCheck }) continue
 
         val parserWithOptions = parser.applyOptions(options)
@@ -496,13 +493,13 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
         hasNotNulls = false
         nullStringParsed = false
         for (str in this) {
-            when {
-                str == null -> {
+            when (str) {
+                null -> {
                     parsedValues += null
                     hasNulls = true
                 }
 
-                str in nulls -> {
+                in nulls -> {
                     parsedValues += null
                     hasNulls = true
                     nullStringParsed = true
@@ -510,10 +507,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
 
                 else -> {
                     val trimmed = str.trim()
-                    val res = parserWithOptions(trimmed)
-                    if (res == null) {
-                        continue
-                    }
+                    val res = parserWithOptions(trimmed) ?: continue
                     parsedValues += res
                     hasNotNulls = true
                 }
@@ -546,43 +540,38 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
 }
 
 internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
-    runBlocking { parseParallel(options, columns) }
+    parseParallel(options, columns)
 
-private suspend fun <T> DataFrame<T>.parseParallel(
-    options: ParserOptions?,
-    columns: ColumnsSelector<T, Any?>,
-): DataFrame<T> =
-    coroutineScope {
-        val convertedCols = getColumnsWithPaths(columns).map { col ->
-            async {
-                when {
-                    // when a frame column is requested to be parsed,
-                    // parse each value/frame column at any depth inside each DataFrame in the frame column
-                    col.isFrameColumn() ->
-                        col.values.map {
-                            async {
-                                it.parseParallel(options) {
-                                    colsAtAnyDepth { !it.isColumnGroup() }
-                                }
-                            }
-                        }.awaitAll()
-                            .toColumn(col.name)
+/**
+ * Parses a [DataFrame] in parallel using java parallel streams.
+ */
+private fun <T> DataFrame<T>.parseParallel(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> {
+    val convertedCols = getColumnsWithPaths(columns).stream().parallel().map { col ->
+        when {
+            // when a frame column is requested to be parsed,
+            // parse each value/frame column at any depth inside each DataFrame in the frame column
+            col.isFrameColumn() ->
+                col.toList().stream().parallel().map {
+                    it.parseParallel(options) {
+                        colsAtAnyDepth { !it.isColumnGroup() }
+                    }
+                }.collect(Collectors.toList())
+                    .toColumn(col.name)
 
-                    // when a column group is requested to be parsed,
-                    // parse each column in the group
-                    col.isColumnGroup() ->
-                        col.parseParallel(options) { all() }
-                            .asColumnGroup(col.name())
-                            .asDataColumn()
+            // when a column group is requested to be parsed,
+            // parse each column in the group
+            col.isColumnGroup() ->
+                col.parseParallel(options) { all() }
+                    .asColumnGroup(col.name())
+                    .asDataColumn()
 
-                    // Base case, parse the column if it's a `String?` column
-                    col.isSubtypeOf<String?>() ->
-                        col.cast<String?>().tryParse(options)
+            // Base case, parse the column if it's a `String?` column
+            col.isSubtypeOf<String?>() ->
+                col.cast<String?>().tryParse(options)
 
-                    else -> col
-                }.let { ColumnToInsert(col.path, it) }
-            }
-        }.awaitAll()
+            else -> col
+        }.let { ColumnToInsert(col.path, it) }
+    }.collect(Collectors.toList())
 
-        emptyDataFrame<T>().insertImpl(convertedCols)
-    }
+    return emptyDataFrame<T>().insertImpl(convertedCols)
+}
