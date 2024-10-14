@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
-import org.jetbrains.kotlinx.dataframe.io.defaultNullStrings
+import org.jetbrains.kotlinx.dataframe.io.DEFAULT_NULL_STRINGS
 import java.io.InputStream
 import java.math.BigDecimal
 import java.net.URL
@@ -86,7 +86,7 @@ internal fun readDelimImpl(
     val csvSpecs = with(CsvSpecs.builder()) {
         if (additionalCsvSpecs != null) from(additionalCsvSpecs)
         customDoubleParser(FastDoubleParser(parserOptions))
-        nullValueLiterals(parserOptions.nullStrings ?: defaultNullStrings)
+        nullValueLiterals(parserOptions.nullStrings ?: DEFAULT_NULL_STRINGS)
         headerLegalizer(::legalizeHeader)
         numRows(readLines ?: Long.MAX_VALUE)
         ignoreEmptyLines(ignoreEmptyLines)

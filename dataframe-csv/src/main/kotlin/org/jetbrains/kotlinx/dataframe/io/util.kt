@@ -11,8 +11,8 @@ public const val DEFAULT_COL_TYPE: String = ".default"
 /**
  * Default strings that are considered null.
  */
-public val defaultNullStrings: Set<String> =
+public val DEFAULT_NULL_STRINGS: Set<String> =
     setOf("", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil")
 
-public val defaultDelimParserOptions: ParserOptions =
-    ParserOptions(nullStrings = defaultNullStrings)
+public val DEFAULT_PARSER_OPTIONS: ParserOptions =
+    ParserOptions(nullStrings = DEFAULT_NULL_STRINGS)

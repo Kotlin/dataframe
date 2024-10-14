@@ -529,24 +529,27 @@ class DelimCsvTsvTests {
     }
 
     @Test
-    fun `parse with wrong locales`() {
-        @Language("csv")
-        val csv =
-            """
-            name; price;
-            a;12,45;
-            b;-13,35;
-            c;100.123,35;
-            d;-204.235,23;
-            """.trimIndent()
-
-        val df = DataFrame.readCsvStr(
-            text = csv,
-            delimiter = ';',
+    fun `NA and custom null string in double column`() {
+        val df = DataFrame.readCsv(
+            msleepCsv,
             parserOptions = ParserOptions(
-                locale = Locale.GERMAN,
+                nullStrings = DEFAULT_NULL_STRINGS + "nothing",
             ),
         )
+
+        df.print(columnTypes = true, borders = true, title = true)
+
+        df["name"].type() shouldBe typeOf<String>()
+        df["genus"].type() shouldBe typeOf<String>()
+        df["vore"].type() shouldBe typeOf<String?>()
+        df["order"].type() shouldBe typeOf<String>()
+        df["conservation"].type() shouldBe typeOf<String?>()
+        df["sleep_total"].type() shouldBe typeOf<Double>()
+        df["sleep_rem"].type() shouldBe typeOf<Double?>()
+        df["sleep_cycle"].type() shouldBe typeOf<Double?>()
+        df["awake"].type() shouldBe typeOf<Double>()
+        df["brainwt"].type() shouldBe typeOf<Double?>()
+        df["bodywt"].type() shouldBe typeOf<Double?>()
     }
 
     companion object {
@@ -558,6 +561,7 @@ class DelimCsvTsvTests {
         private val wineCsv = testCsv("wine")
         private val durationCsv = testCsv("duration")
         private val withBomCsv = testCsv("with-bom")
+        private val msleepCsv = testCsv("msleep")
     }
 }
 

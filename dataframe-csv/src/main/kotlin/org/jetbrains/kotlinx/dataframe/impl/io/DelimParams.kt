@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
-import org.jetbrains.kotlinx.dataframe.io.defaultDelimParserOptions
+import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
 
 /**
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
@@ -78,12 +78,12 @@ internal object DelimParams {
     /**
      * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
      *   Can configure locale, date format, double parsing, skipping types, etc.
-     *   Default, [defaultDelimParserOptions]:
+     *   Default, [DEFAULT_PARSER_OPTIONS]:
      *   ```
      *   ParserOptions(nullStrings = ["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"])
      *   ```
      */
-    val PARSER_OPTIONS: ParserOptions = defaultDelimParserOptions
+    val PARSER_OPTIONS: ParserOptions = DEFAULT_PARSER_OPTIONS
 
     /**
      * @param ignoreEmptyLines If `true`, intermediate empty lines will be skipped.
