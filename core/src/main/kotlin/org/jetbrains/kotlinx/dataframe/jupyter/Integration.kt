@@ -181,6 +181,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 "org.jetbrains.kotlinx:dataframe-jdbc:$version",
                 "org.jetbrains.kotlinx:dataframe-arrow:$version",
                 "org.jetbrains.kotlinx:dataframe-openapi:$version",
+                "org.jetbrains.kotlinx:dataframe-openapi-generator:$version"
             )
         }
 

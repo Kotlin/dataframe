@@ -20,7 +20,7 @@ dependencies {
     api(libs.kotlin.reflect)
     implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
-    implementation(project(":dataframe-openapi"))
+    implementation(project(":dataframe-openapi-generator"))
     implementation(project(":dataframe-excel"))
     implementation(project(":dataframe-jdbc"))
 
@@ -116,12 +116,13 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
     dependsOn(":dataframe-jdbc:publishToMavenLocal")
+    dependsOn(":dataframe-openapi-generator:publishToMavenLocal")
     dependsOn(":dataframe-openapi:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
     dependsOn(":dataframe-jdbc:publishDataframeJDBCPublicationToMavenLocal")
-    dependsOn(":dataframe-openapi:publishDataframeOpenApiPublicationToMavenLocal")
+    dependsOn(":dataframe-openapi-generator:publishDataframeOpenApiPublicationToMavenLocal")
     dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")
     dependsOn(":core:publishCorePublicationToMavenLocal")
     description = "Runs integration tests."
