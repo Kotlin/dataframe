@@ -1,3 +1,5 @@
+@file:JvmName("WriteTsvDeephavenKt")
+
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.commons.csv.CSVFormat

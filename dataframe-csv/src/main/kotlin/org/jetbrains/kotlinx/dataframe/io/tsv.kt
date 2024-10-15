@@ -1,3 +1,5 @@
+@file:JvmName("TsvDeephavenKt")
+
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.DataFrame

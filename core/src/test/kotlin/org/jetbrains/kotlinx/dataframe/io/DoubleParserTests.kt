@@ -120,6 +120,7 @@ class DoubleParserTests {
             "100123.35",
             "-204,235.23",
             "1.234e3",
+            "3e-04", // failed with old double parser
         )
 
         val expectedDoubles = listOf(
@@ -128,6 +129,7 @@ class DoubleParserTests {
             100_123.35,
             -204_235.23,
             1.234e3,
+            3e-04,
         )
 
         // CharSequence

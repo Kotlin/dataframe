@@ -11,6 +11,7 @@ plugins {
         alias(ktlint)
         alias(jupyter.api)
         alias(docProcessor)
+        alias(kotlinx.benchmark)
     }
     idea
 }
@@ -39,9 +40,16 @@ dependencies {
     implementation(libs.kotlin.coroutinesCore)
 
     testApi(project(":core"))
+    testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
+    }
+}
+
+benchmark {
+    targets {
+        register("test")
     }
 }
 
@@ -155,7 +163,6 @@ kotlin {
     explicitApi()
     sourceSets.all {
         languageSettings {
-            enableLanguageFeature("ExplicitBackingFields")
         }
     }
 }
