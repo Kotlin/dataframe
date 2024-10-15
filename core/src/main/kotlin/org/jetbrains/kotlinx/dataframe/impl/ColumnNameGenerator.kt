@@ -2,13 +2,13 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 
-internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
+public class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 
     private val usedNames = columnNames.toMutableSet()
 
     private val colNames = columnNames.toMutableList()
 
-    fun addUnique(preferredName: String): String {
+    public fun addUnique(preferredName: String): String {
         var name = preferredName
         var k = 1
         while (usedNames.contains(name)) {
@@ -19,17 +19,17 @@ internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
         return name
     }
 
-    fun addIfAbsent(name: String) {
+    public fun addIfAbsent(name: String) {
         if (!usedNames.contains(name)) {
             usedNames.add(name)
             colNames.add(name)
         }
     }
 
-    val names: List<String>
+    public val names: List<String>
         get() = colNames
 
-    fun contains(name: String) = usedNames.contains(name)
+    public operator fun contains(name: String): Boolean = usedNames.contains(name)
 }
 
 internal fun AnyFrame.nameGenerator() = ColumnNameGenerator(columnNames())
