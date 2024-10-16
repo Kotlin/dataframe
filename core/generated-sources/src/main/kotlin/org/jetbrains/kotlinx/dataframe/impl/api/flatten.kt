@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 internal fun <T, C> DataFrame<T>.flattenImpl(
     columns: ColumnsSelector<T, C>,
     keepParentNameForColumns: Boolean = false,
-    separator: String = ".",
+    separator: String = "_",
 ): DataFrame<T> {
     val rootColumns = getColumnsWithPaths {
         columns.toColumnSet().filter { it.isColumnGroup() }.simplify()
