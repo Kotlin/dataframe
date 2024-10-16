@@ -269,6 +269,8 @@ public fun DataFrame.Companion.readJsonStr(
  * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
  * @return [DataRow] from the given [text].
  */
+@Refine
+@Interpretable("DataRowReadJsonStr")
 public fun DataRow.Companion.readJsonStr(
     @Language("json") text: String,
     header: List<String> = emptyList(),
