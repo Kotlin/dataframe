@@ -69,7 +69,8 @@ dependencies {
     implementation(libs.commonsIo)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
-    implementation(libs.fastDoubleParser)
+//    implementation(libs.fastDoubleParser) TODO temp
+    implementation(files("../libs/fastdoubleparser-2024-10-13_199e49bf.jar"))
 
     implementation(libs.fuel)
 

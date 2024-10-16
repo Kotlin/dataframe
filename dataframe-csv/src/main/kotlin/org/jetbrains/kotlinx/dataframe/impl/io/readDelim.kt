@@ -17,9 +17,6 @@ import io.deephaven.csv.parsers.Parser
 import io.deephaven.csv.parsers.Parsers
 import io.deephaven.csv.reading.CsvReader
 import io.deephaven.csv.util.CsvReaderException
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -142,26 +139,12 @@ internal fun readDelimImpl(
     val defaultColType = colTypes[DEFAULT_COL_TYPE]
 
     // convert each ResultColumn to a DataColumn
-    val cols =
-        if (parseParallel) {
-            runBlocking {
-                csvReaderResult.map {
-                    async {
-                        it.toDataColumn(
-                            parserOptions = parserOptions,
-                            desiredColType = colTypes[it.name()] ?: defaultColType,
-                        )
-                    }
-                }.awaitAll()
-            }
-        } else {
-            csvReaderResult.map {
-                it.toDataColumn(
-                    parserOptions = parserOptions,
-                    desiredColType = colTypes[it.name()] ?: defaultColType,
-                )
-            }
-        }
+    val cols = csvReaderResult.map {
+        it.toDataColumn(
+            parserOptions = parserOptions,
+            desiredColType = colTypes[it.name()] ?: defaultColType,
+        )
+    }
 
     return dataFrameOf(cols)
 }

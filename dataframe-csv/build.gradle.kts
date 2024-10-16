@@ -37,7 +37,6 @@ dependencies {
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
-    implementation(libs.kotlin.coroutinesCore)
 
     testApi(project(":core"))
     testImplementation(libs.kotlinx.benchmark.runtime)
