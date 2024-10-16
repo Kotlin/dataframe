@@ -5,7 +5,10 @@ This folder holds the source code of our documentation website:
 
 It's built using [WriterSide](https://www.jetbrains.com/writerside/) and published
 by a [Github Action](../.github/workflows/main.yml).
-The file structure mirrors the default WriterSide structure with some small exceptions.
+The file structure largely mirrors the default WriterSide structure.
+For instance, if you want to add a new page to the website, this needs to be stored as an `.md` file in the
+[StardustDocs/topics](./StardustDocs/topics) folder,
+and included in the [StardustDocs/d.tree](./StardustDocs/d.tree) file.
 
 Images all README files can be stored in [docs/imgs](./imgs).
 
@@ -22,7 +25,7 @@ We can also generate "normal" DataFrame samples for the website. This can be don
 [OtherSamples class](../core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/OtherSamples.kt). Generated
 HTML files will be stored in [docs/StardustDocs/snippets/manual](./StardustDocs/snippets/manual).
 
-### KDoc Preprocesor
+### KDoc Preprocessor
 KDocs can also be exported to HTML, for them to be reused on the website.
 Elements annotated with `@ExportAsHtml` will have their generated content be copied over to
 [docs/StardustDocs/snippets/kdocs](./StardustDocs/snippets/kdocs).

@@ -6,7 +6,8 @@ there are some CI operations that are handled by GitHub actions instead.
 ### Publishing Docs
 
 The building of the documentation website in [docs](../docs), and the publishing of it along
-with the search-indices is handled by the [Build Docs GH Action](./workflows/main.yml).
+with the search-indices is handled by the [Build Docs GH Action](./workflows/main.yml). Careful: This action replaces the entire contents
+of the documentation website.
 
 ### Gradle Wrapper Validation
 

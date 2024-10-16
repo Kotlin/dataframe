@@ -7,7 +7,7 @@ I/O operations are split off into other modules, like [:dataframe-excel](../data
 or [:dataframe-jdbc](../dataframe-jdbc), however, this is has not happened yet for all operations
 (see [Issue #100](https://github.com/Kotlin/dataframe/issues/100)).
 
-Operations likely to be split off in the future include:
+At the moment, these data sources are still part of the `:core` module:
 
 - csv/tsv
 - html
