@@ -6,9 +6,26 @@ import io.deephaven.csv.CsvSpecs
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.CommonReadParams
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.DelimDocs
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.ADDITIONAL_CSV_SPECS
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.COL_TYPES
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.COMPRESSION
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.DELIM_DELIMITER
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.FILE
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.FILE_OR_URL
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.HEADER
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.IGNORE_EMPTY_LINES
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.IGNORE_EXCESS_COLUMNS
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.IGNORE_SURROUNDING_SPACES
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.INPUT_STREAM
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.PARSE_PARALLEL
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.QUOTE
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.READ_LINES
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.SKIP_LINES
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.TEXT
+import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.asURL
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
 import org.jetbrains.kotlinx.dataframe.impl.io.compressionStateOf
@@ -25,31 +42,31 @@ import java.net.URL
  */
 
 /**
- * @include [DelimDocs]
+ * @include [ReadDelim.DelimDocs]
  * @set [ReadDelim.DataTitleArg] File
  * @set [ReadDelim.DataArg] file
- * @include [DelimParams.FILE]
- * @include [DelimParams.CSV_DELIMITER]
- * @include [DelimParams.COMPRESSION]
- * @include [CommonReadParams]
+ * @include [FILE]
+ * @include [DELIM_DELIMITER]
+ * @include [COMPRESSION]
+ * @include [ReadDelim.CommonReadParams]
  */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     file: File,
-    delimiter: Char = DelimParams.CSV_DELIMITER,
-    header: List<String> = DelimParams.HEADER,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
     compression: Compression<*> = compressionStateOf(file),
-    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
-    skipLines: Long = DelimParams.SKIP_LINES,
-    readLines: Long? = DelimParams.READ_LINES,
-    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = DelimParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
 ): DataFrame<*> =
     FileInputStream(file).use {
         readDelimImpl(
@@ -72,31 +89,31 @@ public fun DataFrame.Companion.readDelim(
     }
 
 /**
- * @include [DelimDocs]
+ * @include [ReadDelim.DelimDocs]
  * @set [ReadDelim.DataTitleArg] Url
  * @set [ReadDelim.DataArg] url
  * @include [DelimParams.URL]
- * @include [DelimParams.CSV_DELIMITER]
- * @include [DelimParams.COMPRESSION]
- * @include [CommonReadParams]
+ * @include [DELIM_DELIMITER]
+ * @include [COMPRESSION]
+ * @include [ReadDelim.CommonReadParams]
  */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     url: URL,
-    delimiter: Char = DelimParams.CSV_DELIMITER,
-    header: List<String> = DelimParams.HEADER,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
     compression: Compression<*> = compressionStateOf(url),
-    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
-    skipLines: Long = DelimParams.SKIP_LINES,
-    readLines: Long? = DelimParams.READ_LINES,
-    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = DelimParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
 ): DataFrame<*> =
     catchHttpResponse(url) {
         readDelimImpl(
@@ -119,31 +136,31 @@ public fun DataFrame.Companion.readDelim(
     }
 
 /**
- * @include [DelimDocs]
+ * @include [ReadDelim.DelimDocs]
  * @set [ReadDelim.DataTitleArg] File or URL
  * @set [ReadDelim.DataArg] file or url
- * @include [DelimParams.FILE_OR_URL]
- * @include [DelimParams.CSV_DELIMITER]
- * @include [DelimParams.COMPRESSION]
- * @include [CommonReadParams]
+ * @include [FILE_OR_URL]
+ * @include [DELIM_DELIMITER]
+ * @include [COMPRESSION]
+ * @include [ReadDelim.CommonReadParams]
  */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     fileOrUrl: String,
-    delimiter: Char = DelimParams.CSV_DELIMITER,
-    header: List<String> = DelimParams.HEADER,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
     compression: Compression<*> = compressionStateOf(fileOrUrl),
-    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
-    skipLines: Long = DelimParams.SKIP_LINES,
-    readLines: Long? = DelimParams.READ_LINES,
-    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = DelimParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
@@ -167,33 +184,33 @@ public fun DataFrame.Companion.readDelim(
 
 /**
  * {@comment the only one with additionalCsvSpecs}
- * @include [DelimDocs]
+ * @include [ReadDelim.DelimDocs]
  * @set [ReadDelim.DataTitleArg] InputStream
  * @set [ReadDelim.DataArg] input stream
- * @include [DelimParams.INPUT_STREAM]
- * @include [DelimParams.CSV_DELIMITER]
- * @include [DelimParams.COMPRESSION]
- * @include [CommonReadParams]
- * @include [DelimParams.ADDITIONAL_CSV_SPECS]
+ * @include [INPUT_STREAM]
+ * @include [DELIM_DELIMITER]
+ * @include [COMPRESSION]
+ * @include [ReadDelim.CommonReadParams]
+ * @include [ADDITIONAL_CSV_SPECS]
  */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelim(
     inputStream: InputStream,
-    delimiter: Char = DelimParams.CSV_DELIMITER,
-    header: List<String> = DelimParams.HEADER,
-    compression: Compression<*> = DelimParams.COMPRESSION,
-    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
-    skipLines: Long = DelimParams.SKIP_LINES,
-    readLines: Long? = DelimParams.READ_LINES,
-    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = DelimParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
-    additionalCsvSpecs: CsvSpecs? = DelimParams.ADDITIONAL_CSV_SPECS,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
+    compression: Compression<*> = COMPRESSION,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    additionalCsvSpecs: CsvSpecs? = ADDITIONAL_CSV_SPECS,
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = inputStream,
@@ -215,29 +232,29 @@ public fun DataFrame.Companion.readDelim(
     )
 
 /**
- * @include [DelimDocs]
+ * @include [ReadDelim.DelimDocs]
  * @set [ReadDelim.DataTitleArg] String
  * @set [ReadDelim.DataArg] [String]
- * @include [DelimParams.TEXT]
- * @include [DelimParams.CSV_DELIMITER]
- * @include [CommonReadParams]
+ * @include [TEXT]
+ * @include [DELIM_DELIMITER]
+ * @include [ReadDelim.CommonReadParams]
  */
 @ExperimentalCsv
 public fun DataFrame.Companion.readDelimStr(
     text: String,
-    delimiter: Char = DelimParams.CSV_DELIMITER,
-    header: List<String> = DelimParams.HEADER,
-    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
-    skipLines: Long = DelimParams.SKIP_LINES,
-    readLines: Long? = DelimParams.READ_LINES,
-    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = DelimParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
+    delimiter: Char = DELIM_DELIMITER,
+    header: List<String> = HEADER,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = text.byteInputStream(),

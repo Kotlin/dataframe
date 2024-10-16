@@ -28,14 +28,6 @@ internal fun compressionStateOf(file: File): Compression<*> =
         else -> Compression.None
     }
 
-internal fun compressionStateOf(inputStream: InputStream): Compression<*> =
-    when (inputStream) {
-        is GZIPInputStream -> Compression.Gzip
-        is ZipInputStream -> Compression.Zip
-        is InflaterInputStream -> error("Please supply compression = CsvCompression.Custom to read this input stream.")
-        else -> Compression.None
-    }
-
 internal fun compressionStateOf(url: URL): Compression<*> = compressionStateOf(url.path)
 
 internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFrame {

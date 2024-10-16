@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 @BenchmarkMode(Mode.SingleShotTime)
 @Warmup(iterations = 10, time = 5, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 20, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 10, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 open class BenchmarkTest {
 
