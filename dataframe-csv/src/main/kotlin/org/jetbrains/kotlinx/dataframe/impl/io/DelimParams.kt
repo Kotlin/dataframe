@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
-import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 
 /**
  * Contains both the default values of csv/tsv parameters and the parameter KDocs.
@@ -33,8 +33,11 @@ internal object DelimParams {
     /** @param delimiter The field delimiter character. Default: ','. */
     const val CSV_DELIMITER: Char = ','
 
-    /** @param delimiter The field delimiter character. Default: '\t'. */
+    /** @param delimiter The field delimiter character. Default: '\\t'. */
     const val TSV_DELIMITER: Char = '\t'
+
+    /** @param delimiter The field delimiter character. Default: ','. */
+    const val DELIM_DELIMITER: Char = ','
 
     /**
      * @param header Optional column titles.

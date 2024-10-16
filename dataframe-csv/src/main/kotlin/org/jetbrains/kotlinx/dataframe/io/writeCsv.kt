@@ -4,16 +4,19 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.CommonWriteParams
+import org.jetbrains.kotlinx.dataframe.documentation.WriteDelim
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 import java.io.File
 import java.io.FileWriter
 
 /**
- * TODO
+ * @include [WriteDelim.CsvDocs]
+ * @set [WriteDelim.WriteOrConvertArg] Write
+ * @set [WriteDelim.DataTitleArg] File
+ * @set [WriteDelim.DataArg] file
  * @include [DelimParams.CSV_DELIMITER]
- * @include [CommonWriteParams]
+ * @include [WriteDelim.CommonWriteParams]
  */
 @ExperimentalCsv
 public fun AnyFrame.writeCsv(
@@ -40,6 +43,14 @@ public fun AnyFrame.writeCsv(
         recordSeparator = recordSeparator,
     )
 
+/**
+ * @include [WriteDelim.CsvDocs]
+ * @set [WriteDelim.WriteOrConvertArg] Write
+ * @set [WriteDelim.DataTitleArg] File
+ * @set [WriteDelim.DataArg] file
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [WriteDelim.CommonWriteParams]
+ */
 @ExperimentalCsv
 public fun AnyFrame.writeCsv(
     path: String,
@@ -65,7 +76,17 @@ public fun AnyFrame.writeCsv(
         recordSeparator = recordSeparator,
     )
 
-// only one with additionalCsvFormat
+/**
+ * @include [WriteDelim.CsvDocs]
+ * @set [WriteDelim.WriteOrConvertArg] Write
+ * @set [WriteDelim.DataTitleArg] Appendable
+ * @set [WriteDelim.DataArg] [Appendable]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [WriteDelim.CommonWriteParams]
+ *
+ *
+ * {@comment only one with additionalCsvFormat}
+ */
 @ExperimentalCsv
 public fun AnyFrame.writeCsv(
     writer: Appendable,
@@ -93,6 +114,14 @@ public fun AnyFrame.writeCsv(
         additionalCsvFormat = additionalCsvFormat,
     )
 
+/**
+ * @include [WriteDelim.CsvDocs]
+ * @set [WriteDelim.WriteOrConvertArg] Convert
+ * @set [WriteDelim.DataTitleArg] String
+ * @set [WriteDelim.DataArg] [String]
+ * @include [DelimParams.CSV_DELIMITER]
+ * @include [WriteDelim.CommonWriteParams]
+ */
 @ExperimentalCsv
 public fun AnyFrame.toCsvStr(
     delimiter: Char = DelimParams.CSV_DELIMITER,
