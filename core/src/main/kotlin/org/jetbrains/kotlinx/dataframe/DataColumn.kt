@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
@@ -98,7 +98,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
             name: String,
             values: List<T>,
             nullable: Boolean? = null,
-        ): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
+        ): DataColumn<T> = createColumnGuessingType(name, values, nullable = nullable)
 
         public fun <T> create(
             name: String,

@@ -6,11 +6,11 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KProperty
 
-public fun AnyCol.inferType(): DataColumn<*> = guessColumnType(name, toList(), type, true)
+public fun AnyCol.inferType(): DataColumn<*> = createColumnGuessingType(name, toList(), type, true)
 
 // region DataFrame
 

@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 
 internal inline fun <T> Aggregatable<T>.remainingColumns(
     crossinline predicate: (AnyCol) -> Boolean,
@@ -19,7 +19,7 @@ internal fun <T> Aggregatable<T>.comparableColumns() =
 internal fun <T> Aggregatable<T>.numberColumns() = remainingColumns { it.isNumber() } as ColumnsSelector<T, Number?>
 
 internal fun NamedValue.toColumnWithPath() =
-    path to guessColumnType(
+    path to createColumnGuessingType(
         name = path.last(),
         values = listOf(value),
         suggestedType = type,
