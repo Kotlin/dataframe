@@ -59,7 +59,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
     val (nullable, values) = computeValues(df, expression)
     return when (infer) {
-        Infer.Nulls -> DataColumn.create(
+        Infer.Nulls -> DataColumn.createUnsafe(
             name = name,
             values = values,
             type = type.withNullability(nullable).replaceGenericTypeParametersWithUpperbound(),
@@ -72,7 +72,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
             nullable = nullable,
         )
 
-        Infer.None -> DataColumn.create(
+        Infer.None -> DataColumn.createUnsafe(
             name = name,
             values = values,
             type = type.replaceGenericTypeParametersWithUpperbound(),
@@ -87,7 +87,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
     val (_, values) = computeValues(this as DataFrame<T>, expression)
-    return guessColumnType(name, values)
+    return createColumnGuessingType(name, values)
 }
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
@@ -129,7 +129,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
             ).asDataColumn().cast()
 
         guessType ->
-            guessColumnType(
+            createColumnGuessingType(
                 name = "",
                 values = values.asList(),
                 suggestedType = suggestedType,
@@ -217,10 +217,8 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
 
 // endregion
 
-internal fun <T> guessColumnType(name: String, values: List<T>) = guessColumnType(name, values, null)
-
 @PublishedApi
-internal fun <T> guessColumnType(
+internal fun <T> createColumnGuessingType(
     name: String,
     values: List<T>,
     suggestedType: KType? = null,

@@ -34,12 +34,12 @@ public inline fun <T, reified R> DataColumn<T>.map(
     crossinline transform: (T) -> R,
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
-    return DataColumn.create(name(), newValues, typeOf<R>(), infer)
+    return DataColumn.createUnsafe(name(), newValues, typeOf<R>(), infer)
 }
 
 public fun <T, R> DataColumn<T>.map(type: KType, infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
-    return DataColumn.create(name(), values, type, infer).cast()
+    return DataColumn.createUnsafe(name(), values, type, infer).cast()
 }
 
 public inline fun <T, reified R> DataColumn<T>.mapIndexed(
@@ -47,7 +47,7 @@ public inline fun <T, reified R> DataColumn<T>.mapIndexed(
     crossinline transform: (Int, T) -> R,
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(it, get(it)) }.asList()
-    return DataColumn.create(name(), newValues, typeOf<R>(), infer)
+    return DataColumn.createUnsafe(name(), newValues, typeOf<R>(), infer)
 }
 
 public fun <T, R> DataColumn<T>.mapIndexed(
@@ -56,7 +56,7 @@ public fun <T, R> DataColumn<T>.mapIndexed(
     transform: (Int, T) -> R,
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(it, get(it)) }.asList()
-    return DataColumn.create(name(), values, type, infer).cast()
+    return DataColumn.createUnsafe(name(), values, type, infer).cast()
 }
 
 // endregion
