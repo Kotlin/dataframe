@@ -290,7 +290,7 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFr
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
         fill(value).asList().let {
-            DataColumn.create(value.toString(), it)
+            DataColumn.createUnsafe(value.toString(), it)
         }
     }.toDataFrame()
 
@@ -325,7 +325,7 @@ public class DataFrameBuilder(private val header: List<String>) {
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
             valuesBuilder(name).let {
-                DataColumn.create(
+                DataColumn.createUnsafe(
                     name = name,
                     values = it.asList(),
                 )
@@ -345,7 +345,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.create(
+            DataColumn.createUnsafe(
                 name,
                 List(nrow) { init(it, name) },
             )
@@ -353,7 +353,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.create(
+            DataColumn.createUnsafe(
                 name = name,
                 values = List(nrow, init),
             )

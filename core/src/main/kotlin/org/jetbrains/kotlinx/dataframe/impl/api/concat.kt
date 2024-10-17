@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
@@ -73,7 +73,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
         } else {
             getListType(baseType.withNullability(listOfNullable))
         }
-        return guessColumnType(
+        return createColumnGuessingType(
             name = name,
             values = list,
             suggestedType = tartypeOf,

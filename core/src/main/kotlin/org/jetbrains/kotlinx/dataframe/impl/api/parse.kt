@@ -525,7 +525,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     if (type.jvmErasure == String::class && !nullStringParsed) {
         return this // nothing parsed
     }
-    return DataColumn.create(name(), parsedValues, type)
+    return DataColumn.createUnsafe(name(), parsedValues, type)
 }
 
 internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: ParserOptions?): DataColumn<T?> {
