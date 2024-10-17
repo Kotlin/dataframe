@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
+import kotlinx.datetime.toLocalDateTime
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
@@ -21,6 +24,7 @@ import org.apache.arrow.vector.LargeVarBinaryVector
 import org.apache.arrow.vector.LargeVarCharVector
 import org.apache.arrow.vector.NullVector
 import org.apache.arrow.vector.SmallIntVector
+import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
@@ -178,6 +182,16 @@ private fun TimeStampMicroVector.values(range: IntRange): List<LocalDateTime?> =
             getObject(it).toKotlinLocalDateTime()
         }
     }
+
+private fun TimeStampMicroTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+            if (isNull(i)) {
+                    null
+                } else {
+                    Instant.fromEpochMilliseconds(getObject(it) / 1000)
+                        .toLocalDateTime(TimeZone.of(this.timeZone))
+                }
+        }
 
 private fun TimeStampMilliVector.values(range: IntRange): List<LocalDateTime?> =
     range.mapIndexed { i, it ->
@@ -344,6 +358,8 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeStampNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is TimeStampMicroTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
