@@ -59,7 +59,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
     val (nullable, values) = computeValues(df, expression)
     return when (infer) {
-        Infer.Nulls -> DataColumn.create(
+        Infer.Nulls -> DataColumn.createUnsafe(
             name = name,
             values = values,
             type = type.withNullability(nullable).replaceGenericTypeParametersWithUpperbound(),
@@ -72,7 +72,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
             nullable = nullable,
         )
 
-        Infer.None -> DataColumn.create(
+        Infer.None -> DataColumn.createUnsafe(
             name = name,
             values = values,
             type = type.replaceGenericTypeParametersWithUpperbound(),

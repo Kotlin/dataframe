@@ -33,6 +33,17 @@ internal open class FrameColumnImpl<T> constructor(
         // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
         if (BuildConfig.DEBUG) {
             require(!values.anyNull()) { "FrameColumn cannot null values." }
+
+//            val schema = columnSchema?.value
+//                ?: values.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
+//
+//            for (df in values) {
+//                val dfSchema = df.schema()
+//                if (dfSchema.columns.isEmpty()) continue
+//                require(dfSchema.compare(schema).isDerivedOrEqual()) {
+//                    "DataFrames in FrameColumn don't adhere to the given schema:\nGiven:\n$schema\n\nActual:\n$dfSchema"
+//                }
+//            }
         }
     }
 

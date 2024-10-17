@@ -44,7 +44,7 @@ class DataColumns {
         }
 
         shouldThrow<IllegalArgumentException> {
-            DataColumn.create(
+            DataColumn.createUnsafe(
                 "",
                 listOf(dataFrameOf("a")(1), null),
             )
