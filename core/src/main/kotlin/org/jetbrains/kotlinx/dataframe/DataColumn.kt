@@ -100,6 +100,10 @@ public interface DataColumn<out T> : BaseColumn<T> {
             nullable: Boolean? = null,
         ): DataColumn<T> = createColumnGuessingType(name, values, nullable = nullable)
 
+        /**
+         * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
+         * [type] without checking the actual values in [values].
+         */
         public fun <T> create(
             name: String,
             values: List<T>,
@@ -112,6 +116,10 @@ public interface DataColumn<out T> : BaseColumn<T> {
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
 
+        /**
+         * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
+         * type [T] without checking the actual values in [values].
+         */
         public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
             create(name, values, typeOf<T>(), infer)
 

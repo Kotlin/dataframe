@@ -23,6 +23,8 @@ import kotlin.reflect.KProperty
  * - [ColumnAccessor] created by [columnGroup] delegate
  * - explicit cast using [asColumnGroup]
  *
+ * Can be instantiated by [DataColumn.createColumnGroup].
+ *
  * @param T Schema marker. See [DataFrame] for details.
  */
 @HasSchema(schemaArg = 0)
