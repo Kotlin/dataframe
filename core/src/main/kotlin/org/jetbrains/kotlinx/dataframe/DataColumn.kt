@@ -103,7 +103,11 @@ public interface DataColumn<out T> : BaseColumn<T> {
          */
         public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(name, df)
 
-        // TODO this shouldn't be here
+        @Deprecated(
+            message = CREATE_FRAME_COLUMN,
+            replaceWith = ReplaceWith(CREATE_FRAME_COLUMN_REPLACE, CREATE_FRAME_COLUMN_IMPORT),
+            level = DeprecationLevel.WARNING,
+        )
         public fun <T> createFrameColumn(name: String, df: DataFrame<T>, startIndices: Iterable<Int>): FrameColumn<T> =
             FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence()).toList(), lazy { df.schema() })
 

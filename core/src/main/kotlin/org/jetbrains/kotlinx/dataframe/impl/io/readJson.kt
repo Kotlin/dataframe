@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -298,11 +299,12 @@ internal fun fromJsonListAnyColumns(
                     )
                 }
 
-                else -> DataColumn.createFrameColumn(
-                    name = ARRAY_COLUMN_NAME, // will be erased
-                    df = parsed.unwrapUnnamedColumns(),
-                    startIndices = startIndices,
-                )
+                else ->
+                    parsed.unwrapUnnamedColumns()
+                        .chunked(
+                            startIndices = startIndices,
+                            name = ARRAY_COLUMN_NAME, // will be erased
+                        )
             }
             listOf(UnnamedColumn(res))
         }
@@ -640,7 +642,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                 )
                             }
 
-                            else -> DataColumn.createFrameColumn(colName, parsed.unwrapUnnamedColumns(), startIndices)
+                            else -> parsed.unwrapUnnamedColumns().chunked(startIndices, colName)
                         }
                         UnnamedColumn(res)
                     }
