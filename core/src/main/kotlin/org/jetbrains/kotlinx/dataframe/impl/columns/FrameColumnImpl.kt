@@ -1,12 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -25,6 +27,14 @@ internal open class FrameColumnImpl<T> constructor(
         distinct = distinct,
     ),
     FrameColumn<T> {
+
+    init {
+        // Checks for nulls in the `values` list.
+        // This only runs with `kotlin.dataframe.debug=true` in gradle.properties.
+        if (BuildConfig.DEBUG) {
+            require(!values.anyNull()) { "FrameColumn cannot null values." }
+        }
+    }
 
     override fun rename(newName: String) = FrameColumnImpl(newName, values, schema, distinct)
 
