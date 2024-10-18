@@ -202,8 +202,8 @@ private fun TimeStampMicroTZVector.values(range: IntRange): List<LocalDateTime?>
             if (isNull(i)) {
                     null
                 } else {
-                    Instant.fromEpochMilliseconds(getObject(it) / 1_000L)
-                        .toLocalDateTime(TimeZone.of(this.timeZone))
+                    DateUtility.getLocalDateTimeFromEpochMicro(getObject(it), this.timeZone)
+                        .toKotlinLocalDateTime()
                 }
         }
 
