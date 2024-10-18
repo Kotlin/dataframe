@@ -249,7 +249,9 @@ internal fun <T> createColumnGuessingType(
                 val df = dataFrameOf(values as Iterable<AnyCol>)
                 DataColumn.createColumnGroup(name, df)
             } else {
-                val df = values.map { (it as AnyRow?)?.toDataFrame() ?: DataFrame.empty(1) }.concat()
+                val df = values.map {
+                    (it as AnyRow?)?.toDataFrame() ?: DataFrame.empty(1)
+                }.concat()
                 DataColumn.createColumnGroup(name, df)
             }.asDataColumn().cast()
         }
