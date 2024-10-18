@@ -24,16 +24,17 @@ import org.apache.arrow.vector.LargeVarBinaryVector
 import org.apache.arrow.vector.LargeVarCharVector
 import org.apache.arrow.vector.NullVector
 import org.apache.arrow.vector.SmallIntVector
-import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
+import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeStampMicroVector
 import org.apache.arrow.vector.TimeStampMilliTZVector
 import org.apache.arrow.vector.TimeStampMilliVector
 import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
+import org.apache.arrow.vector.TimeStampSecTZVector
 import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.UInt1Vector
@@ -69,6 +70,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -233,6 +235,16 @@ private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
+private fun TimeStampSecTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            DateUtility.getLocalDateTimeFromEpochMilli(TimeUnit.SECONDS.toMillis(getObject(it)), this.timeZone)
+                .toKotlinLocalDateTime()
+        }
+    }
+
 private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> =
     range.map {
         getObject(it)
@@ -390,6 +402,8 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeStampMilliTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is TimeStampSecTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
