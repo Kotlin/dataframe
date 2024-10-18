@@ -23,6 +23,6 @@ internal fun NamedValue.toColumnWithPath() =
         name = path.last(),
         values = listOf(value),
         suggestedType = type,
-        suggestedTypeIsUpperBound = guessType,
+        guessTypeWithSuggestedAsUpperbound = guessType,
         defaultValue = default,
     )

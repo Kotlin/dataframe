@@ -77,7 +77,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
             name = name,
             values = list,
             suggestedType = tartypeOf,
-            suggestedTypeIsUpperBound = guessType,
+            guessTypeWithSuggestedAsUpperbound = guessType,
             defaultValue = defaultValue,
         ).cast()
     }
