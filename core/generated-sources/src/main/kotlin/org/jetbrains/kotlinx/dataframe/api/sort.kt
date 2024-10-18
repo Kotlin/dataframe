@@ -117,7 +117,7 @@ private interface CommonDataColumnSortWithDocs
  *   a lambda of type `(`[T][T]`, `[T][T]`) -> `[Int][Int].
  * @return The sorted [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] [this] of the same type as the receiver. */
 public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
-    DataColumn.create(name, values().sortedWith(comparator), type) as C
+    DataColumn.createUnsafe(name, values().sortedWith(comparator), type) as C
 
 /** ## Sort [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] With
  *
