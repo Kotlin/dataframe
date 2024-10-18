@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.types
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
 import org.jetbrains.kotlinx.dataframe.impl.commonParents
@@ -151,6 +154,19 @@ class UtilTests {
 
         guessValueType(sequenceOf(1, 2, listOf(1), emptySet<Any>())) shouldBe typeOf<Any>()
         guessValueType(sequenceOf(listOf(1), setOf(1.0, 2.0))) shouldBe typeOf<Collection<Number>>()
+
+        guessValueType(
+            sequenceOf(DataColumn.empty(), columnOf(1)),
+            allColsMakesRow = true,
+        ) shouldBe typeOf<DataColumn<*>>()
+
+        guessValueType(
+            sequenceOf(columnOf("a"), columnOf(1)),
+            allColsMakesRow = true,
+        ) shouldBe typeOf<DataRow<*>>()
+        guessValueType(
+            sequenceOf(columnOf("a"), columnOf(1)),
+        ) shouldBe typeOf<DataColumn<*>>()
     }
 
     @Test
