@@ -188,7 +188,7 @@ private fun TimeStampMicroTZVector.values(range: IntRange): List<LocalDateTime?>
             if (isNull(i)) {
                     null
                 } else {
-                    Instant.fromEpochMilliseconds(getObject(it) / 1000)
+                    Instant.fromEpochMilliseconds(getObject(it) / 1_000L)
                         .toLocalDateTime(TimeZone.of(this.timeZone))
                 }
         }
