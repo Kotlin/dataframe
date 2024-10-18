@@ -30,6 +30,7 @@ import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
 import org.apache.arrow.vector.TimeStampMicroVector
+import org.apache.arrow.vector.TimeStampMilliTZVector
 import org.apache.arrow.vector.TimeStampMilliVector
 import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
@@ -216,6 +217,16 @@ private fun TimeStampMilliVector.values(range: IntRange): List<LocalDateTime?> =
         }
     }
 
+private fun TimeStampMilliTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            Instant.fromEpochMilliseconds(getObject(it))
+                .toLocalDateTime(TimeZone.of(this.timeZone))
+        }
+    }
+
 private fun TimeStampSecVector.values(range: IntRange): List<LocalDateTime?> =
     range.mapIndexed { i, it ->
         if (isNull(i)) {
@@ -378,6 +389,8 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeStampMicroTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is TimeStampMilliTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
