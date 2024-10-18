@@ -31,6 +31,7 @@ import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
 import org.apache.arrow.vector.TimeStampMicroVector
 import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
 import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.TinyIntVector
@@ -171,6 +172,19 @@ private fun TimeStampNanoVector.values(range: IntRange): List<LocalDateTime?> =
             null
         } else {
             getObject(it).toKotlinLocalDateTime()
+        }
+    }
+
+private fun TimeStampNanoTZVector.values(range: IntRange): List<LocalDateTime?> =
+    range.mapIndexed { i, it ->
+        if (isNull(i)) {
+            null
+        } else {
+            val nanoseconds = getObject(it)
+            val seconds = nanoseconds / 1_000_000_000
+            val nanosAdjustment = nanoseconds % 1_000_000_000
+            Instant.fromEpochSeconds(seconds, nanosAdjustment)
+                .toLocalDateTime(TimeZone.of(this.timeZone))
         }
     }
 
@@ -356,6 +370,8 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
             is TimeSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+
+            is TimeStampNanoTZVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 
             is TimeStampMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
 

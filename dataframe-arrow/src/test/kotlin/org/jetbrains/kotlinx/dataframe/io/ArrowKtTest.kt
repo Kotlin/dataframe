@@ -12,6 +12,7 @@ import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.TimeStampMicroTZVector
 import org.apache.arrow.vector.TimeStampMicroVector
 import org.apache.arrow.vector.TimeStampMilliVector
+import org.apache.arrow.vector.TimeStampNanoTZVector
 import org.apache.arrow.vector.TimeStampNanoVector
 import org.apache.arrow.vector.TimeStampSecVector
 import org.apache.arrow.vector.VectorSchemaRoot
@@ -533,6 +534,7 @@ internal class ArrowKtTest {
 
         val dataFrame = dataFrameOf(
             "ts_nano" to dates,
+            "ts_nano_tz" to dates,
             "ts_micro" to dates,
             "ts_micro_tz" to dates,
             "ts_milli" to dates,
@@ -569,22 +571,30 @@ internal class ArrowKtTest {
                 null,
             )
 
+            val timeStampNanoTZ = Field(
+                "ts_nano_tz",
+                FieldType.nullable(ArrowType.Timestamp(TimeUnit.NANOSECOND, "UTC")),
+                null,
+            )
+
             val timeStampSec = Field(
                 "ts_sec",
                 FieldType.nullable(ArrowType.Timestamp(TimeUnit.SECOND, null)),
                 null,
             )
             val schemaTimeStamp = Schema(
-                listOf(timeStampNano, timeStampMicro, timeStampMicroTZ, timeStampMilli, timeStampSec),
+                listOf(timeStampNano, timeStampNanoTZ, timeStampMicro, timeStampMicroTZ, timeStampMilli, timeStampSec),
             )
             VectorSchemaRoot.create(schemaTimeStamp, allocator).use { vectorSchemaRoot ->
                 val timeStampMilliVector = vectorSchemaRoot.getVector("ts_milli") as TimeStampMilliVector
                 val timeStampNanoVector = vectorSchemaRoot.getVector("ts_nano") as TimeStampNanoVector
+                val timeStampNanoTZVector = vectorSchemaRoot.getVector("ts_nano_tz") as TimeStampNanoTZVector
                 val timeStampMicroVector = vectorSchemaRoot.getVector("ts_micro") as TimeStampMicroVector
                 val timeStampMicroTZVector = vectorSchemaRoot.getVector("ts_micro_tz") as TimeStampMicroTZVector
                 val timeStampSecVector = vectorSchemaRoot.getVector("ts_sec") as TimeStampSecVector
                 timeStampMilliVector.allocateNew(dates.size)
                 timeStampNanoVector.allocateNew(dates.size)
+                timeStampNanoTZVector.allocateNew(dates.size)
                 timeStampMicroVector.allocateNew(dates.size)
                 timeStampMicroTZVector.allocateNew(dates.size)
                 timeStampSecVector.allocateNew(dates.size)
@@ -592,6 +602,7 @@ internal class ArrowKtTest {
                 dates.forEachIndexed { index, localDateTime ->
                     val instant = localDateTime.toInstant(UtcOffset.ZERO).toJavaInstant()
                     timeStampNanoVector[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
+                    timeStampNanoTZVector[index] = instant.toEpochMilli() * 1_000_000L + instant.nano
                     timeStampMicroVector[index] = instant.toEpochMilli() * 1_000L
                     timeStampMicroTZVector[index] = instant.toEpochMilli() * 1_000L
                     timeStampMilliVector[index] = instant.toEpochMilli()
