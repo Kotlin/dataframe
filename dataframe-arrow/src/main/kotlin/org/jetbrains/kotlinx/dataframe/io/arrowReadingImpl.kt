@@ -181,11 +181,8 @@ private fun TimeStampNanoTZVector.values(range: IntRange): List<LocalDateTime?> 
         if (isNull(i)) {
             null
         } else {
-            val nanoseconds = getObject(it)
-            val seconds = nanoseconds / 1_000_000_000
-            val nanosAdjustment = nanoseconds % 1_000_000_000
-            Instant.fromEpochSeconds(seconds, nanosAdjustment)
-                .toLocalDateTime(TimeZone.of(this.timeZone))
+            DateUtility.getLocalDateTimeFromEpochNano(getObject(it), this.timeZone)
+                .toKotlinLocalDateTime()
         }
     }
 
