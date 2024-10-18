@@ -142,12 +142,21 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * @param name name of the column
          * @param values the values to represent each row in the column
          * @param nullable optionally you can specify whether [values] contains nulls, if `null` it is inferred.
+         * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
+         *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
          */
         public fun <T> createWithTypeInference(
             name: String,
             values: List<T>,
             nullable: Boolean? = null,
-        ): DataColumn<T> = createColumnGuessingType(name, values, nullable = nullable)
+            allColsMakesColGroup: Boolean = false,
+        ): DataColumn<T> =
+            createColumnGuessingType(
+                name = name,
+                values = values,
+                nullable = nullable,
+                allColsMakesColGroup = allColsMakesColGroup,
+            )
 
         /**
          * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on

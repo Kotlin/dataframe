@@ -43,11 +43,9 @@ class DataColumns {
             )
         }
 
-        shouldThrow<IllegalArgumentException> {
-            DataColumn.createUnsafe(
-                "",
-                listOf(dataFrameOf("a")(1), null),
-            )
-        }
+        DataColumn.createUnsafe(
+            name = "",
+            values = listOf(dataFrameOf("a")(1), null),
+        ).kind() shouldBe ColumnKind.Value
     }
 }
