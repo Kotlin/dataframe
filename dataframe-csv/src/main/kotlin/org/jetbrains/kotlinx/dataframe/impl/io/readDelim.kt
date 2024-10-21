@@ -44,7 +44,7 @@ import kotlin.time.Duration
 
 /**
  *
- * @include [DelimParams.INPUT_STREAM]
+ * @include [DelimParams.INPUT_STREAM_READ]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
  * @include [DelimParams.HEADER]
  * @include [DelimParams.COMPRESSION]

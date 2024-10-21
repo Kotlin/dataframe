@@ -1,13 +1,11 @@
-@file:ExcludeFromSources
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.DataTitleArg
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.FileTypeArg
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.FileTypeTitleArg
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.FunctionLinkArg
-import org.jetbrains.kotlinx.dataframe.documentation.ReadDelim.OldFunctionLinkArg
+import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.DataTitleArg
+import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FileTypeArg
+import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FileTypeTitleArg
+import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FunctionLinkArg
+import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.OldFunctionLinkArg
 import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.io.ExperimentalCsv
 import java.io.File
@@ -25,14 +23,14 @@ import java.net.URL
  *
  * The integration is built upon {@include [DocumentationUrls.Deephaven]}.
  *
- * ##### Other overloads
+ * ##### Similar Functions
  * With the overloads of $[FunctionLinkArg]`()`, you can read any $[FileTypeArg] by [File][File],
  * [URL][URL], or [InputStream][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
- * For example, $[FunctionLinkArg]`("input.$[ReadDelim.FileExtensionArg]")`
+ * For example, $[FunctionLinkArg]`("input.$[CommonReadDelimDocs.FileExtensionArg]")`
  *
- * or $[FunctionLinkArg]`(`[File][File]`("input.$[ReadDelim.FileExtensionArg]"))`
+ * or $[FunctionLinkArg]`(`[File][File]`("input.$[CommonReadDelimDocs.FileExtensionArg]"), readLines = 100L)`
  *
  * ZIP (.zip) or GZIP (.gz) files are supported by default. \[compression\] is automatically detected.
  *
@@ -49,10 +47,10 @@ import java.net.URL
  * @set [StrFunctionLinkArg] \[DataFrame.${[FunctionNameArg]}Str\]\[${[FunctionNameArg]}Str\]
  * @set [OldFunctionLinkArg] \[DataFrame.${[OldFunctionNameArg]}\]\[org.jetbrains.kotlinx.dataframe.io.${[OldFunctionNameArg]}\]
  */
-internal interface ReadDelim {
+internal interface CommonReadDelimDocs {
 
     /**
-     * @include [ReadDelim]
+     * @include [CommonReadDelimDocs]
      * @set [FileTypeTitleArg] CSV
      * @set [FileTypeArg] CSV
      * @set [FileExtensionArg] csv
@@ -62,7 +60,7 @@ internal interface ReadDelim {
     interface CsvDocs
 
     /**
-     * @include [ReadDelim]
+     * @include [CommonReadDelimDocs]
      * @set [FileTypeTitleArg] TSV
      * @set [FileTypeArg] TSV
      * @set [FileExtensionArg] tsv
@@ -72,7 +70,7 @@ internal interface ReadDelim {
     interface TsvDocs
 
     /**
-     * @include [ReadDelim]
+     * @include [CommonReadDelimDocs]
      * @set [FileTypeTitleArg] Delimiter-Separated Text
      * @set [FileTypeArg] delimiter-separated text
      * @set [FileExtensionArg] txt
@@ -125,86 +123,5 @@ internal interface ReadDelim {
     interface StrFunctionLinkArg
 
     // A link to the old function, set by ReadDelim itself
-    interface OldFunctionLinkArg
-}
-
-/**
- * ### $[WriteOrConvertArg] [DataFrame] to $[FileTypeTitleArg] $[DataTitleArg]
- *
- * ${[WriteOrConvertArg]}s [this] [DataFrame] to a $[FileTypeArg] $[DataArg].
- *
- * Parameters you can use to customize the writing process include, for instance, \[delimiter\],
- * \[includeHeader\], \[quoteMode\], and \[headerComments\].
- *
- * The integration is built upon {@include [DocumentationUrls.ApacheCsv]}.
- *
- * ##### Other overloads
- *
- * TODO
- */
-internal interface WriteDelim {
-
-    /**
-     * @include [WriteDelim]
-     * @set [FileTypeTitleArg] CSV
-     * @set [FileTypeArg] CSV
-     * @set [FileExtensionArg] csv
-     * @set [FunctionNameArg] writeCsv
-     * @set [OldFunctionNameArg] writeCSV
-     */
-    interface CsvDocs
-
-    /**
-     * @include [WriteDelim]
-     * @set [FileTypeTitleArg] TSV
-     * @set [FileTypeArg] TSV
-     * @set [FileExtensionArg] tsv
-     * @set [FunctionNameArg] writeTsv
-     * @set [OldFunctionNameArg] writeTSV
-     */
-    interface TsvDocs
-
-    /**
-     * @include [DelimParams.INCLUDE_HEADER]
-     * @include [DelimParams.QUOTE]
-     * @include [DelimParams.QUOTE_MODE]
-     * @include [DelimParams.ESCAPE_CHAR]
-     * @include [DelimParams.COMMENT_CHAR]
-     * @include [DelimParams.HEADER_COMMENTS]
-     * @include [DelimParams.RECORD_SEPARATOR]
-     */
-    interface CommonWriteParams
-
-    // something like "Write" or "Convert"
-    interface WriteOrConvertArg
-
-    // Like "CSV" or "TSV", capitalized
-    interface FileTypeTitleArg
-
-    // something like "File" or "String"
-    interface DataTitleArg
-
-    // something like "file" or "text"
-    interface DataArg
-
-    // Like "CSV" or "TSV"
-    interface FileTypeArg
-
-    // like "csv" or "txt"
-    interface FileExtensionArg
-
-    // Function name, like "readCsv"
-    interface FunctionNameArg
-
-    // Old function name, like "writeCSV"
-    interface OldFunctionNameArg
-
-    // A link to the main function, set by WriteDelim itself
-    interface FunctionLinkArg
-
-    // A link to the str function, set by WriteDelim itself
-    interface StrFunctionLinkArg
-
-    // A link to the old function, set by WriteDelim itself
     interface OldFunctionLinkArg
 }

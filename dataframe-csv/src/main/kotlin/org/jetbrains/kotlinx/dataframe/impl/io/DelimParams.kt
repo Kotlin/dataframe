@@ -16,19 +16,28 @@ import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 internal object DelimParams {
 
     /** @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
-    interface FILE
+    interface FILE_READ
 
     /** @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
-    interface URL
+    interface URL_READ
 
-    /** @param fileOrUrl The file or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
-    interface FILE_OR_URL
+    /** @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    interface FILE_OR_URL_READ
 
     /** @param inputStream Represents the file to read. */
-    interface INPUT_STREAM
+    interface INPUT_STREAM_READ
 
     /** @param text The raw data to read in the form of a [String]. */
-    interface TEXT
+    interface TEXT_READ
+
+    /** @param file The file to write to. */
+    interface FILE_WRITE
+
+    /** @param path The path pointing to a file to write to. */
+    interface PATH_WRITE
+
+    /** @param writer The [Appendable] to write to. */
+    interface WRITER_WRITE
 
     /** @param delimiter The field delimiter character. Default: ','. */
     const val CSV_DELIMITER: Char = ','

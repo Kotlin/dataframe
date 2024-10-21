@@ -10,9 +10,6 @@ import java.io.File
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.zip.GZIPInputStream
-import java.util.zip.InflaterInputStream
-import java.util.zip.ZipInputStream
 
 internal fun compressionStateOf(fileOrUrl: String): Compression<*> =
     when (fileOrUrl.split(".").last()) {

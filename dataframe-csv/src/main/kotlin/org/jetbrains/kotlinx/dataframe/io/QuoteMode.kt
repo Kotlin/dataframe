@@ -1,18 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-/**
- * Defines quoting behavior.
- */
+/** Defines quoting behavior. */
 public enum class QuoteMode {
 
-    /**
-     * Quotes all fields.
-     */
+    /** Quotes all fields. */
     ALL,
 
-    /**
-     * Quotes all non-null fields.
-     */
+    /** Quotes all non-null fields. */
     ALL_NON_NULL,
 
     /**
@@ -21,9 +15,7 @@ public enum class QuoteMode {
      */
     MINIMAL,
 
-    /**
-     * Quotes all non-numeric fields.
-     */
+    /** Quotes all non-numeric fields. */
     NON_NUMERIC,
 
     /**
