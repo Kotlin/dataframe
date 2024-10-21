@@ -285,8 +285,10 @@ public fun dataFrameOf(vararg columns: AnyBaseCol): DataFrame<*> = dataFrameOf(c
 @Interpretable("DataFrameOf0")
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 
-public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): DataFrame<*> =
-    dataFrameOf(header.asIterable(), fill)
+public inline fun <reified C> dataFrameOf(
+    vararg header: String,
+    crossinline fill: (String) -> Iterable<C>,
+): DataFrame<*> = dataFrameOf(header.asIterable()).invoke(fill)
 
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
@@ -300,9 +302,12 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFr
 
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
-        fill(value).asList().let {
-            DataColumn.createUnsafe(value.toString(), it)
-        }
+        createColumnGuessingType(
+            name = value.toString(),
+            values = fill(value).asList(),
+            suggestedType = typeOf<C>(),
+            guessTypeWithSuggestedAsUpperbound = true,
+        )
     }.toDataFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
@@ -331,16 +336,19 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public operator fun invoke(args: Sequence<Any?>): DataFrame<*> = invoke(*args.toList().toTypedArray())
 
-    public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> = header.map(columnBuilder).toDataFrame()
+    public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> =
+        header
+            .map { columnBuilder(it) named it } // create a columns and make sure to rename them to the given header
+            .toDataFrame()
 
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
-            valuesBuilder(name).let {
-                DataColumn.createUnsafe(
-                    name = name,
-                    values = it.asList(),
-                )
-            }
+            createColumnGuessingType(
+                name = name,
+                values = valuesBuilder(name).asList(),
+                suggestedType = typeOf<T>(),
+                guessTypeWithSuggestedAsUpperbound = true,
+            )
         }
 
     public inline fun <reified C> fill(nrow: Int, value: C): DataFrame<*> =
@@ -352,30 +360,39 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    public fun fill(nrow: Int, dataFrame: AnyFrame): DataFrame<*> =
+        withColumns { name ->
+            DataColumn.createFrameColumn(
+                name = name,
+                groups = List(nrow) { dataFrame },
+                schema = lazy { dataFrame.schema() },
+            )
+        }
+
     public inline fun <reified C> nulls(nrow: Int): DataFrame<*> = fill<C?>(nrow, null)
 
     public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.createUnsafe(
-                name,
-                List(nrow) { init(it, name) },
+            DataColumn.createWithTypeInference(
+                name = name,
+                values = List(nrow) { init(it, name) },
             )
         }
 
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.createUnsafe(
+            DataColumn.createWithTypeInference(
                 name = name,
                 values = List(nrow, init),
             )
         }
 
-    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
+    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C & Any) =
         withColumns { name ->
             DataColumn.createValueColumn(
                 name = name,
                 values = List(nrow, init),
-                type = typeOf<C>(),
+                type = typeOf<C>().withNullability(false),
             )
         }
 

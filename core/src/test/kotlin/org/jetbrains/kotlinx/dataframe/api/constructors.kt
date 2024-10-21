@@ -149,4 +149,175 @@ class ConstructorsTests {
     }
 
     // endregion
+
+    // region dataFrameOf
+    @Test
+    fun `dataFrameOf withColumns`() {
+        val df = dataFrameOf("value", "value2", "frameCol").withColumns {
+            when (it) {
+                "value" -> columnOf(1, 2, 3, null)
+
+                "value2" -> columnOf(
+                    columnOf(1, 2),
+                    columnOf(3, 4),
+                    columnOf(5, null),
+                    null,
+                )
+
+                "frameCol" -> columnOf(
+                    dataFrameOf("a", "b")(1, 2),
+                    dataFrameOf("a", "b")(3, 4),
+                    dataFrameOf("a", "b")(5, null),
+                    null,
+                )
+
+                else -> error("Unexpected column name: $it")
+            }
+        }
+
+        df["value"].type shouldBe typeOf<Int?>()
+        df["value"].kind() shouldBe ColumnKind.Value
+
+        df["value2"].type shouldBe typeOf<DataColumn<Int?>?>()
+        df["value2"].kind() shouldBe ColumnKind.Value
+
+        df["frameCol"].type shouldBe typeOf<DataFrame<*>>()
+        df["frameCol"].kind() shouldBe ColumnKind.Frame
+        df["frameCol"].last() shouldBe DataFrame.empty()
+    }
+
+    @Test
+    fun `dataFrameOf invoke`() {
+        val df1 = dataFrameOf("value", "value2", "frameCol") {
+            when (it) {
+                "value" -> listOf(1, 2, 3, null)
+
+                "value2" -> listOf(
+                    columnOf(1, 2),
+                    columnOf(3, 4),
+                    columnOf(5, null),
+                    null,
+                )
+
+                "frameCol" -> listOf(
+                    dataFrameOf("a", "b")(1, 2),
+                    dataFrameOf("a", "b")(3, 4),
+                    dataFrameOf("a", "b")(5, null),
+                    null,
+                )
+
+                else -> error("Unexpected column name: $it")
+            }
+        }
+
+        val df2 = dataFrameOf("value", "value2", "frameCol").invoke {
+            when (it) {
+                "value" -> listOf(1, 2, 3, null)
+
+                "value2" -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
+
+                "frameCol" -> listOf(
+                    dataFrameOf("a", "b")(1, 2),
+                    dataFrameOf("a", "b")(3, 4),
+                    dataFrameOf("a", "b")(5, null),
+                    null,
+                )
+
+                else -> error("Unexpected column name: $it")
+            }
+        }
+
+        val names = listOf("value", "value2", "frameCol")
+        val df3 = dataFrameOf(listOf(1, 2, 3)) {
+            when (it) {
+                1 -> listOf(1, 2, 3, null)
+
+                2 -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
+
+                3 -> listOf(
+                    dataFrameOf("a", "b")(1, 2),
+                    dataFrameOf("a", "b")(3, 4),
+                    dataFrameOf("a", "b")(5, null),
+                    null,
+                )
+
+                else -> error("Unexpected column name: $it")
+            }
+        }.rename { all() }.into { names[it.name.toInt() - 1] }
+
+        val df4 = dataFrameOf(names).invoke {
+            when (it) {
+                "value" -> listOf(1, 2, 3, null)
+
+                "value2" -> listOf(columnOf(1, 2), columnOf(3, 4), columnOf(5, null), null)
+
+                "frameCol" -> listOf(
+                    dataFrameOf("a", "b")(1, 2),
+                    dataFrameOf("a", "b")(3, 4),
+                    dataFrameOf("a", "b")(5, null),
+                    null,
+                )
+
+                else -> error("Unexpected column name: $it")
+            }
+        }
+
+        df1 shouldBe df2
+        df2 shouldBe df3
+        df3 shouldBe df4
+
+        df1["value"].type shouldBe typeOf<Int?>()
+        df1["value"].kind() shouldBe ColumnKind.Value
+
+        df1["value2"].type shouldBe typeOf<DataColumn<*>?>()
+        df1["value2"].kind() shouldBe ColumnKind.Value
+
+        df1["frameCol"].type shouldBe typeOf<DataFrame<*>>()
+        df1["frameCol"].kind() shouldBe ColumnKind.Frame
+        df1["frameCol"].last() shouldBe DataFrame.empty()
+    }
+
+    @Test
+    fun `dataFrameOf fill`() {
+        val df1 = dataFrameOf("a", "b").fill(2, "lol")
+
+        df1["a"].values shouldBe listOf("lol", "lol")
+        df1["a"].kind() shouldBe ColumnKind.Value
+        df1["b"].values shouldBe listOf("lol", "lol")
+        df1["b"].kind() shouldBe ColumnKind.Value
+
+        val df2 = dataFrameOf("a", "b").fill(2, dataFrameOf("a", "b")(1, 2))
+        df2["a"].type() shouldBe typeOf<DataFrame<*>>()
+        df2["a"].kind() shouldBe ColumnKind.Frame
+        df2["b"].type() shouldBe typeOf<DataFrame<*>>()
+        df2["b"].kind() shouldBe ColumnKind.Frame
+
+        val df3 = dataFrameOf("a", "b").fill(2) { it }
+        df3["a"].values shouldBe listOf(0, 1)
+        df3["a"].kind() shouldBe ColumnKind.Value
+        df3["b"].values shouldBe listOf(0, 1)
+        df3["b"].kind() shouldBe ColumnKind.Value
+
+        val df4 = dataFrameOf("a", "b").fill(2) { dataFrameOf("a", "b")(1, 2) }
+        df4["a"].type() shouldBe typeOf<DataFrame<*>>()
+        df4["a"].kind() shouldBe ColumnKind.Frame
+        df4["b"].type() shouldBe typeOf<DataFrame<*>>()
+        df4["b"].kind() shouldBe ColumnKind.Frame
+
+        val a = listOf(1, 2)
+        val b = listOf(dataFrameOf("a", "b")(1, 2), null)
+        val df5 = dataFrameOf("a", "b").fillIndexed(2) { it, colName ->
+            when (colName) {
+                "a" -> a[it]
+                "b" -> b[it]
+                else -> error("Unexpected column name: $colName")
+            }
+        }
+        df5["a"].values shouldBe a
+        df5["a"].kind() shouldBe ColumnKind.Value
+        df5["b"].values shouldBe listOf(b[0], DataFrame.empty())
+        df5["b"].kind() shouldBe ColumnKind.Frame
+    }
+
+    // endregion
 }
