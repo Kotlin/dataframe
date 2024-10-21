@@ -4,7 +4,7 @@ import com.github.kittinunf.fuel.httpGet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -33,7 +33,7 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
                 if (it.isEmpty()) return@mapNotNull null
                 val name = it[0].toString()
                 val values = it.drop(1)
-                guessColumnType(name, values)
+                createColumnGuessingType(name, values)
             }.toDataFrame()
         }
 
@@ -50,7 +50,7 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
                         row[colIndex]
                     }
                 }
-                guessColumnType(name, values)
+                createColumnGuessingType(name, values)
             }.toDataFrame()
         }
     }
