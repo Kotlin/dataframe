@@ -2,10 +2,11 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -43,7 +44,6 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
 internal fun <T> BaseColumn<T>.checkEquals(other: Any?): Boolean {
@@ -471,13 +471,17 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
     return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
+/**
+ * Retrieves the correct [ColumnKind] based on the [type][KType] of the values in the column.
+ *
+ * NOTE: nullable DataFrames cannot become a [FrameColumns][FrameColumn],
+ * so they become [ValueColumns][ValueColumn] instead.
+ */
 internal fun KType.toColumnKind(): ColumnKind =
-    jvmErasure.let {
-        when (it) {
-            DataFrame::class -> ColumnKind.Frame
-            DataRow::class -> ColumnKind.Group
-            else -> ColumnKind.Value
-        }
+    when {
+        this.isSubtypeOf(typeOf<AnyFrame>()) -> ColumnKind.Frame
+        this.isSubtypeOf(typeOf<AnyRow?>()) -> ColumnKind.Group
+        else -> ColumnKind.Value
     }
 
 internal fun <C> ColumnsResolver<C>.resolve(
