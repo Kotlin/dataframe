@@ -114,16 +114,23 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
                 }
             }
 
-        return NumberFormatSymbols(
-            DecimalFormatSymbols::getDecimalSeparator.fromLocalWithFallBack(),
-            DecimalFormatSymbols::getGroupingSeparator.fromLocalWithFallBack(),
-            DecimalFormatSymbols::getExponentSeparator.fromLocalWithFallBack(),
-            DecimalFormatSymbols::getMinusSign.fromLocalWithFallBack(),
-            setOf('+'), // cannot get from DFS
-            DecimalFormatSymbols::getInfinity.fromLocalWithFallBack("∞", "inf", "infinity", "infty"),
-            DecimalFormatSymbols::getNaN.fromLocalWithFallBack("nan", "na", "n/a"),
-            localDecimalFormatSymbols.zeroDigit, // needs to be single char
-        )
+        return NumberFormatSymbols.fromDecimalFormatSymbols(localDecimalFormatSymbols)
+            .withPlusSign(
+                setOf('+'),
+            )
+            .withDecimalSeparator(
+                DecimalFormatSymbols::getDecimalSeparator.fromLocalWithFallBack(),
+            ).withGroupingSeparator(
+                DecimalFormatSymbols::getGroupingSeparator.fromLocalWithFallBack(),
+            ).withExponentSeparator(
+                DecimalFormatSymbols::getExponentSeparator.fromLocalWithFallBack(),
+            ).withMinusSign(
+                DecimalFormatSymbols::getMinusSign.fromLocalWithFallBack(),
+            ).withInfinity(
+                DecimalFormatSymbols::getInfinity.fromLocalWithFallBack("∞", "inf", "infinity", "infty"),
+            ).withNaN(
+                DecimalFormatSymbols::getNaN.fromLocalWithFallBack("nan", "na", "n/a"),
+            )
     }
 
     // fallback method for parsing doubles
@@ -157,7 +164,7 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
     public open fun parseOrNull(ba: ByteArray, charset: Charset = Charsets.UTF_8): Double? {
         if (parserOptions.useFastDoubleParser && charset in supportedFastCharsets) {
             try {
-                return parser.parseDouble(ba.toString(charset)) // TODO: use ba directly
+                return parser.parseDouble(ba)
             } catch (e: Exception) {
                 logger.debug(e) {
                     "Failed to parse '${
