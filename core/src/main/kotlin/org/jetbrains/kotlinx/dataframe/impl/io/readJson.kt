@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -38,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
+import org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.commonType
@@ -301,7 +301,7 @@ internal fun fromJsonListAnyColumns(
 
                 else ->
                     parsed.unwrapUnnamedColumns()
-                        .chunked(
+                        .chunkedImpl(
                             startIndices = startIndices,
                             name = ARRAY_COLUMN_NAME, // will be erased
                         )
@@ -645,7 +645,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                 )
                             }
 
-                            else -> parsed.unwrapUnnamedColumns().chunked(startIndices, colName)
+                            else -> parsed.unwrapUnnamedColumns().chunkedImpl(startIndices, colName)
                         }
                         UnnamedColumn(res)
                     }
