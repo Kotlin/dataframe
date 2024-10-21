@@ -266,16 +266,22 @@ public enum class Infer {
 
     /**
      * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type].
+     *
+     * This is the most efficient but least safe option.
      */
     None,
 
     /**
-     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type], but compute [DataColumn.hasNulls] by checking column [DataColumn.values] for an actual presence of *null* values.
+     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type],
+     * but compute [DataColumn.hasNulls] by checking column [DataColumn.values] for an actual presence of `null` values.
      */
     Nulls,
 
     /**
-     * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using optionally provided base type as an upper bound.
+     * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using an optionally provided
+     * base type as an upper bound.
+     *
+     * This is the least efficient but safest option.
      */
     Type,
 
@@ -338,17 +344,17 @@ public inline fun <reified T> Iterable<T>.toColumn(name: String = "", infer: Inf
     if (infer == Infer.Type) {
         DataColumn.createWithTypeInference(name, asList())
     } else {
-        DataColumn.create(name, asList(), typeOf<T>(), infer)
+        DataColumn.createUnsafe(name, asList(), typeOf<T>(), infer)
     }.forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
-    DataColumn.create(name, asList() as List<T>, typeOf<T>()).forceResolve()
+    DataColumn.createUnsafe(name, asList() as List<T>, typeOf<T>()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
-    DataColumn.create(ref.name(), asList()).forceResolve()
+    DataColumn.createUnsafe(ref.name(), asList()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
-    DataColumn.create(property.columnName, asList()).forceResolve()
+    DataColumn.createUnsafe(property.columnName, asList()).forceResolve()
 
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
