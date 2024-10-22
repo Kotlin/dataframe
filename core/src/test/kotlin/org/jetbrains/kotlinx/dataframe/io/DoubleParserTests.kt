@@ -2,119 +2,26 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.collections.shouldContainInOrder
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.impl.io.DecimalFormatBridgeImpl
 import org.jetbrains.kotlinx.dataframe.impl.io.DoubleParser
-import org.junit.Ignore
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import java.util.Locale
 
 class DoubleParserTests {
 
-    init {
+    private var loggerBefore: String? = null
+
+    @Before
+    fun setLogger() {
+        loggerBefore = System.getProperty("org.slf4j.simpleLogger.defaultLogLevel")
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug")
     }
 
-    @Ignore
-    @Test
-    fun `can bridge from German locale`() {
-        val numbers = listOf(
-            "12,45",
-            "-13,35",
-            "100.123,35",
-            "-204.235,23",
-            "1,234e3",
-        )
-
-        val expectedStrings = listOf(
-            "12.45",
-            "-13.35",
-            "100,123.35",
-            "-204,235.23",
-            "1.234e3",
-        )
-        // test bridge
-        val bridge = DecimalFormatBridgeImpl(Locale.GERMANY, Locale.ROOT)
-
-        // CharSequence
-        numbers.map { bridge.convert(it) }.shouldContainInOrder(expectedStrings)
-
-        // CharArray
-        numbers.map { bridge.convert(it.toCharArray()).joinToString("") }.shouldContainInOrder(expectedStrings)
-
-        // ByteArray
-        for (charset in listOf(Charsets.UTF_8, Charsets.ISO_8859_1, Charsets.US_ASCII)) {
-            numbers.map { bridge.convert(it.toByteArray(charset), charset).toString(charset) }
-                .shouldContainInOrder(expectedStrings)
-        }
-    }
-
-    @Ignore
-    @Test
-    fun `can bridge from French locale`() {
-        val numbers = listOf(
-            "12,45",
-            "-13,35",
-            "100 123,35",
-            "-204 235,23",
-            "1,234e3",
-        )
-
-        val expectedStrings = listOf(
-            "12.45",
-            "-13.35",
-            "100,123.35",
-            "-204,235.23",
-            "1.234e3",
-        )
-        // test bridge
-        val bridge = DecimalFormatBridgeImpl(Locale.FRANCE, Locale.ROOT)
-
-        // CharSequence
-        numbers.map { bridge.convert(it) }.shouldContainInOrder(expectedStrings)
-
-        // CharArray
-        numbers.map { bridge.convert(it.toCharArray()).joinToString("") }.shouldContainInOrder(expectedStrings)
-
-        // ByteArray
-        for (charset in listOf(Charsets.UTF_8, Charsets.ISO_8859_1, Charsets.US_ASCII)) {
-            numbers.map { bridge.convert(it.toByteArray(charset), charset).toString(charset) }
-                .shouldContainInOrder(expectedStrings)
-        }
-    }
-
-    @Ignore
-    @Test
-    fun `can bridge from Estonian locale`() {
-        val numbers = listOf(
-            "12,45",
-            "−13,35", // note the different minus sign '−' vs '-'
-            "100 123,35",
-            "−204 235,23", // note the different minus sign '−' vs '-'
-            "1,234e3",
-            "-345,122", // check forgiving behavior with 'ordinary' minus sign
-        )
-
-        val expectedStrings = listOf(
-            "12.45",
-            "-13.35",
-            "100,123.35",
-            "-204,235.23",
-            "1.234e3",
-            "-345.122",
-        )
-        // test bridge
-        val bridge = DecimalFormatBridgeImpl(Locale.forLanguageTag("et-EE"), Locale.ROOT)
-
-        // CharSequence
-        numbers.map { bridge.convert(it) }.shouldContainInOrder(expectedStrings)
-
-        // CharArray
-        numbers.map { bridge.convert(it.toCharArray()).joinToString("") }.shouldContainInOrder(expectedStrings)
-
-        // ByteArray (must skip ASCII as NBSP and estonian minus sign are not ASCII)
-        for (charset in listOf(Charsets.UTF_8, Charsets.ISO_8859_1)) {
-            numbers.map { bridge.convert(it.toByteArray(charset), charset).toString(charset) }
-                .shouldContainInOrder(expectedStrings)
+    @After
+    fun restoreLogger() {
+        if (loggerBefore != null) {
+            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loggerBefore)
         }
     }
 

@@ -55,8 +55,7 @@ public interface GlobalParserOptions {
  *   it will be used to create a [DateTimeFormatter].
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
  *   ["null", "NULL", "NA", "N/A"].
- * @param useFastDoubleParser whether to use FastDoubleParser, defaults to `true`, but it can be disabled
- *   if it works unreliably on, for instance, [locale]-dependent data.
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
  *   By default, it's an empty set. To skip all types except some specified ones, use [allTypesExcept].
  */
@@ -66,7 +65,7 @@ public data class ParserOptions(
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
-    val useFastDoubleParser: Boolean = true,
+    val useFastDoubleParser: Boolean = false,
     val skipTypes: Set<KType> = emptySet(),
 ) {
     public companion object {

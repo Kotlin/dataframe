@@ -141,8 +141,6 @@ class ParserTests {
         parsed.toList() shouldBe listOf(1, 2, null, 3, null, null, 4.0, 5.0)
     }
 
-    // TODO
-    @Ignore
     @Test
     fun `converting String to Double in different locales`() {
         val currentLocale = Locale.getDefault()

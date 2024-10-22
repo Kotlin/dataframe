@@ -431,9 +431,9 @@ internal object Parsers : GlobalParserOptions {
         return parser.applyOptions(options)
     }
 
-    internal fun getDoubleParser(locale: Locale? = null): (String) -> Double? {
+    internal fun getDoubleParser(locale: Locale? = null, useFastDoubleParser: Boolean): (String) -> Double? {
         val options = if (locale != null) {
-            ParserOptions(locale = locale)
+            ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser)
         } else {
             null
         }
