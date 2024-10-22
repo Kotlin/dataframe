@@ -8,7 +8,6 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -141,7 +140,7 @@ class DelimCsvTsvTests {
         val df = DataFrame.readCsv(
             url = csvWithFrenchLocale,
             delimiter = ';',
-            parserOptions = ParserOptions(locale = Locale.FRENCH),
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(locale = Locale.FRENCH),
         )
 
         df.columnsCount() shouldBe 11
@@ -447,7 +446,7 @@ class DelimCsvTsvTests {
         val frenchDf = DataFrame.readCsvStr(
             text = frenchCsv,
             delimiter = ';',
-            parserOptions = ParserOptions(
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
                 dateTimePattern = "dd/MM/yyyy",
                 locale = Locale.FRENCH,
             ),
@@ -471,7 +470,7 @@ class DelimCsvTsvTests {
         val dutchDf = DataFrame.readCsvStr(
             text = dutchCsv,
             delimiter = ';',
-            parserOptions = ParserOptions(
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
                 locale = Locale.forLanguageTag("nl-NL"),
             ),
         )
@@ -494,7 +493,7 @@ class DelimCsvTsvTests {
         val easternArabicDf = DataFrame.readCsvStr(
             arabicCsv,
             delimiter = ';',
-            parserOptions = ParserOptions(
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
                 locale = Locale.forLanguageTag("ar-001"),
             ),
         )
@@ -520,7 +519,7 @@ class DelimCsvTsvTests {
         val estonianDf = DataFrame.readCsvStr(
             text = estonianWrongMinus,
             delimiter = ';',
-            parserOptions = ParserOptions(
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
                 locale = Locale.forLanguageTag("et-EE"),
             ),
         )
@@ -532,7 +531,7 @@ class DelimCsvTsvTests {
     fun `NA and custom null string in double column`() {
         val df = DataFrame.readCsv(
             msleepCsv,
-            parserOptions = ParserOptions(
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
                 nullStrings = DEFAULT_NULL_STRINGS + "nothing",
             ),
         )

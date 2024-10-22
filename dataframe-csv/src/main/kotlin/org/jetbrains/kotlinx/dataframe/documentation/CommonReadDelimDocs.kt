@@ -6,11 +6,14 @@ import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FileTyp
 import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FileTypeTitleArg
 import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FunctionLinkArg
 import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.OldFunctionLinkArg
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
+import org.jetbrains.kotlinx.dataframe.io.ColType
+import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
+import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
 import org.jetbrains.kotlinx.dataframe.io.ExperimentalCsv
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import java.util.Locale
 
 /**
  * ### Read $[FileTypeTitleArg] $[DataTitleArg] to [DataFrame]
@@ -28,9 +31,19 @@ import java.net.URL
  * [URL][URL], or [InputStream][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
- * For example, $[FunctionLinkArg]`("input.$[CommonReadDelimDocs.FileExtensionArg]")`
+ * For example, $[FunctionLinkArg]`("input.$[CommonReadDelimDocs.FileExtensionArg]")` or with some options:
  *
- * or $[FunctionLinkArg]`(`[File][File]`("input.$[CommonReadDelimDocs.FileExtensionArg]"), readLines = 100L)`
+ * $[FunctionLinkArg]`(`
+ *
+ * {@include [Indent]}`file = `[File][File]`("input.$[CommonReadDelimDocs.FileExtensionArg]"),`
+ *
+ * {@include [Indent]}`parserOptions = `[DEFAULT_PARSER_OPTIONS][DEFAULT_PARSER_OPTIONS]`.copy(locale = `[Locale][Locale]`.`[US][Locale.US]`),`
+ *
+ * {@include [Indent]}`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[DEFAULT_COL_TYPE][DEFAULT_COL_TYPE]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
+ *
+ * {@include [Indent]}`readLines = 1000L,`
+ *
+ * `)`
  *
  * ZIP (.zip) or GZIP (.gz) files are supported by default. \[compression\] is automatically detected.
  *

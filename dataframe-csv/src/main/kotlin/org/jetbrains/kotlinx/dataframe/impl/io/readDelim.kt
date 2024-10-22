@@ -29,6 +29,21 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_SPECS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ALLOW_MISSING_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COL_TYPES
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMPRESSION
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HEADER
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EMPTY_LINES
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EXCESS_COLUMNS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_SURROUNDING_SPACES
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.INPUT_STREAM_READ
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.PARSE_PARALLEL
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.QUOTE
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
@@ -44,40 +59,40 @@ import kotlin.time.Duration
 
 /**
  *
- * @include [DelimParams.INPUT_STREAM_READ]
+ * @include [INPUT_STREAM_READ]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
- * @include [DelimParams.HEADER]
- * @include [DelimParams.COMPRESSION]
- * @include [DelimParams.COL_TYPES]
- * @include [DelimParams.SKIP_LINES]
- * @include [DelimParams.READ_LINES]
- * @include [DelimParams.PARSER_OPTIONS]
- * @include [DelimParams.IGNORE_EMPTY_LINES]
- * @include [DelimParams.ALLOW_MISSING_COLUMNS]
- * @include [DelimParams.IGNORE_EXCESS_COLUMNS]
- * @include [DelimParams.QUOTE]
- * @include [DelimParams.IGNORE_SURROUNDING_SPACES]
- * @include [DelimParams.TRIM_INSIDE_QUOTED]
- * @include [DelimParams.PARSE_PARALLEL]
- * @include [DelimParams.ADDITIONAL_CSV_SPECS]
+ * @include [HEADER]
+ * @include [COMPRESSION]
+ * @include [COL_TYPES]
+ * @include [SKIP_LINES]
+ * @include [READ_LINES]
+ * @include [PARSER_OPTIONS]
+ * @include [IGNORE_EMPTY_LINES]
+ * @include [ALLOW_MISSING_COLUMNS]
+ * @include [IGNORE_EXCESS_COLUMNS]
+ * @include [QUOTE]
+ * @include [IGNORE_SURROUNDING_SPACES]
+ * @include [TRIM_INSIDE_QUOTED]
+ * @include [PARSE_PARALLEL]
+ * @include [ADDITIONAL_CSV_SPECS]
  */
 internal fun readDelimImpl(
     inputStream: InputStream,
     delimiter: Char,
-    header: List<String> = DelimParams.HEADER,
-    compression: Compression<*> = DelimParams.COMPRESSION,
-    colTypes: Map<String, ColType> = DelimParams.COL_TYPES,
-    skipLines: Long = DelimParams.SKIP_LINES,
-    readLines: Long? = DelimParams.READ_LINES,
-    parserOptions: ParserOptions = DelimParams.PARSER_OPTIONS,
-    ignoreEmptyLines: Boolean = DelimParams.IGNORE_EMPTY_LINES,
-    allowMissingColumns: Boolean = DelimParams.ALLOW_MISSING_COLUMNS,
-    ignoreExcessColumns: Boolean = DelimParams.IGNORE_EXCESS_COLUMNS,
-    quote: Char = DelimParams.QUOTE,
-    ignoreSurroundingSpaces: Boolean = DelimParams.IGNORE_SURROUNDING_SPACES,
-    trimInsideQuoted: Boolean = DelimParams.TRIM_INSIDE_QUOTED,
-    parseParallel: Boolean = DelimParams.PARSE_PARALLEL,
-    additionalCsvSpecs: CsvSpecs? = DelimParams.ADDITIONAL_CSV_SPECS,
+    header: List<String> = HEADER,
+    compression: Compression<*> = COMPRESSION,
+    colTypes: Map<String, ColType> = COL_TYPES,
+    skipLines: Long = SKIP_LINES,
+    readLines: Long? = READ_LINES,
+    parserOptions: ParserOptions = PARSER_OPTIONS,
+    ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
+    allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
+    ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,
+    quote: Char = QUOTE,
+    ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
+    trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
+    parseParallel: Boolean = PARSE_PARALLEL,
+    additionalCsvSpecs: CsvSpecs? = ADDITIONAL_CSV_SPECS,
 ): DataFrame<*> {
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {

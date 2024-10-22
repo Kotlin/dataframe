@@ -4,6 +4,14 @@ import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_FORMAT
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMMENT_CHAR
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ESCAPE_CHAR
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HEADER_COMMENTS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.INCLUDE_HEADER
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.QUOTE
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.QUOTE_MODE
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.RECORD_SEPARATOR
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
@@ -12,14 +20,14 @@ internal fun writeDelimImpl(
     df: AnyFrame,
     writer: Appendable,
     delimiter: Char,
-    includeHeader: Boolean = DelimParams.INCLUDE_HEADER,
-    quote: Char? = DelimParams.QUOTE,
-    quoteMode: QuoteMode = DelimParams.QUOTE_MODE,
-    escapeChar: Char? = DelimParams.ESCAPE_CHAR,
-    commentChar: Char? = DelimParams.COMMENT_CHAR,
-    headerComments: List<String> = DelimParams.HEADER_COMMENTS,
-    recordSeparator: String = DelimParams.RECORD_SEPARATOR,
-    additionalCsvFormat: CSVFormat = DelimParams.ADDITIONAL_CSV_FORMAT,
+    includeHeader: Boolean = INCLUDE_HEADER,
+    quote: Char? = QUOTE,
+    quoteMode: QuoteMode = QUOTE_MODE,
+    escapeChar: Char? = ESCAPE_CHAR,
+    commentChar: Char? = COMMENT_CHAR,
+    headerComments: List<String> = HEADER_COMMENTS,
+    recordSeparator: String = RECORD_SEPARATOR,
+    additionalCsvFormat: CSVFormat = ADDITIONAL_CSV_FORMAT,
 ) {
     val format = with(CSVFormat.Builder.create(additionalCsvFormat)) {
         setDelimiter(delimiter)

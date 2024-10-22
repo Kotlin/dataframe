@@ -3,7 +3,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams
 import org.jetbrains.kotlinx.dataframe.io.ExperimentalCsv
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL
 import org.jetbrains.kotlinx.dataframe.io.toCsv

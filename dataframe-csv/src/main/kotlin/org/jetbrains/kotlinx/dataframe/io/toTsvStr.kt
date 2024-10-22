@@ -2,14 +2,14 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.documentation.CommonWriteDelimDocs
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.COMMENT_CHAR
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.ESCAPE_CHAR
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.HEADER_COMMENTS
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.INCLUDE_HEADER
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.QUOTE
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.QUOTE_MODE
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.RECORD_SEPARATOR
-import org.jetbrains.kotlinx.dataframe.impl.io.DelimParams.TSV_DELIMITER
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMMENT_CHAR
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ESCAPE_CHAR
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HEADER_COMMENTS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.INCLUDE_HEADER
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.QUOTE
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.QUOTE_MODE
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.RECORD_SEPARATOR
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 
 /**

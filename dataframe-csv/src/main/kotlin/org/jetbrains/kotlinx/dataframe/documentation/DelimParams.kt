@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.impl.io
+package org.jetbrains.kotlinx.dataframe.documentation
 
 import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.io.DefaultNullStringsContentLink
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 
 /**
@@ -90,10 +91,18 @@ internal object DelimParams {
     /**
      * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
      *   Can configure locale, date format, double parsing, skipping types, etc.
+     *
+     *   **NOTE:** Make sure to use [DEFAULT_PARSER_OPTIONS][DEFAULT_PARSER_OPTIONS]`.copy()` to override the desired options.
+     *
      *   Default, [DEFAULT_PARSER_OPTIONS]:
-     *   ```
-     *   ParserOptions(nullStrings = ["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"])
-     *   ```
+     *
+     *   [ParserOptions][ParserOptions]`(`
+     *
+     *   {@include [Indent]}[nullStrings][ParserOptions.nullStrings]`  =  `{@include [DefaultNullStringsContentLink]}`,`
+     *
+     *   {@include [Indent]}[useFastDoubleParser][ParserOptions.useFastDoubleParser]` = true,`
+     *
+     *   `)`
      */
     val PARSER_OPTIONS: ParserOptions = DEFAULT_PARSER_OPTIONS
 
