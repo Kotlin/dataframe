@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.times
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
-import org.junit.Ignore
 import org.junit.Test
 import java.math.BigDecimal
 import java.util.Locale

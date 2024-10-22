@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.QUOTE
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
-import org.jetbrains.kotlinx.dataframe.impl.io.asURL
+import org.jetbrains.kotlinx.dataframe.impl.io.asUrl
 import org.jetbrains.kotlinx.dataframe.impl.io.catchHttpResponse
 import org.jetbrains.kotlinx.dataframe.impl.io.compressionStateOf
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
@@ -155,7 +155,7 @@ public fun DataFrame.Companion.readCsv(
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
 ): DataFrame<*> =
-    catchHttpResponse(asURL(fileOrUrl = fileOrUrl)) {
+    catchHttpResponse(asUrl(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
             inputStream = it,
             delimiter = delimiter,
