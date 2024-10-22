@@ -13,33 +13,33 @@ import kotlin.reflect.KProperty
 
 @Refine
 @Interpretable("FlattenDefault")
-public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, separator: String = "."): DataFrame<T> =
+public fun <T> DataFrame<T>.flatten(keepParentNameForColumns: Boolean = false, separator: String = "_"): DataFrame<T> =
     flatten(keepParentNameForColumns, separator) { all() }
 
 @Refine
 @Interpretable("Flatten0")
 public fun <T, C> DataFrame<T>.flatten(
     keepParentNameForColumns: Boolean = false,
-    separator: String = ".",
+    separator: String = "_",
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = flattenImpl(columns, keepParentNameForColumns, separator)
 
 public fun <T> DataFrame<T>.flatten(
     vararg columns: String,
     keepParentNameForColumns: Boolean = false,
-    separator: String = ".",
+    separator: String = "_",
 ): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: ColumnReference<C>,
     keepParentNameForColumns: Boolean = false,
-    separator: String = ".",
+    separator: String = "_",
 ): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: KProperty<C>,
     keepParentNameForColumns: Boolean = false,
-    separator: String = ".",
+    separator: String = "_",
 ): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
 // endregion
