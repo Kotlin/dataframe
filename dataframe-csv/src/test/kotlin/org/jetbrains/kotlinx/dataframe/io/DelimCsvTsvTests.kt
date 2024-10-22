@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import jdk.nashorn.internal.ir.annotations.Ignore
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
@@ -549,6 +550,30 @@ class DelimCsvTsvTests {
         df["awake"].type() shouldBe typeOf<Double>()
         df["brainwt"].type() shouldBe typeOf<Double?>()
         df["bodywt"].type() shouldBe typeOf<Double?>()
+    }
+
+    @Ignore
+    @Test // TODO https://github.com/deephaven/deephaven-csv/issues/212
+    fun `multiple spaces as delimiter`() {
+        @Language("csv")
+        val csv =
+            """
+            NAME                     STATUS   AGE      LABELS
+            argo-events              Active   2y77d    app.kubernetes.io/instance=argo-events,kubernetes.io/metadata.name=argo-events
+            argo-workflows           Active   2y77d    app.kubernetes.io/instance=argo-workflows,kubernetes.io/metadata.name=argo-workflows
+            argocd                   Active   5y18d    kubernetes.io/metadata.name=argocd
+            beta                     Active   4y235d   kubernetes.io/metadata.name=beta
+            """.trimIndent()
+        val df = DataFrame.readCsvStr(
+            text = csv,
+            delimiter = ' ',
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+                nullStrings = DEFAULT_NULL_STRINGS - "",
+            ),
+            ignoreSurroundingSpaces = false,
+        )
+
+        df.print(borders = true, title = true)
     }
 
     companion object {
