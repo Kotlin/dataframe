@@ -230,15 +230,14 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
                 .let {
                     when {
                         // if there is only one class - return it
-                        it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> listOf(it[0])
+                        it.size == 1 && it[0].visibility.let { it == null || it == KVisibility.PUBLIC } -> listOf(it[0])
 
                         else ->
                             it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
                                 // collect a set of all common superclasses from original classes
-                                val superclasses =
-                                    (clazz.allSuperclasses + clazz)
-                                        .filter { it.visibility == KVisibility.PUBLIC }
-                                        .toSet()
+                                val superclasses = (clazz.allSuperclasses + clazz)
+                                    .filter { it.visibility == null || it.visibility == KVisibility.PUBLIC }
+                                    .toSet()
                                 set?.intersect(superclasses) ?: superclasses
                             }!!.let {
                                 // leave only 'leaf' classes, that are not super to some other class in a set
