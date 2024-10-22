@@ -50,7 +50,7 @@ internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFr
     }
 }
 
-public fun asURL(fileOrUrl: String): URL =
+public fun asUrl(fileOrUrl: String): URL =
     if (isURL(fileOrUrl)) {
         URL(fileOrUrl).toURI()
     } else {
@@ -70,17 +70,17 @@ internal inline fun <T, I : InputStream> InputStream.useSafely(
     compression: Compression<I>,
     block: (InputStream) -> T,
 ): T {
-    // first wrap the stream in the compression algorithm
-    val unpackedStream = compression(this)
-    compression.doFirst(unpackedStream)
+    // first wrap the stream by (optional) compression algorithm
+    val wrappedStream = compression.wrapStream(this)
+    compression.doFirst(wrappedStream)
 
     val bomSafeStream = BOMInputStream.builder()
-        .setInputStream(unpackedStream)
+        .setInputStream(wrappedStream)
         .get()
 
     try {
         return block(bomSafeStream)
     } finally {
-        compression.doFinally(unpackedStream)
+        compression.doFinally(wrappedStream)
     }
 }

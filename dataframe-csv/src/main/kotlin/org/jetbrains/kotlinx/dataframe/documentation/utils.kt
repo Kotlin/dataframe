@@ -1,5 +1,3 @@
-@file:ExcludeFromSources
-
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import kotlin.annotation.AnnotationTarget.ANNOTATION_CLASS
@@ -21,24 +19,31 @@ import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
  * {@include [Indent]}
  *
  */
+@ExcludeFromSources
 internal interface LineBreak
 
 /** &nbsp; */
+@ExcludeFromSources
 internal interface QuarterIndent
 
 /** &nbsp;&nbsp; */
+@ExcludeFromSources
 internal interface HalfIndent
 
 /** &nbsp;&nbsp;&nbsp;&nbsp; */
+@ExcludeFromSources
 internal interface Indent
 
 /** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
+@ExcludeFromSources
 internal interface DoubleIndent
 
 /** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
+@ExcludeFromSources
 internal interface TripleIndent
 
 /** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
+@ExcludeFromSources
 internal interface QuadrupleIndent
 
 /**

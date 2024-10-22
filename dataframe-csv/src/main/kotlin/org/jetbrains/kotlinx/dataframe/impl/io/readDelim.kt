@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_SPECS
@@ -58,6 +59,7 @@ import kotlin.reflect.typeOf
 import kotlin.time.Duration
 
 /**
+ * Implementation to read delimiter-separated data from an [InputStream] based on the Deephaven CSV library.
  *
  * @include [INPUT_STREAM_READ]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
@@ -97,7 +99,7 @@ internal fun readDelimImpl(
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {
         if (additionalCsvSpecs != null) from(additionalCsvSpecs)
-        customDoubleParser(FastDoubleParser(parserOptions))
+        customDoubleParser(DataFrameCustomDoubleParser(parserOptions))
         nullValueLiterals(parserOptions.nullStrings ?: DEFAULT_NULL_STRINGS)
         headerLegalizer(::legalizeHeader)
         numRows(readLines ?: Long.MAX_VALUE)
@@ -109,9 +111,7 @@ internal fun readDelimImpl(
         ignoreSurroundingSpaces(ignoreSurroundingSpaces)
         trim(trimInsideQuoted)
         concurrent(parseParallel)
-
         header(header)
-
         skipLines(takeHeaderFromCsv = header.isEmpty(), skipLines = skipLines)
 
         val useDeepHavenLocalDateTime = with(parserOptions) {
@@ -119,32 +119,33 @@ internal fun readDelimImpl(
         }
         parsersWithOptions(parserOptions, useDeepHavenLocalDateTime)
 
-        colTypes(colTypes, useDeepHavenLocalDateTime) // this function must be last, so the return value is used
+        // this function must be last, so the return value is used
+        return@with this.withColTypes(colTypes, useDeepHavenLocalDateTime)
     }.build()
 
     val csvReaderResult = inputStream.useSafely(compression) { safeInputStream ->
+        // check if the input stream is empty, return either empty df or df with supplied header
         if (safeInputStream.available() <= 0) {
-            return if (header.isEmpty()) {
+            return@readDelimImpl if (header.isEmpty()) {
                 DataFrame.empty()
             } else {
-                dataFrameOf(
-                    header.map {
-                        DataColumn.createValueColumn(
-                            name = it,
-                            values = emptyList<String>(),
-                            type = typeOf<String>(),
-                        )
-                    },
-                )
+                header.map {
+                    DataColumn.createValueColumn(
+                        name = it,
+                        values = emptyList<String>(),
+                        type = typeOf<String>(),
+                    )
+                }.toDataFrame()
             }
         }
 
         // read the csv
         try {
+            @Suppress("ktlint:standard:comment-wrapping")
             CsvReader.read(
-                csvSpecs,
-                safeInputStream,
-                ListSink.SINK_FACTORY,
+                /* specs = */ csvSpecs,
+                /* stream = */ safeInputStream,
+                /* sinkFactory = */ ListSink.SINK_FACTORY,
             )
         } catch (e: CsvReaderException) {
             throw IllegalStateException("Could not read delimiter-separated data", e)
@@ -170,7 +171,7 @@ private fun CsvReader.ResultColumn.toDataColumn(
     desiredColType: ColType?,
 ): DataColumn<*> {
     val listSink = data()!! as ListSink
-    val columnData: List<Any?> = listSink.data
+    val columnData = listSink.data
     val dataType = listSink.dataType
     val hasNulls = listSink.hasNulls
     val type = dataType().toKType().withNullability(hasNulls)
@@ -182,7 +183,7 @@ private fun CsvReader.ResultColumn.toDataColumn(
     )
     if (dataType != STRING) return column
 
-    // perform additional parsing if necessary
+    // attempt to perform additional parsing if necessary, will remain String if it fails
     column as ValueColumn<String?>
 
     return if (desiredColType == null) {
@@ -192,6 +193,7 @@ private fun CsvReader.ResultColumn.toDataColumn(
         )
         column.tryParse(adjustedParserOptions)
     } else {
+        // try parsing only with the desired type
         column.tryParse(
             parserOptions.copy(
                 skipTypes = ParserOptions.allTypesExcept(desiredColType.toKType()),
@@ -244,14 +246,14 @@ private fun legalizeHeader(header: Array<String>): Array<String> {
  * CAREFUL: Unlike the other functions on [CsvSpecs.Builder], this function can return a NEW builder instance.
  * Make sure to use the return value.
  */
-private fun CsvSpecs.Builder.colTypes(
+private fun CsvSpecs.Builder.withColTypes(
     colTypes: Map<String, ColType>,
     useDeepHavenLocalDateTime: Boolean,
 ): CsvSpecs.Builder {
     if (colTypes.isEmpty()) return this
 
-    colTypes.entries.fold(this) { it, (colName, colType) ->
-        it.putParserForName(colName, colType.toCsvParser(useDeepHavenLocalDateTime))
+    colTypes.forEach { (colName, colType) ->
+        this.putParserForName(colName, colType.toCsvParser(useDeepHavenLocalDateTime))
     }
 
     return if (DEFAULT_COL_TYPE in colTypes) {
@@ -280,12 +282,9 @@ private fun CsvSpecs.Builder.parsersWithOptions(
     if (parserOptions.skipTypes.isEmpty()) {
         parsers(Parsers.DEFAULT) // BOOLEAN, INT, LONG, DOUBLE, DATETIME, CHAR, STRING
     } else {
-        parsers(
-            Parsers.DEFAULT.toSet() -
-                parserOptions.skipTypes
-                    .mapNotNull { it.toColType().toCsvParserOrNull(useDeepHavenLocalDateTime) }
-                    .toSet(),
-        )
+        val parsersToSkip = parserOptions.skipTypes
+            .mapNotNull { it.toColType().toCsvParserOrNull(useDeepHavenLocalDateTime) }
+        parsers(Parsers.DEFAULT.toSet() - parsersToSkip.toSet())
     }
 
 private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
@@ -297,6 +296,10 @@ private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
             .headers(header)
     }
 
+/**
+ * Converts a [ColType] to a [Parser] from the Deephaven CSV library.
+ * If no direct [Parser] exists, it returns `null`.
+ */
 internal fun ColType.toCsvParserOrNull(useDeepHavenLocalDateTime: Boolean): Parser<*>? =
     when (this) {
         ColType.Int -> Parsers.INT
@@ -359,6 +362,8 @@ internal fun KType.toColType(): ColType =
 /**
  * Types that Deephaven already parses, so we can skip them when
  * defaulting to DataFrame's String parsers.
+ *
+ * [LocalDateTime] and [java.time.LocalDateTime] are not included because Deephaven cannot recognize all formats.
  */
 internal val typesDeephavenAlreadyParses: Set<KType> =
     setOf(
@@ -367,6 +372,4 @@ internal val typesDeephavenAlreadyParses: Set<KType> =
         typeOf<Double>(),
         typeOf<Char>(),
         typeOf<Boolean>(),
-//        typeOf<LocalDateTime>(), it cannot recognize all formats
-//        typeOf<java.time.LocalDateTime>(), it cannot recognize all formats
     )

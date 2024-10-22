@@ -17,8 +17,8 @@ private val logger = KotlinLogging.logger {}
 /**
  * Parses a [String]/[CharSequence], [CharArray], or [ByteArray] into a [Double].
  *
- * If [ParserOptions.useFastDoubleParser] is enabled, it will try to parse the input with a fast double parser,
- * [ConfigurableDoubleParser].
+ * If [ParserOptions.useFastDoubleParser] is enabled, it will try to parse the input with an _EXPERIMENTAL_
+ * fast double parser, [ConfigurableDoubleParser].
  * We use [ConfigurableDoubleParser] instead of the, even faster, [JavaDoubleParser] to
  * support different locales and fallback symbols.
  *

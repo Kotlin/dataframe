@@ -7,14 +7,13 @@ import java.util.zip.ZipInputStream
 
 /**
  * Compression algorithm to use when reading csv files.
- * We support GZIP and ZIP compression out of the box.
+ * We support [GZIP][Compression.Gzip] and [ZIP][Compression.Zip] compression out of the box.
  *
  * Custom decompression algorithms can be added by creating an instance of [Custom].
  *
  * @param wrapStream function that wraps any [InputStream] into a decompressing [InflaterInputStream] stream
  */
-public sealed class Compression<I : InputStream>(public open val wrapStream: (InputStream) -> I) :
-    (InputStream) -> I by wrapStream {
+public sealed class Compression<I : InputStream>(public open val wrapStream: (InputStream) -> I) {
 
     /** Can be overridden to perform some actions before reading from the input stream. */
     public open fun doFirst(inputStream: I) {}
@@ -30,16 +29,14 @@ public sealed class Compression<I : InputStream>(public open val wrapStream: (In
     /**
      * For .gz / GZIP files.
      */
-    public data object Gzip : Compression<GZIPInputStream>(::GZIPInputStream)
+    public data object Gzip : Compression<GZIPInputStream>(wrapStream = ::GZIPInputStream)
 
     /**
      * For .zip / ZIP files.
      */
-    public data object Zip : Compression<ZipInputStream>(::ZipInputStream) {
+    public data object Zip : Compression<ZipInputStream>(wrapStream = ::ZipInputStream) {
 
         override fun doFirst(inputStream: ZipInputStream) {
-            super.doFirst(inputStream)
-
             // Make sure to call nextEntry once to prepare the stream
             if (inputStream.nextEntry == null) error("No entries in zip file")
         }
@@ -57,12 +54,12 @@ public sealed class Compression<I : InputStream>(public open val wrapStream: (In
     /**
      * No compression.
      */
-    public data object None : Compression<InputStream>({ it })
+    public data object None : Compression<InputStream>(wrapStream = { it })
 
     /**
      * Custom decompression algorithm.
      * @param wrapStream function that wraps any [InputStream] into a decompressing [InflaterInputStream] stream
      */
     public data class Custom<I : InflaterInputStream>(override val wrapStream: (InputStream) -> I) :
-        Compression<I>(wrapStream)
+        Compression<I>(wrapStream = wrapStream)
 }

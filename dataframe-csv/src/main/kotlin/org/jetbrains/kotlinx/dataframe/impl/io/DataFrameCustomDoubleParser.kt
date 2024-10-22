@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 /**
  * Wrapper around [DoubleParser] so we can use it from Deephaven.
  */
-internal class FastDoubleParser(parserOptions: ParserOptions) : CustomDoubleParser {
+internal class DataFrameCustomDoubleParser(parserOptions: ParserOptions) : CustomDoubleParser {
 
     private val doubleParser = DoubleParser(parserOptions)
 

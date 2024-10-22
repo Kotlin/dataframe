@@ -34,35 +34,23 @@ internal interface SinkSource<T : Any> :
 @Suppress("UNCHECKED_CAST")
 internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSource<Any> {
 
+    @Suppress("ktlint:standard:comment-wrapping", "ktlint:standard:no-consecutive-comments")
     companion object {
         val SINK_FACTORY: SinkFactory = SinkFactory.of(
-            // byteSinkSupplier =
-            { ListSink(it, BYTE) as SinkSource<ByteArray> }, // unused in Parsers.DEFAULT
-            // shortSinkSupplier =
-            { ListSink(it, SHORT) as SinkSource<ShortArray> }, // unused in Parsers.DEFAULT
-            // intSinkSupplier =
-            { ListSink(it, INT) as SinkSource<IntArray> },
-            // longSinkSupplier =
-            { ListSink(it, LONG) as SinkSource<LongArray> },
-            // floatSinkSupplier =
-            { ListSink(it, FLOAT) as SinkSource<FloatArray> }, // unused in Parsers.COMPLETE and Parsers.DEFAULT
-            // doubleSinkSupplier =
-            { ListSink(it, DOUBLE) as SinkSource<DoubleArray> },
-            // booleanAsByteSinkSupplier =
-            { ListSink(it, BOOLEAN_AS_BYTE) as SinkSource<ByteArray> },
-            // charSinkSupplier =
-            { ListSink(it, CHAR) as SinkSource<CharArray> },
-            // stringSinkSupplier =
-            { ListSink(it, STRING) as SinkSource<Array<String>> },
-            // dateTimeAsLongSinkSupplier =
-            { ListSink(it, DATETIME_AS_LONG) as SinkSource<LongArray> },
-            // timestampAsLongSinkSupplier =
-            {
-                ListSink(
-                    it,
-                    TIMESTAMP_AS_LONG,
-                ) as SinkSource<LongArray>
-            }, // unused in Parsers.COMPLETE and Parsers.DEFAULT
+            // unused in Parsers.DEFAULT:
+            /* byteSinkSupplier = */ { ListSink(it, BYTE) as SinkSource<ByteArray> },
+            /* shortSinkSupplier = */ { ListSink(it, SHORT) as SinkSource<ShortArray> },
+            /* intSinkSupplier = */ { ListSink(it, INT) as SinkSource<IntArray> },
+            /* longSinkSupplier = */ { ListSink(it, LONG) as SinkSource<LongArray> },
+            // unused in Parsers.COMPLETE and Parsers.DEFAULT:
+            /* floatSinkSupplier = */ { ListSink(it, FLOAT) as SinkSource<FloatArray> },
+            /* doubleSinkSupplier = */ { ListSink(it, DOUBLE) as SinkSource<DoubleArray> },
+            /* booleanAsByteSinkSupplier = */ { ListSink(it, BOOLEAN_AS_BYTE) as SinkSource<ByteArray> },
+            /* charSinkSupplier = */ { ListSink(it, CHAR) as SinkSource<CharArray> },
+            /* stringSinkSupplier = */ { ListSink(it, STRING) as SinkSource<Array<String>> },
+            /* dateTimeAsLongSinkSupplier = */ { ListSink(it, DATETIME_AS_LONG) as SinkSource<LongArray> },
+            // unused in Parsers.COMPLETE and Parsers.DEFAULT:
+            /* timestampAsLongSinkSupplier = */ { ListSink(it, TIMESTAMP_AS_LONG) as SinkSource<LongArray> },
         )
     }
 
