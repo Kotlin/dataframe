@@ -90,3 +90,9 @@ jobs:
               repo: context.repo.repo,
               body: "Generated sources will be updated after merging this PR.\nPlease inspect the changes in [here](https://github.com/${{ github.repository }}/commit/${{ steps.git-commit.outputs.commit }}).",
             });
+
+      - name: Update status to PR
+        uses: ouzi-dev/commit-status-updater@v2
+        with:
+          failComment: Failed to update generated sources. Please check the logs of this GitHub Action.
+          successComment: Generated sources will be updated after merging this PR.\nPlease inspect the changes in [here](https://github.com/${{ github.repository }}/commit/${{ steps.git-commit.outputs.commit }}).
