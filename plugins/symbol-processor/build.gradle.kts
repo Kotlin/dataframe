@@ -20,7 +20,7 @@ group = "org.jetbrains.kotlinx.dataframe"
 dependencies {
     implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
-    implementation(project(":dataframe-openapi"))
+    implementation(project(":dataframe-openapi-generator"))
     implementation(project(":dataframe-excel"))
     implementation(project(":dataframe-jdbc"))
     implementation(libs.ksp.api)
