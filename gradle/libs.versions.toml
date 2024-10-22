@@ -5,7 +5,7 @@ kotlinJupyter = "0.12.0-139"
 ktlint = "12.1.1"
 
 # make sure to sync both manually with :generator module
-kotlin = "2.0.20"
+kotlin = "2.0.21"
 kotlinpoet = "1.18.1"
 
 dokka = "1.9.20"
@@ -17,6 +17,8 @@ dataframe = "0.14.1"
 korro = "0.1.6"
 
 kover = "0.8.3"
+deephavenCsv = "0.14.0"
+fastDoubleParser = "1.0.1"
 commonsCsv = "1.11.0"
 commonsCompress = "1.27.1"
 commonsIo = "2.16.1"
@@ -54,6 +56,7 @@ ktor-server-netty = "2.3.12"
 kotlin-compile-testing = "1.6.0"
 duckdb = "1.0.0"
 buildconfig = "5.4.0"
+benchmark = "0.4.12"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -65,6 +68,8 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
+deephavenCsv = { group = "io.deephaven", name = "deephaven-csv", version.ref = "deephavenCsv" }
+fastDoubleParser = { group = "ch.randelshofer", name = "fastdoubleparser", version.ref = "fastDoubleParser" }
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
@@ -123,7 +128,7 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
-
+kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
 
 duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref= "duckdb"}
@@ -148,3 +153,4 @@ dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "depe
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
