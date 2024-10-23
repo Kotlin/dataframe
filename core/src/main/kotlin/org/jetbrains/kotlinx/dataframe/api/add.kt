@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
 
 // region Add existing columns
 
-/**
+/** temp
  * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
  *
  * Original [DataFrame] is not modified.
