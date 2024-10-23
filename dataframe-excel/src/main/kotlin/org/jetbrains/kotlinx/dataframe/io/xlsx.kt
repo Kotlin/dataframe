@@ -131,7 +131,8 @@ public fun DataFrame.Companion.readExcel(
     nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(file)
+    @Suppress("ktlint:standard:comment-wrapping")
+    val wb = WorkbookFactory.create(file, /* password = */ null, /* readOnly = */ true)
     return wb.use {
         readExcel(it, sheetName, skipRows, columns, stringColumns?.toFormattingOptions(), rowsCount, nameRepairStrategy)
     }
