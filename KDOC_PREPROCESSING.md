@@ -58,7 +58,7 @@ This can be seen in action in the `core:processKDocsMain` and `core:changeJarTas
 To make sure the generated sources can be seen and reviewed on GitHub,
 since [PR #731](https://github.com/Kotlin/dataframe/pull/731),
 there's a [GitHub action](.github/workflows/generated-sources.yml) that runs the `core:processKDocsMain` task and
-comments the results on the PR. After a PR is merged, [another action](.github/workflows/generated-sources-master.yml)
+shows the results in the PR checks. After a PR is merged, [another action](.github/workflows/generated-sources-master.yml)
 runs on the master branch and commits the generated sources automatically.
 This way, the generated sources are always up to date with the latest changes in the code.
 This means you don't have to run and commit the generated sources yourself, though it's
