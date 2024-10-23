@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.typeClass
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
@@ -40,13 +41,42 @@ public interface GlobalParserOptions {
     public var locale: Locale
 }
 
+/**
+ * ### Options for parsing [String]`?` columns
+ *
+ * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
+ *   If specified instead of [dateTimeFormatter], it will be used in combination with [dateTimePattern]
+ *   to create a [DateTimeFormatter]. Just providing [locale] will not allow you to parse
+ *   locale-specific dates!
+ * @param dateTimeFormatter a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
+ *   from [dateTimePattern] and [locale]. If neither [dateTimeFormatter] nor [dateTimePattern] are specified,
+ *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
+ * @param dateTimePattern a pattern to use for parsing dates. If specified instead of [dateTimeFormatter],
+ *   it will be used to create a [DateTimeFormatter].
+ * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
+ *   ["null", "NULL", "NA", "N/A"].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
+ *   By default, it's an empty set. To skip all types except some specified ones, use [allTypesExcept].
+ */
 public data class ParserOptions(
     val locale: Locale? = null,
     // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
+    val useFastDoubleParser: Boolean = false,
+    val skipTypes: Set<KType> = emptySet(),
 ) {
+    public companion object {
+        /**
+         * Small helper function to get all types except the ones specified.
+         * Useful in combination with the [skipTypes] parameter.
+         */
+        public fun allTypesExcept(vararg types: KType): Set<KType> =
+            Parsers.parsersOrder.map { it.type }.toSet() - types.toSet()
+    }
+
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {
             dateTimeFormatter != null -> dateTimeFormatter
