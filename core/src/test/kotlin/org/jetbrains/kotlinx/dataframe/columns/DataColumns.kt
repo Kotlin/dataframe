@@ -1,6 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.junit.Test
@@ -27,5 +31,21 @@ class DataColumns {
     fun `create column with nullable platform type from factory method`() {
         val col = listOf(URI.create("http://example.com"), null).toColumn("a")
         col.type().toString() shouldBe "java.net.URI?"
+    }
+
+    @Test
+    fun `allow no nulls in frame columns`() {
+        // enable kotlin.dataframe.debug=true for this
+        shouldThrow<IllegalArgumentException> {
+            DataColumn.createFrameColumn(
+                name = "",
+                groups = listOf(dataFrameOf("a")(1), null) as List<AnyFrame>,
+            )
+        }
+
+        DataColumn.createUnsafe(
+            name = "",
+            values = listOf(dataFrameOf("a")(1), null),
+        ).kind() shouldBe ColumnKind.Value
     }
 }

@@ -20,11 +20,14 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.CREATE_FRAME_COLUMN
+import org.jetbrains.kotlinx.dataframe.util.CREATE_FRAME_COLUMN_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.CREATE_FRAME_COLUMN_REPLACE
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -45,6 +48,9 @@ public interface DataColumn<out T> : BaseColumn<T> {
         /**
          * Creates [ValueColumn] using given [name], [values] and [type].
          *
+         * Be careful; values are NOT checked to adhere to [type] for efficiency,
+         * unless you specify [infer].
+         *
          * @param name name of the column
          * @param values list of column values
          * @param type type of the column
@@ -56,10 +62,19 @@ public interface DataColumn<out T> : BaseColumn<T> {
             type: KType,
             infer: Infer = Infer.None,
             defaultValue: T? = null,
-        ): ValueColumn<T> = ValueColumnImpl(values, name, getValuesType(values, type, infer), defaultValue)
+        ): ValueColumn<T> =
+            ValueColumnImpl(
+                values = values,
+                name = name,
+                type = getValuesType(values, type, infer),
+                defaultValue = defaultValue,
+            )
 
         /**
          * Creates [ValueColumn] using given [name], [values] and reified column [type].
+         *
+         * Be careful; values are NOT checked to adhere to [type] for efficiency,
+         * unless you specify [infer].
          *
          * Note, that column [type] will be defined at compile-time using [T] argument
          *
@@ -74,33 +89,92 @@ public interface DataColumn<out T> : BaseColumn<T> {
             infer: Infer = Infer.None,
         ): ValueColumn<T> =
             createValueColumn(
-                name,
-                values,
-                getValuesType(
-                    values,
-                    typeOf<T>(),
-                    infer,
-                ),
+                name = name,
+                values = values,
+                type = typeOf<T>(),
+                infer = infer,
             )
 
+        /**
+         * Creates [ColumnGroup] using the given [name] and [df] representing the group of columns.
+         *
+         * @param name name of the column group
+         * @param df the collection of columns representing the column group
+         */
         public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(name, df)
 
+        @Deprecated(
+            message = CREATE_FRAME_COLUMN,
+            replaceWith = ReplaceWith(CREATE_FRAME_COLUMN_REPLACE, CREATE_FRAME_COLUMN_IMPORT),
+            level = DeprecationLevel.WARNING,
+        )
         public fun <T> createFrameColumn(name: String, df: DataFrame<T>, startIndices: Iterable<Int>): FrameColumn<T> =
             FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence()).toList(), lazy { df.schema() })
 
+        /**
+         * Creates [FrameColumn] using the given [name] and list of dataframes [groups].
+         *
+         * Be careful; [groups] must be a non-null list of [DataFrames][DataFrame].
+         * This is NOT checked at runtime for efficiency, nor is the validity of given [schema].
+         *
+         * @param name name of the frame column
+         * @param groups the dataframes to be put in the column
+         * @param schema an optional (lazily calculated) [DataFrameSchema] representing
+         *   the intersecting schema of [groups]
+         */
         public fun <T> createFrameColumn(
             name: String,
             groups: List<DataFrame<T>>,
             schema: Lazy<DataFrameSchema>? = null,
         ): FrameColumn<T> = FrameColumnImpl(name, groups, schema)
 
+        /**
+         * Creates either a [FrameColumn], [ColumnGroup], or [ValueColumn] by analyzing each value in
+         * [values].
+         * This is safer but less efficient than the other functions.
+         *
+         * Some conversions are done automatically to attempt to unify the values, like:
+         * - `null` -> [DataFrame.empty][DataFrame.empty]`()` and [DataRow] -> single-row [DataFrame] when there are other
+         *   [DataFrames][DataFrame] present in [values]
+         * - [List][List]`<`[DataRow][DataRow]`<*>>` -> [DataFrame]
+         * etc.
+         *
+         * @param name name of the column
+         * @param values the values to represent each row in the column
+         * @param nullable optionally you can specify whether [values] contains nulls, if `null` it is inferred.
+         * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
+         *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
+         */
         public fun <T> createWithTypeInference(
             name: String,
             values: List<T>,
             nullable: Boolean? = null,
-        ): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
+            allColsMakesColGroup: Boolean = false,
+        ): DataColumn<T> =
+            createColumnGuessingType(
+                name = name,
+                values = values,
+                nullable = nullable,
+                allColsMakesColGroup = allColsMakesColGroup,
+            )
 
-        public fun <T> create(
+        /**
+         * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
+         * [type].
+         *
+         * Be careful; Values in [values] are NOT checked to adhere to the given [type], nor
+         * do we check whether there are nulls among the values when the given type is [DataFrame]
+         * (a [FrameColumn] cannot contain `null`, this causes runtime exceptions).
+         * When [type] is `DataFrame<*>?`, a [ValueColumn] is created to avoid this issue.
+         *
+         * This may be unsafe but is more efficient than [createWithTypeInference].
+         *
+         * @param name the name of the column
+         * @param values the values to represent each row in the column
+         * @param type the (unchecked) common type of [values]
+         * @param infer in case a [ValueColumn] is created, this controls how/whether types need to be inferred
+         */
+        public fun <T> createUnsafe(
             name: String,
             values: List<T>,
             type: KType,
@@ -112,9 +186,29 @@ public interface DataColumn<out T> : BaseColumn<T> {
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
 
-        public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
-            create(name, values, typeOf<T>(), infer)
+        /**
+         * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
+         * type [T].
+         *
+         * Be careful; Values in [values] are NOT checked to adhere to the given [type], nor
+         * do we check whether there are nulls among the values when the given type is [DataFrame]
+         * (a [FrameColumn] cannot contain `null`, this causes runtime exceptions).
+         * When [type] is `DataFrame<*>?`, a [ValueColumn] is created to avoid this issue.
+         *
+         * This may be unsafe but is more efficient than [createWithTypeInference].
+         *
+         * @param T the (unchecked) common type of [values]
+         * @param name the name of the column
+         * @param values the values to represent each row in the column
+         * @param infer in case a [ValueColumn] is created, this controls how/whether types need to be inferred
+         */
+        public inline fun <reified T> createUnsafe(
+            name: String,
+            values: List<T>,
+            infer: Infer = Infer.None,
+        ): DataColumn<T> = createUnsafe(name, values, typeOf<T>(), infer)
 
+        /** Creates an empty [DataColumn] with given [name]. */
         public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
     }
 

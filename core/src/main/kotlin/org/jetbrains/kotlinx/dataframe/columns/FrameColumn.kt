@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 /**
  * Column that stores values of type [DataFrame]
  *
+ * Can be instantiated by [DataColumn.createFrameColumn].
+ *
  * @param T schema marker of contained dataframes. See [DataFrame] for details.
  */
 public interface FrameColumn<out T> : DataColumn<DataFrame<T>> {

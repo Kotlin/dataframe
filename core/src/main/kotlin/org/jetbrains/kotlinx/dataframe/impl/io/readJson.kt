@@ -37,8 +37,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
+import org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
@@ -298,11 +299,12 @@ internal fun fromJsonListAnyColumns(
                     )
                 }
 
-                else -> DataColumn.createFrameColumn(
-                    name = ARRAY_COLUMN_NAME, // will be erased
-                    df = parsed.unwrapUnnamedColumns(),
-                    startIndices = startIndices,
-                )
+                else ->
+                    parsed.unwrapUnnamedColumns()
+                        .chunkedImpl(
+                            startIndices = startIndices,
+                            name = ARRAY_COLUMN_NAME, // will be erased
+                        )
             }
             listOf(UnnamedColumn(res))
         }
@@ -334,8 +336,11 @@ internal fun fromJsonListAnyColumns(
 
                         dataFrameOf(
                             columnOf(*map.keys.toTypedArray()).named(KeyValueProperty<*>::key.name),
-                            createColumn(values = map.values, suggestedType = valueType, guessType = false)
-                                .named(KeyValueProperty<*>::value.name),
+                            createColumnGuessingType(
+                                values = map.values,
+                                suggestedType = valueType,
+                                guessTypeWithSuggestedAsUpperbound = false,
+                            ).named(KeyValueProperty<*>::value.name),
                         )
                     }
 
@@ -514,10 +519,10 @@ internal fun fromJsonListArrayAndValueColumns(
 
                         dataFrameOf(
                             columnOf(*map.keys.toTypedArray()).named(KeyValueProperty<*>::key.name),
-                            createColumn(
+                            createColumnGuessingType(
                                 values = map.values,
                                 suggestedType = valueType,
-                                guessType = false,
+                                guessTypeWithSuggestedAsUpperbound = false,
                             ).named(KeyValueProperty<*>::value.name),
                         )
                     }
@@ -640,7 +645,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                 )
                             }
 
-                            else -> DataColumn.createFrameColumn(colName, parsed.unwrapUnnamedColumns(), startIndices)
+                            else -> parsed.unwrapUnnamedColumns().chunkedImpl(startIndices, colName)
                         }
                         UnnamedColumn(res)
                     }

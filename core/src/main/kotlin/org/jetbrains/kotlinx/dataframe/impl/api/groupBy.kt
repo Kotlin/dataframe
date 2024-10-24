@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
@@ -62,7 +61,7 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
     }
 
     val groupedColumnName = keyColumnsDf.nameGenerator().addUnique(GroupBy.groupedColumnAccessor.name())
-    val groupedColumn = DataColumn.createFrameColumn(groupedColumnName, sorted, startIndices.asIterable())
+    val groupedColumn = sorted.chunkedImpl(startIndices.asIterable(), groupedColumnName)
 
     val df = keyColumnsDf + groupedColumn
     return GroupByImpl(df, groupedColumn, columns)

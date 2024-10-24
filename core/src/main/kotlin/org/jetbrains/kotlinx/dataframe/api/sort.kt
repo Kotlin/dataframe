@@ -94,7 +94,7 @@ private interface CommonDataColumnSortWithDocs
 
 /** @include [CommonDataColumnSortWithDocs] */
 public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
-    DataColumn.create(name, values().sortedWith(comparator), type) as C
+    DataColumn.createUnsafe(name, values().sortedWith(comparator), type) as C
 
 /** @include [CommonDataColumnSortWithDocs] */
 public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C = sortWith(Comparator(comparator))
