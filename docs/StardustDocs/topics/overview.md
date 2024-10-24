@@ -55,16 +55,16 @@ val df = DataFrame.readCSV("titanic.csv", delimiter = ';')
 
 ```kotlin
 // filter rows
-df.filter { survived && home.endsWith("NY") && age in 10..20 }
+val someSurvivors = df.filter { survived && home.endsWith("NY") && age in 10..20 }
     
 // add column
-df.add("birthYear") { 1912 - age }
+val withBirthYearColumen = df.add("birthYear") { 1912 - age }
 
 // sort rows
-df.sortByDesc { age }
+val sortedByAge = df.sortByDesc { age }
 
 // aggregate data
-df.groupBy { pclass }.aggregate {
+val aggregated = df.groupBy { pclass }.aggregate {
     maxBy { age }.name into "oldest person"
     count { survived } into "survived"
 }
@@ -119,7 +119,7 @@ val dfClean = df
 **Aggregate:**
 ```kotlin
 // group by flight origin
-dfClean.groupBy { From into "origin" }.aggregate {
+val analysed = dfClean.groupBy { From into "origin" }.aggregate {
     // we are in the context of single data group
     
     // number of flights from origin
