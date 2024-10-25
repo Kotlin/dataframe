@@ -35,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.splitInto
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
 import org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl
@@ -338,8 +339,7 @@ internal fun fromJsonListAnyColumns(
                             columnOf(*map.keys.toTypedArray()).named(KeyValueProperty<*>::key.name),
                             createColumnGuessingType(
                                 values = map.values,
-                                suggestedType = valueType,
-                                guessTypeWithSuggestedAsUpperbound = false,
+                                suggestedType = TypeSuggestion.Use(valueType),
                             ).named(KeyValueProperty<*>::value.name),
                         )
                     }
@@ -521,8 +521,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             columnOf(*map.keys.toTypedArray()).named(KeyValueProperty<*>::key.name),
                             createColumnGuessingType(
                                 values = map.values,
-                                suggestedType = valueType,
-                                guessTypeWithSuggestedAsUpperbound = false,
+                                suggestedType = TypeSuggestion.Use(valueType),
                             ).named(KeyValueProperty<*>::value.name),
                         )
                     }

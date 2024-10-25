@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.commonType
@@ -76,8 +77,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
         return createColumnGuessingType(
             name = name,
             values = list,
-            suggestedType = tartypeOf,
-            guessTypeWithSuggestedAsUpperbound = guessType,
+            suggestedType = TypeSuggestion.create(tartypeOf, guessType),
             defaultValue = defaultValue,
         ).cast()
     }

@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
@@ -73,10 +74,9 @@ public interface DataColumn<out T> : BaseColumn<T> {
         /**
          * Creates [ValueColumn] using given [name], [values] and reified column [type].
          *
-         * Be careful; values are NOT checked to adhere to [type] for efficiency,
+         * The column [type] will be defined at compile-time using [T] argument.
+         * Be careful with casting; values are NOT checked to adhere to `reified` type [T] for efficiency,
          * unless you specify [infer].
-         *
-         * Note, that column [type] will be defined at compile-time using [T] argument
          *
          * @param T type of the column
          * @param name name of the column
@@ -114,7 +114,8 @@ public interface DataColumn<out T> : BaseColumn<T> {
         /**
          * Creates [FrameColumn] using the given [name] and list of dataframes [groups].
          *
-         * Be careful; [groups] must be a non-null list of [DataFrames][DataFrame].
+         * [groups] must be a non-null list of [DataFrames][DataFrame], as [FrameColumn] does
+         * not allow `null` values.
          * This is NOT checked at runtime for efficiency, nor is the validity of given [schema].
          *
          * @param name name of the frame column
@@ -141,21 +142,21 @@ public interface DataColumn<out T> : BaseColumn<T> {
          *
          * @param name name of the column
          * @param values the values to represent each row in the column
+         * @param suggestedType optional suggested type for values. Default is [TypeSuggestion.Infer].
+         *   See [TypeSuggestion] for more information.
          * @param nullable optionally you can specify whether [values] contains nulls, if `null` it is inferred.
-         * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
-         *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
          */
         public fun <T> createWithTypeInference(
             name: String,
             values: List<T>,
+            suggestedType: TypeSuggestion = TypeSuggestion.Infer,
             nullable: Boolean? = null,
-            allColsMakesColGroup: Boolean = false,
         ): DataColumn<T> =
             createColumnGuessingType(
                 name = name,
                 values = values,
+                suggestedType = suggestedType,
                 nullable = nullable,
-                allColsMakesColGroup = allColsMakesColGroup,
             )
 
         /**

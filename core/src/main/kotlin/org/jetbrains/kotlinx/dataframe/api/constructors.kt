@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -225,8 +226,7 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
     createColumnGuessingType(
         values = values.asIterable(),
-        suggestedType = typeOf<T>(),
-        guessTypeWithSuggestedAsUpperbound = true,
+        suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
         listifyValues = false,
         allColsMakesColGroup = true,
     ).forceResolve()
@@ -252,8 +252,7 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
     createColumnGuessingType(
         values = values,
-        suggestedType = typeOf<T>(),
-        guessTypeWithSuggestedAsUpperbound = false,
+        suggestedType = TypeSuggestion.Use(typeOf<T>()),
         allColsMakesColGroup = true,
     ).forceResolve()
 
@@ -305,8 +304,7 @@ public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> I
         createColumnGuessingType(
             name = value.toString(),
             values = fill(value).asList(),
-            suggestedType = typeOf<C>(),
-            guessTypeWithSuggestedAsUpperbound = true,
+            suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<C>()),
         )
     }.toDataFrame()
 
@@ -346,8 +344,7 @@ public class DataFrameBuilder(private val header: List<String>) {
             createColumnGuessingType(
                 name = name,
                 values = valuesBuilder(name).asList(),
-                suggestedType = typeOf<T>(),
-                guessTypeWithSuggestedAsUpperbound = true,
+                suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
             )
         }
 
@@ -387,12 +384,12 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
-    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C & Any) =
+    private inline fun <reified C : Any> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
         withColumns { name ->
             DataColumn.createValueColumn(
                 name = name,
                 values = List(nrow, init),
-                type = typeOf<C>().withNullability(false),
+                type = typeOf<C>(),
             )
         }
 

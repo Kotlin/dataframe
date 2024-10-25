@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
@@ -181,10 +182,8 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
  * some conversions to unify the values if necessary.
  *
  * @param values values to create a column from
- * @param suggestedType optional suggested type for values.
- *   If set to `null` (default) the type will be inferred.
- * @param guessTypeWithSuggestedAsUpperbound Only relevant when [suggestedType]` != null`.
- *   If `true`, type inference will happen with the given [suggestedType] as the supertype.
+ * @param suggestedType optional suggested type for values. Default is [TypeSuggestion.Infer].
+ *   See [TypeSuggestion] for more information.
  * @param defaultValue optional default value for the column used when a [ValueColumn] is created.
  * @param nullable optional hint for the column nullability, used when a [ValueColumn] is created.
  * @param listifyValues if `true`, then values and nulls will be wrapped in a list if they appear among other lists.
@@ -196,8 +195,7 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
 @PublishedApi
 internal fun <T> createColumnGuessingType(
     values: Iterable<T>,
-    suggestedType: KType? = null,
-    guessTypeWithSuggestedAsUpperbound: Boolean = false,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
     defaultValue: T? = null,
     nullable: Boolean? = null,
     listifyValues: Boolean = false,
@@ -207,7 +205,6 @@ internal fun <T> createColumnGuessingType(
         name = "",
         values = values,
         suggestedType = suggestedType,
-        guessTypeWithSuggestedAsUpperbound = guessTypeWithSuggestedAsUpperbound,
         defaultValue = defaultValue,
         nullable = nullable,
         listifyValues = listifyValues,
@@ -222,30 +219,29 @@ internal fun <T> createColumnGuessingType(
 internal fun <T> createColumnGuessingType(
     name: String,
     values: Iterable<T>,
-    suggestedType: KType? = null,
-    guessTypeWithSuggestedAsUpperbound: Boolean = false,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
     defaultValue: T? = null,
     nullable: Boolean? = null,
     listifyValues: Boolean = false,
     allColsMakesColGroup: Boolean = false,
 ): DataColumn<T> {
-    val detectType = suggestedType == null || guessTypeWithSuggestedAsUpperbound
-    val type = if (detectType) {
-        guessValueType(
-            values = values.asSequence(),
-            upperBound = suggestedType,
-            listifyValues = listifyValues,
-            allColsMakesRow = allColsMakesColGroup,
-        )
-    } else {
-        suggestedType!!
+    val type = when (suggestedType) {
+        is TypeSuggestion.Infer, is TypeSuggestion.InferWithUpperbound ->
+            guessValueType(
+                values = values.asSequence(),
+                upperBound = (suggestedType as? TypeSuggestion.InferWithUpperbound)?.upperbound,
+                listifyValues = listifyValues,
+                allColsMakesRow = allColsMakesColGroup,
+            )
+
+        is TypeSuggestion.Use -> suggestedType.type
     }
 
     return when (type.classifier!! as KClass<*>) {
+        // guessValueType can only return DataRow if all values are `AnyRow?`
+        // or allColsMakesColGroup == true, all values are `AnyCol`, and they all have the same size
         DataRow::class -> {
-            // guessValueType can only return DataRow if all values are AnyRow?
-            // or all are AnyCol and they all have the same size
-            if (values.firstOrNull() is AnyCol) {
+            if (allColsMakesColGroup && values.firstOrNull() is AnyCol) {
                 val df = dataFrameOf(values as Iterable<AnyCol>)
                 DataColumn.createColumnGroup(name, df)
             } else {
@@ -301,23 +297,19 @@ internal fun <T> createColumnGuessingType(
             }
         }
 
-        else -> {
-            if (nullable == null) {
-                DataColumn.createValueColumn(
-                    name = name,
-                    values = values.asList(),
-                    type = type,
-                    infer = if (detectType) Infer.None else Infer.Nulls,
-                    defaultValue = defaultValue,
-                )
-            } else {
-                DataColumn.createValueColumn(
-                    name = name,
-                    values = values.asList(),
-                    type = type.withNullability(nullable),
-                    defaultValue = defaultValue,
-                )
-            }
-        }
+        else ->
+            DataColumn.createValueColumn(
+                name = name,
+                values = values.asList(),
+                type = if (nullable != null) type.withNullability(nullable) else type,
+                infer = when {
+                    // even though an exact type is suggested,
+                    // nullable is not given, so we still infer nullability
+                    nullable == null && suggestedType is TypeSuggestion.Use -> Infer.Nulls
+
+                    // nullability already inferred by guessValueType
+                    else -> Infer.None
+                },
+            )
     }
 }

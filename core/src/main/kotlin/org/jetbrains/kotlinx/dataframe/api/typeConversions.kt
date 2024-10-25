@@ -233,14 +233,14 @@ public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): V
 public enum class Infer {
 
     /**
-     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type].
+     * Use `reified` type argument of an inline [DataFrame] operation as [DataColumn.type].
      *
      * This is the most efficient but least safe option.
      */
     None,
 
     /**
-     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type],
+     * Use `reified` type argument of an inline [DataFrame] operation as [DataColumn.type],
      * but compute [DataColumn.hasNulls] by checking column [DataColumn.values] for an actual presence of `null` values.
      */
     Nulls,
@@ -250,6 +250,10 @@ public enum class Infer {
      * base type as an upper bound.
      *
      * This is the least efficient but safest option.
+     *
+     * It's useful, for instance,
+     * if you have a column of type `Any?` and want its schema type to be inferred based on the actual values.
+     * In many cases, letting the library infer by `reified` types is enough and more efficient.
      */
     Type,
 

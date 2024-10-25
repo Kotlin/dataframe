@@ -27,12 +27,12 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isURL
@@ -529,7 +529,11 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
 
     // Create a new column with the parsed values,
     // createColumnGuessingType is used to handle unifying values if needed
-    return createColumnGuessingType(name(), parsedValues, type)
+    return DataColumn.createWithTypeInference(
+        name = name(),
+        values = parsedValues,
+        suggestedType = TypeSuggestion.Use(type),
+    )
 }
 
 internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: ParserOptions?): DataColumn<T?> {
@@ -539,7 +543,11 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
             handler(it.trim()) ?: throw IllegalStateException("Couldn't parse '$it' into type ${parser.type}")
         }
     }
-    return createColumnGuessingType(name(), parsedValues, parser.type.withNullability(hasNulls))
+    return DataColumn.createWithTypeInference(
+        name = name(),
+        values = parsedValues,
+        suggestedType = TypeSuggestion.Use(parser.type.withNullability(hasNulls)),
+    )
 }
 
 internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> {

@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 
 internal inline fun <T> Aggregatable<T>.remainingColumns(
@@ -22,7 +23,6 @@ internal fun NamedValue.toColumnWithPath() =
     path to createColumnGuessingType(
         name = path.last(),
         values = listOf(value),
-        suggestedType = type,
-        guessTypeWithSuggestedAsUpperbound = guessType,
+        suggestedType = TypeSuggestion.create(type, guessType),
         defaultValue = default,
     )
