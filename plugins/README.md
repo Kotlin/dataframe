@@ -8,8 +8,8 @@ task `dataframes {}`. It uses [:plugins:symbol-processor](./symbol-processor) to
 
 ### [:plugins:symbol-processor](./symbol-processor)
 The KSP plugin that can generate data schemas from a data sample using the `@file:ImportDataSchema` annotation.
-It is also used to detect (both manually written- or generated) `@DataSchema` annotated classes/interfaces to generate
-column accessors for in the form of extension properties.
+It is also used to generate column accessors for in the form of extension properties for 
+(both manually written- or generated) `@DataSchema` annotated classes/interfaces.
 
 ### [:plugins:kotlin-dataframe](./kotlin-dataframe)
 The Kotlin 2.x Compiler plugin of DataFrame. A [work-in-progress](https://github.com/Kotlin/dataframe/issues/704)

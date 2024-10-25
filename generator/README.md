@@ -10,5 +10,5 @@ code in Notebooks or any of our [plugins](../plugins). Words like "package", "fu
 As the Kotlin language can change over time, this task ensures that any changes to the language
 will be reflected in our code generation.
 
-This module can probably be moved under [:plugins](../plugins):
+This module will likely be moved under [:plugins](../plugins):
 [Issue #899](https://github.com/Kotlin/dataframe/issues/899).

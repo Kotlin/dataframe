@@ -1,7 +1,8 @@
 ## :plugins:symbol-processor
 
 This module holds the KSP plugin, published as the library "symbol-processor-all" that can generate data schemas from 
-a data sample using the `@file:ImportDataSchema` annotation.
+a data sample using the `@file:ImportDataSchema` annotation. This annotation can be used as an alternative to
+the `dataframes {}` syntax of the [Gradle plugin](../dataframe-gradle-plugin) that's declared closer to the source code.
 It is also used to detect (both manually written- or generated) `@DataSchema` annotated classes/interfaces to generate
 column accessors for in the form of extension properties.
 
