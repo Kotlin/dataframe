@@ -155,6 +155,7 @@ class DataSchemaGenerator(
             codeGenerator.createNewFile(Dependencies(true, importStatement.origin), packageName, "$name.Generated")
 
         val formats = listOf(
+            // TODO new Csv() and Tsv()
             CSV(delimiter = importStatement.csvOptions.delimiter),
             JSON(
                 typeClashTactic = importStatement.jsonOptions.typeClashTactic,
