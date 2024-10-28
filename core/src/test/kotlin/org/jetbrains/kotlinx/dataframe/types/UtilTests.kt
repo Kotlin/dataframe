@@ -158,7 +158,7 @@ class UtilTests {
         guessValueType(
             sequenceOf(DataColumn.empty(), columnOf(1)),
             allColsMakesRow = true,
-        ) shouldBe typeOf<DataColumn<*>>()
+        ) shouldBe typeOf<DataRow<*>>()
 
         guessValueType(
             sequenceOf(columnOf("a"), columnOf(1)),
