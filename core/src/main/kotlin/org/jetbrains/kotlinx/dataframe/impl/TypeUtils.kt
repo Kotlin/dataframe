@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
@@ -385,7 +386,12 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
     }
 
 /**
- * Returns the value type of the given [values] sequence.
+ * Returns the guessed value type of the given [values] sequence.
+ *
+ * This function analyzes all [values] once and returns the expected column type.
+ *
+ * The resulting column type may need [values] to be converted to the expected type.
+ * See [createColumnGuessingType] for how to create a column with the guessed type.
  *
  * @param values the values to guess the type from
  * @param upperBound the upper bound of the type to guess

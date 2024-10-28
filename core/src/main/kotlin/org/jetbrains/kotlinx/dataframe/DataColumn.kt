@@ -132,13 +132,18 @@ public interface DataColumn<out T> : BaseColumn<T> {
         /**
          * Creates either a [FrameColumn], [ColumnGroup], or [ValueColumn] by analyzing each value in
          * [values].
+         *
          * This is safer but less efficient than the other functions.
          *
-         * Some conversions are done automatically to attempt to unify the values, like:
-         * - `null` -> [DataFrame.empty][DataFrame.empty]`()` and [DataRow] -> single-row [DataFrame] when there are other
-         *   [DataFrames][DataFrame] present in [values]
-         * - [List][List]`<`[DataRow][DataRow]`<*>>` -> [DataFrame]
-         * etc.
+         * Some conversions are done automatically to attempt to unify the values.
+         *
+         * For instance, when there are other [DataFrames][DataFrame] present in [values], we'll convert:
+         * - `null` -> [DataFrame.empty]`()`
+         * - [DataRow] -> single-row [DataFrame]
+         * - [List][List]`<`[DataRow][DataRow]`<*>>` -> multi-row [DataFrame]
+         *
+         * to be able to create a [FrameColumn].
+         * There are more conversions for other types as well.
          *
          * @param name name of the column
          * @param values the values to represent each row in the column
@@ -163,12 +168,12 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
          * [type].
          *
-         * Be careful; Values in [values] are NOT checked to adhere to the given [type], nor
-         * do we check whether there are nulls among the values when the given type is [DataFrame]
-         * (a [FrameColumn] cannot contain `null`, this causes runtime exceptions).
-         * When [type] is `DataFrame<*>?`, a [ValueColumn] is created to avoid this issue.
-         *
          * This may be unsafe but is more efficient than [createWithTypeInference].
+         *
+         * Be careful; Values in [values] are NOT checked to adhere to the given [type], nor
+         * do we check whether there are unexpected nulls among the values.
+         *
+         * It's recommended to use [createValueColumn], [createColumnGroup], and [createFrameColumn] instead.
          *
          * @param name the name of the column
          * @param values the values to represent each row in the column
@@ -181,9 +186,11 @@ public interface DataColumn<out T> : BaseColumn<T> {
             type: KType,
             infer: Infer = Infer.None,
         ): DataColumn<T> =
-            when (type.toColumnKind()) {
+            when (type.toColumnKind()) { // AnyFrame -> Frame, AnyRow? -> Group, else -> Value
                 ColumnKind.Value -> createValueColumn(name, values, type, infer)
+
                 ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().cast()
+
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
 
@@ -191,12 +198,12 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
          * type [T].
          *
-         * Be careful; Values in [values] are NOT checked to adhere to the given [type], nor
-         * do we check whether there are nulls among the values when the given type is [DataFrame]
-         * (a [FrameColumn] cannot contain `null`, this causes runtime exceptions).
-         * When [type] is `DataFrame<*>?`, a [ValueColumn] is created to avoid this issue.
+         * This is generally safe, as [T] can be inferred, and more efficient than [createWithTypeInference].
          *
-         * This may be unsafe but is more efficient than [createWithTypeInference].
+         * Be careful when casting occurs; Values in [values] are NOT checked to adhere to the given/inferred type [T],
+         * nor do we check whether there are unexpected nulls among the values.
+         *
+         * It's recommended to use [createValueColumn], [createColumnGroup], and [createFrameColumn] instead.
          *
          * @param T the (unchecked) common type of [values]
          * @param name the name of the column
