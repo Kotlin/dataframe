@@ -263,7 +263,7 @@ internal fun convertToDataFrame(
         val shouldCreateColumnGroup = kClass == DataRow::class
 
         when {
-            hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable)
+            hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable = nullable)
 
             shouldCreateValueCol ->
                 DataColumn.createValueColumn(

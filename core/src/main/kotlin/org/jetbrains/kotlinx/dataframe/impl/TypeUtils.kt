@@ -2,11 +2,14 @@
 
 package org.jetbrains.kotlinx.dataframe.impl
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
@@ -383,21 +386,35 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
     }
 
 /**
- * Returns the value type of the given [values] sequence.
+ * Returns the guessed value type of the given [values] sequence.
+ *
+ * This function analyzes all [values] once and returns the expected column type.
+ *
+ * The resulting column type may need [values] to be converted to the expected type.
+ * See [createColumnGuessingType] for how to create a column with the guessed type.
  *
  * @param values the values to guess the type from
  * @param upperBound the upper bound of the type to guess
  * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
  *   Note: this parameter is ignored if another [Collection] is present in the values.
+ * @param allColsMakesRow if true, then, if all values are non-null columns, we assume
+ *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
+ *   so the function will return [DataRow].
  */
 @PublishedApi
-internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, listifyValues: Boolean = false): KType {
+internal fun guessValueType(
+    values: Sequence<Any?>,
+    upperBound: KType? = null,
+    listifyValues: Boolean = false,
+    allColsMakesRow: Boolean = false,
+): KType {
     val classes = mutableSetOf<KClass<*>>()
     val collectionClasses = mutableSetOf<KClass<out Collection<*>>>()
     var hasNulls = false
     var hasFrames = false
     var hasRows = false
+    var hasCols = false
     var hasList = false
     var allListsAreEmpty = true
     val classesInCollection = mutableSetOf<KClass<*>>()
@@ -410,6 +427,8 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
             is AnyRow -> hasRows = true
 
             is AnyFrame -> hasFrames = true
+
+            is AnyCol -> hasCols = true
 
             is List<*> -> {
                 hasList = true
@@ -448,6 +467,7 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
         classes.isNotEmpty() -> {
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)
+            if (hasCols) classes.add(DataColumn::class)
             if (hasList) {
                 if (listifyValues) {
                     val typeInLists = classesInCollection.commonType(
@@ -465,15 +485,18 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
             return classes.commonType(hasNulls, upperBound)
         }
 
-        hasNulls && !hasFrames && !hasRows && !hasList -> nothingType(nullable = true)
+        hasNulls && !hasFrames && !hasRows && !hasList && !hasCols -> nothingType(nullable = true)
 
         (hasFrames && (!hasList || allListsWithRows)) || (!hasFrames && allListsWithRows) ->
             DataFrame::class.createStarProjectedType(hasNulls)
 
-        hasRows && !hasFrames && !hasList ->
+        hasRows && !hasFrames && !hasList && !hasCols ->
             DataRow::class.createStarProjectedType(false)
 
-        collectionClasses.isNotEmpty() && !hasFrames && !hasRows -> {
+        allColsMakesRow && hasCols && !hasFrames && !hasList && !hasRows && !hasNulls ->
+            DataRow::class.createStarProjectedType(false)
+
+        collectionClasses.isNotEmpty() && !hasFrames && !hasRows && !hasCols -> {
             val elementType = upperBound?.let {
                 if (it.jvmErasure.isSubclassOf(Collection::class)) {
                     it.projectUpTo(Collection::class).arguments[0].type
@@ -482,30 +505,31 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
                 }
             }
             if (hasList) collectionClasses.add(List::class)
-            (commonParent(collectionClasses) ?: Collection::class)
-                .createTypeWithArgument(
-                    classesInCollection.commonType(
-                        nullable = nullsInCollection,
-                        upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                    ),
-                ).withNullability(hasNulls)
+            (commonParent(collectionClasses) ?: Collection::class).createTypeWithArgument(
+                argument = classesInCollection.commonType(
+                    nullable = nullsInCollection,
+                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                ),
+            ).withNullability(hasNulls)
         }
 
-        hasList && collectionClasses.isEmpty() && !hasFrames && !hasRows -> {
-            val elementType = upperBound?.let { if (it.jvmErasure == List::class) it.arguments[0].type else null }
-            List::class
-                .createTypeWithArgument(
-                    classesInCollection.commonType(
-                        nullable = nullsInCollection,
-                        upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                    ),
-                ).withNullability(hasNulls && !listifyValues)
+        hasList && collectionClasses.isEmpty() && !hasFrames && !hasRows && !hasCols -> {
+            val elementType = upperBound?.let {
+                if (it.jvmErasure == List::class) it.arguments[0].type else null
+            }
+            List::class.createTypeWithArgument(
+                argument = classesInCollection.commonType(
+                    nullable = nullsInCollection,
+                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                ),
+            ).withNullability(hasNulls && !listifyValues)
         }
 
         else -> {
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)
             if (hasList) classes.add(List::class)
+            if (hasCols) classes.add(DataColumn::class)
             if (collectionClasses.isNotEmpty()) classes.addAll(collectionClasses)
             return classes.commonType(hasNulls, upperBound)
         }
