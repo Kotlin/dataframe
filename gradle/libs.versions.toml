@@ -5,7 +5,7 @@ kotlinJupyter = "0.12.0-139"
 ktlint = "12.1.1"
 
 # make sure to sync both manually with :generator module
-kotlin = "2.0.21"
+kotlin = "2.0.20"
 kotlinpoet = "1.18.1"
 
 dokka = "1.9.20"
@@ -18,7 +18,7 @@ korro = "0.1.6"
 
 kover = "0.8.3"
 deephavenCsv = "0.14.0"
-fastDoubleParser = "1.0.1"
+fastDoubleParser = "2.0.0"
 commonsCsv = "1.11.0"
 commonsCompress = "1.27.1"
 commonsIo = "2.16.1"
@@ -50,7 +50,7 @@ docProcessor = "0.3.10"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
 plugin-publish = "1.2.1"
-shadow = "8.1.1"
+shadow = "8.3.3"
 android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
 ktor-server-netty = "2.3.12"
 kotlin-compile-testing = "1.6.0"
@@ -151,6 +151,6 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
 kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
