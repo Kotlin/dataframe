@@ -11,16 +11,12 @@ internal class DataFrameCustomDoubleParser(parserOptions: ParserOptions) : Custo
 
     private val doubleParser = DoubleParser(parserOptions)
 
-    override fun parse(bs: ByteSlice): Double {
-        val array = ByteArray(bs.size())
+    override fun parse(bs: ByteSlice): Double =
         try {
-            bs.copyTo(array, 0)
+            doubleParser.parseOrNull(bs.data(), bs.begin(), bs.size())
         } catch (e: Exception) {
-            throw NumberFormatException("Failed to parse double")
-        }
-        return doubleParser.parseOrNull(array)
-            ?: throw NumberFormatException("Failed to parse double")
-    }
+            null
+        } ?: throw NumberFormatException("Failed to parse double")
 
     override fun parse(cs: CharSequence): Double =
         doubleParser.parseOrNull(cs.toString())
