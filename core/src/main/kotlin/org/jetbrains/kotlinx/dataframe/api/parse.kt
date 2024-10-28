@@ -40,12 +40,29 @@ public interface GlobalParserOptions {
     public var locale: Locale
 }
 
+/**
+ * ### Options for parsing [String]`?` columns
+ *
+ * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
+ *   If specified instead of [dateTimeFormatter], it will be used in combination with [dateTimePattern]
+ *   to create a [DateTimeFormatter]. Just providing [locale] will not allow you to parse
+ *   locale-specific dates!
+ * @param dateTimeFormatter a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
+ *   from [dateTimePattern] and [locale]. If neither [dateTimeFormatter] nor [dateTimePattern] are specified,
+ *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
+ * @param dateTimePattern a pattern to use for parsing dates. If specified instead of [dateTimeFormatter],
+ *   it will be used to create a [DateTimeFormatter].
+ * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
+ *   ["null", "NULL", "NA", "N/A"].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ */
 public data class ParserOptions(
     val locale: Locale? = null,
     // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
+    val useFastDoubleParser: Boolean = false,
 ) {
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {
