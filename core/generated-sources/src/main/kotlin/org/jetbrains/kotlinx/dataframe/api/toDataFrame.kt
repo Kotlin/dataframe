@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -121,12 +121,12 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
     map {
-        it.first to guessColumnType(it.first.last(), it.second.asList())
+        it.first to createColumnGuessingType(it.first.last(), it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
 public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
     map {
-        ColumnPath(it.first) to guessColumnType(it.first, it.second.asList())
+        ColumnPath(it.first) to createColumnGuessingType(it.first, it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
 public interface TraversePropertiesDsl {
