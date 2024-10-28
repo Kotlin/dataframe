@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -24,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withValuesImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
@@ -223,7 +224,12 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 // region create DataColumn
 
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
-    createColumn(values.asIterable(), typeOf<T>(), true).forceResolve()
+    createColumnGuessingType(
+        values = values.asIterable(),
+        suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
+        listifyValues = false,
+        allColsMakesColGroup = true,
+    ).forceResolve()
 
 public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
@@ -244,7 +250,11 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
     ).forceResolve()
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
-    createColumn(values, typeOf<T>(), false).forceResolve()
+    createColumnGuessingType(
+        values = values,
+        suggestedType = TypeSuggestion.Use(typeOf<T>()),
+        allColsMakesColGroup = true,
+    ).forceResolve()
 
 // endregion
 
@@ -274,8 +284,10 @@ public fun dataFrameOf(vararg columns: AnyBaseCol): DataFrame<*> = dataFrameOf(c
 @Interpretable("DataFrameOf0")
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 
-public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): DataFrame<*> =
-    dataFrameOf(header.asIterable(), fill)
+public inline fun <reified C> dataFrameOf(
+    vararg header: String,
+    crossinline fill: (String) -> Iterable<C>,
+): DataFrame<*> = dataFrameOf(header.asIterable()).invoke(fill)
 
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
@@ -289,9 +301,11 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFr
 
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
-        fill(value).asList().let {
-            DataColumn.create(value.toString(), it)
-        }
+        DataColumn.createWithTypeInference(
+            name = value.toString(),
+            values = fill(value).asList(),
+            suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<C>()),
+        )
     }.toDataFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
@@ -320,16 +334,18 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public operator fun invoke(args: Sequence<Any?>): DataFrame<*> = invoke(*args.toList().toTypedArray())
 
-    public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> = header.map(columnBuilder).toDataFrame()
+    public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> =
+        header
+            .map { columnBuilder(it) named it } // create a columns and make sure to rename them to the given header
+            .toDataFrame()
 
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
-            valuesBuilder(name).let {
-                DataColumn.create(
-                    name = name,
-                    values = it.asList(),
-                )
-            }
+            DataColumn.createWithTypeInference(
+                name = name,
+                values = valuesBuilder(name).asList(),
+                suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
+            )
         }
 
     public inline fun <reified C> fill(nrow: Int, value: C): DataFrame<*> =
@@ -341,25 +357,34 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
+    public fun fill(nrow: Int, dataFrame: AnyFrame): DataFrame<*> =
+        withColumns { name ->
+            DataColumn.createFrameColumn(
+                name = name,
+                groups = List(nrow) { dataFrame },
+                schema = lazy { dataFrame.schema() },
+            )
+        }
+
     public inline fun <reified C> nulls(nrow: Int): DataFrame<*> = fill<C?>(nrow, null)
 
     public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.create(
-                name,
-                List(nrow) { init(it, name) },
+            DataColumn.createWithTypeInference(
+                name = name,
+                values = List(nrow) { init(it, name) },
             )
         }
 
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.create(
+            DataColumn.createWithTypeInference(
                 name = name,
                 values = List(nrow, init),
             )
         }
 
-    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
+    private inline fun <reified C : Any> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
         withColumns { name ->
             DataColumn.createValueColumn(
                 name = name,

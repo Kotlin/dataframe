@@ -15,6 +15,10 @@ internal const val DF_READ_NO_CSV = "This function is deprecated and should be r
 internal const val DF_READ_NO_CSV_REPLACE =
     "this.readCSV(fileOrUrl, delimiter, header, colTypes, skipLines, readLines, duplicate, charset)"
 
+internal const val CREATE_FRAME_COLUMN = "Replaced by df.chunked(). $MESSAGE_0_16"
+internal const val CREATE_FRAME_COLUMN_REPLACE = "df.chunked(startIndices, name)"
+internal const val CREATE_FRAME_COLUMN_IMPORT = "org.jetbrains.kotlinx.dataframe.api.chunked"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
