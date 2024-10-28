@@ -301,7 +301,7 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFr
 
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
-        createColumnGuessingType(
+        DataColumn.createWithTypeInference(
             name = value.toString(),
             values = fill(value).asList(),
             suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<C>()),
@@ -341,7 +341,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
-            createColumnGuessingType(
+            DataColumn.createWithTypeInference(
                 name = name,
                 values = valuesBuilder(name).asList(),
                 suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),

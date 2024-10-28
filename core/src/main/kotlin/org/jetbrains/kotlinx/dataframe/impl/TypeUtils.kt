@@ -392,7 +392,7 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
  * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
  *   Note: this parameter is ignored if another [Collection] is present in the values.
- * @param allColsMakesRow if true, then, if all values are non-null same-sized columns, we assume
+ * @param allColsMakesRow if true, then, if all values are non-null columns, we assume
  *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
  *   so the function will return [DataRow].
  */
@@ -409,7 +409,6 @@ internal fun guessValueType(
     var hasFrames = false
     var hasRows = false
     var hasCols = false
-    val colSizes = mutableListOf<Int>()
     var hasList = false
     var allListsAreEmpty = true
     val classesInCollection = mutableSetOf<KClass<*>>()
@@ -423,10 +422,7 @@ internal fun guessValueType(
 
             is AnyFrame -> hasFrames = true
 
-            is AnyCol -> {
-                hasCols = true
-                colSizes += it.size()
-            }
+            is AnyCol -> hasCols = true
 
             is List<*> -> {
                 hasList = true
@@ -491,13 +487,7 @@ internal fun guessValueType(
         hasRows && !hasFrames && !hasList && !hasCols ->
             DataRow::class.createStarProjectedType(false)
 
-        allColsMakesRow &&
-            hasCols &&
-            !hasFrames &&
-            !hasList &&
-            !hasRows &&
-            !hasNulls &&
-            colSizes.distinct().size == 1 ->
+        allColsMakesRow && hasCols && !hasFrames && !hasList && !hasRows && !hasNulls ->
             DataRow::class.createStarProjectedType(false)
 
         collectionClasses.isNotEmpty() && !hasFrames && !hasRows && !hasCols -> {
@@ -509,24 +499,24 @@ internal fun guessValueType(
                 }
             }
             if (hasList) collectionClasses.add(List::class)
-            (commonParent(collectionClasses) ?: Collection::class)
-                .createTypeWithArgument(
-                    classesInCollection.commonType(
-                        nullable = nullsInCollection,
-                        upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                    ),
-                ).withNullability(hasNulls)
+            (commonParent(collectionClasses) ?: Collection::class).createTypeWithArgument(
+                argument = classesInCollection.commonType(
+                    nullable = nullsInCollection,
+                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                ),
+            ).withNullability(hasNulls)
         }
 
         hasList && collectionClasses.isEmpty() && !hasFrames && !hasRows && !hasCols -> {
-            val elementType = upperBound?.let { if (it.jvmErasure == List::class) it.arguments[0].type else null }
-            List::class
-                .createTypeWithArgument(
-                    classesInCollection.commonType(
-                        nullable = nullsInCollection,
-                        upperBound = elementType ?: nothingType(nullable = nullsInCollection),
-                    ),
-                ).withNullability(hasNulls && !listifyValues)
+            val elementType = upperBound?.let {
+                if (it.jvmErasure == List::class) it.arguments[0].type else null
+            }
+            List::class.createTypeWithArgument(
+                argument = classesInCollection.commonType(
+                    nullable = nullsInCollection,
+                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                ),
+            ).withNullability(hasNulls && !listifyValues)
         }
 
         else -> {

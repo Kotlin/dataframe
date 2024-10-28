@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion.InferWithUpperbound
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.type
@@ -49,7 +50,10 @@ class ConstructorsTests {
     @Test
     fun `guess column group from rows`() {
         val row = dataFrameOf("a", "b")(1, 2).single()
-        val col = createColumnGuessingType(listOf(row, DataRow.empty), typeOf<AnyRow>(), true)
+        val col = createColumnGuessingType(
+            values = listOf(row, DataRow.empty),
+            suggestedType = InferWithUpperbound(typeOf<AnyRow>()),
+        )
         col shouldBe columnOf(row, DataRow.empty)
 
         col.hasNulls() shouldBe false
@@ -62,7 +66,10 @@ class ConstructorsTests {
     @Test
     fun `guess column group from rows with null`() {
         val row = dataFrameOf("a", "b")(1, 2).single()
-        val col = createColumnGuessingType(listOf(row, DataRow.empty, null), typeOf<AnyRow?>(), true)
+        val col = createColumnGuessingType(
+            values = listOf(row, DataRow.empty, null),
+            suggestedType = InferWithUpperbound(typeOf<AnyRow?>()),
+        )
         col shouldBe columnOf(row, DataRow.empty, null)
 
         col.hasNulls() shouldBe false
@@ -79,8 +86,7 @@ class ConstructorsTests {
         val col2 = columnOf("a", "b")
         val col = createColumnGuessingType(
             values = listOf(col1, col2),
-            suggestedType = typeOf<AnyCol>(),
-            guessTypeWithSuggestedAsUpperbound = true,
+            suggestedType = InferWithUpperbound(typeOf<AnyCol>()),
             allColsMakesColGroup = true,
         )
         col shouldBe columnOf(col1, col2)
@@ -99,9 +105,8 @@ class ConstructorsTests {
         val col1 = columnOf(1, 2)
         val col2 = columnOf("a", "b")
         val col = createColumnGuessingType(
-            listOf(col1, col2, null),
-            typeOf<AnyCol?>(),
-            true,
+            values = listOf(col1, col2, null),
+            suggestedType = InferWithUpperbound(typeOf<AnyCol?>()),
         )
         col.values shouldBe columnOf(col1, col2, null).values
 
@@ -118,9 +123,8 @@ class ConstructorsTests {
         val df1 = dataFrameOf("a", "b")(1, 2)
         val df2 = dataFrameOf("a", "b")(3, 4)
         val col = createColumnGuessingType(
-            listOf(df1, df2, null),
-            typeOf<AnyCol?>(),
-            true,
+            values = listOf(df1, df2, null),
+            suggestedType = InferWithUpperbound(typeOf<AnyCol?>()),
         )
         col.values shouldBe columnOf(df1, df2, null).values
 
@@ -135,9 +139,8 @@ class ConstructorsTests {
     @Test
     fun `guess value column from nulls`() {
         val col = createColumnGuessingType(
-            listOf(null, null),
-            nothingType(true),
-            true,
+            values = listOf(null, null),
+            suggestedType = InferWithUpperbound(nothingType(true)),
         )
         col.values shouldBe columnOf<Any?>(null, null).values
 

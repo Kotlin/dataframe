@@ -239,7 +239,7 @@ internal fun <T> createColumnGuessingType(
 
     return when (type.classifier!! as KClass<*>) {
         // guessValueType can only return DataRow if all values are `AnyRow?`
-        // or allColsMakesColGroup == true, all values are `AnyCol`, and they all have the same size
+        // or allColsMakesColGroup == true, all values are `AnyCol`
         DataRow::class -> {
             if (allColsMakesColGroup && values.firstOrNull() is AnyCol) {
                 val df = dataFrameOf(values as Iterable<AnyCol>)
@@ -293,7 +293,12 @@ internal fun <T> createColumnGuessingType(
                 }
                 DataColumn.createFrameColumn(name, frames).cast()
             } else {
-                DataColumn.createValueColumn(name, lists, type, defaultValue = defaultValue).cast()
+                DataColumn.createValueColumn(
+                    name = name,
+                    values = lists,
+                    type = type,
+                    defaultValue = defaultValue,
+                ).cast()
             }
         }
 
@@ -310,6 +315,7 @@ internal fun <T> createColumnGuessingType(
                     // nullability already inferred by guessValueType
                     else -> Infer.None
                 },
+                defaultValue = defaultValue,
             )
     }
 }

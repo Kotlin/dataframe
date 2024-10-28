@@ -23,8 +23,7 @@ public sealed interface TypeSuggestion {
             when {
                 suggestedType != null && guessType -> InferWithUpperbound(suggestedType)
                 suggestedType != null && !guessType -> Use(suggestedType)
-                suggestedType == null && guessType -> Infer
-                else -> error("Cannot create TypeSuggestion with no suggested type and no guessing allowed.")
+                else -> Infer // no type was suggested, so we need to guess, no matter what guessType is
             }
     }
 
