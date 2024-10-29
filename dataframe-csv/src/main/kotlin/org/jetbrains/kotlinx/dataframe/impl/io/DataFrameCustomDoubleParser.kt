@@ -5,20 +5,20 @@ import io.deephaven.csv.tokenization.Tokenizer.CustomDoubleParser
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 
 /**
- * Wrapper around [DoubleParser] so we can use it from Deephaven.
+ * Wrapper around [FastDoubleParser] so we can use it from Deephaven.
  */
 internal class DataFrameCustomDoubleParser(parserOptions: ParserOptions) : CustomDoubleParser {
 
-    private val doubleParser = DoubleParser(parserOptions)
+    private val fastDoubleParser = FastDoubleParser(parserOptions)
 
     override fun parse(bs: ByteSlice): Double =
         try {
-            doubleParser.parseOrNull(bs.data(), bs.begin(), bs.size())
+            fastDoubleParser.parseOrNull(bs.data(), bs.begin(), bs.size())
         } catch (e: Exception) {
             null
         } ?: throw NumberFormatException("Failed to parse double")
 
     override fun parse(cs: CharSequence): Double =
-        doubleParser.parseOrNull(cs.toString())
+        fastDoubleParser.parseOrNull(cs.toString())
             ?: throw NumberFormatException("Failed to parse double")
 }

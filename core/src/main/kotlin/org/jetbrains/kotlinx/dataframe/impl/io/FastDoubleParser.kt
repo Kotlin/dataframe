@@ -22,21 +22,22 @@ private val logger = KotlinLogging.logger {}
  * support different locales and fallback symbols.
  *
  * Public, so it can be used in other modules.
- * Open, so it may be modified.
  *
  * @param parserOptions can be supplied to configure the parser.
  *   We'll only use [ParserOptions.locale] and [ParserOptions.useFastDoubleParser].
  */
 @Suppress("ktlint:standard:comment-wrapping")
-public open class DoubleParser(private val parserOptions: ParserOptions) {
+public class FastDoubleParser(private val parserOptions: ParserOptions) {
 
-    protected val locale: Locale = parserOptions.locale ?: Locale.getDefault()
-    protected val supportedFastCharsets: Set<Charset> = setOf(Charsets.UTF_8, Charsets.ISO_8859_1, Charsets.US_ASCII)
+    private val supportedFastCharsets = setOf(Charsets.UTF_8, Charsets.ISO_8859_1, Charsets.US_ASCII)
 
-    protected val localDecimalFormatSymbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance(locale)
-    protected val fallbackDecimalFormatSymbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.ROOT)
+    private val locale: Locale = parserOptions.locale ?: Locale.getDefault()
+    private val fallbackLocale: Locale = Locale.ROOT
 
-    protected open val parser: ConfigurableDoubleParser =
+    private val localDecimalFormatSymbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance(locale)
+    private val fallbackDecimalFormatSymbols: DecimalFormatSymbols = DecimalFormatSymbols.getInstance(fallbackLocale)
+
+    private val parser: ConfigurableDoubleParser =
         ConfigurableDoubleParser(
             /* symbols = */ setupNumberFormatSymbols(),
             /* ignoreCase = */ true,
@@ -48,11 +49,11 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
      *
      * Fallback characters/strings are only added if they're not clashing with local characters/strings.
      */
-    protected fun setupNumberFormatSymbols(): NumberFormatSymbols {
+    private fun setupNumberFormatSymbols(): NumberFormatSymbols {
         // collect all chars and strings that are locale-specific such that we can check whether
         // fallback chars and strings are safe to add
-        val localChars = buildSet {
-            with(localDecimalFormatSymbols) {
+        val localChars = with(localDecimalFormatSymbols) {
+            buildSet {
                 add(decimalSeparator.lowercaseChar())
                 add(groupingSeparator.lowercaseChar())
                 add(minusSign.lowercaseChar())
@@ -60,8 +61,8 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
                 add(zeroDigit.lowercaseChar())
             }
         }
-        val localStrings = buildSet {
-            with(localDecimalFormatSymbols) {
+        val localStrings = with(localDecimalFormatSymbols) {
+            buildSet {
                 add(exponentSeparator.lowercase())
                 add(infinity.lowercase())
                 add(naN.lowercase())
@@ -137,7 +138,7 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
     }
 
     /** Fallback method for parsing doubles. */
-    protected open fun String.parseToDoubleOrNullFallback(): Double? =
+    private fun String.parseToDoubleOrNullFallback(): Double? =
         when (lowercase()) {
             "inf", "+inf", "infinity", "+infinity", "infty", "+infty", "∞", "+∞" -> Double.POSITIVE_INFINITY
 
@@ -168,7 +169,7 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
      * It uses the [fast double parser][ConfigurableDoubleParser] if [ParserOptions.useFastDoubleParser] is enabled,
      * else, or if that fails, it uses [parseToDoubleOrNullFallback].
      */
-    public open fun parseOrNull(
+    public fun parseOrNull(
         ba: ByteArray,
         offset: Int = 0,
         length: Int = ba.size,
@@ -195,7 +196,7 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
      * It uses the [fast double parser][ConfigurableDoubleParser] if [ParserOptions.useFastDoubleParser] is enabled,
      * else, or if that fails, it uses [parseToDoubleOrNullFallback].
      */
-    public open fun parseOrNull(cs: CharSequence): Double? {
+    public fun parseOrNull(cs: CharSequence): Double? {
         if (parserOptions.useFastDoubleParser) {
             try {
                 return parser.parseDouble(cs)
@@ -215,7 +216,7 @@ public open class DoubleParser(private val parserOptions: ParserOptions) {
      * It uses the [fast double parser][ConfigurableDoubleParser] if [ParserOptions.useFastDoubleParser] is enabled,
      * else, or if that fails, it uses [parseToDoubleOrNullFallback].
      */
-    public open fun parseOrNull(ca: CharArray, offset: Int = 0, length: Int = ca.size): Double? {
+    public fun parseOrNull(ca: CharArray, offset: Int = 0, length: Int = ca.size): Double? {
         if (parserOptions.useFastDoubleParser) {
             try {
                 return parser.parseDouble(ca, offset, length)

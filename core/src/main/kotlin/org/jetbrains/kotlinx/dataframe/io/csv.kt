@@ -395,6 +395,7 @@ public fun DataFrame.Companion.readDelim(
             null -> column.tryParse(parserOptions)
 
             else -> {
+                // TODO use skipAllExcept
                 val parser = Parsers[colType.toKType()]!!
                 column.parse(parser, parserOptions)
             }

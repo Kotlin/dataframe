@@ -2,32 +2,34 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.collections.shouldContainInOrder
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.impl.io.DoubleParser
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.Locale
 
-class DoubleParserTests {
+private const val LOG_LEVEL = "org.slf4j.simpleLogger.defaultLogLevel"
+
+class FastDoubleParserTests {
 
     private var loggerBefore: String? = null
 
     @Before
     fun setLogger() {
-        loggerBefore = System.getProperty("org.slf4j.simpleLogger.defaultLogLevel")
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug")
+        loggerBefore = System.getProperty(LOG_LEVEL)
+        System.setProperty(LOG_LEVEL, "debug")
     }
 
     @After
     fun restoreLogger() {
         if (loggerBefore != null) {
-            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", loggerBefore)
+            System.setProperty(LOG_LEVEL, loggerBefore)
         }
     }
 
     @Test
     fun `can fast parse doubles`() {
-        val parser = DoubleParser(ParserOptions(locale = Locale.ROOT, useFastDoubleParser = true))
+        val parser = FastDoubleParser(ParserOptions(locale = Locale.ROOT, useFastDoubleParser = true))
 
         val numbers = listOf(
             "+12.45",
@@ -67,7 +69,7 @@ class DoubleParserTests {
 
     @Test
     fun `can fast parse german locale`() {
-        val parser = DoubleParser(ParserOptions(locale = Locale.GERMANY, useFastDoubleParser = true))
+        val parser = FastDoubleParser(ParserOptions(locale = Locale.GERMANY, useFastDoubleParser = true))
 
         val numbers = listOf(
             "12,45",
@@ -97,7 +99,7 @@ class DoubleParserTests {
 
     @Test
     fun `can fast parse french locale`() {
-        val parser = DoubleParser(ParserOptions(locale = Locale.FRANCE, useFastDoubleParser = true))
+        val parser = FastDoubleParser(ParserOptions(locale = Locale.FRANCE, useFastDoubleParser = true))
 
         val numbers = listOf(
             "12,45",
@@ -127,7 +129,8 @@ class DoubleParserTests {
 
     @Test
     fun `can fast parse estonian locale`() {
-        val parser = DoubleParser(ParserOptions(locale = Locale.forLanguageTag("et-EE"), useFastDoubleParser = true))
+        val parser =
+            FastDoubleParser(ParserOptions(locale = Locale.forLanguageTag("et-EE"), useFastDoubleParser = true))
 
         val numbers = listOf(
             "12,45",

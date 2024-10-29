@@ -33,7 +33,7 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.impl.io.DoubleParser
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
@@ -293,12 +293,12 @@ internal object Parsers : GlobalParserOptions {
     ): StringParserWithFormat<T> = StringParserWithFormat(typeOf<T>(), coveredBy, body)
 
     private val parserToDoubleWithOptions = stringParserWithOptions { options ->
-        val doubleParser = DoubleParser(options ?: ParserOptions())
-        val parser = { it: String -> doubleParser.parseOrNull(it) }
+        val fastDoubleParser = FastDoubleParser(options ?: ParserOptions())
+        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
         parser
     }
 
-    private val posixDoubleParser = DoubleParser(
+    private val posixDoubleParser = FastDoubleParser(
         ParserOptions(locale = Locale.forLanguageTag("C.UTF-8")),
     )
 
