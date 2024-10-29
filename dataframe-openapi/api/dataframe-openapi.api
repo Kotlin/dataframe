@@ -11,31 +11,3 @@ public final class org/jetbrains/kotlinx/dataframe/io/ConvertDataRowsWithOpenApi
 	public static final fun convertDataRowsWithOpenApi (Lorg/jetbrains/kotlinx/dataframe/api/ConvertSchemaDsl;)V
 }
 
-public final class org/jetbrains/kotlinx/dataframe/io/IsOpenApiKt {
-	public static final fun isOpenApi (Ljava/io/File;)Z
-	public static final fun isOpenApi (Ljava/lang/String;)Z
-	public static final fun isOpenApi (Ljava/net/URL;)Z
-	public static final fun isOpenApiStr (Ljava/lang/String;)Z
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/OpenApi : org/jetbrains/kotlinx/dataframe/io/SupportedCodeGenerationFormat {
-	public fun <init> ()V
-	public fun acceptsExtension (Ljava/lang/String;)Z
-	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
-	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
-	public fun getTestOrder ()I
-	public fun readCodeForGeneration (Ljava/io/File;Ljava/lang/String;Z)Ljava/lang/String;
-	public final fun readCodeForGeneration (Ljava/io/File;Ljava/lang/String;ZZ)Ljava/lang/String;
-	public fun readCodeForGeneration (Ljava/io/InputStream;Ljava/lang/String;Z)Ljava/lang/String;
-	public final fun readCodeForGeneration (Ljava/io/InputStream;Ljava/lang/String;ZZ)Ljava/lang/String;
-	public final fun readCodeForGeneration (Ljava/lang/String;Ljava/lang/String;ZZ)Ljava/lang/String;
-	public static synthetic fun readCodeForGeneration$default (Lorg/jetbrains/kotlinx/dataframe/io/OpenApi;Ljava/lang/String;Ljava/lang/String;ZZILjava/lang/Object;)Ljava/lang/String;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/ReadOpenapiKt {
-	public static final fun readOpenApi (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lio/swagger/v3/parser/core/models/ParseOptions;ZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;)Ljava/lang/String;
-	public static synthetic fun readOpenApi$default (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lio/swagger/v3/parser/core/models/ParseOptions;ZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;ILjava/lang/Object;)Ljava/lang/String;
-	public static final fun readOpenApiAsString (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lio/swagger/v3/parser/core/models/ParseOptions;ZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;)Ljava/lang/String;
-	public static synthetic fun readOpenApiAsString$default (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lio/swagger/v3/parser/core/models/ParseOptions;ZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;ILjava/lang/Object;)Ljava/lang/String;
-}
-

@@ -1,16 +1,3 @@
-public abstract interface class org/jetbrains/kotlinx/dataframe/io/AdditionalProperty : org/jetbrains/kotlinx/dataframe/api/KeyValueProperty {
-	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/AdditionalProperty$Companion;
-	public abstract fun getKey ()Ljava/lang/String;
-	public abstract fun getValue ()Ljava/lang/Object;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/AdditionalProperty$Companion {
-}
-
-public final class org/jetbrains/kotlinx/dataframe/io/ConvertDataRowsWithOpenApiKt {
-	public static final fun convertDataRowsWithOpenApi (Lorg/jetbrains/kotlinx/dataframe/api/ConvertSchemaDsl;)V
-}
-
 public final class org/jetbrains/kotlinx/dataframe/io/IsOpenApiKt {
 	public static final fun isOpenApi (Ljava/io/File;)Z
 	public static final fun isOpenApi (Ljava/lang/String;)Z
