@@ -4,6 +4,7 @@ plugins {
         alias(publisher)
         alias(kover)
         alias(ktlint)
+        alias(binary.compatibility.validator)
     }
 }
 

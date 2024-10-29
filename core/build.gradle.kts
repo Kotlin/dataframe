@@ -19,6 +19,7 @@ plugins {
         alias(docProcessor)
         alias(simpleGit)
         alias(buildconfig)
+        alias(binary.compatibility.validator)
 
         // generates keywords using the :generator module
         alias(keywordGenerator)
