@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
@@ -64,6 +66,44 @@ public data class ParserOptions(
     val nullStrings: Set<String>? = null,
     val useFastDoubleParser: Boolean = false,
 ) {
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = PARSER_OPTIONS,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        locale: Locale? = null,
+        dateTimeFormatter: DateTimeFormatter? = null,
+        dateTimePattern: String? = null,
+        nullStrings: Set<String>? = null,
+    ) : this(
+        locale = locale,
+        dateTimeFormatter = dateTimeFormatter,
+        dateTimePattern = dateTimePattern,
+        nullStrings = nullStrings,
+        useFastDoubleParser = false,
+    )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = PARSER_OPTIONS_COPY,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public fun copy(
+        locale: Locale? = this.locale,
+        dateTimeFormatter: DateTimeFormatter? = this.dateTimeFormatter,
+        dateTimePattern: String? = this.dateTimePattern,
+        nullStrings: Set<String>? = this.nullStrings,
+    ): ParserOptions =
+        ParserOptions(
+            locale = locale,
+            dateTimeFormatter = dateTimeFormatter,
+            dateTimePattern = dateTimePattern,
+            nullStrings = nullStrings,
+            useFastDoubleParser = useFastDoubleParser,
+        )
+
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {
             dateTimeFormatter != null -> dateTimeFormatter
