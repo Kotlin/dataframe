@@ -33,13 +33,13 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
 import java.net.URL
-import java.text.NumberFormat
 import java.text.ParsePosition
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
@@ -274,29 +274,6 @@ internal object Parsers : GlobalParserOptions {
             null
         }
 
-    private fun String.parseDouble(format: NumberFormat) =
-        when (uppercase(Locale.getDefault())) {
-            "NAN" -> Double.NaN
-
-            "INF" -> Double.POSITIVE_INFINITY
-
-            "-INF" -> Double.NEGATIVE_INFINITY
-
-            "INFINITY" -> Double.POSITIVE_INFINITY
-
-            "-INFINITY" -> Double.NEGATIVE_INFINITY
-
-            else -> {
-                val parsePosition = ParsePosition(0)
-                val result: Double? = format.parse(this, parsePosition)?.toDouble()
-                if (parsePosition.index != this.length) {
-                    null
-                } else {
-                    result
-                }
-            }
-        }
-
     inline fun <reified T : Any> stringParser(
         catch: Boolean = false,
         coveredBy: Set<KType> = emptySet(),
@@ -316,10 +293,14 @@ internal object Parsers : GlobalParserOptions {
     ): StringParserWithFormat<T> = StringParserWithFormat(typeOf<T>(), coveredBy, body)
 
     private val parserToDoubleWithOptions = stringParserWithOptions { options ->
-        val numberFormat = NumberFormat.getInstance(options?.locale ?: Locale.getDefault())
-        val parser = { it: String -> it.parseDouble(numberFormat) }
+        val fastDoubleParser = FastDoubleParser(options ?: ParserOptions())
+        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
         parser
     }
+
+    private val posixDoubleParser = FastDoubleParser(
+        ParserOptions(locale = Locale.forLanguageTag("C.UTF-8")),
+    )
 
     internal val parsersOrder = listOf(
         // Int
@@ -383,7 +364,7 @@ internal object Parsers : GlobalParserOptions {
         // Double, with explicit number format or taken from current locale
         parserToDoubleWithOptions,
         // Double, with POSIX format
-        stringParser<Double> { it.parseDouble(NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))) },
+        stringParser<Double> { posixDoubleParser.parseOrNull(it) },
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
         // BigDecimal
@@ -406,6 +387,8 @@ internal object Parsers : GlobalParserOptions {
                 null
             }
         },
+        // Char
+        stringParser<Char> { it.singleOrNull() },
         // No parser found, return as String
         // must be last in the list of parsers to return original unparsed string
         stringParser<String> { it },
@@ -448,9 +431,9 @@ internal object Parsers : GlobalParserOptions {
         return parser.applyOptions(options)
     }
 
-    internal fun getDoubleParser(locale: Locale? = null): (String) -> Double? {
+    internal fun getDoubleParser(locale: Locale? = null, useFastDoubleParser: Boolean): (String) -> Double? {
         val options = if (locale != null) {
-            ParserOptions(locale = locale)
+            ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser)
         } else {
             null
         }
@@ -479,7 +462,9 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     var nullStringParsed = false
     val nulls = options?.nullStrings ?: Parsers.nulls
 
+    val parserTypesToSkip = options?.skipTypes ?: emptySet()
     val parsersToCheck = Parsers.parsersOrder
+        .filterNot { it.type in parserTypesToSkip }
     val parserTypesToCheck = parsersToCheck.map { it.type }.toSet()
 
     var correctParser: StringParser<*>? = null
