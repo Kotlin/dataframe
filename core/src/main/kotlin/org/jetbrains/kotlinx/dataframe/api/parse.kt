@@ -11,6 +11,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_REPLACE
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
@@ -40,13 +44,68 @@ public interface GlobalParserOptions {
     public var locale: Locale
 }
 
+/**
+ * ### Options for parsing [String]`?` columns
+ *
+ * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
+ *   If specified instead of [dateTimeFormatter], it will be used in combination with [dateTimePattern]
+ *   to create a [DateTimeFormatter]. Just providing [locale] will not allow you to parse
+ *   locale-specific dates!
+ * @param dateTimeFormatter a [DateTimeFormatter] to use for parsing dates, if not specified, it will be created
+ *   from [dateTimePattern] and [locale]. If neither [dateTimeFormatter] nor [dateTimePattern] are specified,
+ *   [DateTimeFormatter.ISO_LOCAL_DATE_TIME] will be used.
+ * @param dateTimePattern a pattern to use for parsing dates. If specified instead of [dateTimeFormatter],
+ *   it will be used to create a [DateTimeFormatter].
+ * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
+ *   ["null", "NULL", "NA", "N/A"].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ */
 public data class ParserOptions(
     val locale: Locale? = null,
     // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
+    val useFastDoubleParser: Boolean = false,
 ) {
+
+    @Deprecated(
+        message = PARSER_OPTIONS,
+        replaceWith = ReplaceWith(PARSER_OPTIONS_REPLACE),
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        locale: Locale? = null,
+        dateTimeFormatter: DateTimeFormatter? = null,
+        dateTimePattern: String? = null,
+        nullStrings: Set<String>? = null,
+    ) : this(
+        locale = locale,
+        dateTimeFormatter = dateTimeFormatter,
+        dateTimePattern = dateTimePattern,
+        nullStrings = nullStrings,
+        useFastDoubleParser = false,
+    )
+
+    @Deprecated(
+        message = PARSER_OPTIONS_COPY,
+        replaceWith = ReplaceWith(PARSER_OPTIONS_COPY_REPLACE),
+        level = DeprecationLevel.HIDDEN,
+    )
+    public fun copy(
+        locale: Locale? = this.locale,
+        dateTimeFormatter: DateTimeFormatter? = this.dateTimeFormatter,
+        dateTimePattern: String? = this.dateTimePattern,
+        nullStrings: Set<String>? = this.nullStrings,
+    ): ParserOptions =
+        ParserOptions(
+            locale = locale,
+            dateTimeFormatter = dateTimeFormatter,
+            dateTimePattern = dateTimePattern,
+            nullStrings = nullStrings,
+            useFastDoubleParser = useFastDoubleParser,
+        )
+
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {
             dateTimeFormatter != null -> dateTimeFormatter

@@ -15,6 +15,12 @@ internal const val DF_READ_NO_CSV = "This function is deprecated and should be r
 internal const val DF_READ_NO_CSV_REPLACE =
     "this.readCSV(fileOrUrl, delimiter, header, colTypes, skipLines, readLines, duplicate, charset)"
 
+internal const val PARSER_OPTIONS = "This constructor is only here for binary compatibility. $MESSAGE_0_16"
+internal const val PARSER_OPTIONS_REPLACE = "ParserOptions(locale, dateTimeFormatter, dateTimePattern, nullStrings, false)"
+
+internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_0_16"
+internal const val PARSER_OPTIONS_COPY_REPLACE = "copy(locale, dateTimeFormatter, dateTimePattern, nullStrings, false)"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
