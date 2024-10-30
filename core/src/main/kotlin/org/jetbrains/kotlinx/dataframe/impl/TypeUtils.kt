@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
+import org.jetbrains.kotlinx.dataframe.util.GUESS_VALUE_TYPE
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
@@ -384,6 +385,12 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
         Infer.Type -> guessValueType(values.asSequence(), type)
         Infer.None -> type
     }
+
+/** Just for binary compatibility, as it's @PublishedApi. */
+@Deprecated(GUESS_VALUE_TYPE, level = DeprecationLevel.HIDDEN)
+@PublishedApi
+internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, listifyValues: Boolean = false): KType =
+    guessValueType(values = values, upperBound = upperBound, listifyValues = listifyValues, allColsMakesRow = false)
 
 /**
  * Returns the guessed value type of the given [values] sequence.

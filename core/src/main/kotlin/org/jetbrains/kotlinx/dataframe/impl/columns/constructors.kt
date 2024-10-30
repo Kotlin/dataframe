@@ -38,6 +38,8 @@ import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.CREATE_COLUMN
+import org.jetbrains.kotlinx.dataframe.util.GUESS_COLUMN_TYPE
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -318,3 +320,39 @@ internal fun <T> createColumnGuessingType(
             )
     }
 }
+
+// region deprecated
+
+/** Just for binary compatibility, since it's @PublishedApi. */
+@Deprecated(CREATE_COLUMN, level = DeprecationLevel.HIDDEN)
+@Suppress("UNCHECKED_CAST")
+@PublishedApi
+internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> =
+    createColumnGuessingType(
+        values = values,
+        suggestedType = TypeSuggestion.create(suggestedType, guessType),
+        allColsMakesColGroup = true,
+    )
+
+/** Just for binary compatibility, since it's @PublishedApi. */
+@Deprecated(GUESS_COLUMN_TYPE, level = DeprecationLevel.HIDDEN)
+@PublishedApi
+internal fun <T> guessColumnType(
+    name: String,
+    values: List<T>,
+    suggestedType: KType? = null,
+    suggestedTypeIsUpperBound: Boolean = false,
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
+): DataColumn<T> =
+    createColumnGuessingType(
+        name = name,
+        values = values,
+        suggestedType = TypeSuggestion.create(suggestedType, suggestedTypeIsUpperBound),
+        defaultValue = defaultValue,
+        nullable = nullable,
+        listifyValues = false,
+        allColsMakesColGroup = false,
+    )
+
+// endregion

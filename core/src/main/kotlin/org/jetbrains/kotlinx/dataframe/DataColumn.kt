@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -17,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
@@ -24,11 +24,18 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
-import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.CHUNKED_IMPL_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.CREATE
+import org.jetbrains.kotlinx.dataframe.util.CREATE_BY_INFERENCE_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.CREATE_BY_TYPE_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.CREATE_FRAME_COLUMN
-import org.jetbrains.kotlinx.dataframe.util.CREATE_FRAME_COLUMN_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.CREATE_FRAME_COLUMN_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.CREATE_INLINE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.CREATE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE
+import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.TYPE_SUGGESTION_IMPORT
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -102,14 +109,6 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * @param df the collection of columns representing the column group
          */
         public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(name, df)
-
-        @Deprecated(
-            message = CREATE_FRAME_COLUMN,
-            replaceWith = ReplaceWith(CREATE_FRAME_COLUMN_REPLACE, CREATE_FRAME_COLUMN_IMPORT),
-            level = DeprecationLevel.WARNING,
-        )
-        public fun <T> createFrameColumn(name: String, df: DataFrame<T>, startIndices: Iterable<Int>): FrameColumn<T> =
-            FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence()).toList(), lazy { df.schema() })
 
         /**
          * Creates [FrameColumn] using the given [name] and list of dataframes [groups].
@@ -219,6 +218,65 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
         /** Creates an empty [DataColumn] with given [name]. */
         public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
+
+        // region deprecated
+
+        @Deprecated(
+            message = CREATE_FRAME_COLUMN,
+            replaceWith = ReplaceWith(CREATE_FRAME_COLUMN_REPLACE, CHUNKED_IMPL_IMPORT),
+            level = DeprecationLevel.WARNING,
+        )
+        public fun <T> createFrameColumn(name: String, df: DataFrame<T>, startIndices: Iterable<Int>): FrameColumn<T> =
+            df.chunkedImpl(startIndices = startIndices, name = name)
+
+        @Deprecated(
+            message = CREATE_WITH_TYPE_INFERENCE,
+            replaceWith = ReplaceWith(
+                CREATE_WITH_TYPE_INFERENCE_REPLACE,
+                CREATE_BY_INFERENCE_IMPORT,
+                TYPE_SUGGESTION_IMPORT,
+            ),
+            level = DeprecationLevel.WARNING,
+        )
+        public fun <T> createWithTypeInference(
+            name: String,
+            values: List<T>,
+            nullable: Boolean? = null,
+        ): DataColumn<T> =
+            createByInference(
+                name = name,
+                values = values,
+                suggestedType = TypeSuggestion.Infer,
+                nullable = nullable,
+            )
+
+        @Deprecated(
+            message = CREATE,
+            replaceWith = ReplaceWith(CREATE_REPLACE, CREATE_BY_TYPE_IMPORT),
+            level = DeprecationLevel.WARNING,
+        )
+        public fun <T> create(
+            name: String,
+            values: List<T>,
+            type: KType,
+            infer: Infer = Infer.None,
+        ): DataColumn<T> =
+            createByType(
+                name = name,
+                values = values,
+                type = type,
+                infer = infer,
+            )
+
+        @Deprecated(
+            message = CREATE,
+            replaceWith = ReplaceWith(CREATE_INLINE_REPLACE, CREATE_BY_TYPE_IMPORT),
+            level = DeprecationLevel.WARNING,
+        )
+        public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
+            createByType(name = name, values = values, type = typeOf<T>(), infer = infer)
+
+        // endregion
     }
 
     public fun hasNulls(): Boolean = type().isMarkedNullable
