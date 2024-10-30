@@ -5,6 +5,7 @@ plugins {
         alias(kover)
         alias(ktlint)
         alias(jupyter.api)
+        alias(binary.compatibility.validator)
     }
 }
 

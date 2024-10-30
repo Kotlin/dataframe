@@ -1,8 +1,11 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.ktlint)
-    alias(libs.plugins.publisher)
-    alias(libs.plugins.jupyter.api)
+    with(libs.plugins) {
+        alias(kotlin.jvm)
+        alias(ktlint)
+        alias(publisher)
+        alias(jupyter.api)
+        alias(binary.compatibility.validator)
+    }
 }
 
 group = "org.jetbrains.kotlinx"
