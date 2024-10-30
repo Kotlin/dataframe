@@ -61,20 +61,20 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
     val (nullable, values) = computeValues(df, expression)
     return when (infer) {
-        Infer.Nulls -> DataColumn.createUnsafe(
+        Infer.Nulls -> DataColumn.createByType(
             name = name,
             values = values,
             type = type.withNullability(nullable).replaceGenericTypeParametersWithUpperbound(),
             infer = Infer.None,
         )
 
-        Infer.Type -> DataColumn.createWithTypeInference(
+        Infer.Type -> DataColumn.createByInference(
             name = name,
             values = values,
             nullable = nullable,
         )
 
-        Infer.None -> DataColumn.createUnsafe(
+        Infer.None -> DataColumn.createByType(
             name = name,
             values = values,
             type = type.replaceGenericTypeParametersWithUpperbound(),

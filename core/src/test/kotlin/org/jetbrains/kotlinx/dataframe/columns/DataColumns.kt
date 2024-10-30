@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
@@ -35,15 +36,16 @@ class DataColumns {
 
     @Test
     fun `allow no nulls in frame columns`() {
-        // enable kotlin.dataframe.debug=true for this
-        shouldThrow<IllegalArgumentException> {
-            DataColumn.createFrameColumn(
-                name = "",
-                groups = listOf(dataFrameOf("a")(1), null) as List<AnyFrame>,
-            )
+        if (BuildConfig.DEBUG) {
+            shouldThrow<IllegalArgumentException> {
+                DataColumn.createFrameColumn(
+                    name = "",
+                    groups = listOf(dataFrameOf("a")(1), null) as List<AnyFrame>,
+                )
+            }
         }
 
-        DataColumn.createUnsafe(
+        DataColumn.createByType(
             name = "",
             values = listOf(dataFrameOf("a")(1), null),
         ).kind() shouldBe ColumnKind.Value

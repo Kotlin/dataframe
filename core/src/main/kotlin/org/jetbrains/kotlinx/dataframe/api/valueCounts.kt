@@ -40,9 +40,9 @@ public fun <T> DataColumn<T>.valueCounts(
     }
     if (dropNA) grouped = grouped.filter { !it.first.isNA }
     val nulls = if (dropNA) false else hasNulls()
-    val values = DataColumn.createUnsafe(name(), grouped.map { it.first }, type().withNullability(nulls))
+    val values = DataColumn.createByType(name(), grouped.map { it.first }, type().withNullability(nulls))
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
-    val counts = DataColumn.createUnsafe(countName, grouped.map { it.second }, typeOf<Int>())
+    val counts = DataColumn.createByType(countName, grouped.map { it.second }, typeOf<Int>())
     return dataFrameOf(values, counts).cast()
 }
 

@@ -221,8 +221,9 @@ class ParserTests {
         }
     }
 
+    /** Checks fix for [Issue #593](https://github.com/Kotlin/dataframe/issues/593) */
     @Test
-    fun `Issue #593, mixing null and json`() {
+    fun `Mixing null and json`() {
         val col by columnOf("[\"str\"]", "[]", "null")
         val parsed = col.parse()
         parsed.type() shouldBe typeOf<AnyFrame>()

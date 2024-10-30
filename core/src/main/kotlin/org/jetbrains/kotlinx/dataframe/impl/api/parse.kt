@@ -529,7 +529,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
 
     // Create a new column with the parsed values,
     // createColumnGuessingType is used to handle unifying values if needed
-    return DataColumn.createWithTypeInference(
+    return DataColumn.createByInference(
         name = name(),
         values = parsedValues,
         suggestedType = TypeSuggestion.Use(type),
@@ -543,7 +543,7 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
             handler(it.trim()) ?: throw IllegalStateException("Couldn't parse '$it' into type ${parser.type}")
         }
     }
-    return DataColumn.createWithTypeInference(
+    return DataColumn.createByInference(
         name = name(),
         values = parsedValues,
         suggestedType = TypeSuggestion.Use(parser.type.withNullability(hasNulls)),

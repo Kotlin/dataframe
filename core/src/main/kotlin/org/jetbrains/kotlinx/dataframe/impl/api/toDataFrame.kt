@@ -263,7 +263,7 @@ internal fun convertToDataFrame(
         val shouldCreateColumnGroup = kClass == DataRow::class
 
         when {
-            hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable = nullable)
+            hasExceptions -> DataColumn.createByInference(it.columnName, values, nullable = nullable)
 
             shouldCreateValueCol ->
                 DataColumn.createValueColumn(
@@ -301,7 +301,7 @@ internal fun convertToDataFrame(
                                     (it as? Iterable<*>)?.asList()
                                 }
 
-                                DataColumn.createWithTypeInference(it.columnName, listValues)
+                                DataColumn.createByInference(it.columnName, listValues)
                             }
 
                             elementClass.isValueType -> {

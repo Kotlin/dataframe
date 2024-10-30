@@ -314,19 +314,19 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
 
 public inline fun <reified T> Iterable<T>.toColumn(name: String = "", infer: Infer = Infer.Nulls): DataColumn<T> =
     if (infer == Infer.Type) {
-        DataColumn.createWithTypeInference(name, asList())
+        DataColumn.createByInference(name, asList())
     } else {
-        DataColumn.createUnsafe(name, asList(), typeOf<T>(), infer)
+        DataColumn.createByType(name, asList(), typeOf<T>(), infer)
     }.forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
-    DataColumn.createUnsafe(name, asList() as List<T>, typeOf<T>()).forceResolve()
+    DataColumn.createByType(name, asList() as List<T>, typeOf<T>()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
-    DataColumn.createUnsafe(ref.name(), asList()).forceResolve()
+    DataColumn.createByType(ref.name(), asList()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
-    DataColumn.createUnsafe(property.columnName, asList()).forceResolve()
+    DataColumn.createByType(property.columnName, asList()).forceResolve()
 
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 

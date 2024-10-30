@@ -133,7 +133,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * Creates either a [FrameColumn], [ColumnGroup], or [ValueColumn] by analyzing each value in
          * [values].
          *
-         * This is safer but less efficient than the other functions.
+         * This is safer but slower than the other functions.
          *
          * Some conversions are done automatically to attempt to unify the values.
          *
@@ -151,7 +151,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
          *   See [TypeSuggestion] for more information.
          * @param nullable optionally you can specify whether [values] contains nulls, if `null` it is inferred.
          */
-        public fun <T> createWithTypeInference(
+        public fun <T> createByInference(
             name: String,
             values: List<T>,
             suggestedType: TypeSuggestion = TypeSuggestion.Infer,
@@ -168,7 +168,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
          * [type].
          *
-         * This may be unsafe but is more efficient than [createWithTypeInference].
+         * This may be unsafe but is more efficient than [createByInference].
          *
          * Be careful; Values in [values] are NOT checked to adhere to the given [type], nor
          * do we check whether there are unexpected nulls among the values.
@@ -180,7 +180,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * @param type the (unchecked) common type of [values]
          * @param infer in case a [ValueColumn] is created, this controls how/whether types need to be inferred
          */
-        public fun <T> createUnsafe(
+        public fun <T> createByType(
             name: String,
             values: List<T>,
             type: KType,
@@ -198,7 +198,8 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * Calls [createColumnGroup], [createFrameColumn], or [createValueColumn] based on
          * type [T].
          *
-         * This is generally safe, as [T] can be inferred, and more efficient than [createWithTypeInference].
+         * This is generally safe, as [T] can be inferred by the compiler,
+         * and more efficient than [createByInference].
          *
          * Be careful when casting occurs; Values in [values] are NOT checked to adhere to the given/inferred type [T],
          * nor do we check whether there are unexpected nulls among the values.
@@ -210,11 +211,11 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * @param values the values to represent each row in the column
          * @param infer in case a [ValueColumn] is created, this controls how/whether types need to be inferred
          */
-        public inline fun <reified T> createUnsafe(
+        public inline fun <reified T> createByType(
             name: String,
             values: List<T>,
             infer: Infer = Infer.None,
-        ): DataColumn<T> = createUnsafe(name, values, typeOf<T>(), infer)
+        ): DataColumn<T> = createByType(name, values, typeOf<T>(), infer)
 
         /** Creates an empty [DataColumn] with given [name]. */
         public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())

@@ -301,7 +301,7 @@ public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFr
 
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
-        DataColumn.createWithTypeInference(
+        DataColumn.createByInference(
             name = value.toString(),
             values = fill(value).asList(),
             suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<C>()),
@@ -329,7 +329,7 @@ public class DataFrameBuilder(private val header: List<String>) {
     @JvmName("invoke1")
     internal fun withValues(values: Iterable<Any?>): DataFrame<*> =
         withValuesImpl(header, values.asList()).map { (name, values) ->
-            DataColumn.createWithTypeInference(name, values)
+            DataColumn.createByInference(name, values)
         }.toDataFrame()
 
     public operator fun invoke(args: Sequence<Any?>): DataFrame<*> = invoke(*args.toList().toTypedArray())
@@ -341,7 +341,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
-            DataColumn.createWithTypeInference(
+            DataColumn.createByInference(
                 name = name,
                 values = valuesBuilder(name).asList(),
                 suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
@@ -370,7 +370,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.createWithTypeInference(
+            DataColumn.createByInference(
                 name = name,
                 values = List(nrow) { init(it, name) },
             )
@@ -378,7 +378,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.createWithTypeInference(
+            DataColumn.createByInference(
                 name = name,
                 values = List(nrow, init),
             )
