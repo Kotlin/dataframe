@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
@@ -121,12 +121,12 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
     map {
-        it.first to guessColumnType(it.first.last(), it.second.asList())
+        it.first to createColumnGuessingType(it.first.last(), it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
 public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame =
     map {
-        ColumnPath(it.first) to guessColumnType(it.first, it.second.asList())
+        ColumnPath(it.first) to createColumnGuessingType(it.first, it.second.asList())
     }.toDataFrameFromPairs<Unit>()
 
 public interface TraversePropertiesDsl {
@@ -190,10 +190,10 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
         add(columnName, expression)
 
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
-        add(DataColumn.createWithTypeInference(this, source.map { inferType.expression(it) }))
+        add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
 
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
-        add(DataColumn.createWithTypeInference(columnName, source.map { inferType.expression(it) }))
+        add(DataColumn.createByInference(columnName, source.map { inferType.expression(it) }))
 
     public data class InferType<T, R>(val expression: (T) -> R)
 
@@ -317,13 +317,13 @@ public interface ValueProperty<T> {
 
 public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame =
     map {
-        DataColumn.createWithTypeInference(it.key, it.value.asList())
+        DataColumn.createByInference(it.key, it.value.asList())
     }.toDataFrame()
 
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
     map {
-        it.key to DataColumn.createWithTypeInference(
+        it.key to DataColumn.createByInference(
             name = it.key.last(),
             values = it.value.asList(),
         )
