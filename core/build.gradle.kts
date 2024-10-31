@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.commonsIo)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
+    implementation(libs.fastDoubleParser)
 
     implementation(libs.fuel)
 
