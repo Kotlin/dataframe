@@ -48,7 +48,7 @@ class ParserTests {
 
     @Test(expected = IllegalStateException::class)
     fun `parse should throw`() {
-        val col by columnOf("a", "b")
+        val col by columnOf("a", "bc")
         col.parse()
     }
 
