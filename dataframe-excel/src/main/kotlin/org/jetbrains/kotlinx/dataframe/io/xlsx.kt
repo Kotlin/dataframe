@@ -150,7 +150,8 @@ public fun DataFrame.Companion.readExcel(
     firstRowIsHeader: Boolean = true,
 ): AnyFrame {
     setWorkbookTempDirectory()
-    val wb = WorkbookFactory.create(file)
+    @Suppress("ktlint:standard:comment-wrapping")
+    val wb = WorkbookFactory.create(file, /* password = */ null, /* readOnly = */ true)
     return wb.use {
         readExcel(
             it,
@@ -379,7 +380,7 @@ public fun DataFrame.Companion.readExcel(
             val cell: Cell? = row?.getCell(index)
             getCellValue(cell)
         }
-        DataColumn.createWithTypeInference(name, values)
+        DataColumn.createByInference(name, values)
     }
     return dataFrameOf(columns)
 }

@@ -14,12 +14,15 @@ plugins {
         alias(serialization)
         alias(jupyter.api)
         alias(korro)
-        alias(keywordGenerator)
         alias(kover)
         alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
         alias(buildconfig)
+        alias(binary.compatibility.validator)
+
+        // generates keywords using the :generator module
+        alias(keywordGenerator)
 
         // dependence on our own plugin
         alias(dataframe)
@@ -266,8 +269,10 @@ tasks.withType<Jar> {
 }
 
 // modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
-tasks.named { it.startsWith("publish") }.configureEach {
-    dependsOn(processKDocsMain, changeJarTask)
+tasks.configureEach {
+    if (name.startsWith("publish")) {
+        dependsOn(processKDocsMain, changeJarTask)
+    }
 }
 
 // Exclude the generated/processed sources from the IDE

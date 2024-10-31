@@ -28,6 +28,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
@@ -36,6 +38,8 @@ import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.util.CREATE_COLUMN
+import org.jetbrains.kotlinx.dataframe.util.GUESS_COLUMN_TYPE
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -59,20 +63,20 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
     val (nullable, values) = computeValues(df, expression)
     return when (infer) {
-        Infer.Nulls -> DataColumn.create(
+        Infer.Nulls -> DataColumn.createByType(
             name = name,
             values = values,
             type = type.withNullability(nullable).replaceGenericTypeParametersWithUpperbound(),
             infer = Infer.None,
         )
 
-        Infer.Type -> DataColumn.createWithTypeInference(
+        Infer.Type -> DataColumn.createByInference(
             name = name,
             values = values,
             nullable = nullable,
         )
 
-        Infer.None -> DataColumn.create(
+        Infer.None -> DataColumn.createByType(
             name = name,
             values = values,
             type = type.replaceGenericTypeParametersWithUpperbound(),
@@ -87,7 +91,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
     val (_, values) = computeValues(this as DataFrame<T>, expression)
-    return guessColumnType(name, values)
+    return createColumnGuessingType(name, values)
 }
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
@@ -101,48 +105,6 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
     }
     return nullable to list
 }
-
-@Suppress("UNCHECKED_CAST")
-@PublishedApi
-internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> =
-    when {
-        // values is a non-empty list of AnyRows
-        values.any() && values.all { it is AnyRow } ->
-            DataColumn.createColumnGroup(
-                name = "",
-                df = (values as Iterable<AnyRow>).toDataFrame(),
-            ).asDataColumn().cast()
-
-        // values is a non-empty list of DataColumns
-        values.any() && values.all { it is AnyCol } ->
-            DataColumn.createColumnGroup(
-                name = "",
-                df = (values as Iterable<AnyCol>).toDataFrame(),
-            ).asDataColumn().cast()
-
-        // values is a non-empty list of DataFrames and nulls
-        // (but not just nulls; we cannot assume that should create a FrameColumn)
-        values.any() && values.all { it is AnyFrame? } && !values.all { it == null } ->
-            DataColumn.createFrameColumn(
-                name = "",
-                groups = values.map { it as? AnyFrame ?: DataFrame.empty() },
-            ).asDataColumn().cast()
-
-        guessType ->
-            guessColumnType(
-                name = "",
-                values = values.asList(),
-                suggestedType = suggestedType,
-                suggestedTypeIsUpperBound = true,
-            ).cast()
-
-        else ->
-            DataColumn.createValueColumn(
-                name = "",
-                values = values.toList(),
-                type = suggestedType,
-            )
-    }
 
 // endregion
 
@@ -217,33 +179,79 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
 
 // endregion
 
-internal fun <T> guessColumnType(name: String, values: List<T>) = guessColumnType(name, values, null)
-
+/**
+ * Creates a new column by doing type inference on the given values and
+ * some conversions to unify the values if necessary.
+ *
+ * @param values values to create a column from
+ * @param suggestedType optional suggested type for values. Default is [TypeSuggestion.Infer].
+ *   See [TypeSuggestion] for more information.
+ * @param defaultValue optional default value for the column used when a [ValueColumn] is created.
+ * @param nullable optional hint for the column nullability, used when a [ValueColumn] is created.
+ * @param listifyValues if `true`, then values and nulls will be wrapped in a list if they appear among other lists.
+ *   For example: `[1, null, listOf(1, 2, 3)]` will become `[[1], [], [1, 2, 3]]`.
+ *   Note: this parameter is ignored if another [Collection] is present in the values.
+ * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
+ *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
+ */
 @PublishedApi
-internal fun <T> guessColumnType(
-    name: String,
-    values: List<T>,
-    suggestedType: KType? = null,
-    suggestedTypeIsUpperBound: Boolean = false,
+internal fun <T> createColumnGuessingType(
+    values: Iterable<T>,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
     defaultValue: T? = null,
     nullable: Boolean? = null,
+    listifyValues: Boolean = false,
+    allColsMakesColGroup: Boolean = false,
+): DataColumn<T> =
+    createColumnGuessingType(
+        name = "",
+        values = values,
+        suggestedType = suggestedType,
+        defaultValue = defaultValue,
+        nullable = nullable,
+        listifyValues = listifyValues,
+        allColsMakesColGroup = allColsMakesColGroup,
+    )
+
+/**
+ * @include [createColumnGuessingType]
+ * @param name name for the column
+ */
+@PublishedApi
+internal fun <T> createColumnGuessingType(
+    name: String,
+    values: Iterable<T>,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
+    listifyValues: Boolean = false,
+    allColsMakesColGroup: Boolean = false,
 ): DataColumn<T> {
-    val detectType = suggestedType == null || suggestedTypeIsUpperBound
-    val type = if (detectType) {
-        guessValueType(
-            values = values.asSequence(),
-            upperBound = suggestedType,
-            listifyValues = false,
-        )
-    } else {
-        suggestedType!!
+    val type = when (suggestedType) {
+        is TypeSuggestion.Infer, is TypeSuggestion.InferWithUpperbound ->
+            guessValueType(
+                values = values.asSequence(),
+                upperBound = (suggestedType as? TypeSuggestion.InferWithUpperbound)?.upperbound,
+                listifyValues = listifyValues,
+                allColsMakesRow = allColsMakesColGroup,
+            )
+
+        is TypeSuggestion.Use -> suggestedType.type
     }
 
     return when (type.classifier!! as KClass<*>) {
-        DataRow::class -> {
-            val df = values.map { (it as AnyRow?)?.toDataFrame() ?: DataFrame.empty(1) }.concat()
-            DataColumn.createColumnGroup(name, df).asDataColumn().cast()
-        }
+        // guessValueType can only return DataRow if all values are `AnyRow?`
+        // or allColsMakesColGroup == true, and all values are `AnyCol`
+        DataRow::class ->
+            if (allColsMakesColGroup && values.firstOrNull() is AnyCol) {
+                val df = dataFrameOf(values as Iterable<AnyCol>)
+                DataColumn.createColumnGroup(name, df)
+            } else {
+                val df = values.map {
+                    (it as AnyRow?)?.toDataFrame() ?: DataFrame.empty(1)
+                }.concat()
+                DataColumn.createColumnGroup(name, df)
+            }.asDataColumn().cast()
 
         DataFrame::class -> {
             val frames = values.map {
@@ -286,27 +294,65 @@ internal fun <T> guessColumnType(
                 }
                 DataColumn.createFrameColumn(name, frames).cast()
             } else {
-                DataColumn.createValueColumn(name, lists, type, defaultValue = defaultValue).cast()
+                DataColumn.createValueColumn(
+                    name = name,
+                    values = lists,
+                    type = type,
+                    defaultValue = defaultValue,
+                ).cast()
             }
         }
 
-        else -> {
-            if (nullable == null) {
-                DataColumn.createValueColumn(
-                    name = name,
-                    values = values,
-                    type = type,
-                    infer = if (detectType) Infer.None else Infer.Nulls,
-                    defaultValue = defaultValue,
-                )
-            } else {
-                DataColumn.createValueColumn(
-                    name = name,
-                    values = values,
-                    type = type.withNullability(nullable),
-                    defaultValue = defaultValue,
-                )
-            }
-        }
+        else ->
+            DataColumn.createValueColumn(
+                name = name,
+                values = values.asList(),
+                type = if (nullable != null) type.withNullability(nullable) else type,
+                infer = when {
+                    // even though an exact type is suggested,
+                    // nullable is not given, so we still infer nullability
+                    nullable == null && suggestedType is TypeSuggestion.Use -> Infer.Nulls
+
+                    // nullability already handled; inferred by guessValueType or explicitly given
+                    else -> Infer.None
+                },
+                defaultValue = defaultValue,
+            )
     }
 }
+
+// region deprecated
+
+/** Just for binary compatibility, since it's @PublishedApi. */
+@Deprecated(CREATE_COLUMN, level = DeprecationLevel.HIDDEN)
+@Suppress("UNCHECKED_CAST")
+@PublishedApi
+internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> =
+    createColumnGuessingType(
+        values = values,
+        suggestedType = TypeSuggestion.create(suggestedType, guessType),
+        allColsMakesColGroup = true,
+    )
+
+/** Just for binary compatibility, since it's @PublishedApi. */
+@Deprecated(GUESS_COLUMN_TYPE, level = DeprecationLevel.HIDDEN)
+@PublishedApi
+internal fun <T> guessColumnType(
+    name: String,
+    values: List<T>,
+    suggestedType: KType? = null,
+    suggestedTypeIsUpperBound: Boolean = false,
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
+): DataColumn<T> =
+    createColumnGuessingType(
+        name = name,
+        values = values,
+        suggestedType = TypeSuggestion.create(suggestedType, suggestedTypeIsUpperBound),
+        defaultValue = defaultValue,
+        nullable = nullable,
+        listifyValues = false,
+        allColsMakesColGroup = false,
+    )
+
+// endregion

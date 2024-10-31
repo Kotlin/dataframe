@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -24,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withValuesImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
@@ -223,7 +224,12 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 // region create DataColumn
 
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
-    createColumn(values.asIterable(), typeOf<T>(), true).forceResolve()
+    createColumnGuessingType(
+        values = values.asIterable(),
+        suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
+        listifyValues = false,
+        allColsMakesColGroup = true,
+    ).forceResolve()
 
 public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
@@ -244,7 +250,11 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> =
     ).forceResolve()
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
-    createColumn(values, typeOf<T>(), false).forceResolve()
+    createColumnGuessingType(
+        values = values,
+        suggestedType = TypeSuggestion.Use(typeOf<T>()),
+        allColsMakesColGroup = true,
+    ).forceResolve()
 
 // endregion
 
@@ -261,7 +271,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
  * @throws [UnequalColumnSizesException] if column size are not equal
  * @param columns columns for [DataFrame]
  */
-public fun dataFrameOf(columns: Iterable<AnyBaseCol>): AnyFrame {
+public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
     val cols = columns.map { it.unbox() }
     val nrow = if (cols.isEmpty()) 0 else cols[0].size
     return DataFrameImpl<Unit>(cols, nrow)
@@ -269,36 +279,42 @@ public fun dataFrameOf(columns: Iterable<AnyBaseCol>): AnyFrame {
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 
-public fun dataFrameOf(vararg columns: AnyBaseCol): AnyFrame = dataFrameOf(columns.asIterable())
+public fun dataFrameOf(vararg columns: AnyBaseCol): DataFrame<*> = dataFrameOf(columns.asIterable())
 
 @Interpretable("DataFrameOf0")
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 
-public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): AnyFrame =
-    dataFrameOf(header.asIterable(), fill)
+public inline fun <reified C> dataFrameOf(
+    vararg header: String,
+    crossinline fill: (String) -> Iterable<C>,
+): DataFrame<*> = dataFrameOf(header.asIterable()).invoke(fill)
 
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
-public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): AnyFrame =
+@Refine
+@Interpretable("DataFrameOf3")
+public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): DataFrame<*> =
     columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
 
-public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): AnyFrame =
+public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): DataFrame<*> =
     dataFrameOf(header).withValues(values)
 
-public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame =
+public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): DataFrame<*> =
     header.map { value ->
-        fill(value).asList().let {
-            DataColumn.create(value.toString(), it)
-        }
+        DataColumn.createByInference(
+            name = value.toString(),
+            values = fill(value).asList(),
+            suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<C>()),
+        )
     }.toDataFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
 public class DataFrameBuilder(private val header: List<String>) {
 
-    public operator fun invoke(vararg columns: AnyCol): AnyFrame = invoke(columns.asIterable())
+    public operator fun invoke(vararg columns: AnyCol): DataFrame<*> = invoke(columns.asIterable())
 
-    public operator fun invoke(columns: Iterable<AnyCol>): AnyFrame {
+    public operator fun invoke(columns: Iterable<AnyCol>): DataFrame<*> {
         val cols = columns.asList()
         require(cols.size == header.size) { "Number of columns differs from number of column names" }
         return cols.mapIndexed { i, col ->
@@ -308,29 +324,31 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     @Refine
     @Interpretable("DataFrameBuilderInvoke0")
-    public operator fun invoke(vararg values: Any?): AnyFrame = withValues(values.asIterable())
+    public operator fun invoke(vararg values: Any?): DataFrame<*> = withValues(values.asIterable())
 
     @JvmName("invoke1")
-    internal fun withValues(values: Iterable<Any?>): AnyFrame =
+    internal fun withValues(values: Iterable<Any?>): DataFrame<*> =
         withValuesImpl(header, values.asList()).map { (name, values) ->
-            DataColumn.createWithTypeInference(name, values)
+            DataColumn.createByInference(name, values)
         }.toDataFrame()
 
-    public operator fun invoke(args: Sequence<Any?>): AnyFrame = invoke(*args.toList().toTypedArray())
+    public operator fun invoke(args: Sequence<Any?>): DataFrame<*> = invoke(*args.toList().toTypedArray())
 
-    public fun withColumns(columnBuilder: (String) -> AnyCol): AnyFrame = header.map(columnBuilder).toDataFrame()
+    public fun withColumns(columnBuilder: (String) -> AnyCol): DataFrame<*> =
+        header
+            .map { columnBuilder(it) named it } // create a columns and make sure to rename them to the given header
+            .toDataFrame()
 
-    public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): AnyFrame =
+    public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): DataFrame<*> =
         withColumns { name ->
-            valuesBuilder(name).let {
-                DataColumn.create(
-                    name = name,
-                    values = it.asList(),
-                )
-            }
+            DataColumn.createByInference(
+                name = name,
+                values = valuesBuilder(name).asList(),
+                suggestedType = TypeSuggestion.InferWithUpperbound(typeOf<T>()),
+            )
         }
 
-    public inline fun <reified C> fill(nrow: Int, value: C): AnyFrame =
+    public inline fun <reified C> fill(nrow: Int, value: C): DataFrame<*> =
         withColumns { name ->
             DataColumn.createValueColumn(
                 name = name,
@@ -339,25 +357,34 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
-    public inline fun <reified C> nulls(nrow: Int): AnyFrame = fill<C?>(nrow, null)
-
-    public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): AnyFrame =
+    public fun fill(nrow: Int, dataFrame: AnyFrame): DataFrame<*> =
         withColumns { name ->
-            DataColumn.create(
-                name,
-                List(nrow) { init(it, name) },
+            DataColumn.createFrameColumn(
+                name = name,
+                groups = List(nrow) { dataFrame },
+                schema = lazy { dataFrame.schema() },
             )
         }
 
-    public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): AnyFrame =
+    public inline fun <reified C> nulls(nrow: Int): DataFrame<*> = fill<C?>(nrow, null)
+
+    public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): DataFrame<*> =
         withColumns { name ->
-            DataColumn.create(
+            DataColumn.createByInference(
+                name = name,
+                values = List(nrow) { init(it, name) },
+            )
+        }
+
+    public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): DataFrame<*> =
+        withColumns { name ->
+            DataColumn.createByInference(
                 name = name,
                 values = List(nrow, init),
             )
         }
 
-    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
+    private inline fun <reified C : Any> fillNotNull(nrow: Int, crossinline init: (Int) -> C) =
         withColumns { name ->
             DataColumn.createValueColumn(
                 name = name,
@@ -366,23 +393,23 @@ public class DataFrameBuilder(private val header: List<String>) {
             )
         }
 
-    public fun randomInt(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextInt() }
+    public fun randomInt(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextInt() }
 
-    public fun randomInt(nrow: Int, range: IntRange): AnyFrame = fillNotNull(nrow) { Random.nextInt(range) }
+    public fun randomInt(nrow: Int, range: IntRange): DataFrame<*> = fillNotNull(nrow) { Random.nextInt(range) }
 
-    public fun randomDouble(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextDouble() }
+    public fun randomDouble(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextDouble() }
 
-    public fun randomDouble(nrow: Int, range: ClosedRange<Double>): AnyFrame =
+    public fun randomDouble(nrow: Int, range: ClosedRange<Double>): DataFrame<*> =
         fillNotNull(nrow) { Random.nextDouble(range.start, range.endInclusive) }
 
-    public fun randomFloat(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextFloat() }
+    public fun randomFloat(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextFloat() }
 
-    public fun randomLong(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextLong() }
+    public fun randomLong(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextLong() }
 
-    public fun randomLong(nrow: Int, range: ClosedRange<Long>): AnyFrame =
+    public fun randomLong(nrow: Int, range: ClosedRange<Long>): DataFrame<*> =
         fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
 
-    public fun randomBoolean(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextBoolean() }
+    public fun randomBoolean(nrow: Int): DataFrame<*> = fillNotNull(nrow) { Random.nextBoolean() }
 }
 
 /**
@@ -408,7 +435,7 @@ public class DynamicDataFrameBuilder {
         return uniqueName
     }
 
-    public fun toDataFrame(): AnyFrame = dataFrameOf(cols)
+    public fun toDataFrame(): DataFrame<*> = dataFrameOf(cols)
 }
 
 /**
