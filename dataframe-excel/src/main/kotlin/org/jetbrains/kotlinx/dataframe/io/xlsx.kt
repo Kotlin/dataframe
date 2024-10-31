@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.util.DF_READ_EXCEL
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -332,11 +333,11 @@ public fun DataFrame.Companion.readExcel(
         }
 
         else -> {
-            val notEmptyRow = sheet.rowIterator().asSequence().maxByOrNull { it.lastCellNum }
-            checkNotNull(notEmptyRow) {
+            val largestRow = sheet.rowIterator().asSequence().maxByOrNull { it.lastCellNum }
+            checkNotNull(largestRow) {
                 "There are no defined cells"
             }
-            notEmptyRow.firstCellNum until notEmptyRow.lastCellNum
+            largestRow.firstCellNum until largestRow.lastCellNum
         }
     }
 
@@ -650,3 +651,137 @@ private fun Cell.setDate(date: JavaDate) {
     calStart.time = date
     this.setTime(calStart.toInstant().atZone(getUserTimeZone().toZoneId()).toLocalDateTime())
 }
+
+// region deprecated
+
+/** For binary compatibility */
+@Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    url: URL,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+): AnyFrame =
+    readExcel(
+        url = url,
+        sheetName = sheetName,
+        skipRows = skipRows,
+        columns = columns,
+        stringColumns = stringColumns,
+        rowsCount = rowsCount,
+        nameRepairStrategy = nameRepairStrategy,
+        firstRowIsHeader = true,
+    )
+
+/** For binary compatibility */
+@Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    file: File,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+): AnyFrame =
+    readExcel(
+        file = file,
+        sheetName = sheetName,
+        skipRows = skipRows,
+        columns = columns,
+        stringColumns = stringColumns,
+        rowsCount = rowsCount,
+        nameRepairStrategy = nameRepairStrategy,
+        firstRowIsHeader = true,
+    )
+
+/** For binary compatibility */
+@Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    fileOrUrl: String,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+): AnyFrame =
+    readExcel(
+        fileOrUrl = fileOrUrl,
+        sheetName = sheetName,
+        skipRows = skipRows,
+        columns = columns,
+        stringColumns = stringColumns,
+        rowsCount = rowsCount,
+        nameRepairStrategy = nameRepairStrategy,
+        firstRowIsHeader = true,
+    )
+
+/** For binary compatibility */
+@Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    inputStream: InputStream,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    stringColumns: StringColumns? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+): AnyFrame =
+    readExcel(
+        inputStream = inputStream,
+        sheetName = sheetName,
+        skipRows = skipRows,
+        columns = columns,
+        stringColumns = stringColumns,
+        rowsCount = rowsCount,
+        nameRepairStrategy = nameRepairStrategy,
+        firstRowIsHeader = true,
+    )
+
+/** For binary compatibility */
+@Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    wb: Workbook,
+    sheetName: String? = null,
+    skipRows: Int = 0,
+    columns: String? = null,
+    formattingOptions: FormattingOptions? = null,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+): AnyFrame =
+    readExcel(
+        wb = wb,
+        sheetName = sheetName,
+        skipRows = skipRows,
+        columns = columns,
+        formattingOptions = formattingOptions,
+        rowsCount = rowsCount,
+        nameRepairStrategy = nameRepairStrategy,
+        firstRowIsHeader = true,
+    )
+
+/** For binary compatibility */
+@Deprecated(DF_READ_EXCEL, level = DeprecationLevel.HIDDEN)
+public fun DataFrame.Companion.readExcel(
+    sheet: Sheet,
+    columns: String? = null,
+    formattingOptions: FormattingOptions? = null,
+    skipRows: Int = 0,
+    rowsCount: Int? = null,
+    nameRepairStrategy: NameRepairStrategy = NameRepairStrategy.CHECK_UNIQUE,
+): AnyFrame =
+    readExcel(
+        sheet = sheet,
+        columns = columns,
+        formattingOptions = formattingOptions,
+        skipRows = skipRows,
+        rowsCount = rowsCount,
+        nameRepairStrategy = nameRepairStrategy,
+        firstRowIsHeader = true,
+    )
+
+// endregion
