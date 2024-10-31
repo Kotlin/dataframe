@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
@@ -56,6 +57,8 @@ public interface GlobalParserOptions {
  *   it will be used to create a [DateTimeFormatter].
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
  *   ["null", "NULL", "NA", "N/A"].
+ * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
+ *   By default, it's an empty set. To skip all types except some specified ones, use [allTypesExcept].
  * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  */
 public data class ParserOptions(
@@ -64,8 +67,17 @@ public data class ParserOptions(
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
+    val skipTypes: Set<KType> = emptySet(),
     val useFastDoubleParser: Boolean = false,
 ) {
+    public companion object {
+        /**
+         * Small helper function to get all types except the ones specified.
+         * Useful in combination with the [skipTypes] parameter.
+         */
+        public fun allTypesExcept(vararg types: KType): Set<KType> =
+            Parsers.parsersOrder.map { it.type }.toSet() - types.toSet()
+    }
 
     /** For binary compatibility. */
     @Deprecated(
@@ -82,6 +94,7 @@ public data class ParserOptions(
         dateTimeFormatter = dateTimeFormatter,
         dateTimePattern = dateTimePattern,
         nullStrings = nullStrings,
+        skipTypes = emptySet(),
         useFastDoubleParser = false,
     )
 
@@ -101,6 +114,7 @@ public data class ParserOptions(
             dateTimeFormatter = dateTimeFormatter,
             dateTimePattern = dateTimePattern,
             nullStrings = nullStrings,
+            skipTypes = skipTypes,
             useFastDoubleParser = useFastDoubleParser,
         )
 
