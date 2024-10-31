@@ -14,12 +14,15 @@ plugins {
         alias(serialization)
         alias(jupyter.api)
         alias(korro)
-        alias(keywordGenerator)
         alias(kover)
         alias(ktlint)
         alias(docProcessor)
         alias(simpleGit)
         alias(buildconfig)
+        alias(binary.compatibility.validator)
+
+        // generates keywords using the :generator module
+        alias(keywordGenerator)
 
         // dependence on our own plugin
         alias(dataframe)

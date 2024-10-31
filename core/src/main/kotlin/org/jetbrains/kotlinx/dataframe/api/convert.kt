@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
@@ -189,27 +190,38 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
  * If [locale] parameter is defined, it's number format is used for parsing.
  * If [locale] parameter is null, the current system locale is used.
  * If the column cannot be parsed, then the POSIX format is used.
- *
+ */
+@ExcludeFromSources
+private interface DataColumnStringConvertToDoubleDoc
+
+/** @include [DataColumnStringConvertToDoubleDoc] */
+@JvmName("convertToDoubleFromString")
+public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> =
+    convertToDouble(locale = locale, useFastDoubleParser = false)
+
+/**
+ * @include [DataColumnStringConvertToDoubleDoc]
  * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(
     locale: Locale? = null,
-    useFastDoubleParser: Boolean = false,
+    useFastDoubleParser: Boolean,
 ): DataColumn<Double> = this.castToNullable().convertToDouble(locale, useFastDoubleParser).castToNotNullable()
 
+/** @include [DataColumnStringConvertToDoubleDoc] */
+@JvmName("convertToDoubleFromStringNullable")
+public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> =
+    convertToDouble(locale = locale, useFastDoubleParser = false)
+
 /**
- * Parses a String column to Double considering locale (number format).
- * If [locale] parameter is defined, it's number format is used for parsing.
- * If [locale] parameter is null, the current system locale is used.
- * If the column cannot be parsed, then the POSIX format is used.
- *
+ * @include [DataColumnStringConvertToDoubleDoc]
  * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(
     locale: Locale? = null,
-    useFastDoubleParser: Boolean = false,
+    useFastDoubleParser: Boolean,
 ): DataColumn<Double?> {
     fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
         var currentRow = 0

@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
+import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
@@ -55,9 +57,9 @@ public interface GlobalParserOptions {
  *   it will be used to create a [DateTimeFormatter].
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
  *   ["null", "NULL", "NA", "N/A"].
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
  *   By default, it's an empty set. To skip all types except some specified ones, use [allTypesExcept].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  */
 public data class ParserOptions(
     val locale: Locale? = null,
@@ -65,8 +67,8 @@ public data class ParserOptions(
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
     val nullStrings: Set<String>? = null,
-    val useFastDoubleParser: Boolean = false,
     val skipTypes: Set<KType> = emptySet(),
+    val useFastDoubleParser: Boolean = false,
 ) {
     public companion object {
         /**
@@ -76,6 +78,45 @@ public data class ParserOptions(
         public fun allTypesExcept(vararg types: KType): Set<KType> =
             Parsers.parsersOrder.map { it.type }.toSet() - types.toSet()
     }
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = PARSER_OPTIONS,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public constructor(
+        locale: Locale? = null,
+        dateTimeFormatter: DateTimeFormatter? = null,
+        dateTimePattern: String? = null,
+        nullStrings: Set<String>? = null,
+    ) : this(
+        locale = locale,
+        dateTimeFormatter = dateTimeFormatter,
+        dateTimePattern = dateTimePattern,
+        nullStrings = nullStrings,
+        skipTypes = emptySet(),
+        useFastDoubleParser = false,
+    )
+
+    /** For binary compatibility. */
+    @Deprecated(
+        message = PARSER_OPTIONS_COPY,
+        level = DeprecationLevel.HIDDEN,
+    )
+    public fun copy(
+        locale: Locale? = this.locale,
+        dateTimeFormatter: DateTimeFormatter? = this.dateTimeFormatter,
+        dateTimePattern: String? = this.dateTimePattern,
+        nullStrings: Set<String>? = this.nullStrings,
+    ): ParserOptions =
+        ParserOptions(
+            locale = locale,
+            dateTimeFormatter = dateTimeFormatter,
+            dateTimePattern = dateTimePattern,
+            nullStrings = nullStrings,
+            skipTypes = skipTypes,
+            useFastDoubleParser = useFastDoubleParser,
+        )
 
     internal fun getDateTimeFormatter(): DateTimeFormatter? =
         when {

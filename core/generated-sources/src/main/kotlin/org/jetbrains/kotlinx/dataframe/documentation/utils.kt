@@ -15,31 +15,6 @@ import kotlin.annotation.AnnotationTarget.TYPEALIAS
 import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 
 /**
- *
- * &nbsp;&nbsp;&nbsp;&nbsp;
- *
- */
-internal interface LineBreak
-
-/** &nbsp; */
-internal interface QuarterIndent
-
-/** &nbsp;&nbsp; */
-internal interface HalfIndent
-
-/** &nbsp;&nbsp;&nbsp;&nbsp; */
-internal interface Indent
-
-/** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
-internal interface DoubleIndent
-
-/** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
-internal interface TripleIndent
-
-/** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */
-internal interface QuadrupleIndent
-
-/**
  * Any `Documentable` annotated with this annotation will be excluded from the generated sources by
  * the documentation processor.
  *

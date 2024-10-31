@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -510,7 +511,14 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     if (type.jvmErasure == String::class && !nullStringParsed) {
         return this // nothing parsed
     }
-    return DataColumn.create(name(), parsedValues, type)
+
+    // Create a new column with the parsed values,
+    // createColumnGuessingType is used to handle unifying values if needed
+    return DataColumn.createByInference(
+        name = name(),
+        values = parsedValues,
+        suggestedType = TypeSuggestion.Use(type),
+    )
 }
 
 internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: ParserOptions?): DataColumn<T?> {
@@ -520,7 +528,11 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
             handler(it.trim()) ?: throw IllegalStateException("Couldn't parse '$it' into type ${parser.type}")
         }
     }
-    return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
+    return DataColumn.createByInference(
+        name = name(),
+        values = parsedValues,
+        suggestedType = TypeSuggestion.Use(parser.type.withNullability(hasNulls)),
+    )
 }
 
 internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> {

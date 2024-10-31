@@ -44,3 +44,5 @@ ___
 ---
 * 0.14.0 Dev Feature Overview [notebook](notebooks/feature_overviews/0.14.0/new_features.ipynb)
   Overview of new features available in 0.14.0-dev
+
+These example notebooks are tested by the [:core module](../core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/jupyter).
