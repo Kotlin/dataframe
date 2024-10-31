@@ -47,6 +47,7 @@ public enum class DataSchemaVisibility {
     EXPLICIT_PUBLIC,
 }
 
+// TODO add more options
 public annotation class CsvOptions(public val delimiter: Char)
 
 /**
