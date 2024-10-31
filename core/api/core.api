@@ -10867,3 +10867,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/schema/DataFrame
 	public abstract fun getColumns ()Ljava/util/Map;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/util/DeprecationMessagesKt {
+	public static final field DF_READ_EXCEL Ljava/lang/String;
+}
+
