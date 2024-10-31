@@ -16,6 +16,7 @@ libsPublisher = "1.9.23-dev-45"
 dataframe = "0.14.1"
 korro = "0.1.6"
 
+binaryCompatibilityValidator = "0.16.3"
 kover = "0.8.3"
 fastDoubleParser = "2.0.0"
 commonsCsv = "1.11.0"
@@ -133,7 +134,7 @@ duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref= "duckdb
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }

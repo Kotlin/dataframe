@@ -7,6 +7,7 @@ import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -17,11 +18,15 @@ import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.convertToLocalDate
 import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
 import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
+import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.times
 import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.junit.Test
 import java.math.BigDecimal
@@ -226,5 +231,19 @@ class ParserTests {
         } finally {
             Locale.setDefault(currentLocale)
         }
+    }
+
+    /** Checks fix for [Issue #593](https://github.com/Kotlin/dataframe/issues/593) */
+    @Test
+    fun `Mixing null and json`() {
+        val col by columnOf("[\"str\"]", "[]", "null")
+        val parsed = col.parse()
+        parsed.type() shouldBe typeOf<AnyFrame>()
+        parsed.kind() shouldBe ColumnKind.Frame
+        require(parsed.isFrameColumn())
+
+        parsed[0]["value"].first() shouldBe "str"
+        parsed[1].isEmpty() shouldBe true
+        parsed[2].isEmpty() shouldBe true
     }
 }

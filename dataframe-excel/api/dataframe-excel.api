@@ -1,0 +1,76 @@
+public final class org/jetbrains/kotlinx/dataframe/io/Excel : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
+	public fun <init> ()V
+	public fun acceptsExtension (Ljava/lang/String;)Z
+	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
+	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
+	public fun getTestOrder ()I
+	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/FormattingOptions {
+	public fun <init> (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;)V
+	public synthetic fun <init> (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getColumnIndices ()Ljava/util/Set;
+	public final fun getFormatter ()Lorg/apache/poi/ss/usermodel/DataFormatter;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/StringColumns {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/StringColumns;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getRange ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/WorkBookType : java/lang/Enum {
+	public static final field XLS Lorg/jetbrains/kotlinx/dataframe/io/WorkBookType;
+	public static final field XLSX Lorg/jetbrains/kotlinx/dataframe/io/WorkBookType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/WorkBookType;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/WorkBookType;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/XlsxKt {
+	public static final synthetic fun readExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Sheet;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Sheet;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Workbook;Ljava/lang/String;ILjava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Workbook;Ljava/lang/String;ILjava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Sheet;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Sheet;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Workbook;Ljava/lang/String;ILjava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/poi/ss/usermodel/Workbook;Ljava/lang/String;ILjava/lang/String;Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readExcel-CWg63oo (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readExcel-CWg63oo (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readExcel-CWg63oo (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readExcel-CWg63oo (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-CWg63oo$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-CWg63oo$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-CWg63oo$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-CWg63oo$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readExcel-ssqQo1E (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readExcel-ssqQo1E (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readExcel-ssqQo1E (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readExcel-ssqQo1E (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-ssqQo1E$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-ssqQo1E$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-ssqQo1E$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readExcel-ssqQo1E$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/io/NameRepairStrategy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toFormattingOptions-lk1XfQA (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;)Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;
+	public static synthetic fun toFormattingOptions-lk1XfQA$default (Ljava/lang/String;Lorg/apache/poi/ss/usermodel/DataFormatter;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/FormattingOptions;
+	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;Z)V
+	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/OutputStream;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/apache/poi/ss/usermodel/Workbook;)V
+	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;Z)V
+	public static final fun writeExcel (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/poi/ss/usermodel/Workbook;Lkotlin/jvm/functions/Function2;Ljava/lang/String;Z)Lorg/apache/poi/ss/usermodel/Sheet;
+	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;ZILjava/lang/Object;)V
+	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/OutputStream;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/apache/poi/ss/usermodel/Workbook;ILjava/lang/Object;)V
+	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZLorg/jetbrains/kotlinx/dataframe/io/WorkBookType;ZILjava/lang/Object;)V
+	public static synthetic fun writeExcel$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/poi/ss/usermodel/Workbook;Lkotlin/jvm/functions/Function2;Ljava/lang/String;ZILjava/lang/Object;)Lorg/apache/poi/ss/usermodel/Sheet;
+}
+
