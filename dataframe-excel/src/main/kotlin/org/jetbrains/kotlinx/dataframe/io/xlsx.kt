@@ -293,7 +293,7 @@ public fun DataFrame.Companion.readExcel(
             val cell: Cell? = row?.getCell(index)
             getCellValue(cell)
         }
-        DataColumn.createWithTypeInference(name, values)
+        DataColumn.createByInference(name, values)
     }
     return dataFrameOf(columns)
 }

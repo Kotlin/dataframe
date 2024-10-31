@@ -249,6 +249,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/DataColumn : org
 public final class org/jetbrains/kotlinx/dataframe/DataColumn$Companion {
 	public final fun create (Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun create$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn$Companion;Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public final fun createByInference (Ljava/lang/String;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun createByInference$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn$Companion;Ljava/lang/String;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public final fun createByType (Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun createByType$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn$Companion;Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public final fun createColumnGroup (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public final fun createFrameColumn (Ljava/lang/String;Ljava/util/List;Lkotlin/Lazy;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
 	public final fun createFrameColumn (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
@@ -4150,6 +4154,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataFrameBuilder {
 	public fun <init> (Ljava/util/List;)V
+	public final fun fill (ILorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public final fun invoke (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public final fun invoke (Lkotlin/sequences/Sequence;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public final fun invoke ([Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -9590,6 +9595,43 @@ public final class org/jetbrains/kotlinx/dataframe/columns/SingleColumnKt {
 	public static final fun isSingleColumnWithGroup (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Ljava/util/List;)Z
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Companion;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Companion {
+	public final fun create (Lkotlin/reflect/KType;Z)Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Infer : org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Infer;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$InferWithUpperbound : org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion {
+	public fun <init> (Lkotlin/reflect/KType;)V
+	public final fun component1 ()Lkotlin/reflect/KType;
+	public final fun copy (Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$InferWithUpperbound;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$InferWithUpperbound;Lkotlin/reflect/KType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$InferWithUpperbound;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getUpperbound ()Lkotlin/reflect/KType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Use : org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion {
+	public fun <init> (Lkotlin/reflect/KType;)V
+	public final fun component1 ()Lkotlin/reflect/KType;
+	public final fun copy (Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Use;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Use;Lkotlin/reflect/KType;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Use;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getType ()Lkotlin/reflect/KType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ValueColumn : org/jetbrains/kotlinx/dataframe/DataColumn {
 	public abstract fun distinct ()Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
 	public abstract fun get (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/columns/ValueColumn;
@@ -9913,8 +9955,10 @@ public final class org/jetbrains/kotlinx/dataframe/impl/ExceptionUtilsKt {
 
 public final class org/jetbrains/kotlinx/dataframe/impl/TypeUtilsKt {
 	public static final fun getValuesType (Ljava/util/List;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;)Lkotlin/reflect/KType;
-	public static final fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+	public static final synthetic fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+	public static final fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZZ)Lkotlin/reflect/KType;
 	public static synthetic fun guessValueType$default (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZILjava/lang/Object;)Lkotlin/reflect/KType;
+	public static synthetic fun guessValueType$default (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZZILjava/lang/Object;)Lkotlin/reflect/KType;
 	public static final fun replaceGenericTypeParametersWithUpperbound (Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
 }
 
@@ -10121,9 +10165,13 @@ public final class org/jetbrains/kotlinx/dataframe/impl/columns/ComputedColumnRe
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/columns/ConstructorsKt {
-	public static final fun createColumn (Ljava/lang/Iterable;Lkotlin/reflect/KType;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final synthetic fun createColumn (Ljava/lang/Iterable;Lkotlin/reflect/KType;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun createColumn$default (Ljava/lang/Iterable;Lkotlin/reflect/KType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun guessColumnType (Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;ZLjava/lang/Object;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun createColumnGuessingType (Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun createColumnGuessingType (Ljava/lang/String;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun createColumnGuessingType$default (Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun createColumnGuessingType$default (Ljava/lang/String;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final synthetic fun guessColumnType (Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;ZLjava/lang/Object;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun guessColumnType$default (Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;ZLjava/lang/Object;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun newColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lkotlin/reflect/KType;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/Infer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun newColumn$default (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lkotlin/reflect/KType;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/Infer;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
