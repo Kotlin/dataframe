@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
@@ -42,6 +41,7 @@ import java.math.BigDecimal
 import java.net.URL
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -320,6 +320,8 @@ public enum class ColType {
     Char,
 }
 
+public fun ColType.toType(): KClass<*> = toKType().classifier as KClass<*>
+
 public fun ColType.toKType(): KType =
     when (this) {
         ColType.Int -> typeOf<Int>()
@@ -395,9 +397,11 @@ public fun DataFrame.Companion.readDelim(
             null -> column.tryParse(parserOptions)
 
             else -> {
-                // TODO use skipAllExcept
-                val parser = Parsers[colType.toKType()]!!
-                column.parse(parser, parserOptions)
+                column.tryParse(
+                    (parserOptions ?: ParserOptions()).copy(
+                        skipTypes = ParserOptions.allTypesExcept(colType.toKType()),
+                    ),
+                )
             }
         }
     }

@@ -50,6 +50,7 @@ import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_COL_TYPE
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_NULL_STRINGS
+import org.jetbrains.kotlinx.dataframe.io.toKType
 import java.io.InputStream
 import java.math.BigDecimal
 import java.net.URL
@@ -318,26 +319,6 @@ internal fun ColType.toCsvParserOrNull(useDeepHavenLocalDateTime: Boolean): Pars
  */
 internal fun ColType.toCsvParser(useDeepHavenLocalDateTime: Boolean): Parser<*> =
     toCsvParserOrNull(useDeepHavenLocalDateTime) ?: Parsers.STRING
-
-// has issues when calling to :core
-internal fun ColType.toKType(): KType =
-    when (this) {
-        ColType.Int -> typeOf<Int>()
-        ColType.Long -> typeOf<Long>()
-        ColType.Double -> typeOf<Double>()
-        ColType.Boolean -> typeOf<Boolean>()
-        ColType.BigDecimal -> typeOf<BigDecimal>()
-        ColType.LocalDate -> typeOf<LocalDate>()
-        ColType.LocalTime -> typeOf<LocalTime>()
-        ColType.LocalDateTime -> typeOf<LocalDateTime>()
-        ColType.String -> typeOf<String>()
-        ColType.Instant -> typeOf<Instant>()
-        ColType.Duration -> typeOf<Duration>()
-        ColType.Url -> typeOf<URL>()
-        ColType.JsonArray -> typeOf<DataFrame<*>>()
-        ColType.JsonObject -> typeOf<DataRow<*>>()
-        ColType.Char -> typeOf<Char>()
-    }
 
 internal fun KType.toColType(): ColType =
     when (this.withNullability(false)) {

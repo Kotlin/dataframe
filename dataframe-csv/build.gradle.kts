@@ -11,6 +11,7 @@ plugins {
         alias(ktlint)
         alias(jupyter.api)
         alias(docProcessor)
+        alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
     }
     idea
