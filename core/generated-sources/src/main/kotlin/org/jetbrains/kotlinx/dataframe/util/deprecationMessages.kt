@@ -39,6 +39,11 @@ internal const val CREATE_COLUMN = "This function is just here for binary compat
 internal const val GUESS_COLUMN_TYPE = "This function is just here for binary compatibility. $MESSAGE_0_16"
 
 public const val DF_READ_EXCEL: String = "This function is just here for binary compatibility. $MESSAGE_0_16"
+
+internal const val PARSER_OPTIONS = "This constructor is only here for binary compatibility. $MESSAGE_0_16"
+
+internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_0_16"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
