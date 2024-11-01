@@ -1,28 +1,46 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import com.github.kittinunf.fuel.httpGet
+import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
+import org.jetbrains.kotlinx.dataframe.util.IS_URL
+import org.jetbrains.kotlinx.dataframe.util.IS_URL_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.IS_URL_REPLACE
 import java.io.File
-import java.io.IOException
 import java.io.InputStream
+import java.net.HttpURLConnection
 import java.net.URL
 
-internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFrame {
+/**
+ * Opens a stream to [url] to create a [DataFrame] from it.
+ * If the URL is a file URL, the file is read directly.
+ * If the URL is an HTTP URL, it's also read directly, but if the server returns an error code,
+ * the error response is read as JSON and parsed as [DataFrame] too.
+ *
+ * Public so it may be used in other modules.
+ */
+public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFrame {
+    val connection = url.openConnection()
+    if (connection !is HttpURLConnection) {
+        return connection.inputStream.use(body)
+    }
     try {
-        return url.openStream().use(body)
-    } catch (e: IOException) {
-        if (e.message?.startsWith("Server returned HTTP response code") == true) {
-            val (_, response, _) = url.toString().httpGet().responseString()
+        connection.connect()
+        val code = connection.responseCode
+        if (code != 200) {
+            val response = connection.responseMessage
             try {
-                return DataFrame.readJsonStr(response.data.decodeToString())
-            } catch (e2: Exception) {
-                throw e
+                // attempt to read error response as JSON
+                return DataFrame.readJson(connection.errorStream)
+            } catch (_: Exception) {
+                throw RuntimeException("Server returned HTTP response code: $code. Response: $response")
             }
         }
-        throw e
+        return connection.inputStream.use(body)
+    } finally {
+        connection.disconnect()
     }
 }
 
@@ -55,7 +73,14 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
         }
     }
 
-public fun isURL(path: String): Boolean = listOf("http:", "https:", "ftp:").any { path.startsWith(it) }
+@Deprecated(
+    message = IS_URL,
+    replaceWith = ReplaceWith(IS_URL_REPLACE, IS_URL_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
+public fun isURL(path: String): Boolean = isUrl(path)
+
+public fun isUrl(path: String): Boolean = listOf("http:", "https:", "ftp:").any { path.startsWith(it) }
 
 public fun isFile(url: URL): Boolean = url.protocol == "file"
 
@@ -64,3 +89,24 @@ public fun asFileOrNull(url: URL): File? = if (isFile(url)) File(url.path) else 
 public fun urlAsFile(url: URL): File = File(url.toURI())
 
 public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http", "https", "ftp")
+
+/**
+ * Converts a file path or URL [String] to a [URL].
+ * If the path is a file path, the file is checked for existence and not being a directory.
+ */
+public fun asUrl(fileOrUrl: String): URL =
+    if (isUrl(fileOrUrl)) {
+        URL(fileOrUrl).toURI()
+    } else {
+        File(fileOrUrl).also {
+            require(it.exists()) { "File not found: \"$fileOrUrl\"" }
+            require(it.isFile) { "Not a file: \"$fileOrUrl\"" }
+        }.toURI()
+    }.toURL()
+
+/** Skips BOM characters if present. */
+public fun InputStream.skippingBomCharacters(): InputStream =
+    BOMInputStream.builder()
+        .setInputStream(this)
+        .setInclude(false)
+        .get()
