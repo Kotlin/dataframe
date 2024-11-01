@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
-import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
@@ -210,7 +210,7 @@ internal object Parsers : GlobalParserOptions {
         toJavaLocalDateTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
             ?.toKotlinLocalDateTime()
 
-    private fun String.toUrlOrNull(): URL? = if (isURL(this)) catchSilent { URL(this) } else null
+    private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URL(this) } else null
 
     private fun String.toBooleanOrNull() =
         when (uppercase(Locale.getDefault())) {
