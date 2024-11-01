@@ -351,61 +351,70 @@ public fun DataFrame.Companion.readDelim(
     readLines: Int? = null,
     parserOptions: ParserOptions? = null,
 ): AnyFrame {
-    var reader = reader
-    if (skipLines > 0) {
-        reader = BufferedReader(reader)
-        repeat(skipLines) { reader.readLine() }
-    }
-
-    val csvParser = format.parse(reader)
-    val records = if (readLines == null) {
-        csvParser.records
-    } else {
-        require(readLines >= 0) { "`readLines` must not be negative" }
-        val records = ArrayList<CSVRecord>(readLines)
-        val iter = csvParser.iterator()
-        var count = readLines ?: 0
-        while (iter.hasNext() && 0 < count--) {
-            records.add(iter.next())
+    try {
+        var reader = reader
+        if (skipLines > 0) {
+            reader = BufferedReader(reader)
+            repeat(skipLines) { reader.readLine() }
         }
-        records
-    }
 
-    val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
-        ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
+        val csvParser = format.parse(reader)
+        val records = if (readLines == null) {
+            csvParser.records
+        } else {
+            require(readLines >= 0) { "`readLines` must not be negative" }
+            val records = ArrayList<CSVRecord>(readLines)
+            val iter = csvParser.iterator()
+            var count = readLines ?: 0
+            while (iter.hasNext() && 0 < count--) {
+                records.add(iter.next())
+            }
+            records
+        }
 
-    val generator = ColumnNameGenerator()
-    val uniqueNames = columnNames.map { generator.addUnique(it) }
+        val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
+            ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
 
-    val cols = uniqueNames.mapIndexed { colIndex, colName ->
-        val defaultColType = colTypes[".default"]
-        val colType = colTypes[colName] ?: defaultColType
-        var hasNulls = false
-        val values = records.map {
-            if (it.isSet(colIndex)) {
-                it[colIndex].ifEmpty {
+        val generator = ColumnNameGenerator()
+        val uniqueNames = columnNames.map { generator.addUnique(it) }
+
+        val cols = uniqueNames.mapIndexed { colIndex, colName ->
+            val defaultColType = colTypes[".default"]
+            val colType = colTypes[colName] ?: defaultColType
+            var hasNulls = false
+            val values = records.map {
+                if (it.isSet(colIndex)) {
+                    it[colIndex].ifEmpty {
+                        hasNulls = true
+                        null
+                    }
+                } else {
                     hasNulls = true
                     null
                 }
-            } else {
-                hasNulls = true
-                null
             }
-        }
-        val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
-        when (colType) {
-            null -> column.tryParse(parserOptions)
+            val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
+            when (colType) {
+                null -> column.tryParse(parserOptions)
 
-            else -> {
-                column.tryParse(
-                    (parserOptions ?: ParserOptions()).copy(
-                        skipTypes = ParserOptions.allTypesExcept(colType.toKType()),
-                    ),
-                )
+                else -> {
+                    column.tryParse(
+                        (parserOptions ?: ParserOptions()).copy(
+                            skipTypes = ParserOptions.allTypesExcept(colType.toKType()),
+                        ),
+                    )
+                }
             }
         }
+        return cols.toDataFrame()
+    } catch (e: OutOfMemoryError) {
+        throw OutOfMemoryError(
+            "Ran out of memory reading this CSV-like file. " +
+                "You can try our new experimental CSV reader by adding the dependency " +
+                "\"org.jetbrains.kotlinx:dataframe-csv:{VERSION}\" and using `DataFrame.readCsv()` instead of " +
+                "`DataFrame.readCSV()`. This requires `@OptIn(ExperimentalCsv::class)`.",
+        )
     }
-    return cols.toDataFrame()
 }
 
 public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT): Unit =
