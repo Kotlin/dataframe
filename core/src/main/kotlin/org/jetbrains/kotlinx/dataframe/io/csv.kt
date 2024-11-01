@@ -23,6 +23,9 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.util.AS_URL
+import org.jetbrains.kotlinx.dataframe.util.AS_URL_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.AS_URL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
 import org.jetbrains.kotlinx.dataframe.values
@@ -120,7 +123,7 @@ public fun DataFrame.Companion.read(
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
 ): DataFrame<*> =
-    catchHttpResponse(asURL(fileOrUrl)) {
+    catchHttpResponse(asUrl(fileOrUrl)) {
         readDelim(
             it,
             delimiter,
@@ -148,7 +151,7 @@ public fun DataFrame.Companion.readCSV(
     charset: Charset = Charsets.UTF_8,
     parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
-    catchHttpResponse(asURL(fileOrUrl)) {
+    catchHttpResponse(asUrl(fileOrUrl)) {
         readDelim(
             it,
             delimiter,
@@ -246,19 +249,12 @@ private fun getCSVType(path: String): CSVType =
         else -> throw IOException("Unknown file format")
     }
 
-private fun asStream(fileOrUrl: String) =
-    if (isURL(fileOrUrl)) {
-        URL(fileOrUrl).toURI()
-    } else {
-        File(fileOrUrl).toURI()
-    }.toURL().openStream()
-
-public fun asURL(fileOrUrl: String): URL =
-    if (isURL(fileOrUrl)) {
-        URL(fileOrUrl).toURI()
-    } else {
-        File(fileOrUrl).toURI()
-    }.toURL()
+@Deprecated(
+    message = AS_URL,
+    replaceWith = ReplaceWith(AS_URL_REPLACE, AS_URL_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
+public fun asURL(fileOrUrl: String): URL = asUrl(fileOrUrl)
 
 private fun getFormat(
     type: CSVType,
