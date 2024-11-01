@@ -116,6 +116,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             val url = urlOf(data.get())
 
             val formats = listOf(
+                // TODO new Csv() and Tsv()
                 CSV(delimiter = csvOptions.delimiter),
                 JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
                 Excel(),
