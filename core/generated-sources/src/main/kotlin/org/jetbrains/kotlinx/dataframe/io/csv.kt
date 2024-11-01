@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -10,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
@@ -20,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
@@ -41,8 +42,10 @@ import java.net.URL
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
@@ -296,6 +299,9 @@ public fun DataFrame.Companion.readDelim(
     )
 }
 
+/**
+ * Column types that DataFrame can [parse] from a [String].
+ */
 public enum class ColType {
     Int,
     Long,
@@ -306,19 +312,33 @@ public enum class ColType {
     LocalTime,
     LocalDateTime,
     String,
+    Instant,
+    Duration,
+    Url,
+    JsonArray,
+    JsonObject,
+    Char,
 }
 
-public fun ColType.toType(): KClass<out Any> =
+public fun ColType.toType(): KClass<*> = toKType().classifier as KClass<*>
+
+public fun ColType.toKType(): KType =
     when (this) {
-        ColType.Int -> Int::class
-        ColType.Long -> Long::class
-        ColType.Double -> Double::class
-        ColType.Boolean -> Boolean::class
-        ColType.BigDecimal -> BigDecimal::class
-        ColType.LocalDate -> LocalDate::class
-        ColType.LocalTime -> LocalTime::class
-        ColType.LocalDateTime -> LocalDateTime::class
-        ColType.String -> String::class
+        ColType.Int -> typeOf<Int>()
+        ColType.Long -> typeOf<Long>()
+        ColType.Double -> typeOf<Double>()
+        ColType.Boolean -> typeOf<Boolean>()
+        ColType.BigDecimal -> typeOf<BigDecimal>()
+        ColType.LocalDate -> typeOf<LocalDate>()
+        ColType.LocalTime -> typeOf<LocalTime>()
+        ColType.LocalDateTime -> typeOf<LocalDateTime>()
+        ColType.String -> typeOf<String>()
+        ColType.Instant -> typeOf<Instant>()
+        ColType.Duration -> typeOf<Duration>()
+        ColType.Url -> typeOf<URL>()
+        ColType.JsonArray -> typeOf<DataFrame<*>>()
+        ColType.JsonObject -> typeOf<DataRow<*>>()
+        ColType.Char -> typeOf<Char>()
     }
 
 public fun DataFrame.Companion.readDelim(
@@ -331,58 +351,70 @@ public fun DataFrame.Companion.readDelim(
     readLines: Int? = null,
     parserOptions: ParserOptions? = null,
 ): AnyFrame {
-    var reader = reader
-    if (skipLines > 0) {
-        reader = BufferedReader(reader)
-        repeat(skipLines) { reader.readLine() }
-    }
-
-    val csvParser = format.parse(reader)
-    val records = if (readLines == null) {
-        csvParser.records
-    } else {
-        require(readLines >= 0) { "`readLines` must not be negative" }
-        val records = ArrayList<CSVRecord>(readLines)
-        val iter = csvParser.iterator()
-        var count = readLines ?: 0
-        while (iter.hasNext() && 0 < count--) {
-            records.add(iter.next())
+    try {
+        var reader = reader
+        if (skipLines > 0) {
+            reader = BufferedReader(reader)
+            repeat(skipLines) { reader.readLine() }
         }
-        records
-    }
 
-    val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
-        ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
+        val csvParser = format.parse(reader)
+        val records = if (readLines == null) {
+            csvParser.records
+        } else {
+            require(readLines >= 0) { "`readLines` must not be negative" }
+            val records = ArrayList<CSVRecord>(readLines)
+            val iter = csvParser.iterator()
+            var count = readLines ?: 0
+            while (iter.hasNext() && 0 < count--) {
+                records.add(iter.next())
+            }
+            records
+        }
 
-    val generator = ColumnNameGenerator()
-    val uniqueNames = columnNames.map { generator.addUnique(it) }
+        val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
+            ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
 
-    val cols = uniqueNames.mapIndexed { colIndex, colName ->
-        val defaultColType = colTypes[".default"]
-        val colType = colTypes[colName] ?: defaultColType
-        var hasNulls = false
-        val values = records.map {
-            if (it.isSet(colIndex)) {
-                it[colIndex].ifEmpty {
+        val generator = ColumnNameGenerator()
+        val uniqueNames = columnNames.map { generator.addUnique(it) }
+
+        val cols = uniqueNames.mapIndexed { colIndex, colName ->
+            val defaultColType = colTypes[".default"]
+            val colType = colTypes[colName] ?: defaultColType
+            var hasNulls = false
+            val values = records.map {
+                if (it.isSet(colIndex)) {
+                    it[colIndex].ifEmpty {
+                        hasNulls = true
+                        null
+                    }
+                } else {
                     hasNulls = true
                     null
                 }
-            } else {
-                hasNulls = true
-                null
             }
-        }
-        val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
-        when (colType) {
-            null -> column.tryParse(parserOptions)
+            val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
+            when (colType) {
+                null -> column.tryParse(parserOptions)
 
-            else -> {
-                val parser = Parsers[colType.toType()]!!
-                column.parse(parser, parserOptions)
+                else -> {
+                    column.tryParse(
+                        (parserOptions ?: ParserOptions()).copy(
+                            skipTypes = ParserOptions.allTypesExcept(colType.toKType()),
+                        ),
+                    )
+                }
             }
         }
+        return cols.toDataFrame()
+    } catch (e: OutOfMemoryError) {
+        throw OutOfMemoryError(
+            "Ran out of memory reading this CSV-like file. " +
+                "You can try our new experimental CSV reader by adding the dependency " +
+                "\"org.jetbrains.kotlinx:dataframe-csv:{VERSION}\" and using `DataFrame.readCsv()` instead of " +
+                "`DataFrame.readCSV()`. This requires `@OptIn(ExperimentalCsv::class)`.",
+        )
     }
-    return cols.toDataFrame()
 }
 
 public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT): Unit =
