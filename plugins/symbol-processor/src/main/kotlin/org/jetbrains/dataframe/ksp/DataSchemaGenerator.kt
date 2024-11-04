@@ -32,7 +32,7 @@ import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
-import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.net.MalformedURLException
@@ -73,7 +73,7 @@ class DataSchemaGenerator(
             }
 
     private fun ImportDataSchema.toStatement(file: KSFile, logger: KSPLogger): ImportDataSchemaStatement? {
-        val url = if (isURL(path)) {
+        val url = if (isUrl(path)) {
             try {
                 URL(this.path)
             } catch (exception: MalformedURLException) {
@@ -155,6 +155,7 @@ class DataSchemaGenerator(
             codeGenerator.createNewFile(Dependencies(true, importStatement.origin), packageName, "$name.Generated")
 
         val formats = listOf(
+            // TODO new Csv() and Tsv()
             CSV(delimiter = importStatement.csvOptions.delimiter),
             JSON(
                 typeClashTactic = importStatement.jsonOptions.typeClashTactic,

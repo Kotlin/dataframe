@@ -166,7 +166,7 @@ public fun DataFrame.Companion.readJson(
     header: List<String> = emptyList(),
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(asURL(path), header, keyValuePaths, typeClashTactic)
+): AnyFrame = readJson(asUrl(path), header, keyValuePaths, typeClashTactic)
 
 /**
  * @param path URL or file path from where to fetch the Json as [InputStream] to be converted to a [DataRow].
