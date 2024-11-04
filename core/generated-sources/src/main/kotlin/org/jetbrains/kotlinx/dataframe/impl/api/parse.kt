@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
-import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
@@ -210,7 +210,7 @@ internal object Parsers : GlobalParserOptions {
         toJavaLocalDateTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
             ?.toKotlinLocalDateTime()
 
-    private fun String.toUrlOrNull(): URL? = if (isURL(this)) catchSilent { URL(this) } else null
+    private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URL(this) } else null
 
     private fun String.toBooleanOrNull() =
         when (uppercase(Locale.getDefault())) {
@@ -388,6 +388,8 @@ internal object Parsers : GlobalParserOptions {
                 null
             }
         },
+        // Char
+        stringParser<Char> { it.singleOrNull() },
         // No parser found, return as String
         // must be last in the list of parsers to return original unparsed string
         stringParser<String> { it },
@@ -461,7 +463,9 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     var nullStringParsed = false
     val nulls = options?.nullStrings ?: Parsers.nulls
 
+    val parserTypesToSkip = options?.skipTypes ?: emptySet()
     val parsersToCheck = Parsers.parsersOrder
+        .filterNot { it.type in parserTypesToSkip }
     val parserTypesToCheck = parsersToCheck.map { it.type }.toSet()
 
     var correctParser: StringParser<*>? = null
