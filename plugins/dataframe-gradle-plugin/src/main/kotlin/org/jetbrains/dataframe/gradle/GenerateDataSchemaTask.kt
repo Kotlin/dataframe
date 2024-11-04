@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
-import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.io.File
 import java.net.URL
@@ -116,6 +116,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             val url = urlOf(data.get())
 
             val formats = listOf(
+                // TODO new Csv() and Tsv()
                 CSV(delimiter = csvOptions.delimiter),
                 JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
                 Excel(),
@@ -224,7 +225,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
             is String ->
                 when {
-                    isURL(data) -> stringOf(URL(data))
+                    isUrl(data) -> stringOf(URL(data))
 
                     else -> {
                         val relativeFile = project.file(data)
@@ -252,7 +253,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             is URL -> data.toURI()
 
             is String -> when {
-                isURL(data) -> URL(data).toURI()
+                isUrl(data) -> URL(data).toURI()
 
                 else -> {
                     val relativeFile = project.file(data)
