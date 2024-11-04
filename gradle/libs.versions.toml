@@ -18,6 +18,7 @@ korro = "0.1.6"
 
 binaryCompatibilityValidator = "0.16.3"
 kover = "0.8.3"
+deephavenCsv = "0.14.0"
 fastDoubleParser = "2.0.0"
 commonsCsv = "1.11.0"
 commonsCompress = "1.27.1"
@@ -50,12 +51,13 @@ docProcessor = "0.3.10"
 simpleGit = "2.0.3"
 dependencyVersions = "0.51.0"
 plugin-publish = "1.2.1"
-shadow = "8.1.1"
+shadow = "8.3.3"
 android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
 ktor-server-netty = "2.3.12"
 kotlin-compile-testing = "1.6.0"
 duckdb = "1.0.0"
 buildconfig = "5.4.0"
+benchmark = "0.4.12"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -67,6 +69,7 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
+deephavenCsv = { group = "io.deephaven", name = "deephaven-csv", version.ref = "deephavenCsv" }
 fastDoubleParser = { group = "ch.randelshofer", name = "fastdoubleparser", version.ref = "fastDoubleParser" }
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
@@ -126,7 +129,7 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
-
+kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
 
 duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref= "duckdb"}
@@ -149,5 +152,6 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }
