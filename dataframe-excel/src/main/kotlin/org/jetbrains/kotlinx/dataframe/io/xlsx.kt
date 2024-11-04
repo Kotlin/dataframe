@@ -194,7 +194,7 @@ public fun DataFrame.Companion.readExcel(
     firstRowIsHeader: Boolean = true,
 ): AnyFrame =
     readExcel(
-        asURL(fileOrUrl),
+        asUrl(fileOrUrl),
         sheetName,
         skipRows,
         columns,
