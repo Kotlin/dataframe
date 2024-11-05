@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_SPECS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ALLOW_MISSING_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.DELIM_DELIMITER
@@ -61,5 +61,5 @@ public fun DataFrame.Companion.readDelimStr(
         ignoreSurroundingSpaces = ignoreSurroundingSpaces,
         trimInsideQuoted = trimInsideQuoted,
         parseParallel = parseParallel,
-        additionalCsvSpecs = ADDITIONAL_CSV_SPECS,
+        adjustCsvSpecs = ADJUST_CSV_SPECS,
     )

@@ -2,12 +2,11 @@
 
 package org.jetbrains.kotlinx.dataframe.io
 
-import io.deephaven.csv.CsvSpecs
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_SPECS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ALLOW_MISSING_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMPRESSION
@@ -75,7 +74,7 @@ public fun DataFrame.Companion.readCsv(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
-            additionalCsvSpecs = ADDITIONAL_CSV_SPECS,
+            adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
 
@@ -123,7 +122,7 @@ public fun DataFrame.Companion.readCsv(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
-            additionalCsvSpecs = ADDITIONAL_CSV_SPECS,
+            adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
 
@@ -171,12 +170,12 @@ public fun DataFrame.Companion.readCsv(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
-            additionalCsvSpecs = ADDITIONAL_CSV_SPECS,
+            adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
 
 /**
- * {@comment the only one with additionalCsvSpecs}
+ * {@comment the only one with adjustCsvSpecs}
  * @include [CommonReadDelimDocs.CsvDocs]
  * @set [CommonReadDelimDocs.DataTitleArg] InputStream
  * @set [CommonReadDelimDocs.DataArg] input stream
@@ -184,7 +183,7 @@ public fun DataFrame.Companion.readCsv(
  * @include [CSV_DELIMITER]
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
- * @include [ADDITIONAL_CSV_SPECS]
+ * @include [ADJUST_CSV_SPECS]
  */
 @ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
@@ -203,7 +202,7 @@ public fun DataFrame.Companion.readCsv(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
-    additionalCsvSpecs: CsvSpecs? = ADDITIONAL_CSV_SPECS,
+    adjustCsvSpecs: AdjustCsvSpecs = ADJUST_CSV_SPECS,
 ): DataFrame<*> =
     readDelimImpl(
         inputStream = inputStream,
@@ -221,5 +220,5 @@ public fun DataFrame.Companion.readCsv(
         ignoreSurroundingSpaces = ignoreSurroundingSpaces,
         trimInsideQuoted = trimInsideQuoted,
         parseParallel = parseParallel,
-        additionalCsvSpecs = additionalCsvSpecs,
+        adjustCsvSpecs = adjustCsvSpecs,
     )

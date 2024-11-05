@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
+import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
@@ -158,13 +160,12 @@ internal object DelimParams {
     const val PARSE_PARALLEL: Boolean = true
 
     /**
-     * @param additionalCsvSpecs Optional [CsvSpecs]. Default: `null`.
+     * @param adjustCsvSpecs Optional extra [CsvSpecs] configuration. Default: `{ it }`.
      *
-     *   A [CsvSpecs] instance can be supplied to configure additional
-     *   parsing options not covered by the other parameters.
-     *   The (default) values of other parameters will override the values in \[additionalCsvSpecs\].
+     *   Before instantiating the [CsvSpecs], the [CsvSpecs.Builder] will be passed to this lambda.
+     *   This will allow you to configure/overwrite any CSV / TSV parsing options.
      */
-    val ADDITIONAL_CSV_SPECS: CsvSpecs? = null
+    val ADJUST_CSV_SPECS: AdjustCsvSpecs = { it }
 
     /** @param includeHeader Whether to include the header in the output. Default: `true`. */
     const val INCLUDE_HEADER: Boolean = true
@@ -200,11 +201,10 @@ internal object DelimParams {
     val HEADER_COMMENTS: List<String> = emptyList()
 
     /**
-     * @param additionalCsvFormat Optional [CSVFormat]. Default: [CSVFormat.DEFAULT].
+     * @param adjustCsvFormat Optional extra [CSVFormat] configuration. Default: `{ it }`.
      *
-     *   A [CSVFormat] instance can be supplied to configure additional CSV / TSV printing options
-     *   not covered by the other parameters. The (default) values of other parameters will override the values in
-     *   [additionalCsvFormat].
+     *   Before instantiating the [CSVFormat], the [CSVFormat.Builder] will be passed to this lambda.
+     *   This will allow you to configure/overwrite any CSV / TSV writing options.
      */
-    val ADDITIONAL_CSV_FORMAT: CSVFormat = CSVFormat.DEFAULT
+    val ADJUST_CSV_FORMAT: AdjustCSVFormat = { it }
 }

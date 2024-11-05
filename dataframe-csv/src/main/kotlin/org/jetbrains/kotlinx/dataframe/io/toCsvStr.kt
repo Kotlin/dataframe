@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.documentation.CommonWriteDelimDocs
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_FORMAT
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_FORMAT
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMMENT_CHAR
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.CSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ESCAPE_CHAR
@@ -44,6 +44,6 @@ public fun AnyFrame.toCsvStr(
             commentChar = commentChar,
             headerComments = headerComments,
             recordSeparator = recordSeparator,
-            additionalCsvFormat = ADDITIONAL_CSV_FORMAT,
+            adjustCsvFormat = ADJUST_CSV_FORMAT,
         )
     }

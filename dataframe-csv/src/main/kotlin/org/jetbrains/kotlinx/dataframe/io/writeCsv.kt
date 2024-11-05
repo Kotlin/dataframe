@@ -2,10 +2,9 @@
 
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.documentation.CommonWriteDelimDocs
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_FORMAT
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_FORMAT
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMMENT_CHAR
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.CSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ESCAPE_CHAR
@@ -53,7 +52,7 @@ public fun AnyFrame.writeCsv(
         commentChar = commentChar,
         headerComments = headerComments,
         recordSeparator = recordSeparator,
-        additionalCsvFormat = ADDITIONAL_CSV_FORMAT,
+        adjustCsvFormat = ADJUST_CSV_FORMAT,
     )
 
 /**
@@ -88,11 +87,11 @@ public fun AnyFrame.writeCsv(
         commentChar = commentChar,
         headerComments = headerComments,
         recordSeparator = recordSeparator,
-        additionalCsvFormat = ADDITIONAL_CSV_FORMAT,
+        adjustCsvFormat = ADJUST_CSV_FORMAT,
     )
 
 /**
- * {@comment only one with additionalCsvFormat}
+ * {@comment only one with adjustCsvFormat}
  * @include [CommonWriteDelimDocs.CsvDocs]
  * @set [CommonWriteDelimDocs.WriteOrConvertArg] Write
  * @set [CommonWriteDelimDocs.DataTitleArg] Appendable
@@ -100,7 +99,7 @@ public fun AnyFrame.writeCsv(
  * @include [WRITER_WRITE]
  * @include [CSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]
- * @include [ADDITIONAL_CSV_FORMAT]
+ * @include [ADJUST_CSV_FORMAT]
  */
 @ExperimentalCsv
 public fun AnyFrame.writeCsv(
@@ -113,7 +112,7 @@ public fun AnyFrame.writeCsv(
     commentChar: Char? = COMMENT_CHAR,
     headerComments: List<String> = HEADER_COMMENTS,
     recordSeparator: String = RECORD_SEPARATOR,
-    additionalCsvFormat: CSVFormat = ADDITIONAL_CSV_FORMAT,
+    adjustCsvFormat: AdjustCSVFormat = ADJUST_CSV_FORMAT,
 ): Unit =
     writeDelimImpl(
         df = this,
@@ -126,5 +125,5 @@ public fun AnyFrame.writeCsv(
         commentChar = commentChar,
         headerComments = headerComments,
         recordSeparator = recordSeparator,
-        additionalCsvFormat = additionalCsvFormat,
+        adjustCsvFormat = adjustCsvFormat,
     )

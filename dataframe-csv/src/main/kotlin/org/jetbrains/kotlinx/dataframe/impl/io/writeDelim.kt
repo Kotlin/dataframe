@@ -5,9 +5,10 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.documentation.CommonWriteDelimDocs
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_FORMAT
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_FORMAT
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.CSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.WRITER_WRITE
+import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
@@ -19,7 +20,7 @@ import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
  * @include [WRITER_WRITE]
  * @include [CSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]
- * @include [ADDITIONAL_CSV_FORMAT]
+ * @include [ADJUST_CSV_FORMAT]
  */
 internal fun writeDelimImpl(
     df: AnyFrame,
@@ -32,10 +33,10 @@ internal fun writeDelimImpl(
     commentChar: Char?,
     headerComments: List<String>,
     recordSeparator: String,
-    additionalCsvFormat: CSVFormat,
+    adjustCsvFormat: AdjustCSVFormat,
 ) {
     // setup CSV format
-    val format = with(CSVFormat.Builder.create(additionalCsvFormat)) {
+    val format = with(CSVFormat.Builder.create(CSVFormat.DEFAULT)) {
         setDelimiter(delimiter)
         setQuote(quote)
         setSkipHeaderRecord(!includeHeader)
@@ -44,7 +45,8 @@ internal fun writeDelimImpl(
         setEscape(escapeChar)
         setCommentMarker(commentChar)
         setHeaderComments(*headerComments.toTypedArray())
-    }.build()
+    }.let { adjustCsvFormat(it, it) }
+        .build()
 
     // let the format handle the writing, only converting AnyRow and AnyFrame to JSON
     format.print(writer).use { printer ->

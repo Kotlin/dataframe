@@ -29,7 +29,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADDITIONAL_CSV_SPECS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_SPECS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ALLOW_MISSING_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMPRESSION
@@ -45,6 +45,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_NULL_STRINGS
@@ -77,7 +78,7 @@ import kotlin.time.Duration
  * @include [IGNORE_SURROUNDING_SPACES]
  * @include [TRIM_INSIDE_QUOTED]
  * @include [PARSE_PARALLEL]
- * @include [ADDITIONAL_CSV_SPECS]
+ * @include [ADJUST_CSV_SPECS]
  */
 internal fun readDelimImpl(
     inputStream: InputStream,
@@ -95,11 +96,10 @@ internal fun readDelimImpl(
     ignoreSurroundingSpaces: Boolean,
     trimInsideQuoted: Boolean,
     parseParallel: Boolean,
-    additionalCsvSpecs: CsvSpecs?,
+    adjustCsvSpecs: AdjustCsvSpecs,
 ): DataFrame<*> {
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {
-        if (additionalCsvSpecs != null) from(additionalCsvSpecs)
         customDoubleParser(DataFrameCustomDoubleParser(parserOptions))
         nullValueLiterals(parserOptions.nullStrings ?: DEFAULT_NULL_STRINGS)
         headerLegalizer(::legalizeHeader)
@@ -124,7 +124,9 @@ internal fun readDelimImpl(
 
         // this function must be last, so the return value is used
         return@with this.withColTypes(colTypes, useDeepHavenLocalDateTime)
-    }.build()
+    }
+        .let { adjustCsvSpecs(it, it) }
+        .build()
 
     val csvReaderResult = inputStream.useDecompressed(compression) { decompressedInputStream ->
         // read the csv
