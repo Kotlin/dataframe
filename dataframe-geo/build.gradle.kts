@@ -6,14 +6,14 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(jupyter.api)
+        //alias(ktlint)
     }
 }
 
 group = "org.jetbrains.kotlinx"
 
 repositories {
-    // geo repositories should come before Maven Central
-    maven("https://maven.geotoolkit.org")
+    // geo repository should come before Maven Central
     maven("https://repo.osgeo.org/repository/release")
     mavenCentral()
 }
@@ -21,7 +21,6 @@ repositories {
 // https://stackoverflow.com/questions/26993105/i-get-an-error-downloading-javax-media-jai-core1-1-3-from-maven-central
 // jai core dependency should be excluded from geotools dependencies and added separately
 fun ExternalModuleDependency.excludeJaiCore() = exclude("javax.media", "jai_core")
-
 
 dependencies {
     api(project(":core"))
@@ -42,6 +41,7 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
 
+    testImplementation(kotlin("test"))
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -63,7 +63,6 @@ kotlinPublications {
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.IntegrationGeo")
 }
-
 
 tasks.test {
     useJUnitPlatform()

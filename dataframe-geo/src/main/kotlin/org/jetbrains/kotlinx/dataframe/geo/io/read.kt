@@ -10,20 +10,20 @@ import org.jetbrains.kotlinx.dataframe.io.asURL
 import java.net.URL
 
 
-fun GeoDataFrame.Companion.readGeoJSON(path: String): GeoDataFrame<*> {
-    return readGeoJSON(asURL(path))
+fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> {
+    return readGeoJson(asURL(path))
 }
 
-fun GeoDataFrame.Companion.readGeoJSON(url: URL): GeoDataFrame<*> {
+fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> {
     return (FeatureJSON().readFeatureCollection(url.openStream()) as SimpleFeatureCollection).toGeoDataFrame()
 }
 
-fun DataFrame.Companion.readGeoJSON(path: String): GeoDataFrame<*> {
-    return GeoDataFrame.readGeoJSON(path)
+fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> {
+    return GeoDataFrame.readGeoJson(path)
 }
 
-fun DataFrame.Companion.readGeoJSON(url: URL): GeoDataFrame<*> {
-    return GeoDataFrame.readGeoJSON(url)
+fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> {
+    return GeoDataFrame.readGeoJson(url)
 }
 
 fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> {

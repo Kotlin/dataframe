@@ -8,28 +8,28 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.geom.Polygon
 
 @DataSchema
-interface GeoFrame {
+interface WithGeometry {
     val geometry: Geometry
 }
 
 @DataSchema
-interface PolygonGeoFrame : GeoFrame {
+interface WithPolygon : WithGeometry {
     override val geometry: Polygon
 }
 
 @DataSchema
-interface MultiPolygonGeoFrame : GeoFrame {
+interface WithMultiPolygon : WithGeometry {
     override val geometry: MultiPolygon
 }
 
 @get:JvmName("geometry")
-val <T : GeoFrame> ColumnsContainer<T>.geometry: DataColumn<Geometry>
+val <T : WithGeometry> ColumnsContainer<T>.geometry: DataColumn<Geometry>
     get() = get("geometry") as DataColumn<Geometry>
 
 @get:JvmName("geometryPolygon")
-val <T : PolygonGeoFrame> ColumnsContainer<T>.geometry: DataColumn<Polygon>
+val <T : WithPolygon> ColumnsContainer<T>.geometry: DataColumn<Polygon>
     get() = get("geometry") as DataColumn<Polygon>
 
 @get:JvmName("geometryMultiPolygon")
-val <T : MultiPolygonGeoFrame> ColumnsContainer<T>.geometry: DataColumn<MultiPolygon>
+val <T : WithMultiPolygon> ColumnsContainer<T>.geometry: DataColumn<MultiPolygon>
     get() = get("geometry") as DataColumn<MultiPolygon>

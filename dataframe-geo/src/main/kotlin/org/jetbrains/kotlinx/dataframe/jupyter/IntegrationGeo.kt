@@ -3,49 +3,26 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
-import org.jetbrains.kotlinx.dataframe.geo.GeoFrame
-import org.jetbrains.kotlinx.dataframe.geo.MultiPolygonGeoFrame
-import org.jetbrains.kotlinx.dataframe.geo.PolygonGeoFrame
+import org.jetbrains.kotlinx.dataframe.geo.WithGeometry
+import org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygon
+import org.jetbrains.kotlinx.dataframe.geo.WithPolygon
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.jupyter.api.FieldHandler
 import org.jetbrains.kotlinx.jupyter.api.FieldHandlerExecution
-import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
-import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.libraries.FieldHandlerFactory
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
+/**
+ * DataFrame Jupyter integration for geo module.
+ *
+ * Adds all necessary imports.
+ * Adds type converter for inner dataframe in `GeoDataFrame`.
+ */
 internal class IntegrationGeo : JupyterIntegration() {
-
-    // TODO make internal in core and use here
-    private fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
-        val code = codeWithConverter.with(argument)
-        return if (code.isNotBlank()) {
-            val result = execute(code)
-            if (codeWithConverter.hasConverter) {
-                result.name
-            } else {
-                null
-            }
-        } else {
-            null
-        }
-    }
-
-    // TODO make internal in core and use here
-    private fun KotlinKernelHost.execute(
-        codeWithConverter: CodeWithConverter,
-        property: KProperty<*>,
-        type: KType,
-    ): VariableName? {
-        val variableName = "(${property.name}${if (property.returnType.isMarkedNullable) "!!" else ""} as $type)"
-        return execute(codeWithConverter, variableName)
-    }
 
     override fun Builder.onLoaded() {
         import("org.jetbrains.kotlinx.dataframe.geo.*")
@@ -54,14 +31,14 @@ internal class IntegrationGeo : JupyterIntegration() {
         import("org.jetbrains.kotlinx.dataframe.geo.geotools.*")
         import("org.jetbrains.kotlinx.dataframe.geo.geocode.*")
         onLoaded {
-            useSchema<GeoFrame>()
-            useSchema<PolygonGeoFrame>()
-            useSchema<MultiPolygonGeoFrame>()
+            useSchema<WithGeometry>()
+            useSchema<WithPolygon>()
+            useSchema<WithMultiPolygon>()
         }
         val replCodeGeneratorImpl = ReplCodeGeneratorImpl()
-        replCodeGeneratorImpl.process(GeoFrame::class)
-        replCodeGeneratorImpl.process(PolygonGeoFrame::class)
-        replCodeGeneratorImpl.process(MultiPolygonGeoFrame::class)
+        replCodeGeneratorImpl.process(WithGeometry::class)
+        replCodeGeneratorImpl.process(WithPolygon::class)
+        replCodeGeneratorImpl.process(WithMultiPolygon::class)
         val execution = FieldHandlerFactory.createUpdateExecution<GeoDataFrame<*>> { geo, kProperty ->
             // TODO rewrite
             val generatedDf = execute(

@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
-import org.jetbrains.kotlinx.dataframe.geo.GeoFrame
+import org.jetbrains.kotlinx.dataframe.geo.WithGeometry
 import org.locationtech.jts.geom.Geometry
 
 fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
@@ -24,7 +24,7 @@ fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
     val geometryAttribute = attributeDescriptors?.find { it is GeometryDescriptor }
         ?: throw IllegalArgumentException("No geometry attribute")
 
-    // In GeoJSON the crs attribute is optional
+    // In GeoJSON, the crs attribute is optional
     val crs: CoordinateReferenceSystem? = (geometryAttribute as GeometryDescriptor).coordinateReferenceSystem
 
     val data = dataAttributes.associate { it.localName to ArrayList<Any?>() }
@@ -52,5 +52,5 @@ fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
 
     val geometryColumn = DataColumn.create("geometry", geometries, Infer.Type)
 
-    return GeoDataFrame((data.toDataFrame() + geometryColumn) as DataFrame<GeoFrame>, crs)
+    return GeoDataFrame((data.toDataFrame() + geometryColumn) as DataFrame<WithGeometry>, crs)
 }
