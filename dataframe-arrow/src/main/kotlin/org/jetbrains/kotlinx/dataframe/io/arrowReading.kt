@@ -109,7 +109,7 @@ public fun DataFrame.Companion.readArrowIPC(
     path: String,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
-    if (isURL(path)) {
+    if (isUrl(path)) {
         readArrowIPC(URL(path), nullability)
     } else {
         readArrowIPC(File(path), nullability)
@@ -165,7 +165,7 @@ public fun DataFrame.Companion.readArrowFeather(
     path: String,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
-    if (isURL(path)) {
+    if (isUrl(path)) {
         readArrowFeather(URL(path), nullability)
     } else {
         readArrowFeather(File(path), nullability)

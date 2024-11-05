@@ -6485,28 +6485,35 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParseKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;
 	public fun <init> ()V
 	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)V
 	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Z)V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Z)V
+	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/Locale;
 	public final fun component2 ()Ljava/time/format/DateTimeFormatter;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/util/Set;
-	public final fun component5 ()Z
+	public final fun component5 ()Ljava/util/Set;
+	public final fun component6 ()Z
 	public final synthetic fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public final fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Z)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Z)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDateTimeFormatter ()Ljava/time/format/DateTimeFormatter;
 	public final fun getDateTimePattern ()Ljava/lang/String;
 	public final fun getLocale ()Ljava/util/Locale;
 	public final fun getNullStrings ()Ljava/util/Set;
+	public final fun getSkipTypes ()Ljava/util/Set;
 	public final fun getUseFastDoubleParser ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion {
+	public final fun allTypesExcept ([Lkotlin/reflect/KType;)Ljava/util/Set;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Pivot : org/jetbrains/kotlinx/dataframe/aggregation/Aggregatable {
@@ -9946,6 +9953,16 @@ public final class org/jetbrains/kotlinx/dataframe/impl/ColumnAccessTrackerKt {
 	public static final fun trackColumnAccess (Lkotlin/jvm/functions/Function0;)Ljava/util/List;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/ColumnNameGenerator {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun addIfAbsent (Ljava/lang/String;)V
+	public final fun addUnique (Ljava/lang/String;)Ljava/lang/String;
+	public final fun contains (Ljava/lang/String;)Z
+	public final fun getNames ()Ljava/util/List;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/DataFrameSize {
 	public fun <init> (II)V
 	public final fun component1 ()I
@@ -10271,23 +10288,38 @@ public final class org/jetbrains/kotlinx/dataframe/io/CSVType : java/lang/Enum {
 public final class org/jetbrains/kotlinx/dataframe/io/ColType : java/lang/Enum {
 	public static final field BigDecimal Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Boolean Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Char Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/ColType$Companion;
+	public static final field DEFAULT Ljava/lang/String;
 	public static final field Double Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Duration Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Instant Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Int Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field JsonArray Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field JsonObject Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field LocalDate Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field LocalDateTime Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field LocalTime Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Long Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field String Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Url Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/ColType$Companion {
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/CommonKt {
 	public static final fun asFileOrNull (Ljava/net/URL;)Ljava/io/File;
+	public static final fun asUrl (Ljava/lang/String;)Ljava/net/URL;
+	public static final fun catchHttpResponse (Ljava/net/URL;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun isFile (Ljava/net/URL;)Z
 	public static final fun isProtocolSupported (Ljava/net/URL;)Z
 	public static final fun isURL (Ljava/lang/String;)Z
+	public static final fun isUrl (Ljava/lang/String;)Z
+	public static final fun skippingBomCharacters (Ljava/io/InputStream;)Ljava/io/InputStream;
 	public static final fun toDataFrame (Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toDataFrame$default (Ljava/util/List;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun urlAsFile (Ljava/net/URL;)Ljava/io/File;
@@ -10313,6 +10345,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/CsvKt {
 	public static synthetic fun readDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;)Ljava/lang/String;
 	public static synthetic fun toCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun toKType (Lorg/jetbrains/kotlinx/dataframe/io/ColType;)Lkotlin/reflect/KType;
 	public static final fun toType (Lorg/jetbrains/kotlinx/dataframe/io/ColType;)Lkotlin/reflect/KClass;
 	public static final fun writeCSV (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Lorg/apache/commons/csv/CSVFormat;)V
 	public static final fun writeCSV (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;Lorg/apache/commons/csv/CSVFormat;)V
