@@ -36,6 +36,9 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
      * @return A new `GeoDataFrame` with reprojected geometries and the specified CRS.
      */
     fun applyCrs(targetCrs: CoordinateReferenceSystem): GeoDataFrame<T> {
+        if (crs == null) {
+            return GeoDataFrame(df, targetCrs)
+        }
         if (targetCrs == this.crs) return this
         // Use WGS 84 by default TODO
         val sourceCRS: CoordinateReferenceSystem = this.crs ?: DEFAULT_CRS
@@ -47,8 +50,14 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
     }
 
     override fun equals(other: Any?): Boolean {
+        if (this === other) return true
         if (other !is GeoDataFrame<*>) return false
-        return df == other.df && crs == other.crs
+
+        return df == other.df && when {
+            crs == null && other.crs == null -> true
+            crs == null || other.crs == null -> false
+            else -> CRS.equalsIgnoreMetadata(crs, other.crs)
+        }
     }
 
     companion object {

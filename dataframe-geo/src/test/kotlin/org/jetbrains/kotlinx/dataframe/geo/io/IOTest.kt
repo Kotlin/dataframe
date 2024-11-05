@@ -21,7 +21,7 @@ class IOTest {
             "Point 2", point2
         )
     }
-    private val simplePointsGeoDf = simplePointsDf.toGeo(null)
+    private val simplePointsGeoDf = simplePointsDf.toGeo(GeoDataFrame.DEFAULT_CRS)
     private val classLoader = (this::class as Any).javaClass.classLoader
 
     @Test
@@ -61,7 +61,6 @@ class IOTest {
         simplePointsGeoDf.writeShapefile(tempShapefileDir)
         val shapefile = File("${tempShapefileDir.path}/simple_points.shp")
         assertEquals(simplePointsGeoDf, GeoDataFrame.readShapefile(shapefile.toURI().toURL()))
-
         tempDir.deleteOnExit()
     }
 }
