@@ -128,6 +128,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%")
+    
+    // This artifact is only needed to directly call functions that generate @DataSchema code from OpenAPI specifications
+    // It's used by Gradle and KSP plugins internally.
+    // Your project needs dataframe-openapi to use generated code
+    implementation("org.jetbrains.kotlinx:dataframe-openapi-generator:%dataFrameVersion%")
 }
 ```
 
@@ -144,6 +149,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%'
+    implementation 'org.jetbrains.kotlinx:dataframe-openapi-generator:%dataFrameVersion%'
 }
 ```
 
