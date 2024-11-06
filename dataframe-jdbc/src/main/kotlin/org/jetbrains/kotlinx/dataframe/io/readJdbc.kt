@@ -113,7 +113,8 @@ public data class DbConnectionConfig(val url: String, val user: String = "", val
  * @param [tableName] the name of the table to read data from.
  * @param [limit] the maximum number of rows to retrieve from the table.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the DataFrame containing the data from the SQL table.
  */
 public fun DataFrame.Companion.readSqlTable(
@@ -135,7 +136,8 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [tableName] the name of the table to read data from.
  * @param [limit] the maximum number of rows to retrieve from the table.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [connection].
  * @return the DataFrame containing the data from the SQL table.
  *
  * @see DriverManager.getConnection
@@ -176,7 +178,8 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DataFrame.Companion.readSqlQuery(
@@ -201,7 +204,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [sqlQuery] the SQL query to execute.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [connection].
  * @return the DataFrame containing the result of the SQL query.
  *
  * @see DriverManager.getConnection
@@ -241,7 +245,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [DbConnectionConfig].
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DbConnectionConfig.readDataFrame(
@@ -292,7 +297,8 @@ private fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
  * It should not contain `;` symbol.
  * @param [limit] the maximum number of rows to retrieve from the result of the SQL query execution.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [Connection].
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun Connection.readDataFrame(
@@ -402,7 +408,8 @@ public fun ResultSet.readDataFrame(
  * that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [resultSet].
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
@@ -434,7 +441,8 @@ public fun DataFrame.Companion.readResultSet(
  * that the [ResultSet] belongs to.
  * @param [limit] the maximum number of rows to read from the [ResultSet][java.sql.ResultSet].
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [ResultSet].
  * @return the DataFrame generated from the [ResultSet][java.sql.ResultSet] data.
  *
  * [java.sql.ResultSet]: https://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html
@@ -454,7 +462,8 @@ public fun ResultSet.readDataFrame(
  * @param [limit] the maximum number of rows to read from each table.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dbConfig].
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  */
 public fun DataFrame.Companion.readAllSqlTables(
@@ -477,7 +486,8 @@ public fun DataFrame.Companion.readAllSqlTables(
  * @param [limit] the maximum number of rows to read from each table.
  * @param [catalogue] a name of the catalog from which tables will be retrieved. A null value retrieves tables from all catalogs.
  * @param [inferNullability] indicates how the column nullability should be inferred.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [connection].
  * @return a map of [String] to [AnyFrame] objects representing the non-system tables from the database.
  *
  * @see DriverManager.getConnection
@@ -526,10 +536,15 @@ public fun DataFrame.Companion.readAllSqlTables(
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the [DataFrameSchema] object representing the schema of the SQL table
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String, dbType: DbType? = null,): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(
+    dbConfig: DbConnectionConfig,
+    tableName: String,
+    dbType: DbType? = null,
+): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlTable(connection, tableName, dbType)
     }
@@ -540,12 +555,17 @@ public fun DataFrame.Companion.getSchemaForSqlTable(dbConfig: DbConnectionConfig
  *
  * @param [connection] the database connection.
  * @param [tableName] the name of the SQL table for which to retrieve the schema.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [connection].
  * @return the schema of the SQL table as a [DataFrameSchema] object.
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tableName: String, dbType: DbType? = null,): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlTable(
+    connection: Connection,
+    tableName: String,
+    dbType: DbType? = null,
+): DataFrameSchema {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     val sqlQuery = "SELECT * FROM $tableName"
@@ -564,10 +584,15 @@ public fun DataFrame.Companion.getSchemaForSqlTable(connection: Connection, tabl
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dbConfig].
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, dbType: DbType? = null,): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlQuery(
+    dbConfig: DbConnectionConfig,
+    sqlQuery: String,
+    dbType: DbType? = null,
+): DataFrameSchema {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForSqlQuery(connection, sqlQuery, dbType)
     }
@@ -578,12 +603,17 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(dbConfig: DbConnectionConfig
  *
  * @param [connection] the database connection.
  * @param [sqlQuery] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [connection].
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  *
  * @see DriverManager.getConnection
  */
-public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQuery: String, dbType: DbType? = null,): DataFrameSchema {
+public fun DataFrame.Companion.getSchemaForSqlQuery(
+    connection: Connection,
+    sqlQuery: String,
+    dbType: DbType? = null,
+): DataFrameSchema {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
     connection.createStatement().use { st ->
@@ -598,10 +628,14 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(connection: Connection, sqlQ
  * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
  *
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [DbConnectionConfig].
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null,): DataFrameSchema =
+public fun DbConnectionConfig.getDataFrameSchema(
+    sqlQueryOrTableName: String,
+    dbType: DbType? = null,
+): DataFrameSchema =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
 
@@ -616,10 +650,11 @@ public fun DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String, db
  * Retrieves the schema of an SQL query result or the SQL table using the provided database configuration.
  *
  * @param [sqlQueryOrTableName] the SQL query to execute and retrieve the schema from.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [Connection].
  * @return the schema of the SQL query as a [DataFrameSchema] object.
  */
-public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null,): DataFrameSchema =
+public fun Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType? = null): DataFrameSchema =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.getSchemaForSqlQuery(this, sqlQueryOrTableName, dbType)
 
@@ -658,10 +693,14 @@ public fun ResultSet.getDataFrameSchema(dbType: DbType): DataFrameSchema = DataF
  * Retrieves the schemas of all non-system tables in the database using the provided database configuration.
  *
  * @param [dbConfig] the database configuration to connect to the database, including URL, user, and password.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [dbConfig].
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DbConnectionConfig, dbType: DbType? = null,): Map<String, DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(
+    dbConfig: DbConnectionConfig,
+    dbType: DbType? = null,
+): Map<String, DataFrameSchema> {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
         return getSchemaForAllSqlTables(connection, dbType)
     }
@@ -671,10 +710,14 @@ public fun DataFrame.Companion.getSchemaForAllSqlTables(dbConfig: DbConnectionCo
  * Retrieves the schemas of all non-system tables in the database using the provided database connection.
  *
  * @param [connection] the database connection.
- * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`.
+ * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
+ * in that case the [dbType] will be recognized from the [connection].
  * @return a map of [String, DataFrameSchema] objects representing the table name and its schema for each non-system table.
  */
-public fun DataFrame.Companion.getSchemaForAllSqlTables(connection: Connection, dbType: DbType? = null,): Map<String, DataFrameSchema> {
+public fun DataFrame.Companion.getSchemaForAllSqlTables(
+    connection: Connection,
+    dbType: DbType? = null,
+): Map<String, DataFrameSchema> {
     val metaData = connection.metaData
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 

@@ -974,7 +974,7 @@ class JdbcTest {
     }
 
     // helper object created for API testing purposes
-    object CustomDB: H2(MySql)
+    object CustomDB : H2(MySql)
 
     @Test
     fun `read from table from custom database`() {
