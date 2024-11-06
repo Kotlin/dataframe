@@ -154,10 +154,10 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 /**
  * ## As ColumnGroup
  *
- * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C]`>>` from [this][this].
+ * Creates a [ColumnAccessor][ColumnAccessor]`<`[DataRow][DataRow]`<`[C][C\]`>>` from [this][this\].
  * This is especially useful when you want to use [ColumnGroup] functions in the [ColumnsSelectionDsl] but your column
  * type is not recognized as a [ColumnGroup].
- * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
+ * If you're not sure whether a column is recognized as [ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup\]
  * and it will return the same type if it is already a [ColumnGroup].
  *
  * NOTE: This does not check whether the column is actually a [ColumnGroup] or not. It just casts it.
@@ -166,49 +166,17 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
  *
  * `df.`[select][DataFrame.select]` { `[first][ColumnsSelectionDsl.first]`().`[asColumnGroup][SingleColumn.asColumnGroup]`().`[firstCol][ColumnsSelectionDsl.firstCol]`() }`
  *
- * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C]`>>`.
- * @param [C] The type of the (group) column.
- * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C]`>>`.
+ * @receiver The column reference to cast to a [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
+ * @param [C\] The type of the (group) column.
+ * @return A [SingleColumn]`<`[DataRow][DataRow]`<`[C][C\]`>>`.
  */
 private interface SingleColumnAsColumnGroupDocs
 
-/** ## As ColumnGroup
- *
- * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
- * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
- * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
- * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
- *
- * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
- *
- * #### For example:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
- *
- * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
- * @param [C] The type of the (group) column.
- * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+/** @include [SingleColumnAsColumnGroupDocs] */
 @Suppress("UNCHECKED_CAST")
 public fun <C> SingleColumn<C>.asColumnGroup(): SingleColumn<DataRow<C>> = this as SingleColumn<DataRow<C>>
 
-/** ## As ColumnGroup
- *
- * Creates a [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>` from [this][this].
- * This is especially useful when you want to use [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] functions in the [ColumnsSelectionDsl][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] but your column
- * type is not recognized as a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
- * If you're not sure whether a column is recognized as [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not, you can always call [asColumnGroup][asColumnGroup]
- * and it will return the same type if it is already a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup].
- *
- * NOTE: This does not check whether the column is actually a [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] or not. It just casts it.
- *
- * #### For example:
- *
- * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[first][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`().`[asColumnGroup][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.asColumnGroup]`().`[firstCol][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`() }`
- *
- * @receiver The column reference to cast to a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`.
- * @param [C] The type of the (group) column.
- * @return A [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn]`<`[DataRow][org.jetbrains.kotlinx.dataframe.DataRow]`<`[C][C]`>>`. */
+/** @include [SingleColumnAsColumnGroupDocs] */
 @JvmName("asColumnGroupDataRow")
 public fun <C> SingleColumn<DataRow<C>>.asColumnGroup(): SingleColumn<DataRow<C>> = this
 
@@ -265,24 +233,34 @@ public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): V
 public enum class Infer {
 
     /**
-     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type].
+     * Use `reified` type argument of an inline [DataFrame] operation as [DataColumn.type].
+     *
+     * This is the most efficient but least safe option.
      */
     None,
 
     /**
-     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type], but compute [DataColumn.hasNulls] by checking column [DataColumn.values] for an actual presence of *null* values.
+     * Use `reified` type argument of an inline [DataFrame] operation as [DataColumn.type],
+     * but compute [DataColumn.hasNulls] by checking column [DataColumn.values] for an actual presence of `null` values.
      */
     Nulls,
 
     /**
-     * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using optionally provided base type as an upper bound.
+     * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using an optionally provided
+     * base type as an upper bound.
+     *
+     * This is the least efficient but safest option.
+     *
+     * It's useful, for instance,
+     * if you have a column of type `Any?` and want its schema type to be inferred based on the actual values.
+     * In many cases, letting the library infer by `reified` types is enough and more efficient.
      */
     Type,
 
     ;
 
     /**
-     * @param [infer] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
+     * @param [infer\] [An enum][Infer] that indicates how [DataColumn.type] should be calculated.
      * Either [None], [Nulls], or [Type].
      */
     internal interface ParamDoc
@@ -336,19 +314,19 @@ public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: 
 
 public inline fun <reified T> Iterable<T>.toColumn(name: String = "", infer: Infer = Infer.Nulls): DataColumn<T> =
     if (infer == Infer.Type) {
-        DataColumn.createWithTypeInference(name, asList())
+        DataColumn.createByInference(name, asList())
     } else {
-        DataColumn.create(name, asList(), typeOf<T>(), infer)
+        DataColumn.createByType(name, asList(), typeOf<T>(), infer)
     }.forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
-    DataColumn.create(name, asList() as List<T>, typeOf<T>()).forceResolve()
+    DataColumn.createByType(name, asList() as List<T>, typeOf<T>()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
-    DataColumn.create(ref.name(), asList()).forceResolve()
+    DataColumn.createByType(ref.name(), asList()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
-    DataColumn.create(property.columnName, asList()).forceResolve()
+    DataColumn.createByType(property.columnName, asList()).forceResolve()
 
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
