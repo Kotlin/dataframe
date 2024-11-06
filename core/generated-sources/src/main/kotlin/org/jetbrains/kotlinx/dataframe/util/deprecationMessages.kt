@@ -5,11 +5,14 @@ package org.jetbrains.kotlinx.dataframe.util
  * After each release, all messages should be reviewed and updated.
  * Level.WARNING -> Level.ERROR
  * Level.ERROR -> Remove
+ *
+ * Level.HIDDEN can remain as is but needs to be removed together with other deprecations in
+ * the same cycle.
  */
 
 // region WARNING in 0.15, ERROR in 0.16
 
-private const val MESSAGE_0_16 = "Will be removed in 0.16."
+private const val MESSAGE_0_16 = "Will be ERROR in 0.16."
 
 internal const val DF_READ_NO_CSV = "This function is deprecated and should be replaced with `readCSV`. $MESSAGE_0_16"
 internal const val DF_READ_NO_CSV_REPLACE =
@@ -44,11 +47,20 @@ internal const val PARSER_OPTIONS = "This constructor is only here for binary co
 
 internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_0_16"
 
+internal const val SEQUENCE_FLOAT_MEAN =
+    "`Sequence<Float>.mean()` is removed since it's already covered by other overloads. $MESSAGE_0_16"
+
+internal const val INTERNAL_MEAN =
+    "`Iterable.mean(skipNA)` is removed since it's already covered by other overloads. $MESSAGE_0_16"
+
+internal const val MEAN =
+    "`Iterable.mean()` is removed from the public API because it's outside the scope of DataFrame. You can still call `.mean()` on a column. For most types there's already `.average()` in stdlib. $MESSAGE_0_16"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
 
-private const val MESSAGE_0_17 = "Will be removed in 0.17."
+private const val MESSAGE_0_17 = "Will be ERROR in 0.17."
 
 // endregion
 

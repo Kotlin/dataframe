@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.math.cumSum
 import org.jetbrains.kotlinx.dataframe.math.defaultCumSumSkipNA
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -22,15 +23,30 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
         typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
         typeOf<Int>() -> cast<Int>().cumSum().cast()
         typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
+        typeOf<Byte>() -> cast<Byte>().cumSum().cast()
+        typeOf<Byte?>() -> cast<Byte?>().cumSum(skipNA).cast()
+        typeOf<Short>() -> cast<Short>().cumSum().cast()
+        typeOf<Short?>() -> cast<Short?>().cumSum(skipNA).cast()
         typeOf<Long>() -> cast<Long>().cumSum().cast()
         typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
+        typeOf<BigInteger>() -> cast<BigInteger>().cumSum().cast()
+        typeOf<BigInteger?>() -> cast<BigInteger?>().cumSum(skipNA).cast()
         typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
         typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
         typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
         else -> error("Cumsum for type ${type()} is not supported")
     }
 
-private val supportedClasses = setOf(Double::class, Float::class, Int::class, Long::class, BigDecimal::class)
+private val supportedClasses = setOf(
+    Double::class,
+    Float::class,
+    Int::class,
+    Byte::class,
+    Short::class,
+    Long::class,
+    BigInteger::class,
+    BigDecimal::class,
+)
 
 // endregion
 
