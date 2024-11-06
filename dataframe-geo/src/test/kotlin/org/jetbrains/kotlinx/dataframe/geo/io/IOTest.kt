@@ -17,8 +17,10 @@ class IOTest {
         val point1 = geometryFactory.createPoint(Coordinate(30.5, 50.5))
         val point2 = geometryFactory.createPoint(Coordinate(31.5, 51.5))
         dataFrameOf("name", "geometry")(
-            "Point 1", point1,
-            "Point 2", point2
+            "Point 1",
+            point1,
+            "Point 2",
+            point2,
         )
     }
     private val simplePointsGeoDf = simplePointsDf.toGeo(GeoDataFrame.DEFAULT_CRS)

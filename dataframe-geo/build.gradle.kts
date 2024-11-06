@@ -6,7 +6,7 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(jupyter.api)
-        //alias(ktlint)
+        alias(ktlint)
     }
 }
 
@@ -66,7 +66,4 @@ tasks.processJupyterApiResources {
 
 tasks.test {
     useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(11)
 }

@@ -9,11 +9,9 @@ import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toSimpleFeatureCollection
 import java.io.File
 
-
 fun GeoDataFrame<*>.writeGeoJson(path: String): Unit = writeGeoJson(File(path))
 
 fun GeoDataFrame<*>.writeGeoJson(file: File) {
-
     // TODO: adds ids that breaks order of reading
     val featureJSON = FeatureJSON()
     file.outputStream().use { outputStream ->
@@ -24,7 +22,6 @@ fun GeoDataFrame<*>.writeGeoJson(file: File) {
 fun GeoDataFrame<*>.writeShapefile(directoryPath: String): Unit = writeShapefile(File(directoryPath))
 
 fun GeoDataFrame<*>.writeShapefile(directory: File) {
-
     if (!directory.exists()) {
         directory.mkdirs()
     }
@@ -34,7 +31,6 @@ fun GeoDataFrame<*>.writeShapefile(directory: File) {
 
     val creationParams = mutableMapOf<String, java.io.Serializable>()
     creationParams["url"] = file.toURI().toURL()
-
 
     val factory = FileDataStoreFinder.getDataStoreFactory("shp")
     val dataStore = factory.createNewDataStore(creationParams)
@@ -58,5 +54,4 @@ fun GeoDataFrame<*>.writeShapefile(directory: File) {
     } finally {
         transaction.close()
     }
-
 }

@@ -22,14 +22,17 @@ interface WithMultiPolygon : WithGeometry {
     override val geometry: MultiPolygon
 }
 
+@Suppress("UNCHECKED_CAST")
 @get:JvmName("geometry")
-val <T : WithGeometry> ColumnsContainer<T>.geometry: DataColumn<Geometry>
+val ColumnsContainer<WithGeometry>.geometry: DataColumn<Geometry>
     get() = get("geometry") as DataColumn<Geometry>
 
+@Suppress("UNCHECKED_CAST")
 @get:JvmName("geometryPolygon")
-val <T : WithPolygon> ColumnsContainer<T>.geometry: DataColumn<Polygon>
+val ColumnsContainer<WithPolygon>.geometry: DataColumn<Polygon>
     get() = get("geometry") as DataColumn<Polygon>
 
+@Suppress("UNCHECKED_CAST")
 @get:JvmName("geometryMultiPolygon")
-val <T : WithMultiPolygon> ColumnsContainer<T>.geometry: DataColumn<MultiPolygon>
+val ColumnsContainer<WithMultiPolygon>.geometry: DataColumn<MultiPolygon>
     get() = get("geometry") as DataColumn<MultiPolygon>

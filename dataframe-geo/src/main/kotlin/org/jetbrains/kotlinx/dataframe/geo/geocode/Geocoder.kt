@@ -21,25 +21,27 @@ import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.io.geojson.GeoJsonReader
 
-
 object Geocoder {
 
     private val url = "https://geo2.datalore.jetbrains.com/map_data/geocoding"
 
-    private fun countryQuery(country: String) = """ {
-    "region_query_names" : [ "$country" ],
-    "region_query_countries" : null,
-    "region_query_states" : null,
-    "region_query_counties" : null,
-    "ambiguity_resolver" : {
-      "ambiguity_resolver_ignoring_strategy" : null,
-      "ambiguity_resolver_box" : null,
-      "ambiguity_resolver_closest_coord" : null
-    }
-    }
-    """.trimIndent()
+    private fun countryQuery(country: String) =
+        """
+         {
+        "region_query_names" : [ "$country" ],
+        "region_query_countries" : null,
+        "region_query_states" : null,
+        "region_query_counties" : null,
+        "ambiguity_resolver" : {
+          "ambiguity_resolver_ignoring_strategy" : null,
+          "ambiguity_resolver_box" : null,
+          "ambiguity_resolver_closest_coord" : null
+        }
+        }
+        """.trimIndent()
 
-    private fun geocodeQuery(countries: List<String>) = """
+    private fun geocodeQuery(countries: List<String>) =
+        """
 {
   "version" : 3,
   "mode" : "by_geocoding",
@@ -55,29 +57,31 @@ object Geocoder {
   "namesake_example_limit" : 10,
   "allow_ambiguous" : false
 }
-""".trimIndent()
+        """.trimIndent()
 
-    private fun idsQuery(ids: List<String>) = """
-    {"version": 3, 
-    "mode": "by_id", 
-    "feature_options": ["boundary"], 
-    "resolution": 5, 
-    "view_box": null, 
-    "fetched_ids": null, 
-    "ids": [${ids.joinToString(", ") { "\"" + it + "\"" }}]}
-    """.trimIndent()
+    private fun idsQuery(ids: List<String>) =
+        """
+        {"version": 3, 
+        "mode": "by_id", 
+        "feature_options": ["boundary"], 
+        "resolution": 5, 
+        "view_box": null, 
+        "fetched_ids": null, 
+        "ids": [${ids.joinToString(", ") { "\"" + it + "\"" }}]}
+        """.trimIndent()
 
     private val client = HttpClient(CIO) {
         install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-            })
+            json(
+                Json {
+                    prettyPrint = true
+                    isLenient = true
+                },
+            )
         }
     }
 
     fun geocodeCountries(countries: List<String>): GeoDataFrame<*> {
-
         val query = geocodeQuery(countries)
         val foundNames = mutableListOf<String>()
         val geometries = mutableListOf<Geometry>()
@@ -104,13 +108,14 @@ object Geocoder {
             }.bodyAsText()
 
             val geoJsonReader = GeoJsonReader(GeometryFactory())
-            Json.parseToJsonElement(responseStringGeometries).jsonObject["data"]!!.jsonObject["answers"]!!.jsonArray.forEach {
+            Json.parseToJsonElement(
+                responseStringGeometries,
+            ).jsonObject["data"]!!.jsonObject["answers"]!!.jsonArray.forEach {
                 it.jsonObject["features"]!!.jsonArray.single().jsonObject.also {
                     val boundary = it["boundary"]!!.jsonPrimitive.content
                     geometries.add(geoJsonReader.read(boundary))
                 }
             }
-
         }
         return dataFrameOf(
             "country" to countries,

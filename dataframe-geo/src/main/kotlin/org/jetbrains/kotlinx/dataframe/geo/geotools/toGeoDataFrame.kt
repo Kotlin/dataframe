@@ -13,8 +13,17 @@ import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.WithGeometry
 import org.locationtech.jts.geom.Geometry
 
+/**
+ * Converts this SimpleFeatureCollection to a GeoDataFrame.
+ *
+ * This method transforms the SimpleFeatureCollection into a GeoDataFrame, extracting both
+ * spatial (geometry) and non-spatial attributes, and associates them with an optional
+ * Coordinate Reference System (CRS) if available.
+ *
+ * @return a GeoDataFrame containing the data from this SimpleFeatureCollection, including
+ *         geometries and other attributes, and an associated CRS if present.
+ */
 fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
-
     require(schema is SimpleFeatureType) {
         "GeoTools: SimpleFeatureType expected but was: ${schema::class.simpleName}"
     }
@@ -52,5 +61,6 @@ fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
 
     val geometryColumn = DataColumn.create("geometry", geometries, Infer.Type)
 
+    @Suppress("UNCHECKED_CAST")
     return GeoDataFrame((data.toDataFrame() + geometryColumn) as DataFrame<WithGeometry>, crs)
 }

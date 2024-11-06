@@ -2,7 +2,6 @@
 
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.WithGeometry
 import org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygon
@@ -43,19 +42,17 @@ internal class IntegrationGeo : JupyterIntegration() {
             // TODO rewrite
             val generatedDf = execute(
                 codeWithConverter = replCodeGeneratorImpl.process(geo.df, kProperty),
-                "(${kProperty.name}.df as DataFrame<*>)"
+                "(${kProperty.name}.df as DataFrame<*>)",
             )
             val name = execute("GeoDataFrame($generatedDf, ${kProperty.name}.crs)").name
             name
         }
 
-
         addTypeConverter(object : FieldHandler {
             override val execution: FieldHandlerExecution<*> = execution
 
-            override fun accepts(value: Any?, property: KProperty<*>): Boolean {
-                return property.returnType.isSubtypeOf(typeOf<GeoDataFrame<*>>())
-            }
+            override fun accepts(value: Any?, property: KProperty<*>): Boolean =
+                property.returnType.isSubtypeOf(typeOf<GeoDataFrame<*>>())
         })
     }
 }

@@ -11,9 +11,16 @@ import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.locationtech.jts.geom.Geometry
 
+/**
+ * Converts the `GeoDataFrame` to a `SimpleFeatureCollection`.
+ *
+ * @param name Optional name for the `SimpleFeatureCollection`. Defaults to "geodata" if not specified.
+ * @param singleGeometryType Whether to enforce a single geometry type within the collection. Defaults to false.
+ * @return A `SimpleFeatureCollection` representing the `GeoDataFrame`.
+ */
 fun GeoDataFrame<*>.toSimpleFeatureCollection(
     name: String? = null,
-    singleGeometryType: Boolean = false
+    singleGeometryType: Boolean = false,
 ): SimpleFeatureCollection {
     val typeBuilder = SimpleFeatureTypeBuilder()
     typeBuilder.name = name ?: "geodata"
@@ -21,7 +28,9 @@ fun GeoDataFrame<*>.toSimpleFeatureCollection(
     val geometryClass = if (singleGeometryType) {
         // todo singleOrNull() ?: error()
         df["geometry"].map { it!!::class.java }.distinct().single()
-    } else Geometry::class.java
+    } else {
+        Geometry::class.java
+    }
     typeBuilder.add("the_geom", geometryClass)
     df.columnNames().filter { it != "geometry" }.forEach { colName ->
         typeBuilder.add(colName, String::class.java)

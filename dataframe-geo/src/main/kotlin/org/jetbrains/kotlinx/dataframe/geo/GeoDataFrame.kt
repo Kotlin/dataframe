@@ -17,14 +17,12 @@ import org.jetbrains.kotlinx.dataframe.api.with
  */
 class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateReferenceSystem?) {
     /**
-     * Updates the `GeoDataFrame` using a specified transformation block on the underlying DataFrame.
+     * Creates a new `GeoDataFrame` using a specified transformation block on the underlying DataFrame.
      *
      * @param updateBlock The block defining the transformations to be applied to the DataFrame.
      * @return A new `GeoDataFrame` instance with updated data and the same CRS.
      */
-    fun update(updateBlock: DataFrame<T>.() -> DataFrame<T>): GeoDataFrame<T> {
-        return GeoDataFrame(df.updateBlock(), crs)
-    }
+    fun update(updateBlock: DataFrame<T>.() -> DataFrame<T>): GeoDataFrame<T> = GeoDataFrame(df.updateBlock(), crs)
 
     /**
      * Transforms the geometries to a specified Coordinate Reference System (CRS).
@@ -41,11 +39,11 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
         }
         if (targetCrs == this.crs) return this
         // Use WGS 84 by default TODO
-        val sourceCRS: CoordinateReferenceSystem = this.crs ?: DEFAULT_CRS
+        val sourceCRS: CoordinateReferenceSystem = this.crs
         val transform = CRS.findMathTransform(sourceCRS, targetCrs, true)
         return GeoDataFrame(
             df.update { geometry }.with { JTS.transform(it, transform) },
-            targetCrs
+            targetCrs,
         )
     }
 
@@ -53,12 +51,17 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
         if (this === other) return true
         if (other !is GeoDataFrame<*>) return false
 
-        return df == other.df && when {
-            crs == null && other.crs == null -> true
-            crs == null || other.crs == null -> false
-            else -> CRS.equalsIgnoreMetadata(crs, other.crs)
-        }
+        return df == other.df &&
+            when {
+                crs == null && other.crs == null -> true
+                crs == null || other.crs == null -> false
+                else -> CRS.equalsIgnoreMetadata(crs, other.crs)
+            }
     }
+
+    override fun toString(): String = super.toString()
+
+    override fun hashCode(): Int = super.hashCode()
 
     companion object {
         val DEFAULT_CRS = CRS.decode("EPSG:4326", true)
