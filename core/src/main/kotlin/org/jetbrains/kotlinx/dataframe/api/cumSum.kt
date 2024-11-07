@@ -18,22 +18,33 @@ import kotlin.reflect.typeOf
 public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> =
     when (type()) {
         typeOf<Double>() -> cast<Double>().cumSum(skipNA).cast()
+
         typeOf<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
+
         typeOf<Float>() -> cast<Float>().cumSum(skipNA).cast()
+
         typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
-        typeOf<Int>() -> cast<Int>().cumSum().cast()
-        typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
-        typeOf<Byte>() -> cast<Byte>().cumSum().cast()
-        typeOf<Byte?>() -> cast<Byte?>().cumSum(skipNA).cast()
-        typeOf<Short>() -> cast<Short>().cumSum().cast()
-        typeOf<Short?>() -> cast<Short?>().cumSum(skipNA).cast()
+
+        // careful, cast to Int can occur! TODO
+        typeOf<Int>(), typeOf<Byte>(), typeOf<Short>() -> cast<Int>().cumSum().cast()
+
+        // careful, cast to Int can occur! TODO
+        typeOf<Int?>(), typeOf<Byte?>(), typeOf<Short?>() -> cast<Int?>().cumSum(skipNA).cast()
+
         typeOf<Long>() -> cast<Long>().cumSum().cast()
+
         typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
+
         typeOf<BigInteger>() -> cast<BigInteger>().cumSum().cast()
+
         typeOf<BigInteger?>() -> cast<BigInteger?>().cumSum(skipNA).cast()
+
         typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
+
         typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
+
         typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
+
         else -> error("Cumsum for type ${type()} is not supported")
     }
 

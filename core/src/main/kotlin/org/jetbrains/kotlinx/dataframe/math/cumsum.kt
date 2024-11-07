@@ -89,66 +89,6 @@ internal fun DataColumn<Int?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Dat
     }
 }
 
-@JvmName("byteCumsum")
-internal fun DataColumn<Byte>.cumSum(): DataColumn<Byte> {
-    var sum = 0.toByte()
-    return map {
-        sum = (sum + it).toByte()
-        sum
-    }
-}
-
-@JvmName("cumsumByteNullable")
-internal fun DataColumn<Byte?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Byte?> {
-    var sum = 0.toByte()
-    var fillNull = false
-    return map {
-        when {
-            it == null -> {
-                if (!skipNA) fillNull = true
-                null
-            }
-
-            fillNull -> null
-
-            else -> {
-                sum = (sum + it).toByte()
-                sum
-            }
-        }
-    }
-}
-
-@JvmName("shortCumsum")
-internal fun DataColumn<Short>.cumSum(): DataColumn<Short> {
-    var sum = 0.toShort()
-    return map {
-        sum = (sum + it).toShort()
-        sum
-    }
-}
-
-@JvmName("cumsumShortNullable")
-internal fun DataColumn<Short?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Short?> {
-    var sum = 0.toShort()
-    var fillNull = false
-    return map {
-        when {
-            it == null -> {
-                if (!skipNA) fillNull = true
-                null
-            }
-
-            fillNull -> null
-
-            else -> {
-                sum = (sum + it).toShort()
-                sum
-            }
-        }
-    }
-}
-
 @JvmName("longCumsum")
 internal fun DataColumn<Long>.cumSum(): DataColumn<Long> {
     var sum = 0L
