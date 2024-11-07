@@ -5,13 +5,16 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnDescription
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.isBigNumber
 import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.medianOrNull
@@ -25,7 +28,9 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.isBigNumber
 import org.jetbrains.kotlinx.dataframe.impl.renderType
+import org.jetbrains.kotlinx.dataframe.impl.toBigDecimal
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
@@ -78,12 +83,54 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }
             ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
         }
-        if (hasComparable) {
-            ColumnDescription::min from inferType { if (it.isComparable()) it.asComparable().minOrNull() else null }
-            ColumnDescription::median from inferType {
-                if (it.isComparable()) it.asComparable().medianOrNull() else null
+        if (hasComparable || hasNumeric) {
+            ColumnDescription::min from inferType {
+                when {
+                    it.isComparable() ->
+                        it.asComparable().minOrNull()
+
+                    // Found incomparable number types, convert all to Double or BigDecimal first
+                    it.isNumber() ->
+                        if (it.any { it?.isBigNumber() == true }) {
+                            it.map { (it as Number?)?.toBigDecimal() }.minOrNull()
+                        } else {
+                            it.map { (it as Number?)?.toDouble() }.minOrNull()
+                        }
+
+                    else -> null
+                }
             }
-            ColumnDescription::max from inferType { if (it.isComparable()) it.asComparable().maxOrNull() else null }
+            ColumnDescription::median from inferType {
+                when {
+                    it.isComparable() ->
+                        it.asComparable().medianOrNull()
+
+                    // Found incomparable number types, convert all to Double or BigDecimal first
+                    it.isNumber() ->
+                        if (it.any { it?.isBigNumber() == true }) {
+                            it.map { (it as Number?)?.toBigDecimal() }.medianOrNull()
+                        } else {
+                            it.map { (it as Number?)?.toDouble() }.medianOrNull()
+                        }
+
+                    else -> null
+                }
+            }
+            ColumnDescription::max from inferType {
+                when {
+                    it.isComparable() -> it.asComparable().maxOrNull()
+
+                    // Found incomparable number types, convert all to Double or BigDecimal first
+                    it.isNumber() ->
+                        if (it.any { it?.isBigNumber() == true }) {
+                            it.map { (it as Number?)?.toBigDecimal() }.maxOrNull()
+                        } else {
+                            it.map { (it as Number?)?.toDouble() }.maxOrNull()
+                        }
+
+                    else -> null
+                }
+            }
         }
     }
     df = df.add(ColumnDescription::freq) {

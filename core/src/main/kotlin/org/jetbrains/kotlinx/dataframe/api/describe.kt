@@ -16,7 +16,7 @@ import kotlin.reflect.KType
 public interface ColumnDescription {
     public val name: String
     public val path: ColumnPath
-    public val type: KType
+    public val type: String
     public val count: Int
     public val unique: Int
     public val nulls: Int
