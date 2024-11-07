@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.projectTo
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KClass
@@ -43,6 +45,8 @@ public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
+
+public fun AnyCol.isBigNumber(): Boolean = isSubtypeOf<BigInteger?>() || isSubtypeOf<BigDecimal?>()
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
