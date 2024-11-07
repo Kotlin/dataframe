@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -138,13 +139,13 @@ internal var sessionId = (Random().nextInt() % 128) shl 24
 internal fun nextTableId() = sessionId + (tableInSessionId++)
 
 internal fun AnyFrame.toHtmlData(
-    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    defaultConfiguration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer,
 ): DataFrameHtmlData {
     val scripts = mutableListOf<String>()
-    val queue = LinkedList<Pair<AnyFrame, Int>>()
+    val queue = LinkedList<RenderingQueueItem>()
 
-    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int?): ColumnDataForJs {
+    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int?, configuration: DisplayConfiguration): ColumnDataForJs {
         val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
         val format = if (scale > 0) {
@@ -155,13 +156,15 @@ internal fun AnyFrame.toHtmlData(
         val renderConfig = configuration.copy(decimalFormat = format)
         val contents = values.map {
             val value = it[col]
-            if (value is AnyFrame) {
-                if (value.isEmpty()) {
+            val content = dataFrameLikeOrNull(value)
+            if (content != null) {
+                val df = content.df()
+                if (df.isEmpty()) {
                     HtmlContent("", null)
                 } else {
                     val id = nextTableId()
-                    queue.add(value to id)
-                    DataFrameReference(id, value.size)
+                    queue.add(RenderingQueueItem(df, id, content.configuration(defaultConfiguration)))
+                    DataFrameReference(id, df.size)
                 }
             } else {
                 val html =
@@ -174,20 +177,25 @@ internal fun AnyFrame.toHtmlData(
                 HtmlContent(html, style)
             }
         }
+        val nested = if (col is ColumnGroup<*>) {
+            col.columns().map { col.columnToJs(it, rowsLimit, configuration) }
+        } else {
+            emptyList()
+        }
         return ColumnDataForJs(
             column = col,
-            nested = if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it, rowsLimit) } else emptyList(),
+            nested = nested,
             rightAlign = col.isSubtypeOf<Number?>(),
             values = contents,
         )
     }
 
     val rootId = nextTableId()
-    queue.add(this to rootId)
+    queue.add(RenderingQueueItem(this, rootId, defaultConfiguration))
     while (!queue.isEmpty()) {
-        val (nextDf, nextId) = queue.pop()
+        val (nextDf, nextId, configuration) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
-        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit) }
+        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit, configuration) }
         val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
     }
@@ -195,6 +203,36 @@ internal fun AnyFrame.toHtmlData(
     val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
     return DataFrameHtmlData(style = "", body = body, script = script)
 }
+
+private interface DataFrameLike {
+    fun configuration(default: DisplayConfiguration): DisplayConfiguration
+
+    fun df(): AnyFrame
+}
+
+private fun dataFrameLikeOrNull(value: Any?): DataFrameLike? =
+    when (value) {
+        is AnyFrame -> {
+            object : DataFrameLike {
+                override fun configuration(default: DisplayConfiguration) = default
+
+                override fun df(): AnyFrame = value
+            }
+        }
+
+        is FormattedFrame<*> -> {
+            object : DataFrameLike {
+                override fun configuration(default: DisplayConfiguration): DisplayConfiguration =
+                    value.getDisplayConfiguration(default)
+
+                override fun df(): AnyFrame = value.df
+            }
+        }
+
+        else -> null
+    }
+
+private data class RenderingQueueItem(val df: DataFrame<*>, val id: Int, val configuration: DisplayConfiguration)
 
 private const val DEFAULT_HTML_IMG_SIZE = 100
 
