@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -20,6 +21,30 @@ class CumsumTests {
     fun `int column`() {
         col.cumSum().toList() shouldBe expected
         col.cumSum(skipNA = false).toList() shouldBe expectedNoSkip
+    }
+
+    @Test
+    fun `short column`() {
+        col.map { it?.toShort() }.cumSum().toList() shouldBe expected.map { it?.toShort() }
+        col.map { it?.toShort() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toShort() }
+    }
+
+    @Test
+    fun `byte column`() {
+        col.map { it?.toByte() }.cumSum().toList() shouldBe expected.map { it?.toByte() }
+        col.map { it?.toByte() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toByte() }
+    }
+
+    @Test
+    fun `big int column`() {
+        col.map { it?.toBigInteger() }.cumSum().toList() shouldBe expected.map { it?.toBigInteger() }
+        col.map { it?.toBigInteger() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toBigInteger() }
+    }
+
+    @Test
+    fun `big decimal column`() {
+        col.map { it?.toBigDecimal() }.cumSum().toList() shouldBe expected.map { it?.toBigDecimal() }
+        col.map { it?.toBigDecimal() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toBigDecimal() }
     }
 
     @Test
