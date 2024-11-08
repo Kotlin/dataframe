@@ -60,7 +60,7 @@ so do familiarize yourself with the following guidelines.
 4. The contributor answers the comments or fixes the proposed PR.
 5. The reviewer marks the PR with the word "LGTM."
 6. The maintainer could suggest merging the `master` branch to the PR branch a few times due to changes in the `master` branch.
-7. If the PR influences generated code/samples, a bot will inform about this in the PR comments.
+7. If the PR influences generated code/samples, a bot will inform about this in the PR checks.
 8. The maintainer runs TeamCity builds (unit tests and examples as integration tests).
 9. TeamCity writes the result (passed or not passed) to the PR checks at the bottom of the proposed PR.
 10. If it is possible, maintainers share the details of the failed build with the contributor.

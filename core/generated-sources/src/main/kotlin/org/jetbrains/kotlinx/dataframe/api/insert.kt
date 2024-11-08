@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
@@ -49,19 +50,24 @@ public class InsertClause<T>(internal val df: DataFrame<T>, internal val column:
 
 // region under
 
+@Refine
 @Interpretable("Under0")
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
 
+@Refine
 @Interpretable("Under1")
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> =
     df.insertImpl(columnPath + column.name, column)
 
+@Refine
 @Interpretable("Under2")
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
 
+@Refine
 @Interpretable("Under3")
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
+@Refine
 @Interpretable("Under4")
 public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathOf(column))
 

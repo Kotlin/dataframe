@@ -7,15 +7,42 @@ package org.jetbrains.kotlinx.dataframe.util
  * Level.ERROR -> Remove
  */
 
-// region WARNING in 0.14, ERROR in 0.15
-
-private const val MESSAGE_0_15 = "Will be removed in 0.15."
-
-// endregion
-
 // region WARNING in 0.15, ERROR in 0.16
 
 private const val MESSAGE_0_16 = "Will be removed in 0.16."
+
+internal const val DF_READ_NO_CSV = "This function is deprecated and should be replaced with `readCSV`. $MESSAGE_0_16"
+internal const val DF_READ_NO_CSV_REPLACE =
+    "this.readCSV(fileOrUrl, delimiter, header, colTypes, skipLines, readLines, duplicate, charset)"
+
+internal const val CREATE_FRAME_COLUMN =
+    "Removed from public API as this can likely better be solved by `DataFrame.chunked()`. Replaced by internal df.chunkedImpl(). $MESSAGE_0_16"
+internal const val CREATE_FRAME_COLUMN_REPLACE = "df.chunkedImpl(startIndices, name)"
+internal const val CHUNKED_IMPL_IMPORT = "org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl"
+
+internal const val CREATE_WITH_TYPE_INFERENCE =
+    "This function is deprecated and should be replaced by `createByInference()`. $MESSAGE_0_16"
+internal const val CREATE_WITH_TYPE_INFERENCE_REPLACE =
+    "createByInference(name, values, TypeSuggestion.Infer, nullable)"
+internal const val CREATE_BY_INFERENCE_IMPORT = "org.jetbrains.kotlinx.dataframe.DataColumn.Companion.createByInference"
+internal const val TYPE_SUGGESTION_IMPORT = "org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion"
+
+internal const val CREATE = "This function is deprecated and should be replaced by `createByType()`. $MESSAGE_0_16"
+internal const val CREATE_REPLACE = "createByType(name, values, type, infer)"
+internal const val CREATE_INLINE_REPLACE = "createByType(name, values, infer)"
+internal const val CREATE_BY_TYPE_IMPORT = "org.jetbrains.kotlinx.dataframe.DataColumn.Companion.createByType"
+
+internal const val GUESS_VALUE_TYPE = "This function is just here for binary compatibility. $MESSAGE_0_16"
+
+internal const val CREATE_COLUMN = "This function is just here for binary compatibility. $MESSAGE_0_16"
+
+internal const val GUESS_COLUMN_TYPE = "This function is just here for binary compatibility. $MESSAGE_0_16"
+
+public const val DF_READ_EXCEL: String = "This function is just here for binary compatibility. $MESSAGE_0_16"
+
+internal const val PARSER_OPTIONS = "This constructor is only here for binary compatibility. $MESSAGE_0_16"
+
+internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_0_16"
 
 // endregion
 

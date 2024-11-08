@@ -5,6 +5,7 @@ plugins {
         alias(kover)
         alias(ktlint)
         alias(jupyter.api)
+        alias(binary.compatibility.validator)
     }
 }
 
@@ -27,7 +28,7 @@ dependencies {
     testImplementation(libs.h2db)
     testImplementation(libs.mssql)
     testImplementation(libs.junit)
-    testImplementation(libs.sl4j)
+    testImplementation(libs.sl4jsimple)
     testImplementation(libs.jts)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

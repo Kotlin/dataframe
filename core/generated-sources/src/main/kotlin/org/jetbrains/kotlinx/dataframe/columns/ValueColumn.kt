@@ -6,6 +6,8 @@ import kotlin.reflect.KProperty
 /**
  * Column that stores values.
  *
+ * Can be instantiated by [DataColumn.createValueColumn].
+ *
  * @param T - type of values
  */
 public interface ValueColumn<out T> : DataColumn<T> {

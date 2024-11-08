@@ -166,6 +166,8 @@ class JdbcTest {
         val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName)
         dataSchema.columns.size shouldBe 2
         dataSchema.columns["characterCol"]!!.type shouldBe typeOf<String?>()
+
+        connection.createStatement().execute("DROP TABLE EmptyTestTable")
     }
 
     @Test
@@ -299,6 +301,8 @@ class JdbcTest {
         schema.columns["realCol"]!!.type shouldBe typeOf<Float?>()
         schema.columns["doublePrecisionCol"]!!.type shouldBe typeOf<Double?>()
         schema.columns["decFloatCol"]!!.type shouldBe typeOf<BigDecimal?>()
+
+        connection.createStatement().execute("DROP TABLE $tableName")
     }
 
     @Test
@@ -441,7 +445,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val dataSchema1 = DataFrame.getSchemaForResultSet(rs, connection)
+                val dataSchema1 = DataFrame.getSchemaForResultSet(rs, H2(MySql))
                 dataSchema1.columns.size shouldBe 3
                 dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
             }
@@ -493,7 +497,7 @@ class JdbcTest {
 
                 rs.beforeFirst()
 
-                val dataSchema1 = rs.getDataFrameSchema(connection)
+                val dataSchema1 = rs.getDataFrameSchema(H2(MySql))
                 dataSchema1.columns.size shouldBe 3
                 dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
             }
@@ -613,6 +617,7 @@ class JdbcTest {
             """
 
         DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL).rowsCount() shouldBe 0
+        connection.createStatement().execute("DROP TABLE \"ALTER\"")
     }
 
     @Test
@@ -966,5 +971,128 @@ class JdbcTest {
             H2(H2())
         }
         exception.message shouldBe "H2 database could not be specified with H2 dialect!"
+    }
+
+    // helper object created for API testing purposes
+    object CustomDB : H2(MySql)
+
+    @Test
+    fun `read from table from custom database`() {
+        val tableName = "Customer"
+        val df = DataFrame.readSqlTable(connection, tableName, dbType = CustomDB).cast<Customer>()
+
+        df.rowsCount() shouldBe 4
+        df.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+        df[0][1] shouldBe "John"
+
+        val dataSchema = DataFrame.getSchemaForSqlTable(connection, tableName, dbType = CustomDB)
+        dataSchema.columns.size shouldBe 3
+        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+
+        val dbConfig = DbConnectionConfig(url = URL)
+        val df2 = DataFrame.readSqlTable(dbConfig, tableName, dbType = CustomDB).cast<Customer>()
+
+        df2.rowsCount() shouldBe 4
+        df2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+        df2[0][1] shouldBe "John"
+
+        val dataSchema1 = DataFrame.getSchemaForSqlTable(dbConfig, tableName, dbType = CustomDB)
+        dataSchema1.columns.size shouldBe 3
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+    }
+
+    @Test
+    fun `read from query from custom database`() {
+        @Language("SQL")
+        val sqlQuery =
+            """
+            SELECT c.name as customerName, SUM(s.amount) as totalSalesAmount
+            FROM Sale s
+            INNER JOIN Customer c ON s.customerId = c.id
+            WHERE c.age > 35
+            GROUP BY s.customerId, c.name
+            """.trimIndent()
+
+        val df = DataFrame.readSqlQuery(connection, sqlQuery, dbType = CustomDB).cast<CustomerSales>()
+
+        df.rowsCount() shouldBe 2
+        df.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
+        df[0][0] shouldBe "John"
+
+        val dataSchema = DataFrame.getSchemaForSqlQuery(connection, sqlQuery, dbType = CustomDB)
+        dataSchema.columns.size shouldBe 2
+        dataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+
+        val dbConfig = DbConnectionConfig(url = URL)
+        val df2 = DataFrame.readSqlQuery(dbConfig, sqlQuery, dbType = CustomDB).cast<CustomerSales>()
+
+        df2.rowsCount() shouldBe 2
+        df2.filter { it[CustomerSales::totalSalesAmount]!! > 100 }.rowsCount() shouldBe 1
+        df2[0][0] shouldBe "John"
+
+        val dataSchema1 = DataFrame.getSchemaForSqlQuery(dbConfig, sqlQuery, dbType = CustomDB)
+        dataSchema1.columns.size shouldBe 2
+        dataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+    }
+
+    @Test
+    fun `read from all tables from custom database`() {
+        val dataFrameMap = DataFrame.readAllSqlTables(connection, dbType = CustomDB)
+        dataFrameMap.containsKey("Customer") shouldBe true
+        dataFrameMap.containsKey("Sale") shouldBe true
+
+        val dataframes = dataFrameMap.values.toList()
+
+        val customerDf = dataframes[0].cast<Customer>()
+
+        customerDf.rowsCount() shouldBe 4
+        customerDf.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+        customerDf[0][1] shouldBe "John"
+
+        val saleDf = dataframes[1].cast<Sale>()
+
+        saleDf.rowsCount() shouldBe 4
+        saleDf.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
+        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
+
+        val dataFrameSchemaMap = DataFrame.getSchemaForAllSqlTables(connection, dbType = CustomDB)
+        dataFrameSchemaMap.containsKey("Customer") shouldBe true
+        dataFrameSchemaMap.containsKey("Sale") shouldBe true
+
+        val dataSchemas = dataFrameSchemaMap.values.toList()
+
+        val customerDataSchema = dataSchemas[0]
+        customerDataSchema.columns.size shouldBe 3
+        customerDataSchema.columns["name"]!!.type shouldBe typeOf<String?>()
+
+        val saleDataSchema = dataSchemas[1]
+        saleDataSchema.columns.size shouldBe 3
+        // TODO: fix nullability
+        saleDataSchema.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
+
+        val dbConfig = DbConnectionConfig(url = URL)
+        val dataframes2 = DataFrame.readAllSqlTables(dbConfig, dbType = CustomDB).values.toList()
+
+        val customerDf2 = dataframes2[0].cast<Customer>()
+
+        customerDf2.rowsCount() shouldBe 4
+        customerDf2.filter { it[Customer::age] != null && it[Customer::age]!! > 30 }.rowsCount() shouldBe 2
+        customerDf2[0][1] shouldBe "John"
+
+        val saleDf2 = dataframes2[1].cast<Sale>()
+
+        saleDf2.rowsCount() shouldBe 4
+        saleDf2.filter { it[Sale::amount] > 40 }.rowsCount() shouldBe 3
+        (saleDf[0][2] as BigDecimal).compareTo(BigDecimal(100.50)) shouldBe 0
+
+        val dataSchemas1 = DataFrame.getSchemaForAllSqlTables(dbConfig, dbType = CustomDB).values.toList()
+
+        val customerDataSchema1 = dataSchemas1[0]
+        customerDataSchema1.columns.size shouldBe 3
+        customerDataSchema1.columns["name"]!!.type shouldBe typeOf<String?>()
+
+        val saleDataSchema1 = dataSchemas1[1]
+        saleDataSchema1.columns.size shouldBe 3
+        saleDataSchema1.columns["amount"]!!.type shouldBe typeOf<BigDecimal>()
     }
 }

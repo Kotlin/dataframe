@@ -1,0 +1,302 @@
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowFeather : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
+	public fun <init> ()V
+	public fun acceptsExtension (Ljava/lang/String;)Z
+	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
+	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
+	public fun getTestOrder ()I
+	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowReadingKt {
+	public static final fun readArrow (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrow$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/channels/SeekableByteChannel;Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[BLorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowFeather$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowFeather$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowFeather$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowFeather$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowFeather$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/channels/SeekableByteChannel;Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowFeather$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[BLorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/channels/ReadableByteChannel;Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[BLorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/nio/channels/ReadableByteChannel;Lorg/apache/arrow/memory/RootAllocator;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;[BLorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toDataFrame (Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun toDataFrame$default (Lorg/apache/arrow/vector/ipc/ArrowReader;Lorg/jetbrains/kotlinx/dataframe/api/NullabilityOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowTypesMatchingKt {
+	public static final fun toArrowField (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Lorg/apache/arrow/vector/types/pojo/Field;
+	public static synthetic fun toArrowField$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/apache/arrow/vector/types/pojo/Field;
+	public static final fun toArrowSchema (Ljava/util/List;Lkotlin/jvm/functions/Function1;)Lorg/apache/arrow/vector/types/pojo/Schema;
+	public static synthetic fun toArrowSchema$default (Ljava/util/List;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/apache/arrow/vector/types/pojo/Schema;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/ArrowWriter : java/lang/AutoCloseable {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Companion;
+	public abstract fun allocateVectorSchemaRoot ()Lorg/apache/arrow/vector/VectorSchemaRoot;
+	public abstract fun getDataFrame ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public abstract fun getMismatchSubscriber ()Lkotlin/jvm/functions/Function1;
+	public abstract fun getMode ()Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;
+	public abstract fun getTargetSchema ()Lorg/apache/arrow/vector/types/pojo/Schema;
+	public abstract fun saveArrowFeatherToByteArray ()[B
+	public abstract fun saveArrowIPCToByteArray ()[B
+	public abstract fun writeArrowFeather (Ljava/io/File;)V
+	public abstract fun writeArrowFeather (Ljava/io/OutputStream;)V
+	public abstract fun writeArrowFeather (Ljava/nio/channels/WritableByteChannel;)V
+	public abstract fun writeArrowIPC (Ljava/io/File;Z)V
+	public abstract fun writeArrowIPC (Ljava/io/OutputStream;)V
+	public abstract fun writeArrowIPC (Ljava/nio/channels/WritableByteChannel;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowWriter$Companion {
+	public final fun create (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/arrow/vector/types/pojo/Schema;Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;
+	public static synthetic fun create$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Companion;Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/arrow/vector/types/pojo/Schema;Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowWriter$DefaultImpls {
+	public static fun saveArrowFeatherToByteArray (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;)[B
+	public static fun saveArrowIPCToByteArray (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;)[B
+	public static fun writeArrowFeather (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/io/File;)V
+	public static fun writeArrowFeather (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/io/OutputStream;)V
+	public static fun writeArrowFeather (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/nio/channels/WritableByteChannel;)V
+	public static fun writeArrowIPC (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/io/File;Z)V
+	public static fun writeArrowIPC (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/io/OutputStream;)V
+	public static fun writeArrowIPC (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/nio/channels/WritableByteChannel;)V
+	public static synthetic fun writeArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;Ljava/io/File;ZILjava/lang/Object;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode$Companion;
+	public fun <init> (ZZZZ)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun copy (ZZZZ)Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;ZZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRestrictNarrowing ()Z
+	public final fun getRestrictWidening ()Z
+	public final fun getStrictNullable ()Z
+	public final fun getStrictType ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode$Companion {
+	public final fun getLOYAL ()Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;
+	public final fun getSTRICT ()Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowWriterKt {
+	public static final fun getIgnoreMismatchMessage ()Lkotlin/jvm/functions/Function1;
+	public static final fun getLogMismatchMessage ()Lkotlin/jvm/functions/Function1;
+	public static final fun getWriteMismatchMessage ()Lkotlin/jvm/functions/Function1;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ArrowWritingKt {
+	public static final fun arrowWriter (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;
+	public static final fun arrowWriter (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/arrow/vector/types/pojo/Schema;Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;
+	public static synthetic fun arrowWriter$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/arrow/vector/types/pojo/Schema;Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter$Mode;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ArrowWriter;
+	public static final fun saveArrowFeatherToByteArray (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)[B
+	public static final fun saveArrowIPCToByteArray (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)[B
+	public static final fun writeArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;)V
+	public static final fun writeArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/OutputStream;)V
+	public static final fun writeArrowFeather (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/nio/channels/WritableByteChannel;)V
+	public static final fun writeArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Z)V
+	public static final fun writeArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/OutputStream;)V
+	public static final fun writeArrowIPC (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/nio/channels/WritableByteChannel;)V
+	public static synthetic fun writeArrowIPC$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;ZILjava/lang/Object;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingException : java/lang/IllegalArgumentException {
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch;)V
+	public final fun getMismatchCase ()Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Exception;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getCause ()Ljava/lang/Exception;
+	public fun getColumn ()Ljava/lang/String;
+	public fun getRow ()Ljava/lang/Integer;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnError : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnError;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnError;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnError;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnIgnored : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnIgnored;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnIgnored;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NarrowingMismatch$NotPresentedColumnIgnored;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueError : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueError;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueError;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueError;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public fun getRow ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueIgnored : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueIgnored;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueIgnored;Ljava/lang/String;Ljava/lang/Integer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$NullableMismatch$NullValueIgnored;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public fun getRow ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$SavedAsString : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Class;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Class;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Class;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$SavedAsString;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$SavedAsString;Ljava/lang/String;Ljava/lang/Class;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$SavedAsString;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/Class;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun getCause ()Ljava/lang/Exception;
+	public fun getCause ()Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailError : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailError;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailError;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailError;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getCause ()Ljava/lang/Exception;
+	public fun getCause ()Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;
+	public fun getColumn ()Ljava/lang/String;
+	public fun getRow ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailIgnored : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailIgnored;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailIgnored;Ljava/lang/String;Ljava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionFail$ConversionFailIgnored;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getCause ()Ljava/lang/Exception;
+	public fun getCause ()Lorg/jetbrains/kotlinx/dataframe/exceptions/CellConversionException;
+	public fun getColumn ()Ljava/lang/String;
+	public fun getRow ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch {
+	public synthetic fun <init> (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundError : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound {
+	public fun <init> (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;
+	public final fun copy (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundError;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundError;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundError;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public final fun getE ()Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundIgnored : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound {
+	public fun <init> (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;
+	public final fun copy (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundIgnored;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundIgnored;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$TypeConversionNotFound$ConversionNotFoundIgnored;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getCause ()Ljava/lang/Exception;
+	public fun getCause ()Lorg/jetbrains/kotlinx/dataframe/exceptions/TypeConverterNotFoundException;
+	public fun getColumn ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$AddedColumn : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$AddedColumn;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$AddedColumn;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$AddedColumn;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$RejectedColumn : org/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$RejectedColumn;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$RejectedColumn;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/io/ConvertingMismatch$WideningMismatch$RejectedColumn;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getColumn ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

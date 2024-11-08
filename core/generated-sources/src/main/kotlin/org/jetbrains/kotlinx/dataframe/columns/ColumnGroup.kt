@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
-import org.jetbrains.kotlinx.dataframe.impl.api.GenericColumnGroup
 import kotlin.reflect.KProperty
 
 /**
@@ -23,13 +22,14 @@ import kotlin.reflect.KProperty
  * - [ColumnAccessor] created by [columnGroup] delegate
  * - explicit cast using [asColumnGroup]
  *
+ * Can be instantiated by [DataColumn.createColumnGroup].
+ *
  * @param T Schema marker. See [DataFrame] for details.
  */
 @HasSchema(schemaArg = 0)
 public interface ColumnGroup<out T> :
     BaseColumn<DataRow<T>>,
-    DataFrame<T>,
-    GenericColumnGroup<BaseColumn<*>> {
+    DataFrame<T> {
 
     /**
      * Gets the rows at given indices.

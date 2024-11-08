@@ -16,7 +16,9 @@ libsPublisher = "1.9.23-dev-45"
 dataframe = "0.14.1"
 korro = "0.1.6"
 
+binaryCompatibilityValidator = "0.16.3"
 kover = "0.8.3"
+fastDoubleParser = "2.0.0"
 commonsCsv = "1.11.0"
 commonsCompress = "1.27.1"
 commonsIo = "2.16.1"
@@ -69,6 +71,7 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
+fastDoubleParser = { group = "ch.randelshofer", name = "fastdoubleparser", version.ref = "fastDoubleParser" }
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
@@ -127,7 +130,8 @@ kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotli
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
 
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
-sl4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
+sl4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "sl4j" }
+sl4jsimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
 android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "android-gradle-api" }
 android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-api" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin" }
@@ -150,7 +154,7 @@ duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref= "duckdb
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }

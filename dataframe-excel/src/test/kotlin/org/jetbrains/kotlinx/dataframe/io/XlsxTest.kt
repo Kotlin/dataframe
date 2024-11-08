@@ -199,4 +199,29 @@ class XlsxTest {
         df["col1"].type() shouldBe typeOf<String>()
         df shouldBe dataFrameOf("col1")("100", "A100", "B100", "C100")
     }
+
+    @Test
+    fun `read with default header unstructured excel file`() {
+        val df = DataFrame.readExcel(
+            testResource("unstructured_example.xlsx"),
+            firstRowIsHeader = false,
+        )
+        df.columnNames() shouldBe listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
+    }
+
+    @Test
+    fun `should work read with default header unstructured excel file with skipRow params`() {
+        val df = DataFrame.readExcel(
+            testResource("unstructured_example.xlsx"),
+            firstRowIsHeader = false,
+            skipRows = 2,
+            rowsCount = 1,
+        )
+
+        df shouldBe dataFrameOf(
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+        )(
+            "Field 3: ", "", "TEAM 1", "", "", "", "", "Staff Code:", "Staff 1", "",
+        )
+    }
 }

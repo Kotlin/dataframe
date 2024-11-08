@@ -53,6 +53,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("columnName_invalidSymbol.kt")
+  public void testColumnName_invalidSymbol() {
+    runTest("testData/box/columnName_invalidSymbol.kt");
+  }
+
+  @Test
   @TestMetadata("columnWithStarProjection.kt")
   public void testColumnWithStarProjection() {
     runTest("testData/box/columnWithStarProjection.kt");
@@ -80,6 +86,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("dataFrameOf.kt")
   public void testDataFrameOf() {
     runTest("testData/box/dataFrameOf.kt");
+  }
+
+  @Test
+  @TestMetadata("dataFrameOf_to.kt")
+  public void testDataFrameOf_to() {
+    runTest("testData/box/dataFrameOf_to.kt");
   }
 
   @Test
@@ -299,6 +311,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("playground.kt")
+  public void testPlayground() {
+    runTest("testData/box/playground.kt");
+  }
+
+  @Test
   @TestMetadata("propertiesOrder.kt")
   public void testPropertiesOrder() {
     runTest("testData/box/propertiesOrder.kt");
@@ -434,6 +452,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("transformReplaceFunctionCall.kt")
   public void testTransformReplaceFunctionCall() {
     runTest("testData/box/transformReplaceFunctionCall.kt");
+  }
+
+  @Test
+  @TestMetadata("trimIndent.kt")
+  public void testTrimIndent() {
+    runTest("testData/box/trimIndent.kt");
+  }
+
+  @Test
+  @TestMetadata("trimMargin.kt")
+  public void testTrimMargin() {
+    runTest("testData/box/trimMargin.kt");
   }
 
   @Test
