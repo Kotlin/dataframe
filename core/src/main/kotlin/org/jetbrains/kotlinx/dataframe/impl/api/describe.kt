@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnDescription
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -35,30 +36,6 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 
 internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
-    fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
-        flatMap { col ->
-            when (col.kind) {
-                ColumnKind.Frame ->
-                    col.asAnyFrameColumn()
-                        .concat()
-                        .columns()
-                        .map { it.addPath(col.path() + it.name) }
-                        .collectAll(true)
-
-                ColumnKind.Group ->
-                    if (atAnyDepth) {
-                        col.asColumnGroup()
-                            .columns()
-                            .map { it.addPath(col.path() + it.name) }
-                            .collectAll(true)
-                    } else {
-                        listOf(col)
-                    }
-
-                ColumnKind.Value -> listOf(col)
-            }
-        }
-
     val allCols = cols.collectAll(false)
 
     val hasNumericCols = allCols.any { it.isNumber() }
@@ -84,51 +61,13 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         }
         if (hasInterComparableCols || hasNumericCols) {
             ColumnDescription::min from inferType {
-                when {
-                    it.isInterComparable() ->
-                        it.asComparable().minOrNull()
-
-                    // Found incomparable number types, convert all to Double or BigDecimal first
-                    it.isNumber() ->
-                        if (it.any { it?.isBigNumber() == true }) {
-                            it.map { (it as Number?)?.toBigDecimal() }.minOrNull()
-                        } else {
-                            it.map { (it as Number?)?.toDouble() }.minOrNull()
-                        }
-
-                    else -> null
-                }
+                it.convertToInterComparableOrNull()?.minOrNull()
             }
             ColumnDescription::median from inferType {
-                when {
-                    it.isInterComparable() ->
-                        it.asComparable().medianOrNull()
-
-                    // Found incomparable number types, convert all to Double or BigDecimal first
-                    it.isNumber() ->
-                        if (it.any { it?.isBigNumber() == true }) {
-                            it.map { (it as Number?)?.toBigDecimal() }.medianOrNull()
-                        } else {
-                            it.map { (it as Number?)?.toDouble() }.medianOrNull()
-                        }
-
-                    else -> null
-                }
+                it.convertToInterComparableOrNull()?.medianOrNull()
             }
             ColumnDescription::max from inferType {
-                when {
-                    it.isInterComparable() -> it.asComparable().maxOrNull()
-
-                    // Found incomparable number types, convert all to Double or BigDecimal first
-                    it.isNumber() ->
-                        if (it.any { it?.isBigNumber() == true }) {
-                            it.map { (it as Number?)?.toBigDecimal() }.maxOrNull()
-                        } else {
-                            it.map { (it as Number?)?.toDouble() }.maxOrNull()
-                        }
-
-                    else -> null
-                }
+                it.convertToInterComparableOrNull()?.maxOrNull()
             }
         }
     }
@@ -140,3 +79,43 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
 
     return df.cast()
 }
+
+private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
+    flatMap { col ->
+        when (col.kind) {
+            ColumnKind.Frame ->
+                col.asAnyFrameColumn()
+                    .concat()
+                    .columns()
+                    .map { it.addPath(col.path() + it.name) }
+                    .collectAll(true)
+
+            ColumnKind.Group ->
+                if (atAnyDepth) {
+                    col.asColumnGroup()
+                        .columns()
+                        .map { it.addPath(col.path() + it.name) }
+                        .collectAll(true)
+                } else {
+                    listOf(col)
+                }
+
+            ColumnKind.Value -> listOf(col)
+        }
+    }
+
+/** Converts a column to a comparable column if it is not already comparable. */
+private fun DataColumn<Any?>.convertToInterComparableOrNull(): DataColumn<Comparable<Any?>>? =
+    when {
+        isInterComparable() -> asComparable()
+
+        // Found incomparable number types, convert all to Double or BigDecimal first
+        isNumber() ->
+            if (any { it?.isBigNumber() == true }) {
+                map { (it as Number?)?.toBigDecimal() }
+            } else {
+                map { (it as Number?)?.toDouble() }
+            }.cast()
+
+        else -> null
+    }
