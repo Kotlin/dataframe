@@ -111,7 +111,8 @@ kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotli
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
 
 kotlinLogging = { group = "io.github.oshai", name = "kotlin-logging", version.ref = "kotlinLogging" }
-sl4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
+sl4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "sl4j" }
+sl4jsimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "sl4j" }
 android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", version.ref = "android-gradle-api" }
 android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-api" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin" }
