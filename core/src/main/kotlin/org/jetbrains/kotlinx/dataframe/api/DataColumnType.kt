@@ -11,6 +11,9 @@ import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.projectTo
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
+import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.contracts.ExperimentalContracts
@@ -50,11 +53,22 @@ public fun AnyCol.isBigNumber(): Boolean = isSubtypeOf<BigInteger?>() || isSubty
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
+/** @include [isInterComparable] */
+@Deprecated(
+    message = IS_COMPARABLE,
+    replaceWith = ReplaceWith(IS_COMPARABLE_REPLACE, IS_INTER_COMPARABLE_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
+public fun AnyCol.isComparable(): Boolean = isInterComparable()
+
 /**
- * Returns `true` if [this] column is comparable, i.e. its type is a subtype of [Comparable] and its
- * type argument is not [Nothing].
+ * Returns `true` if [this] column is inter-comparable, i.e.
+ * its elements can be compared with each other.
+ *
+ * Technically, this means the elements' common type is a subtype of [Comparable] with
+ * the type argument not being [Nothing].
  */
-public fun AnyCol.isComparable(): Boolean =
+public fun AnyCol.isInterComparable(): Boolean =
     isSubtypeOf<Comparable<*>?>() &&
         type().projectTo(Comparable::class).arguments[0].let {
             it != KTypeProjection.STAR &&

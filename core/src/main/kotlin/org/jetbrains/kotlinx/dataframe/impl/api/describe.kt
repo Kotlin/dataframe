@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.isComparable
+import org.jetbrains.kotlinx.dataframe.api.isInterComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
@@ -62,7 +62,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
     val allCols = cols.collectAll(false)
 
     val hasNumericCols = allCols.any { it.isNumber() }
-    val hasInterComparableCols = allCols.any { it.isComparable() }
+    val hasInterComparableCols = allCols.any { it.isInterComparable() }
     val hasLongPaths = allCols.any { it.path().size > 1 }
     var df = allCols.toDataFrame {
         ColumnDescription::name from { it.name() }
@@ -85,7 +85,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         if (hasInterComparableCols || hasNumericCols) {
             ColumnDescription::min from inferType {
                 when {
-                    it.isComparable() ->
+                    it.isInterComparable() ->
                         it.asComparable().minOrNull()
 
                     // Found incomparable number types, convert all to Double or BigDecimal first
@@ -101,7 +101,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             }
             ColumnDescription::median from inferType {
                 when {
-                    it.isComparable() ->
+                    it.isInterComparable() ->
                         it.asComparable().medianOrNull()
 
                     // Found incomparable number types, convert all to Double or BigDecimal first
@@ -117,7 +117,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             }
             ColumnDescription::max from inferType {
                 when {
-                    it.isComparable() -> it.asComparable().maxOrNull()
+                    it.isInterComparable() -> it.asComparable().maxOrNull()
 
                     // Found incomparable number types, convert all to Double or BigDecimal first
                     it.isNumber() ->
