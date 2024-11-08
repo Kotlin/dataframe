@@ -38,13 +38,15 @@ class CumsumTests {
     @Test
     fun `big int column`() {
         col.map { it?.toBigInteger() }.cumSum().toList() shouldBe expected.map { it?.toBigInteger() }
-        col.map { it?.toBigInteger() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toBigInteger() }
+        col.map { it?.toBigInteger() }.cumSum(skipNA = false)
+            .toList() shouldBe expectedNoSkip.map { it?.toBigInteger() }
     }
 
     @Test
     fun `big decimal column`() {
         col.map { it?.toBigDecimal() }.cumSum().toList() shouldBe expected.map { it?.toBigDecimal() }
-        col.map { it?.toBigDecimal() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toBigDecimal() }
+        col.map { it?.toBigDecimal() }.cumSum(skipNA = false)
+            .toList() shouldBe expectedNoSkip.map { it?.toBigDecimal() }
     }
 
     @Test

@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class DescribeTests {
 

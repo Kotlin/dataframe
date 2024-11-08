@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.math.cumSum
 import org.jetbrains.kotlinx.dataframe.math.defaultCumSumSkipNA
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -44,6 +46,9 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
         typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
 
         typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
+
+        // Cumsum for empty column or column with just null is itself
+        nothingType, nullableNothingType -> this
 
         else -> error("Cumsum for type ${type()} is not supported")
     }

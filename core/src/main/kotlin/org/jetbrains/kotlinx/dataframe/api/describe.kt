@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 
 // region DataSchema
 @DataSchema

@@ -549,12 +549,10 @@ internal fun guessValueType(
 internal val KType.isNothing: Boolean
     get() = classifier == Nothing::class
 
-internal fun nothingType(nullable: Boolean): KType =
-    if (nullable) {
-        typeOf<List<Nothing?>>()
-    } else {
-        typeOf<List<Nothing>>()
-    }.arguments.first().type!!
+internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
+internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
+
+internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
 
 @OptIn(ExperimentalUnsignedTypes::class)
 private val primitiveArrayClasses = setOf(

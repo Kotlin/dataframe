@@ -15,7 +15,7 @@ import kotlin.reflect.KType
  *
  * NOTE: All date and timestamp-related types are converted to String to avoid java.sql.* types.
  */
-public class H2(public val dialect: DbType = MySql) : DbType("h2") {
+public open class H2(public val dialect: DbType = MySql) : DbType("h2") {
     init {
         require(dialect::class != H2::class) { "H2 database could not be specified with H2 dialect!" }
     }
