@@ -41,13 +41,25 @@ internal object DelimParams {
     /** @param writer The [Appendable] to write to. */
     interface WRITER_WRITE
 
-    /** @param delimiter The field delimiter character. Default: ','. */
+    /**
+     * @param delimiter The field delimiter character. Default: ','.
+     *
+     *   Ignored if \[hasFixedWidthColumns\] is `true`.
+     */
     const val CSV_DELIMITER: Char = ','
 
-    /** @param delimiter The field delimiter character. Default: '\\t'. */
+    /**
+     * @param delimiter The field delimiter character. Default: '\\t'.
+     *
+     *   Ignored if \[hasFixedWidthColumns\] is `true`.
+     */
     const val TSV_DELIMITER: Char = '\t'
 
-    /** @param delimiter The field delimiter character. Default: ','. */
+    /**
+     * @param delimiter The field delimiter character. Default: ','.
+     *
+     *   Ignored if \[hasFixedWidthColumns\] is `true`.
+     */
     const val DELIM_DELIMITER: Char = ','
 
     /**
@@ -58,6 +70,26 @@ internal object DelimParams {
      *   If empty (default), the header will be read from the data.
      */
     val HEADER: List<String> = emptyList()
+
+    /**
+     * @param hasFixedWidthColumns Whether the data has fixed-width columns instead of a single delimiter.
+     *   Default: `false`.
+     *
+     *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
+     *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
+     *   Columns widths are determined by the header in the data (if present), or manually by setting
+     *   \[fixedColumnWidths\].
+     */
+    val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
+
+    /**
+     * @param fixedColumnWidths The fixed column widths. Default: empty list.
+     *
+     *   Requires \[hasFixedWidthColumns\]. If empty, the column widths will be determined by the header in the data
+     *   (if present), else, this manually sets the column widths.
+     *   The number of widths should match the number of columns.
+     */
+    val FIXED_COLUMN_WIDTHS: List<Int> = emptyList()
 
     /**
      * @param compression The compression of the data.

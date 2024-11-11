@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_SPEC
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ALLOW_MISSING_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.DELIM_DELIMITER
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.FIXED_COLUMN_WIDTHS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HAS_FIXED_WIDTH_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HEADER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EMPTY_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EXCESS_COLUMNS
@@ -33,6 +35,8 @@ public fun DataFrame.Companion.readDelimStr(
     text: String,
     delimiter: Char = DELIM_DELIMITER,
     header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -49,6 +53,8 @@ public fun DataFrame.Companion.readDelimStr(
         inputStream = text.byteInputStream(),
         delimiter = delimiter,
         header = header,
+        hasFixedWidthColumns = hasFixedWidthColumns,
+        fixedColumnWidths = fixedColumnWidths,
         compression = Compression.None, // of course
         colTypes = colTypes,
         skipLines = skipLines,

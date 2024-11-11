@@ -95,6 +95,8 @@ internal interface CommonReadDelimDocs {
 
     /**
      * @include [DelimParams.HEADER]
+     * @include [DelimParams.HAS_FIXED_WIDTH_COLUMNS]
+     * @include [DelimParams.FIXED_COLUMN_WIDTHS]
      * @include [DelimParams.COL_TYPES]
      * @include [DelimParams.SKIP_LINES]
      * @include [DelimParams.READ_LINES]

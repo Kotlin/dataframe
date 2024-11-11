@@ -70,6 +70,8 @@ import kotlin.time.Duration
  * @include [COL_TYPES]
  * @include [SKIP_LINES]
  * @include [READ_LINES]
+ * @include [HAS_FIXED_WIDTH_COLUMNS]
+ * @include [FIXED_COLUMN_WIDTHS]
  * @include [PARSER_OPTIONS]
  * @include [IGNORE_EMPTY_LINES]
  * @include [ALLOW_MISSING_COLUMNS]
@@ -84,6 +86,8 @@ internal fun readDelimImpl(
     inputStream: InputStream,
     delimiter: Char,
     header: List<String>,
+    hasFixedWidthColumns: Boolean,
+    fixedColumnWidths: List<Int>,
     compression: Compression<*>,
     colTypes: Map<String, ColType>,
     skipLines: Long,
@@ -107,12 +111,14 @@ internal fun readDelimImpl(
         ignoreEmptyLines(ignoreEmptyLines)
         allowMissingColumns(allowMissingColumns)
         ignoreExcessColumns(ignoreExcessColumns)
-        delimiter(delimiter)
+        if (!hasFixedWidthColumns) delimiter(delimiter)
         quote(quote)
         ignoreSurroundingSpaces(ignoreSurroundingSpaces)
         trim(trimInsideQuoted)
         concurrent(parseParallel)
         header(header)
+        hasFixedWidthColumns(hasFixedWidthColumns)
+        if (hasFixedWidthColumns && fixedColumnWidths.isNotEmpty()) fixedColumnWidths(fixedColumnWidths)
         skipLines(takeHeaderFromCsv = header.isEmpty(), skipLines = skipLines)
 
         // Deephaven's LocalDateTime parser is unconfigurable, so if the user provides a locale, pattern, or formatter,
@@ -139,7 +145,9 @@ internal fun readDelimImpl(
             )
         } catch (e: CsvReaderException) {
             // catch case when the file is empty and header needs to be inferred from it.
-            if (e.message == "Can't proceed because hasHeaders is set but input file is empty") {
+            if (e.message ==
+                "Can't proceed because hasHeaderRow is set but input file is empty or shorter than skipHeaderRows"
+            ) {
                 return@readDelimImpl DataFrame.empty()
             }
             throw IllegalStateException("Could not read delimiter-separated data. ${e.message}", e)

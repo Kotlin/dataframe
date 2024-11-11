@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.io.StringWriter
@@ -361,6 +360,9 @@ class DelimCsvTsvTests {
         val emptyDelimStr = DataFrame.readCsvStr("")
         emptyDelimStr shouldBe DataFrame.empty()
 
+        val emptyWidthStr = DataFrame.readCsvStr("", hasFixedWidthColumns = true)
+        emptyWidthStr shouldBe DataFrame.empty()
+
         val emptyCsvFile = DataFrame.readCsv(File.createTempFile("empty", "csv"))
         emptyCsvFile shouldBe DataFrame.empty()
 
@@ -554,28 +556,42 @@ class DelimCsvTsvTests {
         df["bodywt"].type() shouldBe typeOf<Double?>()
     }
 
-    @Ignore
-    @Test // TODO https://github.com/deephaven/deephaven-csv/issues/212
+    @Test
     fun `multiple spaces as delimiter`() {
         @Language("csv")
         val csv =
             """
-            NAME                     STATUS   AGE      LABELS
-            argo-events              Active   2y77d    app.kubernetes.io/instance=argo-events,kubernetes.io/metadata.name=argo-events
-            argo-workflows           Active   2y77d    app.kubernetes.io/instance=argo-workflows,kubernetes.io/metadata.name=argo-workflows
-            argocd                   Active   5y18d    kubernetes.io/metadata.name=argocd
-            beta                     Active   4y235d   kubernetes.io/metadata.name=beta
+            NAME                     STATUS   AGE      NUMBER   LABELS
+            argo-events              Active   2y77d    1234     app.kubernetes.io/instance=argo-events,kubernetes.io/metadata.name=argo-events
+            argo-workflows           Active   2y77d    1234     app.kubernetes.io/instance=argo-workflows,kubernetes.io/metadata.name=argo-workflows
+            argocd                   Active   5y18d    1234     kubernetes.io/metadata.name=argocd
+            beta                     Active   4y235d   1234     kubernetes.io/metadata.name=beta
             """.trimIndent()
-        val df = DataFrame.readCsvStr(
+
+        val df1 = DataFrame.readCsvStr(
             text = csv,
-            delimiter = ' ',
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
-                nullStrings = DEFAULT_NULL_STRINGS - "",
-            ),
-            ignoreSurroundingSpaces = false,
+            hasFixedWidthColumns = true,
         )
 
-        df.print(borders = true, title = true)
+        df1["NAME"].type() shouldBe typeOf<String>()
+        df1["STATUS"].type() shouldBe typeOf<String>()
+        df1["AGE"].type() shouldBe typeOf<String>()
+        df1["NUMBER"].type() shouldBe typeOf<Int>()
+        df1["LABELS"].type() shouldBe typeOf<String>()
+
+        val df2 = DataFrame.readCsvStr(
+            text = csv,
+            hasFixedWidthColumns = true,
+            fixedColumnWidths = listOf(25, 9, 9, 9, 100),
+            skipLines = 1,
+            header = listOf("name", "status", "age", "number", "labels"),
+        )
+
+        df2["name"].type() shouldBe typeOf<String>()
+        df2["status"].type() shouldBe typeOf<String>()
+        df2["age"].type() shouldBe typeOf<String>()
+        df2["number"].type() shouldBe typeOf<Int>()
+        df2["labels"].type() shouldBe typeOf<String>()
     }
 
     @Test

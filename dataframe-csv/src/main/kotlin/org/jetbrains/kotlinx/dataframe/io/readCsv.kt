@@ -13,6 +13,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMPRESSION
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.CSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.FILE_OR_URL_READ
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.FILE_READ
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.FIXED_COLUMN_WIDTHS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HAS_FIXED_WIDTH_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HEADER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EMPTY_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EXCESS_COLUMNS
@@ -44,6 +46,8 @@ public fun DataFrame.Companion.readCsv(
     file: File,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     compression: Compression<*> = compressionStateOf(file),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
@@ -62,6 +66,8 @@ public fun DataFrame.Companion.readCsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            hasFixedWidthColumns = hasFixedWidthColumns,
+            fixedColumnWidths = fixedColumnWidths,
             compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
@@ -92,6 +98,8 @@ public fun DataFrame.Companion.readCsv(
     url: URL,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     compression: Compression<*> = compressionStateOf(url),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
@@ -110,6 +118,8 @@ public fun DataFrame.Companion.readCsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            hasFixedWidthColumns = hasFixedWidthColumns,
+            fixedColumnWidths = fixedColumnWidths,
             compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
@@ -140,6 +150,8 @@ public fun DataFrame.Companion.readCsv(
     fileOrUrl: String,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     compression: Compression<*> = compressionStateOf(fileOrUrl),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
@@ -158,6 +170,8 @@ public fun DataFrame.Companion.readCsv(
             inputStream = it,
             delimiter = delimiter,
             header = header,
+            hasFixedWidthColumns = hasFixedWidthColumns,
+            fixedColumnWidths = fixedColumnWidths,
             compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
@@ -190,6 +204,8 @@ public fun DataFrame.Companion.readCsv(
     inputStream: InputStream,
     delimiter: Char = CSV_DELIMITER,
     header: List<String> = HEADER,
+    hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
+    fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
     compression: Compression<*> = COMPRESSION,
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
@@ -208,6 +224,8 @@ public fun DataFrame.Companion.readCsv(
         inputStream = inputStream,
         delimiter = delimiter,
         header = header,
+        hasFixedWidthColumns = hasFixedWidthColumns,
+        fixedColumnWidths = fixedColumnWidths,
         compression = compression,
         colTypes = colTypes,
         skipLines = skipLines,
