@@ -601,13 +601,15 @@ class DelimCsvTsvTests {
             header = listOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"),
             skipLines = 2,
             colTypes = mapOf(
+                "a" to ColType.Int,
+                "b" to ColType.Double,
                 ColType.DEFAULT to ColType.String,
             ),
         )
 
         df.columnTypes().shouldContainInOrder(
-            typeOf<String>(),
-            typeOf<String>(),
+            typeOf<Int>(),
+            typeOf<Double>(),
             typeOf<String>(),
             typeOf<String?>(),
             typeOf<String>(),

@@ -33,6 +33,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_SPEC
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ALLOW_MISSING_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COL_TYPES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.COMPRESSION
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.FIXED_COLUMN_WIDTHS
+import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HAS_FIXED_WIDTH_COLUMNS
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.HEADER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EMPTY_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.IGNORE_EXCESS_COLUMNS
@@ -126,13 +128,10 @@ internal fun readDelimImpl(
         val useDeepHavenLocalDateTime = with(parserOptions) {
             locale == null && dateTimePattern == null && dateTimeFormatter == null
         }
-        parsersWithOptions(parserOptions, useDeepHavenLocalDateTime)
+        parsers(parserOptions, colTypes, useDeepHavenLocalDateTime)
 
-        // this function must be last, so the return value is used
-        return@with this.withColTypes(colTypes, useDeepHavenLocalDateTime)
-    }
-        .let { adjustCsvSpecs(it, it) }
-        .build()
+        adjustCsvSpecs(this, this)
+    }.build()
 
     val csvReaderResult = inputStream.useDecompressed(compression) { decompressedInputStream ->
         // read the csv
@@ -240,31 +239,6 @@ private fun legalizeHeader(header: Array<String>): Array<String> {
     return header.map { generator.addUnique(it) }.toTypedArray()
 }
 
-/**
- * Sets correct parsers per name in [colTypes]. If [ColType.DEFAULT] is present, it sets the default parser.
- *
- * CAREFUL: Unlike the other functions on [CsvSpecs.Builder], this function can return a NEW builder instance.
- * Make sure to use the return value.
- */
-private fun CsvSpecs.Builder.withColTypes(
-    colTypes: Map<String, ColType>,
-    useDeepHavenLocalDateTime: Boolean,
-): CsvSpecs.Builder {
-    if (colTypes.isEmpty()) return this
-
-    colTypes.forEach { (colName, colType) ->
-        this.putParserForName(colName, colType.toCsvParser(useDeepHavenLocalDateTime))
-    }
-
-    return if (ColType.DEFAULT in colTypes) {
-        this.withDefaultParser(
-            colTypes[ColType.DEFAULT]!!.toCsvParser(useDeepHavenLocalDateTime),
-        )
-    } else {
-        this
-    }
-}
-
 private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Long): CsvSpecs.Builder =
     if (takeHeaderFromCsv) {
         skipHeaderRows(skipLines)
@@ -273,19 +247,33 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
     }
 
 /**
- * Sets the correct parsers for the csv, based on the [ParserOptions.skipTypes].
+ * Sets the correct parsers for the csv, based on [colTypes] and [ParserOptions.skipTypes].
+ * If [ColType.DEFAULT] is present, it sets the default parser.
  */
-private fun CsvSpecs.Builder.parsersWithOptions(
+private fun CsvSpecs.Builder.parsers(
     parserOptions: ParserOptions,
+    colTypes: Map<String, ColType>,
     useDeepHavenLocalDateTime: Boolean,
-): CsvSpecs.Builder =
-    if (parserOptions.skipTypes.isEmpty()) {
-        parsers(Parsers.DEFAULT) // BOOLEAN, INT, LONG, DOUBLE, DATETIME, CHAR, STRING
-    } else {
-        val parsersToSkip = parserOptions.skipTypes
-            .mapNotNull { it.toColType().toCsvParserOrNull(useDeepHavenLocalDateTime) }
-        parsers(Parsers.DEFAULT.toSet() - parsersToSkip.toSet())
+): CsvSpecs.Builder {
+    for ((colName, colType) in colTypes) {
+        if (colName == ColType.DEFAULT) continue
+        putParserForName(colName, colType.toCsvParser(useDeepHavenLocalDateTime))
     }
+    val parsersToUse = when {
+        ColType.DEFAULT in colTypes ->
+            listOf(colTypes[ColType.DEFAULT]!!.toCsvParser(useDeepHavenLocalDateTime))
+
+        parserOptions.skipTypes.isNotEmpty() -> {
+            val parsersToSkip = parserOptions.skipTypes
+                .mapNotNull { it.toColType().toCsvParserOrNull(useDeepHavenLocalDateTime) }
+            Parsers.DEFAULT.toSet() - parsersToSkip.toSet()
+        }
+
+        else -> Parsers.DEFAULT // BOOLEAN, INT, LONG, DOUBLE, DATETIME, CHAR, STRING
+    }
+    parsers(parsersToUse)
+    return this
+}
 
 private fun CsvSpecs.Builder.header(header: List<String>): CsvSpecs.Builder =
     if (header.isEmpty()) {
