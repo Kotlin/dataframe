@@ -42,6 +42,36 @@ public inline fun <reified T> AnyFrame.castTo(
     verify: Boolean = true,
 ): DataFrame<T> = cast<T>(verify = verify)
 
+/**
+ * With the compiler plugin, schema marker T of DataFrame can be a local type.
+ * You cannot refer to it directly from your code, like a type argument for cast.
+ * The example below shows a situation where you'd need to cast DataFrame<*> to DataFrame<plugin generated local type>.
+ * This function helps by inferring type from [schemaFrom]
+ * ```
+ *
+ * // parse listOf("b:1:abc", "c:2:bca")
+ * private fun convert(data: List<String>)/*: DataFrame<plugin generated local type>*/ = data.map { it.split(":") }.toDataFrame {
+ *      "part1" from { it[0] }
+ *      "part2" from { it[1].toInt() }
+ *      "part3" from { it[2] }
+ * }
+ *
+ * fun serialize(data: List<String>, destination: File) {
+ *      convert(data).writeJson(destination)
+ * }
+ *
+ * fun deserializeAndUse(file: File) {
+ *      val df = DataFrame.readJson(file).castTo(schemaFrom = ::convert)
+ *      // Possible to use properties
+ *      df.part1.print()
+ * }
+ * ```
+ */
+public inline fun <reified T> AnyFrame.castTo(
+    @Suppress("UNUSED_PARAMETER") schemaFrom: Function<DataFrame<T>>,
+    verify: Boolean = true,
+): DataFrame<T> = cast<T>(verify = verify)
+
 public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
 
 public inline fun <reified T> AnyRow.cast(verify: Boolean = true): DataRow<T> = df().cast<T>(verify)[0]
