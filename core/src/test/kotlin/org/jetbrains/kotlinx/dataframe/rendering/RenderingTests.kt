@@ -2,13 +2,16 @@ package org.jetbrains.kotlinx.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldInclude
 import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -16,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.formatter
@@ -24,7 +28,9 @@ import org.jetbrains.kotlinx.dataframe.io.maxWidth
 import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
+import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
 import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -195,5 +201,30 @@ class RenderingTests : TestBase() {
         val schema = df.schema()
         val rendered = schema.toString()
         rendered shouldBe "a: Int?\nb: IntArray\nc: Array<Int>\nd: Array<Int?>"
+    }
+
+    @Test
+    fun `render nested FormattedFrame as DataFrame`() {
+        val empty = object : CellAttributes {
+            override fun attributes(): List<Pair<String, String>> = emptyList()
+        }
+        val df = dataFrameOf("b")(1)
+
+        val formatted = dataFrameOf("a")(df.format { all() }.with { empty })
+        val nestedFrame = dataFrameOf("a")(df)
+        val configuration = DisplayConfiguration(enableFallbackStaticTables = false)
+        tableInSessionId = 0
+        val formattedHtml = formatted.toStandaloneHTML(configuration).toString()
+        tableInSessionId = 0
+        val regularHtml = nestedFrame.toStandaloneHTML(configuration).toString()
+
+        formattedHtml.replace("api.FormattedFrame", "DataFrame") shouldBe regularHtml
+    }
+
+    @Test
+    fun `render cell attributes for nested FormattedFrame`() {
+        val df = dataFrameOf("a")(dataFrameOf("b")(1).format { all() }.with { background(green) })
+        val html = df.toStandaloneHTML()
+        html.toString() shouldInclude "style: \"background-color"
     }
 }
