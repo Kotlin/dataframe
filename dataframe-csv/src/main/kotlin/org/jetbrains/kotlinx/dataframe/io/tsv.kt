@@ -10,7 +10,6 @@ import java.io.File
 import java.io.InputStream
 import kotlin.reflect.typeOf
 
-@ExperimentalCsv
 public class Tsv(private val delimiter: Char = DelimParams.TSV_DELIMITER) : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): DataFrame<*> =
         DataFrame.readTsv(inputStream = stream, header = header)

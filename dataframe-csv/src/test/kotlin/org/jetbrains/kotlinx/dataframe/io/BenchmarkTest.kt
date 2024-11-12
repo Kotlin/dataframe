@@ -47,7 +47,6 @@ open class BenchmarkTest {
         DataFrame.readCSV(file!!)
     }
 
-    @OptIn(ExperimentalCsv::class)
     @Benchmark
     fun deephaven() {
         DataFrame.readCsv(file!!)

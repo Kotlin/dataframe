@@ -30,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  * @include [DELIM_DELIMITER]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-@ExperimentalCsv
 public fun DataFrame.Companion.readDelimStr(
     text: String,
     delimiter: Char = DELIM_DELIMITER,

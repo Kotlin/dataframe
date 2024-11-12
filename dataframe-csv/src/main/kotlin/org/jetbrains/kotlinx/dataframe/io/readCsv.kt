@@ -41,7 +41,6 @@ import java.net.URL
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-@ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
     file: File,
     delimiter: Char = CSV_DELIMITER,
@@ -93,7 +92,6 @@ public fun DataFrame.Companion.readCsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-@ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
     url: URL,
     delimiter: Char = CSV_DELIMITER,
@@ -145,7 +143,6 @@ public fun DataFrame.Companion.readCsv(
  * @include [COMPRESSION]
  * @include [CommonReadDelimDocs.CommonReadParams]
  */
-@ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
     fileOrUrl: String,
     delimiter: Char = CSV_DELIMITER,
@@ -199,7 +196,6 @@ public fun DataFrame.Companion.readCsv(
  * @include [CommonReadDelimDocs.CommonReadParams]
  * @include [ADJUST_CSV_SPECS]
  */
-@ExperimentalCsv
 public fun DataFrame.Companion.readCsv(
     inputStream: InputStream,
     delimiter: Char = CSV_DELIMITER,

@@ -3,18 +3,11 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.DataTitleArg
-import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FileTypeArg
-import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FileTypeTitleArg
-import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.FunctionLinkArg
-import org.jetbrains.kotlinx.dataframe.documentation.CommonReadDelimDocs.OldFunctionLinkArg
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
-import org.jetbrains.kotlinx.dataframe.io.ExperimentalCsv
 import java.io.File
 import java.io.InputStream
 import java.net.URL
-import java.util.Locale
 
 /**
  * ### Read $[FileTypeTitleArg] $[DataTitleArg] to [DataFrame]
@@ -53,8 +46,7 @@ import java.util.Locale
  * $[StrFunctionLinkArg]`("a,b,c", delimiter = ",")`
  *
  * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old $[OldFunctionLinkArg]`()` functions.
- * They'll hopefully be faster and better. Until they are proven to be so,
- * you'll need to [opt in][OptIn] to [ExperimentalCsv][ExperimentalCsv] to be able to use them._
+ * They'll hopefully be faster and better._
  *
  * @comment Some helper arguments for the function links
  * @set [FunctionLinkArg] \[DataFrame.${[FunctionNameArg]}\]\[${[FunctionNameArg]}\]

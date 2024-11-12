@@ -29,7 +29,6 @@ import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
-@OptIn(ExperimentalCsv::class)
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DelimCsvTsvTests {
 

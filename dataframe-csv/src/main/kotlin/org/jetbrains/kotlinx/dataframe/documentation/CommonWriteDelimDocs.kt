@@ -3,7 +3,6 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.io.ExperimentalCsv
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL
 import org.jetbrains.kotlinx.dataframe.io.toCsv
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
@@ -34,8 +33,7 @@ import java.io.File
  *
  * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
  * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better. Until they are proven to be so,
- * you'll need to [opt in][OptIn] to [ExperimentalCsv][ExperimentalCsv] to be able to use them._
+ * They'll hopefully be better._
  *
  * @comment Some helper arguments for the function links
  * @set [FunctionLinkArg] \[DataFrame.${[FunctionNameArg]}\]\[${[FunctionNameArg]}\]

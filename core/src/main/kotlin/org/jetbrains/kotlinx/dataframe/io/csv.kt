@@ -418,7 +418,7 @@ public fun DataFrame.Companion.readDelim(
             "Ran out of memory reading this CSV-like file. " +
                 "You can try our new experimental CSV reader by adding the dependency " +
                 "\"org.jetbrains.kotlinx:dataframe-csv:{VERSION}\" and using `DataFrame.readCsv()` instead of " +
-                "`DataFrame.readCSV()`. This requires `@OptIn(ExperimentalCsv::class)`.",
+                "`DataFrame.readCSV()`.",
         )
     }
 }

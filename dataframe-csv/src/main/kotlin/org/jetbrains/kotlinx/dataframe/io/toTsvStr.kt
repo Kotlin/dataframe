@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  * @include [TSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]
  */
-@ExperimentalCsv
 public fun AnyFrame.toTsvStr(
     includeHeader: Boolean = INCLUDE_HEADER,
     delimiter: Char = TSV_DELIMITER,
