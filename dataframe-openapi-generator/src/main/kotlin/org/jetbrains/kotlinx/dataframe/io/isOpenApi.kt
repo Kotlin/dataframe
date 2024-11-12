@@ -17,7 +17,7 @@ public fun isOpenApiStr(text: String): Boolean =
         false
     }
 
-public fun isOpenApi(path: String): Boolean = isOpenApi(asURL(path))
+public fun isOpenApi(path: String): Boolean = isOpenApi(asUrl(path))
 
 public fun isOpenApi(url: URL): Boolean {
     if (url.path.endsWith(".yml") || url.path.endsWith("yaml")) {

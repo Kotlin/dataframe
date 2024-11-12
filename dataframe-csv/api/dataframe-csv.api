@@ -1,0 +1,175 @@
+public abstract class org/jetbrains/kotlinx/dataframe/io/Compression {
+	public synthetic fun <init> (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun doFinally (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/io/InputStream;)V
+	public fun getWrapStream ()Lkotlin/jvm/functions/Function1;
+}
+
+public class org/jetbrains/kotlinx/dataframe/io/Compression$Custom : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public fun <init> (Lkotlin/jvm/functions/Function1;)V
+	public fun getWrapStream ()Lkotlin/jvm/functions/Function1;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Gzip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Gzip;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$None : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$None;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Zip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Zip;
+	public synthetic fun doFinally (Ljava/io/InputStream;)V
+	public fun doFinally (Ljava/util/zip/ZipInputStream;)V
+	public synthetic fun doFirst (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/util/zip/ZipInputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/CompressionKt {
+	public static final fun compressionStateOf (Ljava/io/File;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public static final fun compressionStateOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public static final fun compressionStateOf (Ljava/net/URL;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public static final fun useDecompressed (Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Csv : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
+	public fun <init> ()V
+	public fun <init> (C)V
+	public synthetic fun <init> (CILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun acceptsExtension (Ljava/lang/String;)Z
+	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
+	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
+	public fun getTestOrder ()I
+	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/QuoteMode : java/lang/Enum {
+	public static final field ALL Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public static final field ALL_NON_NULL Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public static final field MINIMAL Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public static final field NONE Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public static final field NON_NUMERIC Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ReadCsvDeephavenKt {
+	public static final fun readCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ReadCsvStrKt {
+	public static final fun readCsvStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readCsvStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ReadDelimDeephavenKt {
+	public static final fun readDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ReadDelimStrKt {
+	public static final fun readDelimStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ReadTsvDeephavenKt {
+	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readTsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readTsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readTsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readTsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;CLjava/util/List;ZLjava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ReadTsvStrKt {
+	public static final fun readTsvStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readTsvStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;ZLjava/util/List;Ljava/util/Map;JLjava/lang/Long;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ZZZCZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ToCsvStrKt {
+	public static final fun toCsvStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun toCsvStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ToDelimStrKt {
+	public static final fun toDelimStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun toDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/ToTsvStrKt {
+	public static final fun toTsvStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZCLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun toTsvStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZCLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Tsv : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
+	public fun <init> ()V
+	public fun <init> (C)V
+	public synthetic fun <init> (CILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun acceptsExtension (Ljava/lang/String;)Z
+	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
+	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
+	public fun getTestOrder ()I
+	public fun readDataFrame (Ljava/io/File;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public fun readDataFrame (Ljava/io/InputStream;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/UtilKt {
+	public static final fun getDEFAULT_NULL_STRINGS ()Ljava/util/Set;
+	public static final fun getDEFAULT_PARSER_OPTIONS ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/WriteCsvDeephavenKt {
+	public static final fun writeCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)V
+	public static final fun writeCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+	public static final fun writeCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)V
+	public static synthetic fun writeCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun writeCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun writeCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/WriteDelimDeephavenKt {
+	public static final fun writeDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)V
+	public static final fun writeDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+	public static final fun writeDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)V
+	public static synthetic fun writeDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun writeDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun writeDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/WriteTsvDeephavenKt {
+	public static final fun writeTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)V
+	public static final fun writeTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+	public static final fun writeTsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;)V
+	public static synthetic fun writeTsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun writeTsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun writeTsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;CZLjava/lang/Character;Lorg/jetbrains/kotlinx/dataframe/io/QuoteMode;Ljava/lang/Character;Ljava/lang/Character;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
