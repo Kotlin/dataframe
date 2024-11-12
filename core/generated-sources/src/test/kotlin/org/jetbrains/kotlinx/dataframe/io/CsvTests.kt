@@ -70,7 +70,7 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
@@ -89,7 +89,7 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["number"].type() shouldBe typeOf<Double>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
