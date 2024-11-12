@@ -11,6 +11,7 @@ import kotlin.reflect.full.withNullability
 internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double =
     asSequence().mean(type, skipNA)
 
+@Suppress("UNCHECKED_CAST")
 internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
     if (type.isMarkedNullable) {
         return filterNotNull().mean(type.withNullability(false), skipNA)

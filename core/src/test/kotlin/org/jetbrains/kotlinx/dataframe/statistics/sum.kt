@@ -61,6 +61,4 @@ class SumTests {
         df.sum { value2 } shouldBe expected2
         df.sum { value3 } shouldBe expected3
     }
-
-
 }
