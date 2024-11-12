@@ -25,9 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
@@ -537,23 +535,29 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
         when {
             // when a frame column is requested to be parsed,
             // parse each value/frame column at any depth inside each DataFrame in the frame column
-            col.isFrameColumn() -> col.map {
-                it.parseImpl(options) {
-                    colsAtAnyDepth { !it.isColumnGroup() }
+            col.isFrameColumn() -> {
+                col.map {
+                    it.parseImpl(options) {
+                        colsAtAnyDepth { !it.isColumnGroup() }
+                    }
                 }
             }
 
             // when a column group is requested to be parsed,
             // parse each column in the group
-            col.isColumnGroup() ->
+            col.isColumnGroup() -> {
                 col.parseImpl(options) { all() }
                     .asColumnGroup(col.name())
                     .asDataColumn()
+            }
 
             // Base case, parse the column if it's a `String?` column
-            col.isSubtypeOf<String?>() ->
+            col.isSubtypeOf<String?>() -> {
                 col.cast<String?>().tryParseImpl(options)
+            }
 
-            else -> col
+            else -> {
+                col
+            }
         }
     }
