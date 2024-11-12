@@ -11,7 +11,7 @@ import java.io.File
 /**
  * ### $[WriteOrConvertArg] [DataFrame] to $[FileTypeTitleArg] $[DataTitleArg]
  *
- * ${[WriteOrConvertArg]}s [this] [DataFrame] to a $[FileTypeArg] $[DataArg].
+ * ${[WriteOrConvertArg]}s \[this\]\[this\] [DataFrame][DataFrame] to a $[FileTypeArg] $[DataArg].
  *
  * Parameters you can use to customize the process include, for instance, \[delimiter\],
  * \[includeHeader\], \[quoteMode\], and \[headerComments\].
@@ -20,7 +20,7 @@ import java.io.File
  * The integration is built upon {@include [DocumentationUrls.ApacheCsv]}.
  *
  * ##### Similar Functions
- * With overloads of $[FunctionLinkArg]`()`, you can write $[FileTypeArg] to [File][File],
+ * With overloads of $[FunctionLinkArg]`()`, you can write $[FileTypeArg] to [File][File], [Path][java.nio.file.Path],
  * [Appendable], or [String].
  *
  * For example, $[FunctionLinkArg]`("output.$[CommonWriteDelimDocs.FileExtensionArg]")`

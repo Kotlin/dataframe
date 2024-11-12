@@ -17,6 +17,9 @@ import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 @Suppress("ktlint:standard:class-naming", "ClassName", "KDocUnresolvedReference")
 internal object DelimParams {
 
+    /** @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    interface PATH_READ
+
     /** @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
     interface FILE_READ
 

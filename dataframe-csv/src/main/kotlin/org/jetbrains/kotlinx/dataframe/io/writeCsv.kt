@@ -19,6 +19,42 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.WRITER_WRITE
 import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 import java.io.File
 import java.io.FileWriter
+import java.nio.file.Path
+import kotlin.io.path.writer
+
+/**
+ * @include [CommonWriteDelimDocs.CsvDocs]
+ * @set [CommonWriteDelimDocs.WriteOrConvertArg] Write
+ * @set [CommonWriteDelimDocs.DataTitleArg] File
+ * @set [CommonWriteDelimDocs.DataArg] file
+ * @include [PATH_WRITE]
+ * @include [CSV_DELIMITER]
+ * @include [CommonWriteDelimDocs.CommonWriteParams]
+ */
+public fun AnyFrame.writeCsv(
+    path: Path,
+    delimiter: Char = CSV_DELIMITER,
+    includeHeader: Boolean = INCLUDE_HEADER,
+    quote: Char? = QUOTE,
+    quoteMode: QuoteMode = QUOTE_MODE,
+    escapeChar: Char? = ESCAPE_CHAR,
+    commentChar: Char? = COMMENT_CHAR,
+    headerComments: List<String> = HEADER_COMMENTS,
+    recordSeparator: String = RECORD_SEPARATOR,
+): Unit =
+    writeDelimImpl(
+        df = this,
+        writer = path.writer(),
+        delimiter = delimiter,
+        includeHeader = includeHeader,
+        quote = quote,
+        quoteMode = quoteMode,
+        escapeChar = escapeChar,
+        commentChar = commentChar,
+        headerComments = headerComments,
+        recordSeparator = recordSeparator,
+        adjustCsvFormat = ADJUST_CSV_FORMAT,
+    )
 
 /**
  * @include [CommonWriteDelimDocs.CsvDocs]

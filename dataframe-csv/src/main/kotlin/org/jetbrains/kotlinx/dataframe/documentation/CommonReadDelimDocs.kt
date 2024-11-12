@@ -22,7 +22,7 @@ import java.net.URL
  *
  * ##### Similar Functions
  * With the overloads of $[FunctionLinkArg]`()`, you can read any $[FileTypeArg] by [File][File],
- * [URL][URL], or [InputStream][InputStream].
+ * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
  * For example, $[FunctionLinkArg]`("input.$[CommonReadDelimDocs.FileExtensionArg]")` or with some options:

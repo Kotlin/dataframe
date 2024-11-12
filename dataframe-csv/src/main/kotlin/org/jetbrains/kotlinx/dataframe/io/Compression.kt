@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Path
 import java.util.zip.GZIPInputStream
 import java.util.zip.InflaterInputStream
 import java.util.zip.ZipInputStream
@@ -97,11 +98,8 @@ public fun compressionStateOf(fileOrUrl: String): Compression<*> =
         else -> Compression.None
     }
 
-public fun compressionStateOf(file: File): Compression<*> =
-    when (file.extension) {
-        "gz" -> Compression.Gzip
-        "zip" -> Compression.Zip
-        else -> Compression.None
-    }
+public fun compressionStateOf(file: File): Compression<*> = compressionStateOf(file.name)
+
+public fun compressionStateOf(path: Path): Compression<*> = compressionStateOf(path.fileName?.toString() ?: "")
 
 public fun compressionStateOf(url: URL): Compression<*> = compressionStateOf(url.path)
