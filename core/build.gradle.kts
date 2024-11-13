@@ -68,6 +68,8 @@ dependencies {
     kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
     implementation(libs.kotlin.stdlib.jdk8)
 
+    compileOnly("org.jetbrains:annotations:26.0.1")
+
     api(libs.commonsCsv)
     implementation(libs.commonsIo)
     implementation(libs.serialization.core)

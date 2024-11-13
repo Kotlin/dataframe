@@ -1,11 +1,17 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.annotations.Debug
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -24,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.util.CHUNKED_IMPL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.CREATE
@@ -35,7 +42,9 @@ import org.jetbrains.kotlinx.dataframe.util.CREATE_INLINE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE
 import org.jetbrains.kotlinx.dataframe.util.CREATE_WITH_TYPE_INFERENCE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.DebugEntry
 import org.jetbrains.kotlinx.dataframe.util.TYPE_SUGGESTION_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.renderColumnNameAndType
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -49,6 +58,11 @@ import kotlin.reflect.typeOf
  *
  * @param T type of values in the column.
  */
+@Debug.Renderer(
+    text = """org.jetbrains.kotlinx.dataframe.DataColumnKt.debugName(this)""",
+    childrenArray = "org.jetbrains.kotlinx.dataframe.DataColumnKt.debugInfo(this)",
+    hasChildren = "org.jetbrains.kotlinx.dataframe.DataColumnKt.debugInfo(this).length > 0",
+)
 public interface DataColumn<out T> : BaseColumn<T> {
 
     public companion object {
@@ -312,3 +326,32 @@ public val AnyCol.typeClass: KClass<*>
         ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
 
 public fun AnyBaseCol.indices(): IntRange = 0 until size()
+
+internal fun AnyCol.debugInfo(): Array<Any?> =
+    when {
+        isColumnGroup() -> arrayOf(
+            DebugEntry(
+                key = "columns { ${columns().joinToString { renderColumnNameAndType(it) }} }",
+                value = columns().toTypedArray(),
+            ),
+            DebugEntry("rows", rows().toList().toTypedArray()),
+            schema(),
+        )
+
+        isFrameColumn() -> arrayOf(
+            DebugEntry("values", this.toList().toTypedArray()),
+            schema.value,
+        )
+
+        isValueColumn() -> this.toList().toTypedArray()
+
+        else -> error("")
+    }
+
+internal fun AnyCol.debugName(): String =
+    when {
+        isColumnGroup() -> "$name: column group { ${columns().joinToString { renderColumnNameAndType(it) }} }"
+        isFrameColumn() -> "$name: frame column"
+        isValueColumn() -> "$name: ${renderType(type)}"
+        else -> error("")
+    }

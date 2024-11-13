@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.annotations.Debug
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -19,6 +20,11 @@ import kotlin.reflect.KType
 
 internal val anyRowType = createTypeWithArgument<AnyRow>()
 
+@Debug.Renderer(
+    text = """org.jetbrains.kotlinx.dataframe.DataColumnKt.debugName(this)""",
+    childrenArray = "org.jetbrains.kotlinx.dataframe.DataColumnKt.debugInfo(this)",
+    hasChildren = "org.jetbrains.kotlinx.dataframe.DataColumnKt.debugInfo(this).length > 0",
+)
 internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T>) :
     DataFrameImpl<T>(df.columns(), df.nrow),
     DataColumnInternal<DataRow<T>>,

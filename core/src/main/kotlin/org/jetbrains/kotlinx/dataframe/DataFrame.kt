@@ -1,14 +1,17 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.annotations.Debug
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
@@ -21,6 +24,8 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrameOf
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.util.DebugEntry
+import org.jetbrains.kotlinx.dataframe.util.renderColumnNameAndType
 import kotlin.reflect.KType
 
 /**
@@ -31,6 +36,11 @@ import kotlin.reflect.KType
  * @param T Schema marker. It identifies column schema and is used to generate schema-specific extension properties for typed data access. It is covariant, so `DataFrame<A>` is assignable to variable of type `DataFrame<B>` if `A` is a subtype of `B`.
  */
 @HasSchema(schemaArg = 0)
+@Debug.Renderer(
+    text = """"DataFrame " + org.jetbrains.kotlinx.dataframe.DataFrameKt.size(this) """,
+    childrenArray = "org.jetbrains.kotlinx.dataframe.DataFrameKt.debugInfo(this)",
+    hasChildren = "true",
+)
 public interface DataFrame<out T> :
     Aggregatable<T>,
     ColumnsContainer<T> {
@@ -133,3 +143,24 @@ internal val AnyFrame.indices get() = indices()
 internal val AnyFrame.size: DataFrameSize get() = size()
 
 public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol, nrow)
+
+private fun AnyFrame.debugInfo(): Array<Any> =
+    arrayOf(
+        DebugEntry(
+            key = "columns { ${columns().joinToString { renderColumnNameAndType(it) }} }",
+            value = columns().toTypedArray(),
+        ),
+        DebugEntry(
+            key = "rows { rowsCount = ${rowsCount()} }",
+            value = rows().toList().toTypedArray(),
+        ),
+        DebugEntry(
+            key = "toString",
+            value = toString(),
+        ),
+        DebugEntry(
+            key = "describe",
+            value = describe(),
+        ),
+        schema(),
+    )

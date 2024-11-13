@@ -1,13 +1,16 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.annotations.Debug
 import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.toIterable
+import org.jetbrains.kotlinx.dataframe.util.DebugEntry
 import kotlin.reflect.KProperty
 
 /**
@@ -15,6 +18,11 @@ import kotlin.reflect.KProperty
  *
  * @param T Schema marker. See [DataFrame] for details
  */
+@Debug.Renderer(
+    text = "this.toString()",
+    hasChildren = "!this.values().isEmpty()",
+    childrenArray = "org.jetbrains.kotlinx.dataframe.DataRowKt.debugInfo(this)",
+)
 public interface DataRow<out T> {
 
     public fun index(): Int
@@ -145,3 +153,8 @@ internal val AnyRow.values: List<Any?> get() = values()
 internal val AnyRow.index: Int get() = index()
 internal val <T> DataRow<T>.prev: DataRow<T>? get() = this.prev()
 internal val <T> DataRow<T>.next: DataRow<T>? get() = this.next()
+
+private fun AnyRow.debugInfo(): Array<Any> =
+    toMap().map { (col, value) ->
+        DebugEntry(key = "$col -> $value", value = value)
+    }.toTypedArray()
