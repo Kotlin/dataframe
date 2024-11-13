@@ -25,9 +25,12 @@ import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.ConeFlexibleType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
+import org.jetbrains.kotlin.fir.types.ConeTypeProjection
 import org.jetbrains.kotlin.fir.types.canBeNull
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.coneType
@@ -41,8 +44,10 @@ import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlin.fir.types.toRegularClassSymbol
 import org.jetbrains.kotlin.fir.types.toSymbol
 import org.jetbrains.kotlin.fir.types.type
+import org.jetbrains.kotlin.fir.types.typeContext
 import org.jetbrains.kotlin.fir.types.upperBoundIfFlexible
 import org.jetbrains.kotlin.fir.types.withArguments
+import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -50,6 +55,7 @@ import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.name.StandardClassIds.List
 import org.jetbrains.kotlinx.dataframe.codeGen.*
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
+import org.jetbrains.kotlinx.dataframe.plugin.extensions.wrap
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractSchemaModificationInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Arguments
@@ -71,9 +77,11 @@ import java.util.*
 class ToDataFrameDsl : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver: FirExpression? by arg(lens = Interpreter.Id)
     val Arguments.body by dsl()
+    val Arguments.typeArg0: ConeTypeProjection? by arg(lens = Interpreter.Id)
+
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val dsl = CreateDataFrameDslImplApproximation()
-        body(dsl, mapOf("explicitReceiver" to Interpreter.Success(receiver)))
+        body(dsl, mapOf("typeArg0" to Interpreter.Success(typeArg0)))
         return PluginDataFrameSchema(dsl.columns)
     }
 }
@@ -81,17 +89,19 @@ class ToDataFrameDsl : AbstractSchemaModificationInterpreter() {
 class ToDataFrame : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver: FirExpression? by arg(lens = Interpreter.Id)
     val Arguments.maxDepth: Number by arg(defaultValue = Present(DEFAULT_MAX_DEPTH))
+    val Arguments.typeArg0: ConeTypeProjection by arg(lens = Interpreter.Id)
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return toDataFrame(maxDepth.toInt(), receiver, TraverseConfiguration())
+        return toDataFrame(maxDepth.toInt(), typeArg0, TraverseConfiguration())
     }
 }
 
 class ToDataFrameDefault : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver: FirExpression? by arg(lens = Interpreter.Id)
+    val Arguments.typeArg0: ConeTypeProjection by arg(lens = Interpreter.Id)
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return toDataFrame(DEFAULT_MAX_DEPTH, receiver, TraverseConfiguration())
+        return toDataFrame(DEFAULT_MAX_DEPTH, typeArg0, TraverseConfiguration())
     }
 }
 
@@ -109,14 +119,14 @@ private const val DEFAULT_MAX_DEPTH = 0
 
 class Properties0 : AbstractInterpreter<Unit>() {
     val Arguments.dsl: CreateDataFrameDslImplApproximation by arg()
-    val Arguments.explicitReceiver: FirExpression? by arg()
     val Arguments.maxDepth: Int by arg()
     val Arguments.body by dsl()
+    val Arguments.typeArg0: ConeTypeProjection by arg(lens = Interpreter.Id)
 
     override fun Arguments.interpret() {
         dsl.configuration.maxDepth = maxDepth
         body(dsl.configuration.traverseConfiguration, emptyMap())
-        val schema = toDataFrame(dsl.configuration.maxDepth, explicitReceiver, dsl.configuration.traverseConfiguration)
+        val schema = toDataFrame(dsl.configuration.maxDepth, typeArg0, dsl.configuration.traverseConfiguration)
         dsl.columns.addAll(schema.columns())
     }
 }
@@ -172,8 +182,8 @@ class Exclude1 : AbstractInterpreter<Unit>() {
 @OptIn(SymbolInternals::class)
 internal fun KotlinTypeFacade.toDataFrame(
     maxDepth: Int,
-    explicitReceiver: FirExpression?,
-    traverseConfiguration: TraverseConfiguration
+    arg: ConeTypeProjection,
+    traverseConfiguration: TraverseConfiguration,
 ): PluginDataFrameSchema {
     fun ConeKotlinType.isValueType() =
         this.isArrayTypeOrNullableArrayType ||
@@ -197,7 +207,7 @@ internal fun KotlinTypeFacade.toDataFrame(
     val preserveClasses = traverseConfiguration.preserveClasses.mapNotNullTo(mutableSetOf()) { it.classId }
     val preserveProperties = traverseConfiguration.preserveProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }
 
-    fun convert(classLike: ConeKotlinType, depth: Int): List<SimpleCol> {
+    fun convert(classLike: ConeKotlinType, depth: Int, makeNullable: Boolean): List<SimpleCol> {
         val symbol = classLike.toRegularClassSymbol(session) ?: return emptyList()
         val scope = symbol.unsubstitutedScope(session, ScopeSession(), false, FirResolvePhase.STATUS)
         val declarations = if (symbol.fir is FirJavaClass) {
@@ -260,7 +270,7 @@ internal fun KotlinTypeFacade.toDataFrame(
 
                 val keepSubtree = depth >= maxDepth && !fieldKind.shouldBeConvertedToColumnGroup && !fieldKind.shouldBeConvertedToFrameColumn
                 if (keepSubtree || returnType.isValueType() || returnType.classId in preserveClasses || it in preserveProperties) {
-                    SimpleDataColumn(name, TypeApproximation(returnType))
+                    SimpleDataColumn(name, TypeApproximation(returnType.withNullability(ConeNullability.create(makeNullable), session.typeContext)))
                 } else if (
                     returnType.isSubtypeOf(StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection)), session) ||
                     returnType.isSubtypeOf(StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection), isNullable = true), session)
@@ -271,30 +281,28 @@ internal fun KotlinTypeFacade.toDataFrame(
                         else -> session.builtinTypes.nullableAnyType.type
                     }
                     if (type.isValueType()) {
-                        SimpleDataColumn(name,
-                            TypeApproximation(
-                                List.constructClassLikeType(
-                                    arrayOf(type),
-                                    returnType.isNullable
-                                )
-                            )
-                        )
+                        val columnType = List.constructClassLikeType(arrayOf(type), returnType.isNullable)
+                            .withNullability(ConeNullability.create(makeNullable), session.typeContext)
+                            .wrap()
+                        SimpleDataColumn(name, columnType)
                     } else {
-                        SimpleFrameColumn(name, convert(type, depth + 1))
+                        SimpleFrameColumn(name, convert(type, depth + 1, makeNullable = false))
                     }
                 } else {
-                    SimpleColumnGroup(name, convert(returnType, depth + 1))
+                    SimpleColumnGroup(name, convert(returnType, depth + 1, returnType.isNullable || makeNullable))
                 }
             }
     }
 
-    val receiver = explicitReceiver ?: return PluginDataFrameSchema.EMPTY
-    val arg = receiver.resolvedType.typeArguments.firstOrNull() ?: return PluginDataFrameSchema.EMPTY
     return when {
         arg.isStarProjection -> PluginDataFrameSchema.EMPTY
         else -> {
-            val classLike = arg.type as? ConeClassLikeType ?: return PluginDataFrameSchema.EMPTY
-            val columns = convert(classLike, 0)
+            val classLike = when (val type = arg.type) {
+                is ConeClassLikeType -> type
+                is ConeFlexibleType -> type.upperBound
+                else -> null
+            } ?: return PluginDataFrameSchema.EMPTY
+            val columns = convert(classLike, 0, makeNullable = classLike.isNullable)
             PluginDataFrameSchema(columns)
         }
     }
