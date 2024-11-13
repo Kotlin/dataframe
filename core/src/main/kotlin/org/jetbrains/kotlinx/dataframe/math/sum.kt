@@ -45,8 +45,13 @@ internal fun <T : Number> Iterable<T>.sum(type: KType): T =
 
         Float::class -> (this as Iterable<Float>).sum() as T
 
-        // careful, cast to Int occurs! TODO
-        Int::class, Short::class, Byte::class -> (this as Iterable<Int>).sum() as T
+        Int::class -> (this as Iterable<Int>).sum() as T
+
+        // TODO result should be Int, but same type as input is returned, Issue #558
+        Short::class -> (this as Iterable<Short>).sum().toShort() as T
+
+        // TODO result should be Int, but same type as input is returned, Issue #558
+        Byte::class -> (this as Iterable<Byte>).sum().toByte() as T
 
         Long::class -> (this as Iterable<Long>).sum() as T
 
@@ -69,8 +74,13 @@ internal fun <T : Number> Iterable<T?>.sum(type: KType): T =
 
         Float::class -> (this as Iterable<Float?>).asSequence().filterNotNull().sum() as T
 
-        // careful, cast to Int occurs! TODO
-        Int::class, Short::class, Byte::class -> (this as Iterable<Int?>).asSequence().filterNotNull().sum() as T
+        Int::class -> (this as Iterable<Int?>).asSequence().filterNotNull().sum() as T
+
+        // TODO result should be Int, but same type as input is returned, Issue #558
+        Short::class -> (this as Iterable<Short?>).asSequence().filterNotNull().sum().toShort() as T
+
+        // TODO result should be Int, but same type as input is returned, Issue #558
+        Byte::class -> (this as Iterable<Short?>).asSequence().filterNotNull().sum().toByte() as T
 
         Long::class -> (this as Iterable<Long?>).asSequence().filterNotNull().sum() as T
 

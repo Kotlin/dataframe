@@ -25,14 +25,26 @@ class CumsumTests {
 
     @Test
     fun `short column`() {
-        col.map { it?.toShort() }.cumSum().toList() shouldBe expected.map { it?.toShort() }
-        col.map { it?.toShort() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toShort() }
+        col.map { it?.toShort() }.cumSum().toList() shouldBe expected
+        col.map { it?.toShort() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip
+    }
+
+    @Test
+    fun `frame with multiple columns`() {
+        val col2 by columnOf(1.toShort(), 2, 3, 4, 5)
+        val col3 by columnOf(1.toByte(), 2, 3, 4, null)
+        val df = dataFrameOf(col, col2, col3)
+        val res = df.cumSum(skipNA = false)
+
+        res[col].toList() shouldBe expectedNoSkip
+        res[col2].toList() shouldBe listOf(1, 3, 6, 10, 15)
+        res[col3].toList() shouldBe listOf(1, 3, 6, 10, null)
     }
 
     @Test
     fun `byte column`() {
-        col.map { it?.toByte() }.cumSum().toList() shouldBe expected.map { it?.toByte() }
-        col.map { it?.toByte() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toByte() }
+        col.map { it?.toByte() }.cumSum().toList() shouldBe expected
+        col.map { it?.toByte() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip
     }
 
     @Test

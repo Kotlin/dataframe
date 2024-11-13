@@ -135,6 +135,7 @@ public fun Iterable<Long>.mean(): Double =
         if (count > 0) sum / count else Double.NaN
     }
 
+// TODO result is Double, but should be BigDecimal, Issue #558
 @JvmName("bigIntegerMean")
 public fun Iterable<BigInteger>.mean(): Double =
     if (this is Collection) {
@@ -148,6 +149,7 @@ public fun Iterable<BigInteger>.mean(): Double =
         if (count > 0) sum / count else Double.NaN
     }
 
+// TODO result is Double, but should be BigDecimal, Issue #558
 @JvmName("bigDecimalMean")
 public fun Iterable<BigDecimal>.mean(): Double =
     if (this is Collection) {

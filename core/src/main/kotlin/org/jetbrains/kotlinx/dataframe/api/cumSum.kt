@@ -27,11 +27,21 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
 
         typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
 
-        // careful, cast to Int can occur! TODO
-        typeOf<Int>(), typeOf<Byte>(), typeOf<Short>() -> cast<Int>().cumSum().cast()
+        typeOf<Int>() -> cast<Int>().cumSum().cast()
 
-        // careful, cast to Int can occur! TODO
-        typeOf<Int?>(), typeOf<Byte?>(), typeOf<Short?>() -> cast<Int?>().cumSum(skipNA).cast()
+        // TODO cumSum for Byte returns Int but is cast back to T: Byte
+        typeOf<Byte>() -> cast<Byte>().cumSum().cast()
+
+        // TODO cumSum for Short returns Int but is cast back to T: Short
+        typeOf<Short>() -> cast<Short>().cumSum().cast()
+
+        typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
+
+        // TODO cumSum for Byte? returns Int? but is cast back to T: Byte?
+        typeOf<Byte?>() -> cast<Byte?>().cumSum(skipNA).cast()
+
+        // TODO cumSum for Short? returns Int? but is cast back to T: Short?
+        typeOf<Short?>() -> cast<Short?>().cumSum(skipNA).cast()
 
         typeOf<Long>() -> cast<Long>().cumSum().cast()
 
