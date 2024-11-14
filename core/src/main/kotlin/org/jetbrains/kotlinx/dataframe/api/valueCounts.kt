@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import kotlin.reflect.KProperty
@@ -50,6 +52,8 @@ public fun <T> DataColumn<T>.valueCounts(
 
 // region DataFrame
 
+@Refine
+@Interpretable("ValueCounts")
 public fun <T> DataFrame<T>.valueCounts(
     sort: Boolean = true,
     ascending: Boolean = false,
