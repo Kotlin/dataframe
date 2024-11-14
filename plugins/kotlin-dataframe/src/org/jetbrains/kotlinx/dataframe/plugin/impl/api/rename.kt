@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.plugin.impl.api
 
+import org.jetbrains.kotlinx.dataframe.plugin.impl.Absent
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractSchemaModificationInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Arguments
@@ -8,9 +9,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
-import org.jetbrains.kotlinx.dataframe.plugin.impl.data.ColumnWithPathApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.impl.dataFrame
-import org.jetbrains.kotlinx.dataframe.plugin.impl.varargString
 
 class Rename : AbstractInterpreter<RenameClauseApproximation>() {
     private val Arguments.receiver by dataFrame()
@@ -24,7 +23,7 @@ class RenameClauseApproximation(val schema: PluginDataFrameSchema, val columns: 
 
 class RenameInto : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver: RenameClauseApproximation by arg()
-    val Arguments.newNames: List<String> by varargString()
+    val Arguments.newNames: List<String> by arg(defaultValue = Absent)
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val columns = receiver.columns.resolve(receiver.schema)
