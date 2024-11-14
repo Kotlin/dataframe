@@ -1464,4 +1464,63 @@ class Modify : TestBase() {
         }
         // SampleEnd
     }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun rename_properties() {
+        // SampleStart
+        df.rename { name }.into("fullName")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun rename_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        df.rename { name }.into("fullName")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun rename_strings() {
+        // SampleStart
+        df.rename("name").into("fullName")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun renameExpression_properties() {
+        // SampleStart
+        df.rename { age }.into {
+            val mean = it.data.mean()
+            "age [mean = $mean]"
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun renameExpression_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        df.rename { age }.into {
+            val mean = it.data.mean()
+            "age [mean = $mean]"
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun renameExpression_strings() {
+        // SampleStart
+        df.rename("age").into {
+            val mean = it.data.cast<Int>().mean()
+            "age [mean = $mean]"
+        }
+        // SampleEnd
+    }
 }

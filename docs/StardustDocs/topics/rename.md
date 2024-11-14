@@ -44,21 +44,31 @@ df.rename("name").into("fullName")
 <tab title="Properties">
 
 ```kotlin
-
+df.rename { age }.into {
+    val mean = it.data.mean()
+    "age [mean = $mean]"
+}
 ```
 
 </tab>
 <tab title="Accessors">
 
 ```kotlin
-
+val age by column<Int>()
+df.rename { age }.into {
+    val mean = it.data.mean()
+    "age [mean = $mean]"
+}
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-
+df.rename("age").into {
+    val mean = it.data.cast<Int>().mean()
+    "age [mean = $mean]"
+}
 ```
 
 </tab></tabs>
