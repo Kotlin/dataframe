@@ -194,6 +194,8 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
                 }
             }
 
+            // Deephaven's fast path for numeric type inference supports only byte, short, int, and long
+            // so this should never be reached
             else -> error("unsupported sink state")
         }
     }
