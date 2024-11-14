@@ -123,6 +123,7 @@ class Schema(
 }
 
 // Without Serializable GradleRunner tests fail
+// TODO add more options
 data class CsvOptionsDsl(var delimiter: Char = ',') : Serializable
 
 data class JsonOptionsDsl(

@@ -55,12 +55,15 @@ dependencies {
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
     api(project(":dataframe-jdbc"))
+    // TODO enable when it leaves the experimental phase
+    //  api(project(":dataframe-csv"))
 
     kover(project(":core"))
     kover(project(":dataframe-arrow"))
     kover(project(":dataframe-excel"))
     kover(project(":dataframe-openapi"))
     kover(project(":dataframe-jdbc"))
+    kover(project(":dataframe-csv"))
     kover(project(":plugins:kotlin-dataframe"))
 }
 
@@ -153,7 +156,7 @@ allprojects {
     afterEvaluate {
         try {
             configure<KtlintExtension> {
-                version = "1.3.0"
+                version = "1.4.1"
                 // rules are set up through .editorconfig
             }
         } catch (_: UnknownDomainObjectException) {
