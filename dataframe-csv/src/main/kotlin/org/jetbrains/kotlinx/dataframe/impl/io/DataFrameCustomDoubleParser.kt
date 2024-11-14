@@ -14,11 +14,11 @@ internal class DataFrameCustomDoubleParser(parserOptions: ParserOptions) : Custo
     override fun parse(bs: ByteSlice): Double =
         try {
             fastDoubleParser.parseOrNull(bs.data(), bs.begin(), bs.size())
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
-        } ?: throw NumberFormatException("Failed to parse double")
+        } ?: throw NumberFormatException()
 
     override fun parse(cs: CharSequence): Double =
         fastDoubleParser.parseOrNull(cs.toString())
-            ?: throw NumberFormatException("Failed to parse double")
+            ?: throw NumberFormatException()
 }

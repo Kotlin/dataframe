@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.Test
 import java.io.File
 import java.io.StringWriter
@@ -76,59 +77,28 @@ class DelimCsvTsvTests {
         df["double"].type() shouldBe typeOf<Double?>()
         df["number"].type() shouldBe typeOf<Double>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
-
-        df.print(columnTypes = true, borders = true, title = true)
     }
 
     @Test
     fun `read ZIP Csv`() {
-        val df = DataFrame.readCsv(simpleCsvZip)
+        DataFrame.readCsv(simpleCsvZip) shouldBe DataFrame.readCsv(simpleCsv)
 
-        df.columnsCount() shouldBe 11
-        df.rowsCount() shouldBe 5
-        df.columnNames()[5] shouldBe "duplicate1"
-        df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<Char?>()
-        df["double"].type() shouldBe typeOf<Double?>()
-        df["number"].type() shouldBe typeOf<Double>()
-        df["time"].type() shouldBe typeOf<LocalDateTime>()
-
-        df.print(columnTypes = true, borders = true, title = true)
+        shouldThrow<IllegalStateException> {
+            DataFrame.readCsv(notCsv)
+        }
     }
 
     @Test
     fun `read GZ Csv`() {
-        val df = DataFrame.readCsv(simpleCsvGz)
-
-        df.columnsCount() shouldBe 11
-        df.rowsCount() shouldBe 5
-        df.columnNames()[5] shouldBe "duplicate1"
-        df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<Char?>()
-        df["double"].type() shouldBe typeOf<Double?>()
-        df["number"].type() shouldBe typeOf<Double>()
-        df["time"].type() shouldBe typeOf<LocalDateTime>()
-
-        df.print(columnTypes = true, borders = true, title = true)
+        DataFrame.readCsv(simpleCsvGz) shouldBe DataFrame.readCsv(simpleCsv)
     }
 
     @Test
     fun `read custom compression Csv`() {
-        val df = DataFrame.readCsv(
+        DataFrame.readCsv(
             simpleCsvGz,
             compression = Compression.Custom { GZIPInputStream(it) },
-        )
-
-        df.columnsCount() shouldBe 11
-        df.rowsCount() shouldBe 5
-        df.columnNames()[5] shouldBe "duplicate1"
-        df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<Char?>()
-        df["double"].type() shouldBe typeOf<Double?>()
-        df["number"].type() shouldBe typeOf<Double>()
-        df["time"].type() shouldBe typeOf<LocalDateTime>()
-
-        df.print(columnTypes = true, borders = true, title = true)
+        ) shouldBe DataFrame.readCsv(simpleCsv)
     }
 
     @Test
@@ -156,20 +126,20 @@ class DelimCsvTsvTests {
         println(df)
     }
 
+    private fun assertColumnType(columnName: String, kClass: KClass<*>, schema: DataFrameSchema) {
+        val col = schema.columns[columnName]
+        col.shouldNotBeNull()
+        col.type.classifier shouldBe kClass
+    }
+
     @Test
     fun readCsvWithFloats() {
         val df = DataFrame.readCsv(wineCsv, delimiter = ';')
         val schema = df.schema()
 
-        fun assertColumnType(columnName: String, kClass: KClass<*>) {
-            val col = schema.columns[columnName]
-            col.shouldNotBeNull()
-            col.type.classifier shouldBe kClass
-        }
-
-        assertColumnType("citric acid", Double::class)
-        assertColumnType("alcohol", Double::class)
-        assertColumnType("quality", Int::class)
+        assertColumnType("citric acid", Double::class, schema)
+        assertColumnType("alcohol", Double::class, schema)
+        assertColumnType("quality", Int::class, schema)
     }
 
     @Test
@@ -180,15 +150,9 @@ class DelimCsvTsvTests {
             val df = DataFrame.readCsv(wineCsv, delimiter = ';')
             val schema = df.schema()
 
-            fun assertColumnType(columnName: String, kClass: KClass<*>) {
-                val col = schema.columns[columnName]
-                col.shouldNotBeNull()
-                col.type.classifier shouldBe kClass
-            }
-
-            assertColumnType("citric acid", Double::class)
-            assertColumnType("alcohol", Double::class)
-            assertColumnType("quality", Int::class)
+            assertColumnType("citric acid", Double::class, schema)
+            assertColumnType("alcohol", Double::class, schema)
+            assertColumnType("quality", Int::class, schema)
         } finally {
             Locale.setDefault(currentLocale)
         }
@@ -236,7 +200,15 @@ class DelimCsvTsvTests {
 
     @Test
     fun `if string starts with a number, it should be parsed as a string anyway`() {
-        val df = DataFrame.readCsv(durationCsv)
+        @Language("CSV")
+        val df = DataFrame.readCsvStr(
+            """
+            duration,floatDuration
+            12 min,1.0
+            15,12.98 sec
+            1 Season,0.9 parsec
+            """.trimIndent(),
+        )
         df["duration"].type() shouldBe typeOf<String>()
         df["floatDuration"].type() shouldBe typeOf<String>()
     }
@@ -318,9 +290,18 @@ class DelimCsvTsvTests {
 
     @Test
     fun `check integrity of example data`() {
+        shouldThrow<IllegalStateException> {
+            // cannot read file with blank line at the start
+            DataFrame.readCsv("../data/jetbrains_repositories.csv")
+        }
+        shouldThrow<IllegalStateException> {
+            // ignoreEmptyLines only ignores intermediate empty lines
+            DataFrame.readCsv("../data/jetbrains_repositories.csv", ignoreEmptyLines = true)
+        }
+
         val df = DataFrame.readCsv(
             "../data/jetbrains_repositories.csv",
-            skipLines = 1, // now needs this, ignoreEmptyLines cannot catch it
+            skipLines = 1, // we need to skip the empty lines manually
         )
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
         df.columnTypes() shouldBe listOf(
@@ -332,7 +313,7 @@ class DelimCsvTsvTests {
         )
         df shouldBe DataFrame.readCsv(
             "../data/jetbrains repositories.csv",
-            skipLines = 1, // now needs this, ignoreEmptyLines cannot catch it
+            skipLines = 1,
         )
     }
 
@@ -646,9 +627,9 @@ class DelimCsvTsvTests {
         private val simpleCsvGz = testResource("testCSV.csv.gz")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
-        private val durationCsv = testCsv("duration")
         private val withBomCsv = testCsv("with-bom")
         private val msleepCsv = testCsv("msleep")
+        private val notCsv = testResource("not-csv.zip")
     }
 }
 
