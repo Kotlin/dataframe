@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
+import org.jetbrains.annotations.ApiStatus.Experimental
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.toGeo
@@ -21,6 +22,10 @@ import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.io.geojson.GeoJsonReader
 
+/**
+ * Experimental geo coding utility.
+ */
+@Experimental
 object Geocoder {
 
     private val url = "https://geo2.datalore.jetbrains.com/map_data/geocoding"

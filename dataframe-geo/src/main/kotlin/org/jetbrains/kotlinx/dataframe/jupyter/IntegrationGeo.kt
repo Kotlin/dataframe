@@ -4,8 +4,12 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.WithGeometry
-import org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygon
-import org.jetbrains.kotlinx.dataframe.geo.WithPolygon
+import org.jetbrains.kotlinx.dataframe.geo.WithLineStringGeometry
+import org.jetbrains.kotlinx.dataframe.geo.WithMultiLineStringGeometry
+import org.jetbrains.kotlinx.dataframe.geo.WithMultiPointGeometry
+import org.jetbrains.kotlinx.dataframe.geo.WithMultiPolygonGeometry
+import org.jetbrains.kotlinx.dataframe.geo.WithPointGeometry
+import org.jetbrains.kotlinx.dataframe.geo.WithPolygonGeometry
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.jupyter.api.FieldHandler
 import org.jetbrains.kotlinx.jupyter.api.FieldHandlerExecution
@@ -29,17 +33,27 @@ internal class IntegrationGeo : JupyterIntegration() {
         import("org.jetbrains.kotlinx.dataframe.geo.jts.*")
         import("org.jetbrains.kotlinx.dataframe.geo.geotools.*")
         import("org.jetbrains.kotlinx.dataframe.geo.geocode.*")
+        import("org.geotools.referencing.CRS")
+        import("org.locationtech.jts.geom.*")
         onLoaded {
             useSchema<WithGeometry>()
-            useSchema<WithPolygon>()
-            useSchema<WithMultiPolygon>()
+            useSchema<WithPolygonGeometry>()
+            useSchema<WithMultiPolygonGeometry>()
+            useSchema<WithPointGeometry>()
+            useSchema<WithMultiPointGeometry>()
+            useSchema<WithLineStringGeometry>()
+            useSchema<WithMultiLineStringGeometry>()
         }
         val replCodeGeneratorImpl = ReplCodeGeneratorImpl()
         replCodeGeneratorImpl.process(WithGeometry::class)
-        replCodeGeneratorImpl.process(WithPolygon::class)
-        replCodeGeneratorImpl.process(WithMultiPolygon::class)
+        replCodeGeneratorImpl.process(WithPolygonGeometry::class)
+        replCodeGeneratorImpl.process(WithMultiPolygonGeometry::class)
+        replCodeGeneratorImpl.process(WithPointGeometry::class)
+        replCodeGeneratorImpl.process(WithMultiPointGeometry::class)
+        replCodeGeneratorImpl.process(WithLineStringGeometry::class)
+        replCodeGeneratorImpl.process(WithMultiLineStringGeometry::class)
         val execution = FieldHandlerFactory.createUpdateExecution<GeoDataFrame<*>> { geo, kProperty ->
-            // TODO rewrite
+            // TODO rewrite better
             val generatedDf = execute(
                 codeWithConverter = replCodeGeneratorImpl.process(geo.df, kProperty),
                 "(${kProperty.name}.df as DataFrame<*>)",

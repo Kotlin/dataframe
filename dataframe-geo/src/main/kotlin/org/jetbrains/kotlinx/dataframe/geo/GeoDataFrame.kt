@@ -17,12 +17,12 @@ import org.jetbrains.kotlinx.dataframe.api.with
  */
 class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateReferenceSystem?) {
     /**
-     * Creates a new `GeoDataFrame` using a specified transformation block on the underlying DataFrame.
+     * Creates a new `GeoDataFrame` with the modified underlying DataFrame.
      *
-     * @param updateBlock The block defining the transformations to be applied to the DataFrame.
-     * @return A new `GeoDataFrame` instance with updated data and the same CRS.
+     * @param block The block defining the transformations to be applied to the DataFrame.
+     * @return A new `GeoDataFrame` instance with updated dataframe and the same CRS.
      */
-    fun update(updateBlock: DataFrame<T>.() -> DataFrame<T>): GeoDataFrame<T> = GeoDataFrame(df.updateBlock(), crs)
+    inline fun modify(block: DataFrame<T>.() -> DataFrame<T>): GeoDataFrame<T> = GeoDataFrame(df.block(), crs)
 
     /**
      * Transforms the geometries to a specified Coordinate Reference System (CRS).
@@ -49,19 +49,26 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is GeoDataFrame<*>) return false
+        if (javaClass != other?.javaClass) return false
 
-        return df == other.df &&
-            when {
-                crs == null && other.crs == null -> true
-                crs == null || other.crs == null -> false
-                else -> CRS.equalsIgnoreMetadata(crs, other.crs)
-            }
+        other as GeoDataFrame<*>
+
+        if (df != other.df) return false
+
+        return when {
+            crs == null && other.crs == null -> true
+            crs == null || other.crs == null -> false
+            else -> CRS.equalsIgnoreMetadata(crs, other.crs)
+        }
     }
 
-    override fun toString(): String = super.toString()
+    override fun hashCode(): Int {
+        var result = df.hashCode()
+        result = 31 * result + (crs?.hashCode() ?: 0)
+        return result
+    }
 
-    override fun hashCode(): Int = super.hashCode()
+    override fun toString(): String = "GeoDataFrame(df=$df, crs=$crs)"
 
     companion object {
         val DEFAULT_CRS = CRS.decode("EPSG:4326", true)

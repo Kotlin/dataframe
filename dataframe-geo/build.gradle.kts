@@ -7,6 +7,8 @@ plugins {
         alias(publisher)
         alias(jupyter.api)
         alias(ktlint)
+        alias(dataframe)
+        alias(ksp)
     }
 }
 

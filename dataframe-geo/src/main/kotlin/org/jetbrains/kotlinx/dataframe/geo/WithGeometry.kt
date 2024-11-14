@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.geo
 
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.LineString
+import org.locationtech.jts.geom.MultiLineString
+import org.locationtech.jts.geom.MultiPoint
 import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.geom.Point
 import org.locationtech.jts.geom.Polygon
 
 @DataSchema
@@ -13,26 +15,31 @@ interface WithGeometry {
 }
 
 @DataSchema
-interface WithPolygon : WithGeometry {
+interface WithPolygonGeometry : WithGeometry {
     override val geometry: Polygon
 }
 
 @DataSchema
-interface WithMultiPolygon : WithGeometry {
+interface WithMultiPolygonGeometry : WithGeometry {
     override val geometry: MultiPolygon
 }
 
-@Suppress("UNCHECKED_CAST")
-@get:JvmName("geometry")
-val ColumnsContainer<WithGeometry>.geometry: DataColumn<Geometry>
-    get() = get("geometry") as DataColumn<Geometry>
+@DataSchema
+interface WithPointGeometry : WithGeometry {
+    override val geometry: Point
+}
 
-@Suppress("UNCHECKED_CAST")
-@get:JvmName("geometryPolygon")
-val ColumnsContainer<WithPolygon>.geometry: DataColumn<Polygon>
-    get() = get("geometry") as DataColumn<Polygon>
+@DataSchema
+interface WithMultiPointGeometry : WithGeometry {
+    override val geometry: MultiPoint
+}
 
-@Suppress("UNCHECKED_CAST")
-@get:JvmName("geometryMultiPolygon")
-val ColumnsContainer<WithMultiPolygon>.geometry: DataColumn<MultiPolygon>
-    get() = get("geometry") as DataColumn<MultiPolygon>
+@DataSchema
+interface WithLineStringGeometry : WithGeometry {
+    override val geometry: LineString
+}
+
+@DataSchema
+interface WithMultiLineStringGeometry : WithGeometry {
+    override val geometry: MultiLineString
+}
