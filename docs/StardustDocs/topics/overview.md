@@ -58,7 +58,7 @@ val df = DataFrame.readCSV("titanic.csv", delimiter = ';')
 val someSurvivors = df.filter { survived && home.endsWith("NY") && age in 10..20 }
     
 // add column
-val withBirthYearColumen = df.add("birthYear") { 1912 - age }
+val withBirthYearColumn = df.add("birthYear") { 1912 - age }
 
 // sort rows
 val sortedByAge = df.sortByDesc { age }
