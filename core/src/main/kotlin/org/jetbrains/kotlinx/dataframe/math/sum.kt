@@ -13,16 +13,16 @@ internal fun <T, R : Number> Iterable<T>.sumOf(type: KType, selector: (T) -> R?)
     return when (type.classifier) {
         Double::class -> sumOf(selector as ((T) -> Double)) as R
 
-        // careful, conversion to Double to Float occurs! TODO
+        // careful, conversion to Double to Float occurs! TODO, Issue #558
         Float::class -> sumOf { (selector as ((T) -> Float))(it).toDouble() }.toFloat() as R
 
         Int::class -> sumOf(selector as ((T) -> Int)) as R
 
-        // careful, cast to Int occurs! TODO
-        Short::class -> sumOf { (selector as ((T) -> Short))(it).toInt() } as R
+        // careful, conversion to Int occurs! TODO, Issue #558
+        Short::class -> sumOf { (selector as ((T) -> Short))(it).toInt() }.toShort() as R
 
-        // careful, cast to Int occurs! TODO
-        Byte::class -> sumOf { (selector as ((T) -> Byte))(it).toInt() } as R
+        // careful, conversion to Int occurs! TODO, Issue #558
+        Byte::class -> sumOf { (selector as ((T) -> Byte))(it).toInt() }.toByte() as R
 
         Long::class -> sumOf(selector as ((T) -> Long)) as R
 
