@@ -29,19 +29,19 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
 
         typeOf<Int>() -> cast<Int>().cumSum().cast()
 
-        // TODO cumSum for Byte returns Int but is cast back to T: Byte
-        typeOf<Byte>() -> cast<Byte>().cumSum().cast()
+        // TODO cumSum for Byte returns Int but is converted back to T: Byte
+        typeOf<Byte>() -> cast<Byte>().cumSum().map { it.toByte() }.cast()
 
-        // TODO cumSum for Short returns Int but is cast back to T: Short
-        typeOf<Short>() -> cast<Short>().cumSum().cast()
+        // TODO cumSum for Short returns Int but is converted back to T: Short
+        typeOf<Short>() -> cast<Short>().cumSum().map { it.toShort() }.cast()
 
         typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
 
-        // TODO cumSum for Byte? returns Int? but is cast back to T: Byte?
-        typeOf<Byte?>() -> cast<Byte?>().cumSum(skipNA).cast()
+        // TODO cumSum for Byte? returns Int? but is converted back to T: Byte?
+        typeOf<Byte?>() -> cast<Byte?>().cumSum(skipNA).map { it?.toByte() }.cast()
 
-        // TODO cumSum for Short? returns Int? but is cast back to T: Short?
-        typeOf<Short?>() -> cast<Short?>().cumSum(skipNA).cast()
+        // TODO cumSum for Short? returns Int? but is converted back to T: Short?
+        typeOf<Short?>() -> cast<Short?>().cumSum(skipNA).map { it?.toShort() }.cast()
 
         typeOf<Long>() -> cast<Long>().cumSum().cast()
 
