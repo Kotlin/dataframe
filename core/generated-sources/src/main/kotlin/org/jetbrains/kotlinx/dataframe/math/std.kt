@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.ddof_default
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -26,6 +27,8 @@ internal fun <T : Number> Iterable<T?>.std(
         Int::class, Short::class, Byte::class -> (this as Iterable<Int>).std(ddof)
         Long::class -> (this as Iterable<Long>).std(ddof)
         BigDecimal::class -> (this as Iterable<BigDecimal>).std(ddof)
+        BigInteger::class -> (this as Iterable<BigInteger>).std(ddof)
+        Number::class -> (this as Iterable<Number>).map { it.toDouble() }.std(skipNA, ddof)
         Nothing::class -> Double.NaN
         else -> throw IllegalArgumentException("Unable to compute the std for type ${renderType(type)}")
     }
@@ -47,3 +50,6 @@ public fun Iterable<Long>.std(ddof: Int = ddof_default): Double = varianceAndMea
 
 @JvmName("bigDecimalStd")
 public fun Iterable<BigDecimal>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
+
+@JvmName("bigIntegerStd")
+public fun Iterable<BigInteger>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
