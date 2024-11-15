@@ -81,9 +81,9 @@ import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isInterComparable
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.keysInto
@@ -2445,12 +2445,12 @@ class DataFrameTests : BaseTest() {
             ComparableTest(2, 2, "b", "b", "2", "2"),
         ).toDataFrame()
 
-        df.int.isComparable() shouldBe true
-        df.comparableInt.isComparable() shouldBe true
-        df.string.isComparable() shouldBe true
-        df.comparableString.isComparable() shouldBe true
-        df.comparableStar.isComparable() shouldBe false
-        df.comparableNothing.isComparable() shouldBe false
+        df.int.isInterComparable() shouldBe true
+        df.comparableInt.isInterComparable() shouldBe true
+        df.string.isInterComparable() shouldBe true
+        df.comparableString.isInterComparable() shouldBe true
+        df.comparableStar.isInterComparable() shouldBe false
+        df.comparableNothing.isInterComparable() shouldBe false
     }
 
     @Test
