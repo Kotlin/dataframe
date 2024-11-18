@@ -34,12 +34,9 @@ class GeoDataFrame<T : WithGeometry>(val df: DataFrame<T>, val crs: CoordinateRe
      * @return A new `GeoDataFrame` with reprojected geometries and the specified CRS.
      */
     fun applyCrs(targetCrs: CoordinateReferenceSystem): GeoDataFrame<T> {
-        if (crs == null) {
-            return GeoDataFrame(df, targetCrs)
-        }
         if (targetCrs == this.crs) return this
         // Use WGS 84 by default TODO
-        val sourceCRS: CoordinateReferenceSystem = this.crs
+        val sourceCRS: CoordinateReferenceSystem = this.crs ?: DEFAULT_CRS
         val transform = CRS.findMathTransform(sourceCRS, targetCrs, true)
         return GeoDataFrame(
             df.update { geometry }.with { JTS.transform(it, transform) },
