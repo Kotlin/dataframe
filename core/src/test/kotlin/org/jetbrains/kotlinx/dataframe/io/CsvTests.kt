@@ -5,6 +5,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import org.apache.commons.csv.CSVFormat
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -177,7 +178,15 @@ class CsvTests {
 
     @Test
     fun `if string starts with a number, it should be parsed as a string anyway`() {
-        val df = DataFrame.readCSV(durationCsv)
+        @Language("CSV")
+        val df = DataFrame.readDelimStr(
+            """
+            duration,floatDuration
+            12 min,1.0
+            15,12.98 sec
+            1 Season,0.9 parsec
+            """.trimIndent(),
+        )
         df["duration"].type() shouldBe typeOf<String>()
         df["floatDuration"].type() shouldBe typeOf<String>()
     }
@@ -321,7 +330,6 @@ class CsvTests {
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
-        private val durationCsv = testCsv("duration")
         private val withBomCsv = testCsv("with-bom")
     }
 }

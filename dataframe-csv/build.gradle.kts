@@ -164,8 +164,4 @@ kotlinPublications {
 
 kotlin {
     explicitApi()
-    sourceSets.all {
-        languageSettings {
-        }
-    }
 }

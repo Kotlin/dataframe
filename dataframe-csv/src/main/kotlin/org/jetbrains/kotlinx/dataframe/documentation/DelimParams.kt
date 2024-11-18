@@ -189,7 +189,7 @@ internal object DelimParams {
     /**
      * @param parseParallel Whether to parse the data in parallel. Default: `true`.
      *
-     *   If `true`, the data will be parsed in parallel.
+     *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
      *   This is usually faster, but can be turned off for debugging.
      */
     const val PARSE_PARALLEL: Boolean = true

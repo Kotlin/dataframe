@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
+import org.jetbrains.kotlinx.dataframe.io.Compression
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -56,7 +57,7 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = compressionStateOf(path),
+    compression: Compression<*> = Compression.of(path),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -107,7 +108,7 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = compressionStateOf(file),
+    compression: Compression<*> = Compression.of(file),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -158,7 +159,7 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = compressionStateOf(url),
+    compression: Compression<*> = Compression.of(url),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -209,7 +210,7 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = compressionStateOf(fileOrUrl),
+    compression: Compression<*> = Compression.of(fileOrUrl),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,

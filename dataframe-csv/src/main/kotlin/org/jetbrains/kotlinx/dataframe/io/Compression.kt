@@ -18,6 +18,21 @@ import java.util.zip.ZipInputStream
  */
 public sealed class Compression<I : InputStream>(public open val wrapStream: (InputStream) -> I) {
 
+    public companion object {
+        public fun of(fileOrUrl: String): Compression<*> =
+            when (fileOrUrl.split(".").last()) {
+                "gz" -> Gzip
+                "zip" -> Zip
+                else -> None
+            }
+
+        public fun of(file: File): Compression<*> = of(file.name)
+
+        public fun of(path: Path): Compression<*> = of(path.fileName?.toString() ?: "")
+
+        public fun of(url: URL): Compression<*> = of(url.path)
+    }
+
     /** Can be overridden to perform some actions before reading from the input stream. */
     public open fun doFirst(inputStream: I) {}
 
@@ -90,16 +105,3 @@ public inline fun <T, I : InputStream> InputStream.useDecompressed(
         compression.doFinally(wrappedStream)
     }
 }
-
-public fun compressionStateOf(fileOrUrl: String): Compression<*> =
-    when (fileOrUrl.split(".").last()) {
-        "gz" -> Compression.Gzip
-        "zip" -> Compression.Zip
-        else -> Compression.None
-    }
-
-public fun compressionStateOf(file: File): Compression<*> = compressionStateOf(file.name)
-
-public fun compressionStateOf(path: Path): Compression<*> = compressionStateOf(path.fileName?.toString() ?: "")
-
-public fun compressionStateOf(url: URL): Compression<*> = compressionStateOf(url.path)
