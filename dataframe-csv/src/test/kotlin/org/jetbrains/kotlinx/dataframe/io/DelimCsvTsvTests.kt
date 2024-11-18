@@ -19,6 +19,9 @@ import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import java.io.File
 import java.io.StringWriter
@@ -31,6 +34,22 @@ import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DelimCsvTsvTests {
+
+    private val logLevel = "org.slf4j.simpleLogger.log.${FastDoubleParser::class.qualifiedName}"
+    private var loggerBefore: String? = null
+
+    @Before
+    fun setLogger() {
+        loggerBefore = System.getProperty(logLevel)
+        System.setProperty(logLevel, "debug")
+    }
+
+    @After
+    fun restoreLogger() {
+        if (loggerBefore != null) {
+            System.setProperty(logLevel, loggerBefore)
+        }
+    }
 
     @Test
     fun readNulls() {
