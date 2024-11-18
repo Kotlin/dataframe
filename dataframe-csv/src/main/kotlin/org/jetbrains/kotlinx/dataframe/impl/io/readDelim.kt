@@ -149,7 +149,10 @@ internal fun readDelimImpl(
             ) {
                 return@readDelimImpl DataFrame.empty()
             }
-            throw IllegalStateException("Could not read delimiter-separated data. ${e.message}", e)
+            throw IllegalStateException(
+                "Could not read delimiter-separated data: CsvReaderException: ${e.message}: ${e.cause?.message ?: ""}",
+                e,
+            )
         }
     }
 

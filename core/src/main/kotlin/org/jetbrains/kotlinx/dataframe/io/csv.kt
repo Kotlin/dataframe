@@ -5,11 +5,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVRecord
 import org.apache.commons.io.input.BOMInputStream
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -17,12 +15,11 @@ import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
+import org.jetbrains.kotlinx.dataframe.io.ColType.String
 import org.jetbrains.kotlinx.dataframe.util.AS_URL
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_REPLACE
@@ -46,7 +43,6 @@ import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
 
@@ -354,66 +350,17 @@ public fun DataFrame.Companion.readDelim(
     skipLines: Int = 0,
     readLines: Int? = null,
     parserOptions: ParserOptions? = null,
-): AnyFrame {
+): AnyFrame =
     try {
-        var reader = reader
-        if (skipLines > 0) {
-            reader = BufferedReader(reader)
-            repeat(skipLines) { reader.readLine() }
-        }
-
-        val csvParser = format.parse(reader)
-        val records = if (readLines == null) {
-            csvParser.records
-        } else {
-            require(readLines >= 0) { "`readLines` must not be negative" }
-            val records = ArrayList<CSVRecord>(readLines)
-            val iter = csvParser.iterator()
-            var count = readLines ?: 0
-            while (iter.hasNext() && 0 < count--) {
-                records.add(iter.next())
-            }
-            records
-        }
-
-        val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
-            ?: (1..(records.firstOrNull()?.count() ?: 0)).map { index -> "X$index" }
-
-        val generator = ColumnNameGenerator()
-        val uniqueNames = columnNames.map { generator.addUnique(it) }
-
-        val cols = uniqueNames.mapIndexed { colIndex, colName ->
-            val defaultColType = colTypes[".default"]
-            val colType = colTypes[colName] ?: defaultColType
-            var hasNulls = false
-            val values = records.map {
-                if (it.isSet(colIndex)) {
-                    it[colIndex].ifEmpty {
-                        hasNulls = true
-                        null
-                    }
-                } else {
-                    hasNulls = true
-                    null
-                }
-            }
-            val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
-            val skipTypes = when {
-                colType != null ->
-                    // skip all types except the desired type
-                    ParserOptions.allTypesExcept(colType.toKType())
-
-                else ->
-                    // respect the provided parser options
-                    parserOptions?.skipTypes ?: emptySet()
-            }
-            val adjustsedParserOptions = (parserOptions ?: ParserOptions())
-                .copy(skipTypes = skipTypes)
-
-            return@mapIndexed column.tryParse(adjustsedParserOptions)
-        }
-        return cols.toDataFrame()
-    } catch (e: OutOfMemoryError) {
+        readDelimImpl(
+            reader = reader,
+            format = format,
+            colTypes = colTypes,
+            skipLines = skipLines,
+            readLines = readLines,
+            parserOptions = parserOptions,
+        )
+    } catch (_: OutOfMemoryError) {
         throw OutOfMemoryError(
             "Ran out of memory reading this CSV-like file. " +
                 "You can try our new experimental CSV reader by adding the dependency " +
@@ -421,7 +368,6 @@ public fun DataFrame.Companion.readDelim(
                 "`DataFrame.readCSV()`.",
         )
     }
-}
 
 public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT): Unit =
     writeCSV(FileWriter(file), format)
