@@ -43,4 +43,6 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
     override fun getValue(row: AnyRow) = path.getValue(row) as T
 
     override fun getValueOrNull(row: AnyRow) = path.getValueOrNull(row) as T
+
+    override fun toString(): String = path().toString()
 }
