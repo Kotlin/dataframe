@@ -43,10 +43,6 @@ public class FastDoubleParser(private val parserOptions: ParserOptions) {
 
     private val parser = ConfigurableDoubleParser(/* symbols = */ setupNumberFormatSymbols(), /* ignoreCase = */ true)
 
-    // Fix for Java 8 RTL languages minus sign not being recognized
-    private val minusSignIsFormatSymbol =
-        Character.getType(localDecimalFormatSymbols.minusSign) == Character.FORMAT.toInt()
-
     /**
      * Sets up the [NumberFormatSymbols] for the [ConfigurableDoubleParser] based on
      * [localDecimalFormatSymbols] with fallbacks from [fallbackDecimalFormatSymbols].
@@ -181,17 +177,6 @@ public class FastDoubleParser(private val parserOptions: ParserOptions) {
     ): Double? {
         if (parserOptions.useFastDoubleParser && charset in supportedFastCharsets) {
             try {
-                // Fixes RTL minus sign not being recognized
-                if (minusSignIsFormatSymbol && ba.toString(charset).startsWith(localDecimalFormatSymbols.minusSign)) {
-                    val localMinusSize = localDecimalFormatSymbols.minusSign.toString().toByteArray(charset).size
-                    val fallbackMinusSize = fallbackDecimalFormatSymbols.minusSign.toString().toByteArray(charset).size
-                    val newOffset = (localMinusSize - fallbackMinusSize).coerceAtLeast(0)
-                    val newBa = ba.copyOf()
-                    fallbackDecimalFormatSymbols.minusSign.toString().toByteArray(charset)
-                        .copyInto(destination = newBa, destinationOffset = newOffset)
-
-                    return parser.parseDouble(newBa, newOffset, length - newOffset)
-                }
                 return parser.parseDouble(ba, offset, length)
             } catch (e: Exception) {
                 logger.debug(e) {
@@ -214,15 +199,6 @@ public class FastDoubleParser(private val parserOptions: ParserOptions) {
     public fun parseOrNull(cs: CharSequence): Double? {
         if (parserOptions.useFastDoubleParser) {
             try {
-                // Fixes RTL minus sign not being recognized
-                if (minusSignIsFormatSymbol && cs.startsWith(localDecimalFormatSymbols.minusSign)) {
-                    val newCs = cs.toString().replaceFirst(
-                        localDecimalFormatSymbols.minusSign,
-                        fallbackDecimalFormatSymbols.minusSign,
-                    )
-                    return parser.parseDouble(newCs)
-                }
-
                 return parser.parseDouble(cs)
             } catch (e: Exception) {
                 logger.debug(e) {
@@ -243,12 +219,6 @@ public class FastDoubleParser(private val parserOptions: ParserOptions) {
     public fun parseOrNull(ca: CharArray, offset: Int = 0, length: Int = ca.size): Double? {
         if (parserOptions.useFastDoubleParser) {
             try {
-                // Fixes RTL minus sign not being recognized.
-                if (minusSignIsFormatSymbol && ca.firstOrNull() == localDecimalFormatSymbols.minusSign) {
-                    val newCa = ca.copyOf()
-                    newCa[0] = fallbackDecimalFormatSymbols.minusSign
-                    return parser.parseDouble(newCa, offset, length)
-                }
                 return parser.parseDouble(ca, offset, length)
             } catch (e: Exception) {
                 logger.debug(e) {
