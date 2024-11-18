@@ -27,6 +27,8 @@ repositories {
     maven(jupyterApiTCRepo)
 }
 
+val generateApi by sourceSets.creating
+
 dependencies {
     implementation(project(":core"))
 
@@ -39,9 +41,13 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
 
+    add("${generateApi.name}Implementation", "com.squareup:kotlinpoet:2.0.0")
+    add("${generateApi.name}Implementation", project(":core"))
+
     testApi(project(":core"))
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
+    testImplementation(libs.sl4jsimple)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
@@ -163,4 +169,10 @@ kotlinPublications {
 
 kotlin {
     explicitApi()
+}
+
+val executeGenerateApi by tasks.creating(JavaExec::class) {
+    classpath = generateApi.runtimeClasspath
+    mainClass = "GenerateApiKt"
+    args = listOf(file("src/main/kotlin").absolutePath)
 }

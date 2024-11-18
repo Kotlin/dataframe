@@ -43,3 +43,4 @@ plugins {
 include("dataframe-excel")
 include("core")
 include("dataframe-openapi-generator")
+include("dataframe-geo")

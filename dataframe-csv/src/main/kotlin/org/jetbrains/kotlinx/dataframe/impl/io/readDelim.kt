@@ -252,6 +252,23 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
 /**
  * Sets the correct parsers for the csv, based on [colTypes] and [ParserOptions.skipTypes].
  * If [ColType.DEFAULT] is present, it sets the default parser.
+ *
+ * Logic overview:
+ *
+ * - if no [colTypes] are given
+ *     - let deephaven use all its [default parsers][Parsers.DEFAULT]
+ *     - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
+ * - if [colTypes] are supplied
+ *     - if [ColType.DEFAULT] is among the values
+ *       - set the parser for each supplied column+colType
+ *       - let deephaven use _only_ the parser given as [ColType.DEFAULT] type
+ *     - if [ColType.DEFAULT] is not among the values
+ *       - set the parser for each supplied column+coltype
+ *       - let deephaven use all its [default parsers][Parsers.DEFAULT]
+ *       - subtract parsers of [skipTypes][ParserOptions.skipTypes] if those are supplied
+ *
+ * Note that `skipTypes` will never skip a type explicitly set by `colTypes`.
+ * This is intended.
  */
 private fun CsvSpecs.Builder.parsers(
     parserOptions: ParserOptions,

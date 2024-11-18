@@ -19,7 +19,10 @@ import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import java.io.File
 import java.io.StringWriter
@@ -32,6 +35,22 @@ import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DelimCsvTsvTests {
+
+    private val logLevel = "org.slf4j.simpleLogger.log.${FastDoubleParser::class.qualifiedName}"
+    private var loggerBefore: String? = null
+
+    @Before
+    fun setLogger() {
+        loggerBefore = System.getProperty(logLevel)
+        System.setProperty(logLevel, "debug")
+    }
+
+    @After
+    fun restoreLogger() {
+        if (loggerBefore != null) {
+            System.setProperty(logLevel, loggerBefore)
+        }
+    }
 
     @Test
     fun readNulls() {
@@ -77,6 +96,8 @@ class DelimCsvTsvTests {
         df["double"].type() shouldBe typeOf<Double?>()
         df["number"].type() shouldBe typeOf<Double>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
+
+        df.print(columnTypes = true, borders = true, title = true)
     }
 
     @Test
@@ -415,6 +436,39 @@ class DelimCsvTsvTests {
     }
 
     @Test
+    fun `cannot auto-parse specific date string`() {
+        @Language("csv")
+        val frenchCsv =
+            """
+            name; price; date;
+            a;12,45; 05/06/2021;
+            b;-13,35;14/07/2025;
+            c;100 123,35;;
+            d;-204 235,23;;
+            e;NaN;;
+            f;null;;
+            """.trimIndent()
+
+        val dfDeephaven = DataFrame.readCsvStr(
+            text = frenchCsv,
+            delimiter = ';',
+        )
+
+        // could not parse, remains String
+        dfDeephaven["date"].type() shouldBe typeOf<String?>()
+
+        val dfDataFrame = DataFrame.readCsvStr(
+            text = frenchCsv,
+            delimiter = ';',
+            // setting any locale skips deephaven's date parsing
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(locale = Locale.ROOT),
+        )
+
+        // could not parse, remains String
+        dfDataFrame["date"].type() shouldBe typeOf<String?>()
+    }
+
+    @Test
     fun `parse with other locales`() {
         @Language("csv")
         val frenchCsv =
@@ -607,12 +661,13 @@ class DelimCsvTsvTests {
     fun `skipping types`() {
         val irisDataset = DataFrame.readCsv(
             irisDataset,
+            colTypes = mapOf("sepal.length" to ColType.Double),
             parserOptions = DEFAULT_PARSER_OPTIONS.copy(
                 skipTypes = setOf(typeOf<Double>()),
             ),
         )
 
-        irisDataset["sepal.length"].type() shouldBe typeOf<BigDecimal>()
+        irisDataset["sepal.length"].type() shouldBe typeOf<Double>()
         irisDataset["sepal.width"].type() shouldBe typeOf<BigDecimal>()
         irisDataset["petal.length"].type() shouldBe typeOf<BigDecimal>()
         irisDataset["petal.width"].type() shouldBe typeOf<BigDecimal>()
@@ -627,6 +682,7 @@ class DelimCsvTsvTests {
         private val simpleCsvGz = testResource("testCSV.csv.gz")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
+        private val durationCsv = testCsv("duration")
         private val withBomCsv = testCsv("with-bom")
         private val msleepCsv = testCsv("msleep")
         private val notCsv = testResource("not-csv.zip")
