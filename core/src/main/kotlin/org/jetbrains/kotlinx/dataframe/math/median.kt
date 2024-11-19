@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -9,6 +10,8 @@ public inline fun <reified T : Comparable<T>> Iterable<T>.medianOrNull(): T? = m
 
 public inline fun <reified T : Comparable<T>> Iterable<T>.median(): T = medianOrNull()!!
 
+// TODO median always returns the same type, but this can be confusing for iterables of even length
+// TODO (e.g. median of [1, 2] should be 1.5, but the type is Int, so it returns 1), Issue #558
 @PublishedApi
 internal inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType): T? {
     val list = if (type.isMarkedNullable) filterNotNull() else (this as Iterable<T>).asList()
@@ -19,14 +22,22 @@ internal inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType)
     return when (type.classifier) {
         Double::class -> ((list.quickSelect(index - 1) as Double + list.quickSelect(index) as Double) / 2.0) as T
 
+        Float::class -> ((list.quickSelect(index - 1) as Float + list.quickSelect(index) as Float) / 2.0f) as T
+
         Int::class -> ((list.quickSelect(index - 1) as Int + list.quickSelect(index) as Int) / 2) as T
+
+        Short::class -> ((list.quickSelect(index - 1) as Short + list.quickSelect(index) as Short) / 2) as T
 
         Long::class -> ((list.quickSelect(index - 1) as Long + list.quickSelect(index) as Long) / 2L) as T
 
         Byte::class -> ((list.quickSelect(index - 1) as Byte + list.quickSelect(index) as Byte) / 2).toByte() as T
 
         BigDecimal::class -> (
-            (list.quickSelect(index - 1) as BigDecimal + list.quickSelect(index) as BigDecimal) / BigDecimal(2)
+            (list.quickSelect(index - 1) as BigDecimal + list.quickSelect(index) as BigDecimal) / 2.toBigDecimal()
+        ) as T
+
+        BigInteger::class -> (
+            (list.quickSelect(index - 1) as BigInteger + list.quickSelect(index) as BigInteger) / 2.toBigInteger()
         ) as T
 
         else -> list.quickSelect(index - 1)
