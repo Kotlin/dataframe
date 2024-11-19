@@ -40,6 +40,7 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -272,6 +273,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 BigDecimal::class -> convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
 
+                BigInteger::class -> convert<Boolean> { if (it) BigInteger.ONE else BigInteger.ZERO }
+
                 else -> null
             }
 
@@ -283,10 +286,19 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Short::class -> convert<Number> { it.toShort() }
                 Long::class -> convert<Number> { it.toLong() }
                 Boolean::class -> convert<Number> { it.toDouble() != 0.0 }
+                BigDecimal::class -> convert<Number> { it.toBigDecimal() }
+                BigInteger::class -> convert<Number> { it.toBigInteger() }
+                else -> null
+            }
+
+            Char::class -> when (toClass) {
+                Int::class -> convert<Char> { it.code }
                 else -> null
             }
 
             Int::class -> when (toClass) {
+                Char::class -> convert<Int> { it.toChar() }
+
                 Double::class -> convert<Int> { it.toDouble() }
 
                 Float::class -> convert<Int> { it.toFloat() }
@@ -298,6 +310,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Long::class -> convert<Int> { it.toLong() }
 
                 BigDecimal::class -> convert<Int> { it.toBigDecimal() }
+
+                BigInteger::class -> convert<Int> { it.toBigInteger() }
 
                 Boolean::class -> convert<Int> { it != 0 }
 
@@ -327,7 +341,9 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Float::class -> convert<Double> { it.toFloat() }
                 Long::class -> convert<Double> { it.roundToLong() }
                 Short::class -> convert<Double> { it.roundToInt().toShort() }
+                Byte::class -> convert<Double> { it.roundToInt().toByte() }
                 BigDecimal::class -> convert<Double> { it.toBigDecimal() }
+                BigInteger::class -> convert<Double> { it.toBigInteger() }
                 Boolean::class -> convert<Double> { it != 0.0 }
                 else -> null
             }
@@ -344,6 +360,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Int::class -> convert<Long> { it.toInt() }
 
                 BigDecimal::class -> convert<Long> { it.toBigDecimal() }
+
+                BigInteger::class -> convert<Long> { it.toBigInteger() }
 
                 Boolean::class -> convert<Long> { it != 0L }
 
@@ -422,8 +440,10 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Double::class -> convert<Float> { it.toDouble() }
                 Long::class -> convert<Float> { it.roundToLong() }
                 Int::class -> convert<Float> { it.roundToInt() }
+                Byte::class -> convert<Float> { it.roundToInt().toByte() }
                 Short::class -> convert<Float> { it.roundToInt().toShort() }
                 BigDecimal::class -> convert<Float> { it.toBigDecimal() }
+                BigInteger::class -> convert<Float> { it.toBigInteger() }
                 Boolean::class -> convert<Float> { it != 0.0F }
                 else -> null
             }
@@ -431,9 +451,24 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             BigDecimal::class -> when (toClass) {
                 Double::class -> convert<BigDecimal> { it.toDouble() }
                 Int::class -> convert<BigDecimal> { it.toInt() }
+                Byte::class -> convert<BigDecimal> { it.toByte() }
+                Short::class -> convert<BigDecimal> { it.toShort() }
                 Float::class -> convert<BigDecimal> { it.toFloat() }
                 Long::class -> convert<BigDecimal> { it.toLong() }
+                BigInteger::class -> convert<BigDecimal> { it.toBigInteger() }
                 Boolean::class -> convert<BigDecimal> { it != BigDecimal.ZERO }
+                else -> null
+            }
+
+            BigInteger::class -> when (toClass) {
+                Double::class -> convert<BigInteger> { it.toDouble() }
+                Int::class -> convert<BigInteger> { it.toInt() }
+                Byte::class -> convert<BigInteger> { it.toByte() }
+                Short::class -> convert<BigInteger> { it.toShort() }
+                Float::class -> convert<BigInteger> { it.toFloat() }
+                Long::class -> convert<BigInteger> { it.toLong() }
+                BigDecimal::class -> convert<BigInteger> { it.toBigDecimal() }
+                Boolean::class -> convert<BigInteger> { it != BigInteger.ZERO }
                 else -> null
             }
 
@@ -540,3 +575,21 @@ internal fun Instant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDate
 internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
 internal val defaultTimeZone = TimeZone.currentSystemDefault()
+
+internal fun Number.toBigDecimal(): BigDecimal =
+    when (this) {
+        is BigDecimal -> this
+        is BigInteger -> BigDecimal(this)
+        is Double -> BigDecimal.valueOf(this)
+        is Int -> BigDecimal(this)
+        is Long -> BigDecimal.valueOf(this)
+        else -> BigDecimal.valueOf(this.toDouble())
+    }
+
+internal fun Number.toBigInteger(): BigInteger =
+    when (this) {
+        is BigInteger -> this
+        is BigDecimal -> this.toBigInteger()
+        is Long -> BigInteger.valueOf(this)
+        else -> BigInteger.valueOf(this.toLong())
+    }
