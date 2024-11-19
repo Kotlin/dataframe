@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
@@ -412,5 +413,10 @@ class PostgresTest {
         schema1.columns["realcol"]!!.type shouldBe typeOf<Float>()
         schema1.columns["smallserialcol"]!!.type shouldBe typeOf<Int>()
         schema1.columns["serialcol"]!!.type shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `infer nullability`() {
+        inferNullability(connection)
     }
 }
