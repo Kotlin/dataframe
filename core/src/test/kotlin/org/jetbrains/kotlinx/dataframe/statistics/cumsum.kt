@@ -37,14 +37,14 @@ class CumsumTests {
         val res = df.cumSum(skipNA = false)
 
         res[col].toList() shouldBe expectedNoSkip
-        res[col2].toList() shouldBe listOf(1, 3, 6, 10, 15)
-        res[col3].toList() shouldBe listOf(1, 3, 6, 10, null)
+        res[col2].toList() shouldBe listOf(1.toShort(), 3, 6, 10, 15)
+        res[col3].toList() shouldBe listOf(1.toByte(), 3, 6, 10, null)
     }
 
     @Test
     fun `byte column`() {
-        col.map { it?.toByte() }.cumSum().toList() shouldBe expected
-        col.map { it?.toByte() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip
+        col.map { it?.toByte() }.cumSum().toList() shouldBe expected.map { it?.toByte() }
+        col.map { it?.toByte() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toByte() }
     }
 
     @Test
