@@ -107,7 +107,7 @@ internal interface Select {
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.api.columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -152,7 +152,7 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.api.columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -174,7 +174,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.api.columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -194,7 +194,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.api.columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
