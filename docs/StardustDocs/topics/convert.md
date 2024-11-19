@@ -37,17 +37,20 @@ df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 <!---END-->
 
 `convert` supports automatic type conversions between the following types:
-* `Int`
-* `String`
-* `Double`
-* `Long`
+* `String` (uses [`parse`](parse.md) to convert to `String`)
+* `Boolean`
+* `Byte`
 * `Short`
+* `Int` (and `Char`)
+* `Long`
 * `Float`
+* `Double`
 * `BigDecimal`
-* `LocalDateTime`
-* `LocalDate`
-* `LocalTime`
-* `Duration`
+* `BigInteger`
+* `LocalDateTime` (kotlinx.datetime and java.time)
+* `LocalDate` (kotlinx.datetime and java.time)
+* `LocalTime` (kotlinx.datetime and java.time)
+* `Instant` (kotlinx.datetime and java.time)
 
 <!---FUN convertTo-->
 
