@@ -12,6 +12,7 @@ import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.WithFields
 import org.jetbrains.dataframe.keywords.HardKeywords
 import org.jetbrains.dataframe.keywords.ModifierKeywords
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -166,7 +167,7 @@ internal object FullyQualifiedNames : TypeRenderingStrategy {
 internal object ShortNames : TypeRenderingStrategy {
 
     private val dataRow = DataRow::class.simpleName!!
-    private val columnsContainer = ColumnsContainer::class.simpleName!!
+    private val columnsContainer = ColumnsScope::class.simpleName!!
     private val dataFrame = DataFrame::class.simpleName!!
     private val dataColumn = DataColumn::class.simpleName!!
     private val columnGroup = ColumnGroup::class.simpleName!!
@@ -565,7 +566,7 @@ public fun Code.toStandaloneSnippet(packageName: String, additionalImports: List
             appendLine("package $packageName")
             appendLine()
         }
-        appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+        appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsScope")
         appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
         appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
         appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")

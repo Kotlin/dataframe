@@ -57,11 +57,11 @@ class DataFrameSymbolProcessorTest {
                             class NestedClass
                         }
 
-                        val ColumnsContainer<`Hello Something`>.col1: DataColumn<String> get() = name
-                        val ColumnsContainer<`Hello Something`>.col2: DataColumn<`Hello Something`.NestedClass> get() = `test name`
-                        val ColumnsContainer<`Hello Something`>.col3: DataColumn<Int?> get() = nullableProperty
-                        val ColumnsContainer<`Hello Something`>.col4: DataColumn<() -> Unit> get() = a
-                        val ColumnsContainer<`Hello Something`>.col5: DataColumn<List<List<*>>> get() = d
+                        val ColumnsScope<`Hello Something`>.col1: DataColumn<String> get() = name
+                        val ColumnsScope<`Hello Something`>.col2: DataColumn<`Hello Something`.NestedClass> get() = `test name`
+                        val ColumnsScope<`Hello Something`>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsScope<`Hello Something`>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsScope<`Hello Something`>.col5: DataColumn<List<List<*>>> get() = d
                         
                         val DataRow<`Hello Something`>.row1: String get() = name
                         val DataRow<`Hello Something`>.row2: `Hello Something`.NestedClass get() = `test name`
@@ -99,11 +99,11 @@ class DataFrameSymbolProcessorTest {
                             class NestedClass
                         }
 
-                        val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
-                        val ColumnsContainer<Hello>.col2: DataColumn<Hello.NestedClass> get() = `test name`
-                        val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
-                        val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
-                        val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                        val ColumnsScope<Hello>.col1: DataColumn<String> get() = name
+                        val ColumnsScope<Hello>.col2: DataColumn<Hello.NestedClass> get() = `test name`
+                        val ColumnsScope<Hello>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsScope<Hello>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsScope<Hello>.col5: DataColumn<List<List<*>>> get() = d
                         
                         val DataRow<Hello>.row1: String get() = name
                         val DataRow<Hello>.row2: Hello.NestedClass get() = `test name`
@@ -143,12 +143,12 @@ class DataFrameSymbolProcessorTest {
                             class Nested
                         }
 
-                        val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
-                        val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
-                        val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
-                        val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
-                        val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
-                        val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
+                        val ColumnsScope<Hello>.col1: DataColumn<String> get() = name
+                        val ColumnsScope<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
+                        val ColumnsScope<Hello>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsScope<Hello>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsScope<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                        val ColumnsScope<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
                         
                         val DataRow<Hello>.row1: String get() = name
                         val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
@@ -190,12 +190,12 @@ class DataFrameSymbolProcessorTest {
                             class Nested
                         }
 
-                        val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
-                        val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
-                        val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
-                        val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
-                        val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
-                        val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
+                        val ColumnsScope<Hello>.col1: DataColumn<String> get() = name
+                        val ColumnsScope<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
+                        val ColumnsScope<Hello>.col3: DataColumn<Int?> get() = nullableProperty
+                        val ColumnsScope<Hello>.col4: DataColumn<() -> Unit> get() = a
+                        val ColumnsScope<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                        val ColumnsScope<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
                         
                         val DataRow<Hello>.row1: String get() = name
                         val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
@@ -262,7 +262,7 @@ class DataFrameSymbolProcessorTest {
                             val a: () -> Unit?
                         }
 
-                        val ColumnsContainer<Hello>.test1: DataColumn<() -> Unit?> get() = a
+                        val ColumnsScope<Hello>.test1: DataColumn<() -> Unit?> get() = a
                         val DataRow<Hello>.test2: () -> Unit? get() = a
                         """.trimIndent(),
                     ),
@@ -272,7 +272,7 @@ class DataFrameSymbolProcessorTest {
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
-                    .shouldContain("ColumnsContainer<Hello>.a")
+                    .shouldContain("ColumnsScope<Hello>.a")
                     .shouldContain("DataColumn<kotlin.Function0<kotlin.Unit?>>")
             }
             codeLines.forOne {
@@ -299,7 +299,7 @@ class DataFrameSymbolProcessorTest {
                             val a: suspend () -> Unit?
                         }
 
-                        val ColumnsContainer<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
+                        val ColumnsScope<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
                         val DataRow<Hello>.test2: suspend () -> Unit? get() = a
                         """.trimIndent(),
                     ),
@@ -310,7 +310,7 @@ class DataFrameSymbolProcessorTest {
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
-                    .shouldContain("ColumnsContainer<Hello>.a")
+                    .shouldContain("ColumnsScope<Hello>.a")
                     .shouldContain("DataColumn<kotlin.coroutines.SuspendFunction0<kotlin.Unit?>>")
             }
             codeLines.forOne {
@@ -337,7 +337,7 @@ class DataFrameSymbolProcessorTest {
                             val a: (() -> String)?
                         }
 
-                        val ColumnsContainer<Hello>.test1: DataColumn<(() -> String)?> get() = a
+                        val ColumnsScope<Hello>.test1: DataColumn<(() -> String)?> get() = a
                         val DataRow<Hello>.test2: (() -> String)? get() = a
                         """.trimIndent(),
                     ),
@@ -347,7 +347,7 @@ class DataFrameSymbolProcessorTest {
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
-                    .shouldContain("ColumnsContainer<Hello>.a")
+                    .shouldContain("ColumnsScope<Hello>.a")
                     .shouldContain("DataColumn<kotlin.Function0<kotlin.String>?>")
             }
             codeLines.forOne {
@@ -374,7 +374,7 @@ class DataFrameSymbolProcessorTest {
                             val a: (Int.() -> String)?
                         }
 
-                        val ColumnsContainer<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
+                        val ColumnsScope<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
                         val DataRow<Hello>.test2: (Int.() -> String)? get() = a
                         """.trimIndent(),
                     ),
@@ -384,7 +384,7 @@ class DataFrameSymbolProcessorTest {
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
-                    .shouldContain("ColumnsContainer<Hello>.a")
+                    .shouldContain("ColumnsScope<Hello>.a")
                     .shouldContain("DataColumn<kotlin.Function1<kotlin.Int, kotlin.String>?>")
             }
             codeLines.forOne {
@@ -411,7 +411,7 @@ class DataFrameSymbolProcessorTest {
                             val a: (a: String) -> Unit
                         }
 
-                        val ColumnsContainer<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
+                        val ColumnsScope<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
                         val DataRow<Hello>.test2: (a: String) -> Unit get() = a
                         """.trimIndent(),
                     ),
@@ -421,7 +421,7 @@ class DataFrameSymbolProcessorTest {
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
-                    .shouldContain("ColumnsContainer<Hello>.a")
+                    .shouldContain("ColumnsScope<Hello>.a")
                     .shouldContain("DataColumn<kotlin.Function1<kotlin.String, kotlin.Unit>>")
             }
             codeLines.forOne {
@@ -449,7 +449,7 @@ class DataFrameSymbolProcessorTest {
                             val b get() = a
                         }
 
-                        val ColumnsContainer<Hello>.test1: DataColumn<Int> get() = b
+                        val ColumnsScope<Hello>.test1: DataColumn<Int> get() = b
                         val DataRow<Hello>.test2: Int get() = b
                         """.trimIndent(),
                     ),
@@ -479,7 +479,7 @@ class DataFrameSymbolProcessorTest {
                             val a: A
                         }
 
-                        val ColumnsContainer<Hello>.col1: DataColumn<A> get() = a
+                        val ColumnsScope<Hello>.col1: DataColumn<A> get() = a
                         val DataRow<Hello>.row1: A get() = a
                         
                         """.trimIndent(),
@@ -510,7 +510,7 @@ class DataFrameSymbolProcessorTest {
                             val a: A
                         }
 
-                        val ColumnsContainer<Hello>.col1: ColumnGroup<A> get() = a
+                        val ColumnsScope<Hello>.col1: ColumnGroup<A> get() = a
                         val DataRow<Hello>.row1: DataRow<A> get() = a
                         
                         """.trimIndent(),
@@ -541,7 +541,7 @@ class DataFrameSymbolProcessorTest {
                             val a: List<A>
                         }
 
-                        val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<A>> get() = a
+                        val ColumnsScope<Hello>.col1: DataColumn<DataFrame<A>> get() = a
                         val DataRow<Hello>.row1: DataFrame<A> get() = a
                         
                         """.trimIndent(),
@@ -570,7 +570,7 @@ class DataFrameSymbolProcessorTest {
                             val `test name`: Int
                         }
 
-                        val ColumnsContainer<Hello>.test2: DataColumn<Int> get() = `test name`
+                        val ColumnsScope<Hello>.test2: DataColumn<Int> get() = `test name`
                         val DataRow<Hello>.test4: Int get() = `test name`
                         """.trimIndent(),
                     ),
@@ -601,7 +601,7 @@ class DataFrameSymbolProcessorTest {
                             val a: Int
                         }
 
-                        val ColumnsContainer<Hello>.col1: DataColumn<Int> get() = a
+                        val ColumnsScope<Hello>.col1: DataColumn<Int> get() = a
                         val DataRow<Hello>.row1: Int get() = a
                         
                         """.trimIndent(),
@@ -634,7 +634,7 @@ class DataFrameSymbolProcessorTest {
                             val a: DataRow<Marker>
                         }
 
-                        val ColumnsContainer<Hello>.col1: ColumnGroup<Marker> get() = a
+                        val ColumnsScope<Hello>.col1: ColumnGroup<Marker> get() = a
                         val DataRow<Hello>.row1: DataRow<Marker> get() = a
                         
                         """.trimIndent(),
@@ -664,7 +664,7 @@ class DataFrameSymbolProcessorTest {
                             val a: DataFrame<Marker>
                         }
 
-                        val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
+                        val ColumnsScope<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
                         val DataRow<Hello>.row1: DataFrame<Marker> get() = a
                         
                         """.trimIndent(),
@@ -692,7 +692,7 @@ class DataFrameSymbolProcessorTest {
                             val name: String
                         }
 
-                        val ColumnsContainer<Hello>.test1: DataColumn<String> get() = name
+                        val ColumnsScope<Hello>.test1: DataColumn<String> get() = name
                         val DataRow<Hello>.test2: String get() = name
                         """.trimIndent(),
                     ),
@@ -719,7 +719,7 @@ class DataFrameSymbolProcessorTest {
                             val field: T
                         }
 
-                        val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                        val <T> ColumnsScope<Generic<T>>.test1: DataColumn<T> get() = field
                         val <T> DataRow<Generic<T>>.test2: T get() = field
                         """.trimIndent(),
                     ),
@@ -746,7 +746,7 @@ class DataFrameSymbolProcessorTest {
                             val field: T
                         }
 
-                        val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                        val <T : String> ColumnsScope<Generic<T>>.test1: DataColumn<T> get() = field
                         val <T : String> DataRow<Generic<T>>.test2: T get() = field
                         """.trimIndent(),
                     ),
@@ -775,7 +775,7 @@ class DataFrameSymbolProcessorTest {
                             val field: T
                         }
 
-                        val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                        val <T : UpperBound> ColumnsScope<Generic<T>>.test1: DataColumn<T> get() = field
                         val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
                         """.trimIndent(),
                     ),
@@ -806,7 +806,7 @@ class DataFrameSymbolProcessorTest {
                         interface MySchema : KeyValue<Int>
 
 
-                        val ColumnsContainer<MySchema>.test1: DataColumn<String> get() = key
+                        val ColumnsScope<MySchema>.test1: DataColumn<String> get() = key
                         val DataRow<MySchema>.test2: Int get() = value
                         """.trimIndent(),
                     ),
