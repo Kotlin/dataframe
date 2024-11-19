@@ -15,6 +15,7 @@ import kotlinx.datetime.toJavaLocalTime
 import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.datetime.toKotlinLocalTime
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -350,6 +351,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
 
+                LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
+
                 Instant::class -> convert<Long> { Instant.fromEpochMilliseconds(it) }
 
                 JavaLocalDateTime::class -> convert<Long> {
@@ -501,6 +504,16 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                     it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toJavaInstant()
                 }
 
+                else -> null
+            }
+
+            LocalTime::class -> when (toClass) {
+                JavaLocalTime::class -> convert<LocalTime> { it.toJavaLocalTime() }
+                else -> null
+            }
+
+            JavaLocalTime::class -> when (toClass) {
+                LocalTime::class -> convert<JavaLocalTime> { it.toKotlinLocalTime() }
                 else -> null
             }
 
