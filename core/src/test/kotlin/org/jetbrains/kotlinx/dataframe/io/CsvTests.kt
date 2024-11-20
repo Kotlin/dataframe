@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
 import java.io.File
+import java.io.StringReader
 import java.io.StringWriter
 import java.net.URL
 import java.util.Locale
@@ -324,6 +325,36 @@ class CsvTests {
 
         val emptyTsvStr = DataFrame.readTSV(File.createTempFile("empty", "tsv"))
         emptyTsvStr shouldBe DataFrame.empty()
+    }
+
+    // Issue #921
+    @Test
+    fun `read csv with custom null strings and given type`() {
+        @Language("CSV")
+        val csv =
+            """
+            a,b
+            noppes,2
+            1.2,
+            3,45
+            ,noppes
+            1.3,1
+            """.trimIndent()
+
+        val df = DataFrame.readDelim(
+            reader = StringReader(csv),
+            parserOptions = ParserOptions(
+                nullStrings = setOf("noppes", ""),
+            ),
+            colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
+        )
+        df shouldBe dataFrameOf("a", "b")(
+            null, 2,
+            1.2, null,
+            3.0, 45,
+            null, null,
+            1.3, 1,
+        )
     }
 
     companion object {

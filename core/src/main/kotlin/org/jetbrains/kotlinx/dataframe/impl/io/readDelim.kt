@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
@@ -66,19 +67,15 @@ internal fun DataFrame.Companion.readDelimImpl(
             }
         }
         val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
-        val skipTypes = when {
+        when {
             colType != null ->
-                // skip all types except the desired type
-                ParserOptions.allTypesExcept(colType.toKType())
+                column.convertTo(
+                    newType = colType.toKType().withNullability(true),
+                    parserOptions = parserOptions ?: ParserOptions(),
+                )
 
-            else ->
-                // respect the provided parser options
-                parserOptions?.skipTypes ?: emptySet()
+            else -> column.tryParse(parserOptions ?: ParserOptions())
         }
-        val adjustsedParserOptions = (parserOptions ?: ParserOptions())
-            .copy(skipTypes = skipTypes)
-
-        return@mapIndexed column.tryParse(adjustsedParserOptions)
     }
     return cols.toDataFrame()
 }

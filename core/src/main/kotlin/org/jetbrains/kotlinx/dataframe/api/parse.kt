@@ -58,7 +58,7 @@ public interface GlobalParserOptions {
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
  *   ["null", "NULL", "NA", "N/A"].
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
- *   By default, it's an empty set. To skip all types except some specified ones, use [allTypesExcept].
+ *   By default, it's an empty set. To skip all types except a specified one, use [convertTo] instead.
  * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  */
 public data class ParserOptions(
@@ -70,14 +70,6 @@ public data class ParserOptions(
     val skipTypes: Set<KType> = emptySet(),
     val useFastDoubleParser: Boolean = false,
 ) {
-    public companion object {
-        /**
-         * Small helper function to get all types except the ones specified.
-         * Useful in combination with the [skipTypes] parameter.
-         */
-        public fun allTypesExcept(vararg types: KType): Set<KType> =
-            Parsers.parsersOrder.map { it.type }.toSet() - types.toSet()
-    }
 
     /** For binary compatibility. */
     @Deprecated(

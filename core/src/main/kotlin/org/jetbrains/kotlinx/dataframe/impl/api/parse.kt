@@ -298,9 +298,13 @@ internal object Parsers : GlobalParserOptions {
         parser
     }
 
-    private val posixDoubleParser = FastDoubleParser(
-        ParserOptions(locale = Locale.forLanguageTag("C.UTF-8")),
-    )
+    // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8
+    private val posixParserToDoubleWithOptions = stringParserWithOptions { options ->
+        val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
+        val fastDoubleParser = FastDoubleParser(parserOptions)
+        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
+        parser
+    }
 
     internal val parsersOrder = listOf(
         // Int
@@ -364,7 +368,7 @@ internal object Parsers : GlobalParserOptions {
         // Double, with explicit number format or taken from current locale
         parserToDoubleWithOptions,
         // Double, with POSIX format
-        stringParser<Double> { posixDoubleParser.parseOrNull(it) },
+        posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
         // BigDecimal
@@ -431,14 +435,13 @@ internal object Parsers : GlobalParserOptions {
         return parser.applyOptions(options)
     }
 
-    internal fun getDoubleParser(locale: Locale? = null, useFastDoubleParser: Boolean): (String) -> Double? {
-        val options = if (locale != null) {
-            ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser)
-        } else {
-            null
-        }
-        return parserToDoubleWithOptions.applyOptions(options)
-    }
+    internal fun getDoubleParser(locale: Locale?, useFastDoubleParser: Boolean): (String) -> Double? =
+        parserToDoubleWithOptions
+            .applyOptions(ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser))
+
+    internal fun getPosixDoubleParser(useFastDoubleParser: Boolean): (String) -> Double? =
+        posixParserToDoubleWithOptions
+            .applyOptions(ParserOptions(useFastDoubleParser = useFastDoubleParser))
 }
 
 /**

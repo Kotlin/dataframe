@@ -674,6 +674,36 @@ class DelimCsvTsvTests {
         irisDataset["variety"].type() shouldBe typeOf<String>()
     }
 
+    // Issue #921
+    @Test
+    fun `read csv with custom null strings and given type`() {
+        @Language("CSV")
+        val csv =
+            """
+            a,b
+            noppes,2
+            1.2,
+            3,45
+            ,noppes
+            1.3,1
+            """.trimIndent()
+
+        val df = DataFrame.readCsvStr(
+            csv,
+            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+                nullStrings = setOf("noppes", ""),
+            ),
+            colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
+        )
+        df shouldBe dataFrameOf("a", "b")(
+            null, 2,
+            1.2, null,
+            3.0, 45,
+            null, null,
+            1.3, 1,
+        )
+    }
+
     companion object {
         private val irisDataset = testCsv("irisDataset")
         private val simpleCsv = testCsv("testCSV")

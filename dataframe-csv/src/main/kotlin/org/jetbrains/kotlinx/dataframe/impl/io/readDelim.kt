@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.tryParse
@@ -190,18 +191,20 @@ private fun CsvReader.ResultColumn.toDataColumn(
     // attempt to perform additional parsing if necessary, will remain String if it fails
     column as ValueColumn<String?>
 
-    val skipTypes = when {
+    return when {
         desiredColType != null ->
-            // skip all types except the desired type
-            ParserOptions.allTypesExcept(desiredColType.toKType())
+            column.convertTo(
+                newType = desiredColType.toKType().withNullability(true),
+                parserOptions = parserOptions,
+            )
 
-        else ->
+        else -> {
             // no need to check for types that Deephaven already parses, skip those too
-            parserOptions.skipTypes + typesDeephavenAlreadyParses
+            val skipTypes = parserOptions.skipTypes + typesDeephavenAlreadyParses
+            val adjustsedParserOptions = parserOptions.copy(skipTypes = skipTypes)
+            column.tryParse(adjustsedParserOptions)
+        }
     }
-    val adjustsedParserOptions = parserOptions.copy(skipTypes = skipTypes)
-
-    return column.tryParse(adjustsedParserOptions)
 }
 
 private fun DataType?.toKType(): KType =
