@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.ApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -63,12 +64,15 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): Colum
 public fun <T> ColumnsContainer<T>.getColumn(name: String): AnyCol =
     getColumnOrNull(name) ?: throw IllegalArgumentException("Column not found: '$name'")
 
+@ApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
     getColumnOrNull(column)?.asFrameColumn() ?: throw IllegalArgumentException("FrameColumn not found: '$column'")
 
+@ApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<DataRow<R>>): ColumnGroup<R> =
     getColumnOrNull(column)?.asColumnGroup() ?: throw IllegalArgumentException("ColumnGroup not found: '$column'")
 
+@ApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<R>): DataColumn<R> =
     getColumnOrNull(column) ?: throw IllegalArgumentException("Column not found: '$column'")
 
@@ -89,9 +93,11 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(index: Int): ColumnGroup<*> = 
 
 public fun <T> ColumnsContainer<T>.getColumnGroup(name: String): ColumnGroup<*> = getColumn(name).asColumnGroup()
 
+@ApiOverload
 public fun <T> ColumnsContainer<T>.getColumnGroup(column: KProperty<*>): ColumnGroup<*> =
     getColumnGroup(column.columnName)
 
+@ApiOverload
 public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnReference<DataRow<C>>): ColumnGroup<C> =
     getColumn(column)
 
@@ -105,6 +111,7 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, D
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? =
     getColumnOrNull(name)?.asColumnGroup()
 
+@ApiOverload
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): ColumnGroup<*>? =
     getColumnGroupOrNull(column.columnName)
 
@@ -112,12 +119,16 @@ public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): C
 
 // region containsColumn
 
+@ApiOverload
 public fun <C> ColumnsContainer<*>.containsColumn(column: ColumnReference<C>): Boolean = getColumnOrNull(column) != null
 
+@ApiOverload
 public fun ColumnsContainer<*>.containsColumn(column: KProperty<*>): Boolean = containsColumn(column.columnName)
 
+@ApiOverload
 public operator fun ColumnsContainer<*>.contains(column: AnyColumnReference): Boolean = containsColumn(column)
 
+@ApiOverload
 public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean = containsColumn(column)
 
 // region rows
