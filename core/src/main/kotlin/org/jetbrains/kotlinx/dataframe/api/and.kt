@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.ApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.InfixName
@@ -125,6 +126,7 @@ public interface AndColumnsSelectionDsl {
     public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `Type::colB`} */
+    @ApiOverload
     public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
 
     // endregion
@@ -152,6 +154,7 @@ public interface AndColumnsSelectionDsl {
     public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
 
     /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `Type::colB`} */
+    @ApiOverload
     public infix fun <C> String.and(other: KProperty<C>): ColumnSet<*> = toColumnAccessor() and other
 
     // endregion
@@ -180,6 +183,7 @@ public interface AndColumnsSelectionDsl {
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `Type::colB`} */
+    @ApiOverload
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
 
