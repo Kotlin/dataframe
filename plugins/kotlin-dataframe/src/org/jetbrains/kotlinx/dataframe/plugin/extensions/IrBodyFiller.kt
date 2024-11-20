@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.ir.declarations.IrFile
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrPackageFragment
 import org.jetbrains.kotlin.ir.declarations.IrProperty
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.copyAttributes
 import org.jetbrains.kotlin.ir.declarations.createBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrBody
@@ -113,7 +114,7 @@ class IrBodyFiller(
         schemas: MutableList<IoSchema>
     ) {
         if (element.symbol.owner.name == Name.identifier("readJson")) {
-            val path = (element.valueArguments.firstOrNull() as? IrConst<*>)?.value as? String ?: return
+            val path = (element.valueArguments.firstOrNull() as? IrConst)?.value as? String ?: return
             try {
                 val df = readJson(resolutionPath, path)
                 val json = df.schema().serialize()
@@ -139,6 +140,10 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
         irFile.transformChildren(this, null)
     }
 
+    override fun visitSimpleFunction(declaration: IrSimpleFunction): IrStatement {
+        return declaration
+    }
+
     override fun visitConstructor(declaration: IrConstructor): IrStatement {
         val origin = declaration.origin
         if (!(origin is IrDeclarationOrigin.GeneratedByPlugin && origin.pluginKey is TokenGenerator.Key)) return declaration
@@ -157,7 +162,6 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
             irType,
             symbol,
             typeArgumentsCount = 0,
-            valueArgumentsCount = 0
         ).copyAttributes(declaration.parentAsClass)
 
         val initializerCall = IrInstanceInitializerCallImpl(
@@ -186,7 +190,7 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
             ((getter.extensionReceiverParameter!!.type as IrSimpleType).arguments.single() as IrSimpleType).classOrFail.owner
         val jvmNameArg = "${marker.nestedName()}_${declaration.name.identifier}"
         getter.annotations = listOf(
-            IrConstructorCallImpl(-1, -1, jvmName.owner.returnType, jvmName, 0, 0, 1)
+            IrConstructorCallImpl(-1, -1, jvmName.owner.returnType, jvmName, 0, 1)
                 .also {
                     it.putValueArgument(0, IrConstImpl.string(-1, -1, context.irBuiltIns.stringType, jvmNameArg))
                 }
@@ -210,11 +214,11 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
                 }
         }
 
-        val call = IrCallImpl(-1, -1, context.irBuiltIns.anyNType, get, 0, 1).also {
+        val call = IrCallImpl(-1, -1, context.irBuiltIns.anyNType, get, 0).also {
             val thisSymbol: IrValueSymbol = getter.extensionReceiverParameter?.symbol!!
             it.dispatchReceiver = IrGetValueImpl(-1, -1, thisSymbol)
             val annotation = declaration.annotations.findAnnotation(Names.COLUMN_NAME_ANNOTATION.asSingleFqName())
-            val columnName = (annotation?.valueArguments?.get(0) as? IrConst<*>)?.value as? String
+            val columnName = (annotation?.valueArguments?.get(0) as? IrConst)?.value as? String
             val columName = columnName ?: declaration.name.identifier
             it.putValueArgument(0, IrConstImpl.string(-1, -1, context.irBuiltIns.stringType, columName))
         }
@@ -269,6 +273,6 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
     @OptIn(UnsafeDuringIrConstructionAPI::class)
     private fun IrExpression.replaceWithConstructorCall(): IrConstructorCallImpl {
         val constructor = type.getClass()!!.constructors.toList().single()
-        return IrConstructorCallImpl(-1, -1, type, constructor.symbol, 0, 0, 0)
+        return IrConstructorCallImpl(-1, -1, type, constructor.symbol, 0, 0)
     }
 }

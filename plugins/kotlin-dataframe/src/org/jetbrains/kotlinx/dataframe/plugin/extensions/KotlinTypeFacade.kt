@@ -2,19 +2,15 @@ package org.jetbrains.kotlinx.dataframe.plugin.extensions
 
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.caches.FirCache
-import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
-import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeFlexibleType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeKotlinTypeProjectionIn
 import org.jetbrains.kotlin.fir.types.ConeKotlinTypeProjectionOut
-import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.ConeTypeProjection
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
-import org.jetbrains.kotlin.fir.types.isNullable
+import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.typeContext
 import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.ClassId
@@ -43,7 +39,7 @@ interface KotlinTypeFacade : SessionContext {
         val classId = type.classId()
         val coneType = classId.constructClassLikeType(
             typeArguments = type.arguments.mapToConeTypeProjection(),
-            isNullable = type.isMarkedNullable
+            isMarkedNullable = type.isMarkedNullable
         )
         return coneType
     }
@@ -78,11 +74,7 @@ interface KotlinTypeFacade : SessionContext {
     }
 
     fun Marker.changeNullability(map: (Boolean) -> Boolean): Marker {
-        val coneNullability = when (map(type.isNullable)) {
-            true -> ConeNullability.NULLABLE
-            false -> ConeNullability.NOT_NULL
-        }
-        return Marker(type = type.withNullability(coneNullability, session.typeContext))
+        return Marker(type = type.withNullability(map(type.isMarkedNullable), session.typeContext))
     }
 
     fun Marker.isList(): Boolean {
@@ -110,7 +102,7 @@ private val List = "List".collectionsId()
 
 private fun ConeKotlinType.isBuiltinType(classId: ClassId, isNullable: Boolean?): Boolean {
     if (this !is ConeClassLikeType) return false
-    return lookupTag.classId == classId && (isNullable == null || type.isNullable == isNullable)
+    return lookupTag.classId == classId && (isNullable == null || isMarkedNullable == isNullable)
 }
 
 private fun String.collectionsId() = ClassId(StandardClassIds.BASE_COLLECTIONS_PACKAGE, Name.identifier(this))

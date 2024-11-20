@@ -87,7 +87,7 @@ private fun type(kType: SerializableKType): ConeClassLikeType {
     )
     val type = id.constructClassLikeType(
         typeArguments = kType.arguments.mapToConeTypeProjection(),
-        isNullable = kType.isMarkedNullable
+        isMarkedNullable = kType.isMarkedNullable
     )
     return type
 }

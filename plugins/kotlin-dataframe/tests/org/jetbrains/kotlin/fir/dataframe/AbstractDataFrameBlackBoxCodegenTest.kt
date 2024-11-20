@@ -52,8 +52,8 @@ open class AbstractDataFrameBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCo
     }
 
     override fun runTest(filePath: String) {
-        val muted = setOf("main.kt", "readJson.kt")
-        Assumptions.assumeFalse(muted.any { filePath.contains(it) })
+//        val muted = setOf("main.kt", "readJson.kt")
+//        Assumptions.assumeFalse(muted.any { filePath.contains(it) })
         super.runTest(filePath)
     }
 
