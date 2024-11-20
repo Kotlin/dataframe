@@ -3,8 +3,8 @@ import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
-import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlinx.publisher.composeOfTaskOutputs
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
@@ -60,6 +60,10 @@ sourceSets {
     }
 }
 
+val experimental = sourceSets.create("experimental") {
+    kotlin.srcDir(sourceSets.main.get().kotlin)
+}
+
 dependencies {
     val kotlinCompilerPluginClasspathSamples by configurations.getting
 
@@ -81,6 +85,9 @@ dependencies {
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
 
+    val kotlinCompilerPluginClasspathExperimental by configurations.getting
+    kotlinCompilerPluginClasspathExperimental(project(":plugins:public-api-modifier"))
+
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
@@ -100,14 +107,6 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
     }
     source(sourceSets["test"].kotlin)
     destinationDirectory = layout.buildDirectory.dir("classes/testWithOutputs/kotlin")
-}
-
-tasks.withType<KspTask> {
-    // "test" classpath is re-used, so repeated generation should be disabled
-    if (name == "kspSamplesKotlin") {
-        dependsOn("kspTestKotlin")
-        enabled = false
-    }
 }
 
 val clearTestResults by tasks.creating(Delete::class) {
@@ -295,6 +294,40 @@ tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
 
 // endregion
 
+// region experimental artifact
+val experimentalJar by tasks.registering(Jar::class) {
+    archiveBaseName.set("experimental")
+    from(experimental.output)
+}
+
+val experimentalJarSources by tasks.registering(Jar::class) {
+    dependsOn("kspKotlin")
+    archiveBaseName.set("experimental")
+    from(generatedSources.kotlin.srcDirs)
+    archiveClassifier.set("sources")
+}
+
+val experimentalImplementation by configurations.getting {
+    extendsFrom(configurations.implementation.get())
+}
+
+val experimentalCompileOnly by configurations.getting {
+    extendsFrom(configurations.compileOnly.get())
+}
+// endregion
+
+tasks.withType<KspTask> {
+    // "test" classpath is re-used, so repeated generation should be disabled
+    if (name == "kspSamplesKotlin") {
+        dependsOn("kspTestKotlin")
+        enabled = false
+    }
+    if (name == "kspExperimentalKotlin") {
+        dependsOn("kspKotlin")
+        enabled = false
+    }
+}
+
 korro {
     docs = fileTree(rootProject.rootDir) {
         include("docs/StardustDocs/topics/*.md")
@@ -407,6 +440,11 @@ kotlinPublications {
         artifactId = "dataframe-core"
         description = "Dataframe core API"
         packageName = artifactId
+    }
+    publication {
+        publicationName = "dataframe-experimental"
+        description = "Excel support for Kotlin Dataframe"
+        composeOfTaskOutputs(listOf(experimentalJar, experimentalJarSources))
     }
 }
 
