@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
@@ -71,6 +72,7 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
+@AccessApiOverload
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
@@ -85,6 +87,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
+@AccessApiOverload
 public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
 
 // endregion

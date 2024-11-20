@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
@@ -50,14 +51,17 @@ import kotlin.reflect.typeOf
 @Interpretable("Convert0")
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> = Convert(this, columns)
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> = convert { columns.toColumnSet() }
 
 @Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
     convert { columns.toColumnSet() }
 
+@AccessApiOverload
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
@@ -65,6 +69,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@AccessApiOverload
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,

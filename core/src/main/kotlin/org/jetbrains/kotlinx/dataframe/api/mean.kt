@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -64,6 +65,7 @@ public fun <T, C : Number> DataFrame<T>.meanFor(
     skipNA: Boolean = skipNA_default,
 ): DataRow<T> = meanFor(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> DataFrame<T>.meanFor(
     vararg columns: KProperty<C?>,
     skipNA: Boolean = skipNA_default,
@@ -82,6 +84,7 @@ public fun <T, C : Number> DataFrame<T>.mean(
     skipNA: Boolean = skipNA_default,
 ): Double = mean(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): Double =
     mean(skipNA) { columns.toColumnSet() }
 
@@ -109,6 +112,7 @@ public fun <T, C : Number> Grouped<T>.meanFor(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = meanFor(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.meanFor(
     vararg columns: KProperty<C?>,
     skipNA: Boolean = skipNA_default,
@@ -132,6 +136,7 @@ public fun <T, C : Number> Grouped<T>.mean(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = mean(name, skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: KProperty<C?>,
     name: String? = null,
@@ -169,6 +174,7 @@ public fun <T, C : Number> Pivot<T>.meanFor(
     separate: Boolean = false,
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: KProperty<C?>,
     skipNA: Boolean = skipNA_default,
@@ -210,6 +216,7 @@ public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: KProperty<C?>,
     separate: Boolean = false,
@@ -229,6 +236,7 @@ public fun <T, R : Number> PivotGroupBy<T>.mean(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = mean(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Number> PivotGroupBy<T>.mean(
     vararg columns: KProperty<R?>,
     skipNA: Boolean = skipNA_default,

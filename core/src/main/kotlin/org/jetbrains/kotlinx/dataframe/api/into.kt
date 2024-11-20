@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
@@ -15,8 +16,10 @@ import kotlin.reflect.typeOf
 
 public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
 
+@AccessApiOverload
 public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
 
+@AccessApiOverload
 public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
 
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
@@ -24,6 +27,7 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(pathOf(columnName ?: groups.name()).cast(), expression)
 
+// @Hide
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: ColumnAccessor<V>,
     noinline expression: RowExpression<G, V>,
@@ -35,6 +39,7 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
     }
 }
 
+@AccessApiOverload
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: KProperty<V>,
     noinline expression: RowExpression<G, V>,
@@ -58,11 +63,13 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     }
 }
 
+@AccessApiOverload
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: ColumnAccessor<V>,
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.name(), expression)
 
+@AccessApiOverload
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: KProperty<V>,
     noinline expression: RowExpression<G, V>,
@@ -70,8 +77,10 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
 
 public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
 
+@AccessApiOverload
 public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> = into(column) { this }
 
+@AccessApiOverload
 public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
 
 public fun <T, G> ReducedGroupBy<T, G>.concat(): DataFrame<G> =

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -42,8 +43,10 @@ public interface ColumnsContainer<out T> {
 
     public fun getColumnOrNull(index: Int): AnyCol?
 
+    @AccessApiOverload
     public fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>?
 
+    @AccessApiOverload
     public fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>?
 
     public fun getColumnOrNull(path: ColumnPath): AnyCol?
@@ -58,23 +61,32 @@ public interface ColumnsContainer<out T> {
 
     public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
 
+    @AccessApiOverload
     public operator fun <R> get(column: DataColumn<R>): DataColumn<R> = getColumn(column.name()).cast()
 
+    @AccessApiOverload
     public operator fun <R> get(column: DataColumn<DataRow<R>>): ColumnGroup<R> = getColumn(column)
 
+    @AccessApiOverload
     public operator fun <R> get(column: DataColumn<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
+    @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumn(column)
 
+    @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
 
+    @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
+    @AccessApiOverload
     public operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.columnName).cast()
 
+    @AccessApiOverload
     public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
         get(column.columnName).asColumnGroup().cast()
 
+    @AccessApiOverload
     public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
         get(column.columnName).asAnyFrameColumn().castFrameColumn()
 
