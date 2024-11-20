@@ -56,6 +56,7 @@ table.dataframe th {
 
 table.dataframe td {
     vertical-align: top;
+    white-space: nowrap;
 }
 
 table.dataframe th.bottomBorder {
