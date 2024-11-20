@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -50,6 +51,8 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
+import kotlin.text.trim
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
@@ -69,7 +72,64 @@ internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     rowConverter: RowColumnExpression<T, C, R>,
 ): DataFrame<T> = to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
 
-internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
+/**
+ * Specific implementation for [convertToTypeImpl] for [String] -> [Double] conversion
+ *
+ * This function exists because [convertToTypeImpl] can only retrieve a single parser
+ * double has two: one with the given locale (or system default) and one POSIX parser
+ */
+internal fun DataColumn<String?>.convertToDoubleImpl(
+    locale: Locale?,
+    nullStrings: Set<String>?,
+    useFastDoubleParser: Boolean,
+): DataColumn<Double?> {
+    val nullStrings = nullStrings ?: Parsers.nulls
+
+    fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
+        var currentRow = 0
+        try {
+            return mapIndexed { row, value ->
+                currentRow = row
+                value?.let {
+                    if (it in nullStrings) return@let null
+
+                    parser(value.trim()) ?: throw TypeConversionException(
+                        value = value,
+                        from = typeOf<String>(),
+                        to = typeOf<Double>(),
+                        column = path,
+                    )
+                }
+            }
+        } catch (e: TypeConversionException) {
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
+        }
+    }
+
+    return if (locale != null) {
+        val explicitParser = Parsers.getDoubleParser(
+            locale = locale,
+            useFastDoubleParser = useFastDoubleParser,
+        )
+        applyParser(explicitParser)
+    } else {
+        try {
+            val defaultParser =
+                Parsers.getDoubleParser(
+                    locale = null,
+                    useFastDoubleParser = useFastDoubleParser,
+                )
+            applyParser(defaultParser)
+        } catch (_: TypeConversionException) {
+            val posixParser = Parsers.getPosixDoubleParser(
+                useFastDoubleParser = useFastDoubleParser,
+            )
+            applyParser(posixParser)
+        }
+    }
+}
+
+internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions = ParserOptions()): AnyCol {
     val from = type
 
     val nullsAreAllowed = to.isMarkedNullable
@@ -112,7 +172,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                         value?.let {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
-                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
+                            val converter = getConverter(type, to, parserOptions)
                                 ?: throw TypeConverterNotFoundException(from, to, path)
                             converter(it)
                         }.checkNulls()
@@ -139,7 +199,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
         }
     }
 
-    return when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
+    return when (val converter = getConverter(from, to, parserOptions)) {
         null -> convertPerCell()
         else -> applyConverter(converter)
     }
