@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
@@ -467,5 +468,10 @@ class MariadbTest {
         schema.columns["floatCol"]!!.type shouldBe typeOf<Float>()
         schema.columns["doubleCol"]!!.type shouldBe typeOf<Double>()
         schema.columns["decimalCol"]!!.type shouldBe typeOf<BigDecimal>()
+    }
+
+    @Test
+    fun `infer nullability`() {
+        inferNullability(connection)
     }
 }
