@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.interComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegated
@@ -52,7 +52,7 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMinOf(): T = rowMinOfOrN
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.min(): DataRow<T> = minFor(comparableColumns())
+public fun <T> DataFrame<T>.min(): DataRow<T> = minFor(interComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
     Aggregators.min.aggregateFor(this, columns)
@@ -121,7 +121,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: KProperty<C?>
 
 // region GroupBy
 
-public fun <T> Grouped<T>.min(): DataFrame<T> = minFor(comparableColumns())
+public fun <T> Grouped<T>.min(): DataFrame<T> = minFor(interComparableColumns())
 
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.min.aggregateFor(this, columns)
@@ -219,7 +219,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: KProperty<C?>): Reduced
 
 // region PivotGroupBy
 
-public fun <T> PivotGroupBy<T>.min(separate: Boolean = false): DataFrame<T> = minFor(separate, comparableColumns())
+public fun <T> PivotGroupBy<T>.min(separate: Boolean = false): DataFrame<T> = minFor(separate, interComparableColumns())
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     separate: Boolean = false,
