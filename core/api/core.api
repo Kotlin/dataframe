@@ -2691,7 +2691,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnDescri
 	public abstract fun getPath ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public abstract fun getStd ()D
 	public abstract fun getTop ()Ljava/lang/Object;
-	public abstract fun getType ()Lkotlin/reflect/KType;
+	public abstract fun getType ()Ljava/lang/String;
 	public abstract fun getUnique ()I
 }
 
@@ -2719,7 +2719,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lkotlin/reflect/KType;
+	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
 	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -2745,7 +2745,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lkotlin/reflect/KType;
+	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
 }
@@ -4146,6 +4146,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
+	public static final fun isBigNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isColumnGroup (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isFrameColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
@@ -4154,6 +4155,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
 	public static final fun isPrimitive (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isSubtypeOf (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;)Z
 	public static final fun isValueColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
+	public static final fun valuesAreComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataFrameBuilder {
@@ -10771,6 +10773,7 @@ public final class org/jetbrains/kotlinx/dataframe/math/BasicStats {
 
 public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {
 	public static final fun bigDecimalMean (Ljava/lang/Iterable;)D
+	public static final fun bigIntegerMean (Ljava/lang/Iterable;)D
 	public static final fun byteMean (Ljava/lang/Iterable;)D
 	public static final fun doubleMean (Ljava/lang/Iterable;Z)D
 	public static synthetic fun doubleMean$default (Ljava/lang/Iterable;ZILjava/lang/Object;)D
@@ -10794,6 +10797,8 @@ public final class org/jetbrains/kotlinx/dataframe/math/MedianKt {
 public final class org/jetbrains/kotlinx/dataframe/math/StdKt {
 	public static final fun bigDecimalStd (Ljava/lang/Iterable;I)D
 	public static synthetic fun bigDecimalStd$default (Ljava/lang/Iterable;IILjava/lang/Object;)D
+	public static final fun bigIntegerStd (Ljava/lang/Iterable;I)D
+	public static synthetic fun bigIntegerStd$default (Ljava/lang/Iterable;IILjava/lang/Object;)D
 	public static final fun doubleStd (Ljava/lang/Iterable;ZI)D
 	public static synthetic fun doubleStd$default (Ljava/lang/Iterable;ZIILjava/lang/Object;)D
 	public static final fun floatStd (Ljava/lang/Iterable;ZI)D
@@ -10808,6 +10813,7 @@ public final class org/jetbrains/kotlinx/dataframe/math/StdKt {
 
 public final class org/jetbrains/kotlinx/dataframe/math/StdMeanKt {
 	public static final fun bigDecimalVarianceAndMean (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
+	public static final fun bigIntegerVarianceAndMean (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
 	public static final fun doubleVarianceAndMean (Ljava/lang/Iterable;Z)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
 	public static synthetic fun doubleVarianceAndMean$default (Ljava/lang/Iterable;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
 	public static final fun floatVarianceAndMean (Ljava/lang/Iterable;Z)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
@@ -10818,8 +10824,10 @@ public final class org/jetbrains/kotlinx/dataframe/math/StdMeanKt {
 
 public final class org/jetbrains/kotlinx/dataframe/math/SumKt {
 	public static final fun sum (Ljava/lang/Iterable;)Ljava/math/BigDecimal;
+	public static final fun sum (Ljava/lang/Iterable;)Ljava/math/BigInteger;
 	public static final fun sum (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Number;
 	public static final fun sum (Lkotlin/sequences/Sequence;)Ljava/math/BigDecimal;
+	public static final fun sum (Lkotlin/sequences/Sequence;)Ljava/math/BigInteger;
 	public static final fun sumNullableT (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Number;
 	public static final fun sumOf (Ljava/lang/Iterable;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;)Ljava/lang/Number;
 }
