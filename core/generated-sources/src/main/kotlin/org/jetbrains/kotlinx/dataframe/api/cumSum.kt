@@ -5,10 +5,13 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.math.cumSum
 import org.jetbrains.kotlinx.dataframe.math.defaultCumSumSkipNA
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -17,20 +20,59 @@ import kotlin.reflect.typeOf
 public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> =
     when (type()) {
         typeOf<Double>() -> cast<Double>().cumSum(skipNA).cast()
+
         typeOf<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
+
         typeOf<Float>() -> cast<Float>().cumSum(skipNA).cast()
+
         typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
+
         typeOf<Int>() -> cast<Int>().cumSum().cast()
+
+        // TODO cumSum for Byte returns Int but is converted back to T: Byte, Issue #558
+        typeOf<Byte>() -> cast<Byte>().cumSum().map { it.toByte() }.cast()
+
+        // TODO cumSum for Short returns Int but is converted back to T: Short, Issue #558
+        typeOf<Short>() -> cast<Short>().cumSum().map { it.toShort() }.cast()
+
         typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
+
+        // TODO cumSum for Byte? returns Int? but is converted back to T: Byte?, Issue #558
+        typeOf<Byte?>() -> cast<Byte?>().cumSum(skipNA).map { it?.toByte() }.cast()
+
+        // TODO cumSum for Short? returns Int? but is converted back to T: Short?, Issue #558
+        typeOf<Short?>() -> cast<Short?>().cumSum(skipNA).map { it?.toShort() }.cast()
+
         typeOf<Long>() -> cast<Long>().cumSum().cast()
+
         typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
+
+        typeOf<BigInteger>() -> cast<BigInteger>().cumSum().cast()
+
+        typeOf<BigInteger?>() -> cast<BigInteger?>().cumSum(skipNA).cast()
+
         typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
+
         typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
+
         typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
+
+        // Cumsum for empty column or column with just null is itself
+        nothingType, nullableNothingType -> this
+
         else -> error("Cumsum for type ${type()} is not supported")
     }
 
-private val supportedClasses = setOf(Double::class, Float::class, Int::class, Long::class, BigDecimal::class)
+private val supportedClasses = setOf(
+    Double::class,
+    Float::class,
+    Int::class,
+    Byte::class,
+    Short::class,
+    Long::class,
+    BigInteger::class,
+    BigDecimal::class,
+)
 
 // endregion
 
