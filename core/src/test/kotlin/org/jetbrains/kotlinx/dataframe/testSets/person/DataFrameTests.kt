@@ -83,7 +83,6 @@ import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.isInterComparable
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.keysInto
@@ -156,6 +155,7 @@ import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.api.valuesAreComparable
 import org.jetbrains.kotlinx.dataframe.api.valuesNotNull
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -2445,12 +2445,12 @@ class DataFrameTests : BaseTest() {
             ComparableTest(2, 2, "b", "b", "2", "2"),
         ).toDataFrame()
 
-        df.int.isInterComparable() shouldBe true
-        df.comparableInt.isInterComparable() shouldBe true
-        df.string.isInterComparable() shouldBe true
-        df.comparableString.isInterComparable() shouldBe true
-        df.comparableStar.isInterComparable() shouldBe false
-        df.comparableNothing.isInterComparable() shouldBe false
+        df.int.valuesAreComparable() shouldBe true
+        df.comparableInt.valuesAreComparable() shouldBe true
+        df.string.valuesAreComparable() shouldBe true
+        df.comparableString.valuesAreComparable() shouldBe true
+        df.comparableStar.valuesAreComparable() shouldBe false
+        df.comparableNothing.valuesAreComparable() shouldBe false
     }
 
     @Test
