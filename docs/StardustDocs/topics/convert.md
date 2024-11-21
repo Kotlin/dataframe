@@ -64,7 +64,8 @@ df.convert { weight }.toFloat()
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"/>
 <!---END-->
 
-Automatic conversion from `String` to enum classes is also supported:
+Automatic conversion from `String` to [enum classes](https://kotlinlang.org/docs/enum-classes.html#enum-classes.md)
+is also supported:
 
 ```kotlin
 enum class Direction { NORTH, SOUTH, WEST, EAST }
@@ -78,4 +79,22 @@ dataFrameOf("direction")("NORTH", "WEST")
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToEnum.html"/>
+<!---END-->
+
+And finally, [Value classes](https://kotlinlang.org/docs/inline-classes.html) can be created
+and unpacked using `convert`:
+
+```kotlin
+@JvmInline 
+value class IntClass(val value: Int)
+```
+
+<!---FUN convertToValueClass-->
+
+```kotlin
+dataFrameOf("value")("1", "2")
+    .convert("value").to<IntClass>()
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToValueClass.html"/>
 <!---END-->
