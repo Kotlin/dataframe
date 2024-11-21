@@ -16,8 +16,19 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.hours
+import java.time.LocalTime as JavaLocalTime
 
 class ConvertTests {
+
+    @Test
+    fun `convert LocalTime Kotlin to Java and back`() {
+        val time by columnOf(LocalTime(11, 22, 33))
+        val converted = time.toDataFrame().convert { time }.to<JavaLocalTime>()
+        converted[time][0] shouldBe JavaLocalTime.of(11, 22, 33)
+
+        val convertedBack = converted.convert(time).to<LocalTime>()
+        convertedBack[time][0] shouldBe time[0]
+    }
 
     @Test
     fun `convert nullable strings to time`() {
