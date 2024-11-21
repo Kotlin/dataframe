@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.isInterComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
@@ -23,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.valuesAreComparable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -39,7 +39,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
     val allCols = cols.collectAll(false)
 
     val hasNumericCols = allCols.any { it.isNumber() }
-    val hasInterComparableCols = allCols.any { it.isInterComparable() }
+    val hasComparableCols = allCols.any { it.valuesAreComparable() }
     val hasLongPaths = allCols.any { it.path().size > 1 }
     var df = allCols.toDataFrame {
         ColumnDescription::name from { it.name() }
@@ -59,15 +59,15 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }
             ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
         }
-        if (hasInterComparableCols || hasNumericCols) {
+        if (hasComparableCols || hasNumericCols) {
             ColumnDescription::min from inferType {
-                it.convertToInterComparableOrNull()?.minOrNull()
+                it.convertToComparableOrNull()?.minOrNull()
             }
             ColumnDescription::median from inferType {
-                it.convertToInterComparableOrNull()?.medianOrNull()
+                it.convertToComparableOrNull()?.medianOrNull()
             }
             ColumnDescription::max from inferType {
-                it.convertToInterComparableOrNull()?.maxOrNull()
+                it.convertToComparableOrNull()?.maxOrNull()
             }
         }
     }
@@ -105,9 +105,9 @@ private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
     }
 
 /** Converts a column to a comparable column if it is not already comparable. */
-private fun DataColumn<Any?>.convertToInterComparableOrNull(): DataColumn<Comparable<Any?>>? =
+private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<Any?>>? =
     when {
-        isInterComparable() -> asComparable()
+        valuesAreComparable() -> asComparable()
 
         // Found incomparable number types, convert all to Double or BigDecimal first
         isNumber() ->

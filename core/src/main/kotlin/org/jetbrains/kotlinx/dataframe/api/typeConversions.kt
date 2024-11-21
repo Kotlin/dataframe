@@ -83,7 +83,7 @@ public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
 }
 
 public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
-    require(isInterComparable())
+    require(valuesAreComparable())
     return this as DataColumn<Comparable<T>>
 }
 

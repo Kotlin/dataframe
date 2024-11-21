@@ -4150,12 +4150,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
 	public static final fun isColumnGroup (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isFrameColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
-	public static final fun isInterComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isList (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isPrimitive (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isSubtypeOf (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;)Z
 	public static final fun isValueColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
+	public static final fun valuesAreComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataFrameBuilder {

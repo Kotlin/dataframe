@@ -53,22 +53,22 @@ public fun AnyCol.isBigNumber(): Boolean = isSubtypeOf<BigInteger?>() || isSubty
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
-/** @include [isInterComparable] */
+/** @include [valuesAreComparable] */
 @Deprecated(
     message = IS_COMPARABLE,
     replaceWith = ReplaceWith(IS_COMPARABLE_REPLACE, IS_INTER_COMPARABLE_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-public fun AnyCol.isComparable(): Boolean = isInterComparable()
+public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
 
 /**
  * Returns `true` if [this] column is inter-comparable, i.e.
- * its elements can be compared with each other.
+ * its values can be compared with each other.
  *
- * Technically, this means the elements' common type is a subtype of [Comparable] with
+ * Technically, this means the values' common type is a subtype of [Comparable] with
  * the type argument not being [Nothing].
  */
-public fun AnyCol.isInterComparable(): Boolean =
+public fun AnyCol.valuesAreComparable(): Boolean =
     isSubtypeOf<Comparable<*>?>() &&
         type().projectTo(Comparable::class).arguments[0].let {
             it != KTypeProjection.STAR &&
