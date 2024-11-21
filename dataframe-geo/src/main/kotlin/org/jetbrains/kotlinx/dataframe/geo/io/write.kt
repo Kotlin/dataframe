@@ -52,6 +52,7 @@ fun GeoDataFrame<*>.writeShapefile(directory: File) {
         e.printStackTrace()
         transaction.rollback()
     } finally {
+        dataStore.dispose()
         transaction.close()
     }
 }
