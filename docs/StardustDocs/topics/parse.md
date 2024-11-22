@@ -11,7 +11,6 @@ This is a special case of the [convert](convert.md) operation.
 df.parse()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseAll.html"/>
 <!---END-->
 
 To parse only particular columns use a [column selector](ColumnSelectors.md):
@@ -51,7 +50,6 @@ Available parser options:
 df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseWithOptions.html"/>
 <!---END-->
 
 You can also set global parser options that will be used by default in [`read`](read.md), [`convert`](convert.md),
