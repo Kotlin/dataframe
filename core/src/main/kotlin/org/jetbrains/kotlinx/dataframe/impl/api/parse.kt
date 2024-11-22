@@ -35,7 +35,7 @@ import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
-import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
@@ -119,7 +119,13 @@ internal object Parsers : GlobalParserOptions {
 
     private val nullStrings: MutableSet<String> = mutableSetOf()
 
-    public val nulls: Set<String> get() = nullStrings
+    internal val skipTypesSet = mutableSetOf<KType>()
+
+    override val nulls: Set<String>
+        get() = nullStrings
+
+    override val skipTypes: Set<KType>
+        get() = skipTypesSet
 
     override fun addDateTimePattern(pattern: String) {
         formatters.add(DateTimeFormatter.ofPattern(pattern))
@@ -129,11 +135,18 @@ internal object Parsers : GlobalParserOptions {
         nullStrings.add(str)
     }
 
+    override fun addSkipType(type: KType) {
+        skipTypesSet.add(type)
+    }
+
+    override var useFastDoubleParser: Boolean = false
+
     override var locale: Locale = Locale.getDefault()
 
     override fun resetToDefault() {
         formatters.clear()
         nullStrings.clear()
+        skipTypesSet.clear()
         formatters.add(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         formatters.add(DateTimeFormatter.ISO_DATE_TIME)
 
@@ -145,8 +158,8 @@ internal object Parsers : GlobalParserOptions {
             .toFormatter()
             .let { formatters.add(it) }
 
+        useFastDoubleParser = false
         locale = Locale.getDefault()
-
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
 
@@ -209,7 +222,7 @@ internal object Parsers : GlobalParserOptions {
         toJavaLocalDateTimeOrNull(formatter) // since we accept a Java DateTimeFormatter
             ?.toKotlinLocalDateTime()
 
-    private fun String.toUrlOrNull(): URL? = if (isURL(this)) catchSilent { URL(this) } else null
+    private fun String.toUrlOrNull(): URL? = if (isUrl(this)) catchSilent { URL(this) } else null
 
     private fun String.toBooleanOrNull() =
         when (uppercase(Locale.getDefault())) {
@@ -293,14 +306,18 @@ internal object Parsers : GlobalParserOptions {
     ): StringParserWithFormat<T> = StringParserWithFormat(typeOf<T>(), coveredBy, body)
 
     private val parserToDoubleWithOptions = stringParserWithOptions { options ->
-        val fastDoubleParser = FastDoubleParser(options ?: ParserOptions())
+        val fastDoubleParser = FastDoubleParser(options)
         val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
         parser
     }
 
-    private val posixDoubleParser = FastDoubleParser(
-        ParserOptions(locale = Locale.forLanguageTag("C.UTF-8")),
-    )
+    // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8
+    private val posixParserToDoubleWithOptions = stringParserWithOptions { options ->
+        val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
+        val fastDoubleParser = FastDoubleParser(parserOptions)
+        val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
+        parser
+    }
 
     internal val parsersOrder = listOf(
         // Int
@@ -364,7 +381,7 @@ internal object Parsers : GlobalParserOptions {
         // Double, with explicit number format or taken from current locale
         parserToDoubleWithOptions,
         // Double, with POSIX format
-        stringParser<Double> { posixDoubleParser.parseOrNull(it) },
+        posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
         // BigDecimal
@@ -387,6 +404,8 @@ internal object Parsers : GlobalParserOptions {
                 null
             }
         },
+        // Char
+        stringParser<Char> { it.singleOrNull() },
         // No parser found, return as String
         // must be last in the list of parsers to return original unparsed string
         stringParser<String> { it },
@@ -429,14 +448,13 @@ internal object Parsers : GlobalParserOptions {
         return parser.applyOptions(options)
     }
 
-    internal fun getDoubleParser(locale: Locale? = null, useFastDoubleParser: Boolean): (String) -> Double? {
-        val options = if (locale != null) {
-            ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser)
-        } else {
-            null
-        }
-        return parserToDoubleWithOptions.applyOptions(options)
-    }
+    internal fun getDoubleParser(locale: Locale?, useFastDoubleParser: Boolean): (String) -> Double? =
+        parserToDoubleWithOptions
+            .applyOptions(ParserOptions(locale = locale, useFastDoubleParser = useFastDoubleParser))
+
+    internal fun getPosixDoubleParser(useFastDoubleParser: Boolean): (String) -> Double? =
+        posixParserToDoubleWithOptions
+            .applyOptions(ParserOptions(useFastDoubleParser = useFastDoubleParser))
 }
 
 /**
@@ -460,7 +478,9 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     var nullStringParsed = false
     val nulls = options?.nullStrings ?: Parsers.nulls
 
+    val parserTypesToSkip = options?.skipTypes ?: Parsers.skipTypesSet
     val parsersToCheck = Parsers.parsersOrder
+        .filterNot { it.type in parserTypesToSkip }
     val parserTypesToCheck = parsersToCheck.map { it.type }.toSet()
 
     var correctParser: StringParser<*>? = null
