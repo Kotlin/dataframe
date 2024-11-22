@@ -141,7 +141,13 @@ internal object Parsers : GlobalParserOptions {
 
     override var useFastDoubleParser: Boolean = false
 
-    override var locale: Locale = Locale.getDefault()
+    private var _locale: Locale? = null
+
+    override var locale: Locale
+        get() = _locale ?: Locale.getDefault()
+        set(value) {
+            _locale = value
+        }
 
     override fun resetToDefault() {
         formatters.clear()
@@ -159,7 +165,7 @@ internal object Parsers : GlobalParserOptions {
             .let { formatters.add(it) }
 
         useFastDoubleParser = false
-        locale = Locale.getDefault()
+        _locale = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
 
