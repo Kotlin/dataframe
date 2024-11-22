@@ -71,10 +71,10 @@ internal fun DataFrame.Companion.readDelimImpl(
             colType != null ->
                 column.convertTo(
                     newType = colType.toKType().withNullability(true),
-                    parserOptions = parserOptions ?: ParserOptions(),
+                    parserOptions = parserOptions,
                 )
 
-            else -> column.tryParse(parserOptions ?: ParserOptions())
+            else -> column.tryParse(parserOptions)
         }
     }
     return cols.toDataFrame()

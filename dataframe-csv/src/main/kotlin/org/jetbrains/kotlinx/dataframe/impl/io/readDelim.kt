@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.ADJUST_CSV_SPECS
@@ -51,13 +52,14 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
-import org.jetbrains.kotlinx.dataframe.io.DEFAULT_NULL_STRINGS
+import org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS
 import org.jetbrains.kotlinx.dataframe.io.skippingBomCharacters
 import org.jetbrains.kotlinx.dataframe.io.toKType
 import org.jetbrains.kotlinx.dataframe.io.useDecompressed
 import java.io.InputStream
 import java.math.BigDecimal
 import java.net.URL
+import java.util.Locale
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -95,7 +97,7 @@ internal fun readDelimImpl(
     colTypes: Map<String, ColType>,
     skipLines: Long,
     readLines: Long?,
-    parserOptions: ParserOptions,
+    parserOptions: ParserOptions?,
     ignoreEmptyLines: Boolean,
     allowMissingColumns: Boolean,
     ignoreExcessColumns: Boolean,
@@ -107,8 +109,15 @@ internal fun readDelimImpl(
 ): DataFrame<*> {
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {
-        customDoubleParser(DataFrameCustomDoubleParser(parserOptions))
-        nullValueLiterals(parserOptions.nullStrings ?: DEFAULT_NULL_STRINGS)
+        // turn on fast double parser if not explicitly set regardless of the global parser options
+        @Suppress("NullableBooleanElvis")
+        val adjustedParserOptions = (parserOptions ?: ParserOptions())
+            .copy(useFastDoubleParser = parserOptions?.useFastDoubleParser ?: true)
+        customDoubleParser(DataFrameCustomDoubleParser(adjustedParserOptions))
+
+        // use the given nullStrings if provided, else take the global ones + some extras
+        val nullStrings = parserOptions?.nullStrings ?: (DataFrame.parser.nulls + DEFAULT_DELIM_NULL_STRINGS)
+        nullValueLiterals(nullStrings)
         headerLegalizer(::legalizeHeader)
         numRows(readLines ?: Long.MAX_VALUE)
         ignoreEmptyLines(ignoreEmptyLines)
@@ -124,11 +133,12 @@ internal fun readDelimImpl(
         if (hasFixedWidthColumns && fixedColumnWidths.isNotEmpty()) fixedColumnWidths(fixedColumnWidths)
         skipLines(takeHeaderFromCsv = header.isEmpty(), skipLines = skipLines)
 
-        // Deephaven's LocalDateTime parser is unconfigurable, so if the user provides a locale, pattern, or formatter,
-        // we must use our own parser for LocalDateTime and let Deephaven read them as Strings.
-        val useDeepHavenLocalDateTime = with(parserOptions) {
-            locale == null && dateTimePattern == null && dateTimeFormatter == null
-        }
+        // Deephaven's LocalDateTime parser is unconfigurable, so if the user provides a locale, pattern, or formatter
+        // that's not compatible, we must use our own parser for LocalDateTime and let Deephaven read them as Strings.
+        val useDeepHavenLocalDateTime =
+            (parserOptions?.locale ?: DataFrame.parser.locale) in setOf(Locale.ROOT, Locale.US, Locale.ENGLISH) &&
+                parserOptions?.dateTimePattern == null &&
+                parserOptions?.dateTimeFormatter == null
         parsers(parserOptions, colTypes, useDeepHavenLocalDateTime)
 
         adjustCsvSpecs(this, this)
@@ -172,7 +182,7 @@ internal fun readDelimImpl(
 
 @Suppress("UNCHECKED_CAST")
 private fun CsvReader.ResultColumn.toDataColumn(
-    parserOptions: ParserOptions,
+    parserOptions: ParserOptions?,
     desiredColType: ColType?,
 ): DataColumn<*> {
     val listSink = data()!! as ListSink
@@ -199,10 +209,13 @@ private fun CsvReader.ResultColumn.toDataColumn(
             )
 
         else -> {
+            val givenSkipTypes = parserOptions?.skipTypes ?: DataFrame.parser.skipTypes
             // no need to check for types that Deephaven already parses, skip those too
-            val skipTypes = parserOptions.skipTypes + typesDeephavenAlreadyParses
-            val adjustsedParserOptions = parserOptions.copy(skipTypes = skipTypes)
-            column.tryParse(adjustsedParserOptions)
+            val adjustedSkipTypes = givenSkipTypes + typesDeephavenAlreadyParses
+            val adjustedParserOptions = (parserOptions ?: ParserOptions())
+                .copy(skipTypes = adjustedSkipTypes)
+
+            column.tryParse(adjustedParserOptions)
         }
     }
 }
@@ -274,7 +287,7 @@ private fun CsvSpecs.Builder.skipLines(takeHeaderFromCsv: Boolean, skipLines: Lo
  * This is intended.
  */
 private fun CsvSpecs.Builder.parsers(
-    parserOptions: ParserOptions,
+    parserOptions: ParserOptions?,
     colTypes: Map<String, ColType>,
     useDeepHavenLocalDateTime: Boolean,
 ): CsvSpecs.Builder {
@@ -282,12 +295,13 @@ private fun CsvSpecs.Builder.parsers(
         if (colName == ColType.DEFAULT) continue
         putParserForName(colName, colType.toCsvParser(useDeepHavenLocalDateTime))
     }
+    val skipTypes = parserOptions?.skipTypes ?: DataFrame.parser.skipTypes
     val parsersToUse = when {
         ColType.DEFAULT in colTypes ->
             listOf(colTypes[ColType.DEFAULT]!!.toCsvParser(useDeepHavenLocalDateTime))
 
-        parserOptions.skipTypes.isNotEmpty() -> {
-            val parsersToSkip = parserOptions.skipTypes
+        skipTypes.isNotEmpty() -> {
+            val parsersToSkip = skipTypes
                 .mapNotNull { it.toColType().toCsvParserOrNull(useDeepHavenLocalDateTime) }
             Parsers.DEFAULT.toSet() - parsersToSkip.toSet()
         }

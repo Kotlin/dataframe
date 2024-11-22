@@ -133,20 +133,19 @@ public fun AnyCol.convertTo(newType: KType): AnyCol =
         type().isSubtypeOf(typeOf<String?>()) ->
             (this as DataColumn<String?>).convertTo(newType)
 
-        else -> convertToTypeImpl(newType)
+        else -> convertToTypeImpl(newType, null)
     }
 
-public inline fun <reified C> DataColumn<String?>.convertTo(
-    parserOptions: ParserOptions = ParserOptions(),
-): DataColumn<C> = convertTo(typeOf<C>(), parserOptions) as DataColumn<C>
+public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: ParserOptions? = null): DataColumn<C> =
+    convertTo(typeOf<C>(), parserOptions) as DataColumn<C>
 
-public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions = ParserOptions()): AnyCol =
+public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): AnyCol =
     when {
         newType.isSubtypeOf(typeOf<Double?>()) ->
-            (this as DataColumn<String?>).convertToDoubleImpl(
-                locale = parserOptions.locale,
-                nullStrings = parserOptions.nullStrings,
-                useFastDoubleParser = parserOptions.useFastDoubleParser,
+            convertToDoubleImpl(
+                locale = parserOptions?.locale,
+                nullStrings = parserOptions?.nullStrings,
+                useFastDoubleParser = parserOptions?.useFastDoubleParser,
             ).setNullable(newType.isMarkedNullable)
 
         else -> convertToTypeImpl(newType, parserOptions)
@@ -199,9 +198,12 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
 
 /**
  * Parses a String column to Double considering locale (number format).
- * If [locale] parameter is defined, it's number format is used for parsing.
- * If [locale] parameter is null, the current system locale is used.
- * If the column cannot be parsed, then the POSIX format is used.
+ *
+ * If any of the parameters is `null`, the global default (in [DataFrame.parser][DataFrame.Companion.parser]) is used.
+ *
+ * @param locale If defined, its number format is used for parsing.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is the system locale.
+ *   If the column cannot be parsed, the POSIX format is used.
  */
 @ExcludeFromSources
 private interface DataColumnStringConvertToDoubleDoc
@@ -209,36 +211,40 @@ private interface DataColumnStringConvertToDoubleDoc
 /** @include [DataColumnStringConvertToDoubleDoc] */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> =
-    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = false)
+    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
 
 /**
  * @include [DataColumnStringConvertToDoubleDoc]
- * @param nullStrings a set of strings that should be treated as `null` values. By default, it's ["null", "NULL", "NA", "N/A"].
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ * @param nullStrings a set of strings that should be treated as `null` values.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `false` for now.
  */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(
     locale: Locale? = null,
     nullStrings: Set<String>?,
-    useFastDoubleParser: Boolean,
+    useFastDoubleParser: Boolean?,
 ): DataColumn<Double> =
     this.castToNullable().convertToDouble(locale, nullStrings, useFastDoubleParser).castToNotNullable()
 
 /** @include [DataColumnStringConvertToDoubleDoc] */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> =
-    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = false)
+    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
 
 /**
  * @include [DataColumnStringConvertToDoubleDoc]
- * @param nullStrings a set of strings that should be treated as `null` values. By default, it's ["null", "NULL", "NA", "N/A"].
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ * @param nullStrings a set of strings that should be treated as `null` values.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `false` for now.
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(
     locale: Locale? = null,
     nullStrings: Set<String>?,
-    useFastDoubleParser: Boolean,
+    useFastDoubleParser: Boolean?,
 ): DataColumn<Double?> =
     convertToDoubleImpl(
         locale = locale,

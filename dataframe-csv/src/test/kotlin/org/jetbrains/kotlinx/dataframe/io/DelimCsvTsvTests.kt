@@ -9,6 +9,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -16,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
@@ -132,7 +134,7 @@ class DelimCsvTsvTests {
         val df = DataFrame.readCsv(
             url = csvWithFrenchLocale,
             delimiter = ';',
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(locale = Locale.FRENCH),
+            parserOptions = ParserOptions(locale = Locale.FRENCH),
         )
 
         df.columnsCount() shouldBe 11
@@ -461,7 +463,7 @@ class DelimCsvTsvTests {
             text = frenchCsv,
             delimiter = ';',
             // setting any locale skips deephaven's date parsing
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(locale = Locale.ROOT),
+            parserOptions = ParserOptions(locale = Locale.ROOT),
         )
 
         // could not parse, remains String
@@ -485,7 +487,7 @@ class DelimCsvTsvTests {
         val frenchDf = DataFrame.readCsvStr(
             text = frenchCsv,
             delimiter = ';',
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+            parserOptions = ParserOptions(
                 dateTimePattern = "dd/MM/yyyy",
                 locale = Locale.FRENCH,
             ),
@@ -509,7 +511,7 @@ class DelimCsvTsvTests {
         val dutchDf = DataFrame.readCsvStr(
             text = dutchCsv,
             delimiter = ';',
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+            parserOptions = ParserOptions(
                 locale = Locale.forLanguageTag("nl-NL"),
             ),
         )
@@ -532,7 +534,7 @@ class DelimCsvTsvTests {
         val easternArabicDf = DataFrame.readCsvStr(
             arabicCsv,
             delimiter = ';',
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+            parserOptions = ParserOptions(
                 locale = Locale.forLanguageTag("ar-001"),
             ),
         )
@@ -555,39 +557,59 @@ class DelimCsvTsvTests {
             f;null;
             """.trimIndent()
 
-        val estonianDf = DataFrame.readCsvStr(
+        val estonianDf1 = DataFrame.readCsvStr(
             text = estonianWrongMinus,
             delimiter = ';',
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+            parserOptions = ParserOptions(
                 locale = Locale.forLanguageTag("et-EE"),
             ),
         )
 
-        estonianDf["price"].type() shouldBe typeOf<Double?>()
+        estonianDf1["price"].type() shouldBe typeOf<Double?>()
+
+        // also test the global setting
+        DataFrame.parser.locale = Locale.forLanguageTag("et-EE")
+
+        val estonianDf2 = DataFrame.readCsvStr(
+            text = estonianWrongMinus,
+            delimiter = ';',
+        )
+        estonianDf2 shouldBe estonianDf1
+
+        DataFrame.parser.resetToDefault()
     }
 
     @Test
     fun `NA and custom null string in double column`() {
-        val df = DataFrame.readCsv(
+        val df1 = DataFrame.readCsv(
             msleepCsv,
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
-                nullStrings = DEFAULT_NULL_STRINGS + "nothing",
+            parserOptions = ParserOptions(
+                nullStrings = DEFAULT_DELIM_NULL_STRINGS + "nothing",
             ),
         )
 
-        df.print(columnTypes = true, borders = true, title = true)
+        df1["name"].type() shouldBe typeOf<String>()
+        df1["genus"].type() shouldBe typeOf<String>()
+        df1["vore"].type() shouldBe typeOf<String?>()
+        df1["order"].type() shouldBe typeOf<String>()
+        df1["conservation"].type() shouldBe typeOf<String?>()
+        df1["sleep_total"].type() shouldBe typeOf<Double>()
+        df1["sleep_rem"].type() shouldBe typeOf<Double?>()
+        df1["sleep_cycle"].type() shouldBe typeOf<Double?>()
+        df1["awake"].type() shouldBe typeOf<Double>()
+        df1["brainwt"].type() shouldBe typeOf<Double?>()
+        df1["bodywt"].type() shouldBe typeOf<Double?>()
 
-        df["name"].type() shouldBe typeOf<String>()
-        df["genus"].type() shouldBe typeOf<String>()
-        df["vore"].type() shouldBe typeOf<String?>()
-        df["order"].type() shouldBe typeOf<String>()
-        df["conservation"].type() shouldBe typeOf<String?>()
-        df["sleep_total"].type() shouldBe typeOf<Double>()
-        df["sleep_rem"].type() shouldBe typeOf<Double?>()
-        df["sleep_cycle"].type() shouldBe typeOf<Double?>()
-        df["awake"].type() shouldBe typeOf<Double>()
-        df["brainwt"].type() shouldBe typeOf<Double?>()
-        df["bodywt"].type() shouldBe typeOf<Double?>()
+        // Also test the global setting
+        DataFrame.parser.addNullString("nothing")
+        DEFAULT_DELIM_NULL_STRINGS.forEach {
+            DataFrame.parser.addNullString(it)
+        }
+
+        val df2 = DataFrame.readCsv(msleepCsv)
+        df2 shouldBe df1
+
+        DataFrame.parser.resetToDefault()
     }
 
     @Test
@@ -659,19 +681,30 @@ class DelimCsvTsvTests {
 
     @Test
     fun `skipping types`() {
-        val irisDataset = DataFrame.readCsv(
+        val df1 = DataFrame.readCsv(
             irisDataset,
             colTypes = mapOf("sepal.length" to ColType.Double),
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+            parserOptions = ParserOptions(
                 skipTypes = setOf(typeOf<Double>()),
             ),
         )
 
-        irisDataset["sepal.length"].type() shouldBe typeOf<Double>()
-        irisDataset["sepal.width"].type() shouldBe typeOf<BigDecimal>()
-        irisDataset["petal.length"].type() shouldBe typeOf<BigDecimal>()
-        irisDataset["petal.width"].type() shouldBe typeOf<BigDecimal>()
-        irisDataset["variety"].type() shouldBe typeOf<String>()
+        df1["sepal.length"].type() shouldBe typeOf<Double>()
+        df1["sepal.width"].type() shouldBe typeOf<BigDecimal>()
+        df1["petal.length"].type() shouldBe typeOf<BigDecimal>()
+        df1["petal.width"].type() shouldBe typeOf<BigDecimal>()
+        df1["variety"].type() shouldBe typeOf<String>()
+
+        // Also test the global setting
+        DataFrame.parser.addSkipType(typeOf<Double>())
+
+        val df2 = DataFrame.readCsv(
+            irisDataset,
+            colTypes = mapOf("sepal.length" to ColType.Double),
+        )
+        df2 shouldBe df1
+
+        DataFrame.parser.resetToDefault()
     }
 
     // Issue #921
@@ -688,20 +721,33 @@ class DelimCsvTsvTests {
             1.3,1
             """.trimIndent()
 
-        val df = DataFrame.readCsvStr(
+        val df1 = DataFrame.readCsvStr(
             csv,
-            parserOptions = DEFAULT_PARSER_OPTIONS.copy(
+            parserOptions = ParserOptions(
                 nullStrings = setOf("noppes", ""),
             ),
             colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
         )
-        df shouldBe dataFrameOf("a", "b")(
+        df1 shouldBe dataFrameOf("a", "b")(
             null, 2,
             1.2, null,
             3.0, 45,
             null, null,
             1.3, 1,
         )
+
+        // Also test the global setting
+        DataFrame.parser.addNullString("noppes")
+        DataFrame.parser.addNullString("")
+
+        val df2 = DataFrame.readCsvStr(
+            csv,
+            colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
+        )
+
+        df2 shouldBe df1
+
+        DataFrame.parser.resetToDefault()
     }
 
     companion object {
@@ -712,7 +758,6 @@ class DelimCsvTsvTests {
         private val simpleCsvGz = testResource("testCSV.csv.gz")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
-        private val durationCsv = testCsv("duration")
         private val withBomCsv = testCsv("with-bom")
         private val msleepCsv = testCsv("msleep")
         private val notCsv = testResource("not-csv.zip")

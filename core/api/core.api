@@ -3809,6 +3809,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun convert (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/Convert;
 	public static final fun convert (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/Convert;
 	public static final fun convertTo (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertTo (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertTo$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBigDecimalFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBoolean (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -3817,13 +3819,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun convertToByteFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDoubleFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToDoubleFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToDoubleFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToDoubleFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToDoubleFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToDoubleFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDoubleFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToDoubleFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToDoubleFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToDoubleFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToDoubleFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToDoubleFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDoubleFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToFloat (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToFloatFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4811,9 +4813,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/GenerateCodeKt {
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/GlobalParserOptions {
 	public abstract fun addDateTimePattern (Ljava/lang/String;)V
 	public abstract fun addNullString (Ljava/lang/String;)V
+	public abstract fun addSkipType (Lkotlin/reflect/KType;)V
 	public abstract fun getLocale ()Ljava/util/Locale;
+	public abstract fun getNulls ()Ljava/util/Set;
+	public abstract fun getSkipTypes ()Ljava/util/Set;
+	public abstract fun getUseFastDoubleParser ()Z
 	public abstract fun resetToDefault ()V
 	public abstract fun setLocale (Ljava/util/Locale;)V
+	public abstract fun setUseFastDoubleParser (Z)V
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/GroupBy : org/jetbrains/kotlinx/dataframe/api/Grouped {
@@ -6485,35 +6492,24 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParseKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions {
-	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion;
 	public fun <init> ()V
 	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)V
 	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Z)V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/util/Locale;
-	public final fun component2 ()Ljava/time/format/DateTimeFormatter;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/util/Set;
-	public final fun component5 ()Ljava/util/Set;
-	public final fun component6 ()Z
+	public fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final synthetic fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public final fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Z)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDateTimeFormatter ()Ljava/time/format/DateTimeFormatter;
 	public final fun getDateTimePattern ()Ljava/lang/String;
 	public final fun getLocale ()Ljava/util/Locale;
 	public final fun getNullStrings ()Ljava/util/Set;
 	public final fun getSkipTypes ()Ljava/util/Set;
-	public final fun getUseFastDoubleParser ()Z
+	public final fun getUseFastDoubleParser ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions$Companion {
-	public final fun allTypesExcept ([Lkotlin/reflect/KType;)Ljava/util/Set;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Pivot : org/jetbrains/kotlinx/dataframe/aggregation/Aggregatable {
@@ -10226,7 +10222,9 @@ public final class org/jetbrains/kotlinx/dataframe/impl/columns/UtilsKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/io/FastDoubleParser {
+	public fun <init> ()V
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun parseOrNull (Ljava/lang/CharSequence;)Ljava/lang/Double;
 	public final fun parseOrNull ([BIILjava/nio/charset/Charset;)Ljava/lang/Double;
 	public final fun parseOrNull ([CII)Ljava/lang/Double;

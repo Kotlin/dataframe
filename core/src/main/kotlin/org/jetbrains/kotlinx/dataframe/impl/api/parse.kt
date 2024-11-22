@@ -119,7 +119,13 @@ internal object Parsers : GlobalParserOptions {
 
     private val nullStrings: MutableSet<String> = mutableSetOf()
 
-    public val nulls: Set<String> get() = nullStrings
+    internal val skipTypesSet = mutableSetOf<KType>()
+
+    override val nulls: Set<String>
+        get() = nullStrings
+
+    override val skipTypes: Set<KType>
+        get() = skipTypesSet
 
     override fun addDateTimePattern(pattern: String) {
         formatters.add(DateTimeFormatter.ofPattern(pattern))
@@ -129,11 +135,18 @@ internal object Parsers : GlobalParserOptions {
         nullStrings.add(str)
     }
 
+    override fun addSkipType(type: KType) {
+        skipTypesSet.add(type)
+    }
+
+    override var useFastDoubleParser: Boolean = false
+
     override var locale: Locale = Locale.getDefault()
 
     override fun resetToDefault() {
         formatters.clear()
         nullStrings.clear()
+        skipTypesSet.clear()
         formatters.add(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         formatters.add(DateTimeFormatter.ISO_DATE_TIME)
 
@@ -145,8 +158,8 @@ internal object Parsers : GlobalParserOptions {
             .toFormatter()
             .let { formatters.add(it) }
 
+        useFastDoubleParser = false
         locale = Locale.getDefault()
-
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
 
@@ -293,7 +306,7 @@ internal object Parsers : GlobalParserOptions {
     ): StringParserWithFormat<T> = StringParserWithFormat(typeOf<T>(), coveredBy, body)
 
     private val parserToDoubleWithOptions = stringParserWithOptions { options ->
-        val fastDoubleParser = FastDoubleParser(options ?: ParserOptions())
+        val fastDoubleParser = FastDoubleParser(options)
         val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
         parser
     }
@@ -301,6 +314,7 @@ internal object Parsers : GlobalParserOptions {
     // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8
     private val posixParserToDoubleWithOptions = stringParserWithOptions { options ->
         val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
+        TODO()
         val fastDoubleParser = FastDoubleParser(parserOptions)
         val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
         parser
@@ -465,7 +479,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     var nullStringParsed = false
     val nulls = options?.nullStrings ?: Parsers.nulls
 
-    val parserTypesToSkip = options?.skipTypes ?: emptySet()
+    val parserTypesToSkip = options?.skipTypes ?: Parsers.skipTypesSet
     val parsersToCheck = Parsers.parsersOrder
         .filterNot { it.type in parserTypesToSkip }
     val parserTypesToCheck = parsersToCheck.map { it.type }.toSet()

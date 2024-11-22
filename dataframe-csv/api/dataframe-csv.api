@@ -153,8 +153,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/Tsv : org/jetbrains/kotlin
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/UtilKt {
-	public static final fun getDEFAULT_NULL_STRINGS ()Ljava/util/Set;
-	public static final fun getDEFAULT_PARSER_OPTIONS ()Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static final fun getDEFAULT_DELIM_NULL_STRINGS ()Ljava/util/Set;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/WriteCsvDeephavenKt {

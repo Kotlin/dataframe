@@ -2,12 +2,14 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.Compression
-import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
 import org.jetbrains.kotlinx.dataframe.io.DefaultNullStringsContentLink
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 
@@ -128,21 +130,22 @@ internal object DelimParams {
 
     /**
      * @param parserOptions Optional [parsing options][ParserOptions] for columns initially read as [String].
-     *   Default, [DEFAULT_PARSER_OPTIONS]:
-     *
-     *   [ParserOptions][ParserOptions]`(`
-     *
-     *   {@include [Indent]}[nullStrings][ParserOptions.nullStrings]`  =  `{@include [DefaultNullStringsContentLink]}`,`
-     *
-     *   {@include [Indent]}[useFastDoubleParser][ParserOptions.useFastDoubleParser]` = true,`
-     *
-     *   `)`
+     *   Default, `null`.
      *
      *   Can configure locale, date format, double parsing, skipping types, etc.
      *
-     *   **NOTE:** Make sure to use [DEFAULT_PARSER_OPTIONS][DEFAULT_PARSER_OPTIONS]`.copy()` to override the desired options.
+     *   If [parserOptions\] or any of the arguments are `null`, the global parser configuration
+     *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
+     *
+     *   The only exceptions are:
+     *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
+     *   regardless of the global setting.
+     *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
+     *   will take the global setting + {@include [DefaultNullStringsContentLink]}.
+     *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to
+     *   the given types or the global setting.
      */
-    val PARSER_OPTIONS: ParserOptions = DEFAULT_PARSER_OPTIONS
+    val PARSER_OPTIONS: ParserOptions? = null
 
     /**
      * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.

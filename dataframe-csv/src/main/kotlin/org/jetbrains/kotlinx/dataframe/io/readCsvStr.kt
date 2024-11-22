@@ -39,7 +39,7 @@ public fun DataFrame.Companion.readCsvStr(
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
-    parserOptions: ParserOptions = PARSER_OPTIONS,
+    parserOptions: ParserOptions? = PARSER_OPTIONS,
     ignoreEmptyLines: Boolean = IGNORE_EMPTY_LINES,
     allowMissingColumns: Boolean = ALLOW_MISSING_COLUMNS,
     ignoreExcessColumns: Boolean = IGNORE_EXCESS_COLUMNS,

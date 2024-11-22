@@ -81,9 +81,10 @@ internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
 internal fun DataColumn<String?>.convertToDoubleImpl(
     locale: Locale?,
     nullStrings: Set<String>?,
-    useFastDoubleParser: Boolean,
+    useFastDoubleParser: Boolean?,
 ): DataColumn<Double?> {
     val nullStrings = nullStrings ?: Parsers.nulls
+    val useFastDoubleParser = useFastDoubleParser ?: Parsers.useFastDoubleParser
 
     fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
         var currentRow = 0
@@ -129,7 +130,7 @@ internal fun DataColumn<String?>.convertToDoubleImpl(
     }
 }
 
-internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions = ParserOptions()): AnyCol {
+internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
 
     val nullsAreAllowed = to.isMarkedNullable

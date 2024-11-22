@@ -4,7 +4,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.ColType
-import org.jetbrains.kotlinx.dataframe.io.DEFAULT_PARSER_OPTIONS
 import java.io.File
 import java.io.InputStream
 import java.net.URL
@@ -31,7 +30,7 @@ import java.net.URL
  *
  * {@include [Indent]}`file = `[File][File]`("input.$[CommonReadDelimDocs.FileExtensionArg]"),`
  *
- * {@include [Indent]}`parserOptions = `[DEFAULT_PARSER_OPTIONS][DEFAULT_PARSER_OPTIONS]`.copy(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
+ * {@include [Indent]}`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
  * {@include [Indent]}`colTypes = `[mapOf][mapOf]`("a" `[to][to]` `[ColType][ColType]`.`[Int][ColType.Int]`, `[ColType][ColType]`.`[DEFAULT][ColType.DEFAULT]` `[to][to]` `[ColType][ColType]`.`[String][ColType.String]`),`
  *
