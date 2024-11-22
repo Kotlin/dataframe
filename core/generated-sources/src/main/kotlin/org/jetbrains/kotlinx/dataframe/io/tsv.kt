@@ -39,7 +39,7 @@ public fun DataFrame.Companion.readTSV(
     charset: Charset = Charsets.UTF_8,
     parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
-    catchHttpResponse(asURL(fileOrUrl)) {
+    catchHttpResponse(asUrl(fileOrUrl)) {
         readDelim(
             it,
             TAB_CHAR,
