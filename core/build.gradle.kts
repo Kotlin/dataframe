@@ -87,6 +87,7 @@ dependencies {
     }
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
+    testImplementation(libs.sl4jsimple)
 }
 
 val samplesImplementation by configurations.getting {

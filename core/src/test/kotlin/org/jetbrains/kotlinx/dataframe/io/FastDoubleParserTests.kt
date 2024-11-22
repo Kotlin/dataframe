@@ -9,22 +9,21 @@ import org.junit.Test
 import java.text.NumberFormat
 import java.util.Locale
 
-private const val LOG_LEVEL = "org.slf4j.simpleLogger.defaultLogLevel"
-
 class FastDoubleParserTests {
 
+    private val logLevel = "org.slf4j.simpleLogger.log.${FastDoubleParser::class.qualifiedName}"
     private var loggerBefore: String? = null
 
     @Before
     fun setLogger() {
-        loggerBefore = System.getProperty(LOG_LEVEL)
-        System.setProperty(LOG_LEVEL, "debug")
+        loggerBefore = System.getProperty(logLevel)
+        System.setProperty(logLevel, "debug")
     }
 
     @After
     fun restoreLogger() {
         if (loggerBefore != null) {
-            System.setProperty(LOG_LEVEL, loggerBefore)
+            System.setProperty(logLevel, loggerBefore)
         }
     }
 

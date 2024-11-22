@@ -11,6 +11,11 @@ import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.projectTo
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
+import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KClass
@@ -44,13 +49,36 @@ public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 
+public fun AnyCol.isBigNumber(): Boolean = isSubtypeOf<BigInteger?>() || isSubtypeOf<BigDecimal?>()
+
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
+/** Returns `true` if [this] column is inter-comparable, i.e.
+ * its values can be compared with each other and thus ordered.
+ *
+ * If true, operations like [`min()`][AnyCol.min], [`max()`][AnyCol.max], [`median()`][AnyCol.median], etc.
+ * will work.
+ *
+ * Technically, this means the values' common type is a subtype of [Comparable] with
+ * the type argument not being [Nothing]. */
+@Deprecated(
+    message = IS_COMPARABLE,
+    replaceWith = ReplaceWith(IS_COMPARABLE_REPLACE, IS_INTER_COMPARABLE_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
+public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
+
 /**
- * Returns `true` if [this] column is comparable, i.e. its type is a subtype of [Comparable] and its
- * type argument is not [Nothing].
+ * Returns `true` if [this] column is inter-comparable, i.e.
+ * its values can be compared with each other and thus ordered.
+ *
+ * If true, operations like [`min()`][AnyCol.min], [`max()`][AnyCol.max], [`median()`][AnyCol.median], etc.
+ * will work.
+ *
+ * Technically, this means the values' common type is a subtype of [Comparable] with
+ * the type argument not being [Nothing].
  */
-public fun AnyCol.isComparable(): Boolean =
+public fun AnyCol.valuesAreComparable(): Boolean =
     isSubtypeOf<Comparable<*>?>() &&
         type().projectTo(Comparable::class).arguments[0].let {
             it != KTypeProjection.STAR &&

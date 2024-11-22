@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.math
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -10,6 +11,7 @@ import kotlin.reflect.full.withNullability
 internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double =
     asSequence().mean(type, skipNA)
 
+@Suppress("UNCHECKED_CAST")
 internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
     if (type.isMarkedNullable) {
         return filterNotNull().mean(type.withNullability(false), skipNA)
@@ -27,6 +29,8 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA
         Byte::class -> (this as Sequence<Byte>).map { it.toDouble() }.mean(false)
 
         Long::class -> (this as Sequence<Long>).map { it.toDouble() }.mean(false)
+
+        BigInteger::class -> (this as Sequence<BigInteger>).map { it.toDouble() }.mean(false)
 
         BigDecimal::class -> (this as Sequence<BigDecimal>).map { it.toDouble() }.mean(skipNA)
 
@@ -132,6 +136,21 @@ public fun Iterable<Long>.mean(): Double =
         if (count > 0) sum / count else Double.NaN
     }
 
+// TODO result is Double, but should be BigDecimal, Issue #558
+@JvmName("bigIntegerMean")
+public fun Iterable<BigInteger>.mean(): Double =
+    if (this is Collection) {
+        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+    } else {
+        var count = 0
+        val sum = sumOf {
+            count++
+            it.toDouble()
+        }
+        if (count > 0) sum / count else Double.NaN
+    }
+
+// TODO result is Double, but should be BigDecimal, Issue #558
 @JvmName("bigDecimalMean")
 public fun Iterable<BigDecimal>.mean(): Double =
     if (this is Collection) {

@@ -9,7 +9,7 @@ package org.jetbrains.kotlinx.dataframe.util
 
 // region WARNING in 0.15, ERROR in 0.16
 
-private const val MESSAGE_0_16 = "Will be removed in 0.16."
+private const val MESSAGE_0_16 = "Will be ERROR in 0.16."
 
 internal const val DF_READ_NO_CSV = "This function is deprecated and should be replaced with `readCSV`. $MESSAGE_0_16"
 internal const val DF_READ_NO_CSV_REPLACE =
@@ -44,6 +44,11 @@ internal const val PARSER_OPTIONS = "This constructor is only here for binary co
 
 internal const val PARSER_OPTIONS_COPY = "This function is only here for binary compatibility. $MESSAGE_0_16"
 
+internal const val IS_COMPARABLE =
+    "This function is replaced by `valuesAreComparable()` to better reflect its purpose. $MESSAGE_0_16"
+internal const val IS_COMPARABLE_REPLACE = "valuesAreComparable()"
+internal const val IS_INTER_COMPARABLE_IMPORT = "org.jetbrains.kotlinx.dataframe.api.valuesAreComparable"
+
 internal const val AS_URL = "This function is replaced by `asUrl()`. $MESSAGE_0_16"
 internal const val AS_URL_REPLACE = "asUrl(fileOrUrl)"
 internal const val AS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.asUrl"
@@ -56,7 +61,7 @@ internal const val IS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.isUrl"
 
 // region WARNING in 0.16, ERROR in 0.17
 
-private const val MESSAGE_0_17 = "Will be removed in 0.17."
+private const val MESSAGE_0_17 = "Will be ERROR in 0.17."
 
 // endregion
 
