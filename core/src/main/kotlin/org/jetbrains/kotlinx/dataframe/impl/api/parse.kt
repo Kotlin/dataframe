@@ -314,7 +314,6 @@ internal object Parsers : GlobalParserOptions {
     // same as parserToDoubleWithOptions, but overrides the locale to C.UTF-8
     private val posixParserToDoubleWithOptions = stringParserWithOptions { options ->
         val parserOptions = (options ?: ParserOptions()).copy(locale = Locale.forLanguageTag("C.UTF-8"))
-        TODO()
         val fastDoubleParser = FastDoubleParser(parserOptions)
         val parser = { it: String -> fastDoubleParser.parseOrNull(it) }
         parser
