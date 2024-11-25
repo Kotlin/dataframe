@@ -9901,6 +9901,11 @@ public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnNotFoundExce
 	public fun getMessage ()Ljava/lang/String;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnTypeMismatchesColumnValuesException : java/lang/RuntimeException {
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/Throwable;)V
+	public final fun getColumn ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/exceptions/DuplicateColumnNamesException : java/lang/IllegalArgumentException {
 	public fun <init> (Ljava/util/List;)V
 	public final fun getAllColumnNames ()Ljava/util/List;

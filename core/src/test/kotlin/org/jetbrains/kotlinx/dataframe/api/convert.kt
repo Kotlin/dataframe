@@ -6,10 +6,12 @@ import io.kotest.matchers.shouldBe
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalTime
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.ColumnTypeMismatchesColumnValuesException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -171,5 +173,16 @@ class ConvertTests {
         val col = columnOf(1.hours)
         val res = col.convertTo<String>()
         res.print()
+    }
+
+    private interface Marker
+
+    private val ColumnsContainer<Marker>.a get() = this["a"] as DataColumn<String>
+
+    @Test
+    fun `convert with buggy extension property`() {
+        shouldThrow<ColumnTypeMismatchesColumnValuesException> {
+            dataFrameOf("a")(1, 2, 3).cast<Marker>().convert { a }.with { it }
+        }
     }
 }
