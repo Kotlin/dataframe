@@ -23,6 +23,6 @@ public data class IMG(
         if (height != null) style.append("height:${height}px;")
         if (maxWidth != null) style.append("max-width:${maxWidth}px;")
         if (maxHeight != null) style.append("max-height:${maxHeight}px;")
-        return """<img src="$src" style="$style"}/>"""
+        return """<img src="$src" style="$style"/>"""
     }
 }
