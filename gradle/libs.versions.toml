@@ -24,7 +24,6 @@ commonsCsv = "1.11.0"
 commonsCompress = "1.27.1"
 commonsIo = "2.16.1"
 serialization = "1.7.1"
-fuel = "2.3.1"
 poi = "5.3.0"
 mariadb = "3.4.1"
 h2db = "2.3.232"
@@ -82,7 +81,6 @@ commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsI
 serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
-fuel = { group = "com.github.kittinunf.fuel", name = "fuel", version.ref = "fuel" }
 poi = { group = "org.apache.poi", name = "poi", version.ref = "poi" }
 mariadb = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
