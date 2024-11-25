@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.renderValueForHtml
 import org.jetbrains.kotlinx.dataframe.io.tooltipLimit
@@ -12,7 +13,9 @@ public data class RenderedContent(
 ) {
     public companion object {
 
-        public fun media(html: String): RenderedContent = RenderedContent(html, 0, null, false)
+        public fun media(
+            @Language("HTML") html: String,
+        ): RenderedContent = RenderedContent(html, 0, null, false)
 
         public fun textWithLength(str: String, len: Int): RenderedContent = RenderedContent(str, len, null, false)
 

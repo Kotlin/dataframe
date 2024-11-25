@@ -20,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
+import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.formatter
@@ -226,5 +228,27 @@ class RenderingTests : TestBase() {
         val df = dataFrameOf("a")(dataFrameOf("b")(1).format { all() }.with { background(green) })
         val html = df.toStandaloneHTML()
         html.toString() shouldInclude "style: \"background-color"
+    }
+
+    @Test
+    fun `render img`() {
+        val src = "https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/images/gettingStarted.png?raw=true"
+        val df = dataFrameOf("img")(IMG(src))
+        df.toStandaloneHTML().toString() shouldInclude
+            """values: ["<img src=\"https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/images/gettingStarted.png?raw=true\" style=\"\"/>"]"""
+    }
+
+    @Test
+    fun `render custom content`() {
+        val df = dataFrameOf("customUrl")(RenderedContent.media("""<a href="http://example.com">Click me!</a>"""))
+        df.toStandaloneHTML().toString() shouldInclude
+            """values: ["<a href=\"http://example.com\">Click me!</a>"]"""
+    }
+
+    @Test
+    fun `render iframe content`() {
+        val df = dataFrameOf("iframe")(IFRAME("http://example.com"))
+        df.toStandaloneHTML().toString() shouldInclude
+            """values: ["<iframe src=\"http://example.com\"""
     }
 }
