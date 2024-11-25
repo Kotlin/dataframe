@@ -336,6 +336,82 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 else -> null
             }
 
+            Byte::class -> when (toClass) {
+                Double::class -> convert<Byte> { it.toDouble() }
+
+                Float::class -> convert<Byte> { it.toFloat() }
+
+                Int::class -> convert<Byte> { it.toInt() }
+
+                Short::class -> convert<Byte> { it.toShort() }
+
+                Long::class -> convert<Byte> { it.toLong() }
+
+                BigDecimal::class -> convert<Byte> { it.toBigDecimal() }
+
+                BigInteger::class -> convert<Byte> { it.toBigInteger() }
+
+                Boolean::class -> convert<Byte> { it != 0.toByte() }
+
+                LocalDateTime::class -> convert<Byte> { it.toLong().toLocalDateTime(defaultTimeZone) }
+
+                LocalDate::class -> convert<Byte> { it.toLong().toLocalDate(defaultTimeZone) }
+
+                LocalTime::class -> convert<Byte> { it.toLong().toLocalTime(defaultTimeZone) }
+
+                Instant::class -> convert<Byte> { Instant.fromEpochMilliseconds(it.toLong()) }
+
+                JavaLocalDateTime::class -> convert<Byte> {
+                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
+                JavaLocalDate::class -> convert<Byte> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
+
+                JavaLocalTime::class -> convert<Byte> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                JavaInstant::class -> convert<Byte> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                else -> null
+            }
+
+            Short::class -> when (toClass) {
+                Double::class -> convert<Short> { it.toDouble() }
+
+                Float::class -> convert<Short> { it.toFloat() }
+
+                Int::class -> convert<Short> { it.toInt() }
+
+                Byte::class -> convert<Short> { it.toByte() }
+
+                Long::class -> convert<Short> { it.toLong() }
+
+                BigDecimal::class -> convert<Short> { it.toBigDecimal() }
+
+                BigInteger::class -> convert<Short> { it.toBigInteger() }
+
+                Boolean::class -> convert<Short> { it != 0.toShort() }
+
+                LocalDateTime::class -> convert<Short> { it.toLong().toLocalDateTime(defaultTimeZone) }
+
+                LocalDate::class -> convert<Short> { it.toLong().toLocalDate(defaultTimeZone) }
+
+                LocalTime::class -> convert<Short> { it.toLong().toLocalTime(defaultTimeZone) }
+
+                Instant::class -> convert<Short> { Instant.fromEpochMilliseconds(it.toLong()) }
+
+                JavaLocalDateTime::class -> convert<Short> {
+                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
+                JavaLocalDate::class -> convert<Short> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
+
+                JavaLocalTime::class -> convert<Short> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                JavaInstant::class -> convert<Short> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                else -> null
+            }
+
             Double::class -> when (toClass) {
                 Int::class -> convert<Double> { it.roundToInt() }
                 Float::class -> convert<Double> { it.toFloat() }

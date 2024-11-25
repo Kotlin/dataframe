@@ -13,7 +13,15 @@ import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.api.toBigDecimal
+import org.jetbrains.kotlinx.dataframe.impl.api.toBigInteger
 import org.junit.Test
+import java.math.BigDecimal
+import java.math.BigInteger
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
+import kotlin.random.Random
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.hours
 import java.time.LocalTime as JavaLocalTime
@@ -182,5 +190,129 @@ class ConvertTests {
         val col = columnOf(1.hours)
         val res = col.convertTo<String>()
         res.print()
+    }
+
+    @Test
+    fun `convert Int and Char by code`() {
+        val col = columnOf(65, 66)
+        col.convertTo<Char>() shouldBe columnOf('A', 'B')
+        col.convertTo<Char>().convertTo<Int>() shouldBe col
+    }
+
+    @Test
+    fun `convert all number types to each other`() {
+        val numberTypes: List<Number> = listOf(
+            Random.nextInt().toByte(),
+            Random.nextInt().toShort(),
+            Random.nextInt(),
+            Random.nextLong(),
+            Random.nextFloat(),
+            Random.nextDouble(),
+            BigInteger.valueOf(Random.nextLong()),
+            BigDecimal.valueOf(Random.nextDouble()),
+        )
+        for (a in numberTypes) {
+            val aCol = columnOf(a)
+            for (b in numberTypes) {
+                val bCol = aCol.convertTo(b::class.starProjectedType)
+                when (a) {
+                    is Byte ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.toByte()
+                            is Short -> bCol.first() shouldBe a.toShort()
+                            is Int -> bCol.first() shouldBe a.toInt()
+                            is Long -> bCol.first() shouldBe a.toLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+
+                    is Short ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.toByte()
+                            is Short -> bCol.first() shouldBe a.toShort()
+                            is Int -> bCol.first() shouldBe a.toInt()
+                            is Long -> bCol.first() shouldBe a.toLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+
+                    is Int ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.toByte()
+                            is Short -> bCol.first() shouldBe a.toShort()
+                            is Int -> bCol.first() shouldBe a.toInt()
+                            is Long -> bCol.first() shouldBe a.toLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+
+                    is Long ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.toByte()
+                            is Short -> bCol.first() shouldBe a.toShort()
+                            is Int -> bCol.first() shouldBe a.toInt()
+                            is Long -> bCol.first() shouldBe a.toLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+
+                    is Float ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.roundToInt().toByte()
+                            is Short -> bCol.first() shouldBe a.roundToInt().toShort()
+                            is Int -> bCol.first() shouldBe a.roundToInt()
+                            is Long -> bCol.first() shouldBe a.roundToLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+
+                    is Double ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.roundToInt().toByte()
+                            is Short -> bCol.first() shouldBe a.roundToInt().toShort()
+                            is Int -> bCol.first() shouldBe a.roundToInt()
+                            is Long -> bCol.first() shouldBe a.roundToLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+
+                    is BigInteger ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.toByte()
+                            is Short -> bCol.first() shouldBe a.toShort()
+                            is Int -> bCol.first() shouldBe a.toInt()
+                            is Long -> bCol.first() shouldBe a.toLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+
+                    is BigDecimal ->
+                        when (b) {
+                            is Byte -> bCol.first() shouldBe a.toByte()
+                            is Short -> bCol.first() shouldBe a.toShort()
+                            is Int -> bCol.first() shouldBe a.toInt()
+                            is Long -> bCol.first() shouldBe a.toLong()
+                            is Float -> bCol.first() shouldBe a.toFloat()
+                            is Double -> bCol.first() shouldBe a.toDouble()
+                            is BigInteger -> bCol.first() shouldBe a.toBigInteger()
+                            is BigDecimal -> bCol.first() shouldBe a.toBigDecimal()
+                        }
+                }
+            }
+        }
     }
 }
