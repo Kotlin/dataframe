@@ -49,6 +49,14 @@ internal const val IS_COMPARABLE =
 internal const val IS_COMPARABLE_REPLACE = "valuesAreComparable()"
 internal const val IS_INTER_COMPARABLE_IMPORT = "org.jetbrains.kotlinx.dataframe.api.valuesAreComparable"
 
+internal const val AS_URL = "This function is replaced by `asUrl()`. $MESSAGE_0_16"
+internal const val AS_URL_REPLACE = "asUrl(fileOrUrl)"
+internal const val AS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.asUrl"
+
+internal const val IS_URL = "This function is replaced by `isUrl()`. $MESSAGE_0_16"
+internal const val IS_URL_REPLACE = "isUrl(path)"
+internal const val IS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.isUrl"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
