@@ -74,8 +74,6 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.fastDoubleParser)
 
-    implementation(libs.fuel)
-
     api(libs.kotlin.datetimeJvm)
     implementation(libs.kotlinpoet)
     implementation(libs.sl4j)
