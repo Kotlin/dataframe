@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.ColumnValuesMismatchColumnTypeException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -63,7 +64,16 @@ internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
     type: KType,
     infer: Infer,
     rowConverter: RowValueExpression<T, C, R>,
-): DataFrame<T> = to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) } }
+): DataFrame<T> =
+    to { col ->
+        try {
+            df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) }
+        } catch (e: ClassCastException) {
+            throw ColumnValuesMismatchColumnTypeException(col, e)
+        } catch (e: NullPointerException) {
+            throw ColumnValuesMismatchColumnTypeException(col, e)
+        }
+    }
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
