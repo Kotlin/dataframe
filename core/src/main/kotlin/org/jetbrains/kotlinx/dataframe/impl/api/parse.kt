@@ -39,6 +39,7 @@ import org.jetbrains.kotlinx.dataframe.io.isUrl
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.text.ParsePosition
 import java.time.format.DateTimeFormatter
@@ -390,6 +391,8 @@ internal object Parsers : GlobalParserOptions {
         posixParserToDoubleWithOptions,
         // Boolean
         stringParser<Boolean> { it.toBooleanOrNull() },
+        // BigInteger
+        stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal
         stringParser<BigDecimal> { it.toBigDecimalOrNull() },
         // JSON array as DataFrame<*>
