@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import java.math.BigDecimal
+import java.math.BigInteger
 
 public operator fun DataColumn<Boolean>.not(): DataColumn<Boolean> = map { !it }
 
@@ -168,6 +169,23 @@ public operator fun DataColumn<BigDecimal>.times(value: BigDecimal): DataColumn<
 public operator fun DataColumn<BigDecimal>.div(value: BigDecimal): DataColumn<BigDecimal> = map { it / value }
 
 public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<BigDecimal> = column.map { this / it }
+
+public operator fun DataColumn<BigInteger>.plus(value: BigInteger): DataColumn<BigInteger> = map { it + value }
+
+public operator fun DataColumn<BigInteger>.minus(value: BigInteger): DataColumn<BigInteger> = map { it - value }
+
+public operator fun BigInteger.plus(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this + it }
+
+public operator fun BigInteger.minus(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this - it }
+
+@JvmName("unaryMinusBigInteger")
+public operator fun DataColumn<BigInteger>.unaryMinus(): DataColumn<BigInteger> = map { -it }
+
+public operator fun DataColumn<BigInteger>.times(value: BigInteger): DataColumn<BigInteger> = map { it * value }
+
+public operator fun DataColumn<BigInteger>.div(value: BigInteger): DataColumn<BigInteger> = map { it / value }
+
+public operator fun BigInteger.div(column: DataColumn<BigInteger>): DataColumn<BigInteger> = column.map { this / it }
 
 public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = isMatching { it == value }
 

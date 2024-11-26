@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.util.Locale
 import kotlin.reflect.KProperty
@@ -273,6 +274,11 @@ public fun <T : Any> DataColumn<T>.convertToBigDecimal(): DataColumn<BigDecimal>
 
 public fun <T : Any> DataColumn<T?>.convertToBigDecimal(): DataColumn<BigDecimal?> = convertTo()
 
+@JvmName("convertToBigIntegerFromT")
+public fun <T : Any> DataColumn<T>.convertToBigInteger(): DataColumn<BigInteger> = convertTo()
+
+public fun <T : Any> DataColumn<T?>.convertToBigInteger(): DataColumn<BigInteger?> = convertTo()
+
 @JvmName("convertToBooleanFromT")
 public fun <T : Any> DataColumn<T>.convertToBoolean(): DataColumn<Boolean> = convertTo()
 
@@ -506,6 +512,11 @@ public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
 public fun <T> Convert<T, Any>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
 
 public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
+
+@JvmName("toBigIntegerTAny")
+public fun <T> Convert<T, Any>.toBigInteger(): DataFrame<T> = to<BigInteger>()
+
+public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
 
 @JvmName("toBooleanTAny")
 public fun <T> Convert<T, Any>.toBoolean(): DataFrame<T> = to<Boolean>()
