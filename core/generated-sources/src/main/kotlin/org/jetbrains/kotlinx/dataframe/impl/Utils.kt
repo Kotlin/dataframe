@@ -64,6 +64,7 @@ internal fun <T> List<T>.removeAt(index: Int) = subList(0, index) + subList(inde
 
 internal inline fun <reified T : Any> Int.cast() = convert(this, T::class)
 
+// TODO remove in favor of column convert logic, Issue #971
 internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T =
     when (tartypeOf) {
         Double::class -> src.toDouble() as T

@@ -38,6 +38,7 @@ import java.io.Reader
 import java.io.StringReader
 import java.io.StringWriter
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
@@ -298,6 +299,7 @@ public enum class ColType {
     Double,
     Boolean,
     BigDecimal,
+    BigInteger,
     LocalDate,
     LocalTime,
     LocalDateTime,
@@ -329,6 +331,7 @@ public fun ColType.toKType(): KType =
         ColType.Double -> typeOf<Double>()
         ColType.Boolean -> typeOf<Boolean>()
         ColType.BigDecimal -> typeOf<BigDecimal>()
+        ColType.BigInteger -> typeOf<BigInteger>()
         ColType.LocalDate -> typeOf<LocalDate>()
         ColType.LocalTime -> typeOf<LocalTime>()
         ColType.LocalDateTime -> typeOf<LocalDateTime>()

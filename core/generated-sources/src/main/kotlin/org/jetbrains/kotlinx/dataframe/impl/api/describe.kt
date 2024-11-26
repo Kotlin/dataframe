@@ -30,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.isBigNumber
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import org.jetbrains.kotlinx.dataframe.impl.toBigDecimal
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
