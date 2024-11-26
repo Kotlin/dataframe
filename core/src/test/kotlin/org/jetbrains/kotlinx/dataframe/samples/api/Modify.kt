@@ -223,7 +223,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun convertToValueClass() {
         // SampleStart
-        dataFrameOf("value")("1", "2")
+        dataFrameOf("value")("1", "2") // note that values are strings; conversion is done automatically
             .convert("value").to<IntClass>()
         // SampleEnd
     }

@@ -81,8 +81,8 @@ dataFrameOf("direction")("NORTH", "WEST")
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToEnum.html"/>
 <!---END-->
 
-And finally, [Value classes](https://kotlinlang.org/docs/inline-classes.html) can be created
-and unpacked using `convert`:
+And finally, [Value classes](https://kotlinlang.org/docs/inline-classes.html) can be used with `convert` too.
+Both as conversion source and target:
 
 ```kotlin
 @JvmInline 
@@ -92,7 +92,7 @@ value class IntClass(val value: Int)
 <!---FUN convertToValueClass-->
 
 ```kotlin
-dataFrameOf("value")("1", "2")
+dataFrameOf("value")("1", "2") // note that values are strings; conversion is done automatically
     .convert("value").to<IntClass>()
 ```
 
