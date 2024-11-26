@@ -55,10 +55,13 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 import kotlin.text.trim
+import kotlin.toBigDecimal
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import kotlin.toBigDecimal as toBigDecimalKotlin
+import kotlin.toBigInteger as toBigIntegerKotlin
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
@@ -716,17 +719,25 @@ internal val defaultTimeZone = TimeZone.currentSystemDefault()
 internal fun Number.toBigDecimal(): BigDecimal =
     when (this) {
         is BigDecimal -> this
-        is BigInteger -> BigDecimal(this)
-        is Double -> BigDecimal.valueOf(this)
-        is Int -> BigDecimal(this)
-        is Long -> BigDecimal.valueOf(this)
-        else -> BigDecimal.valueOf(this.toDouble())
+        is BigInteger -> this.toBigDecimalKotlin()
+        is Int -> this.toBigDecimalKotlin()
+        is Byte -> this.toInt().toBigDecimalKotlin()
+        is Short -> this.toInt().toBigDecimalKotlin()
+        is Long -> this.toBigDecimalKotlin()
+        is Float -> this.toBigDecimalKotlin()
+        is Double -> this.toBigDecimalKotlin()
+        else -> BigDecimal(this.toString())
     }
 
 internal fun Number.toBigInteger(): BigInteger =
     when (this) {
         is BigInteger -> this
         is BigDecimal -> this.toBigInteger()
-        is Long -> BigInteger.valueOf(this)
-        else -> BigInteger.valueOf(this.toLong())
+        is Int -> this.toBigIntegerKotlin()
+        is Byte -> this.toInt().toBigIntegerKotlin()
+        is Short -> this.toInt().toBigIntegerKotlin()
+        is Long -> this.toBigIntegerKotlin()
+        is Float -> this.roundToInt().toBigIntegerKotlin()
+        is Double -> this.roundToLong().toBigIntegerKotlin()
+        else -> BigInteger(this.toString())
     }
