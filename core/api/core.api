@@ -3813,6 +3813,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static synthetic fun convertTo$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBigDecimalFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToBigIntegerFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBoolean (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBooleanFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -3891,6 +3893,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun to (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBigDecimal (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBigDecimalTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toBigInteger (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toBigIntegerTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBoolean (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBooleanTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrames (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4078,10 +4082,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun div (ILorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun div (JLorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Ljava/math/BigDecimal;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun div (Ljava/math/BigInteger;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun divDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun divInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4101,10 +4107,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun minus (ILorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun minus (JLorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Ljava/math/BigDecimal;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun minus (Ljava/math/BigInteger;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun minusDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minusInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4120,11 +4128,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun plus (ILorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun plus (JLorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Ljava/math/BigDecimal;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun plus (Ljava/math/BigInteger;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun plusDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4135,6 +4145,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun timesDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun timesInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4142,6 +4153,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun unaryMinus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun unaryMinusBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun unaryMinusBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinusDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinusIntNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinusLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -10287,6 +10299,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/CSVType : java/lang/Enum {
 
 public final class org/jetbrains/kotlinx/dataframe/io/ColType : java/lang/Enum {
 	public static final field BigDecimal Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field BigInteger Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Boolean Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Char Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/ColType$Companion;

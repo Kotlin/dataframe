@@ -31,7 +31,6 @@ import kotlin.reflect.full.superclasses
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
-import kotlin.toBigDecimal as toBigDecimalKotlin
 
 internal inline fun <reified T> KClass<*>.createTypeUsing() = typeOf<T>().projectTo(this)
 
@@ -649,16 +648,3 @@ internal fun Any.asArrayAsListOrNull(): List<*>? =
     }
 
 internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecimal
-
-internal fun Number.toBigDecimal(): BigDecimal =
-    when (this) {
-        is BigDecimal -> this
-        is BigInteger -> this.toBigDecimalKotlin()
-        is Int -> this.toBigDecimalKotlin()
-        is Byte -> this.toInt().toBigDecimalKotlin()
-        is Short -> this.toInt().toBigDecimalKotlin()
-        is Long -> this.toBigDecimalKotlin()
-        is Float -> this.toBigDecimalKotlin()
-        is Double -> this.toBigDecimalKotlin()
-        else -> BigDecimal(this.toString())
-    }

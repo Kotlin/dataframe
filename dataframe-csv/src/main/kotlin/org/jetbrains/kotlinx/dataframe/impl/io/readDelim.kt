@@ -58,6 +58,7 @@ import org.jetbrains.kotlinx.dataframe.io.toKType
 import org.jetbrains.kotlinx.dataframe.io.useDecompressed
 import java.io.InputStream
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.util.Locale
 import kotlin.reflect.KType
@@ -351,6 +352,7 @@ internal fun KType.toColType(): ColType =
         typeOf<Double>() -> ColType.Double
         typeOf<Boolean>() -> ColType.Boolean
         typeOf<BigDecimal>() -> ColType.BigDecimal
+        typeOf<BigInteger>() -> ColType.BigInteger
         typeOf<LocalDate>() -> ColType.LocalDate
         typeOf<LocalTime>() -> ColType.LocalTime
         typeOf<LocalDateTime>() -> ColType.LocalDateTime
