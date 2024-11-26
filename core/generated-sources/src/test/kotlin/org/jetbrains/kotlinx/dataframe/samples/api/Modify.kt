@@ -216,6 +216,18 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    @JvmInline
+    value class IntClass(val value: Int)
+
+    @Test
+    @TransformDataFrameExpressions
+    fun convertToValueClass() {
+        // SampleStart
+        dataFrameOf("value")("1", "2") // note that values are strings; conversion is done automatically
+            .convert("value").to<IntClass>()
+        // SampleEnd
+    }
+
     @Test
     @TransformDataFrameExpressions
     fun convertAsFrame() {
