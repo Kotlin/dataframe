@@ -37,17 +37,20 @@ df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 <!---END-->
 
 `convert` supports automatic type conversions between the following types:
-* `Int`
-* `String`
-* `Double`
-* `Long`
+* `String` (uses [`parse`](parse.md) to convert from `String` to other types)
+* `Boolean`
+* `Byte`
 * `Short`
+* `Int` (and `Char`)
+* `Long`
 * `Float`
+* `Double`
 * `BigDecimal`
-* `LocalDateTime`
-* `LocalDate`
-* `LocalTime`
-* `Duration`
+* `BigInteger`
+* `LocalDateTime` (kotlinx.datetime and java.time)
+* `LocalDate` (kotlinx.datetime and java.time)
+* `LocalTime` (kotlinx.datetime and java.time)
+* `Instant` (kotlinx.datetime and java.time)
 
 <!---FUN convertTo-->
 
@@ -61,7 +64,8 @@ df.convert { weight }.toFloat()
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"/>
 <!---END-->
 
-Automatic conversion from `String` to enum classes is also supported:
+Automatic conversion from `String` to [enum classes](https://kotlinlang.org/docs/enum-classes.html#enum-classes.md)
+is also supported:
 
 ```kotlin
 enum class Direction { NORTH, SOUTH, WEST, EAST }
@@ -75,4 +79,22 @@ dataFrameOf("direction")("NORTH", "WEST")
 ```
 
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToEnum.html"/>
+<!---END-->
+
+And finally, [Value classes](https://kotlinlang.org/docs/inline-classes.html) can be used with `convert` too.
+Both as conversion source and target:
+
+```kotlin
+@JvmInline 
+value class IntClass(val value: Int)
+```
+
+<!---FUN convertToValueClass-->
+
+```kotlin
+dataFrameOf("value")("1", "2") // note that values are strings; conversion is done automatically
+    .convert("value").to<IntClass>()
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToValueClass.html"/>
 <!---END-->
