@@ -1,3 +1,5 @@
+@file:JvmName("ReadDelimDeephavenKt")
+
 package org.jetbrains.kotlinx.dataframe.impl.io
 
 import io.deephaven.csv.CsvSpecs
