@@ -516,7 +516,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
 
                 else -> {
                     val trimmed = str.trim()
-                    val res = parserWithOptions(trimmed) ?: continue
+                    val res = parserWithOptions(trimmed) ?: break
                     parsedValues += res
                     hasNotNulls = true
                 }
