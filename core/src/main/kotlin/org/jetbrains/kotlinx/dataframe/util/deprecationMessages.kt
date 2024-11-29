@@ -7,6 +7,22 @@ package org.jetbrains.kotlinx.dataframe.util
  * Level.ERROR -> Remove
  */
 
+// region WARNING in 0.14, ERROR in 0.15
+
+private const val MESSAGE_0_15 = "Will be ERROR in 0.15."
+
+internal const val STARTS_WITH = "Use nameStartsWith() instead. $MESSAGE_0_15"
+internal const val STARTS_WITH_REPLACE = "this.nameStartsWith(prefix)"
+
+internal const val COL_STARTS_WITH = "Use colsNameStartsWith() instead. $MESSAGE_0_15"
+internal const val COL_STARTS_WITH_REPLACE = "this.colsNameStartsWith(prefix)"
+
+internal const val ENDS_WITH = "Use nameEndsWith() instead. $MESSAGE_0_15"
+internal const val ENDS_WITH_REPLACE = "this.nameEndsWith(suffix)"
+
+internal const val COL_ENDS_WITH = "Use colsNameEndsWith() instead. $MESSAGE_0_15"
+internal const val COL_ENDS_WITH_REPLACE = "this.colsNameEndsWith(suffix)"
+
 // region WARNING in 0.15, ERROR in 0.16
 
 private const val MESSAGE_0_16 = "Will be ERROR in 0.16."
