@@ -12,6 +12,14 @@ import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.util.COL_ENDS_WITH
+import org.jetbrains.kotlinx.dataframe.util.COL_ENDS_WITH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_STARTS_WITH
+import org.jetbrains.kotlinx.dataframe.util.COL_STARTS_WITH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.ENDS_WITH
+import org.jetbrains.kotlinx.dataframe.util.ENDS_WITH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.STARTS_WITH
+import org.jetbrains.kotlinx.dataframe.util.STARTS_WITH_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -339,17 +347,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     @ExcludeFromSources
     private interface CommonNameStartsWithDocs
 
-    @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
-    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> = nameStartsWith(prefix)
-
-    @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
-    public fun ColumnsSelectionDsl<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        nameStartsWith(prefix)
-
-    @Deprecated("Use colsNameStartsWith instead", ReplaceWith("this.colsNameStartsWith(prefix)"))
-    public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        colsNameStartsWith(prefix)
-
     /**
      * @include [CommonNameStartsWithDocs]
      * @set [CommonNameStartsEndsDocs.ExampleArg]
@@ -436,18 +433,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
     @ExcludeFromSources
     private interface CommonNameEndsWithDocs
 
-    @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
-    @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
-        colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
-
-    @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
-    public fun ColumnsSelectionDsl<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> = nameEndsWith(suffix)
-
-    @Deprecated("Use colsNameEndsWith instead", ReplaceWith("this.colsNameEndsWith(suffix)"))
-    public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
-
     /**
      * @include [CommonNameEndsWithDocs]
      * @set [CommonNameStartsEndsDocs.ExampleArg]
@@ -512,6 +497,57 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
         suffix: CharSequence,
         ignoreCase: Boolean = false,
     ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+
+    // endregion
+
+    // region deprecations
+
+    @Deprecated(
+        message = STARTS_WITH,
+        replaceWith = ReplaceWith(STARTS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> = nameStartsWith(prefix)
+
+    @Deprecated(
+        message = STARTS_WITH,
+        replaceWith = ReplaceWith(STARTS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun ColumnsSelectionDsl<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        nameStartsWith(prefix)
+
+    @Deprecated(
+        message = COL_STARTS_WITH,
+        replaceWith = ReplaceWith(COL_STARTS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        colsNameStartsWith(prefix)
+
+    @Deprecated(
+        message = ENDS_WITH,
+        replaceWith = ReplaceWith(ENDS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
+        colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
+
+    @Deprecated(
+        message = ENDS_WITH,
+        replaceWith = ReplaceWith(ENDS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun ColumnsSelectionDsl<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> = nameEndsWith(suffix)
+
+    @Deprecated(
+        message = COL_ENDS_WITH,
+        replaceWith = ReplaceWith(COL_ENDS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
 
     // endregion
 }
