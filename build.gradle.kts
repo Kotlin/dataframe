@@ -98,6 +98,8 @@ val dependencyUpdateExclusions = listOf(
     libs.android.gradle.api.get().group,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
+    // Can't be updated to 2.1.0+ due to Java 8 compatibility
+    libs.plugins.simpleGit.get().pluginId,
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
