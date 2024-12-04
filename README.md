@@ -38,7 +38,7 @@ You could find the following articles there:
 * [Rendering to HTML](https://kotlin.github.io/dataframe/tohtml.html#jupyter-notebooks)
 
 ### What's new
-Check out this [notebook with new features](examples/notebooks/feature_overviews/0.14.0/new_features.ipynb) in development for the next release.
+Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
 The DataFrame compiler plugin has reached public preview!
 Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-demo) that works with [IntelliJ IDEA](https://www.jetbrains.com/idea/) 2024.2.
