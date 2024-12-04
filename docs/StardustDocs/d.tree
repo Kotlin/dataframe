@@ -46,6 +46,7 @@
         <toc-element topic="io.md">
             <toc-element topic="read.md"/>
             <toc-element topic="readSqlDatabases.md"/>
+            <toc-element topic="readSqlFromCustomDatabase.md"/>
             <toc-element topic="write.md"/>
         </toc-element>
         <toc-element topic="info.md">

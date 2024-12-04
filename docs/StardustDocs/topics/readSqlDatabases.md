@@ -32,9 +32,10 @@ Also, there are a few **extension functions** available on `Connection`,
 **NOTE:** This is an experimental module, and for now, 
 we only support four databases: MS SQL, MariaDB, MySQL, PostgreSQL, and SQLite. 
 
+Moreover, since release 0.15 we support the possibility to register custom SQL database, read more in our [guide](readSqlFromCustomDatabase.md).
+
 Additionally, support for JSON and date-time types is limited. 
 Please take this into consideration when using these functions.
-
 
 ## Getting started with reading from SQL database in Gradle Project
 
@@ -70,7 +71,7 @@ implementation("com.mysql:mysql-connector-j:$version")
 
 Maven Central version could be found [here](https://mvnrepository.com/artifact/com.mysql/mysql-connector-j).
 
-For SQLite:
+For **SQLite**:
 
 ```kotlin
 implementation("org.xerial:sqlite-jdbc:$version")
@@ -78,7 +79,7 @@ implementation("org.xerial:sqlite-jdbc:$version")
 
 Maven Central version could be found [here](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc).
 
-For MS SQL:
+For **MS SQL**:
 
 ```kotlin
 implementation("com.microsoft.sqlserver:mssql-jdbc:$version")
@@ -158,13 +159,16 @@ otherwise, it will be considered non-nullable for the newly created `DataFrame` 
 These functions read all data from a specific table in the database. 
 Variants with a limit parameter restrict how many rows will be read from the table.
 
-**readSqlTable(dbConfig: DbConnectionConfig, tableName: String, limit: Int, inferNullability: Boolean): AnyFrame**
+**readSqlTable(dbConfig: DbConnectionConfig, tableName: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Read all data from a specific table in the SQL database and transform it into an `AnyFrame` object.
 
 The `dbConfig: DbConnectionConfig` parameter represents the configuration for a database connection, 
 created under the hood and managed by the library.
 Typically, it requires a URL, username, and password.
+
+The `dbType` parameter is the type of database, could be a custom object, provided by user, optional, default is `null`,
+to know more, read the [guide](readSqlFromCustomDatabase.md).
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.DbConnectionConfig
@@ -180,7 +184,7 @@ The `limit: Int` parameter allows setting the maximum number of records to be re
 val users = DataFrame.readSqlTable(dbConfig, "Users", limit = 100)
 ```
 
-**readSqlTable(connection: Connection, tableName: String, limit: Int, inferNullability: Boolean): AnyFrame**
+**readSqlTable(connection: Connection, tableName: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
@@ -210,7 +214,7 @@ val users = connection.readDataFrame("Users", 100)
 connection.close()
 ```
 
-**Connection.readDataFrame(sqlQueryOrTableName: String, limit: Int, inferNullability: Boolean): AnyFrame**
+**Connection.readDataFrame(sqlQueryOrTableName: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Read all data from a specific table in the SQL database and transform it into an `AnyFrame` object.
 
@@ -222,7 +226,7 @@ It should not contain `;` symbol.
 
 All other parameters are described above.
 
-**DbConnectionConfig.readDataFrame(sqlQueryOrTableName: String, limit: Int, inferNullability: Boolean): AnyFrame**
+**DbConnectionConfig.readDataFrame(sqlQueryOrTableName: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 If you do not have a connection object or need to run a quick, 
 isolated experiment reading data from an SQL database,
@@ -233,7 +237,7 @@ you can delegate the creation of the connection to `DbConnectionConfig`.
 These functions execute an SQL query on the database and convert the result into a `DataFrame` object. 
 If a limit is provided, only that many rows will be returned from the result.
 
-**readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, limit: Int, inferNullability: Boolean): AnyFrame**
+**readSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Execute a specific SQL query on the SQL database and retrieve the resulting data as an AnyFrame.
 
@@ -249,7 +253,7 @@ val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWO
 val df = DataFrame.readSqlQuery(dbConfig, "SELECT * FROM Users WHERE age > 35")
 ```
 
-**readSqlQuery(connection: Connection, sqlQuery: String, limit: Int, inferNullability: Boolean): AnyFrame**
+**readSqlQuery(connection: Connection, sqlQuery: String, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
@@ -301,6 +305,8 @@ The `dbType: DbType` parameter specifies the type of our database (e.g., Postgre
 supported by a library. 
 Currently, the following classes are available: `H2, MsSql, MariaDb, MySql, PostgreSql, Sqlite`.
 
+Also, users have an ability to pass objects, describing their custom databases, more information in [guide](readSqlFromCustomDatabase.md).
+
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
 import java.sql.ResultSet
@@ -308,9 +314,9 @@ import java.sql.ResultSet
 val df = DataFrame.readResultSet(resultSet, PostgreSql)
 ```
 
-**readResultSet(resultSet: ResultSet, connection: Connection, limit: Int, inferNullability: Boolean): AnyFrame**
+**readResultSet(resultSet: ResultSet, connection: Connection, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
-Another variant, where instead of `dbType: DbType` we use a JDBC connection: `Connection` object.
+Another variant, we use a JDBC connection: `Connection` object.
 
 ```kotlin
 import java.sql.Connection
@@ -340,7 +346,7 @@ val df = rs.readDataFrame(connection, 10)
 connection.close()
 ```
 
-**ResultSet.readDataFrame(connection: Connection, limit: Int, inferNullability: Boolean): AnyFrame**
+**ResultSet.readDataFrame(connection: Connection, limit: Int, inferNullability: Boolean, dbType: DbType?): AnyFrame**
 
 Reads the data from a `ResultSet` and converts it into a `DataFrame`.
 
@@ -352,7 +358,7 @@ that the `ResultSet` belongs to.
 These functions read all data from all tables in the connected database. 
 Variants with a limit parameter restrict how many rows will be read from each table.
 
-**readAllSqlTables(dbConfig: DbConnectionConfig, limit: Int, inferNullability: Boolean): Map\<String, AnyFrame>**
+**readAllSqlTables(dbConfig: DbConnectionConfig, limit: Int, inferNullability: Boolean, dbType: DbType?): Map\<String, AnyFrame>**
 
 Retrieves data from all the non-system tables in the SQL database and returns them as a map of table names to `AnyFrame` objects.
 
@@ -368,7 +374,7 @@ val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWO
 val dataframes = DataFrame.readAllSqlTables(dbConfig)
 ```
 
-**readAllSqlTables(connection: Connection, limit: Int, inferNullability: Boolean): Map\<String, AnyFrame>**
+**readAllSqlTables(connection: Connection, limit: Int, inferNullability: Boolean, dbType: DbType?): Map\<String, AnyFrame>**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
@@ -389,7 +395,7 @@ The purpose of these functions is to facilitate the retrieval of table schema.
 By providing a table name and either a database configuration or connection, 
 these functions return the [DataFrameSchema](schema.md) of the specified table.
 
-**getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String): DataFrameSchema**
+**getSchemaForSqlTable(dbConfig: DbConnectionConfig, tableName: String, dbType: DbType?): DataFrameSchema**
 
 This function captures the schema of a specific table from an SQL database.
 
@@ -405,7 +411,7 @@ val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWO
 val schema = DataFrame.getSchemaForSqlTable(dbConfig, "Users")
 ```
 
-**getSchemaForSqlTable(connection: Connection, tableName: String): DataFrameSchema**
+**getSchemaForSqlTable(connection: Connection, tableName: String, dbType: DbType?): DataFrameSchema**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
@@ -427,7 +433,7 @@ These functions return the schema of an SQL query result.
 Once you provide a database configuration or connection and an SQL query, 
 they return the [DataFrameSchema](schema.md) of the query result.
 
-**getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String): DataFrameSchema**
+**getSchemaForSqlQuery(dbConfig: DbConnectionConfig, sqlQuery: String, dbType: DbType?): DataFrameSchema**
 
 This function executes an SQL query on the database and then retrieves the resulting schema.
 
@@ -443,7 +449,7 @@ val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWO
 val schema = DataFrame.getSchemaForSqlQuery(dbConfig, "SELECT * FROM Users WHERE age > 35")
 ```
 
-**getSchemaForSqlQuery(connection: Connection, sqlQuery: String): DataFrameSchema**
+**getSchemaForSqlQuery(connection: Connection, sqlQuery: String, dbType: DbType?): DataFrameSchema**
 
 Another variant, where instead of `dbConfig: DbConnectionConfig` we use a JDBC connection: `Connection` object.
 
@@ -472,11 +478,11 @@ val schema = connection.getDataFrameSchema("SELECT * FROM Users WHERE age > 35")
 
 connection.close()
 ```
-**Connection.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema**
+**Connection.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType?): DataFrameSchema**
 
 Retrieves the schema of an SQL query result or an SQL table using the provided database configuration.
 
-**DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String): DataFrameSchema**
+**DbConnectionConfig.getDataFrameSchema(sqlQueryOrTableName: String, dbType: DbType?): DataFrameSchema**
 
 Retrieves the schema of an SQL query result or an SQL table using the provided database configuration.
 
@@ -507,6 +513,8 @@ The `dbType: DbType` parameter specifies the type of our database (e.g., Postgre
 supported by a library.
 Currently, the following classes are available: `H2, MariaDb, MySql, PostgreSql, Sqlite`.
 
+Also, users have an ability to pass objects, describing their custom databases, more information in [guide](readSqlFromCustomDatabase.md).
+
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
 import java.sql.ResultSet
@@ -514,41 +522,9 @@ import java.sql.ResultSet
 val schema = DataFrame.getSchemaForResultSet(resultSet, PostgreSql)
 ```
 
-**getSchemaForResultSet(connection: Connection, sqlQuery: String): DataFrameSchema**
-
-Another variant, where instead of `dbType: DbType` we use a JDBC connection: `Connection` object.
-
-```kotlin
-import java.sql.Connection
-import java.sql.DriverManager
-
-val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
-
-val schema = DataFrame.getSchemaForResultSet(resultSet, connection)
-
-connection.close()
-```
-
 ### Extension functions for schema reading from the ResultSet
 
 The same example, rewritten with the extension function:
-
-```kotlin
-import java.sql.Connection
-import java.sql.DriverManager
-
-val connection = DriverManager.getConnection("URL_TO_CONNECT_DATABASE")
-
-val schema = resultSet.getDataFrameSchema(connection)
-
-connection.close()
-```
-
-if you are using this extension function
-
-**ResultSet.getDataFrameSchema(connection: Connection): DataFrameSchema**
-
-or
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.io.db.PostgreSql
@@ -566,7 +542,7 @@ based on
 These functions return a list of all [`DataFrameSchema`](schema.md) from all the non-system tables in the SQL database. 
 They can be called with either a database configuration or a connection.
 
-**getSchemaForAllSqlTables(dbConfig: DbConnectionConfig): Map\<String, DataFrameSchema>**
+**getSchemaForAllSqlTables(dbConfig: DbConnectionConfig, dbType: DbType?): Map\<String, DataFrameSchema>**
 
 This function retrieves the schema of all tables from an SQL database 
 and returns them as a map of table names to [`DataFrameSchema`](schema.md) objects.
@@ -583,7 +559,7 @@ val dbConfig = DbConnectionConfig("URL_TO_CONNECT_DATABASE", "USERNAME", "PASSWO
 val schemas = DataFrame.getSchemaForAllSqlTables(dbConfig)
 ```
 
-**getSchemaForAllSqlTables(connection: Connection): Map\<String, DataFrameSchema>**
+**getSchemaForAllSqlTables(connection: Connection, dbType: DbType?): Map\<String, DataFrameSchema>**
 
 This function retrieves the schema of all tables using a JDBC connection: `Connection` object 
 and returns them as a list of [`DataFrameSchema`](schema.md).
