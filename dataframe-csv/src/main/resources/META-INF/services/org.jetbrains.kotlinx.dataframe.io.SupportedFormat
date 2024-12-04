@@ -1,2 +1,2 @@
-org.jetbrains.kotlinx.dataframe.io.Csv
-org.jetbrains.kotlinx.dataframe.io.Tsv
+org.jetbrains.kotlinx.dataframe.io.CsvDeephaven
+org.jetbrains.kotlinx.dataframe.io.TsvDeephaven
