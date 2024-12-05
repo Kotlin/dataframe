@@ -71,6 +71,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
     // TODO temporary settings while these experimental modules are being developed
     private val enableExperimentalCsv = options["enableExperimentalCsv"]
+    private val enableExperimentalGeo = options["enableExperimentalGeo"]
 
     private fun KotlinKernelHost.updateImportDataSchemaVariable(
         importDataSchema: ImportDataSchema,
@@ -158,6 +159,11 @@ internal class Integration(private val notebook: Notebook, private val options: 
             if (enableExperimentalCsv?.toBoolean() == true) {
                 println("Enabling experimental CSV module: dataframe-csv")
                 dependencies("org.jetbrains.kotlinx:dataframe-csv:$version")
+            }
+            if (enableExperimentalGeo?.toBoolean() == true) {
+                println("Enabling experimental Geo module: dataframe-geo")
+                repositories("https://repo.osgeo.org/repository/release")
+                dependencies("org.jetbrains.kotlinx:dataframe-geo:$version")
             }
             dependencies(
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
