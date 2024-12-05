@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":core"))
+    api(project(":core"))
 
     // for csv reading
     api(libs.deephavenCsv)
