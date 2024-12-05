@@ -69,6 +69,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
     val version = options["v"]
 
+    // TODO temporary settings while these experimental modules are being developed
+    private val enableExperimentalCsv = options["enableExperimentalCsv"]
+
     private fun KotlinKernelHost.updateImportDataSchemaVariable(
         importDataSchema: ImportDataSchema,
         property: KProperty<*>,
@@ -152,6 +155,10 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
     override fun Builder.onLoaded() {
         if (version != null) {
+            if (enableExperimentalCsv?.toBoolean() == true) {
+                println("Enabling experimental CSV module: dataframe-csv")
+                dependencies("org.jetbrains.kotlinx:dataframe-csv:$version")
+            }
             dependencies(
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
                 "org.jetbrains.kotlinx:dataframe-jdbc:$version",
