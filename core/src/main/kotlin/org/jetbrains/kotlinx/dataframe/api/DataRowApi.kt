@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.ApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -60,10 +61,12 @@ public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
 
 public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
 
+@ApiOverload
 public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
 
 public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
 
+@ApiOverload
 public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
 // endregion
@@ -74,10 +77,12 @@ public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColum
 
 public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
 
+@ApiOverload
 public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
 public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
 
+@ApiOverload
 public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion

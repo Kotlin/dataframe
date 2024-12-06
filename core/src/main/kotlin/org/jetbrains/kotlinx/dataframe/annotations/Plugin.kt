@@ -43,3 +43,6 @@ public annotation class ScopeProperty
 
 @Target(AnnotationTarget.FUNCTION)
 internal annotation class Check
+
+@Target(AnnotationTarget.FUNCTION)
+internal annotation class ApiOverload

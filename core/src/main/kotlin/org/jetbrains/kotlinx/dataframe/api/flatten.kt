@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.ApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -30,12 +31,14 @@ public fun <T> DataFrame<T>.flatten(
     separator: String = "_",
 ): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
+@ApiOverload
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: ColumnReference<C>,
     keepParentNameForColumns: Boolean = false,
     separator: String = "_",
 ): DataFrame<T> = flatten(keepParentNameForColumns, separator) { columns.toColumnSet() }
 
+@ApiOverload
 public fun <T, C> DataFrame<T>.flatten(
     vararg columns: KProperty<C>,
     keepParentNameForColumns: Boolean = false,
