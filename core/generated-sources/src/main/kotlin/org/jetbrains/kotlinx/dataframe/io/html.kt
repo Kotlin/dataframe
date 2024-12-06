@@ -20,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
+import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
@@ -514,6 +516,8 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
 internal fun DataFrameHtmlData.print() = println(this)
 
 /**
+ * By default, cell content is formatted as text
+ * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
  * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
  */
 public fun <T> DataFrame<T>.toStandaloneHTML(
@@ -523,6 +527,8 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 ): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
+ * By default, cell content is formatted as text
+ * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
  * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
  */
 public fun <T> DataFrame<T>.toHTML(
@@ -834,7 +840,7 @@ internal class DataFrameFormatter(
             return sb.result()
         }
 
-        val result = when (value) {
+        val result: RenderedContent? = when (value) {
             null -> "null".addCss(nullClass)
 
             is AnyRow -> {
@@ -898,6 +904,12 @@ internal class DataFrameFormatter(
             )
 
             is DataFrameHtmlData -> RenderedContent.text(value.body)
+
+            is IMG -> RenderedContent.media(value.toString())
+
+            is IFRAME -> RenderedContent.media(value.toString())
+
+            is RenderedContent -> value
 
             else -> renderer.content(value, configuration)
         }

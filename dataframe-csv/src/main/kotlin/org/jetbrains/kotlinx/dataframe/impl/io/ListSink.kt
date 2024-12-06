@@ -54,7 +54,7 @@ internal class ListSink(val columnIndex: Int, val dataType: DataType) : SinkSour
         )
     }
 
-    private val _data: MutableList<Any?> = mutableListOf()
+    private val _data: MutableList<Any?> = ArrayList(1000)
 
     val data: List<Any?>
         get() = _data
