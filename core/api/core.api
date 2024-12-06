@@ -10130,6 +10130,10 @@ public final class org/jetbrains/kotlinx/dataframe/impl/api/MapKt {
 	public static final fun mapNotNullValues (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/api/SchemaKt {
+	public static final fun compileTimeSchemaImpl (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Lkotlin/reflect/KClass;)Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ToDataFrameKt {
 	public static final fun convertToDataFrame (Ljava/lang/Iterable;Lkotlin/reflect/KClass;Ljava/util/List;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;I)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun createDataFrameImpl (Ljava/lang/Iterable;Lkotlin/reflect/KClass;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
