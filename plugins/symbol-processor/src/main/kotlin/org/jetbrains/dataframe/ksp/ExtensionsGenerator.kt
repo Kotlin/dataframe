@@ -132,7 +132,7 @@ class ExtensionsGenerator(
 
     private fun OutputStreamWriter.writeImports() {
         appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
-        appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+        appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsScope")
         appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
         appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
         appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")

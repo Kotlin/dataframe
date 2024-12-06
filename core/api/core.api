@@ -192,7 +192,7 @@ public final class org/jetbrains/dataframe/keywords/SoftKeywords$Companion {
 	public final fun getVALUES ()Ljava/util/List;
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsContainer {
+public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsContainer : org/jetbrains/kotlinx/dataframe/ColumnsScope {
 	public abstract fun columns ()Ljava/util/List;
 	public abstract fun columnsCount ()I
 	public abstract fun containsColumn (Ljava/lang/String;)Z
@@ -232,6 +232,10 @@ public final class org/jetbrains/kotlinx/dataframe/ColumnsContainer$DefaultImpls
 	public static fun get (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static fun get (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static fun get (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsScope {
+	public abstract fun get (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/DataColumn : org/jetbrains/kotlinx/dataframe/columns/BaseColumn {
@@ -4222,6 +4226,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataFrameGetKt {
 	public static final fun getOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun getRows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun getRows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun properties (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;
 	public static final fun rows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Ljava/lang/Iterable;
 	public static final fun rowsReversed (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Ljava/lang/Iterable;
 }

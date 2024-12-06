@@ -6,7 +6,7 @@ import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.generate
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -30,7 +30,7 @@ class CodeGenerationTests : BaseTest() {
 
     val personShortName = Person::class.simpleName!!
 
-    val dfName = (ColumnsContainer::class).simpleName!!
+    val dfName = (ColumnsScope::class).simpleName!!
     val dfRowName = (DataRow::class).simpleName!!
     val dataCol = (DataColumn::class).simpleName!!
     val dataRow = (DataRow::class).simpleName!!

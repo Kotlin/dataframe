@@ -18,9 +18,9 @@ import kotlin.reflect.KProperty
  *
  * Base interface for [DataFrame] and [ColumnSelectionDsl]
  *
- * @param T Schema marker. Used to generate extension properties for typed column access.
+ * @param T Schema marker. Used to resolve generated extension properties for typed column access.
  */
-public interface ColumnsContainer<out T> {
+public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region columns
 
@@ -54,7 +54,7 @@ public interface ColumnsContainer<out T> {
 
     // region get
 
-    public operator fun get(columnName: String): AnyCol = getColumn(columnName)
+    public override operator fun get(columnName: String): AnyCol = getColumn(columnName)
 
     public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
 
