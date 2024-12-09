@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
+import com.squareup.kotlinpoet.asTypeName
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
@@ -109,7 +110,11 @@ internal object MarkersExtractor {
 
                 else -> {
                     fieldType = FieldType.ValueFieldType(
-                        if (nullableProperties) type.toString().toNullable() else type.toString(),
+                        if (nullableProperties) {
+                            type.asTypeName().toString().toNullable()
+                        } else {
+                            type.asTypeName().toString()
+                        },
                     )
                     ColumnSchema.Value(
                         if (nullableProperties) type.withNullability(true) else type,

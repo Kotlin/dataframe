@@ -61,8 +61,8 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `short functional types are not supported`() {
         fields.keys.asClue {
-            fields["d"]!!.renderAccessorFieldType() shouldBe "() -> kotlin.Unit"
-            fields["d"]!!.renderFieldType() shouldBe "() -> kotlin.Unit"
+            fields["d"]!!.renderAccessorFieldType() shouldBe "kotlin.Function0<kotlin.Unit>"
+            fields["d"]!!.renderFieldType() shouldBe "kotlin.Function0<kotlin.Unit>"
         }
     }
 
@@ -112,7 +112,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `functional type column`() {
         fields.keys.asClue {
-            fields["d"]!!.renderColumnType() shouldBe "DataColumn<() -> kotlin.Unit>"
+            fields["d"]!!.renderColumnType() shouldBe "DataColumn<kotlin.Function0<kotlin.Unit>>"
         }
     }
 
