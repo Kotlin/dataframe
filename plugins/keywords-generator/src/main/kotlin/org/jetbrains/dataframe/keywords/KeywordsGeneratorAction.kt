@@ -5,28 +5,23 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.TaskAction
+import org.gradle.workers.WorkAction
+import org.gradle.workers.WorkParameters
 import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet
 import org.jetbrains.kotlin.lexer.KtKeywordToken
 import org.jetbrains.kotlin.lexer.KtTokens
 import java.io.File
 
-open class GeneratorTask : DefaultTask() {
+abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorAction.Parameters> {
 
-    @OutputDirectory
-    lateinit var srcDir: File
+    interface Parameters : WorkParameters {
+        var srcDir: File
+    }
 
     private val taskPackageName = "org.jetbrains.dataframe.keywords"
 
-    @Input
-    override fun getGroup() = "codegen"
-
-    @TaskAction
-    fun generate() {
-        srcDir.deleteRecursively()
+    override fun execute() {
+        parameters.srcDir.deleteRecursively()
         generateKeywordEnums()
     }
 
@@ -34,14 +29,14 @@ open class GeneratorTask : DefaultTask() {
         listOf(
             "HardKeywords" to KtTokens.KEYWORDS,
             "SoftKeywords" to KtTokens.SOFT_KEYWORDS,
-            "ModifierKeywords" to KtTokens.MODIFIER_KEYWORDS
+            "ModifierKeywords" to KtTokens.MODIFIER_KEYWORDS,
         ).forEach { (name, set) ->
             generateKeywordsEnum(name, set)
         }
     }
 
     private fun generateKeywordsEnum(name: String, tokenSet: TokenSet) {
-        buildKwEnum(name, getKeywords(tokenSet)).writeTo(srcDir)
+        buildKwEnum(name, getKeywords(tokenSet)).writeTo(parameters.srcDir)
     }
 
     private fun getKeywords(tokenSet: TokenSet): List<EnumEntry> {
@@ -86,9 +81,5 @@ open class GeneratorTask : DefaultTask() {
         fileBuilder.addType(enumBuilder.build())
 
         return fileBuilder.build()
-    }
-
-    companion object {
-        const val NAME = "generateKeywordsSrc"
     }
 }
