@@ -1,12 +1,12 @@
 [versions]
-ksp = "2.1.0-1.0.29"
+ksp = "2.0.20-1.0.24"
 kotlinJupyter = "0.12.0-139"
 
 ktlint = "12.1.2"
 
-# make sure to sync both manually with :generator module
-kotlin = "2.1.0"
-kotlinpoet = "1.18.1"
+# make sure to sync both manually with :plugins:keywords-generator module
+kotlin = "2.0.20"
+kotlinpoet = "2.0.0"
 
 dokka = "1.9.20"
 libsPublisher = "1.9.23-dev-45"
