@@ -221,6 +221,8 @@ class ConvertTests {
 
         // but
         columnOf('1', '2').convertToString().convertToInt() shouldBe columnOf(1, 2)
+        // or
+        columnOf('1', '2').parse() shouldBe columnOf(1, 2)
     }
 
     @Test
