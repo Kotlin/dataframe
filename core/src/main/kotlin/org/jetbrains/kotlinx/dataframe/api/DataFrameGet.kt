@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -57,6 +58,28 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColu
 
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> =
     get(columnPath).asColumnGroup()
+
+/**
+ * Utility property to access scope with only dataframe column properties for code completion,
+ * filtering out DataFrame API.
+ *
+ * It's a quick way to check that code generation in notebooks or compiler plugin
+ * worked as expected or find columns you're interested in.
+ *
+ * In notebooks:
+ * ```
+ * val df = DataFrame.read("file.csv")
+ * ==== next code cell
+ * df. // column properties are mixed together with methods, not easy to find unless you already know names
+ * df.properties(). // easy to overview available columns
+ * ```
+ * In compiler plugin:
+ * ```
+ * val df = @Import DataFrame.read("file.csv")
+ * df.properties().
+ * ```
+ */
+public fun <T> DataFrame<T>.properties(): ColumnsScope<T> = this
 
 // region getColumn
 
