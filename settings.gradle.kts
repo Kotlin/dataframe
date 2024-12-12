@@ -35,6 +35,7 @@ pluginManagement {
     repositories {
         mavenLocal()
         gradlePluginPortal()
+        maven(url = "https://repo.nokee.dev/release")
     }
 }
 plugins {
