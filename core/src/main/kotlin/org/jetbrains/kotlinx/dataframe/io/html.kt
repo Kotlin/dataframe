@@ -518,7 +518,11 @@ internal fun DataFrameHtmlData.print() = println(this)
 /**
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
- * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
+ *
+ * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
+ * If you save it as a file and find it in the project tree,
+ * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
+ * @return DataFrameHtmlData with table script and css definitions
  */
 public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
@@ -620,10 +624,18 @@ public data class DataFrameHtmlData(
         destination.writeText(toString())
     }
 
+    public fun writeHTML(destination: String) {
+        File(destination).writeText(toString())
+    }
+
     public fun writeHTML(destination: Path) {
         destination.writeText(toString())
     }
 
+    /**
+     * Opens a new tab in your default browser.
+     * Consider [writeHTML] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
+     */
     public fun openInBrowser() {
         val file = File.createTempFile("df_rendering", ".html")
         writeHTML(file)
