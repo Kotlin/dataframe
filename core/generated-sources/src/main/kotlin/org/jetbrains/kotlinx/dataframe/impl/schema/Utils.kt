@@ -192,8 +192,8 @@ internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): L
     // else sort the ones in the primary constructor first according to the order in there
     // leave the rest at the end in lexicographical order
     val (propsInConstructor, propsNotInConstructor) =
-        lexicographicalColumns.partition { it.columnName in primaryConstructorOrder.keys }
+        lexicographicalColumns.partition { it.name in primaryConstructorOrder.keys }
 
     return propsInConstructor
-        .sortedBy { primaryConstructorOrder[it.columnName] } + propsNotInConstructor
+        .sortedBy { primaryConstructorOrder[it.name] } + propsNotInConstructor
 }
