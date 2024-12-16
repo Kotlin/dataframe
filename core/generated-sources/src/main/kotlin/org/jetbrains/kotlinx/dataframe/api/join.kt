@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -95,12 +96,15 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     public infix fun String.match(other: String): ColumnMatch<Any?> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(this, other.toColumnAccessor())
 
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.match(other: ColumnReference<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other)
 }
