@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.Update.Grammar
@@ -51,6 +52,8 @@ public class Update<T, C>(
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 
     override fun toString(): String = "Update(df=$df, filter=$filter, columns=$columns)"
+
+    // region KDoc declarations
 
     /*
      * This argument providing the (clickable) name of the update-like function.
@@ -125,6 +128,8 @@ public class Update<T, C>(
 
     /** @param [columns\] The [Strings][String] corresponding to the names of columns belonging to this [DataFrame] to update. */
     internal interface ColumnNamesParam
+
+    // endregion
 }
 
 // region update
@@ -172,6 +177,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumnSet() }
 
 /**
@@ -180,6 +186,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * @include [UpdateWithNote]
  * @include [Update.ColumnAccessorsParam]
  */
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumnSet() }
 
@@ -418,6 +425,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @include [Update.ColumnAccessorsParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
@@ -436,6 +444,7 @@ public fun <T, C> DataFrame<T>.update(
  * @include [Update.KPropertiesParam]
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
