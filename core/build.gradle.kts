@@ -3,8 +3,8 @@ import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
 import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
-import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlinx.publisher.composeOfTaskOutputs
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
 plugins {
@@ -60,6 +60,10 @@ sourceSets {
     }
 }
 
+val experimental = sourceSets.create("experimental") {
+    kotlin.srcDir(sourceSets.main.get().kotlin)
+}
+
 dependencies {
     val kotlinCompilerPluginClasspathSamples by configurations.getting
 
@@ -99,14 +103,6 @@ val compileSamplesKotlin = tasks.named<KotlinCompile>("compileSamplesKotlin") {
     }
     source(sourceSets["test"].kotlin)
     destinationDirectory = layout.buildDirectory.dir("classes/testWithOutputs/kotlin")
-}
-
-tasks.withType<KspTask> {
-    // "test" classpath is re-used, so repeated generation should be disabled
-    if (name == "kspSamplesKotlin") {
-        dependsOn("kspTestKotlin")
-        enabled = false
-    }
 }
 
 val clearTestResults by tasks.creating(Delete::class) {
@@ -293,6 +289,14 @@ tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
 }
 
 // endregion
+
+tasks.withType<KspTask> {
+    // "test" classpath is re-used, so repeated generation should be disabled
+    if (name == "kspSamplesKotlin") {
+        dependsOn("kspTestKotlin")
+        enabled = false
+    }
+}
 
 korro {
     docs = fileTree(rootProject.rootDir) {

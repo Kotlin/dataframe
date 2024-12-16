@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.annotations.ApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -20,6 +21,7 @@ import kotlin.reflect.typeOf
 
 // region ColumnReference
 
+@ApiOverload
 public inline fun <C, reified R> ColumnReference<C>.map(
     infer: Infer = Infer.Nulls,
     noinline transform: (C) -> R,
@@ -71,12 +73,14 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
 
+@ApiOverload
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
     infer: Infer = Infer.Nulls,
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
+@ApiOverload
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
@@ -90,6 +94,7 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = newColumn(type, name, infer, body)
 
+@ApiOverload
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
     type: KType,
@@ -97,6 +102,7 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.name(), type, infer, body)
 
+@ApiOverload
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     type: KType,

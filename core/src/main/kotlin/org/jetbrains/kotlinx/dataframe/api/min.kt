@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.annotations.ApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -102,6 +103,7 @@ public fun <T> DataFrame<T>.minBy(column: String): DataRow<T> = minByOrNull(colu
 public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: ColumnReference<C?>): DataRow<T> =
     minByOrNull(column).suggestIfNull("minBy")
 
+@ApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: KProperty<C?>): DataRow<T> =
     minByOrNull(column).suggestIfNull("minBy")
 
@@ -114,6 +116,7 @@ public fun <T> DataFrame<T>.minByOrNull(column: String): DataRow<T>? =
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: ColumnReference<C?>): DataRow<T>? =
     getOrNull(get(column).asSequence().indexOfMin())
 
+@ApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: KProperty<C?>): DataRow<T>? =
     minByOrNull(column.toColumnAccessor())
 
@@ -162,6 +165,7 @@ public fun <T, G, C : Comparable<C>> GroupBy<T, G>.minBy(column: ColumnReference
 public fun <T, G> GroupBy<T, G>.minBy(column: String): ReducedGroupBy<T, G> =
     minBy(column.toColumnAccessor().cast<Comparable<Any?>>())
 
+@ApiOverload
 public fun <T, G, C : Comparable<C>> GroupBy<T, G>.minBy(column: KProperty<C?>): ReducedGroupBy<T, G> =
     minBy(column.toColumnAccessor())
 
@@ -212,6 +216,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: ColumnReference<C?>): R
 public fun <T> Pivot<T>.minBy(column: String): ReducedPivot<T> =
     minBy(column.toColumnAccessor().cast<Comparable<Any?>>())
 
+@ApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: KProperty<C?>): ReducedPivot<T> =
     minBy(column.toColumnAccessor())
 
@@ -262,6 +267,7 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.minBy(column: ColumnReference<
 public fun <T> PivotGroupBy<T>.minBy(column: String): ReducedPivotGroupBy<T> =
     minBy(column.toColumnAccessor().cast<Comparable<Any?>>())
 
+@ApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.minBy(column: KProperty<C?>): ReducedPivotGroupBy<T> =
     minBy(column.toColumnAccessor())
 
