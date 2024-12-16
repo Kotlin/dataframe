@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -31,6 +32,7 @@ public interface DataRow<out T> {
 
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
 
+    @AccessApiOverload
     public operator fun <R> get(property: KProperty<R>): R = get(property.columnName) as R
 
     public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataRow<T> =
@@ -66,6 +68,7 @@ public interface DataRow<out T> {
 
     public fun getOrNull(name: String): Any?
 
+    @AccessApiOverload
     public fun <R> getValueOrNull(column: ColumnReference<R>): R?
 
     // endregion
@@ -74,6 +77,7 @@ public interface DataRow<out T> {
 
     public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)
 
+    @AccessApiOverload
     public operator fun <R> ColumnReference<R>.invoke(): R = get(this)
 
     public operator fun <R> String.invoke(): R = this@DataRow[this@invoke] as R
