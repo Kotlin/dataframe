@@ -40,13 +40,13 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 createTask(target, extension, appliedPlugin, it)
             }
             val generateAll = target.tasks.create("generateDataFrames") {
-                group = GROUP
-                dependsOn(*generationTasks.toTypedArray())
+                it.group = GROUP
+                it.dependsOn(*generationTasks.toTypedArray())
             }
-            tasks.withType(KspTaskJvm::class.java).configureEach {
-                dependsOn(generateAll)
+            it.tasks.withType(KspTaskJvm::class.java).configureEach {
+                it.dependsOn(generateAll)
             }
-            tasks.withType<KotlinCompile> {
+            it.tasks.withType<KotlinCompile> {
                 dependsOn(generateAll)
             }
         }
@@ -84,8 +84,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 // Configure the right ksp task to be aware of these new sources
                 val kspTaskName = "ksp${sourceSetName.replaceFirstChar { it.uppercase() }}Kotlin"
                 target.tasks.withType(KspTaskJvm::class.java).configureEach {
-                    if (sourceSetName == "main" && name == "kspKotlin" || name == kspTaskName) {
-                        source(src)
+                    if (sourceSetName == "main" && it.name == "kspKotlin" || it.name == kspTaskName) {
+                        it.source(src)
                     }
                 }
 
@@ -125,18 +125,18 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
         return target.tasks.create("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
-            (logging as? DefaultLoggingManager)?.setLevelInternal(LogLevel.QUIET)
-            group = GROUP
-            data.set(schema.data)
-            this.interfaceName.set(interfaceName)
-            this.packageName.set(packageName)
-            this.src.set(src)
-            this.schemaVisibility.set(visibility)
-            this.csvOptions.set(schema.csvOptions)
-            this.jsonOptions.set(schema.jsonOptions)
-            this.jdbcOptions.set(schema.jdbcOptions)
-            this.defaultPath.set(defaultPath)
-            this.delimiters.set(delimiters)
+            (it.logging as? DefaultLoggingManager)?.setLevelInternal(LogLevel.QUIET)
+            it.group = GROUP
+            it.data.set(schema.data)
+            it.interfaceName.set(interfaceName)
+            it.packageName.set(packageName)
+            it.src.set(src)
+            it.schemaVisibility.set(visibility)
+            it.csvOptions.set(schema.csvOptions)
+            it.jsonOptions.set(schema.jsonOptions)
+            it.jdbcOptions.set(schema.jdbcOptions)
+            it.defaultPath.set(defaultPath)
+            it.delimiters.set(delimiters)
         }
     }
 
