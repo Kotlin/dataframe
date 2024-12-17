@@ -53,6 +53,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.name.StandardClassIds.List
+import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.withNullability
 import org.jetbrains.kotlinx.dataframe.codeGen.*
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.wrap
