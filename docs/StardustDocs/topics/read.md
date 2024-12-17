@@ -19,6 +19,30 @@ The input string can be a file path or URL.
 
 To read a CSV file, use the `.readCSV()` function.
 
+> Since DataFrame v0.15, a new experimental CSV integration is available.
+> It is faster and more flexible than the old one, now being based on
+> [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
+> 
+> To try it in your Kotlin project, add the dependency:
+> 
+> [`org.jetbrains.kotlinx:dataframe-csv:$dataframe_version`](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/dataframe-csv).
+> 
+> To try it in your Kotlin Notebook, modify the %use-magic directive:
+> 
+> `%use dataFrame(enableExperimentalCsv=true)`.
+> 
+> And then use the new `DataFrame.readCsv()` / `DataFrame.readTsv()` / `DataFrame.readDelim()`
+> functions over the old `DataFrame.readCSV()` ones.
+> 
+> The documentation of the old CSV integration still applies to the new one.
+> We will expand it while the new CSV integration stabilizes.
+> 
+> In the meantime, check out this
+> [example notebook](https://github.com/Kotlin/dataframe/blob/0.15.0/examples/notebooks/feature_overviews/0.15/new_features.ipynb)
+> to see the new CSV integration in action.
+> 
+{style="note"}
+
 To read a CSV file from a file:
 
 ```kotlin
