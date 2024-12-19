@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -25,8 +26,10 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
 
 public fun <T> DataFrame<T>.move(vararg cols: String): MoveClause<T, Any?> = move { cols.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.move(vararg cols: ColumnReference<C>): MoveClause<T, C> = move { cols.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.move(vararg cols: KProperty<C>): MoveClause<T, C> = move { cols.toColumnSet() }
 
 // endregion
@@ -42,6 +45,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String):
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColumnReference): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KProperty<*>): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
@@ -56,6 +60,7 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = m
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> =
     moveToLeft { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: KProperty<*>): DataFrame<T> =
     moveToLeft { columns.toColumnSet() }
 
@@ -139,6 +144,7 @@ public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after {
 
 public fun <T, C> MoveClause<T, C>.after(column: AnyColumnReference): DataFrame<T> = after { column }
 
+@AccessApiOverload
 public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = after { column.toColumnAccessor() }
 
 // endregion

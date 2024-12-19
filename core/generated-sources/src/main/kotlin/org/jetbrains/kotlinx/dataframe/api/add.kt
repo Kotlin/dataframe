@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -131,12 +132,14 @@ public inline fun <reified R, T> DataFrame<T>.add(
     noinline expression: AddExpression<T, R>,
 ): DataFrame<T> = (this + mapToColumn(name, infer, expression))
 
+@AccessApiOverload
 public inline fun <reified R, T> DataFrame<T>.add(
     property: KProperty<R>,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>,
 ): DataFrame<T> = (this + mapToColumn(property, infer, expression))
 
+@AccessApiOverload
 public inline fun <reified R, T> DataFrame<T>.add(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
@@ -188,30 +191,38 @@ public class AddDsl<T>(
         add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
+    @AccessApiOverload
     public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean =
         name().from(expression)
 
+    @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
 
+    @AccessApiOverload
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
 
+    @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     @Interpretable("Into")
     public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
 
+    @AccessApiOverload
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
 
+    @AccessApiOverload
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
 
     @Interpretable("AddDslStringInvoke")
     public operator fun String.invoke(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
+    @AccessApiOverload
     public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
+    @AccessApiOverload
     public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
 
     public fun group(name: String, body: AddDsl<T>.() -> Unit) {
@@ -224,6 +235,7 @@ public class AddDsl<T>(
 
     public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
 
+    @AccessApiOverload
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
@@ -241,6 +253,7 @@ public inline fun <reified R, T, G> GroupBy<T, G>.add(
     noinline expression: RowExpression<G, R>,
 ): GroupBy<T, G> = updateGroups { add(name, infer, expression) }
 
+@AccessApiOverload
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     column: ColumnAccessor<G>,
     infer: Infer = Infer.Nulls,

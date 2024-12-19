@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -65,6 +66,7 @@ public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = 
 
 @Refine
 @Interpretable("Under3")
+@AccessApiOverload
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
 @Refine
@@ -81,6 +83,7 @@ public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this
 
 public fun <T> InsertClause<T>.after(column: ColumnAccessor<*>): DataFrame<T> = after(column.path())
 
+@AccessApiOverload
 public fun <T> InsertClause<T>.after(column: KProperty<*>): DataFrame<T> = after(column.columnName)
 
 public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {

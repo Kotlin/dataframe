@@ -43,3 +43,12 @@ public annotation class ScopeProperty
 
 @Target(AnnotationTarget.FUNCTION)
 internal annotation class Check
+
+/**
+ * One of the design goals of the library is typed access to columns.
+ * That's why all operations that have "column" parameters have 4 overloads: https://kotlin.github.io/dataframe/apilevels.html
+ * In Kotlin Notebook and in Gradle project with the compiler plugin, Column Accessors API and KProperties API become redundant and
+ * clutter API scope of DataFrame. This annotation indicates such functions so that they can be excluded from public API
+ */
+@Target(AnnotationTarget.FUNCTION)
+internal annotation class AccessApiOverload

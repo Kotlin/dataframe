@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -56,20 +57,24 @@ public fun <T, C : Number> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelec
 
 public fun <T> DataFrame<T>.sumFor(vararg columns: String): DataRow<T> = sumFor { columns.toColumnsSetOf() }
 
+@AccessApiOverload
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     sumFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: KProperty<C?>): DataRow<T> =
     sumFor { columns.toColumnSet() }
 
 public inline fun <T, reified C : Number> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C?>): C =
     (Aggregators.sum.aggregateAll(this, columns) as C?) ?: C::class.zero()
 
+@AccessApiOverload
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: ColumnReference<C?>): C =
     sum { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsSetOf() }
 
+@AccessApiOverload
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C =
     sum { columns.toColumnSet() }
 
@@ -87,9 +92,11 @@ public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelecto
 
 public fun <T> Grouped<T>.sumFor(vararg columns: String): DataFrame<T> = sumFor { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     sumFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> =
     sumFor { columns.toColumnSet() }
 
@@ -99,9 +106,11 @@ public fun <T, C : Number> Grouped<T>.sum(name: String? = null, columns: Columns
 public fun <T> Grouped<T>.sum(vararg columns: String, name: String? = null): DataFrame<T> =
     sum(name) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.sum(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> =
     sum(name) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.sum(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
     sum(name) { columns.toColumnSet() }
 
@@ -124,11 +133,13 @@ public fun <T, R : Number> Pivot<T>.sumFor(
 public fun <T> Pivot<T>.sumFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
     sumFor(separate) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> Pivot<T>.sumFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false,
 ): DataRow<T> = sumFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> Pivot<T>.sumFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataRow<T> =
     sumFor(separate) { columns.toColumnSet() }
 
@@ -136,8 +147,10 @@ public fun <T, C : Number> Pivot<T>.sum(columns: ColumnsSelector<T, C?>): DataRo
 
 public fun <T> Pivot<T>.sum(vararg columns: String): DataRow<T> = sum { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> Pivot<T>.sum(vararg columns: ColumnReference<C?>): DataRow<T> = sum { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> Pivot<T>.sum(vararg columns: KProperty<C?>): DataRow<T> = sum { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression: RowExpression<T, R>): DataRow<T> =
@@ -157,11 +170,13 @@ public fun <T, R : Number> PivotGroupBy<T>.sumFor(
 public fun <T> PivotGroupBy<T>.sumFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     sumFor(separate) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> PivotGroupBy<T>.sumFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false,
 ): DataFrame<T> = sumFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> PivotGroupBy<T>.sumFor(
     vararg columns: KProperty<C?>,
     separate: Boolean = false,
@@ -172,9 +187,11 @@ public fun <T, C : Number> PivotGroupBy<T>.sum(columns: ColumnsSelector<T, C?>):
 
 public fun <T> PivotGroupBy<T>.sum(vararg columns: String): DataFrame<T> = sum { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: ColumnReference<C?>): DataFrame<T> =
     sum { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: KProperty<C?>): DataFrame<T> =
     sum { columns.toColumnSet() }
 

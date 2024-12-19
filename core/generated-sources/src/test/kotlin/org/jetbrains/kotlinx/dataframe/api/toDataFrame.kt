@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
@@ -79,12 +80,33 @@ class CreateDataFrameTests {
 
     @Test
     fun `preserve fields order`() {
+        // constructor properties will keep order, so x, c
         class B(val x: Int, val c: String, d: Double) {
+            // then child properties will be sorted lexicographically by column name, so a, b
             val b: Int = x
             val a: Double = d
         }
 
         listOf(B(1, "a", 2.0)).toDataFrame().columnNames() shouldBe listOf("x", "c", "a", "b")
+    }
+
+    @Test
+    fun `preserve fields order with @ColumnName`() {
+        // constructor properties will keep order, so z, y
+        class B(
+            @ColumnName("z") val x: Int,
+            @ColumnName("y") val c: String,
+            d: Double,
+        ) {
+            // then child properties will be sorted lexicographically by column name, so w, x
+            @ColumnName("x")
+            val a: Double = d
+
+            @ColumnName("w")
+            val b: Int = x
+        }
+
+        listOf(B(1, "a", 2.0)).toDataFrame().columnNames() shouldBe listOf("z", "y", "w", "x")
     }
 
     @DataSchema

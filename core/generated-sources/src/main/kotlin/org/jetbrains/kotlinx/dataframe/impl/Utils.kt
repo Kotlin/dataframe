@@ -387,23 +387,43 @@ internal fun KCallable<*>.isGetterLike(): Boolean =
         else -> false
     }
 
+/** Returns the getter name for this callable.
+ * The name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+internal val KFunction<*>.getterName: String
+    get() = name
+        .removePrefix("get")
+        .removePrefix("is")
+        .replaceFirstChar { it.lowercase() }
+
+/** Returns the getter name for this callable.
+ * The name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
+internal val KProperty<*>.getterName: String
+    get() = name
+
+/**
+ * Returns the getter name for this callable.
+ * The name of the callable is returned with proper getter-trimming if it's a [KFunction].
+ */
+internal val KCallable<*>.getterName: String
+    get() = when (this) {
+        is KFunction<*> -> getterName
+        is KProperty<*> -> getterName
+        else -> name
+    }
+
 /** Returns the column name for this callable.
  * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
  * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
 @PublishedApi
 internal val KFunction<*>.columnName: String
-    get() = findAnnotation<ColumnName>()?.name
-        ?: name
-            .removePrefix("get")
-            .removePrefix("is")
-            .replaceFirstChar { it.lowercase() }
+    get() = findAnnotation<ColumnName>()?.name ?: getterName
 
 /** Returns the column name for this callable.
  * If the callable contains the [ColumnName][org.jetbrains.kotlinx.dataframe.annotations.ColumnName] annotation, its [ColumnName.name][org.jetbrains.kotlinx.dataframe.annotations.ColumnName.name] is returned.
  * Otherwise, the name of the callable is returned with proper getter-trimming if it's a [KFunction]. */
 @PublishedApi
 internal val KProperty<*>.columnName: String
-    get() = findAnnotation<ColumnName>()?.name ?: name
+    get() = findAnnotation<ColumnName>()?.name ?: getterName
 
 /**
  * Returns the column name for this callable.
@@ -415,5 +435,5 @@ internal val KCallable<*>.columnName: String
     get() = when (this) {
         is KFunction<*> -> columnName
         is KProperty<*> -> columnName
-        else -> findAnnotation<ColumnName>()?.name ?: name
+        else -> findAnnotation<ColumnName>()?.name ?: getterName
     }
