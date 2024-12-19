@@ -1,6 +1,7 @@
 plugins {
     `java-gradle-plugin`
     `kotlin-dsl`
+    id("com.github.gmazzo.buildconfig") version "5.5.1"
 }
 
 val kotlinCompilerVersion: String by project
@@ -10,8 +11,14 @@ repositories {
     mavenCentral()
 }
 
+buildConfig {
+    packageName = "org.jetbrains.kotlinx.dataframe"
+    className = "BuildConfig"
+    buildConfigField("kotlinCompilerVersion", kotlinCompilerVersion)
+}
+
 dependencies {
-    implementation(kotlin("compiler-embeddable", kotlinCompilerVersion))
+    compileOnly(kotlin("compiler-embeddable", kotlinCompilerVersion))
     implementation("com.squareup:kotlinpoet:$kotlinPoetVersion")
 }
 
