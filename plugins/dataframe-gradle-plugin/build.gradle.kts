@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    `kotlin-dsl`
-    `java-gradle-plugin`
+    kotlin("jvm")
     `maven-publish`
-    alias(libs.plugins.plugin.publish)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.plugin.toolbox)
+//    alias(libs.plugins.plugin.toolbox.functional.test) TODO
 }
 
 repositories {
@@ -14,6 +14,7 @@ repositories {
     google()
 }
 
+val minGradleVersion = "7.0"
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
@@ -24,7 +25,7 @@ dependencies {
     implementation(project(":dataframe-excel"))
     implementation(project(":dataframe-jdbc"))
 
-    implementation(libs.kotlin.gradle.plugin.api)
+    implementation(gradleKotlinDsl())
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
@@ -67,6 +68,10 @@ gradlePlugin {
     // These settings are set for the whole plugin bundle
     website = "https://github.com/Kotlin/dataframe"
     vcsUrl = "https://github.com/Kotlin/dataframe"
+
+    compatibility {
+        minimumGradleVersion = minGradleVersion
+    }
 
     plugins {
         create("schemaGeneratorPlugin") {
