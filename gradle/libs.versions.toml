@@ -46,7 +46,7 @@ kotestAsserions = "5.5.4"
 
 jsoup = "1.18.3"
 arrow = "18.1.0"
-docProcessor = "0.3.10"
+kodex = "0.4.0"
 simpleGit = "2.0.3" # Can't be updated to 2.1.0+ due to Java 8 compatibility
 dependencyVersions = "0.51.0"
 plugin-publish = "1.3.0"
@@ -164,7 +164,7 @@ korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }
+kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
 simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

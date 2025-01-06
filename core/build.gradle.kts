@@ -1,8 +1,8 @@
 import com.google.devtools.ksp.gradle.KspTask
 import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
-import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
-import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
+import nl.jolanrensen.kodex.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
+import nl.jolanrensen.kodex.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
@@ -16,7 +16,7 @@ plugins {
         alias(korro)
         alias(kover)
         alias(ktlint)
-        alias(docProcessor)
+        alias(kodex)
         alias(simpleGit)
         alias(buildconfig)
         alias(binary.compatibility.validator)
