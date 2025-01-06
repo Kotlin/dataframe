@@ -96,7 +96,8 @@ has the best support for Kotlin, compiler plugins, Gradle, and [Kotlin Notebook]
 * We recommend using the [Ktlint plugin](https://plugins.jetbrains.com/plugin/15057-ktlint) for [IntelliJ IDEA](https://www.jetbrains.com/idea/download/).
 It is able to read the `.editorconfig` file and apply the same formatting rules as [Ktlint](https://pinterest.github.io/ktlint/latest/) in the CI.
 
-* Check out the [KDoc Preprocessor guide](KDOC_PREPROCESSING.md) to understand how to work with the KDoc preprocessor.
+* Check out the [KDoc Preprocessor guide](KDOC_PREPROCESSING.md) to understand how to work with
+[KoDEx](https://github.com/Jolanrensen/KoDEx).
 
 ## Building
 
