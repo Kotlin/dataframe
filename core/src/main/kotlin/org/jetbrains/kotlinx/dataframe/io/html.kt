@@ -570,13 +570,13 @@ public fun <T> DataFrame<T>.toHTML(
 }
 
 /**
- * Container for HTML page data in form of String
+ * Container for HTML page data in the form of a String
  * Can be used to compose rendered dataframe tables with additional HTML elements
  */
-public data class DataFrameHtmlData(
-    @Language("css") val style: String = "",
-    @Language("html", prefix = "<body>", suffix = "</body>") val body: String = "",
-    @Language("js") val script: String = "",
+public class DataFrameHtmlData(
+    @Language("css") public val style: String = "",
+    @Language("html", prefix = "<body>", suffix = "</body>") public val body: String = "",
+    @Language("js") public val script: String = "",
 ) {
     override fun toString(): String =
         buildString {
@@ -645,6 +645,36 @@ public data class DataFrameHtmlData(
     }
 
     public fun withTableDefinitions(): DataFrameHtmlData = tableDefinitions() + this
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is DataFrameHtmlData) return false
+
+        if (style != other.style) return false
+        if (body != other.body) return false
+        if (script != other.script) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = style.hashCode()
+        result = 31 * result + body.hashCode()
+        result = 31 * result + script.hashCode()
+        return result
+    }
+
+    public fun copy(
+        style: String = this.style,
+        body: String = this.body,
+        script: String = this.script,
+    ): DataFrameHtmlData = DataFrameHtmlData(style = style, body = body, script = script)
+
+    public operator fun component1(): String = style
+
+    public operator fun component2(): String = body
+
+    public operator fun component3(): String = script
 
     public companion object {
         /**

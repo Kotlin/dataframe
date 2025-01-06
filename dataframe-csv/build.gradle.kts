@@ -1,5 +1,5 @@
-import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
-import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
+import nl.jolanrensen.kodex.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
+import nl.jolanrensen.kodex.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 
 plugins {
@@ -10,7 +10,7 @@ plugins {
         alias(kover)
         alias(ktlint)
         alias(jupyter.api)
-        alias(docProcessor)
+        alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
     }

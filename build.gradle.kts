@@ -24,7 +24,7 @@ plugins {
         alias(kover)
         alias(ktlint)
         alias(korro) apply false
-        alias(docProcessor) apply false
+        alias(kodex) apply false
         alias(simpleGit) apply false
         alias(dependencyVersions)
         alias(buildconfig) apply false
