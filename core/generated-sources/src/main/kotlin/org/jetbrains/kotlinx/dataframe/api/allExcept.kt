@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -974,6 +975,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @AccessApiOverload
     public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> = except(column(other))
 
     /**
@@ -1066,6 +1068,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allFrom
      *
      */
+    @AccessApiOverload
     public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> = except(others.toColumnSet())
 
     /**
@@ -1719,6 +1722,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
@@ -2252,6 +2256,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
 
@@ -2648,6 +2653,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @AccessApiOverload
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -3044,6 +3050,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -3440,6 +3447,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @AccessApiOverload
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -3684,6 +3692,7 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: KProperty<C>): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(column(other))
 
@@ -3710,6 +3719,7 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         exceptExperimentalInternal(others.toColumnSet())
 
@@ -3884,6 +3894,7 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public infix fun String.exceptNew(other: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
 
@@ -3910,6 +3921,7 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public fun String.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
@@ -4140,6 +4152,7 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.exceptNew(other: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
 
@@ -4166,6 +4179,7 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public fun <C> KProperty<C>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
@@ -4194,6 +4208,7 @@ public interface AllExceptColumnsSelectionDsl {
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
+    @AccessApiOverload
     public infix fun <C> KProperty<DataRow<C>>.exceptNew(other: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
 
@@ -4222,6 +4237,7 @@ public interface AllExceptColumnsSelectionDsl {
     @ExperimentalExceptCsDsl
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
+    @AccessApiOverload
     public fun <C> KProperty<DataRow<C>>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
@@ -4452,10 +4468,12 @@ public interface AllExceptColumnsSelectionDsl {
      * are deleted.
      */
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public infix fun ColumnPath.exceptNew(other: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(column(other))
 
     @ExperimentalExceptCsDsl
+    @AccessApiOverload
     public fun ColumnPath.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
 
