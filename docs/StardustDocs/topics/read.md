@@ -170,6 +170,45 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
+### Work with specific date-time formats
+
+Sometimes date and date-time columns in your CSV can appear in different formats.
+
+<table>
+<tr><th>date</th></tr>
+<tr><td>13/Jan/23 11:49 AM</td></tr>
+<tr><td>14/Mar/23 5:35 PM</td></tr>
+</table>
+
+Here, the date is represented by the format "dd/MMM/yy h:mm a". However, by default, the ISO_LOCAL_DATE_TIME format is used, so the column is not recognized as date-time but instead as a simple String. 
+
+You can fix this in two ways:
+
+1) By providing the date-time pattern as raw string to the parser option:
+
+<!---FUN readNumbersWithSpecificDateTimePattern-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+)
+```
+<!---END-->
+
+2) By providing a DateTimeFormatter to the parser option:
+
+<!---FUN readNumbersWithSpecificDateTimeFormatter-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+)
+```
+
+<!---END-->
+These two approaches are essentially the same, just specified in different ways.
 
 ## Read from JSON
 
