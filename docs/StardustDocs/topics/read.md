@@ -172,7 +172,7 @@ val df = DataFrame.readCSV(
 
 ### Work with specific date-time formats
 
-Sometimes date and date-time columns in your CSV can appear in different formats.
+When parsing date or date-time columns, you might encounter formats different from the default ISO_LOCAL_DATE_TIME.
 
 <table>
 <tr><th>date</th></tr>
@@ -180,11 +180,11 @@ Sometimes date and date-time columns in your CSV can appear in different formats
 <tr><td>14/Mar/23 5:35 PM</td></tr>
 </table>
 
-Here, the date is represented by the format "dd/MMM/yy h:mm a". However, by default, the ISO_LOCAL_DATE_TIME format is used, so the column is not recognized as date-time but instead as a simple String. 
+Because the format here "dd/MMM/yy h:mm a" differs from the default (ISO_LOCAL_DATE_TIME), columns like this may be recognized as simple String values rather than actual date-time columns.
 
-You can fix this in two ways:
+You can fix this whenever you parse a string-based column (e.g., using readCsv, readTsv, or StringCol.convertTo<>()) by providing a custom date-time pattern. There are two ways to do this:
 
-1) By providing the date-time pattern as raw string to the parser option:
+1) By providing the date-time pattern as raw string to the ParserOptions:
 
 <!---FUN readNumbersWithSpecificDateTimePattern-->
 
@@ -196,7 +196,7 @@ val df = DataFrame.readCSV(
 ```
 <!---END-->
 
-2) By providing a DateTimeFormatter to the parser option:
+2) By providing a DateTimeFormatter to the ParserOptions:
 
 <!---FUN readNumbersWithSpecificDateTimeFormatter-->
 
@@ -209,6 +209,8 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 These two approaches are essentially the same, just specified in different ways.
+
+> Note: Although these examples focus on reading CSV files, the parse operation can handle any String columns (for instance, readCsv, readTsv, StringCol.convertTo<>(), etc.) and accept a ParserOptions argument to configure locale, null-strings, date-time patterns, and more. For more details on the parse operation, see [`Parse Operation`](parse.md).
 
 ## Read from JSON
 
