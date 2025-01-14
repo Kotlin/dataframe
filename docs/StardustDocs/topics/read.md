@@ -170,6 +170,57 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
+### Work with specific date-time formats
+
+When parsing date or date-time columns, you might encounter formats different from the default `ISO_LOCAL_DATE_TIME`.
+Like:
+
+<table>
+<tr><th>date</th></tr>
+<tr><td>13/Jan/23 11:49 AM</td></tr>
+<tr><td>14/Mar/23 5:35 PM</td></tr>
+</table>
+
+Because the format here `"dd/MMM/yy h:mm a"` differs from the default (`ISO_LOCAL_DATE_TIME`),
+columns like this may be recognized as simple `String` values rather than actual date-time columns.
+
+You can fix this whenever you [parse](parse.md) a string-based column (e.g., using [`DataFrame.readCSV()`](read.md#read-from-csv),
+[`DataFrame.readTSV()`](read.md#read-from-csv), or [`DataColumn<String>.convertTo<>()`](convert.md)) by providing
+a custom date-time pattern. There are two ways to do this:
+
+1) By providing the date-time pattern as raw string to the `ParserOptions` argument:
+
+<!---FUN readNumbersWithSpecificDateTimePattern-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+)
+```
+<!---END-->
+
+2) By providing a `DateTimeFormatter` to the `ParserOptions` argument:
+
+<!---FUN readNumbersWithSpecificDateTimeFormatter-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+)
+```
+
+<!---END-->
+These two approaches are essentially the same, just specified in different ways.
+The result will be a dataframe with properly parsed `DateTime` columns.
+
+> Note: Although these examples focus on reading CSV files, 
+> these `ParserOptions` can be supplied to any `String`-column-handling operation 
+> (like, `readCsv`, `readTsv`, `stringCol.convertTo<>()`, etc.) 
+> This allows you to configure the locale, null-strings, date-time patterns, and more.
+> 
+> For more details on the parse operation, see the [`parse operation`](parse.md).
 
 ## Read from JSON
 
