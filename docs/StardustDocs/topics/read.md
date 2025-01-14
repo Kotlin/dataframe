@@ -172,7 +172,8 @@ val df = DataFrame.readCSV(
 
 ### Work with specific date-time formats
 
-When parsing date or date-time columns, you might encounter formats different from the default ISO_LOCAL_DATE_TIME.
+When parsing date or date-time columns, you might encounter formats different from the default `ISO_LOCAL_DATE_TIME`.
+Like:
 
 <table>
 <tr><th>date</th></tr>
@@ -180,11 +181,14 @@ When parsing date or date-time columns, you might encounter formats different fr
 <tr><td>14/Mar/23 5:35 PM</td></tr>
 </table>
 
-Because the format here "dd/MMM/yy h:mm a" differs from the default (ISO_LOCAL_DATE_TIME), columns like this may be recognized as simple String values rather than actual date-time columns.
+Because the format here `"dd/MMM/yy h:mm a"` differs from the default (`ISO_LOCAL_DATE_TIME`),
+columns like this may be recognized as simple `String` values rather than actual date-time columns.
 
-You can fix this whenever you parse a string-based column (e.g., using readCsv, readTsv, or StringCol.convertTo<>()) by providing a custom date-time pattern. There are two ways to do this:
+You can fix this whenever you [parse](parse.md) a string-based column (e.g., using [`DataFrame.readCSV()`](read.md#read-from-csv),
+[`DataFrame.readTSV()`](read.md#read-from-csv), or [`DataColumn<String>.convertTo<>()`](convert.md)) by providing
+a custom date-time pattern. There are two ways to do this:
 
-1) By providing the date-time pattern as raw string to the ParserOptions:
+1) By providing the date-time pattern as raw string to the `ParserOptions` argument:
 
 <!---FUN readNumbersWithSpecificDateTimePattern-->
 
@@ -196,7 +200,7 @@ val df = DataFrame.readCSV(
 ```
 <!---END-->
 
-2) By providing a DateTimeFormatter to the ParserOptions:
+2) By providing a `DateTimeFormatter` to the `ParserOptions` argument:
 
 <!---FUN readNumbersWithSpecificDateTimeFormatter-->
 
@@ -209,8 +213,14 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 These two approaches are essentially the same, just specified in different ways.
+The result will be a dataframe with properly parsed `DateTime` columns.
 
-> Note: Although these examples focus on reading CSV files, the parse operation can handle any String columns (for instance, readCsv, readTsv, StringCol.convertTo<>(), etc.) and accept a ParserOptions argument to configure locale, null-strings, date-time patterns, and more. For more details on the parse operation, see [`Parse Operation`](parse.md).
+> Note: Although these examples focus on reading CSV files, 
+> these `ParserOptions` can be supplied to any `String`-column-handling operation 
+> (like, `readCsv`, `readTsv`, `stringCol.convertTo<>()`, etc.) 
+> This allows you to configure the locale, null-strings, date-time patterns, and more.
+> 
+> For more details on the parse operation, see the [`parse operation`](parse.md).
 
 ## Read from JSON
 
