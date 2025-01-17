@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -23,9 +22,14 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
+     *
+     *
+     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -34,6 +38,9 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     *
      *
      *
      *
@@ -48,6 +55,9 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
@@ -56,11 +66,6 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -262,6 +267,8 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -277,6 +284,9 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
@@ -286,7 +296,10 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`example`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]**`(`**`[`[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]`]`**`)`**
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`example`**][ColumnsSelectionDsl.first]**`(`**`[`[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]`]`**`)`**
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -297,12 +310,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
-     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsExample`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]**`(`**`[`[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]`]`**`)`**
-     *
-     *
-     *
-     *
-     *
+     *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsExample`**][ColumnsSelectionDsl.first]**`(`**`[`[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]`]`**`)`**
      *
      *
      *
