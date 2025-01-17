@@ -50,7 +50,7 @@ import org.jetbrains.kotlin.fir.resolve.toRegularClassSymbol
 import org.jetbrains.kotlin.fir.scopes.FirKotlinScopeProvider
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
-import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLookupTagWithFixedSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagWithFixedSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirAnonymousFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
@@ -168,7 +168,7 @@ class FunctionCallTransformer(
                     lookupTag,
                     arrayOf(
                         ConeClassLikeTypeImpl(
-                            ConeClassLookupTagWithFixedSymbol(newDataFrameArgument.classId, newDataFrameArgument.symbol),
+                            ConeClassLikeLookupTagWithFixedSymbol(newDataFrameArgument.classId, newDataFrameArgument.symbol),
                             emptyArray(),
                             isMarkedNullable = false
                         )
@@ -213,12 +213,12 @@ class FunctionCallTransformer(
                     lookupTag,
                     arrayOf(
                         ConeClassLikeTypeImpl(
-                            ConeClassLookupTagWithFixedSymbol(keys.classId, keys.symbol),
+                            ConeClassLikeLookupTagWithFixedSymbol(keys.classId, keys.symbol),
                             emptyArray<ConeTypeProjection>(),
                             isMarkedNullable = false
                         ),
                         ConeClassLikeTypeImpl(
-                            ConeClassLookupTagWithFixedSymbol(group.classId, group.symbol),
+                            ConeClassLikeLookupTagWithFixedSymbol(group.classId, group.symbol),
                             emptyArray<ConeTypeProjection>(),
                             isMarkedNullable = false
                         )
@@ -292,7 +292,7 @@ class FunctionCallTransformer(
             scopeProvider = FirKotlinScopeProvider()
             superTypeRefs += buildResolvedTypeRef {
                 coneType = ConeClassLikeTypeImpl(
-                    ConeClassLookupTagWithFixedSymbol(tokenId, token.symbol),
+                    ConeClassLikeLookupTagWithFixedSymbol(tokenId, token.symbol),
                     emptyArray(),
                     isMarkedNullable = false
                 )
@@ -365,7 +365,7 @@ class FunctionCallTransformer(
                         }
                         this.name = itName
                         this.symbol = parameterSymbol
-                        containingFunctionSymbol = fSymbol
+                        containingDeclarationSymbol = fSymbol
                         isCrossinline = false
                         isNoinline = false
                         isVararg = false

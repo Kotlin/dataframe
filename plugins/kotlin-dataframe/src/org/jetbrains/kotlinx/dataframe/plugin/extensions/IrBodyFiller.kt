@@ -162,7 +162,7 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
             irType,
             symbol,
             typeArgumentsCount = 0,
-        ).copyAttributes(declaration.parentAsClass)
+        ).also { it.copyAttributes(declaration.parentAsClass) }
 
         val initializerCall = IrInstanceInitializerCallImpl(
             -1,
