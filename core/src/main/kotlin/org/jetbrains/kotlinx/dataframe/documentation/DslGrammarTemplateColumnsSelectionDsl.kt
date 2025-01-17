@@ -4,15 +4,10 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDslLink
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupRef
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetRef
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.UsageTemplateExample.ColumnSetName
 
 /*
  * This template is to be used in displaying the Usage / DSL grammar
@@ -26,21 +21,21 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
     /**
      * {@include [LineBreak]}
      * {@include [DslGrammarLink]}
-     * {@set [DslGrammarTemplate.DefinitionsPart]
+     * {@get [DslGrammarTemplate.DefinitionsPart]
      *  {@include [LineBreak]}
      *  ### Definitions:
      *  {@get [DslGrammarTemplate.DefinitionsArg]}
-     * }{@get [DslGrammarTemplate.DefinitionsPart]}
+     * }
      * {@comment -------------------------------------------------------------------------------------------- }
-     * {@set [DslGrammarTemplate.PlainDslPart]
+     * {@get [DslGrammarTemplate.PlainDslPart]
      *  {@include [LineBreak]}
      *  ### What can be called directly in the {@include [ColumnsSelectionDslLink]}:
      *
      *  {@include [LineBreak]}
      *  {@get [DslGrammarTemplate.PlainDslFunctionsArg]}
-     * }{@get [DslGrammarTemplate.PlainDslPart]}
+     * }
      * {@comment -------------------------------------------------------------------------------------------- }
-     * {@set [DslGrammarTemplate.ColumnSetPart]
+     * {@get [DslGrammarTemplate.ColumnSetPart]
      *  {@include [LineBreak]}
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
@@ -48,9 +43,9 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *  {@include [ColumnSetRef]}
      *
      *  {@get [DslGrammarTemplate.ColumnSetFunctionsArg]}
-     * }{@get [DslGrammarTemplate.ColumnSetPart]}
+     * }
      * {@comment -------------------------------------------------------------------------------------------- }
-     * {@set [DslGrammarTemplate.ColumnGroupPart]
+     * {@get [DslGrammarTemplate.ColumnGroupPart]
      *  {@include [LineBreak]}
      *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
      *
@@ -58,13 +53,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *  {@include [ColumnGroupRef]}
      *
      *  {@get [DslGrammarTemplate.ColumnGroupFunctionsArg]}
-     * }{@get [DslGrammarTemplate.ColumnGroupPart]}
-     * {@comment -------------------------------------------------------------------------------------------- }
-     * {@comment Setting default arguments for the template}
-     * {@set [DslGrammarTemplate.DefinitionsArg]}
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]}
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]}
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]}
+     * }
      */
     public interface DslGrammarTemplate {
 
