@@ -316,8 +316,7 @@ KDoc.
 Just like [korro](https://github.com/devcrocod/korro), if `// SampleStart` or `// SampleEnd` are present in the code,
 only the code between these markers will be included in the KDoc.
 
-`@sampleNoComments` is the same as `@sample`, but it will remove all comments from the code before pasting it in the
-KDoc.
+`@sampleNoComments` is the same as `@sample`, but it will remove all KDocs from the code before pasting it here.
 
 ### `@exportAsHtmlStart` and `@exportAsHtmlEnd`: Exporting content as HTML
 
