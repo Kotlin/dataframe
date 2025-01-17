@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.kotlin.backend.common.FileLoweringPass
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.backend.jvm.localClassType
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.readJson
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
@@ -19,17 +20,21 @@ import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationWithName
 import org.jetbrains.kotlin.ir.declarations.IrFile
+import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrPackageFragment
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.copyAttributes
 import org.jetbrains.kotlin.ir.declarations.createBlockBody
+import org.jetbrains.kotlin.ir.expressions.IrBlock
+import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrBody
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrErrorCallExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -48,8 +53,12 @@ import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.classOrFail
 import org.jetbrains.kotlin.ir.types.classifierOrNull
 import org.jetbrains.kotlin.ir.types.getClass
+import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
+import org.jetbrains.kotlin.ir.types.impl.IrStarProjectionImpl
+import org.jetbrains.kotlin.ir.types.typeOrNull
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.findAnnotation
+import org.jetbrains.kotlin.ir.util.isLocal
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 import org.jetbrains.kotlin.ir.util.superTypes
@@ -66,6 +75,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.data.IoSchema
 import org.jetbrains.kotlinx.dataframe.plugin.impl.data.serialize
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
+import org.jetbrains.org.objectweb.asm.Type
 import java.io.File
 
 class IrBodyFiller(
@@ -141,7 +151,89 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
     }
 
     override fun visitSimpleFunction(declaration: IrSimpleFunction): IrStatement {
-        return declaration
+        if (declaration.name.asString() == "generated_for_debugger_fun123") {
+            declaration.returnType = declaration.returnType.hideExposedLocalType()
+            declaration.parameters = declaration.parameters.mapNotNull {
+                if ((it.type.classifierOrNull?.owner as? IrClass)?.isLocal == true) {
+                    null
+                } else {
+                    it.type = it.type.hideExposedLocalType()
+                    it
+                }
+            }
+//            declaration.parameters.forEach {
+//                it.type = it.type.hideExposedLocalType()
+//                if ((it.type.classifierOrNull?.owner as? IrClass)?.isLocal == true) {
+//                    it.type = context.irBuiltIns.anyNType
+//                }
+//            }
+            declaration.acceptChildrenVoid(object  : IrElementVisitorVoid {
+                override fun visitElement(element: IrElement) {
+                    if (element is IrBlock) {
+                        element.type = element.type.hideExposedLocalType()
+                    }
+                    if (element is IrExpression) {
+                        element.type = element.type.hideExposedLocalType()
+                    }
+                    if (element is IrFunction) {
+                        element.typeParameters = element.typeParameters.map { it.symbol.owner }
+                    }
+                    element.acceptChildrenVoid(this)
+                }
+            })
+            val body = declaration.body
+            if (body is IrExpressionBody) {
+                body.expression.type.hideExposedLocalType()
+            }
+        }
+//        val returnType = declaration.returnType as? IrSimpleType
+//        if (returnType != null && returnType.classFqName?.asString() == "org.jetbrains.kotlinx.dataframe.DataFrame") {
+//            val typeArgument = returnType.arguments.firstOrNull()?.typeOrNull as? IrSimpleType
+//            val owner = typeArgument?.classifierOrNull?.owner
+//            if (typeArgument != null && owner is IrClass) {
+//                if (owner.isLocal && declaration.name.asString() == "generated_for_debugger_fun") {
+//                    declaration.parameters = declaration.parameters.map { it }
+//                    declaration.returnType = IrSimpleTypeImpl(returnType.classifier, true, listOf(IrStarProjectionImpl), returnType.annotations)
+//                }
+//            }
+//        }
+        return super<IrElementTransformerVoid>.visitSimpleFunction(declaration)
+    }
+
+    private fun IrType.hideExposedLocalType(): IrType {
+        return if (this is IrSimpleTypeImpl) {
+            val irClass = this.classifier.owner as? IrClass
+            if (irClass?.isLocal == true) {
+                irClass.localClassType = Type.getObjectType("localClassName")
+                this
+            } else if (classFqName?.asString() == "org.jetbrains.kotlinx.dataframe.DataFrame") {
+                val typeArgument = arguments.firstOrNull()?.typeOrNull as? IrSimpleType
+                val owner = typeArgument?.classifierOrNull?.owner
+                if (owner is IrClass && owner.isLocal) {
+                    owner.localClassType = Type.getObjectType("localClassName")
+                    IrSimpleTypeImpl(classifier, true, listOf(IrStarProjectionImpl), annotations)
+                } else {
+                    this
+                }
+            } else {
+                this
+            }
+
+        } else {
+            this
+        }
+//        return if (this is IrSimpleType && classFqName?.asString() == "org.jetbrains.kotlinx.dataframe.DataFrame") {
+//            val typeArgument = arguments.firstOrNull()?.typeOrNull as? IrSimpleType
+//            val owner = typeArgument?.classifierOrNull?.owner
+//            if (owner is IrClass && owner.isLocal) {
+//                owner.localClassType = Type.getObjectType("localClassName")
+//                IrSimpleTypeImpl(classifier, true, listOf(IrStarProjectionImpl), annotations)
+//            } else {
+//                this
+//            }
+//        } else {
+//            this
+//        }
     }
 
     override fun visitConstructor(declaration: IrConstructor): IrStatement {
@@ -196,7 +288,7 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
                 }
         )
         val returnType = getter.returnType
-        val isDataColumn = returnType.classFqName!!.asString().let {
+        val isDataColumn = returnType.classFqName?.asString().let {
             it == DataColumn::class.qualifiedName!! || it == ColumnGroup::class.qualifiedName!!
         }
 

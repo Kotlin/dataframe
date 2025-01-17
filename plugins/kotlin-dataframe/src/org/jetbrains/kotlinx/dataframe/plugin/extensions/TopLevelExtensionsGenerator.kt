@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
 import org.jetbrains.kotlin.fir.types.ConeTypeProjection
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructType
@@ -54,7 +55,7 @@ class TopLevelExtensionsGenerator(session: FirSession) : FirDeclarationGeneratio
 
     private val fields by lazy {
         matchedClasses.filterNot { it.isLocal }.flatMap { classSymbol ->
-            classSymbol.declarationSymbols.filterIsInstance<FirPropertySymbol>().map { propertySymbol ->
+            classSymbol.declarationSymbols.filterIsInstance<FirPropertySymbol>().filter { it.resolvedReturnType !is ConeTypeParameterType }.map { propertySymbol ->
                 val callableId = propertySymbol.callableId
                 DataSchemaField(
                     classSymbol,
