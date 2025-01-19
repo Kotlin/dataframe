@@ -16,15 +16,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessorsLink
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNamesLink
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslLink
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingleLink
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KPropertiesLink
 import kotlin.reflect.KProperty
 
 /** [Selecting Columns][SelectingColumns] */
@@ -51,11 +42,11 @@ internal interface SelectingColumns {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OperationArg
+    interface OPERATION
 
     // Using <code>` notation to not create double `` when including
 
-    /** {@set [OperationArg] <code>`operation`</code>} */
+    /** {@set [OPERATION] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 
     /**
@@ -85,11 +76,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@get [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         * `df.`{@get [OPERATION]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
-         * `df.`{@get [OperationArg]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         * `df.`{@get [OPERATION]}`  {  `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@get [OperationArg]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
          *
          * @include [SetDefaultOperationArg]
          */
@@ -125,11 +116,11 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@get [OperationArg]}` { length }`
+         * `df.`{@get [OPERATION]}` { length }`
          *
-         * `df.`{@get [OperationArg]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
+         * `df.`{@get [OPERATION]}`  {  `[col][ColumnsSelectionDsl.col]`(1) }`
          *
-         * `df.`{@get [OperationArg]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
+         * `df.`{@get [OPERATION]}`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>().`[first][ColumnsSelectionDsl.first]`() }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -149,7 +140,7 @@ internal interface SelectingColumns {
          *
          * #### For example:
          *
-         * `df.`{@get [OperationArg]}`("length", "age")`
+         * `df.`{@get [OPERATION]}`("length", "age")`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -173,7 +164,7 @@ internal interface SelectingColumns {
          *
          * `val age by `[column][column]`<`[Double][Double]`>()`
          *
-         * `df.`{@get [OperationArg]}`(length, age)`
+         * `df.`{@get [OPERATION]}`(length, age)`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -193,7 +184,7 @@ internal interface SelectingColumns {
          * data class Person(val length: Double, val age: Double)
          * ```
          *
-         * `df.`{@get [OperationArg]}`(Person::length, Person::age)`
+         * `df.`{@get [OPERATION]}`(Person::length, Person::age)`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample

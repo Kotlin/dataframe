@@ -4,8 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ExprColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.documentation.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
@@ -24,18 +22,18 @@ public interface ExprColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.NameDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.InferDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnExpressionDef]}
      * }
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`(`**`[`{@include [DslGrammarTemplate.NameRef]}**`,`**`][`{@include [DslGrammarTemplate.InferRef]}`]`**`) { `**{@include [DslGrammarTemplate.ColumnExpressionRef]}**` \}`**
      * }
-     * {@set [DslGrammarTemplate.ColumnSetPart]}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 

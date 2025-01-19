@@ -5,11 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.CommonFirstDocs.Examples
-import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -95,7 +90,7 @@ public interface FirstColumnsSelectionDsl {
      * ## First (Col) Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -103,15 +98,15 @@ public interface FirstColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
