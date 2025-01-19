@@ -8818,7 +8818,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/Update {
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns$SelectingColumnsArg {
+public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns$SELECTING_COLUMNS {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Grammar {
@@ -9739,6 +9739,18 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate {
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_GROUP_FUNCTIONS {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_GROUP_PART {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_SET_FUNCTIONS {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_SET_PART {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnDef {
 }
 
@@ -9751,16 +9763,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupDef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupFunctionsArg {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupNoSingleColumnDef {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupNoSingleColumnRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupPart {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupRef {
@@ -9796,12 +9802,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetDef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetFunctionsArg {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetPart {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetRef {
 }
 
@@ -9829,10 +9829,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ConditionRef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DefinitionsArg {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DEFINITIONS {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DefinitionsPart {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DEFINITIONS_PART {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IgnoreCaseDef {
@@ -9877,10 +9877,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$NumberRef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PlainDslFunctionsArg {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PLAIN_DSL_FUNCTIONS {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PlainDslPart {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PLAIN_DSL_PART {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$RegexDef {

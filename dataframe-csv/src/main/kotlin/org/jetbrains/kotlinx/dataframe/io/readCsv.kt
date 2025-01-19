@@ -28,8 +28,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
-import org.jetbrains.kotlinx.dataframe.io.Compression
-import org.jetbrains.kotlinx.dataframe.io.Compression.Companion
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -39,8 +37,8 @@ import kotlin.io.path.inputStream
 
 /**
  * @include [CommonReadDelimDocs.CsvDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] File
- * @set [CommonReadDelimDocs.DataArg] file
+ * @set [CommonReadDelimDocs.DATA_TITLE] File
+ * @set [CommonReadDelimDocs.DATA] file
  * @include [PATH_READ]
  * @include [CSV_DELIMITER]
  * @include [COMPRESSION]
@@ -90,8 +88,8 @@ public fun DataFrame.Companion.readCsv(
 
 /**
  * @include [CommonReadDelimDocs.CsvDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] File
- * @set [CommonReadDelimDocs.DataArg] file
+ * @set [CommonReadDelimDocs.DATA_TITLE] File
+ * @set [CommonReadDelimDocs.DATA] file
  * @include [FILE_READ]
  * @include [CSV_DELIMITER]
  * @include [COMPRESSION]
@@ -141,8 +139,8 @@ public fun DataFrame.Companion.readCsv(
 
 /**
  * @include [CommonReadDelimDocs.CsvDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] Url
- * @set [CommonReadDelimDocs.DataArg] url
+ * @set [CommonReadDelimDocs.DATA_TITLE] Url
+ * @set [CommonReadDelimDocs.DATA] url
  * @include [DelimParams.URL_READ]
  * @include [CSV_DELIMITER]
  * @include [COMPRESSION]
@@ -192,8 +190,8 @@ public fun DataFrame.Companion.readCsv(
 
 /**
  * @include [CommonReadDelimDocs.CsvDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] File or URL
- * @set [CommonReadDelimDocs.DataArg] file or url
+ * @set [CommonReadDelimDocs.DATA_TITLE] File or URL
+ * @set [CommonReadDelimDocs.DATA] file or url
  * @include [FILE_OR_URL_READ]
  * @include [CSV_DELIMITER]
  * @include [COMPRESSION]
@@ -244,8 +242,8 @@ public fun DataFrame.Companion.readCsv(
 /**
  * {@comment the only one with adjustCsvSpecs}
  * @include [CommonReadDelimDocs.CsvDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] InputStream
- * @set [CommonReadDelimDocs.DataArg] input stream
+ * @set [CommonReadDelimDocs.DATA_TITLE] InputStream
+ * @set [CommonReadDelimDocs.DATA] input stream
  * @include [INPUT_STREAM_READ]
  * @include [CSV_DELIMITER]
  * @include [COMPRESSION]

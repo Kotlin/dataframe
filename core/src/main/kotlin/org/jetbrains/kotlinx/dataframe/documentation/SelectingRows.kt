@@ -1,3 +1,5 @@
+@file:Suppress("ClassName")
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.RowFilter
@@ -11,8 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowConditionLink
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueConditionLink
 import org.jetbrains.kotlinx.dataframe.index
 
 /**
@@ -33,15 +33,15 @@ internal interface SelectingRows {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface FirstOperationArg
+    interface FIRST_OPERATION
 
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface SecondOperationArg
+    interface SECOND_OPERATION
 
-    /** {@set [FirstOperationArg] operation}{@set [SecondOperationArg] where} */
+    /** {@set [FIRST_OPERATION] operation}{@set [SECOND_OPERATION] where} */
     interface SetDefaultOperationArg
 
     /** [Entire-Row Condition][EntireRowCondition.WithExample] */
@@ -55,9 +55,9 @@ internal interface SelectingRows {
          *
          * For example:
          *
-         * `df.`{@get [FirstOperationArg]}` { `[index][index]`() % 2 == 0 }`
+         * `df.`{@get [FIRST_OPERATION]}` { `[index][index]`() % 2 == 0 }`
          *
-         * `df.`{@get [FirstOperationArg]}` { `[diff][diff]` { age } == 0 }`
+         * `df.`{@get [FIRST_OPERATION]}` { `[diff][diff]` { age } == 0 }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -76,9 +76,9 @@ internal interface SelectingRows {
          *
          * For example:
          *
-         * `df.`{@get [FirstOperationArg]}` { length }.`{@get [SecondOperationArg]}` { it > 10.0 }`
+         * `df.`{@get [FIRST_OPERATION]}` { length }.`{@get [SECOND_OPERATION]}` { it > 10.0 }`
          *
-         * `df.`{@get [FirstOperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@get [SecondOperationArg]}` { `[index][index]`() > 4 && city != "Paris" }`
+         * `df.`{@get [FIRST_OPERATION]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@get [SECOND_OPERATION]}` { `[index][index]`() > 4 && city != "Paris" }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample

@@ -10,9 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.AddDataRowNote
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpressionLink
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpressionLink
 import org.jetbrains.kotlinx.dataframe.RowExpression as DfRowExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpression
 
@@ -41,11 +38,11 @@ internal interface ExpressionsGivenRow {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OperationArg
+    interface OPERATION
 
     // Using <code>` notation to not create double `` when including
 
-    /** {@set [OperationArg] <code>`operation`</code>} */
+    /** {@set [OPERATION] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 
     /**
@@ -64,9 +61,9 @@ internal interface ExpressionsGivenRow {
          *
          * For example:
          *
-         * `df.`{@get [OperationArg]}` { name.firstName + " " + name.lastName }`
+         * `df.`{@get [OPERATION]}` { name.firstName + " " + name.lastName }`
          *
-         * `df.`{@get [OperationArg]}` { 2021 - age }`
+         * `df.`{@get [OPERATION]}` { 2021 - age }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -85,9 +82,9 @@ internal interface ExpressionsGivenRow {
          *
          * For example:
          *
-         * `df.`{@get [OperationArg]}` { name.firstName + " from " + it }`
+         * `df.`{@get [OPERATION]}` { name.firstName + " from " + it }`
          *
-         * `df.`{@get [OperationArg]}` { it.uppercase() }`
+         * `df.`{@get [OPERATION]}` { it.uppercase() }`
          * {@include [SetDefaultOperationArg]}
          */
         interface WithExample

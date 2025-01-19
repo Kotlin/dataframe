@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
@@ -25,15 +24,15 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [DslGrammarTemplate.ColumnRef]}` `{@include [Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
      * }
-     * {@set [DslGrammarTemplate.ColumnSetPart]}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 
