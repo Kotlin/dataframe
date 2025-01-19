@@ -4,8 +4,6 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
-import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.DistinctColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -66,16 +64,16 @@ public interface DistinctColumnsSelectionDsl {
      * ## Distinct Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslPart]}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 

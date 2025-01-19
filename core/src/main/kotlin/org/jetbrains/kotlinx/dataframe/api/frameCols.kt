@@ -5,9 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.FrameColsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -34,7 +31,7 @@ public interface FrameColsColumnsSelectionDsl {
      * ## Frame Cols Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -42,15 +39,15 @@ public interface FrameColsColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
@@ -87,7 +84,7 @@ public interface FrameColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonFrameColsDocs.ExampleArg]}
+     * {@get [CommonFrameColsDocs.EXAMPLE]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the frame columns by.
      * @return A [ColumnSet] of [FrameColumns][FrameColumn].
@@ -99,12 +96,12 @@ public interface FrameColsColumnsSelectionDsl {
     private interface CommonFrameColsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
      * @include [CommonFrameColsDocs]
-     * @set [CommonFrameColsDocs.ExampleArg]
+     * @set [CommonFrameColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[frameCols][ColumnSet.frameCols]`() }`
      *
@@ -119,7 +116,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @set [CommonFrameColsDocs.ExampleArg]
+     * @set [CommonFrameColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[frameCols][ColumnsSelectionDsl.frameCols]`() }`
      *
@@ -131,7 +128,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @set [CommonFrameColsDocs.ExampleArg]
+     * @set [CommonFrameColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[frameCols][SingleColumn.frameCols]`() }`
      *
@@ -143,7 +140,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @set [CommonFrameColsDocs.ExampleArg]
+     * @set [CommonFrameColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[frameCols][String.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -154,7 +151,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @set [CommonFrameColsDocs.ExampleArg]
+     * @set [CommonFrameColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[frameCols][SingleColumn.frameCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -168,7 +165,7 @@ public interface FrameColsColumnsSelectionDsl {
 
     /**
      * @include [CommonFrameColsDocs]
-     * @set [CommonFrameColsDocs.ExampleArg]
+     * @set [CommonFrameColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[frameCols][ColumnPath.frameCols]`() }`
      */

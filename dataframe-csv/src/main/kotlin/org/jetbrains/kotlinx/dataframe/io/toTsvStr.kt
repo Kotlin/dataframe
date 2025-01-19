@@ -15,9 +15,9 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
 
 /**
  * @include [CommonWriteDelimDocs.TsvDocs]
- * @set [CommonWriteDelimDocs.WriteOrConvertArg] Convert
- * @set [CommonWriteDelimDocs.DataTitleArg] String
- * @set [CommonWriteDelimDocs.DataArg] [String]
+ * @set [CommonWriteDelimDocs.WRITE_OR_CONVERT] Convert
+ * @set [CommonWriteDelimDocs.DATA_TITLE] String
+ * @set [CommonWriteDelimDocs.DATA] [String]
  * @include [TSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]
  */
