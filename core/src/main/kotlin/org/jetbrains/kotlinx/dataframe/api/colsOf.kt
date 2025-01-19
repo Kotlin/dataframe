@@ -5,10 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -36,7 +32,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.SingleColumnDef]}
@@ -52,16 +48,16 @@ public interface ColsOfColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.KTypeDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
      * {@comment We need to deviate from the template here, since we have overload discrepancies.}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]
      *  {@include [LineBreak]}
      *  ### On a column group reference:
      *
