@@ -24,9 +24,9 @@ import kotlin.io.path.writer
 
 /**
  * @include [CommonWriteDelimDocs.TsvDocs]
- * @set [CommonWriteDelimDocs.WriteOrConvertArg] Write
- * @set [CommonWriteDelimDocs.DataTitleArg] File
- * @set [CommonWriteDelimDocs.DataArg] file
+ * @set [CommonWriteDelimDocs.WRITE_OR_CONVERT] Write
+ * @set [CommonWriteDelimDocs.DATA_TITLE] File
+ * @set [CommonWriteDelimDocs.DATA] file
  * @include [PATH_WRITE]
  * @include [TSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]
@@ -58,9 +58,9 @@ public fun AnyFrame.writeTsv(
 
 /**
  * @include [CommonWriteDelimDocs.TsvDocs]
- * @set [CommonWriteDelimDocs.WriteOrConvertArg] Write
- * @set [CommonWriteDelimDocs.DataTitleArg] File
- * @set [CommonWriteDelimDocs.DataArg] file
+ * @set [CommonWriteDelimDocs.WRITE_OR_CONVERT] Write
+ * @set [CommonWriteDelimDocs.DATA_TITLE] File
+ * @set [CommonWriteDelimDocs.DATA] file
  * @include [FILE_WRITE]
  * @include [TSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]
@@ -92,9 +92,9 @@ public fun AnyFrame.writeTsv(
 
 /**
  * @include [CommonWriteDelimDocs.TsvDocs]
- * @set [CommonWriteDelimDocs.WriteOrConvertArg] Write
- * @set [CommonWriteDelimDocs.DataTitleArg] File
- * @set [CommonWriteDelimDocs.DataArg] file
+ * @set [CommonWriteDelimDocs.WRITE_OR_CONVERT] Write
+ * @set [CommonWriteDelimDocs.DATA_TITLE] File
+ * @set [CommonWriteDelimDocs.DATA] file
  * @include [PATH_WRITE]
  * @include [TSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]
@@ -127,9 +127,9 @@ public fun AnyFrame.writeTsv(
 /**
  * {@comment only one with adjustCsvFormat}
  * @include [CommonWriteDelimDocs.TsvDocs]
- * @set [CommonWriteDelimDocs.WriteOrConvertArg] Write
- * @set [CommonWriteDelimDocs.DataTitleArg] Appendable
- * @set [CommonWriteDelimDocs.DataArg] [Appendable]
+ * @set [CommonWriteDelimDocs.WRITE_OR_CONVERT] Write
+ * @set [CommonWriteDelimDocs.DATA_TITLE] Appendable
+ * @set [CommonWriteDelimDocs.DATA] [Appendable]
  * @include [WRITER_WRITE]
  * @include [TSV_DELIMITER]
  * @include [CommonWriteDelimDocs.CommonWriteParams]

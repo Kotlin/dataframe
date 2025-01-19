@@ -11,20 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.BehaviorArg
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ColumnDoesNotExistArg
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.ExampleArg
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.FunctionArg
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.FunctionColsArg
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.CommonAllSubsetDocs.TitleArg
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.After
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.Before
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.From
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.PlainDslName
-import org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.Grammar.UpTo
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -84,7 +70,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * ## Grammar of All Flavors of All (Cols):
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -96,19 +82,19 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`()`**
      *
      *  `| `**`all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      *
      *  {@include [Indent]}`| `**`.all`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` )`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
      *
      *  {@include [Indent]}`| `**`.allCols`**`(`{@include [Before]}`|`{@include [After]}`|`{@include [From]}`|`{@include [UpTo]}`) ( `**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**`  |  `**`{ `**{@include [DslGrammarTemplate.ColumnSelectorRef]}**` \}`**` )`
@@ -160,15 +146,15 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     private interface AllFlavors
 
     /**
-     * ## {@get [TitleArg]}
+     * ## {@get [TITLE]}
      *
      * Creates a new [ColumnSet] that contains a subset of columns from [this\],
-     * containing all columns {@get [BehaviorArg]}.
+     * containing all columns {@get [BEHAVIOR]}.
      *
      * [column\] can be specified both relative to the current [ColumnGroup] or the outer scope and
      * can be referenced using any {@include [AccessApiLink]}.
      *
-     * If [column\] does not exist, {@get [ColumnDoesNotExistArg]}.
+     * If [column\] does not exist, {@get [COLUMN_DOES_NOT_EXIST]}.
      * {@include [LineBreak]}
      * NOTE: Using the `{}` overloads of these functions requires a [ColumnSelector]
      * in the Plain DSL and on [column groups][ColumnGroup].
@@ -178,19 +164,19 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * #### For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[{@get [FunctionArg]}][ColumnsSelectionDsl.{@get [FunctionArg]}]`("someColumn") }`
+     * `df.`[select][DataFrame.select]`  {  `[{@get [FUNCTION]}][ColumnsSelectionDsl.{@get [FUNCTION]}]`("someColumn") }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@get [FunctionColsArg]}][SingleColumn.{@get [FunctionColsArg]}]`(someColumn) }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroup][ColumnsSelectionDsl.colGroup]`(Type::myColGroup).`[{@get [FUNCTION_COLS]}][SingleColumn.{@get [FUNCTION_COLS]}]`(someColumn) }`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@get [FunctionArg]}][ColumnSet.{@get [FunctionArg]}]`(Type::someColumn) }`
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().`[{@get [FUNCTION]}][ColumnSet.{@get [FUNCTION]}]`(Type::someColumn) }`
      *
      * #### Examples for this overload:
      *
-     * {@get [ExampleArg]}
+     * {@get [EXAMPLE]}
      *
      * {@include [AllFlavors]}
      *
-     * @return A new [ColumnSet] containing all columns {@get [BehaviorArg]}.
+     * @return A new [ColumnSet] containing all columns {@get [BEHAVIOR]}.
      * @see [allBefore\]
      * @see [allAfter\]
      * @see [allFrom\]
@@ -199,31 +185,32 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * @see [all\]
      * @see [cols\]
      */
+    @Suppress("ClassName")
     @ExcludeFromSources
     private interface CommonAllSubsetDocs {
 
         // The title of the function, a.k.a. "All (Cols) After"
-        interface TitleArg
+        interface TITLE
 
         // The exact name of the function, a.k.a. "allAfter"
-        interface FunctionArg
+        interface FUNCTION
 
         // The exact name of the function, a.k.a. "allColsAfter"
-        interface FunctionColsArg
+        interface FUNCTION_COLS
 
         /*
          * Small line of text explaining the behavior of the function,
          * a.k.a. "after [column\], excluding [column\]"
          */
-        interface BehaviorArg
+        interface BEHAVIOR
 
         /*
          * Small line of text explaining what happens if `column` does not exist.
          */
-        interface ColumnDoesNotExistArg
+        interface COLUMN_DOES_NOT_EXIST
 
         // Example argument
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     // region all
@@ -327,11 +314,11 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonAllSubsetDocs]
-     * @set [CommonAllSubsetDocs.TitleArg] All (Cols) After
-     * @set [CommonAllSubsetDocs.FunctionArg] allAfter
-     * @set [CommonAllSubsetDocs.FunctionColsArg] allColsAfter
-     * @set [CommonAllSubsetDocs.BehaviorArg] after [column\], excluding [column\] itself
-     * @set [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return an empty [ColumnSet][ColumnSet]
+     * @set [CommonAllSubsetDocs.TITLE] All (Cols) After
+     * @set [CommonAllSubsetDocs.FUNCTION] allAfter
+     * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsAfter
+     * @set [CommonAllSubsetDocs.BEHAVIOR] after [column\], excluding [column\] itself
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
      * @param [column\] The specified column after which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -339,7 +326,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllAfterDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allAfter][ColumnSet.allAfter]`{@get [ColumnSetAllAfterDocs.Arg]} }`
      */
@@ -372,7 +359,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllAfterDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[allAfter][ColumnsSelectionDsl.allAfter]`{@get [ColumnsSelectionDslAllAfterDocs.Arg]} }`
      */
@@ -402,7 +389,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllAfterDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsAfter][SingleColumn.allColsAfter]`{@get [SingleColumnAllAfterDocs.Arg]} }`
      */
@@ -447,7 +434,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllAfterDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsAfter][String.allColsAfter]`{@get [StringAllAfterDocs.Arg]} }`
      */
@@ -475,7 +462,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllAfterDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColGroup.`[allColsAfter][KProperty.allColsAfter]`{@get [KPropertyAllAfterDocs.Arg]} }`
      */
@@ -507,7 +494,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllAfterDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsAfter][ColumnPath.allColsAfter]`{@get [ColumnPathAllAfterDocs.Arg]} }`
      */
@@ -541,11 +528,11 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonAllSubsetDocs]
-     * @set [CommonAllSubsetDocs.TitleArg] All (Cols) From
-     * @set [CommonAllSubsetDocs.FunctionArg] allFrom
-     * @set [CommonAllSubsetDocs.FunctionColsArg] allColsFrom
-     * @set [CommonAllSubsetDocs.BehaviorArg] from [column\], including [column\] itself
-     * @set [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return an empty [ColumnSet][ColumnSet]
+     * @set [CommonAllSubsetDocs.TITLE] All (Cols) From
+     * @set [CommonAllSubsetDocs.FUNCTION] allFrom
+     * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsFrom
+     * @set [CommonAllSubsetDocs.BEHAVIOR] from [column\], including [column\] itself
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return an empty [ColumnSet][ColumnSet]
      * @param [column\] The specified column from which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -553,7 +540,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllFromDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allFrom][ColumnSet.allFrom]`{@get [ColumnSetAllFromDocs.Arg]} }`
      */
@@ -585,7 +572,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllFromDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[allFrom][ColumnsSelectionDsl.allFrom]`{@get [ColumnsSelectionDslAllFromDocs.Arg]} }`
      */
@@ -615,7 +602,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllFromDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsFrom][SingleColumn.allColsFrom]`{@get [SingleColumnAllFromDocs.Arg]} }`
      */
@@ -660,7 +647,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllFromDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsFrom][String.allColsFrom]`{@get [StringAllFromDocs.Arg]} }`
      */
@@ -688,7 +675,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllFromDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsFrom][KProperty.allColsFrom]`{@get [KPropertyAllFromDocs.Arg]} }`
      */
@@ -720,7 +707,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllFromDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allFrom][ColumnPath.allColsFrom]`{@get [ColumnPathAllFromDocs.Arg]} }`
      */
@@ -753,11 +740,11 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonAllSubsetDocs]
-     * @set [CommonAllSubsetDocs.TitleArg] All (Cols) Before
-     * @set [CommonAllSubsetDocs.FunctionArg] allBefore
-     * @set [CommonAllSubsetDocs.FunctionColsArg] allColsBefore
-     * @set [CommonAllSubsetDocs.BehaviorArg] before [column\], excluding [column\] itself
-     * @set [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return a [ColumnSet][ColumnSet] containing all columns
+     * @set [CommonAllSubsetDocs.TITLE] All (Cols) Before
+     * @set [CommonAllSubsetDocs.FUNCTION] allBefore
+     * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsBefore
+     * @set [CommonAllSubsetDocs.BEHAVIOR] before [column\], excluding [column\] itself
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
      * @param [column\] The specified column before which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -765,7 +752,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllBeforeDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allBefore][ColumnSet.allBefore]`{@get [ColumnSetAllBeforeDocs.Arg]} }`
      */
@@ -798,7 +785,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllBeforeDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[allBefore][ColumnsSelectionDsl.allBefore]`{@get [ColumnsSelectionDslAllBeforeDocs.Arg]} }`
      */
@@ -829,7 +816,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllBeforeDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsBefore][SingleColumn.allColsBefore]`{@get [SingleColumnAllBeforeDocs.Arg]} }`
      */
@@ -871,7 +858,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllBeforeDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsBefore][String.allColsBefore]`{@get [StringAllBeforeDocs.Arg]} }`
      */
@@ -900,7 +887,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllBeforeDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsBefore][KProperty.allColsBefore]`{@get [KPropertyAllBeforeDocs.Arg]} }`
      */
@@ -932,7 +919,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllBeforeDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsBefore][ColumnPath.allColsBefore]`{@get [ColumnPathAllBeforeDocs.Arg]} }`
      */
@@ -966,11 +953,11 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonAllSubsetDocs]
-     * @set [CommonAllSubsetDocs.TitleArg] All (Cols) Up To
-     * @set [CommonAllSubsetDocs.FunctionArg] allUpTo
-     * @set [CommonAllSubsetDocs.FunctionColsArg] allColsUpTo
-     * @set [CommonAllSubsetDocs.BehaviorArg] up to [column\], including [column\] itself
-     * @set [CommonAllSubsetDocs.ColumnDoesNotExistArg] the function will return a [ColumnSet][ColumnSet] containing all columns
+     * @set [CommonAllSubsetDocs.TITLE] All (Cols) Up To
+     * @set [CommonAllSubsetDocs.FUNCTION] allUpTo
+     * @set [CommonAllSubsetDocs.FUNCTION_COLS] allColsUpTo
+     * @set [CommonAllSubsetDocs.BEHAVIOR] up to [column\], including [column\] itself
+     * @set [CommonAllSubsetDocs.COLUMN_DOES_NOT_EXIST] the function will return a [ColumnSet][ColumnSet] containing all columns
      * @param [column\] The specified column up to which all columns should be taken. This column can be referenced
      *   to both relatively to the current [ColumnsResolver] and absolutely.
      */
@@ -978,7 +965,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllUpToDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[allUpTo][ColumnSet.allUpTo]`{@get [ColumnSetAllUpToDocs.Arg]} }`
      */
@@ -1010,7 +997,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllUpToDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[allUpTo][ColumnsSelectionDsl.allColsUpTo]`{@get [ColumnsSelectionDslAllUpToDocs.Arg]} }`
      */
@@ -1040,7 +1027,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllUpToDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { someColumnGroup.`[allColsUpTo][SingleColumn.allColsUpTo]`{@get [SingleColumnAllUpToDocs.Arg]} }`
      */
@@ -1085,7 +1072,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllUpToDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "someColGroup".`[allColsUpTo][String.allColsUpTo]`{@get [StringAllUpToDocs.Arg]} }`
      */
@@ -1113,7 +1100,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllUpToDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::someColGroup.`[allColsUpTo][KProperty.allColsUpTo]`{@get [KPropertyAllUpToDocs.Arg]} }`
      */
@@ -1145,7 +1132,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [AllUpToDocs]
-     * @set [CommonAllSubsetDocs.ExampleArg]
+     * @set [CommonAllSubsetDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["someColGroup"].`[allColsUpTo][ColumnPath.allColsUpTo]`{@get [ColumnPathAllUpToDocs.Arg]} }`
      */
