@@ -25,8 +25,11 @@ import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.declarations.IrPackageFragment
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.copyAttributes
 import org.jetbrains.kotlin.ir.declarations.createBlockBody
+import org.jetbrains.kotlin.ir.declarations.impl.IrVariableImpl
 import org.jetbrains.kotlin.ir.expressions.IrBlock
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrBody
@@ -35,6 +38,7 @@ import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrErrorCallExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
+import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -47,6 +51,7 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrReturnImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrTypeOperatorCallImpl
 import org.jetbrains.kotlin.ir.symbols.IrValueSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
+import org.jetbrains.kotlin.ir.symbols.impl.IrVariableSymbolImpl
 import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
@@ -61,6 +66,7 @@ import org.jetbrains.kotlin.ir.util.findAnnotation
 import org.jetbrains.kotlin.ir.util.isLocal
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.ir.util.primaryConstructor
+import org.jetbrains.kotlin.ir.util.statements
 import org.jetbrains.kotlin.ir.util.superTypes
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
@@ -150,17 +156,48 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
         irFile.transformChildren(this, null)
     }
 
+    override fun visitVariable(declaration: IrVariable): IrStatement {
+        return super.visitVariable(declaration)
+    }
     override fun visitSimpleFunction(declaration: IrSimpleFunction): IrStatement {
         if (declaration.name.asString() == "generated_for_debugger_fun123") {
             declaration.returnType = declaration.returnType.hideExposedLocalType()
+            val params = mutableListOf<IrValueParameter>()
             declaration.parameters = declaration.parameters.mapNotNull {
                 if ((it.type.classifierOrNull?.owner as? IrClass)?.isLocal == true) {
+                    params += it
                     null
                 } else {
                     it.type = it.type.hideExposedLocalType()
                     it
                 }
             }
+
+            val map = mutableMapOf<IrValueSymbol, IrValueSymbol>()
+
+            // Add variables for each parameter in params
+            val paramInitializers = params.map { param ->
+                val symbol = IrVariableSymbolImpl()
+                map[param.symbol] = symbol
+                IrVariableImpl(
+                    -1, -1,
+                    origin = IrDeclarationOrigin.DEFINED,
+                    symbol = symbol,
+                    Name.identifier("${param.name}Var"),
+                    param.type,
+                   isVar = false,
+                   isConst = false,
+                   isLateinit = false,
+                ).apply {
+                    parent = declaration
+                    initializer = IrConstructorCallImpl(-1, -1, param.type, param.type.classOrFail.constructors.single(), 0, 0)
+                }
+            }
+            declaration.body = declaration.body?.let { body ->
+                context.irFactory.createBlockBody(-1, -1, paramInitializers + body.statements)
+            }
+
+
 //            declaration.parameters.forEach {
 //                it.type = it.type.hideExposedLocalType()
 //                if ((it.type.classifierOrNull?.owner as? IrClass)?.isLocal == true) {
@@ -169,15 +206,17 @@ private class DataFrameFileLowering(val context: IrPluginContext) : FileLowering
 //            }
             declaration.acceptChildrenVoid(object  : IrElementVisitorVoid {
                 override fun visitElement(element: IrElement) {
-                    if (element is IrBlock) {
-                        element.type = element.type.hideExposedLocalType()
+                    if (element is IrGetValue) {
+                        map[element.symbol]?.let {
+                            element.symbol = it
+                        }
                     }
-                    if (element is IrExpression) {
-                        element.type = element.type.hideExposedLocalType()
-                    }
-                    if (element is IrFunction) {
-                        element.typeParameters = element.typeParameters.map { it.symbol.owner }
-                    }
+//                    if (element is IrExpression) {
+//                        element.type = element.type.hideExposedLocalType()
+//                    }
+//                    if (element is IrFunction) {
+//                        element.typeParameters = element.typeParameters.map { it.symbol.owner }
+//                    }
                     element.acceptChildrenVoid(this)
                 }
             })

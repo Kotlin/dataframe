@@ -8,6 +8,6 @@ class A {
 }
 
 fun box(): String {
-
+    val a1 = 1
     return "OK"
 }
