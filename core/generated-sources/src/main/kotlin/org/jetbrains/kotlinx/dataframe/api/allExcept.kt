@@ -37,6 +37,8 @@ public interface AllExceptColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -62,6 +64,9 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *  `columnsResolver: `[`ColumnsResolver`][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -72,6 +77,9 @@ public interface AllExceptColumnsSelectionDsl {
      *  [**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`   {   `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
      *
      *  `| `[**`allExcept`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.allExcept]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -87,6 +95,9 @@ public interface AllExceptColumnsSelectionDsl {
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`except`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]` `[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `**`.`**[**`except`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`**`)`**
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -104,11 +115,6 @@ public interface AllExceptColumnsSelectionDsl {
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` } EXPERIMENTAL!`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`exceptNew`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.exceptNew]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`) EXPERIMENTAL!`**
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -1893,8 +1899,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `<code></code>[allColsExcept][.allColsExcept]<code></code>` }`
+     * `df.`[select][ColumnsSelectionDsl.select]`  {  `<code></code>[allColsExcept][.allColsExcept]<code></code>` }`
      *
      *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code></code>[allColsExcept][.allColsExcept]<code></code>` }`
      *
@@ -2032,8 +2037,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`name.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>` { firstName }`</code>` }`
      *
@@ -2142,8 +2146,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`("age", "height")`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`("age", "height")`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`name.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`("firstName", "middleName")`</code>` }`
      *
@@ -2236,8 +2239,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`name.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`(Person::firstName, Person::middleName)`</code>` }`
      *
@@ -2330,8 +2332,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`userData.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`name.`</code>[allColsExcept][SingleColumn.allColsExcept]<code>`(pathOf("firstName"), "middleNames"["first"])`</code>` }`
      *
@@ -2428,8 +2429,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"name".`</code>[allColsExcept][String.allColsExcept]<code>` { firstName }`</code>` }`
      *
@@ -2538,8 +2538,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`("age", "height")`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`("age", "height")`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"name".`</code>[allColsExcept][String.allColsExcept]<code>`("firstName", "middleName")`</code>` }`
      *
@@ -2632,8 +2631,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"name".`</code>[allColsExcept][String.allColsExcept]<code>`(Person::firstName, Person::middleName)`</code>` }`
      *
@@ -2726,8 +2724,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`"userData".`</code>[allColsExcept][String.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"name".`</code>[allColsExcept][String.allColsExcept]<code>`(pathOf("firstName"), "middleNames"["first"])`</code>` }`
      *
@@ -2824,8 +2821,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`Person::name.`</code>[allColsExcept][KProperty.allColsExcept]<code>` { firstName }`</code>` }`
      *
@@ -2934,8 +2930,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`("age", "height")`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`("age", "height")`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`Person::name.`</code>[allColsExcept][KProperty.allColsExcept]<code>`("firstName", "middleName")`</code>` }`
      *
@@ -3028,8 +3023,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`Person::name.`</code>[allColsExcept][KProperty.allColsExcept]<code>`(Person::firstName, Person::middleName)`</code>` }`
      *
@@ -3122,8 +3116,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`DataSchemaPerson::userData.`</code>[allColsExcept][KProperty.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`Person::name.`</code>[allColsExcept][KProperty.allColsExcept]<code>`(pathOf("firstName"), "middleNames"["first"])`</code>` }`
      *
@@ -3220,8 +3213,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`  { "age"  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` height }`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"pathTo"["myColGroup"].`</code>[allColsExcept][ColumnPath.allColsExcept]<code>` { firstName }`</code>` }`
      *
@@ -3330,8 +3322,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`("age", "height")`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`("age", "height")`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"pathTo"["myColGroup"].`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`("firstName", "middleName")`</code>` }`
      *
@@ -3424,8 +3415,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`(Person::age, Person::height)`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"pathTo"["myColGroup"].`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`(Person::firstName, Person::middleName)`</code>` }`
      *
@@ -3518,8 +3508,7 @@ public interface AllExceptColumnsSelectionDsl {
      * columns inside the group, 'lifting' them out.
      *
      * ### Examples for this overload
-     *
-     *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  {  `<code>`pathOf("userData").`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`(pathOf("age"), "extraData"["item1"])`</code>` }`
      *
      *  `df.`[select][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]`  { city  `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` `<code>`"pathTo"["myColGroup"].`</code>[allColsExcept][ColumnPath.allColsExcept]<code>`(pathOf("firstName"), "middleNames"["first"])`</code>` }`
      *
