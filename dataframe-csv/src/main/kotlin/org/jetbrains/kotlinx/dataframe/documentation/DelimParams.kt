@@ -85,7 +85,7 @@ internal object DelimParams {
      *   Columns widths are determined by the header in the data (if present), or manually by setting
      *   \[fixedColumnWidths\].
      */
-    val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
+    const val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
 
     /**
      * @param fixedColumnWidths The fixed column widths. Default: empty list.

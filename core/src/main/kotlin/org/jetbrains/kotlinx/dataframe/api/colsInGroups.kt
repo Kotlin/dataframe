@@ -4,9 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsInGroupsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -32,7 +29,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * ## Cols in Groups Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -40,15 +37,15 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
@@ -98,7 +95,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * #### Examples of this overload:
      *
-     * {@get [ColsInGroupsDocs.ExampleArg]}
+     * {@get [ColsInGroupsDocs.EXAMPLE]}
      *
      * @see [ColumnsSelectionDsl.cols\]
      * @see [ColumnsSelectionDsl.colGroups\]
@@ -108,12 +105,12 @@ public interface ColsInGroupsColumnsSelectionDsl {
     private interface ColsInGroupsDocs {
 
         /** Example argument to use */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
      * @include [ColsInGroupsDocs]
-     * @set [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
@@ -124,7 +121,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @set [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
      *
@@ -135,7 +132,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @set [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]`() }`
      *
@@ -146,7 +143,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @set [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
      */
@@ -155,7 +152,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @set [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsInGroups][KProperty.colsInGroups]`() }`
      *
@@ -166,7 +163,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
 
     /**
      * @include [ColsInGroupsDocs]
-     * @set [ColsInGroupsDocs.ExampleArg]
+     * @set [ColsInGroupsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
      */

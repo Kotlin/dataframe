@@ -4,9 +4,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.InfixName
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.Name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -33,7 +30,7 @@ public interface AndColumnsSelectionDsl {
      * ## And Operator Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -43,17 +40,17 @@ public interface AndColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnOrColumnSetDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` `{@include [InfixName]}`  [  `**`{`**`  ]  `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}`  [  `**`\}`**` ]`
      *
      *  `| `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}{@include [Name]}**` (`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [Name]}**` (`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [Name]}**` (`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      */
@@ -92,21 +89,21 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * {@get [CommonAndDocs.ExampleArg]}
+     * {@get [CommonAndDocs.EXAMPLE]}
      *
      * @return A [ColumnSet] that contains all the columns from the [ColumnsResolvers][ColumnsResolver] on the left
      *   and right side of the [and] operator.
      */
     private interface CommonAndDocs {
 
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     // region ColumnsResolver
 
     /**
      * @include [CommonAndDocs]
-     * @set [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code>{@get [ColumnsResolverAndDocs.Argument]}</code>` }`
      */
@@ -135,7 +132,7 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * @include [CommonAndDocs]
-     * @set [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code>{@get [StringAndDocs.Argument]}</code>` }`
      */
@@ -163,7 +160,7 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * @include [CommonAndDocs]
-     * @set [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code>{@get [KPropertyAndDocs.Argument]}</code>` }`
      */

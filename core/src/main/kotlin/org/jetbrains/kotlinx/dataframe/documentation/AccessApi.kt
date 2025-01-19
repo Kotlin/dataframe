@@ -34,7 +34,7 @@ internal interface AccessApi {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
      *
-     * For example:
+     * For example: {@comment This works if you include the test module when running KoDEx}
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.strings]
      */
     interface StringApi
@@ -49,7 +49,7 @@ internal interface AccessApi {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ColumnAccessorsApi]}
      *
-     * For example:
+     * For example: {@comment This works if you include the test module when running KoDEx}
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.accessors3]
      */
     interface ColumnAccessorsApi
@@ -66,7 +66,7 @@ internal interface AccessApi {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.KPropertiesApi]}
      *
-     * For example:
+     * For example: {@comment This works if you include the test module when running KoDEx}
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.kproperties1]
      */
     interface KPropertiesApi
@@ -81,7 +81,7 @@ internal interface AccessApi {
      *
      * For more information: {@include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]}
      *
-     * For example:
+     * For example: {@comment This works if you include the test module when running KoDEx}
      * @sample [org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels.extensionProperties1]
      */
     interface ExtensionPropertiesApi

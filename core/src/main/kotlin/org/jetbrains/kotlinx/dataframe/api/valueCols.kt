@@ -3,9 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -33,7 +30,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -41,15 +38,15 @@ public interface ValueColsColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
@@ -86,7 +83,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonValueColsDocs.ExampleArg]}
+     * {@get [CommonValueColsDocs.EXAMPLE]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
      * @return A [ColumnSet] of [ValueColumns][ValueColumn].
@@ -98,12 +95,12 @@ public interface ValueColsColumnsSelectionDsl {
     private interface CommonValueColsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
      *
@@ -116,7 +113,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]`() }`
      *
@@ -128,7 +125,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]`() }`
      *
@@ -140,7 +137,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -151,7 +148,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -164,7 +161,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`() }`
      */

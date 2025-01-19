@@ -10,10 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.Update.UpdateOperationArg
+import org.jetbrains.kotlinx.dataframe.api.Update.UPDATE_OPERATION
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -41,7 +38,7 @@ import kotlin.reflect.KProperty
  */
 internal interface FillNulls {
 
-    /** @include [Update.Grammar] {@set [UpdateOperationArg] [**fillNulls**][fillNulls]} */
+    /** @include [Update.Grammar] {@set [UPDATE_OPERATION] [**fillNulls**][fillNulls]} */
     interface Grammar
 
     /**
@@ -51,14 +48,14 @@ internal interface FillNulls {
     interface FillNullsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
+/** {@set [SelectingColumns.OPERATION] [fillNulls][fillNulls]} */
 private interface SetFillNullsOperationArg
 
 /**
  * @include [FillNulls] {@comment Description of the fillNulls operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNulls.FillNullsSelectingOptions]}
+ * {@set [Update.Columns.SELECTING_COLUMNS] [Selecting Columns][FillNulls.FillNullsSelectingOptions]}
  * ### This Fill Nulls Overload
  *
  */
@@ -135,7 +132,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  */
 internal interface FillNaNs {
 
-    /** @include [Update.Grammar] {@set [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
+    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNaNs][fillNaNs]} */
     interface Grammar
 
     /**
@@ -145,7 +142,7 @@ internal interface FillNaNs {
     interface FillNaNsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
+/** {@set [SelectingColumns.OPERATION] [fillNaNs][fillNaNs]} */
 @ExcludeFromSources
 internal interface SetFillNaNsOperationArg
 
@@ -153,7 +150,7 @@ internal interface SetFillNaNsOperationArg
  * @include [FillNaNs] {@comment Description of the fillNaNs operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
+ * {@set [Update.Columns.SELECTING_COLUMNS] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
  * ### This Fill NaNs Overload
  */
 @ExcludeFromSources
@@ -207,7 +204,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  */
 internal interface FillNA {
 
-    /** @include [Update.Grammar] {@set [Update.UpdateOperationArg] [fillNA][fillNA]} */
+    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNA][fillNA]} */
     interface Grammar
 
     /**
@@ -217,7 +214,7 @@ internal interface FillNA {
     interface FillNASelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [fillNA][fillNA]} */
+/** {@set [SelectingColumns.OPERATION] [fillNA][fillNA]} */
 @ExcludeFromSources
 internal interface SetFillNAOperationArg
 
@@ -225,7 +222,7 @@ internal interface SetFillNAOperationArg
  * @include [FillNA] {@comment Description of the fillNA operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNA.FillNASelectingOptions]}
+ * {@set [Update.Columns.SELECTING_COLUMNS] [Selecting Columns][FillNA.FillNASelectingOptions]}
  * ### This Fill NA Overload
  */
 @ExcludeFromSources
@@ -312,7 +309,7 @@ internal interface DropNulls {
     interface DropNullsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
+/** {@set [SelectingColumns.OPERATION] [dropNulls][dropNulls]} */
 @ExcludeFromSources
 private interface SetDropNullsOperationArg
 
@@ -420,7 +417,7 @@ internal interface DropNA {
     interface DropNASelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [dropNA][dropNA]} */
+/** {@set [SelectingColumns.OPERATION] [dropNA][dropNA]} */
 @ExcludeFromSources
 private interface SetDropNAOperationArg
 
@@ -529,7 +526,7 @@ internal interface DropNaNs {
     interface DropNaNsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */
+/** {@set [SelectingColumns.OPERATION] [dropNaNs][dropNaNs]} */
 @ExcludeFromSources
 private interface SetDropNaNsOperationArg
 
