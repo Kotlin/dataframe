@@ -203,19 +203,19 @@ public interface RenameColumnsSelectionDsl {
      */
     private interface CommonRenameDocs {
 
-        interface ReceiverArg
+        interface RECEIVER
 
-        interface ReceiverTypeArg
+        interface RECEIVER_TYPE
 
         /** "named" or "into" */
-        interface FunctionNameArg
+        interface FUNCTION_NAME
 
         /** "newName" or "nameOf" */
-        interface ParamNameArg
+        interface PARAM_NAME
 
-        interface ParamArg
+        interface PARAM
 
-        interface ParamTypeArg
+        interface PARAM_TYPE
 
         /**
          */

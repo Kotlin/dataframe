@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.Update.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -100,7 +99,8 @@ public class Update<T, C>(
     public interface Columns {
 
         // Optional argument that can be set to redirect where the [Selecting Columns] link points to
-        public interface SelectingColumnsArg
+        @Suppress("ClassName")
+        public interface SELECTING_COLUMNS
     }
 
     /**

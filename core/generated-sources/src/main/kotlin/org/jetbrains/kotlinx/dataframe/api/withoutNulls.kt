@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -123,7 +122,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      */
     private interface CommonWithoutNullsDocs {
 
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**

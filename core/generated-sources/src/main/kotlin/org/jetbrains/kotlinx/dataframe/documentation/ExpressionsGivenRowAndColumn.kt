@@ -15,7 +15,7 @@ internal interface ExpressionsGivenRowAndColumn {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OperationArg
+    interface OPERATION
 
     // Using <code>` notation to not create double `` when including
 
