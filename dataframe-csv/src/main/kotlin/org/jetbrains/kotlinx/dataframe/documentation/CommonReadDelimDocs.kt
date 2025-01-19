@@ -9,9 +9,9 @@ import java.io.InputStream
 import java.net.URL
 
 /**
- * ### Read $[FileTypeTitleArg] $[DataTitleArg] to [DataFrame]
+ * ### Read $[FILE_TYPE_TITLE] $[DATA_TITLE] to [DataFrame]
  *
- * Reads any $[FileTypeArg] $[DataArg] to a [DataFrame][DataFrame].
+ * Reads any $[FILE_TYPE] $[DATA] to a [DataFrame][DataFrame].
  *
  * Parameters you can use to customize the reading process include, for instance, \[delimiter\],
  * \[header\], \[colTypes\], \[readLines\], and \[parserOptions\].
@@ -20,15 +20,15 @@ import java.net.URL
  * The integration is built upon {@include [DocumentationUrls.Deephaven]}.
  *
  * ##### Similar Functions
- * With the overloads of $[FunctionLinkArg]`()`, you can read any $[FileTypeArg] by [File][File],
+ * With the overloads of $[FUNCTION_LINK]`()`, you can read any $[FILE_TYPE] by [File][File],
  * [Path][java.nio.file.Path], [URL][URL], or [InputStream][InputStream].
  * Reading by file path or URL can also be done by passing a [String].
  *
- * For example, $[FunctionLinkArg]`("input.$[CommonReadDelimDocs.FileExtensionArg]")` or with some options:
+ * For example, $[FUNCTION_LINK]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]")` or with some options:
  *
- * $[FunctionLinkArg]`(`
+ * $[FUNCTION_LINK]`(`
  *
- * {@include [Indent]}`file = `[File][File]`("input.$[CommonReadDelimDocs.FileExtensionArg]"),`
+ * {@include [Indent]}`file = `[File][File]`("input.$[CommonReadDelimDocs.FILE_EXTENSION]"),`
  *
  * {@include [Indent]}`parserOptions = `[ParserOptions][org.jetbrains.kotlinx.dataframe.api.ParserOptions]`(locale = `[Locale][java.util.Locale]`.`[US][java.util.Locale.US]`),`
  *
@@ -40,47 +40,48 @@ import java.net.URL
  *
  * ZIP (.zip) or GZIP (.gz) files are supported by default. \[compression\] is automatically detected.
  *
- * You can also read "raw" $[FileTypeArg] data from a [String] like this:
+ * You can also read "raw" $[FILE_TYPE] data from a [String] like this:
  *
- * $[StrFunctionLinkArg]`("a,b,c", delimiter = ",")`
+ * $[STR_FUNCTION_LINK]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old $[OldFunctionLinkArg]`()` functions.
+ * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old $[OLD_FUNCTION_LINK]`()` functions.
  * They'll hopefully be faster and better._
  *
  * @comment Some helper arguments for the function links
- * @set [FunctionLinkArg] \[DataFrame.${[FunctionNameArg]}\]\[${[FunctionNameArg]}\]
- * @set [StrFunctionLinkArg] \[DataFrame.${[FunctionNameArg]}Str\]\[${[FunctionNameArg]}Str\]
- * @set [OldFunctionLinkArg] \[DataFrame.${[OldFunctionNameArg]}\]\[org.jetbrains.kotlinx.dataframe.io.${[OldFunctionNameArg]}\]
+ * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]
+ * @set [STR_FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}Str\]\[${[FUNCTION_NAME]}Str\]
+ * @set [OLD_FUNCTION_LINK] \[DataFrame.${[OLD_FUNCTION_NAME]}\]\[org.jetbrains.kotlinx.dataframe.io.${[OLD_FUNCTION_NAME]}\]
  */
+@Suppress("ClassName")
 internal interface CommonReadDelimDocs {
 
     /**
      * @include [CommonReadDelimDocs]
-     * @set [FileTypeTitleArg] CSV
-     * @set [FileTypeArg] CSV
-     * @set [FileExtensionArg] csv
-     * @set [FunctionNameArg] readCsv
-     * @set [OldFunctionNameArg] readCSV
+     * @set [FILE_TYPE_TITLE] CSV
+     * @set [FILE_TYPE] CSV
+     * @set [FILE_EXTENSION] csv
+     * @set [FUNCTION_NAME] readCsv
+     * @set [OLD_FUNCTION_NAME] readCSV
      */
     interface CsvDocs
 
     /**
      * @include [CommonReadDelimDocs]
-     * @set [FileTypeTitleArg] TSV
-     * @set [FileTypeArg] TSV
-     * @set [FileExtensionArg] tsv
-     * @set [FunctionNameArg] readTsv
-     * @set [OldFunctionNameArg] readTSV
+     * @set [FILE_TYPE_TITLE] TSV
+     * @set [FILE_TYPE] TSV
+     * @set [FILE_EXTENSION] tsv
+     * @set [FUNCTION_NAME] readTsv
+     * @set [OLD_FUNCTION_NAME] readTSV
      */
     interface TsvDocs
 
     /**
      * @include [CommonReadDelimDocs]
-     * @set [FileTypeTitleArg] Delimiter-Separated Text
-     * @set [FileTypeArg] delimiter-separated text
-     * @set [FileExtensionArg] txt
-     * @set [FunctionNameArg] readDelim
-     * @set [OldFunctionNameArg] readDelim{@comment cannot differentiate between old and new}
+     * @set [FILE_TYPE_TITLE] Delimiter-Separated Text
+     * @set [FILE_TYPE] delimiter-separated text
+     * @set [FILE_EXTENSION] txt
+     * @set [FUNCTION_NAME] readDelim
+     * @set [OLD_FUNCTION_NAME] readDelim{@comment cannot differentiate between old and new}
      */
     interface DelimDocs
 
@@ -103,32 +104,32 @@ internal interface CommonReadDelimDocs {
     interface CommonReadParams
 
     // something like "File" or "File/URL"
-    interface DataTitleArg
+    interface DATA_TITLE
 
     // something like "file" or "file or url"
-    interface DataArg
+    interface DATA
 
     // Like "CSV" or "TSV", capitalized
-    interface FileTypeTitleArg
+    interface FILE_TYPE_TITLE
 
     // Like "CSV" or "TSV"
-    interface FileTypeArg
+    interface FILE_TYPE
 
     // like "csv" or "txt"
-    interface FileExtensionArg
+    interface FILE_EXTENSION
 
     // Function name, like "readCsv"
-    interface FunctionNameArg
+    interface FUNCTION_NAME
 
     // Old function name, like "readCSV"
-    interface OldFunctionNameArg
+    interface OLD_FUNCTION_NAME
 
     // A link to the main function, set by ReadDelim itself
-    interface FunctionLinkArg
+    interface FUNCTION_LINK
 
     // A link to the str function, set by ReadDelim itself
-    interface StrFunctionLinkArg
+    interface STR_FUNCTION_LINK
 
     // A link to the old function, set by ReadDelim itself
-    interface OldFunctionLinkArg
+    interface OLD_FUNCTION_LINK
 }

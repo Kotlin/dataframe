@@ -9,9 +9,9 @@ import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import java.io.File
 
 /**
- * ### $[WriteOrConvertArg] [DataFrame] to $[FileTypeTitleArg] $[DataTitleArg]
+ * ### $[WRITE_OR_CONVERT] [DataFrame] to $[FILE_TYPE_TITLE] $[DATA_TITLE]
  *
- * ${[WriteOrConvertArg]}s \[this\]\[this\] [DataFrame][DataFrame] to a $[FileTypeArg] $[DataArg].
+ * ${[WRITE_OR_CONVERT]}s \[this\]\[this\] [DataFrame][DataFrame] to a $[FILE_TYPE] $[DATA].
  *
  * Parameters you can use to customize the process include, for instance, \[delimiter\],
  * \[includeHeader\], \[quoteMode\], and \[headerComments\].
@@ -20,54 +20,55 @@ import java.io.File
  * The integration is built upon {@include [DocumentationUrls.ApacheCsv]}.
  *
  * ##### Similar Functions
- * With overloads of $[FunctionLinkArg]`()`, you can write $[FileTypeArg] to [File][File], [Path][java.nio.file.Path],
+ * With overloads of $[FUNCTION_LINK]`()`, you can write $[FILE_TYPE] to [File][File], [Path][java.nio.file.Path],
  * [Appendable], or [String].
  *
- * For example, $[FunctionLinkArg]`("output.$[CommonWriteDelimDocs.FileExtensionArg]")`
+ * For example, $[FUNCTION_LINK]`("output.$[CommonWriteDelimDocs.FILE_EXTENSION]")`
  *
- * or $[FunctionLinkArg]`(`[File][File]`("output.$[CommonWriteDelimDocs.FileExtensionArg]"), quoteMode = `[QuoteMode.ALL][ALL]`)`
+ * or $[FUNCTION_LINK]`(`[File][File]`("output.$[CommonWriteDelimDocs.FILE_EXTENSION]"), quoteMode = `[QuoteMode.ALL][ALL]`)`
  *
  * Converting to a [String] can be done like this:
  *
- * $[ToStrFunctionLinkArg]`(delimiter = ",")`
+ * $[TO_STR_FUNCTION_LINK]`(delimiter = ",")`
  *
  * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
  * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
  * They'll hopefully be better._
  *
  * @comment Some helper arguments for the function links
- * @set [FunctionLinkArg] \[DataFrame.${[FunctionNameArg]}\]\[${[FunctionNameArg]}\]
- * @set [ToStrFunctionLinkArg] \[DataFrame.${[ToStrFunctionNameArg]}\]\[${[ToStrFunctionNameArg]}\]
+ * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]
+ * @set [TO_STR_FUNCTION_LINK] \[DataFrame.${[TO_STR_FUNCTION_NAME]}\]\[${[TO_STR_FUNCTION_NAME]}\]
  */
+@Suppress("ClassName")
 internal interface CommonWriteDelimDocs {
 
     /**
      * @include [CommonWriteDelimDocs]
-     * @set [FileTypeTitleArg] CSV
-     * @set [FileTypeArg] CSV
-     * @set [FileExtensionArg] csv
-     * @set [FunctionNameArg] writeCsv
-     * @set [ToStrFunctionNameArg] toCsvStr
+     * @set [FILE_TYPE_TITLE] CSV
+     * @set [FILE_TYPE] CSV
+     * @set [FILE_EXTENSION] csv
+     * @set [FUNCTION_NAME] writeCsv
+     * @set [TO_STR_FUNCTION_NAME] toCsvStr
      */
     interface CsvDocs
 
     /**
      * @include [CommonWriteDelimDocs]
-     * @set [FileTypeTitleArg] TSV
-     * @set [FileTypeArg] TSV
-     * @set [FileExtensionArg] tsv
-     * @set [FunctionNameArg] writeTsv
-     * @set [ToStrFunctionNameArg] toTsvStr
+     * @set [FILE_TYPE_TITLE] TSV
+     * @set [FILE_TYPE] TSV
+     * @set [FILE_EXTENSION] tsv
+     * @set [FUNCTION_NAME] writeTsv
+     * @set [TO_STR_FUNCTION_NAME] toTsvStr
      */
     interface TsvDocs
 
     /**
      * @include [CommonWriteDelimDocs]
-     * @set [FileTypeTitleArg] Delimiter-Separated Text
-     * @set [FileTypeArg] delimiter-separated text
-     * @set [FileExtensionArg] txt
-     * @set [FunctionNameArg] writeDelim
-     * @set [ToStrFunctionNameArg] toDelimStr
+     * @set [FILE_TYPE_TITLE] Delimiter-Separated Text
+     * @set [FILE_TYPE] delimiter-separated text
+     * @set [FILE_EXTENSION] txt
+     * @set [FUNCTION_NAME] writeDelim
+     * @set [TO_STR_FUNCTION_NAME] toDelimStr
      */
     interface DelimDocs
 
@@ -83,32 +84,32 @@ internal interface CommonWriteDelimDocs {
     interface CommonWriteParams
 
     // something like "Write" or "Convert"
-    interface WriteOrConvertArg
+    interface WRITE_OR_CONVERT
 
     // Like "CSV" or "TSV", capitalized
-    interface FileTypeTitleArg
+    interface FILE_TYPE_TITLE
 
     // something like "File" or "String"
-    interface DataTitleArg
+    interface DATA_TITLE
 
     // something like "file" or "text"
-    interface DataArg
+    interface DATA
 
     // Like "CSV" or "TSV"
-    interface FileTypeArg
+    interface FILE_TYPE
 
     // like "csv" or "txt"
-    interface FileExtensionArg
+    interface FILE_EXTENSION
 
     // Function name, like "readCsv"
-    interface FunctionNameArg
+    interface FUNCTION_NAME
 
     // Function name, like "toCsvStr"
-    interface ToStrFunctionNameArg
+    interface TO_STR_FUNCTION_NAME
 
     // A link to the main function, set by WriteDelim itself
-    interface FunctionLinkArg
+    interface FUNCTION_LINK
 
     // A link to the str function, set by WriteDelim itself
-    interface ToStrFunctionLinkArg
+    interface TO_STR_FUNCTION_LINK
 }
