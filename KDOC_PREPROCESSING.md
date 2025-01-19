@@ -415,6 +415,9 @@ interface CommonDoc {
 
     // The name to be greeted from
     interface NameArg
+    
+    // alternative recommended notation
+    interface NAME
 }
 ```
 
@@ -429,13 +432,14 @@ This interface provides a template for all overloads of `allBefore`,
 
 Nested in the documentation interface, there are several other interfaces that define the expected arguments
 of the template.
-These interfaces are named `TitleArg`, `FunctionArg`, etc. and commonly have no KDocs itself,
+These interfaces are named `TitleArg`/`TITLE`, `FunctionArg`/`FUNCTION`, etc. and commonly have no KDocs itself,
 just a simple comment explaining what the argument is for.
 
 Other documentation interfaces like `AllAfterDocs` or functions then include `CommonAllSubsetDocs` and set
 all the arguments accordingly.
 
-It's recommended to name argument interfaces `-Arg`, and have them nested in the documentation interface, though,
+It's recommended to name argument interfaces `-Arg`, or to write their name in `ALL_CAPS` (if the linter is shushed) 
+and have them nested in the documentation interface, though,
 this has not always been done in the past.
 
 ### URLs
@@ -481,7 +485,7 @@ some [helpful templates](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/do
 
 - For each overload there's a basic template with an optional example:
 
-  Adding `@include [SelectingColumns.KProperties.WithExample] {@set [SelectingColumns.OperationArg] [select][select]}`
+  Adding `@include [SelectingColumns.KProperties.WithExample] {@set [SelectingColumns.OPERATION] [select][select]}`
   to an overload, for instance, generates:
 
   ![kprops1.png](docs/imgs/kprops1.png)
@@ -494,7 +498,7 @@ some [helpful templates](core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/do
 
   This is a bit large, so it's best if we just link to it. Also, you'll see the examples have
   the generic `operation` name. So let's create our own interface `SelectSelectingOptions` we can let users link to and
-  `{@set [SelectingColumns.OperationArg] [select][select]}`.
+  `{@set [SelectingColumns.OPERATION] [select][select]}`.
   Actually, we can even put this setting the operation arg in a central place, since we reuse it a lot.
 
   All in all, we get:
@@ -611,7 +615,7 @@ The definition part is filled in like:
 
 ```kt 
 /**
- * {@set [DslGrammarTemplate.DefinitionsArg]
+ * {@set [DslGrammarTemplate.DEFINITIONS]
  *  {@include [DslGrammarTemplate.ColumnSetDef]}
  *  {@include [LineBreak]}
  *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -630,12 +634,12 @@ All other parts are filled in like:
 
 ```kt
 /**
- * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+ * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
  *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
  *  ...
  * }
  *
- * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+ * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
  *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
  *  ...
  * }
