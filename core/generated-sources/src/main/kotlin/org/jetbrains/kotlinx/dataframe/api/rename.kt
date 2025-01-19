@@ -201,21 +201,22 @@ public interface RenameColumnsSelectionDsl {
      * @param [] A [] used to specify the new name of the column.
      * @return A [ColumnReference] to the renamed column.
      */
+    @Suppress("ClassName")
     private interface CommonRenameDocs {
 
-        interface ReceiverArg
+        interface RECEIVER
 
-        interface ReceiverTypeArg
+        interface RECEIVER_TYPE
 
         /** "named" or "into" */
-        interface FunctionNameArg
+        interface FUNCTION_NAME
 
         /** "newName" or "nameOf" */
-        interface ParamNameArg
+        interface PARAM_NAME
 
-        interface ParamArg
+        interface PARAM
 
-        interface ParamTypeArg
+        interface PARAM_TYPE
 
         /**
          */

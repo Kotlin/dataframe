@@ -138,7 +138,7 @@ public interface ValueColsColumnsSelectionDsl {
     private interface CommonValueColsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**

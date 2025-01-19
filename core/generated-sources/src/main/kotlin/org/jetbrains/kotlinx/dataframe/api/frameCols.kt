@@ -139,7 +139,7 @@ public interface FrameColsColumnsSelectionDsl {
     private interface CommonFrameColsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
