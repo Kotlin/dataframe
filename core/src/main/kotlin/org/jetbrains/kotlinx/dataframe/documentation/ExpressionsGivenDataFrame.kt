@@ -4,7 +4,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpressionLink
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpression
 
 /**
@@ -14,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpress
  */
 internal interface ExpressionsGivenDataFrame {
 
-    interface OperationArg
+    interface OPERATION
 
     /** Provide a new value for every selected data frame using a [dataframe expression][DfDataFrameExpression]. */
     interface DataFrameExpression {
@@ -24,7 +23,7 @@ internal interface ExpressionsGivenDataFrame {
          *
          * For example:
          *
-         * {@get [OperationArg]}` { `[select][DataFrame.select]` { lastName } }`
+         * {@get [OPERATION]}` { `[select][DataFrame.select]` { lastName } }`
          */
         interface WithExample
     }

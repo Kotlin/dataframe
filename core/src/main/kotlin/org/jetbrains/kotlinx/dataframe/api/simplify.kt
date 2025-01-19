@@ -2,8 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.SimplifyColumnsSelectionDsl.Grammar.ColumnSetName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
@@ -25,16 +23,16 @@ public interface SimplifyColumnsSelectionDsl {
      * ## Simplify [ColumnSet] Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslPart]}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 

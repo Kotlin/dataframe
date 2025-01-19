@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.mean
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpressionLink
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpression
 
 /**
@@ -16,11 +15,11 @@ internal interface ExpressionsGivenRowAndColumn {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OperationArg
+    interface OPERATION
 
     // Using <code>` notation to not create double `` when including
 
-    /** {@set [OperationArg] <code>`operation`</code>} */
+    /** {@set [OPERATION] <code>`operation`</code>} */
     interface SetDefaultOperationArg
 
     /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
@@ -31,7 +30,7 @@ internal interface ExpressionsGivenRowAndColumn {
          *
          * For example:
          *
-         * `df.`{@get [OperationArg]}` { row, col ->`
+         * `df.`{@get [OPERATION]}` { row, col ->`
          *
          * {@include [Indent]}`row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
          *
