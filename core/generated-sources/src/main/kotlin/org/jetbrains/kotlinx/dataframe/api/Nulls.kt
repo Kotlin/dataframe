@@ -10,9 +10,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
