@@ -8,8 +8,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -108,7 +106,7 @@ internal interface Select {
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -153,7 +151,7 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -176,7 +174,7 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -196,7 +194,7 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -326,7 +324,7 @@ public interface SelectColumnsSelectionDsl {
      */
     private interface CommonSelectDocs {
 
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**

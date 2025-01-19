@@ -14,10 +14,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties
 import kotlin.reflect.KProperty
 
 /** [Selecting Columns][SelectingColumns] */
@@ -97,7 +93,7 @@ internal interface SelectingColumns {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface OperationArg
+    interface OPERATION
 
     // Using <code>` notation to not create double `` when including
 

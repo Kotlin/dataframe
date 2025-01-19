@@ -161,12 +161,11 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      */
     private interface CommonFrameColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface ExampleArg
+        interface EXAMPLE
 
         /**
          * `df.`[select][DataFrame.select]` { `[frameCol][frameCol]`() }`
@@ -181,13 +180,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
         interface DoubleExample
 
         // Receiver argument for the example(s)
-        interface ReceiverArg
+        interface RECEIVER
 
         // Argument for the example(s)
-        interface Arg
+        interface ARG
 
         // Optional note
-        interface Note
+        interface NOTE
 
         /** @param [C] The type of the frame column. */
         interface FrameColumnTypeParam
@@ -241,7 +240,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
@@ -291,7 +289,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
@@ -344,7 +341,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
@@ -408,7 +404,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
@@ -460,7 +455,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
@@ -515,7 +509,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
@@ -566,7 +559,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
@@ -627,7 +619,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     private interface FrameColNameDocs
@@ -678,7 +669,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -735,7 +725,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      * @param [C] The type of the frame column.
      */
@@ -787,7 +776,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -842,7 +830,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -904,7 +891,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -957,7 +943,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1014,7 +999,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1067,7 +1051,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1124,7 +1107,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1177,7 +1159,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1234,7 +1215,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1287,7 +1267,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1348,7 +1327,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     private interface FrameColPathDocs
@@ -1399,7 +1377,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1456,7 +1433,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      * @param [C] The type of the frame column.
      */
@@ -1508,7 +1484,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1563,7 +1538,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1625,7 +1599,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1678,7 +1651,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1735,7 +1707,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1788,7 +1759,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1845,7 +1815,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1898,7 +1867,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1955,7 +1923,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2008,7 +1975,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -2067,7 +2033,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
@@ -2117,7 +2082,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [property] The [KProperty] reference to the value column.
@@ -2174,7 +2138,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
@@ -2225,7 +2188,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [property] The [KProperty] reference to the value column.
@@ -2282,7 +2244,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
@@ -2333,7 +2294,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [property] The [KProperty] reference to the value column.
@@ -2390,7 +2350,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
@@ -2441,7 +2400,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [property] The [KProperty] reference to the value column.
@@ -2498,7 +2456,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
@@ -2549,7 +2506,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [property] The [KProperty] reference to the value column.
@@ -2606,7 +2562,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
@@ -2657,7 +2612,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [property] The [KProperty] reference to the value column.
@@ -2712,7 +2666,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [property] The [KProperty] reference to the value column.
@@ -2773,7 +2726,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
@@ -2823,7 +2775,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -2882,7 +2833,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
@@ -2937,7 +2887,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -2995,7 +2944,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
@@ -3051,7 +2999,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
@@ -3105,7 +3052,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -3168,7 +3114,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
@@ -3224,7 +3169,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
@@ -3277,7 +3221,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -3335,7 +3278,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
@@ -3388,7 +3330,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -3444,7 +3385,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.

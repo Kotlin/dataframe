@@ -154,7 +154,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     private interface ColsInGroupsDocs {
 
         /** Example argument to use */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
