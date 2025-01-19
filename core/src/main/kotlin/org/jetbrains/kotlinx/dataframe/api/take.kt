@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -73,8 +74,8 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [TakeAndDropColumnsSelectionDslGrammar]
-     * @set [TakeAndDropColumnsSelectionDslGrammar.TitleArg] Take
-     * @set [TakeAndDropColumnsSelectionDslGrammar.OperationArg] take
+     * @set [TakeAndDropColumnsSelectionDslGrammar.TITLE] Take
+     * @set [TakeAndDropColumnsSelectionDslGrammar.OPERATION] take
      */
     public interface Grammar {
 
@@ -101,16 +102,16 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
-     * @set [CommonTakeAndDropDocs.TitleArg] Take
-     * @set [CommonTakeAndDropDocs.OperationArg] take
-     * @set [CommonTakeAndDropDocs.NounArg] take
-     * @set [CommonTakeAndDropDocs.FirstOrLastArg] first
+     * @set [CommonTakeAndDropDocs.TITLE] Take
+     * @set [CommonTakeAndDropDocs.OPERATION] take
+     * @set [CommonTakeAndDropDocs.NOUN] take
+     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] first
      */
     private interface CommonTakeFirstDocs
 
     /**
      * @include [CommonTakeFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[take][ColumnSet.take]`(2) }`
      *
@@ -120,7 +121,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[take][ColumnsSelectionDsl.take]`(5) }`
      */
@@ -128,7 +129,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeCols][SingleColumn.takeCols]`(1) }`
      */
@@ -137,7 +138,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeCols][String.takeCols]`(1) }`
      */
@@ -145,7 +146,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeCols][SingleColumn.takeCols]`(1) }`
      *
@@ -155,7 +156,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeCols][ColumnPath.takeCols]`(1) }`
      */
@@ -167,16 +168,16 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
-     * @set [CommonTakeAndDropDocs.TitleArg] Take Last
-     * @set [CommonTakeAndDropDocs.OperationArg] takeLast
-     * @set [CommonTakeAndDropDocs.NounArg] take
-     * @set [CommonTakeAndDropDocs.FirstOrLastArg] last
+     * @set [CommonTakeAndDropDocs.TITLE] Take Last
+     * @set [CommonTakeAndDropDocs.OPERATION] takeLast
+     * @set [CommonTakeAndDropDocs.NOUN] take
+     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] last
      */
     private interface CommonTakeLastDocs
 
     /**
      * @include [CommonTakeLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLast][ColumnSet.takeLast]`(2) }`
      *
@@ -186,7 +187,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[takeLast][ColumnsSelectionDsl.takeLast]`(5) }`
      */
@@ -194,7 +195,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLast][SingleColumn.takeLastCols]`(1) }`
      */
@@ -203,7 +204,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeLastCols][String.takeLastCols]`(1) }`
      */
@@ -211,7 +212,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastCols][SingleColumn.takeLastCols]`(1) }`
      *
@@ -221,7 +222,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeLastCols][ColumnPath.takeLastCols]`(1) }`
      */
@@ -233,16 +234,16 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.TitleArg] Take
-     * @set [CommonTakeAndDropWhileDocs.OperationArg] take
-     * @set [CommonTakeAndDropWhileDocs.NounArg] take
-     * @set [CommonTakeAndDropWhileDocs.FirstOrLastArg] first
+     * @set [CommonTakeAndDropWhileDocs.TITLE] Take
+     * @set [CommonTakeAndDropWhileDocs.OPERATION] take
+     * @set [CommonTakeAndDropWhileDocs.NOUN] take
+     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] first
      */
     private interface CommonTakeFirstWhileDocs
 
     /**
      * @include [CommonTakeFirstWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeWhile][ColumnSet.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -253,7 +254,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[takeWhile][ColumnsSelectionDsl.takeWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -262,7 +263,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeWhile][SingleColumn.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -271,7 +272,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeColsWhile][String.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -280,7 +281,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeColsWhile][SingleColumn.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -291,7 +292,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeFirstWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeColsWhile][ColumnPath.takeColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -304,16 +305,16 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.TitleArg] Take Last
-     * @set [CommonTakeAndDropWhileDocs.OperationArg] takeLast
-     * @set [CommonTakeAndDropWhileDocs.NounArg] take
-     * @set [CommonTakeAndDropWhileDocs.FirstOrLastArg] last
+     * @set [CommonTakeAndDropWhileDocs.TITLE] Take Last
+     * @set [CommonTakeAndDropWhileDocs.OPERATION] takeLast
+     * @set [CommonTakeAndDropWhileDocs.NOUN] take
+     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] last
      */
     private interface CommonTakeLastWhileDocs
 
     /**
      * @include [CommonTakeLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[takeLastWhile][ColumnSet.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -324,7 +325,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[takeLastWhile][ColumnsSelectionDsl.takeLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -333,7 +334,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[takeLastColsWhile][SingleColumn.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -342,7 +343,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[takeLastColsWhile][String.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -351,7 +352,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[takeLastColsWhile][SingleColumn.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
@@ -362,7 +363,7 @@ public interface TakeColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[takeLastColsWhile][ColumnPath.takeLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */

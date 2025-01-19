@@ -7,13 +7,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamNameArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ReceiverTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixIntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixNamedName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.IntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.NamedName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -133,11 +126,11 @@ public interface RenameColumnsSelectionDsl {
      * ## Rename: `named` / `into` Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [DslGrammarTemplate.ColumnRef]}` `{@include [InfixNamedName]}`/`{@include [InfixIntoName]}` `{@include [DslGrammarTemplate.ColumnRef]}
      *
      *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [NamedName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
@@ -145,8 +138,8 @@ public interface RenameColumnsSelectionDsl {
      *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [IntoName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
-     * {@set [DslGrammarTemplate.ColumnSetPart]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
      */
     public interface Grammar {
 
@@ -182,71 +175,72 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]`  { {@get [CommonRenameDocs.ReceiverArg]}  `[{@get [CommonRenameDocs.FunctionNameArg]}][{@get [CommonRenameDocs.ReceiverTypeArg]}.{@get [CommonRenameDocs.FunctionNameArg]}]` {@get [CommonRenameDocs.ParamArg]} }`
+     * `df.`[select][DataFrame.select]`  { {@get [CommonRenameDocs.RECEIVER]}  `[{@get [CommonRenameDocs.FUNCTION_NAME]}][{@get [CommonRenameDocs.RECEIVER_TYPE]}.{@get [CommonRenameDocs.FUNCTION_NAME]}]` {@get [CommonRenameDocs.PARAM]} }`
      *
-     * @receiver The [{@get [ReceiverTypeArg]}] referencing the column to rename.
-     * @param [{@get [ParamNameArg]}\] A [{@get [ParamTypeArg]}\] used to specify the new name of the column.
+     * @receiver The [{@get [RECEIVER_TYPE]}] referencing the column to rename.
+     * @param [{@get [PARAM_NAME]}\] A [{@get [PARAM_TYPE]}\] used to specify the new name of the column.
      * @return A [ColumnReference] to the renamed column.
      */
+    @Suppress("ClassName")
     private interface CommonRenameDocs {
 
-        interface ReceiverArg
+        interface RECEIVER
 
-        interface ReceiverTypeArg
+        interface RECEIVER_TYPE
 
         /** "named" or "into" */
-        interface FunctionNameArg
+        interface FUNCTION_NAME
 
         /** "newName" or "nameOf" */
-        interface ParamNameArg
+        interface PARAM_NAME
 
-        interface ParamArg
+        interface PARAM
 
-        interface ParamTypeArg
+        interface PARAM_TYPE
 
         /**
-         * @set [ReceiverArg] columnA
-         * @set [ReceiverTypeArg] ColumnReference
+         * @set [RECEIVER] columnA
+         * @set [RECEIVER_TYPE] ColumnReference
          */
         interface ColumnReferenceReceiver
 
         /**
-         * @set [ReceiverArg] "columnA"
-         * @set [ReceiverTypeArg] String
+         * @set [RECEIVER] "columnA"
+         * @set [RECEIVER_TYPE] String
          */
         interface StringReceiver
 
         /**
-         * @set [ReceiverArg] Type::columnA
-         * @set [ReceiverTypeArg] KProperty
+         * @set [RECEIVER] Type::columnA
+         * @set [RECEIVER_TYPE] KProperty
          */
         interface KPropertyReceiver
 
         /**
-         * @set [ParamArg] columnB
-         * @set [ParamNameArg] nameOf
-         * @set [ParamTypeArg] ColumnReference
+         * @set [PARAM] columnB
+         * @set [PARAM_NAME] nameOf
+         * @set [PARAM_TYPE] ColumnReference
          */
         interface ColumnReferenceParam
 
         /**
-         * @set [ParamArg] "columnB"
-         * @set [ParamNameArg] newName
-         * @set [ParamTypeArg] String
+         * @set [PARAM] "columnB"
+         * @set [PARAM_NAME] newName
+         * @set [PARAM_TYPE] String
          */
         interface StringParam
 
         /**
-         * @set [ParamArg] Type::columnB
-         * @set [ParamNameArg] nameOf
-         * @set [ParamTypeArg] KProperty
+         * @set [PARAM] Type::columnB
+         * @set [PARAM_NAME] nameOf
+         * @set [PARAM_TYPE] KProperty
          */
         interface KPropertyParam
 
-        /** @set [CommonRenameDocs.FunctionNameArg] named */
+        /** @set [CommonRenameDocs.FUNCTION_NAME] named */
         interface NamedFunctionName
 
-        /** @set [CommonRenameDocs.FunctionNameArg] into */
+        /** @set [CommonRenameDocs.FUNCTION_NAME] into */
         interface IntoFunctionName
     }
 

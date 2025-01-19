@@ -4,10 +4,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.CommonColsDocs.Vararg.AccessorType
-import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -37,7 +33,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * ## Cols Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -54,7 +50,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *  {@include [LineBreak]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
      *  `| `{@include [PlainDslName]}`  [  `**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**`  \}  `**`]`
@@ -64,7 +60,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *  `| `**`this`**`/`**`it `**[**`[`**][cols]{@include [DslGrammarTemplate.ColumnRef]}**`,`**`  ..  `[**`]`**][cols]
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
      *  {@include [Indent]}`| `{@include [ColumnSetName]}`  [  `**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**`  \}  `**`]`
@@ -74,7 +70,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *  {@include [Indent]}`| `[**`[`**][cols]{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}[**`]`**][cols]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRef]}**`,`**`  .. |  `{@include [DslGrammarTemplate.IndexRangeRef]}**`)`**
      *
      *  {@include [Indent]}`| `{@include [ColumnGroupName]}`  [  `**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**`  \}  `**`]`
@@ -178,7 +174,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonColsIndicesDocs.ExampleArg]}
+     * {@get [CommonColsIndicesDocs.EXAMPLE]}
      *
      * @throws [IndexOutOfBoundsException] If any index is out of bounds.
      * @param [firstIndex\] The index of the first column to retrieve.
@@ -188,7 +184,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsIndicesDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
@@ -209,7 +205,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonColsRangeDocs.ExampleArg]}
+     * {@get [CommonColsRangeDocs.EXAMPLE]}
      *
      * @throws [IndexOutOfBoundsException\] if any of the indices in the [range\] are out of bounds.
      * @throws [IllegalArgumentException\] if the [range\] is empty.
@@ -219,7 +215,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsRangeDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     // region predicate
@@ -856,7 +852,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @set [CommonColsIndicesDocs.ExampleArg]
+     * @set [CommonColsIndicesDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`cols`][ColumnSet.cols]`(1, 3) }`
      *
@@ -875,7 +871,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @set [CommonColsIndicesDocs.ExampleArg]
+     * @set [CommonColsIndicesDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(1, 3) }`
      *
@@ -895,7 +891,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @set [CommonColsIndicesDocs.ExampleArg]
+     * @set [CommonColsIndicesDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`(1, 3) }`
      *
@@ -915,7 +911,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @set [CommonColsIndicesDocs.ExampleArg]
+     * @set [CommonColsIndicesDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { "myColumnGroup".`[`cols`][String.cols]`(5, 3, 1) }`
      *
@@ -935,7 +931,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @set [CommonColsIndicesDocs.ExampleArg]
+     * @set [CommonColsIndicesDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`(5, 4) }`
      *
@@ -955,7 +951,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsIndicesDocs]
-     * @set [CommonColsIndicesDocs.ExampleArg]
+     * @set [CommonColsIndicesDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`(0, 1) }`
      *
@@ -979,7 +975,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @set [CommonColsRangeDocs.ExampleArg]
+     * @set [CommonColsRangeDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>().`[`cols`][ColumnSet.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
@@ -996,7 +992,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @set [CommonColsRangeDocs.ExampleArg]
+     * @set [CommonColsRangeDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
@@ -1015,7 +1011,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @set [CommonColsRangeDocs.ExampleArg]
+     * @set [CommonColsRangeDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { myColumnGroup.`[`cols`][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
@@ -1034,7 +1030,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @set [CommonColsRangeDocs.ExampleArg]
+     * @set [CommonColsRangeDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { "myColGroup".`[`cols`][String.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
@@ -1052,7 +1048,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @set [CommonColsRangeDocs.ExampleArg]
+     * @set [CommonColsRangeDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { Type::myColumnGroup.`[`cols`][SingleColumn.cols]`(1`[`..`][Int.rangeTo]`3) }`
      *
@@ -1071,7 +1067,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColsRangeDocs]
-     * @set [CommonColsRangeDocs.ExampleArg]
+     * @set [CommonColsRangeDocs.EXAMPLE]
      *
      * `df.`[`select`][DataFrame.select]` { "pathTo"["myColGroup"].`[`cols`][ColumnPath.cols]`(0`[`..`][Int.rangeTo]`1) }`
      *

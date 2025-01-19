@@ -24,8 +24,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
 
 /**
  * @include [CommonReadDelimDocs.DelimDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] String
- * @set [CommonReadDelimDocs.DataArg] [String]
+ * @set [CommonReadDelimDocs.DATA_TITLE] String
+ * @set [CommonReadDelimDocs.DATA] [String]
  * @include [TEXT_READ]
  * @include [DELIM_DELIMITER]
  * @include [CommonReadDelimDocs.CommonReadParams]

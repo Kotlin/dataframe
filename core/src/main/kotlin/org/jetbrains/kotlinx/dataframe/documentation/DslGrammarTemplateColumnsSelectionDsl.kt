@@ -23,71 +23,72 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
     /**
      * {@include [LineBreak]}
      * {@include [DslGrammarLink]}
-     * {@get [DslGrammarTemplate.DefinitionsPart]
+     * {@get [DslGrammarTemplate.DEFINITIONS_PART]
      *  {@include [LineBreak]}
      *  ### Definitions:
-     *  {@get [DslGrammarTemplate.DefinitionsArg]}
+     *  {@get [DslGrammarTemplate.DEFINITIONS]}
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
-     * {@get [DslGrammarTemplate.PlainDslPart]
+     * {@get [DslGrammarTemplate.PLAIN_DSL_PART]
      *  {@include [LineBreak]}
      *  ### What can be called directly in the {@include [ColumnsSelectionDslLink]}:
      *
      *  {@include [LineBreak]}
-     *  {@get [DslGrammarTemplate.PlainDslFunctionsArg]}
+     *  {@get [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]}
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
-     * {@get [DslGrammarTemplate.ColumnSetPart]
+     * {@get [DslGrammarTemplate.COLUMN_SET_PART]
      *  {@include [LineBreak]}
      *  ### What can be called on a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet]:
      *
      *  {@include [LineBreak]}
      *  {@include [ColumnSetRef]}
      *
-     *  {@get [DslGrammarTemplate.ColumnSetFunctionsArg]}
+     *  {@get [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]}
      * }
      * {@comment -------------------------------------------------------------------------------------------- }
-     * {@get [DslGrammarTemplate.ColumnGroupPart]
+     * {@get [DslGrammarTemplate.COLUMN_GROUP_PART]
      *  {@include [LineBreak]}
      *  ### What can be called on a [Column Group (reference)][DslGrammarTemplate.ColumnGroupDef]:
      *
      *  {@include [LineBreak]}
      *  {@include [ColumnGroupRef]}
      *
-     *  {@get [DslGrammarTemplate.ColumnGroupFunctionsArg]}
+     *  {@get [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]}
      * }
      */
+    @Suppress("ClassName")
     public interface DslGrammarTemplate {
 
         // region parts
 
         // Can be set to nothing to disable the definitions part
-        public interface DefinitionsPart
+        public interface DEFINITIONS_PART
 
         // Can be set to nothing to disable the plain dsl part
-        public interface PlainDslPart
+        public interface PLAIN_DSL_PART
 
         // Can be set to nothing to disable the column set part
-        public interface ColumnSetPart
+        public interface COLUMN_SET_PART
 
         // Can be set to nothing to disable the column group part
-        public interface ColumnGroupPart
+        public interface COLUMN_GROUP_PART
 
         // endregion
 
         // region Template arguments
 
         // What to put in definitions part aside from the default part.
-        public interface DefinitionsArg
+        public interface DEFINITIONS
 
         // What to put in the plain dsl part. Does not need indents.
-        public interface PlainDslFunctionsArg
+        public interface PLAIN_DSL_FUNCTIONS
 
         // What to put in the column set part. Needs indents.
-        public interface ColumnSetFunctionsArg
+        public interface COLUMN_SET_FUNCTIONS
 
         // What to put in the column group part. Needs indents.
-        public interface ColumnGroupFunctionsArg
+        public interface COLUMN_GROUP_FUNCTIONS
 
         // endregion
 
@@ -256,7 +257,7 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *  Don't forget to add the definitions for ColumnSet and ColumnGroup if you're going to use them.
      *  Also, add LineBreaks in between them.
      * }
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -268,16 +269,16 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
      *  the parts belonging to each of these sections. Don't forget to add indents to the ColumnSet and ColumnGroup
      *  parts. Also note we're using -Ref instead of -Def here to refer to definitions.
      * }
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**`[`{@include [DslGrammarTemplate.NumberRef]}`]`**`)`**
      * }
      *
      * {@comment Our example function has no Plain DSL part, so we set it to nothing. No need to set PlainDslFunctionsArg.}
-     * {@set [DslGrammarTemplate.PlainDslPart]}
+     * {@set [DslGrammarTemplate.PLAIN_DSL_PART]}
      */
     public interface UsageTemplateExample {
 
