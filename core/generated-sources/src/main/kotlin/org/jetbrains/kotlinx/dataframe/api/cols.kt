@@ -281,7 +281,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsIndicesDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
@@ -312,7 +312,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsRangeDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     // region predicate

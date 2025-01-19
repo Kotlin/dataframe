@@ -28,6 +28,7 @@ import kotlin.reflect.KProperty
  *
  * See [Grammar] for all functions in this interface.
  */
+@Suppress("ClassName")
 public interface AllExceptColumnsSelectionDsl {
 
     /**
@@ -226,10 +227,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface CommonExceptDocs {
 
         // Example argument
-        interface ExampleArg
+        interface EXAMPLE
 
         // Parameter argument
-        interface ParamArg
+        interface PARAM
     }
 
     // region ColumnSet
@@ -326,10 +327,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface ColumnSetInfixDocs {
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
     }
 
     /**
@@ -424,10 +425,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface ColumnSetVarargDocs {
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
     }
 
     /**
@@ -1353,10 +1354,10 @@ public interface AllExceptColumnsSelectionDsl {
     private interface ColumnsSelectionDslDocs {
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
     }
 
     /**
@@ -1912,22 +1913,23 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @Suppress("ClassName")
     private interface ColumnGroupDocs {
 
         // receiver
-        interface ReceiverArg1
+        interface RECEIVER_1
 
         // receiver
-        interface ReceiverArg2
+        interface RECEIVER_2
 
         // type
-        interface ReceiverType
+        interface RECEIVER_TYPE
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
 
         /**
          */

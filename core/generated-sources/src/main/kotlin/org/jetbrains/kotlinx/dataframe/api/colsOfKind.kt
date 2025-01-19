@@ -144,7 +144,7 @@ public interface ColsOfKindColumnsSelectionDsl {
     private interface CommonColsOfKindDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
