@@ -12,8 +12,9 @@ import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls.Select
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
-import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.OperationArg
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.util.MINUS
+import org.jetbrains.kotlinx.dataframe.util.MINUS_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -81,57 +82,17 @@ public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> =
 
 // region minus
 
-/**
- * ## The Minus Operation
- *
- * Removes the specified [columns] from the original [DataFrame] and returns a new [DataFrame] without them.
- *
- * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
- *
- * See [Selecting Columns][Select.SelectSelectingOptions].
- *
- * Works exactly as [remove]. For more information: {@include [DocumentationUrls.Remove]}
- */
-internal interface Minus
-
-/** {@set [SelectingColumns.OperationArg] [minus][minus]} */
-@ExcludeFromSources
-private interface SetMinusOperationArg
-
-/**
- * {@include [Minus]}
- * ### This Minus Overload
- */
-@ExcludeFromSources
-private interface CommonMinusDocs
-
-/**
- * @include [CommonMinusDocs]
- * @include [SelectingColumns.Dsl.WithExample] {@include [SetMinusOperationArg]}
- * @param [columns] The [Columns Selector][ColumnsSelector] used to remove the columns of this [DataFrame].
- */
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
 public infix operator fun <T> DataFrame<T>.minus(columns: ColumnsSelector<T, *>): DataFrame<T> = remove(columns)
 
-/**
- * @include [CommonMinusDocs]
- * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMinusOperationArg]}
- * @param [columns] The [Column Names][String] used to remove the columns of this [DataFrame].
- */
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
 public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> = remove(column)
 
-/**
- * @include [CommonMinusDocs]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetMinusOperationArg]}
- * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
- */
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
 @AccessApiOverload
 public infix operator fun <T> DataFrame<T>.minus(column: AnyColumnReference): DataFrame<T> = remove(column)
 
-/**
- * @include [CommonMinusDocs]
- * @include [SelectingColumns.KProperties.WithExample] {@include [SetMinusOperationArg]}
- * @param [columns] The [KProperties][KProperty] used to remove the columns of this [DataFrame].
- */
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
 @AccessApiOverload
 public infix operator fun <T> DataFrame<T>.minus(columns: KProperty<*>): DataFrame<T> = remove(columns)
 
