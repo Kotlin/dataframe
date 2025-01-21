@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
@@ -46,6 +47,11 @@ internal interface SelectingColumnsLink
  * {@include [KProperties.WithExample]}
  */
 internal interface SelectingColumns {
+
+    /**
+     * This operation can also be used on [ColumnGroup] and nested columns.
+     */
+    interface ColumnGroupsAndNestedColumnsMention
 
     /*
      * The key for a @set that will define the operation name for the examples below.
