@@ -31,6 +31,8 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with only the columns selected by [columns\].
  *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
  * See [Selecting Columns][SelectSelectingOptions].
  *
  * For more information: {@include [DocumentationUrls.Select]}
