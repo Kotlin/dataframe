@@ -24,7 +24,7 @@ plugins {
         alias(kover)
         alias(ktlint)
         alias(korro) apply false
-        alias(docProcessor) apply false
+        alias(kodex) apply false
         alias(simpleGit) apply false
         alias(dependencyVersions)
         alias(buildconfig) apply false
@@ -55,12 +55,15 @@ dependencies {
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
     api(project(":dataframe-jdbc"))
+    // TODO enable when it leaves the experimental phase
+    //  api(project(":dataframe-csv"))
 
     kover(project(":core"))
     kover(project(":dataframe-arrow"))
     kover(project(":dataframe-excel"))
     kover(project(":dataframe-openapi"))
     kover(project(":dataframe-jdbc"))
+    kover(project(":dataframe-csv"))
     kover(project(":plugins:kotlin-dataframe"))
 }
 
@@ -95,6 +98,8 @@ val dependencyUpdateExclusions = listOf(
     libs.android.gradle.api.get().group,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
+    // Can't be updated to 2.1.0+ due to Java 8 compatibility
+    libs.plugins.simpleGit.get().pluginId,
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
@@ -153,7 +158,7 @@ allprojects {
     afterEvaluate {
         try {
             configure<KtlintExtension> {
-                version = "1.3.0"
+                version = "1.4.1"
                 // rules are set up through .editorconfig
             }
         } catch (_: UnknownDomainObjectException) {

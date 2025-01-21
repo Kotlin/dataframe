@@ -2,8 +2,8 @@
 
 rootProject.name = "dataframe"
 
-// treated as a separate project with its own Kotlin version etc.
-includeBuild("generator")
+// treated as a separate project with its own Kotlin version, etc.
+includeBuild("plugins/keywords-generator")
 
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
@@ -14,6 +14,7 @@ include("dataframe-arrow")
 include("dataframe-openapi")
 include("dataframe-excel")
 include("dataframe-jdbc")
+include("dataframe-csv")
 include("core")
 
 include("examples:idea-examples:titanic")
@@ -42,3 +43,5 @@ plugins {
 include("dataframe-excel")
 include("core")
 include("dataframe-openapi-generator")
+include("dataframe-geo")
+include("plugins:public-api-modifier")

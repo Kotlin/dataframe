@@ -216,6 +216,18 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    @JvmInline
+    value class IntClass(val value: Int)
+
+    @Test
+    @TransformDataFrameExpressions
+    fun convertToValueClass() {
+        // SampleStart
+        dataFrameOf("value")("1", "2") // note that values are strings; conversion is done automatically
+            .convert("value").to<IntClass>()
+        // SampleEnd
+    }
+
     @Test
     @TransformDataFrameExpressions
     fun convertAsFrame() {
@@ -1461,6 +1473,65 @@ class Modify : TestBase() {
             val df = DataFrame.readJson(file).castTo(sample)
             val count = df.count { perf > 10.0 }
             println("$file: $count")
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun rename_properties() {
+        // SampleStart
+        df.rename { name }.into("fullName")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun rename_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        df.rename(name).into("fullName")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun rename_strings() {
+        // SampleStart
+        df.rename("name").into("fullName")
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun renameExpression_properties() {
+        // SampleStart
+        df.rename { age }.into {
+            val mean = it.data.mean()
+            "age [mean = $mean]"
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun renameExpression_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        df.rename(age).into {
+            val mean = it.data.mean()
+            "age [mean = $mean]"
+        }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun renameExpression_strings() {
+        // SampleStart
+        df.rename("age").into {
+            val mean = it.data.cast<Int>().mean()
+            "age [mean = $mean]"
         }
         // SampleEnd
     }

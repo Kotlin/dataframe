@@ -7,11 +7,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.interComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegated
@@ -52,16 +53,18 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(): T = rowMaxOfOrN
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.max(): DataRow<T> = maxFor(comparableColumns())
+public fun <T> DataFrame<T>.max(): DataRow<T> = maxFor(interComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
     Aggregators.max.aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.maxFor(vararg columns: String): DataRow<T> = maxFor { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     maxFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: KProperty<C?>): DataRow<T> =
     maxFor { columns.toColumnSet() }
 
@@ -70,9 +73,11 @@ public fun <T, C : Comparable<C>> DataFrame<T>.max(columns: ColumnsSelector<T, C
 
 public fun <T> DataFrame<T>.max(vararg columns: String): Comparable<Any?> = maxOrNull(*columns).suggestIfNull("max")
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: ColumnReference<C?>): C =
     maxOrNull(*columns).suggestIfNull("max")
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: KProperty<C?>): C =
     maxOrNull(*columns).suggestIfNull("max")
 
@@ -82,9 +87,11 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(columns: ColumnsSelecto
 public fun <T> DataFrame<T>.maxOrNull(vararg columns: String): Comparable<Any?>? =
     maxOrNull { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: ColumnReference<C?>): C? =
     maxOrNull { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: KProperty<C?>): C? =
     maxOrNull { columns.toColumnSet() }
 
@@ -99,9 +106,11 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(expression: RowExpression<T
 
 public fun <T> DataFrame<T>.maxBy(column: String): DataRow<T> = maxByOrNull(column).suggestIfNull("maxBy")
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: ColumnReference<C?>): DataRow<T> =
     maxByOrNull(column).suggestIfNull("maxBy")
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: KProperty<C?>): DataRow<T> =
     maxByOrNull(column).suggestIfNull("maxBy")
 
@@ -111,9 +120,11 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(expression: RowExpres
 public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? =
     maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: ColumnReference<C?>): DataRow<T>? =
     getOrNull(get(column).asSequence().indexOfMax())
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>): DataRow<T>? =
     maxByOrNull(column.toColumnAccessor())
 
@@ -121,16 +132,18 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>
 
 // region GroupBy
 
-public fun <T> Grouped<T>.max(): DataFrame<T> = maxFor(comparableColumns())
+public fun <T> Grouped<T>.max(): DataFrame<T> = maxFor(interComparableColumns())
 
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.max.aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.maxFor(vararg columns: String): DataFrame<T> = maxFor { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     maxFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: KProperty<C?>): DataFrame<T> =
     maxFor { columns.toColumnSet() }
 
@@ -145,6 +158,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.max(
     name: String? = null,
 ): DataFrame<T> = max(name) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.max(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
     max(name) { columns.toColumnSet() }
 
@@ -156,12 +170,14 @@ public fun <T, C : Comparable<C>> Grouped<T>.maxOf(
 public fun <T, G, R : Comparable<R>> GroupBy<T, G>.maxBy(rowExpression: RowExpression<G, R?>): ReducedGroupBy<T, G> =
     reduce { maxByOrNull(rowExpression) }
 
+@AccessApiOverload
 public fun <T, G, C : Comparable<C>> GroupBy<T, G>.maxBy(column: ColumnReference<C?>): ReducedGroupBy<T, G> =
     reduce { maxByOrNull(column) }
 
 public fun <T, G> GroupBy<T, G>.maxBy(column: String): ReducedGroupBy<T, G> =
     maxBy(column.toColumnAccessor().cast<Comparable<Any?>>())
 
+@AccessApiOverload
 public fun <T, G, C : Comparable<C>> GroupBy<T, G>.maxBy(column: KProperty<C?>): ReducedGroupBy<T, G> =
     maxBy(column.toColumnAccessor())
 
@@ -218,7 +234,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: KProperty<C?>): Reduced
 
 // region PivotGroupBy
 
-public fun <T> PivotGroupBy<T>.max(separate: Boolean = false): DataFrame<T> = maxFor(separate, comparableColumns())
+public fun <T> PivotGroupBy<T>.max(separate: Boolean = false): DataFrame<T> = maxFor(separate, interComparableColumns())
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
     separate: Boolean = false,

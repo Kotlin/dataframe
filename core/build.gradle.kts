@@ -1,8 +1,7 @@
 import com.google.devtools.ksp.gradle.KspTask
 import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
-import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
-import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
+import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
@@ -16,7 +15,7 @@ plugins {
         alias(korro)
         alias(kover)
         alias(ktlint)
-        alias(docProcessor)
+        alias(kodex)
         alias(simpleGit)
         alias(buildconfig)
         alias(binary.compatibility.validator)
@@ -74,8 +73,6 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.fastDoubleParser)
 
-    implementation(libs.fuel)
-
     api(libs.kotlin.datetimeJvm)
     implementation(libs.kotlinpoet)
     implementation(libs.sl4j)
@@ -87,6 +84,7 @@ dependencies {
     }
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
+    testImplementation(libs.sl4jsimple)
 }
 
 val samplesImplementation by configurations.getting {
@@ -208,9 +206,9 @@ val generatedSources by kotlin.sourceSets.creating {
 }
 
 // Task to generate the processed documentation
-val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
+val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
+    group = "KDocs"
     target = file(generatedSourcesFolderName)
-    arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
 
     // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
     outputReadOnly = false
@@ -218,10 +216,7 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     exportAsHtml {
         dir = file("../docs/StardustDocs/snippets/kdocs")
     }
-    task {
-        group = "KDocs"
-        finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
-    }
+    finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
 }
 
 tasks.named("ktlintGeneratedSourcesSourceSetCheck") {

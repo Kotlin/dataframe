@@ -57,7 +57,6 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 
 /** Users will get an error if their Kotlin Jupyter kernel is older than this version. */
@@ -70,28 +69,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
     val version = options["v"]
 
-    private fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
-        val code = codeWithConverter.with(argument)
-        return if (code.isNotBlank()) {
-            val result = execute(code)
-            if (codeWithConverter.hasConverter) {
-                result.name
-            } else {
-                null
-            }
-        } else {
-            null
-        }
-    }
-
-    private fun KotlinKernelHost.execute(
-        codeWithConverter: CodeWithConverter,
-        property: KProperty<*>,
-        type: KType,
-    ): VariableName? {
-        val variableName = "(${property.name}${if (property.returnType.isMarkedNullable) "!!" else ""} as $type)"
-        return execute(codeWithConverter, variableName)
-    }
+    // TODO temporary settings while these experimental modules are being developed
+    private val enableExperimentalCsv = options["enableExperimentalCsv"]
+    private val enableExperimentalGeo = options["enableExperimentalGeo"]
 
     private fun KotlinKernelHost.updateImportDataSchemaVariable(
         importDataSchema: ImportDataSchema,
@@ -176,6 +156,15 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
     override fun Builder.onLoaded() {
         if (version != null) {
+            if (enableExperimentalCsv?.toBoolean() == true) {
+                println("Enabling experimental CSV module: dataframe-csv")
+                dependencies("org.jetbrains.kotlinx:dataframe-csv:$version")
+            }
+            if (enableExperimentalGeo?.toBoolean() == true) {
+                println("Enabling experimental Geo module: dataframe-geo")
+                repositories("https://repo.osgeo.org/repository/release")
+                dependencies("org.jetbrains.kotlinx:dataframe-geo:$version")
+            }
             dependencies(
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
                 "org.jetbrains.kotlinx:dataframe-jdbc:$version",

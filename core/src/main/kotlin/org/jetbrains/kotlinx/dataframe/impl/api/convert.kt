@@ -15,6 +15,7 @@ import kotlinx.datetime.toJavaLocalTime
 import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.datetime.toKotlinLocalTime
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -25,12 +26,14 @@ import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.ColumnTypeMismatchesColumnValuesException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -39,6 +42,7 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -50,17 +54,31 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
+import kotlin.text.trim
+import kotlin.toBigDecimal
 import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+import kotlin.toBigDecimal as toBigDecimalKotlin
+import kotlin.toBigInteger as toBigIntegerKotlin
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
     type: KType,
     infer: Infer,
     rowConverter: RowValueExpression<T, C, R>,
-): DataFrame<T> = to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) } }
+): DataFrame<T> =
+    to { col ->
+        try {
+            df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) }
+        } catch (e: ClassCastException) {
+            throw ColumnTypeMismatchesColumnValuesException(col, e)
+        } catch (e: NullPointerException) {
+            throw ColumnTypeMismatchesColumnValuesException(col, e)
+        }
+    }
 
 @PublishedApi
 internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
@@ -69,7 +87,65 @@ internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     rowConverter: RowColumnExpression<T, C, R>,
 ): DataFrame<T> = to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
 
-internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
+/**
+ * Specific implementation for [convertToTypeImpl] for [String] -> [Double] conversion
+ *
+ * This function exists because [convertToTypeImpl] can only retrieve a single parser
+ * double has two: one with the given locale (or system default) and one POSIX parser
+ */
+internal fun DataColumn<String?>.convertToDoubleImpl(
+    locale: Locale?,
+    nullStrings: Set<String>?,
+    useFastDoubleParser: Boolean?,
+): DataColumn<Double?> {
+    val nullStrings = nullStrings ?: Parsers.nulls
+    val useFastDoubleParser = useFastDoubleParser ?: Parsers.useFastDoubleParser
+
+    fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
+        var currentRow = 0
+        try {
+            return mapIndexed { row, value ->
+                currentRow = row
+                value?.let {
+                    if (it in nullStrings) return@let null
+
+                    parser(value.trim()) ?: throw TypeConversionException(
+                        value = value,
+                        from = typeOf<String>(),
+                        to = typeOf<Double>(),
+                        column = path,
+                    )
+                }
+            }
+        } catch (e: TypeConversionException) {
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
+        }
+    }
+
+    return if (locale != null) {
+        val explicitParser = Parsers.getDoubleParser(
+            locale = locale,
+            useFastDoubleParser = useFastDoubleParser,
+        )
+        applyParser(explicitParser)
+    } else {
+        try {
+            val defaultParser =
+                Parsers.getDoubleParser(
+                    locale = null,
+                    useFastDoubleParser = useFastDoubleParser,
+                )
+            applyParser(defaultParser)
+        } catch (_: TypeConversionException) {
+            val posixParser = Parsers.getPosixDoubleParser(
+                useFastDoubleParser = useFastDoubleParser,
+            )
+            applyParser(posixParser)
+        }
+    }
+}
+
+internal fun AnyCol.convertToTypeImpl(to: KType, parserOptions: ParserOptions?): AnyCol {
     val from = type
 
     val nullsAreAllowed = to.isMarkedNullable
@@ -112,7 +188,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                         value?.let {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
-                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
+                            val converter = getConverter(type, to, parserOptions)
                                 ?: throw TypeConverterNotFoundException(from, to, path)
                             converter(it)
                         }.checkNulls()
@@ -139,7 +215,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
         }
     }
 
-    return when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
+    return when (val converter = getConverter(from, to, parserOptions)) {
         null -> convertPerCell()
         else -> applyConverter(converter)
     }
@@ -271,6 +347,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 BigDecimal::class -> convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
 
+                BigInteger::class -> convert<Boolean> { if (it) BigInteger.ONE else BigInteger.ZERO }
+
                 else -> null
             }
 
@@ -282,10 +360,19 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Short::class -> convert<Number> { it.toShort() }
                 Long::class -> convert<Number> { it.toLong() }
                 Boolean::class -> convert<Number> { it.toDouble() != 0.0 }
+                BigDecimal::class -> convert<Number> { it.toBigDecimal() }
+                BigInteger::class -> convert<Number> { it.toBigInteger() }
+                else -> null
+            }
+
+            Char::class -> when (toClass) {
+                Int::class -> convert<Char> { it.code }
                 else -> null
             }
 
             Int::class -> when (toClass) {
+                Char::class -> convert<Int> { it.toChar() }
+
                 Double::class -> convert<Int> { it.toDouble() }
 
                 Float::class -> convert<Int> { it.toFloat() }
@@ -297,6 +384,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Long::class -> convert<Int> { it.toLong() }
 
                 BigDecimal::class -> convert<Int> { it.toBigDecimal() }
+
+                BigInteger::class -> convert<Int> { it.toBigInteger() }
 
                 Boolean::class -> convert<Int> { it != 0 }
 
@@ -321,12 +410,90 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 else -> null
             }
 
+            Byte::class -> when (toClass) {
+                Double::class -> convert<Byte> { it.toDouble() }
+
+                Float::class -> convert<Byte> { it.toFloat() }
+
+                Int::class -> convert<Byte> { it.toInt() }
+
+                Short::class -> convert<Byte> { it.toShort() }
+
+                Long::class -> convert<Byte> { it.toLong() }
+
+                BigDecimal::class -> convert<Byte> { it.toBigDecimal() }
+
+                BigInteger::class -> convert<Byte> { it.toBigInteger() }
+
+                Boolean::class -> convert<Byte> { it != 0.toByte() }
+
+                LocalDateTime::class -> convert<Byte> { it.toLong().toLocalDateTime(defaultTimeZone) }
+
+                LocalDate::class -> convert<Byte> { it.toLong().toLocalDate(defaultTimeZone) }
+
+                LocalTime::class -> convert<Byte> { it.toLong().toLocalTime(defaultTimeZone) }
+
+                Instant::class -> convert<Byte> { Instant.fromEpochMilliseconds(it.toLong()) }
+
+                JavaLocalDateTime::class -> convert<Byte> {
+                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
+                JavaLocalDate::class -> convert<Byte> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
+
+                JavaLocalTime::class -> convert<Byte> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                JavaInstant::class -> convert<Byte> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                else -> null
+            }
+
+            Short::class -> when (toClass) {
+                Double::class -> convert<Short> { it.toDouble() }
+
+                Float::class -> convert<Short> { it.toFloat() }
+
+                Int::class -> convert<Short> { it.toInt() }
+
+                Byte::class -> convert<Short> { it.toByte() }
+
+                Long::class -> convert<Short> { it.toLong() }
+
+                BigDecimal::class -> convert<Short> { it.toBigDecimal() }
+
+                BigInteger::class -> convert<Short> { it.toBigInteger() }
+
+                Boolean::class -> convert<Short> { it != 0.toShort() }
+
+                LocalDateTime::class -> convert<Short> { it.toLong().toLocalDateTime(defaultTimeZone) }
+
+                LocalDate::class -> convert<Short> { it.toLong().toLocalDate(defaultTimeZone) }
+
+                LocalTime::class -> convert<Short> { it.toLong().toLocalTime(defaultTimeZone) }
+
+                Instant::class -> convert<Short> { Instant.fromEpochMilliseconds(it.toLong()) }
+
+                JavaLocalDateTime::class -> convert<Short> {
+                    it.toLong().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
+                JavaLocalDate::class -> convert<Short> { it.toLong().toLocalDate(defaultTimeZone).toJavaLocalDate() }
+
+                JavaLocalTime::class -> convert<Short> { it.toLong().toLocalTime(defaultTimeZone).toJavaLocalTime() }
+
+                JavaInstant::class -> convert<Short> { JavaInstant.ofEpochMilli(it.toLong()) }
+
+                else -> null
+            }
+
             Double::class -> when (toClass) {
                 Int::class -> convert<Double> { it.roundToInt() }
                 Float::class -> convert<Double> { it.toFloat() }
                 Long::class -> convert<Double> { it.roundToLong() }
                 Short::class -> convert<Double> { it.roundToInt().toShort() }
+                Byte::class -> convert<Double> { it.roundToInt().toByte() }
                 BigDecimal::class -> convert<Double> { it.toBigDecimal() }
+                BigInteger::class -> convert<Double> { it.toBigInteger() }
                 Boolean::class -> convert<Double> { it != 0.0 }
                 else -> null
             }
@@ -344,11 +511,15 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
                 BigDecimal::class -> convert<Long> { it.toBigDecimal() }
 
+                BigInteger::class -> convert<Long> { it.toBigInteger() }
+
                 Boolean::class -> convert<Long> { it != 0L }
 
                 LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone) }
 
                 LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
+
+                LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
 
                 Instant::class -> convert<Long> { Instant.fromEpochMilliseconds(it) }
 
@@ -419,8 +590,10 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Double::class -> convert<Float> { it.toDouble() }
                 Long::class -> convert<Float> { it.roundToLong() }
                 Int::class -> convert<Float> { it.roundToInt() }
+                Byte::class -> convert<Float> { it.roundToInt().toByte() }
                 Short::class -> convert<Float> { it.roundToInt().toShort() }
                 BigDecimal::class -> convert<Float> { it.toBigDecimal() }
+                BigInteger::class -> convert<Float> { it.toBigInteger() }
                 Boolean::class -> convert<Float> { it != 0.0F }
                 else -> null
             }
@@ -428,9 +601,24 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             BigDecimal::class -> when (toClass) {
                 Double::class -> convert<BigDecimal> { it.toDouble() }
                 Int::class -> convert<BigDecimal> { it.toInt() }
+                Byte::class -> convert<BigDecimal> { it.toByte() }
+                Short::class -> convert<BigDecimal> { it.toShort() }
                 Float::class -> convert<BigDecimal> { it.toFloat() }
                 Long::class -> convert<BigDecimal> { it.toLong() }
+                BigInteger::class -> convert<BigDecimal> { it.toBigInteger() }
                 Boolean::class -> convert<BigDecimal> { it != BigDecimal.ZERO }
+                else -> null
+            }
+
+            BigInteger::class -> when (toClass) {
+                Double::class -> convert<BigInteger> { it.toDouble() }
+                Int::class -> convert<BigInteger> { it.toInt() }
+                Byte::class -> convert<BigInteger> { it.toByte() }
+                Short::class -> convert<BigInteger> { it.toShort() }
+                Float::class -> convert<BigInteger> { it.toFloat() }
+                Long::class -> convert<BigInteger> { it.toLong() }
+                BigDecimal::class -> convert<BigInteger> { it.toBigDecimal() }
+                Boolean::class -> convert<BigInteger> { it != BigInteger.ZERO }
                 else -> null
             }
 
@@ -504,6 +692,16 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 else -> null
             }
 
+            LocalTime::class -> when (toClass) {
+                JavaLocalTime::class -> convert<LocalTime> { it.toJavaLocalTime() }
+                else -> null
+            }
+
+            JavaLocalTime::class -> when (toClass) {
+                LocalTime::class -> convert<JavaLocalTime> { it.toKotlinLocalTime() }
+                else -> null
+            }
+
             URL::class -> when (toClass) {
                 IMG::class -> convert<URL> { IMG(it.toString()) }
                 IFRAME::class -> convert<URL> { IFRAME(it.toString()) }
@@ -527,3 +725,29 @@ internal fun Instant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDate
 internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).time
 
 internal val defaultTimeZone = TimeZone.currentSystemDefault()
+
+internal fun Number.toBigDecimal(): BigDecimal =
+    when (this) {
+        is BigDecimal -> this
+        is BigInteger -> this.toBigDecimalKotlin()
+        is Int -> this.toBigDecimalKotlin()
+        is Byte -> this.toInt().toBigDecimalKotlin()
+        is Short -> this.toInt().toBigDecimalKotlin()
+        is Long -> this.toBigDecimalKotlin()
+        is Float -> this.toBigDecimalKotlin()
+        is Double -> this.toBigDecimalKotlin()
+        else -> BigDecimal(this.toString())
+    }
+
+internal fun Number.toBigInteger(): BigInteger =
+    when (this) {
+        is BigInteger -> this
+        is BigDecimal -> this.toBigInteger()
+        is Int -> this.toBigIntegerKotlin()
+        is Byte -> this.toInt().toBigIntegerKotlin()
+        is Short -> this.toInt().toBigIntegerKotlin()
+        is Long -> this.toBigIntegerKotlin()
+        is Float -> this.roundToInt().toBigIntegerKotlin()
+        is Double -> this.roundToLong().toBigIntegerKotlin()
+        else -> BigInteger(this.toString())
+    }

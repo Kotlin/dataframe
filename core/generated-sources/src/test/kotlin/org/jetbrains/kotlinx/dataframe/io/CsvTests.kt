@@ -5,6 +5,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import org.apache.commons.csv.CSVFormat
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -22,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
 import java.io.File
+import java.io.StringReader
 import java.io.StringWriter
 import java.net.URL
 import java.util.Locale
@@ -70,7 +72,7 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
 
@@ -89,7 +91,7 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["duplicate1"].type() shouldBe typeOf<Char?>()
         df["double"].type() shouldBe typeOf<Double?>()
         df["number"].type() shouldBe typeOf<Double>()
         df["time"].type() shouldBe typeOf<LocalDateTime>()
@@ -177,7 +179,15 @@ class CsvTests {
 
     @Test
     fun `if string starts with a number, it should be parsed as a string anyway`() {
-        val df = DataFrame.readCSV(durationCsv)
+        @Language("CSV")
+        val df = DataFrame.readDelimStr(
+            """
+            duration,floatDuration
+            12 min,1.0
+            15,12.98 sec
+            1 Season,0.9 parsec
+            """.trimIndent(),
+        )
         df["duration"].type() shouldBe typeOf<String>()
         df["floatDuration"].type() shouldBe typeOf<String>()
     }
@@ -317,11 +327,40 @@ class CsvTests {
         emptyTsvStr shouldBe DataFrame.empty()
     }
 
+    // Issue #921
+    @Test
+    fun `read csv with custom null strings and given type`() {
+        @Language("CSV")
+        val csv =
+            """
+            a,b
+            noppes,2
+            1.2,
+            3,45
+            ,noppes
+            1.3,1
+            """.trimIndent()
+
+        val df = DataFrame.readDelim(
+            reader = StringReader(csv),
+            parserOptions = ParserOptions(
+                nullStrings = setOf("noppes", ""),
+            ),
+            colTypes = mapOf("a" to ColType.Double, "b" to ColType.Int),
+        )
+        df shouldBe dataFrameOf("a", "b")(
+            null, 2,
+            1.2, null,
+            3.0, 45,
+            null, null,
+            1.3, 1,
+        )
+    }
+
     companion object {
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
-        private val durationCsv = testCsv("duration")
         private val withBomCsv = testCsv("with-bom")
     }
 }

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
+import org.jetbrains.kotlinx.dataframe.io.inferNullability
 import org.jetbrains.kotlinx.dataframe.io.readAllSqlTables
 import org.jetbrains.kotlinx.dataframe.io.readSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
@@ -470,5 +471,10 @@ class MySqlTest {
         // validation after mapping in getObject
         // getObject(i+1, type) catch getObject catch getString
         // add direct mapping to getString and other methods
+    }
+
+    @Test
+    fun `infer nullability`() {
+        inferNullability(connection)
     }
 }

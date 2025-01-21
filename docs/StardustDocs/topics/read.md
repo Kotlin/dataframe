@@ -19,6 +19,30 @@ The input string can be a file path or URL.
 
 To read a CSV file, use the `.readCSV()` function.
 
+> Since DataFrame v0.15, a new experimental CSV integration is available.
+> It is faster and more flexible than the old one, now being based on
+> [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
+> 
+> To try it in your Kotlin project, add the dependency:
+> 
+> [`org.jetbrains.kotlinx:dataframe-csv:$dataframe_version`](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/dataframe-csv).
+> 
+> To try it in your Kotlin Notebook, modify the %use-magic directive:
+> 
+> `%use dataFrame(enableExperimentalCsv=true)`.
+> 
+> And then use the new `DataFrame.readCsv()` / `DataFrame.readTsv()` / `DataFrame.readDelim()`
+> functions over the old `DataFrame.readCSV()` ones.
+> 
+> The documentation of the old CSV integration still applies to the new one.
+> We will expand it while the new CSV integration stabilizes.
+> 
+> In the meantime, check out this
+> [example notebook](https://github.com/Kotlin/dataframe/blob/0.15.0/examples/notebooks/feature_overviews/0.15/new_features.ipynb)
+> to see the new CSV integration in action.
+> 
+{style="note"}
+
 To read a CSV file from a file:
 
 ```kotlin
@@ -146,6 +170,57 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
+### Work with specific date-time formats
+
+When parsing date or date-time columns, you might encounter formats different from the default `ISO_LOCAL_DATE_TIME`.
+Like:
+
+<table>
+<tr><th>date</th></tr>
+<tr><td>13/Jan/23 11:49 AM</td></tr>
+<tr><td>14/Mar/23 5:35 PM</td></tr>
+</table>
+
+Because the format here `"dd/MMM/yy h:mm a"` differs from the default (`ISO_LOCAL_DATE_TIME`),
+columns like this may be recognized as simple `String` values rather than actual date-time columns.
+
+You can fix this whenever you [parse](parse.md) a string-based column (e.g., using [`DataFrame.readCSV()`](read.md#read-from-csv),
+[`DataFrame.readTSV()`](read.md#read-from-csv), or [`DataColumn<String>.convertTo<>()`](convert.md)) by providing
+a custom date-time pattern. There are two ways to do this:
+
+1) By providing the date-time pattern as raw string to the `ParserOptions` argument:
+
+<!---FUN readNumbersWithSpecificDateTimePattern-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+)
+```
+<!---END-->
+
+2) By providing a `DateTimeFormatter` to the `ParserOptions` argument:
+
+<!---FUN readNumbersWithSpecificDateTimeFormatter-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+)
+```
+
+<!---END-->
+These two approaches are essentially the same, just specified in different ways.
+The result will be a dataframe with properly parsed `DateTime` columns.
+
+> Note: Although these examples focus on reading CSV files, 
+> these `ParserOptions` can be supplied to any `String`-column-handling operation 
+> (like, `readCsv`, `readTsv`, `stringCol.convertTo<>()`, etc.) 
+> This allows you to configure the locale, null-strings, date-time patterns, and more.
+> 
+> For more details on the parse operation, see the [`parse operation`](parse.md).
 
 ## Read from JSON
 

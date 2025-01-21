@@ -192,7 +192,7 @@ public final class org/jetbrains/dataframe/keywords/SoftKeywords$Companion {
 	public final fun getVALUES ()Ljava/util/List;
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsContainer {
+public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsContainer : org/jetbrains/kotlinx/dataframe/ColumnsScope {
 	public abstract fun columns ()Ljava/util/List;
 	public abstract fun columnsCount ()I
 	public abstract fun containsColumn (Ljava/lang/String;)Z
@@ -232,6 +232,10 @@ public final class org/jetbrains/kotlinx/dataframe/ColumnsContainer$DefaultImpls
 	public static fun get (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static fun get (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static fun get (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsScope {
+	public abstract fun get (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/DataColumn : org/jetbrains/kotlinx/dataframe/columns/BaseColumn {
@@ -2691,7 +2695,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnDescri
 	public abstract fun getPath ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public abstract fun getStd ()D
 	public abstract fun getTop ()Ljava/lang/Object;
-	public abstract fun getType ()Lkotlin/reflect/KType;
+	public abstract fun getType ()Ljava/lang/String;
 	public abstract fun getUnique ()I
 }
 
@@ -2719,7 +2723,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lkotlin/reflect/KType;
+	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
 	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -2745,7 +2749,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lkotlin/reflect/KType;
+	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
 }
@@ -3809,21 +3813,25 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun convert (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/Convert;
 	public static final fun convert (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/Convert;
 	public static final fun convertTo (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertTo (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertTo$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBigDecimalFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToBigIntegerFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBoolean (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToBooleanFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToByteFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDoubleFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToDoubleFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToDoubleFromString (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToDoubleFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToDoubleFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToDoubleFromString$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDoubleFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun convertToDoubleFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun convertToDoubleFromStringNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun convertToDoubleFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun convertToDoubleFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun convertToDoubleFromStringNullable$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/Locale;Ljava/util/Set;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToDoubleFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToFloat (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun convertToFloatFromT (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -3889,6 +3897,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
 	public static final fun to (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBigDecimal (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBigDecimalTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toBigInteger (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun toBigIntegerTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBoolean (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toBooleanTAny (Lorg/jetbrains/kotlinx/dataframe/api/Convert;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toDataFrames (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4076,10 +4086,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun div (ILorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun div (JLorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Ljava/math/BigDecimal;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun div (Ljava/math/BigInteger;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun div (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun divDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun divInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4099,10 +4111,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun minus (ILorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun minus (JLorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Ljava/math/BigDecimal;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun minus (Ljava/math/BigInteger;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun minusDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun minusInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4118,11 +4132,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun plus (ILorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun plus (JLorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Ljava/math/BigDecimal;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun plus (Ljava/math/BigInteger;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun plus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun plusDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4133,6 +4149,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;J)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigDecimal;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/math/BigInteger;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun times (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;I)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun timesDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;I)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun timesInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -4140,12 +4157,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 	public static final fun unaryMinus (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinus (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
 	public static final fun unaryMinusBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun unaryMinusBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinusDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinusIntNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun unaryMinusLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
+	public static final fun isBigNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isColumnGroup (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isFrameColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
@@ -4154,6 +4173,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
 	public static final fun isPrimitive (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isSubtypeOf (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;)Z
 	public static final fun isValueColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
+	public static final fun valuesAreComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataFrameBuilder {
@@ -4206,6 +4226,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataFrameGetKt {
 	public static final fun getOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;I)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun getRows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun getRows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/ranges/IntRange;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun properties (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;
 	public static final fun rows (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Ljava/lang/Iterable;
 	public static final fun rowsReversed (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Ljava/lang/Iterable;
 }
@@ -4811,9 +4832,14 @@ public final class org/jetbrains/kotlinx/dataframe/api/GenerateCodeKt {
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/GlobalParserOptions {
 	public abstract fun addDateTimePattern (Ljava/lang/String;)V
 	public abstract fun addNullString (Ljava/lang/String;)V
+	public abstract fun addSkipType (Lkotlin/reflect/KType;)V
 	public abstract fun getLocale ()Ljava/util/Locale;
+	public abstract fun getNulls ()Ljava/util/Set;
+	public abstract fun getSkipTypes ()Ljava/util/Set;
+	public abstract fun getUseFastDoubleParser ()Z
 	public abstract fun resetToDefault ()V
 	public abstract fun setLocale (Ljava/util/Locale;)V
+	public abstract fun setUseFastDoubleParser (Z)V
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/GroupBy : org/jetbrains/kotlinx/dataframe/api/Grouped {
@@ -6488,23 +6514,19 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions {
 	public fun <init> ()V
 	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)V
 	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Z)V
-	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/util/Locale;
-	public final fun component2 ()Ljava/time/format/DateTimeFormatter;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/util/Set;
-	public final fun component5 ()Z
+	public fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final synthetic fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public final fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Z)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public final fun copy (Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
-	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;Ljava/util/Locale;Ljava/time/format/DateTimeFormatter;Ljava/lang/String;Ljava/util/Set;Ljava/util/Set;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDateTimeFormatter ()Ljava/time/format/DateTimeFormatter;
 	public final fun getDateTimePattern ()Ljava/lang/String;
 	public final fun getLocale ()Ljava/util/Locale;
 	public final fun getNullStrings ()Ljava/util/Set;
-	public final fun getUseFastDoubleParser ()Z
+	public final fun getSkipTypes ()Ljava/util/Set;
+	public final fun getUseFastDoubleParser ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -8796,7 +8818,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/Update {
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns$SelectingColumnsArg {
+public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Columns$SELECTING_COLUMNS {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Update$Grammar {
@@ -9717,6 +9739,18 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate {
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_GROUP_FUNCTIONS {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_GROUP_PART {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_SET_FUNCTIONS {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_SET_PART {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnDef {
 }
 
@@ -9729,16 +9763,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupDef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupFunctionsArg {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupNoSingleColumnDef {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupNoSingleColumnRef {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupPart {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnGroupRef {
@@ -9774,12 +9802,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetDef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetFunctionsArg {
-}
-
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetPart {
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnSetRef {
 }
 
@@ -9807,10 +9829,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ConditionRef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DefinitionsArg {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DEFINITIONS {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DefinitionsPart {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$DEFINITIONS_PART {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$IgnoreCaseDef {
@@ -9855,10 +9877,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$NumberRef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PlainDslFunctionsArg {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PLAIN_DSL_FUNCTIONS {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PlainDslPart {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$PLAIN_DSL_PART {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$RegexDef {
@@ -9899,6 +9921,11 @@ public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnNotFoundExce
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun getColumnName ()Ljava/lang/String;
 	public fun getMessage ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/exceptions/ColumnTypeMismatchesColumnValuesException : java/lang/RuntimeException {
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/lang/Throwable;)V
+	public final fun getColumn ()Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/exceptions/DuplicateColumnNamesException : java/lang/IllegalArgumentException {
@@ -9944,6 +9971,16 @@ public final class org/jetbrains/kotlinx/dataframe/impl/CacheKt {
 
 public final class org/jetbrains/kotlinx/dataframe/impl/ColumnAccessTrackerKt {
 	public static final fun trackColumnAccess (Lkotlin/jvm/functions/Function0;)Ljava/util/List;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/ColumnNameGenerator {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun addIfAbsent (Ljava/lang/String;)V
+	public final fun addUnique (Ljava/lang/String;)Ljava/lang/String;
+	public final fun contains (Ljava/lang/String;)Z
+	public final fun getNames ()Ljava/util/List;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/DataFrameSize {
@@ -10209,7 +10246,9 @@ public final class org/jetbrains/kotlinx/dataframe/impl/columns/UtilsKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/io/FastDoubleParser {
+	public fun <init> ()V
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun parseOrNull (Ljava/lang/CharSequence;)Ljava/lang/Double;
 	public final fun parseOrNull ([BIILjava/nio/charset/Charset;)Ljava/lang/Double;
 	public final fun parseOrNull ([CII)Ljava/lang/Double;
@@ -10270,24 +10309,40 @@ public final class org/jetbrains/kotlinx/dataframe/io/CSVType : java/lang/Enum {
 
 public final class org/jetbrains/kotlinx/dataframe/io/ColType : java/lang/Enum {
 	public static final field BigDecimal Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field BigInteger Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Boolean Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Char Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/ColType$Companion;
+	public static final field DEFAULT Ljava/lang/String;
 	public static final field Double Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Duration Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Instant Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Int Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field JsonArray Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field JsonObject Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field LocalDate Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field LocalDateTime Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field LocalTime Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field Long Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static final field String Lorg/jetbrains/kotlinx/dataframe/io/ColType;
+	public static final field Url Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/io/ColType;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/io/ColType$Companion {
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/CommonKt {
 	public static final fun asFileOrNull (Ljava/net/URL;)Ljava/io/File;
+	public static final fun asUrl (Ljava/lang/String;)Ljava/net/URL;
+	public static final fun catchHttpResponse (Ljava/net/URL;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun isFile (Ljava/net/URL;)Z
 	public static final fun isProtocolSupported (Ljava/net/URL;)Z
 	public static final fun isURL (Ljava/lang/String;)Z
+	public static final fun isUrl (Ljava/lang/String;)Z
+	public static final fun skippingBomCharacters (Ljava/io/InputStream;)Ljava/io/InputStream;
 	public static final fun toDataFrame (Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun toDataFrame$default (Ljava/util/List;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun urlAsFile (Ljava/net/URL;)Ljava/io/File;
@@ -10313,6 +10368,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/CsvKt {
 	public static synthetic fun readDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;)Ljava/lang/String;
 	public static synthetic fun toCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun toKType (Lorg/jetbrains/kotlinx/dataframe/io/ColType;)Lkotlin/reflect/KType;
 	public static final fun toType (Lorg/jetbrains/kotlinx/dataframe/io/ColType;)Lkotlin/reflect/KClass;
 	public static final fun writeCSV (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/io/File;Lorg/apache/commons/csv/CSVFormat;)V
 	public static final fun writeCSV (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Appendable;Lorg/apache/commons/csv/CSVFormat;)V
@@ -10347,6 +10403,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData {
 	public fun toString ()Ljava/lang/String;
 	public final fun withTableDefinitions ()Lorg/jetbrains/kotlinx/dataframe/io/DataFrameHtmlData;
 	public final fun writeHTML (Ljava/io/File;)V
+	public final fun writeHTML (Ljava/lang/String;)V
 	public final fun writeHTML (Ljava/nio/file/Path;)V
 }
 
@@ -10771,6 +10828,7 @@ public final class org/jetbrains/kotlinx/dataframe/math/BasicStats {
 
 public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {
 	public static final fun bigDecimalMean (Ljava/lang/Iterable;)D
+	public static final fun bigIntegerMean (Ljava/lang/Iterable;)D
 	public static final fun byteMean (Ljava/lang/Iterable;)D
 	public static final fun doubleMean (Ljava/lang/Iterable;Z)D
 	public static synthetic fun doubleMean$default (Ljava/lang/Iterable;ZILjava/lang/Object;)D
@@ -10794,6 +10852,8 @@ public final class org/jetbrains/kotlinx/dataframe/math/MedianKt {
 public final class org/jetbrains/kotlinx/dataframe/math/StdKt {
 	public static final fun bigDecimalStd (Ljava/lang/Iterable;I)D
 	public static synthetic fun bigDecimalStd$default (Ljava/lang/Iterable;IILjava/lang/Object;)D
+	public static final fun bigIntegerStd (Ljava/lang/Iterable;I)D
+	public static synthetic fun bigIntegerStd$default (Ljava/lang/Iterable;IILjava/lang/Object;)D
 	public static final fun doubleStd (Ljava/lang/Iterable;ZI)D
 	public static synthetic fun doubleStd$default (Ljava/lang/Iterable;ZIILjava/lang/Object;)D
 	public static final fun floatStd (Ljava/lang/Iterable;ZI)D
@@ -10808,6 +10868,7 @@ public final class org/jetbrains/kotlinx/dataframe/math/StdKt {
 
 public final class org/jetbrains/kotlinx/dataframe/math/StdMeanKt {
 	public static final fun bigDecimalVarianceAndMean (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
+	public static final fun bigIntegerVarianceAndMean (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
 	public static final fun doubleVarianceAndMean (Ljava/lang/Iterable;Z)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
 	public static synthetic fun doubleVarianceAndMean$default (Ljava/lang/Iterable;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
 	public static final fun floatVarianceAndMean (Ljava/lang/Iterable;Z)Lorg/jetbrains/kotlinx/dataframe/math/BasicStats;
@@ -10818,8 +10879,10 @@ public final class org/jetbrains/kotlinx/dataframe/math/StdMeanKt {
 
 public final class org/jetbrains/kotlinx/dataframe/math/SumKt {
 	public static final fun sum (Ljava/lang/Iterable;)Ljava/math/BigDecimal;
+	public static final fun sum (Ljava/lang/Iterable;)Ljava/math/BigInteger;
 	public static final fun sum (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Number;
 	public static final fun sum (Lkotlin/sequences/Sequence;)Ljava/math/BigDecimal;
+	public static final fun sum (Lkotlin/sequences/Sequence;)Ljava/math/BigInteger;
 	public static final fun sumNullableT (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Number;
 	public static final fun sumOf (Ljava/lang/Iterable;Lkotlin/reflect/KType;Lkotlin/jvm/functions/Function1;)Ljava/lang/Number;
 }

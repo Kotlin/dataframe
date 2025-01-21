@@ -2,7 +2,7 @@
 ksp = "2.0.20-1.0.24"
 kotlinJupyter = "0.12.0-139"
 
-ktlint = "12.1.1"
+ktlint = "12.1.2"
 
 # make sure to sync both manually with :generator module
 kotlin = "2.0.20"
@@ -13,49 +13,54 @@ libsPublisher = "1.9.23-dev-45"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
-dataframe = "0.14.1"
+dataframe = "0.15.0-RC2"
 korro = "0.1.6"
 
 binaryCompatibilityValidator = "0.16.3"
 kover = "0.8.3"
-fastDoubleParser = "2.0.0"
-commonsCsv = "1.11.0"
+deephavenCsv = "0.15.0"
+fastDoubleParser = "2.0.1"
+commonsCsv = "1.12.0"
 commonsCompress = "1.27.1"
-commonsIo = "2.16.1"
+commonsIo = "2.18.0"
 serialization = "1.7.1"
-fuel = "2.3.1"
 poi = "5.3.0"
-mariadb = "3.4.1"
+mariadb = "3.5.1"
 h2db = "2.3.232"
 mssql = "12.8.1.jre11"
-mysql = "9.0.0"
+mysql = "9.1.0"
 postgresql = "42.7.4"
-sqlite = "3.46.1.0"
+sqlite = "3.47.1.0"
 jtsCore = "1.19.0"
 kotlinDatetime = "0.6.1"
-openapi = "2.1.22"
-kotlinLogging = "7.0.0"
+openapi = "2.1.24"
+kotlinLogging = "7.0.3"
 sl4j = "2.0.16"
 
 junit = "4.13.2"
-junit-jupiter = "5.11.0"
-junit-platform = "1.11.0"
+junit-jupiter = "5.11.3"
+junit-platform = "1.11.3"
 
 # TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
 kotestAsserions = "5.5.4"
 
-jsoup = "1.18.1"
-arrow = "17.0.0"
-docProcessor = "0.3.10"
-simpleGit = "2.0.3"
+jsoup = "1.18.3"
+arrow = "18.1.0"
+kodex = "0.4.2"
+simpleGit = "2.0.3" # Can't be updated to 2.1.0+ due to Java 8 compatibility
 dependencyVersions = "0.51.0"
-plugin-publish = "1.2.1"
-shadow = "8.1.1"
+plugin-publish = "1.3.0"
+shadow = "8.3.5"
 android-gradle-api = "7.3.1" # Can't be updated to 7.4.0+ due to Java 8 compatibility
-ktor-server-netty = "2.3.12"
+ktor = "3.0.1"
 kotlin-compile-testing = "1.6.0"
-duckdb = "1.0.0"
-buildconfig = "5.4.0"
+duckdb = "1.1.3"
+buildconfig = "5.5.1"
+benchmark = "0.4.12"
+
+geotools = "32.1"
+jai-core = "1.1.3"
+jts = "1.20.0"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -67,6 +72,7 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
+deephavenCsv = { group = "io.deephaven", name = "deephaven-csv", version.ref = "deephavenCsv" }
 fastDoubleParser = { group = "ch.randelshofer", name = "fastdoubleparser", version.ref = "fastDoubleParser" }
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
@@ -75,7 +81,6 @@ commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsI
 serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
-fuel = { group = "com.github.kittinunf.fuel", name = "fuel", version.ref = "fuel" }
 poi = { group = "org.apache.poi", name = "poi", version.ref = "poi" }
 mariadb = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadb" }
 h2db = { group = "com.h2database", name = "h2", version.ref = "h2db" }
@@ -106,6 +111,21 @@ arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref 
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
 arrow-c-data = { group = "org.apache.arrow", name = "arrow-c-data", version.ref = "arrow" }
 
+geotools-main = { module = "org.geotools:gt-main", version.ref = "geotools" }
+geotools-shapefile = { module = "org.geotools:gt-shapefile", version.ref = "geotools" }
+geotools-geojson = { module = "org.geotools:gt-geojson", version.ref = "geotools" }
+geotools-referencing = { module = "org.geotools:gt-referencing", version.ref = "geotools" }
+geotools-epsg-hsql = { module = "org.geotools:gt-epsg-hsql", version.ref = "geotools" }
+
+jai-core = { module = "javax.media:jai-core", version.ref = "jai-core" }
+
+jts-core = { module = "org.locationtech.jts:jts-core", version.ref = "jts" }
+jts-io-common = { module = "org.locationtech.jts.io:jts-io-common", version.ref = "jts" }
+
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kotlinpoet" }
 swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
@@ -117,7 +137,7 @@ android-gradle-api = { group = "com.android.tools.build", name = "gradle-api", v
 android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-api" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin" }
 kotlin-gradle-plugin-api = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin-api" }
-ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor-server-netty" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
 kotlin-compile-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
 kotlin-compile-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
 kotlin-compiler = { group = "org.jetbrains.kotlin", name = "kotlin-compiler", version.ref = "kotlin" }
@@ -127,7 +147,7 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
-
+kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
 
 duckdb-jdbc = { group = "org.duckdb", name = "duckdb_jdbc", version.ref= "duckdb"}
@@ -144,11 +164,12 @@ korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }
+kodex = { id = "nl.jolanrensen.kodex", version.ref = "kodex" }
 simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 dependencyVersions = { id = "com.github.ben-manes.versions", version.ref = "dependencyVersions" }
 plugin-publish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig" }
+kotlinx-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "benchmark" }

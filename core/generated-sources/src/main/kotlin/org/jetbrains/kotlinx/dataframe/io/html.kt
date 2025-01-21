@@ -20,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
+import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
@@ -514,7 +516,13 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
 internal fun DataFrameHtmlData.print() = println(this)
 
 /**
- * @return DataFrameHtmlData with table script and css definitions. Can be saved as an *.html file and displayed in the browser
+ * By default, cell content is formatted as text
+ * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
+ *
+ * The [DataFrameHtmlData] be saved as an *.html file and displayed in the browser.
+ * If you save it as a file and find it in the project tree,
+ * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
+ * @return DataFrameHtmlData with table script and css definitions
  */
 public fun <T> DataFrame<T>.toStandaloneHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
@@ -523,6 +531,8 @@ public fun <T> DataFrame<T>.toStandaloneHTML(
 ): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
+ * By default, cell content is formatted as text
+ * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
  * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
  */
 public fun <T> DataFrame<T>.toHTML(
@@ -560,13 +570,13 @@ public fun <T> DataFrame<T>.toHTML(
 }
 
 /**
- * Container for HTML page data in form of String
+ * Container for HTML page data in the form of a String
  * Can be used to compose rendered dataframe tables with additional HTML elements
  */
-public data class DataFrameHtmlData(
-    @Language("css") val style: String = "",
-    @Language("html", prefix = "<body>", suffix = "</body>") val body: String = "",
-    @Language("js") val script: String = "",
+public class DataFrameHtmlData(
+    @Language("css") public val style: String = "",
+    @Language("html", prefix = "<body>", suffix = "</body>") public val body: String = "",
+    @Language("js") public val script: String = "",
 ) {
     override fun toString(): String =
         buildString {
@@ -614,10 +624,18 @@ public data class DataFrameHtmlData(
         destination.writeText(toString())
     }
 
+    public fun writeHTML(destination: String) {
+        File(destination).writeText(toString())
+    }
+
     public fun writeHTML(destination: Path) {
         destination.writeText(toString())
     }
 
+    /**
+     * Opens a new tab in your default browser.
+     * Consider [writeHTML] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
+     */
     public fun openInBrowser() {
         val file = File.createTempFile("df_rendering", ".html")
         writeHTML(file)
@@ -627,6 +645,36 @@ public data class DataFrameHtmlData(
     }
 
     public fun withTableDefinitions(): DataFrameHtmlData = tableDefinitions() + this
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is DataFrameHtmlData) return false
+
+        if (style != other.style) return false
+        if (body != other.body) return false
+        if (script != other.script) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = style.hashCode()
+        result = 31 * result + body.hashCode()
+        result = 31 * result + script.hashCode()
+        return result
+    }
+
+    public fun copy(
+        style: String = this.style,
+        body: String = this.body,
+        script: String = this.script,
+    ): DataFrameHtmlData = DataFrameHtmlData(style = style, body = body, script = script)
+
+    public operator fun component1(): String = style
+
+    public operator fun component2(): String = body
+
+    public operator fun component3(): String = script
 
     public companion object {
         /**
@@ -834,7 +882,7 @@ internal class DataFrameFormatter(
             return sb.result()
         }
 
-        val result = when (value) {
+        val result: RenderedContent? = when (value) {
             null -> "null".addCss(nullClass)
 
             is AnyRow -> {
@@ -898,6 +946,12 @@ internal class DataFrameFormatter(
             )
 
             is DataFrameHtmlData -> RenderedContent.text(value.body)
+
+            is IMG -> RenderedContent.media(value.toString())
+
+            is IFRAME -> RenderedContent.media(value.toString())
+
+            is RenderedContent -> value
 
             else -> renderer.content(value, configuration)
         }

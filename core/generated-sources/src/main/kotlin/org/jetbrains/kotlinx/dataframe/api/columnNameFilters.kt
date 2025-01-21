@@ -7,6 +7,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
+import org.jetbrains.kotlinx.dataframe.util.COL_ENDS_WITH
+import org.jetbrains.kotlinx.dataframe.util.COL_ENDS_WITH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.COL_STARTS_WITH
+import org.jetbrains.kotlinx.dataframe.util.COL_STARTS_WITH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.ENDS_WITH
+import org.jetbrains.kotlinx.dataframe.util.ENDS_WITH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.STARTS_WITH
+import org.jetbrains.kotlinx.dataframe.util.STARTS_WITH_REPLACE
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -25,6 +33,8 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -46,6 +56,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  `regex: `[`Regex`][Regex]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -56,6 +69,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *  [**`nameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
      *
      *  `| `__`name`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -70,6 +86,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.name`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.nameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -82,11 +101,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colsNameContains`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameContains]**`(`**[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`] | `[`regex`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.RegexDef]**`)`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.colsName`__`(`[**`Starts`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`|`[**`Ends`**][org.jetbrains.kotlinx.dataframe.api.ColumnNameFiltersColumnsSelectionDsl.colsNameEndsWith]`)`**`With`**__`(`__[`text`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.TextDef]`[`**`, `**[`ignoreCase`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IgnoreCaseDef]`]`**`)`**
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -606,17 +620,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     // region nameStartsWith
 
-    @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
-    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> = nameStartsWith(prefix)
-
-    @Deprecated("Use nameStartsWith instead", ReplaceWith("this.nameStartsWith(prefix)"))
-    public fun ColumnsSelectionDsl<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        nameStartsWith(prefix)
-
-    @Deprecated("Use colsNameStartsWith instead", ReplaceWith("this.colsNameStartsWith(prefix)"))
-    public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
-        colsNameStartsWith(prefix)
-
     /**
      * ## (Cols) Name Starts With
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
@@ -850,18 +853,6 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
 
     // region nameEndsWith
 
-    @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
-    @Suppress("UNCHECKED_CAST")
-    public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
-        colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
-
-    @Deprecated("Use nameEndsWith instead", ReplaceWith("this.nameEndsWith(suffix)"))
-    public fun ColumnsSelectionDsl<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> = nameEndsWith(suffix)
-
-    @Deprecated("Use colsNameEndsWith instead", ReplaceWith("this.colsNameEndsWith(suffix)"))
-    public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
-        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
-
     /**
      * ## (Cols) Name Ends With
      * Returns a [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing all columns from [this]
@@ -1088,6 +1079,57 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
         suffix: CharSequence,
         ignoreCase: Boolean = false,
     ): TransformableColumnSet<*> = columnGroup(this).colsNameEndsWith(suffix, ignoreCase)
+
+    // endregion
+
+    // region deprecations
+
+    @Deprecated(
+        message = STARTS_WITH,
+        replaceWith = ReplaceWith(STARTS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun <C> ColumnSet<C>.startsWith(prefix: CharSequence): TransformableColumnSet<C> = nameStartsWith(prefix)
+
+    @Deprecated(
+        message = STARTS_WITH,
+        replaceWith = ReplaceWith(STARTS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun ColumnsSelectionDsl<*>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        nameStartsWith(prefix)
+
+    @Deprecated(
+        message = COL_STARTS_WITH,
+        replaceWith = ReplaceWith(COL_STARTS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun SingleColumn<DataRow<*>>.startsWith(prefix: CharSequence): TransformableColumnSet<*> =
+        colsNameStartsWith(prefix)
+
+    @Deprecated(
+        message = ENDS_WITH,
+        replaceWith = ReplaceWith(ENDS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    @Suppress("UNCHECKED_CAST")
+    public fun <C> ColumnSet<C>.endsWith(suffix: CharSequence): TransformableColumnSet<C> =
+        colsInternal { it.name.endsWith(suffix) } as TransformableColumnSet<C>
+
+    @Deprecated(
+        message = ENDS_WITH,
+        replaceWith = ReplaceWith(ENDS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun ColumnsSelectionDsl<*>.endsWith(suffix: CharSequence): TransformableColumnSet<*> = nameEndsWith(suffix)
+
+    @Deprecated(
+        message = COL_ENDS_WITH,
+        replaceWith = ReplaceWith(COL_ENDS_WITH_REPLACE),
+        level = DeprecationLevel.ERROR,
+    )
+    public fun SingleColumn<DataRow<*>>.endsWith(suffix: CharSequence): TransformableColumnSet<*> =
+        this.ensureIsColumnGroup().colsInternal { it.name.endsWith(suffix) }
 
     // endregion
 }

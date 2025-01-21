@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
@@ -25,10 +26,9 @@ import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
-import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
-import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToDoubleImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
@@ -37,27 +37,29 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
-import org.jetbrains.kotlinx.dataframe.path
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.net.URL
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 @Interpretable("Convert0")
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> = Convert(this, columns)
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> = convert { columns.toColumnSet() }
 
 @Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
     convert { columns.toColumnSet() }
 
+@AccessApiOverload
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
@@ -65,6 +67,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@AccessApiOverload
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
@@ -130,15 +133,29 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
-public fun AnyCol.convertTo(newType: KType): AnyCol {
-    val isTypesAreCorrect = this.type().withNullability(true).isSubtypeOf(typeOf<String?>()) &&
-        newType.withNullability(true) == typeOf<Double?>()
+@Suppress("UNCHECKED_CAST")
+public fun AnyCol.convertTo(newType: KType): AnyCol =
+    when {
+        type().isSubtypeOf(typeOf<String?>()) ->
+            (this as DataColumn<String?>).convertTo(newType)
 
-    if (isTypesAreCorrect) {
-        return (this as DataColumn<String?>).convertToDouble().setNullable(newType.isMarkedNullable)
+        else -> convertToTypeImpl(newType, null)
     }
-    return convertToTypeImpl(newType)
-}
+
+public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: ParserOptions? = null): DataColumn<C> =
+    convertTo(typeOf<C>(), parserOptions) as DataColumn<C>
+
+public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): AnyCol =
+    when {
+        newType.isSubtypeOf(typeOf<Double?>()) ->
+            convertToDoubleImpl(
+                locale = parserOptions?.locale,
+                nullStrings = parserOptions?.nullStrings,
+                useFastDoubleParser = parserOptions?.useFastDoubleParser,
+            ).setNullable(newType.isMarkedNullable)
+
+        else -> convertToTypeImpl(newType, parserOptions)
+    }
 
 @JvmName("convertToLocalDateTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
@@ -187,9 +204,12 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
 
 /**
  * Parses a String column to Double considering locale (number format).
- * If [locale] parameter is defined, it's number format is used for parsing.
- * If [locale] parameter is null, the current system locale is used.
- * If the column cannot be parsed, then the POSIX format is used.
+ *
+ * If any of the parameters is `null`, the global default (in [DataFrame.parser][DataFrame.Companion.parser]) is used.
+ *
+ * @param locale If defined, its number format is used for parsing.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is the system locale.
+ *   If the column cannot be parsed, the POSIX format is used.
  */
 @ExcludeFromSources
 private interface DataColumnStringConvertToDoubleDoc
@@ -197,64 +217,46 @@ private interface DataColumnStringConvertToDoubleDoc
 /** @include [DataColumnStringConvertToDoubleDoc] */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> =
-    convertToDouble(locale = locale, useFastDoubleParser = false)
+    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
 
 /**
  * @include [DataColumnStringConvertToDoubleDoc]
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ * @param nullStrings a set of strings that should be treated as `null` values.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `false` for now.
  */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(
     locale: Locale? = null,
-    useFastDoubleParser: Boolean,
-): DataColumn<Double> = this.castToNullable().convertToDouble(locale, useFastDoubleParser).castToNotNullable()
+    nullStrings: Set<String>?,
+    useFastDoubleParser: Boolean?,
+): DataColumn<Double> =
+    this.castToNullable().convertToDouble(locale, nullStrings, useFastDoubleParser).castToNotNullable()
 
 /** @include [DataColumnStringConvertToDoubleDoc] */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> =
-    convertToDouble(locale = locale, useFastDoubleParser = false)
+    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
 
 /**
  * @include [DataColumnStringConvertToDoubleDoc]
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ * @param nullStrings a set of strings that should be treated as `null` values.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
+ * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser.
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `false` for now.
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(
     locale: Locale? = null,
-    useFastDoubleParser: Boolean,
-): DataColumn<Double?> {
-    fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
-        var currentRow = 0
-        try {
-            return mapIndexed { row, value ->
-                currentRow = row
-                value?.let {
-                    parser(value.trim()) ?: throw TypeConversionException(
-                        value = value,
-                        from = typeOf<String>(),
-                        to = typeOf<Double>(),
-                        column = path,
-                    )
-                }
-            }
-        } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
-        }
-    }
-
-    return if (locale != null) {
-        val explicitParser = Parsers.getDoubleParser(locale, useFastDoubleParser)
-        applyParser(explicitParser)
-    } else {
-        try {
-            val defaultParser = Parsers.getDoubleParser(useFastDoubleParser = useFastDoubleParser)
-            applyParser(defaultParser)
-        } catch (e: TypeConversionException) {
-            val posixParser = Parsers.getDoubleParser(Locale.forLanguageTag("C.UTF-8"), useFastDoubleParser)
-            applyParser(posixParser)
-        }
-    }
-}
+    nullStrings: Set<String>?,
+    useFastDoubleParser: Boolean?,
+): DataColumn<Double?> =
+    convertToDoubleImpl(
+        locale = locale,
+        nullStrings = nullStrings,
+        useFastDoubleParser = useFastDoubleParser,
+    )
 
 @JvmName("convertToFloatFromT")
 public fun <T : Any> DataColumn<T>.convertToFloat(): DataColumn<Float> = convertTo()
@@ -265,6 +267,11 @@ public fun <T : Any> DataColumn<T?>.convertToFloat(): DataColumn<Float?> = conve
 public fun <T : Any> DataColumn<T>.convertToBigDecimal(): DataColumn<BigDecimal> = convertTo()
 
 public fun <T : Any> DataColumn<T?>.convertToBigDecimal(): DataColumn<BigDecimal?> = convertTo()
+
+@JvmName("convertToBigIntegerFromT")
+public fun <T : Any> DataColumn<T>.convertToBigInteger(): DataColumn<BigInteger> = convertTo()
+
+public fun <T : Any> DataColumn<T?>.convertToBigInteger(): DataColumn<BigInteger?> = convertTo()
 
 @JvmName("convertToBooleanFromT")
 public fun <T : Any> DataColumn<T>.convertToBoolean(): DataColumn<Boolean> = convertTo()
@@ -499,6 +506,11 @@ public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
 public fun <T> Convert<T, Any>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
 
 public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
+
+@JvmName("toBigIntegerTAny")
+public fun <T> Convert<T, Any>.toBigInteger(): DataFrame<T> = to<BigInteger>()
+
+public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
 
 @JvmName("toBooleanTAny")
 public fun <T> Convert<T, Any>.toBoolean(): DataFrame<T> = to<Boolean>()

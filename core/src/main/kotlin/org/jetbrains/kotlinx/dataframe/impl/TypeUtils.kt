@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.util.GUESS_VALUE_TYPE
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
@@ -546,12 +548,10 @@ internal fun guessValueType(
 internal val KType.isNothing: Boolean
     get() = classifier == Nothing::class
 
-internal fun nothingType(nullable: Boolean): KType =
-    if (nullable) {
-        typeOf<List<Nothing?>>()
-    } else {
-        typeOf<List<Nothing>>()
-    }.arguments.first().type!!
+internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
+internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
+
+internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
 
 @OptIn(ExperimentalUnsignedTypes::class)
 private val primitiveArrayClasses = setOf(
@@ -646,3 +646,5 @@ internal fun Any.asArrayAsListOrNull(): List<*>? =
         is Array<*> -> asList()
         else -> null
     }
+
+internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecimal

@@ -21,9 +21,14 @@ public interface NoneColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
+     *
+     *
+     *
      *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
@@ -34,11 +39,6 @@ public interface NoneColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`none`**][org.jetbrains.kotlinx.dataframe.api.NoneColumnsSelectionDsl.none]**`()`**
-     *
-     *
-     *
-     *
-     *
      *
      *
      *

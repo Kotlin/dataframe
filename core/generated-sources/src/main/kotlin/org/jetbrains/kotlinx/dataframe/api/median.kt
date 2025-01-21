@@ -7,11 +7,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.interComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
@@ -53,7 +54,7 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOf(): T =
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.median(): DataRow<T> = medianFor(comparableColumns())
+public fun <T> DataFrame<T>.median(): DataRow<T> = medianFor(interComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
     Aggregators.median.aggregateFor(this, columns)
@@ -63,6 +64,7 @@ public fun <T> DataFrame<T>.medianFor(vararg columns: String): DataRow<T> = medi
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     medianFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: KProperty<C?>): DataRow<T> =
     medianFor { columns.toColumnSet() }
 
@@ -74,6 +76,7 @@ public fun <T> DataFrame<T>.median(vararg columns: String): Any = median { colum
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: ColumnReference<C?>): C =
     median { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: KProperty<C?>): C =
     median { columns.toColumnSet() }
 
@@ -85,6 +88,7 @@ public fun <T> DataFrame<T>.medianOrNull(vararg columns: String): Any? = medianO
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C?>): C? =
     medianOrNull { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: KProperty<C?>): C? =
     medianOrNull { columns.toColumnSet() }
 
@@ -96,7 +100,7 @@ public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(
 
 // region GroupBy
 
-public fun <T> Grouped<T>.median(): DataFrame<T> = medianFor(comparableColumns())
+public fun <T> Grouped<T>.median(): DataFrame<T> = medianFor(interComparableColumns())
 
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.median.aggregateFor(this, columns)
@@ -106,6 +110,7 @@ public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medi
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     medianFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: KProperty<C?>): DataFrame<T> =
     medianFor { columns.toColumnSet() }
 
@@ -122,6 +127,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.median(
     name: String? = null,
 ): DataFrame<T> = median(name) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.median(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
     median(name) { columns.toColumnSet() }
 
@@ -134,7 +140,7 @@ public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
 
 // region Pivot
 
-public fun <T> Pivot<T>.median(separate: Boolean = false): DataRow<T> = medianFor(separate, comparableColumns())
+public fun <T> Pivot<T>.median(separate: Boolean = false): DataRow<T> = medianFor(separate, interComparableColumns())
 
 public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     separate: Boolean = false,
@@ -149,6 +155,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     separate: Boolean = false,
 ): DataRow<T> = medianFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     vararg columns: KProperty<C?>,
     separate: Boolean = false,
@@ -162,6 +169,7 @@ public fun <T> Pivot<T>.median(vararg columns: String): DataRow<T> = median { co
 public fun <T, C : Comparable<C>> Pivot<T>.median(vararg columns: ColumnReference<C?>): DataRow<T> =
     median { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.median(vararg columns: KProperty<C?>): DataRow<T> =
     median { columns.toColumnSet() }
 
@@ -174,7 +182,7 @@ public inline fun <T, reified R : Comparable<R>> Pivot<T>.medianOf(
 // region PivotGroupBy
 
 public fun <T> PivotGroupBy<T>.median(separate: Boolean = false): DataFrame<T> =
-    medianFor(separate, comparableColumns())
+    medianFor(separate, interComparableColumns())
 
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
@@ -189,6 +197,7 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
 ): DataFrame<T> = medianFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     vararg columns: KProperty<C?>,
     separate: Boolean = false,
@@ -202,6 +211,7 @@ public fun <T> PivotGroupBy<T>.median(vararg columns: String): DataFrame<T> = me
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(vararg columns: ColumnReference<C?>): DataFrame<T> =
     median { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(vararg columns: KProperty<C?>): DataFrame<T> =
     median { columns.toColumnSet() }
 

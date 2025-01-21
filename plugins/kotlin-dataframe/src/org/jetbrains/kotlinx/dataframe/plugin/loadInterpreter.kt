@@ -91,6 +91,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Move0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairToConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadExcel
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.StringColumnsConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDefault
@@ -100,6 +101,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToTop
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TrimMargin
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Update0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.UpdateWith0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCounts
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
 
 internal fun FirFunctionCall.loadInterpreter(session: FirSession): Interpreter<*>? {
@@ -234,7 +236,7 @@ internal inline fun <reified T> String.load(): T {
         "DataFrameOf0" -> DataFrameOf0()
         "DataFrameBuilderInvoke0" -> DataFrameBuilderInvoke0()
         "ToDataFrameColumn" -> ToDataFrameColumn()
-        "StringColumns" -> ToDataFrameColumn()
+        "StringColumns" -> StringColumnsConstructor()
         "ReadExcel" -> ReadExcel()
         "FillNulls0" -> FillNulls0()
         "UpdateWith0" -> UpdateWith0()
@@ -248,6 +250,7 @@ internal inline fun <reified T> String.load(): T {
         "Update0" -> Update0()
         "Aggregate" -> Aggregate()
         "DataFrameOf3" -> DataFrameOf3()
+        "ValueCounts" -> ValueCounts()
         else -> error("$this")
     } as T
 }

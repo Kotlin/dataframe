@@ -38,7 +38,7 @@ You could find the following articles there:
 * [Rendering to HTML](https://kotlin.github.io/dataframe/tohtml.html#jupyter-notebooks)
 
 ### What's new
-Check out this [notebook with new features](examples/notebooks/feature_overviews/0.14.0/new_features.ipynb) in development for the next release.
+Check out this [notebook with new features](examples/notebooks/feature_overviews/0.15/new_features.ipynb) in v0.15.
 
 The DataFrame compiler plugin has reached public preview!
 Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-demo) that works with [IntelliJ IDEA](https://www.jetbrains.com/idea/) 2024.2.
@@ -46,13 +46,13 @@ Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-d
 ## Setup
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:0.14.1")
+implementation("org.jetbrains.kotlinx:dataframe:0.15.0")
 ```
 
 Optional Gradle plugin for enhanced type safety and schema generation
 https://kotlin.github.io/dataframe/schemasgradle.html
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.14.1"
+id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
@@ -77,7 +77,7 @@ df.filter { "stargazers_count"<Int>() > 50 }.print()
 
 Requires Gradle plugin to work
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.14.1"
+id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
 ```
 
 Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
@@ -229,6 +229,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
 | 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 3.0.0           | 15.0.0               |
 | 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 3.0.0           | 17.0.0               |
+| 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 3.0.0           | 18.1.0               |
 
 ## Code of Conduct
 

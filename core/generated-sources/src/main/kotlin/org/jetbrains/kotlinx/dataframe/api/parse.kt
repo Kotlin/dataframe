@@ -4,20 +4,32 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
+import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
-public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
+/**
+ * ### Global Parser Options
+ *
+ * These options are used to configure how [DataColumns][DataColumn] of type [String] or [String?][String]
+ * should be parsed.
+ * You can always pass a [ParserOptions] object to functions that perform parsing, like [tryParse], [parse],
+ * or even [DataFrame.readCSV][DataFrame.Companion.readCSV] to override these options.
+ */
+public val DataFrame.Companion.parser: GlobalParserOptions
+    get() = Parsers
 
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
     parseImpl(options, columns)
@@ -25,9 +37,11 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: Colum
 public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
@@ -37,13 +51,32 @@ public interface GlobalParserOptions {
 
     public fun addNullString(str: String)
 
+    /** This function can be called to skip some types. Parsing will be attempted for all other types. */
+    public fun addSkipType(type: KType)
+
+    /** Whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now. */
+    public var useFastDoubleParser: Boolean
+
     public fun resetToDefault()
 
     public var locale: Locale
+
+    public val nulls: Set<String>
+
+    public val skipTypes: Set<KType>
 }
 
 /**
  * ### Options for parsing [String]`?` columns
+ *
+ * These options are used to configure how [DataColumn]s of type [String] or [String?][String] should be parsed.
+ * They can be passed to [tryParse] and [parse] functions.
+ *
+ * You can also use the [DataFrame.parser][DataFrame.Companion.parser] property to access and modify
+ * the global parser configuration.
+ *
+ * If any of the arguments in [ParserOptions] are `null` (or [ParserOptions] itself is `null`),
+ * the global configuration will be queried.
  *
  * @param locale locale to use for parsing dates and numbers, defaults to the System default locale.
  *   If specified instead of [dateTimeFormatter], it will be used in combination with [dateTimePattern]
@@ -55,16 +88,19 @@ public interface GlobalParserOptions {
  * @param dateTimePattern a pattern to use for parsing dates. If specified instead of [dateTimeFormatter],
  *   it will be used to create a [DateTimeFormatter].
  * @param nullStrings a set of strings that should be treated as `null` values. By default, it's
- *   ["null", "NULL", "NA", "N/A"].
+ *   `["null", "NULL", "NA", "N/A"]`.
+ * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
+ *   By default, it's an empty set. To skip all types except a specified one, use [convertTo] instead.
  * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
  */
-public data class ParserOptions(
-    val locale: Locale? = null,
+public class ParserOptions(
+    public val locale: Locale? = null,
     // TODO, migrate to kotlinx.datetime.format.DateTimeFormat? https://github.com/Kotlin/dataframe/issues/876
-    val dateTimeFormatter: DateTimeFormatter? = null,
-    val dateTimePattern: String? = null,
-    val nullStrings: Set<String>? = null,
-    val useFastDoubleParser: Boolean = false,
+    public val dateTimeFormatter: DateTimeFormatter? = null,
+    public val dateTimePattern: String? = null,
+    public val nullStrings: Set<String>? = null,
+    public val skipTypes: Set<KType>? = null,
+    public val useFastDoubleParser: Boolean? = null,
 ) {
 
     /** For binary compatibility. */
@@ -82,7 +118,8 @@ public data class ParserOptions(
         dateTimeFormatter = dateTimeFormatter,
         dateTimePattern = dateTimePattern,
         nullStrings = nullStrings,
-        useFastDoubleParser = false,
+        skipTypes = null,
+        useFastDoubleParser = null,
     )
 
     /** For binary compatibility. */
@@ -101,6 +138,7 @@ public data class ParserOptions(
             dateTimeFormatter = dateTimeFormatter,
             dateTimePattern = dateTimePattern,
             nullStrings = nullStrings,
+            skipTypes = skipTypes,
             useFastDoubleParser = useFastDoubleParser,
         )
 
@@ -111,6 +149,52 @@ public data class ParserOptions(
             dateTimePattern != null -> DateTimeFormatter.ofPattern(dateTimePattern)
             else -> null
         }
+
+    public fun copy(
+        locale: Locale? = this.locale,
+        dateTimeFormatter: DateTimeFormatter? = this.dateTimeFormatter,
+        dateTimePattern: String? = this.dateTimePattern,
+        nullStrings: Set<String>? = this.nullStrings,
+        skipTypes: Set<KType>? = this.skipTypes,
+        useFastDoubleParser: Boolean? = this.useFastDoubleParser,
+    ): ParserOptions =
+        ParserOptions(
+            locale = locale,
+            dateTimeFormatter = dateTimeFormatter,
+            dateTimePattern = dateTimePattern,
+            nullStrings = nullStrings,
+            skipTypes = skipTypes,
+            useFastDoubleParser = useFastDoubleParser,
+        )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ParserOptions
+
+        if (useFastDoubleParser != other.useFastDoubleParser) return false
+        if (locale != other.locale) return false
+        if (dateTimeFormatter != other.dateTimeFormatter) return false
+        if (dateTimePattern != other.dateTimePattern) return false
+        if (nullStrings != other.nullStrings) return false
+        if (skipTypes != other.skipTypes) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = useFastDoubleParser?.hashCode() ?: 0
+        result = 31 * result + (locale?.hashCode() ?: 0)
+        result = 31 * result + (dateTimeFormatter?.hashCode() ?: 0)
+        result = 31 * result + (dateTimePattern?.hashCode() ?: 0)
+        result = 31 * result + (nullStrings?.hashCode() ?: 0)
+        result = 31 * result + (skipTypes?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun toString(): String =
+        "ParserOptions(locale=$locale, dateTimeFormatter=$dateTimeFormatter, dateTimePattern=$dateTimePattern, nullStrings=$nullStrings, skipTypes=$skipTypes, useFastDoubleParser=$useFastDoubleParser)"
 }
 
 /** Tries to parse a column of strings into a column of a different type.

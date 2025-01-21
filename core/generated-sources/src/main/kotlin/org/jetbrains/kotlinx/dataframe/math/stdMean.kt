@@ -4,6 +4,7 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
 import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.math.sqrt
 
 public data class BasicStats(val count: Int, val mean: Double, val variance: Double) {
@@ -113,4 +114,21 @@ public fun Iterable<BigDecimal>.varianceAndMean(): BasicStats {
         variance += diff * diff
     }
     return BasicStats(count, mean.toDouble(), variance.toDouble())
+}
+
+@JvmName("bigIntegerVarianceAndMean")
+public fun Iterable<BigInteger>.varianceAndMean(): BasicStats {
+    var count = 0
+    var sum = BigInteger.ZERO
+    for (element in this) {
+        sum += element
+        count++
+    }
+    val mean = sum.toDouble() / count
+    var variance = .0
+    for (element in this) {
+        val diff = element.toDouble() - mean
+        variance += diff * diff
+    }
+    return BasicStats(count, mean, variance)
 }

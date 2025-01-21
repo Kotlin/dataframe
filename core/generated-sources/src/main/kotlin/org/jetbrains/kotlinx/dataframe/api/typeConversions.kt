@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -83,7 +84,7 @@ public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
 }
 
 public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
-    require(isComparable())
+    require(valuesAreComparable())
     return this as DataColumn<Comparable<T>>
 }
 
@@ -254,6 +255,7 @@ public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): Valu
 public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T>): ValueColumn<T> =
     toValueColumn(column.name())
 
+@AccessApiOverload
 public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): ValueColumn<T> =
     toValueColumn(column.columnName)
 
@@ -357,6 +359,7 @@ public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataCol
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.createByType(ref.name(), asList()).forceResolve()
 
+@AccessApiOverload
 public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
     DataColumn.createByType(property.columnName, asList()).forceResolve()
 
@@ -388,6 +391,7 @@ public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor<T>): Colum
 public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> =
     GroupByImpl(this, getFrameColumn(groupedColumnName).castFrameColumn()) { none() }
 
+@AccessApiOverload
 public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> =
     GroupByImpl(this, getFrameColumn(groupedColumn.name()).castFrameColumn()) { none() }
 
