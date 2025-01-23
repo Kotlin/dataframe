@@ -365,7 +365,7 @@ class Modify : TestBase() {
 
         // a.b.e -> be
         // c.d.e -> de
-        df.move { colsAtAnyDepth { it.name() == "e" } }.toTop { it.parentName + it.name() }
+        df.move { colsAtAnyDepth().nameContains("e") }.toTop { it.parentName + it.name() }
         // SampleEnd
     }
 
