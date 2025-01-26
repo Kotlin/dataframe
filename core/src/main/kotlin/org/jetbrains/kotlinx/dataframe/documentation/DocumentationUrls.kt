@@ -74,4 +74,7 @@ internal interface DocumentationUrls {
 
     /** [See `update` on the documentation website.]({@include [Url]}/update.html) */
     interface Update
+
+    /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
+    interface Distinct
 }
