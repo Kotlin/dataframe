@@ -1,6 +1,7 @@
 [versions]
 ksp = "2.0.20-1.0.24"
 kotlinJupyter = "0.12.0-139"
+kotlinxMetadata = "0.7.0"
 
 ktlint = "12.1.2"
 
@@ -147,6 +148,8 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 kotlin-script-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-annotations-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-jupyter-test-kit = { group = "org.jetbrains.kotlinx", name = "kotlin-jupyter-test-kit", version.ref = "kotlinJupyter" }
+kotlin-metadata = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinxMetadata" }
+kotlin-analysis = { group = "org.jetbrains.kotlin", name = "kotlin-analysis-api", version.ref = "kotlin" }
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "benchmark" }
 dataframe-symbol-processor = { group = "org.jetbrains.kotlinx.dataframe", name = "symbol-processor-all" }
 

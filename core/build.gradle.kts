@@ -78,6 +78,14 @@ dependencies {
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
 
+    // Apache POI for XLSX support
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
+
+    // Kotlin compiler for parsing Kotlin code
+    implementation(libs.kotlin.compiler)
+    implementation(libs.kotlin.compiler.embeddable)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
