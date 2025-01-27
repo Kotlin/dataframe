@@ -91,10 +91,25 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
             .toCamelCaseByDelimiters(DELIMITERS_REGEX)
             .replaceFirstChar { it.lowercaseChar() }
     }
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.renameToCamelCase().name() }
 
 // endregion
 
 // region DataColumn
+
+/**
+ * ## Rename to camelCase
+ *
+ * Renames this column to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
+ * and converting the first char to lowercase.
+ */
+@Suppress("UNCHECKED_CAST")
+public fun <T, C : ColumnReference<T>> C.renameToCamelCase(): C =
+    rename(
+        this.name()
+            .toCamelCaseByDelimiters(DELIMITERS_REGEX)
+            .replaceFirstChar { it.lowercaseChar() },
+    ) as C
 
 @Suppress("UNCHECKED_CAST")
 public fun <T, C : ColumnReference<T>> C.rename(column: KProperty<T>): C = rename(column.columnName) as C
