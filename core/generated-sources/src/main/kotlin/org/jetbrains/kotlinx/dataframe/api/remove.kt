@@ -65,11 +65,11 @@ internal interface Remove
  *
  * #### For example:
  *
- * `df.`<code>`operation`</code>` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+ * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
  *
- * `df.`<code>`operation`</code>`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`<code>`operation`</code>`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+ * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
  *
  *
  * @param [columns] The [Columns Selector][ColumnsSelector] used to remove the columns of this [DataFrame].
@@ -95,7 +95,7 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * #### For example:
  *
- * `df.`<code>`operation`</code>`("length", "age")`
+ * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`("length", "age")`
  *
  * @param [columns] The [Column Names][String] used to remove the columns of this [DataFrame].
  */
@@ -121,7 +121,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  *
  * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
- * `df.`<code>`operation`</code>`(length, age)`
+ * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`(length, age)`
  *
  * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
  */
@@ -146,7 +146,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
  * data class Person(val length: Double, val age: Double)
  * ```
  *
- * `df.`<code>`operation`</code>`(Person::length, Person::age)`
+ * `df.`[remove][org.jetbrains.kotlinx.dataframe.api.remove]`(Person::length, Person::age)`
  *
  * @param [columns] The [KProperties][KProperty] used to remove the columns of this [DataFrame].
  */
@@ -157,17 +157,17 @@ public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> =
 
 // region minus
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 public infix operator fun <T> DataFrame<T>.minus(columns: ColumnsSelector<T, *>): DataFrame<T> = remove(columns)
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> = remove(column)
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
 public infix operator fun <T> DataFrame<T>.minus(column: AnyColumnReference): DataFrame<T> = remove(column)
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
 public infix operator fun <T> DataFrame<T>.minus(columns: KProperty<*>): DataFrame<T> = remove(columns)
 

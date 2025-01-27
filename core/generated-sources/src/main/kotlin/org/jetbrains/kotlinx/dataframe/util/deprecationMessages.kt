@@ -73,14 +73,14 @@ internal const val IS_URL = "This function is replaced by `isUrl()`. $MESSAGE_0_
 internal const val IS_URL_REPLACE = "isUrl(path)"
 internal const val IS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.isUrl"
 
+internal const val MINUS = "This minus overload will be removed in favor of `remove`. $MESSAGE_0_16"
+internal const val MINUS_REPLACE = "this.remove(columns)"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
 
 private const val MESSAGE_0_17 = "Will be ERROR in 0.17."
-
-internal const val MINUS = "This minus overload will be removed in favor of `remove`. $MESSAGE_0_17"
-internal const val MINUS_REPLACE = "this.remove(columns)"
 
 // endregion
 
