@@ -102,6 +102,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TrimMargin
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Update0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.UpdateWith0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCounts
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameToCamelCase
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameToCamelCaseClause
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
 
 internal fun FirFunctionCall.loadInterpreter(session: FirSession): Interpreter<*>? {
@@ -251,6 +253,8 @@ internal inline fun <reified T> String.load(): T {
         "Aggregate" -> Aggregate()
         "DataFrameOf3" -> DataFrameOf3()
         "ValueCounts" -> ValueCounts()
+        "RenameToCamelCase" -> RenameToCamelCase()
+        "RenameToCamelCaseClause" -> RenameToCamelCaseClause()
         else -> error("$this")
     } as T
 }
