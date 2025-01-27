@@ -1261,6 +1261,9 @@ public final class org/jetbrains/kotlinx/dataframe/aggregation/NamedValue {
 public final class org/jetbrains/kotlinx/dataframe/aggregation/NamedValue$Companion {
 }
 
+public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annotations/CandidateForRemoval : java/lang/annotation/Annotation {
+}
+
 public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annotations/ColumnName : java/lang/annotation/Annotation {
 	public abstract fun name ()Ljava/lang/String;
 }
