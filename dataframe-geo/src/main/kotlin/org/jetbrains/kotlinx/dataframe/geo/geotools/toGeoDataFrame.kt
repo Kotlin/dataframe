@@ -59,7 +59,7 @@ fun SimpleFeatureCollection.toGeoDataFrame(): GeoDataFrame<*> {
         }
     }
 
-    val geometryColumn = DataColumn.create("geometry", geometries, Infer.Type)
+    val geometryColumn = DataColumn.createByType("geometry", geometries, Infer.Type)
 
     @Suppress("UNCHECKED_CAST")
     return GeoDataFrame((data.toDataFrame() + geometryColumn) as DataFrame<WithGeometry>, crs)
