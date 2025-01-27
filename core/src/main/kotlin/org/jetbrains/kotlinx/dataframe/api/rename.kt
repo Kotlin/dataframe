@@ -52,6 +52,8 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * and converting the first char to lowercase.
  * Even [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
  */
+@Refine
+@Interpretable("RenameToCamelCase")
 public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> =
     // recursively rename all columns written with delimiters or starting with a capital to camel case
     rename {
@@ -83,16 +85,27 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  * Renames the selected columns to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
  * and converting the first char to lowercase.
  */
-public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
-    into {
-        it.name()
-            .toCamelCaseByDelimiters(DELIMITERS_REGEX)
-            .replaceFirstChar { it.lowercaseChar() }
-    }
+@Refine
+@Interpretable("RenameToCamelCaseClause")
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.renameToCamelCase().name() }
 
 // endregion
 
 // region DataColumn
+
+/**
+ * ## Rename to camelCase
+ *
+ * Renames this column to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
+ * and converting the first char to lowercase.
+ */
+@Suppress("UNCHECKED_CAST")
+public fun <T, C : ColumnReference<T>> C.renameToCamelCase(): C =
+    rename(
+        this.name()
+            .toCamelCaseByDelimiters(DELIMITERS_REGEX)
+            .replaceFirstChar { it.lowercaseChar() },
+    ) as C
 
 @Suppress("UNCHECKED_CAST")
 public fun <T, C : ColumnReference<T>> C.rename(column: KProperty<T>): C = rename(column.columnName) as C
