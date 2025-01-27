@@ -224,7 +224,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
         @Deprecated(
             message = CREATE_FRAME_COLUMN,
             replaceWith = ReplaceWith(CREATE_FRAME_COLUMN_REPLACE, CHUNKED_IMPL_IMPORT),
-            level = DeprecationLevel.WARNING,
+            level = DeprecationLevel.ERROR,
         )
         public fun <T> createFrameColumn(name: String, df: DataFrame<T>, startIndices: Iterable<Int>): FrameColumn<T> =
             df.chunkedImpl(startIndices = startIndices, name = name)
@@ -236,7 +236,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
                 CREATE_BY_INFERENCE_IMPORT,
                 TYPE_SUGGESTION_IMPORT,
             ),
-            level = DeprecationLevel.WARNING,
+            level = DeprecationLevel.ERROR,
         )
         public fun <T> createWithTypeInference(
             name: String,
@@ -253,7 +253,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
         @Deprecated(
             message = CREATE,
             replaceWith = ReplaceWith(CREATE_REPLACE, CREATE_BY_TYPE_IMPORT),
-            level = DeprecationLevel.WARNING,
+            level = DeprecationLevel.ERROR,
         )
         public fun <T> create(
             name: String,
@@ -271,7 +271,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
         @Deprecated(
             message = CREATE,
             replaceWith = ReplaceWith(CREATE_INLINE_REPLACE, CREATE_BY_TYPE_IMPORT),
-            level = DeprecationLevel.WARNING,
+            level = DeprecationLevel.ERROR,
         )
         public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
             createByType(name = name, values = values, type = typeOf<T>(), infer = infer)
