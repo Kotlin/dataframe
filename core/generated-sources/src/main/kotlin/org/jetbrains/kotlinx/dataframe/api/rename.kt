@@ -301,6 +301,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf.name)
 
     /**
@@ -328,6 +329,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf.columnName)
 
     /**
@@ -382,6 +384,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun String.named(nameOf: ColumnReference<*>): ColumnReference<*> =
         toColumnAccessor().named(nameOf.name)
 
@@ -410,6 +413,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun String.named(nameOf: KProperty<*>): ColumnReference<*> =
         toColumnAccessor().named(nameOf.columnName)
 
@@ -438,6 +442,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [newName] A [String] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(newName: String): ColumnReference<C> = toColumnAccessor().named(newName)
 
     /**
@@ -465,6 +470,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.name)
 
@@ -493,6 +499,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.columnName)
 
@@ -552,6 +559,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -579,6 +587,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -633,6 +642,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun String.into(nameOf: ColumnReference<*>): ColumnReference<*> = named(nameOf)
 
     /**
@@ -660,6 +670,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun String.into(nameOf: KProperty<*>): ColumnReference<*> = named(nameOf)
 
     /**
@@ -687,6 +698,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [newName] A [String] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(newName: String): ColumnReference<C> = named(newName)
 
     /**
@@ -714,6 +726,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [ColumnReference] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -741,6 +754,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [nameOf] A [KProperty] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
 
     // endregion

@@ -32,6 +32,7 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
 
     public fun String.desc(): SingleColumn<Comparable<*>?> = invoke<Comparable<*>>().desc()
 
+    @AccessApiOverload
     public fun <C> KProperty<C>.desc(): SingleColumn<C> = toColumnAccessor().desc()
 
     public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean = true): ColumnSet<C?> =
@@ -43,6 +44,7 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
     public fun String.nullsLast(flag: Boolean = true): SingleColumn<Comparable<*>?> =
         invoke<Comparable<*>>().nullsLast(flag)
 
+    @AccessApiOverload
     public fun <C> KProperty<C?>.nullsLast(flag: Boolean = true): SingleColumn<C?> = toColumnAccessor().nullsLast(flag)
 }
 
