@@ -121,7 +121,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -189,7 +188,6 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
-import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -956,16 +954,9 @@ class DataFrameTests : BaseTest() {
 
         fun check(body: () -> AnyFrame) = body().columnNames() shouldBe expected
 
-        check { typed - { age } }
-        check { typed - { it.age } }
         check { typed.remove { age } }
         check { typed.remove { it.age } }
-
-        check { df - { age } }
-        check { df - age }
         check { df.remove(age) }
-
-        check { df - "age" }
         check { df.remove("age") }
     }
 
@@ -975,20 +966,14 @@ class DataFrameTests : BaseTest() {
 
         fun check(body: () -> AnyFrame) = body().columnNames() shouldBe expected
 
-        check { typed - { age and weight } }
-        check { typed - { it.age and it.weight } }
-        check { typed - { age } - { weight } }
-        check { typed - { it.age } - { it.weight } }
+        check { typed.remove { age }.remove { weight } }
+        check { typed.remove { it.age }.remove { it.weight } }
         check { typed.remove { age and weight } }
         check { typed.remove { it.age and it.weight } }
-
-        check { df - { age and weight } }
-        check { df - age - weight }
-        check { df - { age } - { weight } }
         check { df.remove(age, weight) }
 
-        check { df - { "age" and "weight" } }
-        check { df - "age" - "weight" }
+        check { df.remove { "age" and "weight" } }
+        check { df.remove { "age"() }.remove { "weight"() } }
         check { df.remove("age", "weight") }
     }
 
