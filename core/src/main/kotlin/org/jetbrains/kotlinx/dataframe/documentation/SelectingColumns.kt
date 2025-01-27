@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import kotlin.reflect.KProperty
 
 /** [Selecting Columns][SelectingColumns] */
+@ExcludeFromSources
 internal interface SelectingColumnsLink
 
 /**
@@ -38,15 +40,23 @@ internal interface SelectingColumnsLink
  */
 internal interface SelectingColumns {
 
+    /**
+     * This operation can also be used on [ColumnGroup] and nested columns.
+     */
+    @ExcludeFromSources
+    interface ColumnGroupsAndNestedColumnsMention
+
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
+    @ExcludeFromSources
     interface OPERATION
 
     // Using <code>` notation to not create double `` when including
 
     /** {@set [OPERATION] <code>`operation`</code>} */
+    @ExcludeFromSources
     interface SetDefaultOperationArg
 
     /**
@@ -88,6 +98,7 @@ internal interface SelectingColumns {
     }
 
     /** [Columns Selection DSL][Dsl.WithExample] */
+    @ExcludeFromSources
     interface DslLink
 
     /**
@@ -127,6 +138,7 @@ internal interface SelectingColumns {
     }
 
     /** [Column Selection DSL][DslSingle.WithExample] */
+    @ExcludeFromSources
     interface DslSingleLink
 
     /**
@@ -147,6 +159,7 @@ internal interface SelectingColumns {
     }
 
     /** [Column names][ColumnNames.WithExample] */
+    @ExcludeFromSources
     interface ColumnNamesLink
 
     /**
@@ -171,6 +184,7 @@ internal interface SelectingColumns {
     }
 
     /** [Column references][ColumnAccessors.WithExample] */
+    @ExcludeFromSources
     interface ColumnAccessorsLink
 
     /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
@@ -191,5 +205,6 @@ internal interface SelectingColumns {
     }
 
     /** [KProperties][KProperties.WithExample] */
+    @ExcludeFromSources
     interface KPropertiesLink
 }
