@@ -64,7 +64,7 @@ public fun AnyCol.isList(): Boolean = typeClass == List::class
 @Deprecated(
     message = IS_COMPARABLE,
     replaceWith = ReplaceWith(IS_COMPARABLE_REPLACE, IS_INTER_COMPARABLE_IMPORT),
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
 )
 public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
 
