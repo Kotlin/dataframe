@@ -74,4 +74,7 @@ internal interface DocumentationUrls {
 
     /** [See `update` on the documentation website.]({@include [Url]}/update.html) */
     interface Update
+
+    /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
+    interface Remove
 }

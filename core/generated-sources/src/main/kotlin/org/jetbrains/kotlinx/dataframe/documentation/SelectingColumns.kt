@@ -16,9 +16,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import kotlin.reflect.KProperty
 
-/** [Selecting Columns][SelectingColumns] */
-internal interface SelectingColumnsLink
-
 /**
  * ## Selecting Columns
  * Selecting columns for various operations (including but not limited to
@@ -89,15 +86,7 @@ internal interface SelectingColumnsLink
  */
 internal interface SelectingColumns {
 
-    /*
-     * The key for a @set that will define the operation name for the examples below.
-     * Make sure to [alias][your examples].
-     */
-    interface OPERATION
-
     // Using <code>` notation to not create double `` when including
-
-    interface SetDefaultOperationArg
 
     /**
      * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
@@ -158,9 +147,6 @@ internal interface SelectingColumns {
         interface WithExample
     }
 
-    /** [Columns Selection DSL][Dsl.WithExample] */
-    interface DslLink
-
     /**
      * Select or express a single column using the Column Selection DSL.
      * (Any [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
@@ -217,9 +203,6 @@ internal interface SelectingColumns {
         interface WithExample
     }
 
-    /** [Column Selection DSL][DslSingle.WithExample] */
-    interface DslSingleLink
-
     /**
      * Select columns using their [column names][String]
      * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
@@ -237,9 +220,6 @@ internal interface SelectingColumns {
          */
         interface WithExample
     }
-
-    /** [Column names][ColumnNames.WithExample] */
-    interface ColumnNamesLink
 
     /**
      * Select columns using [column accessors][ColumnReference]
@@ -263,9 +243,6 @@ internal interface SelectingColumns {
         interface WithExample
     }
 
-    /** [Column references][ColumnAccessors.WithExample] */
-    interface ColumnAccessorsLink
-
     /** Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]). */
     interface KProperties {
 
@@ -282,7 +259,4 @@ internal interface SelectingColumns {
          */
         interface WithExample
     }
-
-    /** [KProperties][KProperties.WithExample] */
-    interface KPropertiesLink
 }
