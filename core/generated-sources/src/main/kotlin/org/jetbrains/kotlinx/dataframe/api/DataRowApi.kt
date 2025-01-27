@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -20,8 +21,10 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
+@CandidateForRemoval
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 
+@CandidateForRemoval
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
@@ -182,10 +185,13 @@ public fun AnyRow.columnNames(): List<String> = df().columnNames()
 
 public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
+@CandidateForRemoval
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
+@CandidateForRemoval
 public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
 
+@CandidateForRemoval
 public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
 
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
