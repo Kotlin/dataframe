@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty
  */
 internal interface Remove
 
-/** {@set [SelectingColumns.OperationArg] [remove][remove]} */
+/** {@set [SelectingColumns.OPERATION] [remove][remove]} */
 @ExcludeFromSources
 private interface SetRemoveOperationArg
 
@@ -82,17 +82,17 @@ public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> =
 
 // region minus
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 public infix operator fun <T> DataFrame<T>.minus(columns: ColumnsSelector<T, *>): DataFrame<T> = remove(columns)
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> = remove(column)
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
 public infix operator fun <T> DataFrame<T>.minus(column: AnyColumnReference): DataFrame<T> = remove(column)
 
-@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.WARNING)
+@Deprecated(MINUS, ReplaceWith(MINUS_REPLACE), DeprecationLevel.ERROR)
 @AccessApiOverload
 public infix operator fun <T> DataFrame<T>.minus(columns: KProperty<*>): DataFrame<T> = remove(columns)
 
