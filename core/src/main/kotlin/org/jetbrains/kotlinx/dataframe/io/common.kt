@@ -76,7 +76,7 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
 @Deprecated(
     message = IS_URL,
     replaceWith = ReplaceWith(IS_URL_REPLACE, IS_URL_IMPORT),
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
 )
 public fun isURL(path: String): Boolean = isUrl(path)
 
