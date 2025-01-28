@@ -15,8 +15,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.removeAll
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE_VARARG
@@ -99,7 +99,8 @@ public interface AllExceptColumnsSelectionDsl {
      * which will 'subtract' the [ColumnSet] created by `age `[and][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [colsOf][colsOf]`<`[Int][Int]`>()`.
      *
      * {@include [LineBreak]}
-     * This operation can also be used to exclude columns from [Column Groups][ColumnGroup].
+     * This operation can also be used to exclude columns originating from [Column Groups][ColumnGroup], although
+     * they need to be directly included in the [ColumnSet], like when using [`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth].
      *
      * For instance:
      *
@@ -110,12 +111,11 @@ public interface AllExceptColumnsSelectionDsl {
      * scope. Use the {@include [ExtensionPropertiesApiLink]} to prevent scoping issues if possible.
      * {@include [LineBreak]}
      * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet], it is excepted
-     * each time it is encountered (including inside [ColumnGroups][ColumnGroup]). You could say the receiver [ColumnSet]
-     * is [simplified][ColumnsSelectionDsl.simplify] before the operation is performed:
+     * each time it is encountered (including inside [ColumnGroups][ColumnGroup]):
      *
      * [cols][ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][ColumnSet.except]`(a.b)`
      *
-     * `== `[cols][ColumnsSelectionDsl.cols]`(a).`[except][ColumnSet.except]`(a.b)`
+     * `== `[cols][ColumnsSelectionDsl.cols]`(a, a, a.b).`[except][ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]
      * Instead of having to write [all][ColumnsSelectionDsl.all]`() `[except][ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -123,7 +123,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`  { userData.age  `[and][ColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][DataFrame.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`  { userData  `[and][ColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][ColumnGroup]
      * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it changes the scope relative to
@@ -142,7 +142,7 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[allCols][ColumnsSelectionDsl.allCols]`() `[except][ColumnSet.except]`  { myColGroup.colA  `[and][ColumnsSelectionDsl.and]` myColGroup.colB } }`
      * {@include [LineBreak]}
      * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
-     * columns inside the group, 'lifting' them out.
+     * columns inside the group, not the group itself.
      *
      * ### Examples for this overload
      * {@get [EXAMPLE]}
@@ -655,7 +655,7 @@ public interface AllExceptColumnsSelectionDsl {
 }
 
 /**
- * Removes the columns in the "other" ColumnsResolver from the current ColumnSet while keeping the structure intact.
+ * Removes the columns in the "other" ColumnsResolver from the current ColumnSet.
  * Returns a new ColumnSet with the remaining columns.
  *
  * @param other The ColumnsResolver containing the columns to be removed.
@@ -666,7 +666,7 @@ internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnS
     createColumnSet { context ->
         val resolvedCols = this.resolve(context)
         val resolvedColsToExcept = other.resolve(context)
-        resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
+        resolvedCols.removeAll(resolvedColsToExcept)
     } as ColumnSet<C>
 
 /**
