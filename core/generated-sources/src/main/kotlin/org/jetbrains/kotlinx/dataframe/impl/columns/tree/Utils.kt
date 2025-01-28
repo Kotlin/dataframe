@@ -31,6 +31,17 @@ internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, createData: (ColumnPath)
 }
 
 /**
+ * Checks if a given column path exists from the current tree node.
+ *
+ * @param path The sequence of column path parts to check from the tree node.
+ * @return True if the specified path exists from the tree node, false otherwise.
+ */
+internal operator fun <T> TreeNode<T>.contains(path: ColumnPath): Boolean =
+    path.fold(this as TreeNode<T>?) { node, pathPart ->
+        node?.get(pathPart)
+    } != null
+
+/**
  * Traverses all children in the tree in depth-first order and returns the top-most nodes that satisfy
  * [yieldCondition]. This means that if a node satisfies [yieldCondition], its children are not traversed, regardless of
  * whether they satisfy [yieldCondition] or not.
