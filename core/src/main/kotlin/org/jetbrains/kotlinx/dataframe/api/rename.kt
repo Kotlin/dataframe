@@ -273,6 +273,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf.name)
 
     /**
@@ -281,6 +282,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf.columnName)
 
     /**
@@ -297,6 +299,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @AccessApiOverload
     public infix fun String.named(nameOf: ColumnReference<*>): ColumnReference<*> =
         toColumnAccessor().named(nameOf.name)
 
@@ -306,6 +309,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @AccessApiOverload
     public infix fun String.named(nameOf: KProperty<*>): ColumnReference<*> =
         toColumnAccessor().named(nameOf.columnName)
 
@@ -315,6 +319,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(newName: String): ColumnReference<C> = toColumnAccessor().named(newName)
 
     /**
@@ -323,6 +328,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.name)
 
@@ -332,6 +338,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.columnName)
 
@@ -353,6 +360,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -361,6 +369,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -377,6 +386,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @AccessApiOverload
     public infix fun String.into(nameOf: ColumnReference<*>): ColumnReference<*> = named(nameOf)
 
     /**
@@ -385,6 +395,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @AccessApiOverload
     public infix fun String.into(nameOf: KProperty<*>): ColumnReference<*> = named(nameOf)
 
     /**
@@ -393,6 +404,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(newName: String): ColumnReference<C> = named(newName)
 
     /**
@@ -401,6 +413,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -409,6 +422,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
 
     // endregion
