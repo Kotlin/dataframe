@@ -23,7 +23,7 @@ import kotlin.reflect.KProperty
  *
  * Removes the specified [columns] from the original [DataFrame] and returns a new [DataFrame] without them.
  *
- * This operation can also be used on [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][Select.SelectSelectingOptions].
  *
@@ -36,7 +36,7 @@ internal interface Remove
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
  *
- * This operation can also be used on [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -84,7 +84,7 @@ public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
  *
- * This operation can also be used on [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -106,7 +106,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
  *
- * This operation can also be used on [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -133,7 +133,7 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
  *
  * Removes the specified [columns][org.jetbrains.kotlinx.dataframe.columns] from the original [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] and returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] without them.
  *
- * This operation can also be used on [ColumnGroup][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
