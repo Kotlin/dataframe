@@ -41,7 +41,7 @@ internal interface SelectingColumnsLink
 internal interface SelectingColumns {
 
     /**
-     * This operation can also be used on [ColumnGroup] and nested columns.
+     * This can include [column groups][ColumnGroup] and nested columns.
      */
     @ExcludeFromSources
     interface ColumnGroupsAndNestedColumnsMention
