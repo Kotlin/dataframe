@@ -381,6 +381,16 @@ internal fun <T> List<ColumnWithPath<T>>.simplify(): List<ColumnWithPath<T>> {
     return root.topmostChildren { it.data != null }.map { it.data!! }
 }
 
+
+private fun ColumnWithPath<*>.renderName(): String =
+    if (isColumnGroup()) {
+        "${path.joinToString()}/{${
+            columns().map { it.addPath() }.joinToString { it.renderName() }
+        }}"
+    } else {
+        path.joinToString()
+    }
+
 /**
  * Returns a new list of distinct column paths, except the ones inside [columns].
  * NOTE: There are no structural changes as removing nested columns is not allowed.
@@ -408,9 +418,9 @@ internal fun List<ColumnWithPath<*>>.removeAll(columnsToRemove: Iterable<ColumnW
         if (nestedColumns.isNotEmpty()) {
             throw IllegalArgumentException(
                 "Cannot exclude the nested columns '[${
-                    nestedColumns.joinToString { it.path.joinToString() }
+                    nestedColumns.joinToString { it.joinToString() }
                 }]' from the column set '[${
-                    this.joinToString { it.path.joinToString() }
+                    this.joinToString { it.renderName() }
                 }]' with the except-functions. Use the `DataFrame<*>.remove { }` operation instead.",
             )
         }
