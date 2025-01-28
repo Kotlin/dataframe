@@ -343,13 +343,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnsSelectionDslDocs]
-     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
-     *  the columns (relative to the current scope) that need to be excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(pathOf("age"), "userdata"["height"])`
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `("name"["firstName"], "name"["middleName"])`
-     */
+    @Deprecated(message = ALL_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
@@ -436,15 +430,6 @@ public interface AllExceptColumnsSelectionDsl {
          * @set [ColumnGroupDocs.ARGUMENT_2] `(Person::firstName, Person::middleName)`
          */
         interface KPropertyArgs
-
-        /**
-         * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
-         *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
-         *  column group. The other columns will be included in the selection by default.
-         * @set [ColumnGroupDocs.ARGUMENT_1] `(pathOf("age"), "extraData"["item1"])`
-         * @set [ColumnGroupDocs.ARGUMENT_2] `(pathOf("firstName"), "middleNames"["first"])`
-         */
-        interface ColumnPathArgs
     }
 
     /**
@@ -487,11 +472,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
         allColsExceptInternal(other.toColumnSet())
 
@@ -539,11 +520,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.StringReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -591,11 +568,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -643,11 +616,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.ColumnPathReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
