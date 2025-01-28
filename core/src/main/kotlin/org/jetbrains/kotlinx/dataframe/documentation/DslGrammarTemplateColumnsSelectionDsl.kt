@@ -115,8 +115,11 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
          */
         public interface ColumnGroupDef
 
-        /** `columnNoAccessor: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*> | `[`ColumnPath`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath] */
-        public interface ColumnNoAccessorDef
+        /** `columnName: `[`String`][String]`  |  `[`KProperty`][kotlin.reflect.KProperty]`<*>` */
+        public interface ColumNameDef
+
+        /** `columnNoPath: `[`ColumnAccessor`][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor]`  |  `[`String`][String]`  | `[`KProperty`][kotlin.reflect.KProperty]`<*>` */
+        public interface ColumnNoPathDef
 
         /** `columnOrSet: `{@include [ColumnRef]}`  |  `{@include [ColumnSetRef]} */
         public interface ColumnOrColumnSetDef
@@ -190,8 +193,11 @@ public interface DslGrammarTemplateColumnsSelectionDsl {
         /** [`columnGroup`][ColumnGroupDef] */
         public interface ColumnGroupRef
 
-        /** [`columnNoAccessor`][ColumnNoAccessorDef] */
-        public interface ColumnNoAccessorRef
+        /** [`columnName`][ColumNameDef] */
+        public interface ColumnNameRef
+
+        /** [`columnNoPath`][ColumnNoPathDef] */
+        public interface ColumnNoPathRef
 
         /** [`columnOrSet`][ColumnOrColumnSetDef] */
         public interface ColumnOrColumnSetRef

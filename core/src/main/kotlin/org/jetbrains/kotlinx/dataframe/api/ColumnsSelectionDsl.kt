@@ -128,7 +128,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [DslGrammarTemplate.ColumnGroupDef]}
          *
-         * {@include [DslGrammarTemplate.ColumnNoAccessorDef]}
+         * {@include [DslGrammarTemplate.ColumNameDef]}
+         *
+         * {@include [DslGrammarTemplate.ColumnNoPathDef]}
          *
          * {@include [DslGrammarTemplate.ColumnOrColumnSetDef]}
          *
@@ -180,7 +182,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * `| `{@include [AllExceptColumnsSelectionDsl.Grammar.PlainDslName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
          *
-         * `| `{@include [AllExceptColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
+         * `| `{@include [AllExceptColumnsSelectionDsl.Grammar.PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnNoPathRef]}**`,`**` ..`**`)`**
          *
          * `| `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` `{@include [AndColumnsSelectionDsl.Grammar.InfixName]}`  [  `**`{`**`  ]  `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}`  [  `**`\}`**`  ]  `
          *
@@ -307,7 +309,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**`  \}  `**
          *
-         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
+         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNameRef]}**`,`**` ..`**`)`**
          *
          * {@include [Indent]}`| `{@include [AndColumnsSelectionDsl.Grammar.Name]}**` (`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
          *
