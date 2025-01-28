@@ -6,10 +6,10 @@ import org.geotools.geojson.feature.FeatureJSON
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.geo.GeoDataFrame
 import org.jetbrains.kotlinx.dataframe.geo.geotools.toGeoDataFrame
-import org.jetbrains.kotlinx.dataframe.io.asURL
+import org.jetbrains.kotlinx.dataframe.io.asUrl
 import java.net.URL
 
-fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asURL(path))
+fun GeoDataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = readGeoJson(asUrl(path))
 
 fun GeoDataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> =
     url.openStream().use { inputStream ->
@@ -21,7 +21,7 @@ fun DataFrame.Companion.readGeoJson(path: String): GeoDataFrame<*> = GeoDataFram
 
 fun DataFrame.Companion.readGeoJson(url: URL): GeoDataFrame<*> = GeoDataFrame.readGeoJson(url)
 
-fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = readShapefile(asURL(path))
+fun GeoDataFrame.Companion.readShapefile(path: String): GeoDataFrame<*> = readShapefile(asUrl(path))
 
 fun GeoDataFrame.Companion.readShapefile(url: URL): GeoDataFrame<*> {
     val dataStore = ShapefileDataStoreFactory().createDataStore(url)

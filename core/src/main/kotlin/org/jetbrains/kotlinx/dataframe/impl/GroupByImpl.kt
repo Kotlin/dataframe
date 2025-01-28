@@ -15,8 +15,8 @@ import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
@@ -41,7 +41,7 @@ internal class GroupByImpl<T, G>(
 ) : GroupBy<T, G>,
     AggregatableInternal<G> {
 
-    override val keys by lazy { df - groups }
+    override val keys by lazy { df.remove(groups) }
 
     override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
         df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>

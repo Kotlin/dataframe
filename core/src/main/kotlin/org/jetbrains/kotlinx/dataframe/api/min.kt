@@ -60,9 +60,11 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minFor(columns: ColumnsForAggrega
 
 public fun <T> DataFrame<T>.minFor(vararg columns: String): DataRow<T> = minFor { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     minFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: KProperty<C?>): DataRow<T> =
     minFor { columns.toColumnSet() }
 
@@ -71,9 +73,11 @@ public fun <T, C : Comparable<C>> DataFrame<T>.min(columns: ColumnsSelector<T, C
 
 public fun <T> DataFrame<T>.min(vararg columns: String): Comparable<Any> = minOrNull(*columns).suggestIfNull("min")
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: ColumnReference<C?>): C =
     minOrNull(*columns).suggestIfNull("min")
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: KProperty<C?>): C =
     minOrNull(*columns).suggestIfNull("min")
 
@@ -83,9 +87,11 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(columns: ColumnsSelecto
 public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any?>? =
     minOrNull { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C?>): C? =
     minOrNull { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: KProperty<C?>): C? =
     minOrNull { columns.toColumnSet() }
 
@@ -100,6 +106,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minBy(expression: RowExpression<T
 
 public fun <T> DataFrame<T>.minBy(column: String): DataRow<T> = minByOrNull(column).suggestIfNull("minBy")
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: ColumnReference<C?>): DataRow<T> =
     minByOrNull(column).suggestIfNull("minBy")
 
@@ -113,6 +120,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(expression: RowExpres
 public fun <T> DataFrame<T>.minByOrNull(column: String): DataRow<T>? =
     minByOrNull(column.toColumnOf<Comparable<Any?>?>())
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: ColumnReference<C?>): DataRow<T>? =
     getOrNull(get(column).asSequence().indexOfMin())
 
@@ -131,9 +139,11 @@ public fun <T, C : Comparable<C>> Grouped<T>.minFor(columns: ColumnsForAggregate
 
 public fun <T> Grouped<T>.minFor(vararg columns: String): DataFrame<T> = minFor { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     minFor { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> =
     minFor { columns.toColumnSet() }
 
@@ -143,11 +153,13 @@ public fun <T, C : Comparable<C>> Grouped<T>.min(name: String? = null, columns: 
 public fun <T> Grouped<T>.min(vararg columns: String, name: String? = null): DataFrame<T> =
     min(name) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.min(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
 ): DataFrame<T> = min(name) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
     min(name) { columns.toColumnSet() }
 
@@ -159,6 +171,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.minOf(
 public fun <T, G, R : Comparable<R>> GroupBy<T, G>.minBy(rowExpression: RowExpression<G, R?>): ReducedGroupBy<T, G> =
     reduce { minByOrNull(rowExpression) }
 
+@AccessApiOverload
 public fun <T, G, C : Comparable<C>> GroupBy<T, G>.minBy(column: ColumnReference<C?>): ReducedGroupBy<T, G> =
     reduce { minByOrNull(column) }
 
@@ -183,11 +196,13 @@ public fun <T, R : Comparable<R>> Pivot<T>.minFor(
 public fun <T> Pivot<T>.minFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
     minFor(separate) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.minFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false,
 ): DataRow<T> = minFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.minFor(
     vararg columns: KProperty<R?>,
     separate: Boolean = false,
@@ -198,9 +213,11 @@ public fun <T, R : Comparable<R>> Pivot<T>.min(columns: ColumnsSelector<T, R?>):
 public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: String): DataRow<T> =
     min { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: ColumnReference<R?>): DataRow<T> =
     min { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: KProperty<R?>): DataRow<T> =
     min { columns.toColumnSet() }
 
@@ -210,6 +227,7 @@ public fun <T, R : Comparable<R>> Pivot<T>.minOf(rowExpression: RowExpression<T,
 public fun <T, R : Comparable<R>> Pivot<T>.minBy(rowExpression: RowExpression<T, R>): ReducedPivot<T> =
     reduce { minByOrNull(rowExpression) }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: ColumnReference<C?>): ReducedPivot<T> =
     reduce { minByOrNull(column) }
 
@@ -234,11 +252,13 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
 public fun <T> PivotGroupBy<T>.minFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     minFor(separate) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false,
 ): DataFrame<T> = minFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     vararg columns: KProperty<R?>,
     separate: Boolean = false,
@@ -252,6 +272,7 @@ public fun <T> PivotGroupBy<T>.min(vararg columns: String): DataFrame<T> = min {
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: ColumnReference<R?>): DataFrame<T> =
     min { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: KProperty<R?>): DataFrame<T> =
     min { columns.toColumnSet() }
 
@@ -261,6 +282,7 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.minOf(rowExpression: RowExpres
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minBy(rowExpression: RowExpression<T, R>): ReducedPivotGroupBy<T> =
     reduce { minByOrNull(rowExpression) }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.minBy(column: ColumnReference<C?>): ReducedPivotGroupBy<T> =
     reduce { minByOrNull(column) }
 

@@ -60,6 +60,7 @@ public fun <T, C : Number> DataFrame<T>.meanFor(
 public fun <T> DataFrame<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataRow<T> =
     meanFor(skipNA) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> DataFrame<T>.meanFor(
     vararg columns: ColumnReference<C?>,
     skipNA: Boolean = skipNA_default,
@@ -79,6 +80,7 @@ public fun <T, C : Number> DataFrame<T>.mean(
 public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): Double =
     mean(skipNA) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> DataFrame<T>.mean(
     vararg columns: ColumnReference<C?>,
     skipNA: Boolean = skipNA_default,
@@ -107,6 +109,7 @@ public fun <T, C : Number> Grouped<T>.meanFor(
 public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> =
     meanFor(skipNA) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.meanFor(
     vararg columns: ColumnReference<C?>,
     skipNA: Boolean = skipNA_default,
@@ -130,6 +133,7 @@ public fun <T> Grouped<T>.mean(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = mean(name, skipNA) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
@@ -168,6 +172,7 @@ public fun <T> Pivot<T>.meanFor(
     separate: Boolean = false,
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: ColumnReference<C?>,
     skipNA: Boolean = skipNA_default,
@@ -210,6 +215,7 @@ public fun <T> PivotGroupBy<T>.meanFor(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
 
+@AccessApiOverload
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false,
@@ -231,6 +237,7 @@ public fun <T, R : Number> PivotGroupBy<T>.mean(
 public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> =
     mean(skipNA) { columns.toColumnsSetOf() }
 
+@AccessApiOverload
 public fun <T, R : Number> PivotGroupBy<T>.mean(
     vararg columns: ColumnReference<R?>,
     skipNA: Boolean = skipNA_default,

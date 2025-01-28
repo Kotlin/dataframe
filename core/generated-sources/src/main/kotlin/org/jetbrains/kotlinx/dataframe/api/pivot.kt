@@ -29,6 +29,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
 
     public infix fun String.then(other: String): ColumnSet<Any?> = toColumnAccessor() then other.toColumnAccessor()
 
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.then(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() then other
 
     @AccessApiOverload
@@ -38,6 +39,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
     public infix fun <C> KProperty<C>.then(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() then other.toColumnAccessor()
 
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.then(other: String): ColumnSet<C> = toColumnAccessor() then other.toColumnOf()
 
     @AccessApiOverload

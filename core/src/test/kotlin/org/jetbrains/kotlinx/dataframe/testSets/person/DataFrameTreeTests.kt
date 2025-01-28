@@ -70,7 +70,6 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.median
-import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
 import org.jetbrains.kotlinx.dataframe.api.moveToLeft
@@ -87,7 +86,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
@@ -587,13 +585,13 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `join with left path`() {
-        val joined = (typed2 - { weight }).join(typed - { city }) { nameAndCity.name.match(right.name) and age }
+        val joined = typed2.remove { weight }.join(typed.remove { city }) { nameAndCity.name.match(right.name) and age }
         joined shouldBe typed2
     }
 
     @Test
     fun `join with right path`() {
-        val joined = (typed - { city }).join(typed2 - { weight }) { name.match(right.nameAndCity.name) and age }
+        val joined = typed.remove { city }.join(typed2.remove { weight }) { name.match(right.nameAndCity.name) and age }
         val expected = typed.moveToRight { city }.move { city }.under("nameAndCity")
         joined shouldBe expected
     }
@@ -605,8 +603,8 @@ class DataFrameTreeTests : BaseTest() {
         val grouped = typed.group { name and age }.into(nameAndAge).add(cityFirst) { city?.get(0) }
         grouped[nameAndAge].columnsCount() shouldBe 3
 
-        val left = grouped - { weight }
-        val right = grouped - { city }
+        val left = grouped.remove { weight }
+        val right = grouped.remove { city }
         val joined = left.join(right) { nameAndAge }
         joined shouldBe grouped
     }

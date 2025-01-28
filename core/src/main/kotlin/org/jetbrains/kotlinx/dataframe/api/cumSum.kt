@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
@@ -87,11 +88,13 @@ public fun <T, C> DataFrame<T>.cumSum(
 public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: AnyColumnReference,
     skipNA: Boolean = defaultCumSumSkipNA,
 ): DataFrame<T> = cumSum(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) { columns.toColumnSet() }
 
@@ -112,11 +115,13 @@ public fun <T, G, C> GroupBy<T, G>.cumSum(
 public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: AnyColumnReference,
     skipNA: Boolean = defaultCumSumSkipNA,
 ): GroupBy<T, G> = cumSum(skipNA) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: KProperty<*>,
     skipNA: Boolean = defaultCumSumSkipNA,

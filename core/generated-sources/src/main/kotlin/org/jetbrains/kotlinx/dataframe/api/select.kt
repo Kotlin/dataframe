@@ -25,6 +25,8 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with only the columns selected by [columns].
  *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
  * See [Selecting Columns][SelectSelectingOptions].
  *
  * For more information: [See `select` on the documentation website.](https://kotlin.github.io/dataframe/select.html)
@@ -108,6 +110,8 @@ internal interface Select {
  *
  * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
  *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `select` on the documentation website.](https://kotlin.github.io/dataframe/select.html)
@@ -153,6 +157,8 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
  *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `select` on the documentation website.](https://kotlin.github.io/dataframe/select.html)
@@ -176,6 +182,8 @@ public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> =
  *
  * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
  *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
  * For more information: [See `select` on the documentation website.](https://kotlin.github.io/dataframe/select.html)
@@ -195,6 +203,8 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
  * ## The Select Operation
  *
  * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -414,6 +424,7 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
+    @AccessApiOverload
     public fun <C, R> KProperty<C>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 

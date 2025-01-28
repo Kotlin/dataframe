@@ -59,6 +59,7 @@ public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
 
 public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
 
+@AccessApiOverload
 public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
 
 @AccessApiOverload
@@ -75,6 +76,7 @@ public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<
 
 public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
 
+@AccessApiOverload
 public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
 
 @AccessApiOverload

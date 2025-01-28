@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -367,6 +368,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
+    @AccessApiOverload
     public fun KProperty<*>.takeCols(n: Int): ColumnSet<*> = columnGroup(this).takeCols(n)
 
     /**
@@ -600,6 +602,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [n] The number of columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
+    @AccessApiOverload
     public fun KProperty<*>.takeLastCols(n: Int): ColumnSet<*> = columnGroup(this).takeLastCols(n)
 
     /**
@@ -830,6 +833,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
+    @AccessApiOverload
     public fun KProperty<*>.takeColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).takeColsWhile(predicate)
 
@@ -1061,6 +1065,7 @@ public interface TakeColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to take.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
+    @AccessApiOverload
     public fun KProperty<*>.takeLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).takeLastColsWhile(predicate)
 

@@ -7,22 +7,6 @@ package org.jetbrains.kotlinx.dataframe.util
  * Level.ERROR -> Remove
  */
 
-// region WARNING in 0.14, ERROR in 0.15
-
-private const val MESSAGE_0_15 = "Will be ERROR in 0.15."
-
-internal const val STARTS_WITH = "Use nameStartsWith() instead. $MESSAGE_0_15"
-internal const val STARTS_WITH_REPLACE = "this.nameStartsWith(prefix)"
-
-internal const val COL_STARTS_WITH = "Use colsNameStartsWith() instead. $MESSAGE_0_15"
-internal const val COL_STARTS_WITH_REPLACE = "this.colsNameStartsWith(prefix)"
-
-internal const val ENDS_WITH = "Use nameEndsWith() instead. $MESSAGE_0_15"
-internal const val ENDS_WITH_REPLACE = "this.nameEndsWith(suffix)"
-
-internal const val COL_ENDS_WITH = "Use colsNameEndsWith() instead. $MESSAGE_0_15"
-internal const val COL_ENDS_WITH_REPLACE = "this.colsNameEndsWith(suffix)"
-
 // region WARNING in 0.15, ERROR in 0.16
 
 private const val MESSAGE_0_16 = "Will be ERROR in 0.16."
@@ -72,6 +56,9 @@ internal const val AS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.asUrl"
 internal const val IS_URL = "This function is replaced by `isUrl()`. $MESSAGE_0_16"
 internal const val IS_URL_REPLACE = "isUrl(path)"
 internal const val IS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.isUrl"
+
+internal const val MINUS = "This minus overload will be removed in favor of `remove`. $MESSAGE_0_16"
+internal const val MINUS_REPLACE = "this.remove(columns)"
 
 // endregion
 

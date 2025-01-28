@@ -31,6 +31,8 @@ import kotlin.reflect.KProperty
  *
  * Returns a new [DataFrame] with only the columns selected by [columns\].
  *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
  * See [Selecting Columns][SelectSelectingOptions].
  *
  * For more information: {@include [DocumentationUrls.Select]}
@@ -187,6 +189,7 @@ public interface SelectColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[and][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      */
+    @AccessApiOverload
     public fun <C, R> KProperty<C>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 

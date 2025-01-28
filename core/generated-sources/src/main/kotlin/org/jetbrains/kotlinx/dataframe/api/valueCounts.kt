@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
@@ -82,6 +83,7 @@ public fun <T> DataFrame<T>.valueCounts(
     resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: AnyColumnReference,
     sort: Boolean = true,
@@ -90,6 +92,7 @@ public fun <T> DataFrame<T>.valueCounts(
     resultColumn: String = defaultCountColumnName,
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.valueCounts(
     vararg columns: KProperty<*>,
     sort: Boolean = true,

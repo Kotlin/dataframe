@@ -61,6 +61,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(columns: ColumnsForAggr
 
 public fun <T> DataFrame<T>.medianFor(vararg columns: String): DataRow<T> = medianFor { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: ColumnReference<C?>): DataRow<T> =
     medianFor { columns.toColumnSet() }
 
@@ -73,6 +74,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.median(columns: ColumnsSelector<T
 
 public fun <T> DataFrame<T>.median(vararg columns: String): Any = median { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: ColumnReference<C?>): C =
     median { columns.toColumnSet() }
 
@@ -85,6 +87,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(columns: ColumnsSele
 
 public fun <T> DataFrame<T>.medianOrNull(vararg columns: String): Any? = medianOrNull { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C?>): C? =
     medianOrNull { columns.toColumnSet() }
 
@@ -107,6 +110,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.medianFor(columns: ColumnsForAggreg
 
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
     medianFor { columns.toColumnSet() }
 
@@ -122,6 +126,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.median(
 public fun <T> Grouped<T>.median(vararg columns: String, name: String? = null): DataFrame<T> =
     median(name) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.median(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
@@ -150,6 +155,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
 public fun <T> Pivot<T>.medianFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
     medianFor(separate) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false,
@@ -166,6 +172,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.median(columns: ColumnsSelector<T, C?
 
 public fun <T> Pivot<T>.median(vararg columns: String): DataRow<T> = median { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.median(vararg columns: ColumnReference<C?>): DataRow<T> =
     median { columns.toColumnSet() }
 
@@ -192,6 +199,7 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
 public fun <T> PivotGroupBy<T>.medianFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     medianFor(separate) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false,
@@ -208,6 +216,7 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(columns: ColumnsSelecto
 
 public fun <T> PivotGroupBy<T>.median(vararg columns: String): DataFrame<T> = median { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(vararg columns: ColumnReference<C?>): DataFrame<T> =
     median { columns.toColumnSet() }
 
