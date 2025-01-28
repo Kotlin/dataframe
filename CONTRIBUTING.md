@@ -108,6 +108,8 @@ This library is built with Gradle.
   things up during development.
 * Make sure to pass the extra parameter `-Pkotlin.dataframe.debug=true` to enable debug mode. This flag will
   make sure some extra checks are run, which are important but too heavy for production.
+* Parameter `-PskipKodex` allows you to skip [kdoc processing](KDOC_PREPROCESSING.md), making local publishing faster
+  `./gradlew publishToMavenLocal -PskipKodex`
 
 You can import this project into IDEA, but you have to delegate the build actions
 to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Gradle -> Runner)

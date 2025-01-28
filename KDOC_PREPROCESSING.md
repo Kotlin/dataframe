@@ -57,6 +57,8 @@ This can be seen in action in the `core:processKDocsMain` and `core:changeJarTas
 `processKDocsMain` task is executed first, which processes the KDocs in the source files and writes them to the
 `generated-sources` folder. The `changeJarTask` task then makes sure that any `Jar` task in the `core` module uses the
 `generated-sources` folder as the source directory instead of the normal `src` folder.
+It's possible to optionally skip this step, for example, when you publish the library locally during development, 
+by providing `-PskipKodex` project property: `./gradlew publishToMavenLocal -PskipKodex`
 
 `core:processKDocsMain` can also be run separately if you just want to see the result of the KDoc processing by KoDEx.
 
