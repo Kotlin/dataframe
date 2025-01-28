@@ -153,6 +153,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.max(name: String? = null, columns: 
 public fun <T> Grouped<T>.max(vararg columns: String, name: String? = null): DataFrame<T> =
     max(name) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Grouped<T>.max(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
@@ -195,11 +196,13 @@ public fun <T, R : Comparable<R>> Pivot<T>.maxFor(
 public fun <T> Pivot<T>.maxFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
     maxFor(separate) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.maxFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false,
 ): DataRow<T> = maxFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.maxFor(
     vararg columns: KProperty<R?>,
     separate: Boolean = false,
@@ -209,9 +212,11 @@ public fun <T, R : Comparable<R>> Pivot<T>.max(columns: ColumnsSelector<T, R?>):
 
 public fun <T> Pivot<T>.max(vararg columns: String): DataRow<T> = max { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.max(vararg columns: ColumnReference<R?>): DataRow<T> =
     max { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> Pivot<T>.max(vararg columns: KProperty<R?>): DataRow<T> =
     max { columns.toColumnSet() }
 
@@ -221,12 +226,14 @@ public fun <T, R : Comparable<R>> Pivot<T>.maxOf(rowExpression: RowExpression<T,
 public fun <T, R : Comparable<R>> Pivot<T>.maxBy(rowExpression: RowExpression<T, R>): ReducedPivot<T> =
     reduce { maxByOrNull(rowExpression) }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: ColumnReference<C?>): ReducedPivot<T> =
     reduce { maxByOrNull(column) }
 
 public fun <T> Pivot<T>.maxBy(column: String): ReducedPivot<T> =
     maxBy(column.toColumnAccessor().cast<Comparable<Any?>>())
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: KProperty<C?>): ReducedPivot<T> =
     maxBy(column.toColumnAccessor())
 
@@ -244,11 +251,13 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
 public fun <T> PivotGroupBy<T>.maxFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     maxFor(separate) { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false,
 ): DataFrame<T> = maxFor(separate) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
     vararg columns: KProperty<R?>,
     separate: Boolean = false,
@@ -259,9 +268,11 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(columns: ColumnsSelector<T
 
 public fun <T> PivotGroupBy<T>.max(vararg columns: String): DataFrame<T> = max { columns.toComparableColumns() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(vararg columns: ColumnReference<R?>): DataFrame<T> =
     max { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(vararg columns: KProperty<R?>): DataFrame<T> =
     max { columns.toColumnSet() }
 
@@ -271,12 +282,14 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxOf(rowExpression: RowExpres
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxBy(rowExpression: RowExpression<T, R>): ReducedPivotGroupBy<T> =
     reduce { maxByOrNull(rowExpression) }
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.maxBy(column: ColumnReference<C?>): ReducedPivotGroupBy<T> =
     reduce { maxByOrNull(column) }
 
 public fun <T> PivotGroupBy<T>.maxBy(column: String): ReducedPivotGroupBy<T> =
     maxBy(column.toColumnAccessor().cast<Comparable<Any?>>())
 
+@AccessApiOverload
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.maxBy(column: KProperty<C?>): ReducedPivotGroupBy<T> =
     maxBy(column.toColumnAccessor())
 

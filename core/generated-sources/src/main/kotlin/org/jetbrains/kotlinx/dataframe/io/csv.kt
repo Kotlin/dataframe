@@ -107,7 +107,7 @@ public fun DataFrame.Companion.readDelimStr(
 @Deprecated(
     message = DF_READ_NO_CSV,
     replaceWith = ReplaceWith(DF_READ_NO_CSV_REPLACE),
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
 )
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
@@ -248,7 +248,7 @@ private fun getCSVType(path: String): CSVType =
 @Deprecated(
     message = AS_URL,
     replaceWith = ReplaceWith(AS_URL_REPLACE, AS_URL_IMPORT),
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
 )
 public fun asURL(fileOrUrl: String): URL = asUrl(fileOrUrl)
 

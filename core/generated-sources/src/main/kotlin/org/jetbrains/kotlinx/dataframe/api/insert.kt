@@ -30,6 +30,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(
 ): InsertClause<T> = insert(mapToColumn(name, infer, expression))
 
 @Interpretable("Insert2")
+@AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
@@ -37,6 +38,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(
 ): InsertClause<T> = insert(column.name(), infer, expression)
 
 @Interpretable("Insert3")
+@AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
