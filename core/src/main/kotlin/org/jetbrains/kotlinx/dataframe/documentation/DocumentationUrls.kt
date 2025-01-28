@@ -77,4 +77,7 @@ internal interface DocumentationUrls {
 
     /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
     interface Remove
+
+    /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
+    interface Distinct
 }
