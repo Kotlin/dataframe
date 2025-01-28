@@ -9410,6 +9410,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$COLUMN_SET_PART {
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumNameDef {
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnDef {
 }
 
@@ -9437,10 +9440,13 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/Ds
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnKindRef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnNoAccessorDef {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnNameRef {
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnNoAccessorRef {
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnNoPathDef {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnNoPathRef {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/documentation/DslGrammarTemplateColumnsSelectionDsl$DslGrammarTemplate$ColumnOrColumnSetDef {
