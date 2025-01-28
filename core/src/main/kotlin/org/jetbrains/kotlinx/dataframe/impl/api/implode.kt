@@ -8,16 +8,20 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.extractDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.typeOf
 
 internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
-    groupBy { allExcept(columns) }.updateGroups {
+    groupBy {
+        (this as DataFrame<T>).remove(columns).columns().toColumnSet()
+    }.updateGroups {
         replace(columns).with { column ->
             val (value, type) = when (column.kind()) {
                 ColumnKind.Value -> (if (dropNA) column.dropNA() else column).toList() to getListType(column.type())

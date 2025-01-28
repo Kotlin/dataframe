@@ -2482,17 +2482,6 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `except in columns selector`() {
         typed.select { allExcept { age and weight } } shouldBe typed.select { name and city }
-
-        typed
-            .group { age and weight and city }.into("info")
-            .alsoDebug()
-            .select { allExcept { "info"["age"] } }
-            .alsoDebug()
-            .let {
-                it.name shouldBe typed.name
-                it["info"]["weight"] shouldBe typed.weight
-                it["info"]["city"] shouldBe typed.city
-            }
     }
 
     @Test

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
@@ -9,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
@@ -33,10 +35,11 @@ internal data class PivotGroupByImpl<T>(
         df.groups.firstOrNull()
             ?.getPivotColumnPaths(columns).orEmpty()
             .let { pivotPaths ->
-                {
-                    all().except(
-                        pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumnSet(),
-                    )
+                return@let {
+                    (this as AnyFrame)
+                        .remove { pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumnSet() }
+                        .columns()
+                        .toColumnSet()
                 }
             }
 }
