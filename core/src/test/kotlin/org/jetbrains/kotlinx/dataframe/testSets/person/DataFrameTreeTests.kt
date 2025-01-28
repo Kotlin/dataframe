@@ -795,4 +795,10 @@ class DataFrameTreeTests : BaseTest() {
         val df = typed2.convert { nameAndCity }.asFrame { it.remove { city } }
         df.nameAndCity.columns() shouldBe typed2.nameAndCity.remove { city }.columns()
     }
+
+    @Test
+    fun `move under existing group`() {
+        val df = typed2.move { age }.under { nameAndCity }
+        df.nameAndCity.columnNames() shouldBe listOf("name", "city", "age")
+    }
 }

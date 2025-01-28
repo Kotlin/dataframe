@@ -71,6 +71,7 @@ import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddDslNamedGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddDslStringInvoke
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddId
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Aggregate
@@ -88,6 +89,13 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FlattenDefault
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FrameCols0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Move0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveAfter0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveInto0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToLeft0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToLeft1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToRight0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveUnder0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveUnder1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairToConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadExcel
@@ -96,6 +104,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDefault
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDsl
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDslStringInvoke
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameFrom
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToTop
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TrimMargin
@@ -235,6 +244,7 @@ internal inline fun <reified T> String.load(): T {
         "toDataFrameDsl" -> ToDataFrameDsl()
         "toDataFrame" -> ToDataFrame()
         "toDataFrameDefault" -> ToDataFrameDefault()
+        "ToDataFrameDslStringInvoke" -> ToDataFrameDslStringInvoke()
         "DataFrameOf0" -> DataFrameOf0()
         "DataFrameBuilderInvoke0" -> DataFrameBuilderInvoke0()
         "ToDataFrameColumn" -> ToDataFrameColumn()
@@ -246,6 +256,7 @@ internal inline fun <reified T> String.load(): T {
         "FlattenDefault" -> FlattenDefault()
         "AddId" -> AddId()
         "AddDslStringInvoke" -> AddDslStringInvoke()
+        "AddDslNamedGroup" -> AddDslNamedGroup()
         "MapToFrame" -> MapToFrame()
         "Move0" -> Move0()
         "ToTop" -> ToTop()
@@ -255,6 +266,13 @@ internal inline fun <reified T> String.load(): T {
         "ValueCounts" -> ValueCounts()
         "RenameToCamelCase" -> RenameToCamelCase()
         "RenameToCamelCaseClause" -> RenameToCamelCaseClause()
+        "MoveUnder0" -> MoveUnder0()
+        "MoveUnder1" -> MoveUnder1()
+        "MoveInto0" -> MoveInto0()
+        "MoveToLeft0" -> MoveToLeft0()
+        "MoveToLeft1" -> MoveToLeft1()
+        "MoveToRight0" -> MoveToRight0()
+        "MoveAfter0" -> MoveAfter0()
         else -> error("$this")
     } as T
 }
