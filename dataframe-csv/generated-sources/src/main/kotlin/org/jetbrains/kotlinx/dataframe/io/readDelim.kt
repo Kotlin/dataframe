@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
-import org.jetbrains.kotlinx.dataframe.io.Compression
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
