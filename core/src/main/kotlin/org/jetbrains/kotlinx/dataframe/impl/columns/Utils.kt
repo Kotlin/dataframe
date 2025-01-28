@@ -7,13 +7,9 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -30,12 +26,11 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
-import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.collectTree
-import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.contains
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.put
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topmostChildren
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
@@ -387,88 +382,41 @@ internal fun <T> List<ColumnWithPath<T>>.simplify(): List<ColumnWithPath<T>> {
 }
 
 /**
- * Returns a new list of column paths, except the ones inside [columns].
- * NOTE: The structure is not kept the same; if a column is removed, its parent will be removed as well, and
- * all its siblings will be lifted out of the group. This also happens if a column is "removed" that does
- * not exist in [this].
+ * Returns a new list of distinct column paths, except the ones inside [columns].
+ * NOTE: There are no structural changes as removing nested columns is not allowed.
+ *
+ * @throws IllegalArgumentException if a nested column were to be removed
  */
-internal fun List<ColumnWithPath<*>>.allColumnsExceptAndUnpack(
-    columns: Iterable<ColumnWithPath<*>>,
-): List<ColumnWithPath<*>> {
+internal fun List<ColumnWithPath<*>>.removeAll(columnsToRemove: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
-    val fullTree = collectTree()
-    columns.forEach {
-        var node = fullTree.getOrPut(it.path).asNullable()
-        node?.allChildren()?.forEach { it.data = null }
-        while (node != null) {
-            node.data = null
-            node = node.parent
+
+    // subtract columnsToRemove from this
+    val result = this.toMutableSet()
+    val columnPathsToRemove = columnsToRemove
+        .map { it.path }
+        .toSet()
+        .mapNotNull { toRemove ->
+            val removed = result.removeIf { it.path == toRemove }
+            if (removed) null else toRemove
+        }
+
+    // provide a helpful exception when a user tries to remove a nested column
+    if (columnPathsToRemove.isNotEmpty()) {
+        val fullTree = this.collectTree()
+        val nestedColumns = columnPathsToRemove.filter { it in fullTree }
+
+        if (nestedColumns.isNotEmpty()) {
+            throw IllegalArgumentException(
+                "Cannot exclude the nested columns '[${
+                    nestedColumns.joinToString { it.path.joinToString() }
+                }]' from the column set '[${
+                    this.joinToString { it.path.joinToString() }
+                }]' with the except-functions. Use the `DataFrame<*>.remove { }` operation instead.",
+            )
         }
     }
-    val subtrees = fullTree.topmostChildren { it.data != null }
-    return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
-}
 
-/**
- * Returns a new list of column paths, except the ones inside [columns].
- * NOTE: ColumnGroups are adapted to keep their structure. If a column inside a column group is excepted, it will
- * be removed from the group.
- * Empty groups will be removed if [removeEmptyGroups]` == true`
- */
-internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
-    columns: Iterable<ColumnWithPath<*>>,
-    removeEmptyGroups: Boolean = true,
-): List<ColumnWithPath<*>> {
-    if (isEmpty()) return emptyList()
-    val fullTree = collectTree()
-    for (columnToExcept in columns) {
-        // grab the node representing the column from the tree
-        val nodeToExcept = fullTree.getOrPut(columnToExcept.path).asNullable()
-        if (nodeToExcept != null) {
-            // remove the children from the node (if it's a column group) and remove its data (the column itself)
-            nodeToExcept.allChildren().forEach { it.data = null }
-            nodeToExcept.data = null
-
-            // we need to update the data of the parent node(s) to reflect the removal of the column
-            if (nodeToExcept.parent != null) {
-                // we grab the data of the parent node, which should be a column group
-                // treat it as a DF to remove the column to except from it and
-                // convert it back to a column group
-                val current = nodeToExcept.parent.data as ColumnGroup<*>? ?: continue
-                val adjustedCurrent = current
-                    .remove(nodeToExcept.name)
-                    .asColumnGroup(current.name)
-                    .addPath(current.path())
-
-                // remove the group if it's empty and removeEmptyGroups is true
-                // else, simply update the parent's data with the adjusted column group
-                nodeToExcept.parent.data =
-                    if (adjustedCurrent.cols().isEmpty() && removeEmptyGroups) {
-                        null
-                    } else {
-                        adjustedCurrent
-                    }
-
-                // now we update the parent's parents recursively with new column group instances
-                var parent = nodeToExcept.parent.parent
-
-                @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
-                var currentNode = nodeToExcept.parent!!
-                while (parent != null) {
-                    val parentData = parent.data as ColumnGroup<*>? ?: break
-                    parent.data = parentData
-                        .replace(currentNode.name).with { currentNode.data!! }
-                        .asColumnGroup(parentData.name)
-                        .addPath(parentData.path())
-
-                    currentNode = parent
-                    parent = parent.parent
-                }
-            }
-        }
-    }
-    val subtrees = fullTree.topmostChildren { it.data != null }
-    return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
+    return result.toList()
 }
 
 /**

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
@@ -10,23 +11,56 @@ import org.jetbrains.kotlinx.dataframe.samples.api.isHappy
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
 import org.jetbrains.kotlinx.dataframe.samples.api.secondName
-import org.jetbrains.kotlinx.dataframe.samples.api.thirdName
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 
 class AllExceptTests : ColumnsSelectionDslTests() {
 
     @Test
-    fun `exceptions`() {
+    fun `disallow excepting nested unselected cols`() {
+        shouldThrow<IllegalArgumentException> {
+            df.select { allExcept { name.firstName } }
+        }
+        shouldThrow<IllegalArgumentException> {
+            dfGroup.select { name.allColsExcept { firstName.firstName and firstName.secondName } }
+        }
+        shouldThrow<IllegalArgumentException> {
+            dfGroup.select { allExcept(name.firstName.firstName) }
+        }
+        shouldThrow<IllegalArgumentException> {
+            dfGroup.select { allExcept { name.firstName.firstName } }
+        }
+        shouldThrow<IllegalArgumentException> {
+            dfGroup.select { all() except { name.firstName.firstName } }
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { all() except { name.firstName } }
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { all() except name.firstName }
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { all() except "name"["firstName"] }
+        }
+        shouldThrow<IllegalArgumentException> {
+            df.select { allExcept { "name"["firstName"] } }
+        }
+        shouldNotThrowAny {
+            df.select { colsAtAnyDepth() except name.firstName }
+        }
+    }
+
+    @Test
+    fun `cannot be resolved`() {
         shouldThrow<IllegalStateException> {
             dfGroup.select {
-                name.firstName.allColsExcept("firstName"["secondName"])
+                name.firstName.allColsExcept { "firstName"["secondName"] }
             }
         }
 
         shouldThrow<IllegalStateException> {
             dfGroup.select {
-                name.firstName.allColsExcept(pathOf("name", "firstName", "secondName"))
+                name.firstName.allColsExcept { pathOf("name", "firstName", "secondName") }
             }
         }
     }
@@ -36,10 +70,6 @@ class AllExceptTests : ColumnsSelectionDslTests() {
         df.select { name.allColsExcept { all() } } shouldBe df.select { none() }
 
         df.select { allExcept { all() } } shouldBe df.select { none() }
-
-        df.select { allExcept { name.allCols() } }.alsoDebug()
-
-        df.remove { name.allCols() }.alsoDebug()
     }
 
     @Test
@@ -51,7 +81,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { allExcept { cols { it.name in listOf("name", "city") } } },
             df.select { allExcept("name", "city") },
             df.select { allExcept(Person::name, Person::city) },
-            df.select { allExcept(pathOf("name"), pathOf("city")) },
+//            df.select { allExcept(pathOf("name"), pathOf("city")) }, // blocked
         ).shouldAllBeEqual()
 
         listOf(
@@ -61,7 +91,7 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { allExcept { cols { it.name == "name" } } },
             df.select { allExcept("name") },
             df.select { allExcept(Person::name) },
-            df.select { allExcept(pathOf("name")) },
+//            df.select { allExcept(pathOf("name")) }, // blocked
         ).shouldAllBeEqual()
 
         listOf(
@@ -150,8 +180,8 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { name.allColsExcept("lastName", "lastName") },
             df.select { name.allColsExcept(Name::lastName) },
             df.select { name.allColsExcept(Name::lastName, Name::lastName) },
-            df.select { name.allColsExcept(pathOf("lastName")) },
-            df.select { name.allColsExcept(pathOf("lastName"), pathOf("lastName")) },
+//            df.select { name.allColsExcept(pathOf("lastName")) }, // blocked
+//            df.select { name.allColsExcept(pathOf("lastName"), pathOf("lastName")) }, // blocked
 //            df.select { name.allColsExcept(pathOf("name", "lastName")) }, // breaks
             df.select { name.allColsExcept { cols { "last" in it.name } } },
             df.select { "name".allColsExcept { lastNameAccessor } },
@@ -161,8 +191,8 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { "name".allColsExcept("lastName", "lastName") },
             df.select { "name".allColsExcept(Name::lastName) },
             df.select { "name".allColsExcept(Name::lastName, Name::lastName) },
-            df.select { "name".allColsExcept(pathOf("lastName")) },
-            df.select { "name".allColsExcept(pathOf("lastName"), pathOf("lastName")) },
+//            df.select { "name".allColsExcept(pathOf("lastName")) }, // blocked
+//            df.select { "name".allColsExcept(pathOf("lastName"), pathOf("lastName")) }, // blocked
 //            df.select { "name".allColsExcept(pathOf("name", "lastName")) }, // breaks
             df.select { "name".allColsExcept { cols { "last" in it.name } } },
 //            df.select { Person::name.allColsExcept(name.lastName) }, // blocked
@@ -171,8 +201,8 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { Person::name.allColsExcept("lastName", "lastName") },
             df.select { Person::name.allColsExcept(Name::lastName) },
             df.select { Person::name.allColsExcept(Name::lastName, Name::lastName) },
-            df.select { Person::name.allColsExcept(pathOf("lastName")) },
-            df.select { Person::name.allColsExcept(pathOf("lastName"), pathOf("lastName")) },
+//            df.select { Person::name.allColsExcept(pathOf("lastName")) }, // blocked
+//            df.select { Person::name.allColsExcept(pathOf("lastName"), pathOf("lastName")) }, // blocked
 //            df.select { Person::name.allColsExcept(pathOf("name", "lastName")) }, // breaks
             df.select { Person::name.allColsExcept { cols { "last" in it.name } } },
             df.select { NonDataSchemaPerson::name.allColsExcept { lastName } },
@@ -183,8 +213,8 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { NonDataSchemaPerson::name.allColsExcept("lastName", "lastName") },
             df.select { NonDataSchemaPerson::name.allColsExcept(Name::lastName) },
             df.select { NonDataSchemaPerson::name.allColsExcept(Name::lastName, Name::lastName) },
-            df.select { NonDataSchemaPerson::name.allColsExcept(pathOf("lastName")) },
-            df.select { NonDataSchemaPerson::name.allColsExcept(pathOf("lastName"), pathOf("lastName")) },
+//            df.select { NonDataSchemaPerson::name.allColsExcept(pathOf("lastName")) }, // blocked
+//            df.select { NonDataSchemaPerson::name.allColsExcept(pathOf("lastName"), pathOf("lastName")) }, // blocked
 //            df.select { NonDataSchemaPerson::name.allColsExcept(pathOf("name", "lastName")) }, // breaks
             df.select { NonDataSchemaPerson::name.allColsExcept { cols { "last" in it.name } } },
             df.select { pathOf("name").allColsExcept { lastNameAccessor } },
@@ -194,92 +224,10 @@ class AllExceptTests : ColumnsSelectionDslTests() {
             df.select { pathOf("name").allColsExcept("lastName", "lastName") },
             df.select { pathOf("name").allColsExcept(Name::lastName) },
             df.select { pathOf("name").allColsExcept(Name::lastName, Name::lastName) },
-            df.select { pathOf("name").allColsExcept(pathOf("lastName")) },
-            df.select { pathOf("name").allColsExcept(pathOf("lastName"), pathOf("lastName")) },
+//            df.select { pathOf("name").allColsExcept(pathOf("lastName")) }, // blocked
+//            df.select { pathOf("name").allColsExcept(pathOf("lastName"), pathOf("lastName")) }, // blocked
 //            df.select { pathOf("name").allColsExcept(pathOf("name", "lastName")) }, // breaks
             df.select { pathOf("name").allColsExcept { cols { "last" in it.name } } },
-        ).shouldAllBeEqual()
-    }
-
-    @Test
-    fun `2 levels deep`() {
-        listOf(
-            dfGroup.remove { name.firstName.secondName }.select { name.allCols() }.alsoDebug(),
-            dfGroup.select {
-                name.allColsExcept("firstName"["secondName"])
-            },
-            dfGroup.select {
-                name.allColsExcept { firstName.secondName and firstName.secondName }
-            },
-            dfGroup.select {
-                name.allColsExcept { colGroup("firstName").col("secondName") }
-            },
-        ).shouldAllBeEqual()
-
-        listOf(
-            dfGroup.remove { name.firstName.secondName }.select { name.firstName.allCols() }.alsoDebug(),
-            dfGroup.select {
-                name.firstName.allColsExcept("secondName")
-            },
-            dfGroup.select {
-                name.firstName.allColsExcept { secondName }
-            },
-            dfGroup.select {
-                name.firstName.allColsExcept(pathOf("secondName"))
-            },
-        ).shouldAllBeEqual()
-
-        listOf(
-            dfGroup.select { name.firstName { secondName and thirdName } },
-            dfGroup.select { name { firstName.allColsExcept("firstName") } }.alsoDebug(),
-            dfGroup.select { name { firstName.allColsExcept(pathOf("firstName")) } }.alsoDebug(),
-            dfGroup.select { (name.allColsExcept("firstName"["firstName"])).first().asColumnGroup().allCols() },
-            dfGroup.remove { name.firstName.firstName }.select { name.firstName.allCols() },
-        ).shouldAllBeEqual()
-
-        val secondNameAccessor = column<String?>("secondName")
-        val thirdNameAccessor = column<String?>("thirdName")
-
-        listOf(
-            dfGroup.select { name.firstName.firstName },
-            dfGroup.select { name.firstName.allColsExcept { secondName and thirdName } },
-            dfGroup.select { name.firstName.allColsExcept { secondNameAccessor and thirdNameAccessor } },
-            dfGroup.select { name.firstName.allColsExcept("secondName", "thirdName") },
-            dfGroup.select { name.firstName.allColsExcept(FirstNames::secondName, FirstNames::thirdName) },
-            dfGroup.select { name.firstName.allColsExcept(pathOf("secondName"), pathOf("thirdName")) },
-            dfGroup.select { name.firstName.allColsExcept { cols { it.name in listOf("secondName", "thirdName") } } },
-            dfGroup.select { name.firstName { allExcept { secondName and thirdName } } },
-            dfGroup.select { name.firstName { allExcept { secondNameAccessor and thirdNameAccessor } } },
-            dfGroup.select { name.firstName { allExcept("secondName", "thirdName") } },
-            dfGroup.select { name.firstName { allExcept(FirstNames::secondName, FirstNames::thirdName) } },
-            dfGroup.select { name.firstName { allExcept(pathOf("secondName"), pathOf("thirdName")) } },
-            dfGroup.select { name.firstName { allExcept { cols { it.name in listOf("secondName", "thirdName") } } } },
-            dfGroup.select { name { firstName.allColsExcept { secondName and thirdName } } },
-            dfGroup.select { name { firstName.allColsExcept { secondNameAccessor and thirdNameAccessor } } },
-            dfGroup.select { name { firstName.allColsExcept("secondName", "thirdName") } },
-            dfGroup.select { name { firstName.allColsExcept(FirstNames::secondName, FirstNames::thirdName) } },
-            dfGroup.select { name { firstName.allColsExcept(pathOf("secondName"), pathOf("thirdName")) } },
-            dfGroup.select {
-                name {
-                    firstName.allColsExcept {
-                        cols { it.name in listOf("secondName", "thirdName") }
-                    }
-                }
-            },
-            dfGroup.select { name { firstName { allExcept { secondName and thirdName } } } },
-            dfGroup.select { name { firstName { allExcept { secondNameAccessor and thirdNameAccessor } } } },
-            dfGroup.select { name { firstName { allExcept("secondName", "thirdName") } } },
-            dfGroup.select { name { firstName { allExcept(FirstNames::secondName, FirstNames::thirdName) } } },
-            dfGroup.select { name { firstName { allExcept(pathOf("secondName"), pathOf("thirdName")) } } },
-            dfGroup.select {
-                name {
-                    firstName {
-                        allExcept {
-                            cols { it.name in listOf("secondName", "thirdName") }
-                        }
-                    }
-                }
-            },
         ).shouldAllBeEqual()
     }
 }

@@ -15,11 +15,13 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSe
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExceptKeepingStructure
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.removeAll
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT
+import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT_COLUMN_PATH
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE_VARARG
+import org.jetbrains.kotlinx.dataframe.util.ALL_EXCEPT_COLUMN_PATH
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -45,7 +47,9 @@ public interface AllExceptColumnsSelectionDsl {
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnDef]}
      *  {@include [LineBreak]}
-     *  {@include [DslGrammarTemplate.ColumnNoAccessorDef]}
+     *  {@include [DslGrammarTemplate.ColumNameDef]}
+     *  {@include [LineBreak]}
+     *  {@include [DslGrammarTemplate.ColumnNoPathDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnsResolverDef]}
      * }
@@ -53,7 +57,7 @@ public interface AllExceptColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`   {   `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
      *
-     *  `| `{@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
+     *  `| `{@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnNoPathRef]}**`,`**` ..`**`)`**
      * }
      * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}` [`**`  {  `**`] `{@include [DslGrammarTemplate.ColumnsResolverRef]}` [`**`  \}  `**`]`
@@ -65,7 +69,7 @@ public interface AllExceptColumnsSelectionDsl {
      * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**`  \}  `**
      *
-     *  {@include [Indent]}`| `{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
+     *  {@include [Indent]}`| `{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNameRef]}**`,`**` ..`**`)`**
      * }
      */
     public interface Grammar {
@@ -99,7 +103,8 @@ public interface AllExceptColumnsSelectionDsl {
      * which will 'subtract' the [ColumnSet] created by `age `[and][ColumnsSelectionDsl.and]` height` from the [ColumnSet] created by [colsOf][colsOf]`<`[Int][Int]`>()`.
      *
      * {@include [LineBreak]}
-     * This operation can also be used to exclude columns from [Column Groups][ColumnGroup].
+     * This operation can also be used to exclude columns originating from [Column Groups][ColumnGroup], although
+     * they need to be directly included in the [ColumnSet], like when using [`colsAtAnyDepth`][ColumnsSelectionDsl.colsAtAnyDepth].
      *
      * For instance:
      *
@@ -110,12 +115,11 @@ public interface AllExceptColumnsSelectionDsl {
      * scope. Use the {@include [ExtensionPropertiesApiLink]} to prevent scoping issues if possible.
      * {@include [LineBreak]}
      * Special case: If a column that needs to be removed appears multiple times in the [ColumnSet], it is excepted
-     * each time it is encountered (including inside [ColumnGroups][ColumnGroup]). You could say the receiver [ColumnSet]
-     * is [simplified][ColumnsSelectionDsl.simplify] before the operation is performed:
+     * each time it is encountered (including inside [ColumnGroups][ColumnGroup]):
      *
      * [cols][ColumnsSelectionDsl.cols]`(a, a, a.b, a.b).`[except][ColumnSet.except]`(a.b)`
      *
-     * `== `[cols][ColumnsSelectionDsl.cols]`(a).`[except][ColumnSet.except]`(a.b)`
+     * `== `[cols][ColumnsSelectionDsl.cols]`(a, a, a.b).`[except][ColumnSet.except]`(a.b)`
      *
      * ### In the [ColumnsSelectionDsl][ColumnsSelectionDsl]
      * Instead of having to write [all][ColumnsSelectionDsl.all]`() `[except][ColumnsSelectionDsl.except]` { ... }` in the DSL,
@@ -123,7 +127,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * For example:
      *
-     * `df.`[select][DataFrame.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`  { userData.age  `[and][ColumnsSelectionDsl.and]` height } }`
+     * `df.`[select][DataFrame.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`  { userData  `[and][ColumnsSelectionDsl.and]` height } }`
      *
      * ### On [ColumnGroups][ColumnGroup]
      * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it changes the scope relative to
@@ -142,7 +146,7 @@ public interface AllExceptColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[allCols][ColumnsSelectionDsl.allCols]`() `[except][ColumnSet.except]`  { myColGroup.colA  `[and][ColumnsSelectionDsl.and]` myColGroup.colB } }`
      * {@include [LineBreak]}
      * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
-     * columns inside the group, 'lifting' them out.
+     * columns inside the group, not the group itself.
      *
      * ### Examples for this overload
      * {@get [EXAMPLE]}
@@ -170,9 +174,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]` `{@get [ARGUMENT_1]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]` {@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` `{@get [ARGUMENT_2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` {@get [ARGUMENT_2]} \}`
      * }
      */
     private interface ColumnSetInfixDocs {
@@ -187,9 +191,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]{@get [ARGUMENT_1]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]`{@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]{@get [ARGUMENT_2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]`{@get [ARGUMENT_2]} \}`
      * }
      */
     private interface ColumnSetVarargDocs {
@@ -205,8 +209,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
      *   excluded from the [ColumnSet]. The scope of the selector is the same as the outer scope.
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `{ "age" `[and][ColumnsSelectionDsl.and]` height }`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `{ name.firstName }`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] { "age" `[and][ColumnsSelectionDsl.and]` height }
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] { name.firstName }
      */
     public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> = except(selector())
 
@@ -214,8 +218,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [ColumnsResolver] containing the columns that need to be
      *   excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `"age" `[and][ColumnsSelectionDsl.and]` height`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `name.firstName`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age" `[and][ColumnsSelectionDsl.and]` height
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] name.firstName
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> = exceptInternal(other)
 
@@ -223,8 +227,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnsResolvers][ColumnsResolver] containing
      *  the columns that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `(age, userData.height)`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `(name.firstName, name.middleName)`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (age, userData.height)
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] (name.firstName, name.middleName)
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> = except(others.toColumnSet())
 
@@ -232,8 +236,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [String] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `"age"`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `"name"`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age"
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] "name"
      */
     public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> = except(column<Any?>(other))
 
@@ -241,8 +245,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `("age", "height")`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `("name")`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] ("age", "height")
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] ("name")
      */
     public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> = except(others.toColumnSet())
 
@@ -250,8 +254,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [KProperty] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `Person::age`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `Person::name`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] Person::age
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] Person::name
      */
     public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> = except(column(other))
 
@@ -259,8 +263,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `(Person::age, Person::height)`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `(Person::name)`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (Person::age, Person::height)
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] (Person::name)
      */
     public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> = except(others.toColumnSet())
 
@@ -268,8 +272,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [ColumnPath] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `"userdata"["age"]`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `pathOf("name", "firstName")`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "userdata"["age"]
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] pathOf("name", "firstName")
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> = except(column<Any?>(other))
 
@@ -277,8 +281,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `(pathOf("age"), "userdata"["height"])`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `("name"["firstName"], "name"["middleName"])`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (pathOf("age"), "userdata"["height"])
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] ("name"["firstName"], "name"["middleName"])
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> = except(others.toColumnSet())
 
@@ -289,9 +293,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * @set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_1]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`{@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`{@get [ARGUMENT_2]} \}`
      */
     private interface ColumnsSelectionDslDocs {
 
@@ -306,8 +310,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnsSelectionDslDocs]
      * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
      *  excluded from the current selection. The scope of the selector is the same as the outer scope.
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] ` { name.firstName }`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] \ { "age"  `[and][ColumnsSelectionDsl.and]` height }
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] \ { name.firstName }
      */
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
@@ -317,8 +321,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnsSelectionDslDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] A [ColumnsResolver] containing the columns that need to be
      *  excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(age, height)`
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `(name.firstName, name.middleName)`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] (age, height)
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] (name.firstName, name.middleName)
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -327,8 +331,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnsSelectionDslDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `("age", "height")`
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `("name")`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] ("age", "height")
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] ("name")
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -337,19 +341,13 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnsSelectionDslDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(Person::age, Person::height)`
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `(Person::name)`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] (Person::age, Person::height)
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] (Person::name)
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnsSelectionDslDocs]
-     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
-     *  the columns (relative to the current scope) that need to be excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(pathOf("age"), "userdata"["height"])`
-     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `("name"["firstName"], "name"["middleName"])`
-     */
+    @Deprecated(message = ALL_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
@@ -436,15 +434,6 @@ public interface AllExceptColumnsSelectionDsl {
          * @set [ColumnGroupDocs.ARGUMENT_2] `(Person::firstName, Person::middleName)`
          */
         interface KPropertyArgs
-
-        /**
-         * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
-         *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
-         *  column group. The other columns will be included in the selection by default.
-         * @set [ColumnGroupDocs.ARGUMENT_1] `(pathOf("age"), "extraData"["item1"])`
-         * @set [ColumnGroupDocs.ARGUMENT_2] `(pathOf("firstName"), "middleNames"["first"])`
-         */
-        interface ColumnPathArgs
     }
 
     /**
@@ -487,11 +476,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
         allColsExceptInternal(other.toColumnSet())
 
@@ -539,11 +524,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.StringReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun String.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -591,11 +572,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.KPropertyReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -643,11 +620,7 @@ public interface AllExceptColumnsSelectionDsl {
     public fun ColumnPath.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
-    /**
-     * @include [ColumnGroupDocs]
-     * @include [ColumnGroupDocs.ColumnPathReceiverArgs]
-     * @include [ColumnGroupDocs.ColumnPathArgs]
-     */
+    @Deprecated(message = ALL_COLS_EXCEPT_COLUMN_PATH, level = DeprecationLevel.ERROR)
     public fun ColumnPath.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -655,7 +628,7 @@ public interface AllExceptColumnsSelectionDsl {
 }
 
 /**
- * Removes the columns in the "other" ColumnsResolver from the current ColumnSet while keeping the structure intact.
+ * Removes the columns in the "other" ColumnsResolver from the current ColumnSet.
  * Returns a new ColumnSet with the remaining columns.
  *
  * @param other The ColumnsResolver containing the columns to be removed.
@@ -666,7 +639,7 @@ internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnS
     createColumnSet { context ->
         val resolvedCols = this.resolve(context)
         val resolvedColsToExcept = other.resolve(context)
-        resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
+        resolvedCols.removeAll(resolvedColsToExcept)
     } as ColumnSet<C>
 
 /**

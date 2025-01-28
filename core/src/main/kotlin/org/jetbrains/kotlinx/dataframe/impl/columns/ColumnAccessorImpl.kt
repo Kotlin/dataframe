@@ -24,8 +24,8 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
             val col = df.getColumn<Any?>(colName, context.unresolvedColumnsPolicy) ?: return null
             if (!col.isColumnGroup()) {
                 error(
-                    "Cannot resolve column '${path.subList(0, i + 2).joinToString(".")}': " +
-                        "Column '${path.subList(0, i + 1).joinToString(".")}' is not a column group.",
+                    "Cannot resolve column '${path.subList(0, i + 2).joinToString("/")}': " +
+                        "Column '${path.subList(0, i + 1).joinToString("/")}' is not a column group.",
                 )
             } else {
                 col

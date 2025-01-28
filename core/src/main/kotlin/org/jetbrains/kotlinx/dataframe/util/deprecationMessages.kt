@@ -79,4 +79,12 @@ internal const val ALL_COLS_EXCEPT =
 internal const val ALL_COLS_REPLACE = "allColsExcept { other }"
 internal const val ALL_COLS_REPLACE_VARARG = "allColsExcept { others.toColumnSet() }"
 
+internal const val ALL_COLS_EXCEPT_COLUMN_PATH =
+    "This overload is blocked because you cannot use `allColsExcept` for columns nested in this column group. " +
+        "Use a String to refer to a column instead, or use DataFrame.remove {} to remove nested columns."
+
+internal const val ALL_EXCEPT_COLUMN_PATH =
+    "This overload is blocked because you cannot use `allExcept` for nested columns. " +
+        "Use a String to refer to a column instead, or use DataFrame.remove {} to remove nested columns."
+
 // endregion
