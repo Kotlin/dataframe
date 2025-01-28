@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.asSingleColumn
  * ## ColumnSet
  *
  * Entity that can be resolved into a list of [columns][DataColumn].
+ * Unlike an actual "set", repeated columns are allowed.
  * Just like [SingleColumn], this is a [ColumnsResolver].
  *
  * @see [SingleColumn]
