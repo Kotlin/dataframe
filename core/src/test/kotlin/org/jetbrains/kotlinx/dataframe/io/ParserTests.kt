@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -157,7 +158,9 @@ class ParserTests {
             // *
             // (3 locales as converting parameter + original converting + original converting to nullable)
             val parsingLocaleNotDefined: Locale? = null // takes parserOptions.locale ?: Locale.getDefault()
+            // uses dot as decimal separator, comma as grouping separator
             val parsingLocaleUsesDot: Locale = Locale.forLanguageTag("en-US")
+            // uses comma as decimal separator, NBSP as grouping separator
             val parsingLocaleUsesComma: Locale = Locale.forLanguageTag("ru-RU")
             // *
             // 3 system locales
@@ -241,6 +244,99 @@ class ParserTests {
             columnComma.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
             // uses fallback to ROOT locale
             columnMixed.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
+        } finally {
+            Locale.setDefault(systemLocale)
+        }
+    }
+
+    @Test
+    fun `converting String to Double in different locales with comma grouping`() {
+        val systemLocale = Locale.getDefault()
+        try {
+            // Test 45 behaviour combinations:
+
+            // 3 source columns
+            val columnDot = columnOf("123,456.789", "0,987,654.321")
+            val columnComma = columnOf("123.456,789", "0.987.654,321")
+            val columnMixed = columnOf("123,456.789", "0.987.654,321")
+            // *
+            // (3 locales as converting parameter + original converting + original converting to nullable)
+            val parsingLocaleNotDefined: Locale? = null // takes parserOptions.locale ?: Locale.getDefault()
+            val parsingLocaleUsesDot: Locale = Locale.forLanguageTag("en-US")
+            val parsingLocaleUsesComma: Locale = Locale.forLanguageTag("nl-NL")
+            // *
+            // 3 system locales
+            // --------------------------------------------------------------------------------
+
+            Locale.setDefault(Locale.forLanguageTag("C.UTF-8"))
+
+            columnDot.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertTo<Double>() }
+            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double>() }
+
+            columnDot.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertTo<Double?>() }
+            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double?>() }
+
+            columnDot.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertToDouble(parsingLocaleNotDefined) }
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleNotDefined) }
+
+            columnDot.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertToDouble(parsingLocaleUsesDot) }
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesDot) }
+
+            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            columnComma.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
+
+            // --------------------------------------------------------------------------------
+
+            Locale.setDefault(Locale.forLanguageTag("en-US"))
+
+            columnDot.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertTo<Double>() }
+            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double>() }
+
+            columnDot.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertTo<Double?>() }
+            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double?>() }
+
+            columnDot.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertToDouble(parsingLocaleNotDefined) }
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleNotDefined) }
+
+            columnDot.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertToDouble(parsingLocaleUsesDot) }
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesDot) }
+
+            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            columnComma.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
+
+            // --------------------------------------------------------------------------------
+
+            Locale.setDefault(Locale.forLanguageTag("nl-NL"))
+
+            columnDot.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
+            columnComma.convertTo<Double>() shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double>() }
+
+            columnDot.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
+            columnComma.convertTo<Double?>() shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnMixed.convertTo<Double?>() }
+
+            columnDot.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
+            columnComma.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleNotDefined) }
+
+            columnDot.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnComma.convertToDouble(parsingLocaleUsesDot) }
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesDot) }
+
+            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            columnComma.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(123_456.789, 987_654.321)
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
         } finally {
             Locale.setDefault(systemLocale)
         }
