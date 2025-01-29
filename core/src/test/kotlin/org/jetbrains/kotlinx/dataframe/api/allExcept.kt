@@ -17,6 +17,24 @@ import org.junit.Test
 class AllExceptTests : ColumnsSelectionDslTests() {
 
     @Test
+    fun `issue 761`() {
+        val renamed = df.rename { colsAtAnyDepth() except name.firstName }.into { it.name.uppercase() }
+        renamed.columnNames() shouldBe listOf("NAME", "AGE", "CITY", "WEIGHT", "ISHAPPY")
+        renamed.getColumnGroup("NAME").columnNames() shouldBe listOf("firstName", "LASTNAME")
+
+        val df2 = dataFrameOf("a.b", "a.c.d", "d.e", "d.f")(1, 3.0, 2, "b")
+            .move { all() }.into { it.name.split(".").toPath() }
+        df2.select { cols("a") except "a"["b"] }.let {
+            it.getColumnGroup("a").getColumnOrNull("b") shouldBe null
+            it[pathOf("a", "c", "d")].single() shouldBe 3.0
+        }
+        df2.select { cols("a") except "a"["c"]["d"] }.let {
+            it.getColumnGroup("a").getColumnOrNull("c") shouldBe null
+            it[pathOf("a", "b")].single() shouldBe 1
+        }
+    }
+
+    @Test
     fun `exceptions`() {
         shouldThrow<IllegalStateException> {
             dfGroup.select {
@@ -70,12 +88,15 @@ class AllExceptTests : ColumnsSelectionDslTests() {
         ).shouldAllBeEqual()
 
         listOf(
-            df.select { name and name.firstName }.alsoDebug(),
+            df.select { cols(name) except name.firstName },
+            df.select { (name and name.firstName and name.firstName) except name.firstName },
+            df.select { (name and name and name.firstName).except(name.firstName).simplify() },
         ).shouldAllBeEqual()
 
-        df.select { (name and name.firstName and name.firstName) except name.firstName }.alsoDebug()
-
-        df.select { (name and name and name.firstName) except name.firstName }.alsoDebug()
+        df.getColumns { (name and name and name.firstName).except(name.firstName) }.forEach {
+            it.isColumnGroup() shouldBe true
+            it.asColumnGroup().columnNames() shouldBe listOf("lastName")
+        }
     }
 
     @Test
