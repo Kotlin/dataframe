@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -145,9 +144,9 @@ class ParserTests {
         parsed.toList() shouldBe listOf(1, 2, null, 3, null, null, 4.0, 5.0)
     }
 
-    @Test // This does not yet use fastDoubleParser!
+    @Test
     fun `converting String to Double in different locales`() {
-        val currentLocale = Locale.getDefault()
+        val systemLocale = Locale.getDefault()
         try {
             // Test 45 behaviour combinations:
 
@@ -157,11 +156,12 @@ class ParserTests {
             val columnMixed = columnOf("12.345", "67,890")
             // *
             // (3 locales as converting parameter + original converting + original converting to nullable)
-            val parsingLocaleNotDefined: Locale? = null
+            val parsingLocaleNotDefined: Locale? = null // takes parserOptions.locale ?: Locale.getDefault()
             val parsingLocaleUsesDot: Locale = Locale.forLanguageTag("en-US")
             val parsingLocaleUsesComma: Locale = Locale.forLanguageTag("ru-RU")
             // *
             // 3 system locales
+            // --------------------------------------------------------------------------------
 
             Locale.setDefault(Locale.forLanguageTag("C.UTF-8"))
 
@@ -181,9 +181,13 @@ class ParserTests {
             columnComma.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(12345.0, 67890.0)
             columnMixed.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(12.345, 67890.0)
 
-            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            // uses fallback to ROOT locale
+            columnDot.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
             columnComma.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
-            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
+            // uses fallback to ROOT locale
+            columnMixed.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
+
+            // --------------------------------------------------------------------------------
 
             Locale.setDefault(Locale.forLanguageTag("en-US"))
 
@@ -203,33 +207,42 @@ class ParserTests {
             columnComma.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(12345.0, 67890.0)
             columnMixed.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(12.345, 67890.0)
 
-            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            // uses fallback to ROOT locale
+            columnDot.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
             columnComma.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
-            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
+            // uses fallback to ROOT locale
+            columnMixed.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
+
+            // --------------------------------------------------------------------------------
 
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
 
             columnDot.convertTo<Double>() shouldBe columnOf(12.345, 67.89)
             columnComma.convertTo<Double>() shouldBe columnOf(12.345, 67.89)
-            columnMixed.convertTo<Double>() shouldBe columnOf(12.345, 67890.0)
+            // uses fallback to ROOT locale
+            columnMixed.convertTo<Double>() shouldBe columnOf(12.345, 67.89)
 
             columnDot.convertTo<Double?>() shouldBe columnOf(12.345, 67.89)
             columnComma.convertTo<Double?>() shouldBe columnOf(12.345, 67.89)
-            columnMixed.convertTo<Double?>() shouldBe columnOf(12.345, 67890.0)
+            // uses fallback to ROOT locale
+            columnMixed.convertTo<Double?>() shouldBe columnOf(12.345, 67.89)
 
             columnDot.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(12.345, 67.89)
             columnComma.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(12.345, 67.89)
-            columnMixed.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(12.345, 67890.0)
+            // uses fallback to ROOT locale
+            columnMixed.convertToDouble(parsingLocaleNotDefined) shouldBe columnOf(12.345, 67.89)
 
             columnDot.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(12.345, 67.89)
             columnComma.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(12345.0, 67890.0)
             columnMixed.convertToDouble(parsingLocaleUsesDot) shouldBe columnOf(12.345, 67890.0)
 
-            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            // uses fallback to ROOT locale
+            columnDot.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
             columnComma.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
-            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
+            // uses fallback to ROOT locale
+            columnMixed.convertToDouble(parsingLocaleUsesComma) shouldBe columnOf(12.345, 67.89)
         } finally {
-            Locale.setDefault(currentLocale)
+            Locale.setDefault(systemLocale)
         }
     }
 
