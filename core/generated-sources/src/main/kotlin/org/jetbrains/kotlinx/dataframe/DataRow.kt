@@ -28,13 +28,16 @@ public interface DataRow<out T> {
 
     public operator fun <R> get(expression: RowExpression<T, R>): R = expression(this, this)
 
+    @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<R>): R
 
+    @AccessApiOverload
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
 
     @AccessApiOverload
     public operator fun <R> get(property: KProperty<R>): R = get(property.columnName) as R
 
+    @AccessApiOverload
     public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataRow<T> =
         owner.get(first, *other)[index]
 

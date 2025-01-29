@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
@@ -186,12 +187,14 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     @Interpretable("ToDataFrameFrom0")
     public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
 
+    @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
 
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
 
+    @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(columnName, source.map { inferType.expression(it) }))
 
