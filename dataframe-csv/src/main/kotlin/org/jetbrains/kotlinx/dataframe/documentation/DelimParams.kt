@@ -138,8 +138,6 @@ internal object DelimParams {
      *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
      *
      *   The only exceptions are:
-     *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
-     *   regardless of the global setting.
      *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
      *   will take the global setting + {@include [DefaultNullStringsContentLink]}.
      *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to

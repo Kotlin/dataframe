@@ -112,11 +112,7 @@ internal fun readDelimImpl(
 ): DataFrame<*> {
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {
-        // turn on fast double parser if not explicitly set regardless of the global parser options
-        @Suppress("NullableBooleanElvis")
-        val adjustedParserOptions = (parserOptions ?: ParserOptions())
-            .copy(useFastDoubleParser = parserOptions?.useFastDoubleParser ?: true)
-        customDoubleParser(DataFrameCustomDoubleParser(adjustedParserOptions))
+        customDoubleParser(DataFrameCustomDoubleParser(parserOptions))
 
         // use the given nullStrings if provided, else take the global ones + some extras
         val nullStrings = parserOptions?.nullStrings ?: (DataFrame.parser.nulls + DEFAULT_DELIM_NULL_STRINGS)
