@@ -53,10 +53,13 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
 
 // region moveToLeft
 
+@Refine
+@Interpretable("MoveToLeft1")
 public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toLeft()
 
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToLeft { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> =
     moveToLeft { columns.toColumnSet() }
 
@@ -68,13 +71,17 @@ public fun <T> DataFrame<T>.moveToLeft(vararg columns: KProperty<*>): DataFrame<
 
 // region moveToRight
 
+@Refine
+@Interpretable("MoveToRight1")
 public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toRight()
 
 public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToRight { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.moveToRight(vararg columns: AnyColumnReference): DataFrame<T> =
     moveToRight { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame<T> =
     moveToRight { columns.toColumnSet() }
 
@@ -94,6 +101,11 @@ public fun <T, C> MoveClause<T, C>.into(
         newPathExpression = column,
     )
 
+/**
+ * Move a single selected column to top level with a new name
+ */
+@Refine
+@Interpretable("MoveInto0")
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
 
 public fun <T, C> MoveClause<T, C>.intoIndexed(
@@ -109,11 +121,19 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
 
 // region under
 
+@Refine
+@Interpretable("MoveUnder0")
 public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(column).let { path -> under { path } }
 
+@AccessApiOverload
 public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> =
     column.path().let { path -> under { path } }
 
+/**
+ * Move selected columns under existing column group
+ */
+@Refine
+@Interpretable("MoveUnder1")
 public fun <T, C> MoveClause<T, C>.under(
     column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference,
 ): DataFrame<T> =
@@ -138,10 +158,13 @@ public fun <T, C> MoveClause<T, C>.toTop(
 
 // region after
 
+@Refine
+@Interpretable("MoveAfter0")
 public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, true)
 
 public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after { column.toColumnAccessor() }
 
+@AccessApiOverload
 public fun <T, C> MoveClause<T, C>.after(column: AnyColumnReference): DataFrame<T> = after { column }
 
 @AccessApiOverload
@@ -157,8 +180,12 @@ fun <T, C> MoveColsClause<T, C>.before(column: String) = before { column.toColum
 fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBefore(column, false)
 */
 
+@Refine
+@Interpretable("MoveToLeft0")
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 
+@Refine
+@Interpretable("MoveToRight0")
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
 public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
