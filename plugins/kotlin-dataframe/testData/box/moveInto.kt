@@ -4,17 +4,10 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
 
 fun box(): String {
-    val df = dataFrameOf("a")(1).add {
-        "id" from { it }
-        "group" {
-            "a" from { it }
-        }
-        group("group1") {
-            "b" from { it }
-        }
-    }
-
-    df.group.a
-    df.group1.b
+    val df = dataFrameOf("a", "b", "c")(1, 2, 3)
+        .group { a and b }.into("d")
+        .move { d.a }.into("renamedA")
+    df.renamedA
+    df.compareSchemas(strict = true)
     return "OK"
 }

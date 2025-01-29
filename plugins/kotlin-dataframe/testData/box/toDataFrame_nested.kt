@@ -4,17 +4,16 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
 
 fun box(): String {
-    val df = dataFrameOf("a")(1).add {
-        "id" from { it }
+    val df = listOf("a").toDataFrame {
         "group" {
-            "a" from { it }
-        }
-        group("group1") {
-            "b" from { it }
+            "anotherGroup" {
+                "a" from { 1 }
+            }
+            "b" from { "c" }
         }
     }
 
-    df.group.a
-    df.group1.b
+    df.group.b
+    df.group.anotherGroup.a
     return "OK"
 }

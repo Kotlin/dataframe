@@ -225,6 +225,7 @@ public class AddDsl<T>(
     @AccessApiOverload
     public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
 
+    @Interpretable("AddDslNamedGroup")
     public fun group(name: String, body: AddDsl<T>.() -> Unit) {
         val dsl = AddDsl(df)
         body(dsl)

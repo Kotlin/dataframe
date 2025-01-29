@@ -202,6 +202,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public inline fun <reified R> inferType(noinline expression: (T) -> R): InferType<T, R> = InferType(expression)
 
+    @Interpretable("ToDataFrameDslStringInvoke")
     public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
 }
 
