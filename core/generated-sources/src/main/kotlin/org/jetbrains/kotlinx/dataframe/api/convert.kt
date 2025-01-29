@@ -35,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -222,8 +223,8 @@ public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColum
  *   If the column cannot be parsed, the POSIX format is used.
  * @param nullStrings a set of strings that should be treated as `null` values.
  *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser.
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `false` for now.
+ * @param useFastDoubleParser whether to use [FastDoubleParser].
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `true`.
  */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(
@@ -254,8 +255,8 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
  *   If the column cannot be parsed, the POSIX format is used.
  * @param nullStrings a set of strings that should be treated as `null` values.
  *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser.
- *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `false` for now.
+ * @param useFastDoubleParser whether to use [FastDoubleParser].
+ *   The default in [DataFrame.parser][DataFrame.Companion.parser] is `true`.
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(
