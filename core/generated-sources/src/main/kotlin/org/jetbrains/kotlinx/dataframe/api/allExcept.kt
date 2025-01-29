@@ -3532,7 +3532,7 @@ public interface AllExceptColumnsSelectionDsl {
 internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnSet<C> =
     createColumnSet { context ->
         val resolvedCols = this.resolve(context)
-        val resolvedColsToExcept = other.resolve(context)
+        val resolvedColsToExcept = other.resolve(context).toSet()
         resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
     } as ColumnSet<C>
 
