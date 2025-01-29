@@ -24,8 +24,8 @@ private val NANS = arrayOf("nan", "na", "n/a")
 /**
  * Parses a [String]/[CharSequence], [CharArray], or [ByteArray] into a [Double].
  *
- * If [ParserOptions.useFastDoubleParser] is enabled, it will try to parse the input with an _EXPERIMENTAL_
- * fast double parser, [FastDoubleParser](https://github.com/wrandelshofer/FastDoubleParser).
+ * If [ParserOptions.useFastDoubleParser] is enabled, it will try to parse the input with the
+ * fast double parser library, [FastDoubleParser](https://github.com/wrandelshofer/FastDoubleParser).
  * If not, or if it fails, it will use [NumberFormat] to parse the input.
  *
  * Public, so it can be used in other modules.
