@@ -25,11 +25,13 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
@@ -47,6 +49,7 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.Temporal
 import java.time.temporal.TemporalQuery
 import java.util.Locale
+import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -114,6 +117,13 @@ internal class StringParserWithFormat<T>(
     }
 }
 
+/**
+ * Central implementation for [GlobalParserOptions].
+ *
+ * Can be obtained by a user by calling [DataFrame.parser][DataFrame.Companion.parser].
+ *
+ * Defaults are set by [resetToDefault].
+ */
 internal object Parsers : GlobalParserOptions {
 
     private val formatters: MutableList<DateTimeFormatter> = mutableListOf()
@@ -140,7 +150,7 @@ internal object Parsers : GlobalParserOptions {
         skipTypesSet.add(type)
     }
 
-    override var useFastDoubleParser: Boolean = false
+    override var useFastDoubleParser by Delegates.notNull<Boolean>()
 
     private var _locale: Locale? = null
 
@@ -165,7 +175,7 @@ internal object Parsers : GlobalParserOptions {
             .toFormatter()
             .let { formatters.add(it) }
 
-        useFastDoubleParser = false
+        useFastDoubleParser = true
         _locale = null
         nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
