@@ -435,6 +435,8 @@ private interface CommonDropNAFunctionDoc
  * @include [DropNA.WhereAllNAParam]
  * @include [DropDslParam]
  */
+@Refine
+@Interpretable("DropNa0")
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
     return if (whereAllNA) {
