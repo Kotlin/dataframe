@@ -248,6 +248,8 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     return dataFrameOf(this@add.columns() + dsl.columns).cast()
 }
 
+@Refine
+@Interpretable("GroupByAdd")
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     name: String,
     infer: Infer = Infer.Nulls,
