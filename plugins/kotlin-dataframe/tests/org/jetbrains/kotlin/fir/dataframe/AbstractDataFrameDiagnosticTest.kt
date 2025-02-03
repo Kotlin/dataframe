@@ -12,12 +12,12 @@ import org.jetbrains.kotlin.fir.dataframe.services.TemporaryDirectoryManagerImpl
 import org.jetbrains.kotlin.test.FirParser
 import org.jetbrains.kotlin.test.TestJdkKind
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
+import org.jetbrains.kotlin.test.configuration.baseFirDiagnosticTestConfiguration
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.frontend.fir.DisableLazyResolveChecksAfterAnalysisChecker
 import org.jetbrains.kotlin.test.initIdeaConfiguration
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerTest
-import org.jetbrains.kotlin.test.runners.baseFirDiagnosticTestConfiguration
 import org.jetbrains.kotlin.test.services.EnvironmentBasedStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.TemporaryDirectoryManager
@@ -38,29 +38,29 @@ abstract class AbstractDataFrameDiagnosticTest : AbstractKotlinCompilerTest() {
         return EnvironmentBasedStandardLibrariesPathProvider
     }
 
-    override fun TestConfigurationBuilder.configuration() {
-        baseFirDiagnosticTestConfiguration()
+    override fun configure(builder: TestConfigurationBuilder) {
+        builder.baseFirDiagnosticTestConfiguration()
 // disabled because checker it too strict and fails even when shouldn't
 //    firHandlersStep {
 //        useHandlers(
 //            ::FirResolveContractViolationErrorHandler,
 //        )
 //    }
-        useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
+        builder.useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
 
-        defaultDirectives {
+        builder.defaultDirectives {
             +FirDiagnosticsDirectives.ENABLE_PLUGIN_PHASES
             +FirDiagnosticsDirectives.FIR_DUMP
             FirDiagnosticsDirectives.FIR_PARSER with FirParser.LightTree
             JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
         }
 
-        useDirectives(Directives)
-        useConfigurators(
+        builder.useDirectives(Directives)
+        builder.useConfigurators(
             ::DataFramePluginAnnotationsProvider,
             ::ExperimentalExtensionRegistrarConfigurator
         )
-        useAfterAnalysisCheckers(
+        builder.useAfterAnalysisCheckers(
             ::DisableLazyResolveChecksAfterAnalysisChecker,
         )
     }

@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.fir.dataframe.services.TemporaryDirectoryManagerImpl
 import org.jetbrains.kotlin.fir.dataframe.services.classpath.classpathFromClassloader
 import org.jetbrains.kotlin.test.TestJdkKind
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
+import org.jetbrains.kotlin.test.configuration.enableLazyResolvePhaseChecking
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives.IGNORE_DEXING
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.directives.model.RegisteredDirectives
@@ -23,6 +24,7 @@ import org.jetbrains.kotlin.test.services.EnvironmentBasedStandardLibrariesPathP
 import org.jetbrains.kotlin.test.services.KotlinStandardLibrariesPathProvider
 import org.jetbrains.kotlin.test.services.RuntimeClasspathProvider
 import org.jetbrains.kotlin.test.services.TemporaryDirectoryManager
+import org.jetbrains.kotlin.test.services.TestModuleStructure
 import org.jetbrains.kotlin.test.services.TestServices
 import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.BeforeAll
@@ -44,6 +46,7 @@ open class AbstractDataFrameBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCo
             +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
             +IGNORE_DEXING
         }
+        builder.enableLazyResolvePhaseChecking()
         builder.useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
         builder.useConfigurators(::DataFramePluginAnnotationsProvider)
         builder.useConfigurators(::ExperimentalExtensionRegistrarConfigurator)
@@ -72,7 +75,11 @@ open class AbstractDataFrameBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCo
             const val COMMON_SOURCE_PATH = "testData/testUtils.kt"
         }
 
-        override fun produceAdditionalFiles(globalDirectives: RegisteredDirectives, module: TestModule): List<TestFile> {
+        override fun produceAdditionalFiles(
+            globalDirectives: RegisteredDirectives,
+            module: TestModule,
+            testModuleStructure: TestModuleStructure
+        ): List<TestFile> {
             return listOf(File(COMMON_SOURCE_PATH).toTestFile())
         }
     }

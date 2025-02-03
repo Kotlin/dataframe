@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeFlexibleType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
-import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.ConeTypeParameterType
 import org.jetbrains.kotlin.fir.types.ConeTypeProjection
@@ -282,7 +281,7 @@ internal fun KotlinTypeFacade.toDataFrame(
 
                 val keepSubtree = depth >= maxDepth && !fieldKind.shouldBeConvertedToColumnGroup && !fieldKind.shouldBeConvertedToFrameColumn
                 if (keepSubtree || returnType.isValueType() || returnType.classId in preserveClasses || it in preserveProperties) {
-                    SimpleDataColumn(name, TypeApproximation(returnType.withNullability(ConeNullability.create(makeNullable), session.typeContext)))
+                    SimpleDataColumn(name, TypeApproximation(returnType.withNullability(makeNullable, session.typeContext)))
                 } else if (
                     returnType.isSubtypeOf(StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection)), session) ||
                     returnType.isSubtypeOf(StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection), isMarkedNullable = true), session)
@@ -302,7 +301,7 @@ internal fun KotlinTypeFacade.toDataFrame(
                         SimpleFrameColumn(name, convert(type, depth + 1, makeNullable = false))
                     }
                 } else {
-                    SimpleColumnGroup(name, convert(returnType, depth + 1, returnType.isNullable || makeNullable))
+                    SimpleColumnGroup(name, convert(returnType, depth + 1, returnType.isMarkedNullable || makeNullable))
                 }
             }
     }
@@ -315,7 +314,7 @@ internal fun KotlinTypeFacade.toDataFrame(
                 is ConeFlexibleType -> type.upperBound
                 else -> null
             } ?: return PluginDataFrameSchema.EMPTY
-            val columns = convert(classLike, 0, makeNullable = classLike.isNullable)
+            val columns = convert(classLike, 0, makeNullable = classLike.isMarkedNullable)
             PluginDataFrameSchema(columns)
         }
     }
