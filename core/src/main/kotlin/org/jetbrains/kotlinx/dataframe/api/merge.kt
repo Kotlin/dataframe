@@ -44,17 +44,39 @@ public data class Merge<T, C, R>(
     internal val infer: Infer,
 )
 
-public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C, R> = copy(notNull = true)
+public class MergeWithTransform<T, C, R>(
+    internal val df: DataFrame<T>,
+    internal val selector: ColumnsSelector<T, C>,
+    internal val notNull: Boolean,
+    internal val transform: DataRow<T>.(List<C>) -> R,
+    internal val resultType: KType,
+    internal val infer: Infer,
+)
+
+public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C & Any, R> = copy(notNull = true) as Merge<T, C & Any, R>
+
+@JvmName("notNullList")
+public fun <T, C, R> Merge<T, C, List<R>>.notNull(): Merge<T, C & Any, List<R & Any>> =
+    copy(notNull = true) as Merge<T, C & Any, List<R & Any>>
+
+public fun <T, C, R> MergeWithTransform<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 
 public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 
 @AccessApiOverload
-public fun <T, C, R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
+public inline fun <T, C, reified R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
+
+@AccessApiOverload
+public inline fun <T, C, reified R> MergeWithTransform<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> =
+    into(column.path())
 
 public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
     df.select(selector).rows().map { transform(it, it.values() as List<C>) }
 
-public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
+public fun <T, C, R> MergeWithTransform<T, C, R>.intoList(): List<R> =
+    df.select(selector).rows().map { transform(it, it.values() as List<C>) }
+
+public fun <T, C, R> MergeWithTransform<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // If target path exists, merge into temp path
     val mergePath = if (df.getColumnOrNull(path) != null) {
         pathOf(df.nameGenerator().addUnique("temp"))
@@ -86,7 +108,10 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     return res
 }
 
-public fun <T, C, R> Merge<T, C, R>.asStrings(): Merge<T, C, String> = by(", ")
+public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> =
+    MergeWithTransform(df, selector, notNull, transform, resultType, infer).into(path)
+
+public fun <T, C, R> Merge<T, C, R>.asStrings(): MergeWithTransform<T, C, String> = by(", ")
 
 public fun <T, C, R> Merge<T, C, R>.by(
     separator: CharSequence = ", ",
@@ -94,8 +119,8 @@ public fun <T, C, R> Merge<T, C, R>.by(
     postfix: CharSequence = "",
     limit: Int = -1,
     truncated: CharSequence = "...",
-): Merge<T, C, String> =
-    Merge(
+): MergeWithTransform<T, C, String> =
+    MergeWithTransform(
         df = df,
         selector = selector,
         notNull = notNull,
@@ -115,4 +140,7 @@ public fun <T, C, R> Merge<T, C, R>.by(
 public inline fun <T, C, R, reified V> Merge<T, C, R>.by(
     infer: Infer = Infer.Nulls,
     crossinline transform: DataRow<T>.(R) -> V,
-): Merge<T, C, V> = Merge(df, selector, notNull, { transform(this@by.transform(this, it)) }, typeOf<V>(), infer)
+): MergeWithTransform<T, C, V> =
+    MergeWithTransform(df, selector, notNull, {
+        transform(this@by.transform(this, it))
+    }, typeOf<V>(), infer)
