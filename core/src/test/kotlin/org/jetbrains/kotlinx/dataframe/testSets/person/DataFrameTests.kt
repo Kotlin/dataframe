@@ -1398,6 +1398,11 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `merge into temp`() {
+        dataFrameOf("a", "b", "temp")(1, null, 3)
+            .merge { cols("a", "b") }.into("b")
+    }
+    @Test
     fun `generic column type`() {
         val d = typed.convert { city }.with { it?.toCharArray()?.toList() ?: emptyList() }
         println(d.city.type())
