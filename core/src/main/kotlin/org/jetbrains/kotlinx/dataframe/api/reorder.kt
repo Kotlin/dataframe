@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.reorderImpl
@@ -52,6 +54,8 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
         inFrameColumns = atAnyDepth,
     ).reorderImpl(desc, expression)
 
+@Refine
+@Interpretable("ReorderColumnsByName")
 public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, desc: Boolean = false): DataFrame<T> =
     reorderColumnsBy(atAnyDepth, desc) { name() }
 
