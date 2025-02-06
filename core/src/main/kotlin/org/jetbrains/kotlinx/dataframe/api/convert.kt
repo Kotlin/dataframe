@@ -110,6 +110,7 @@ public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(t
 public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
     df.replace(columns).with { columnConverter(df, it) }
 
+@Refine
 @Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
