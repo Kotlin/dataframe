@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.Merge
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
@@ -190,6 +191,7 @@ import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
+import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
@@ -1395,6 +1397,35 @@ class DataFrameTests : BaseTest() {
         val res = pivoted.merge { city.asColumnGroup().colsOf<Int>() }.by { it.filterNotNull().sum() }.into("cities")
         val expected = typed.select { name and city }.groupBy { name }.count("cities")
         res shouldBe expected
+    }
+
+    @Test
+    fun `merge into temp`() {
+        dataFrameOf("a", "b", "temp")(1, null, 3)
+            .merge { cols("a", "b") }.into("b")
+    }
+
+    inline fun <T, reified C, R> Merge<T, C, R>.typeOfElement() = typeOf<C>()
+
+    @Test
+    fun `merge not null`() {
+        val merge = dataFrameOf("a", "b")(1, null).merge { col("a") }
+        merge.typeOfElement() shouldBe typeOf<Any?>()
+        merge.notNull().typeOfElement() shouldBe typeOf<Any>()
+    }
+
+    inline fun <reified T> List<T>.typeOfElement(): KType = typeOf<List<T>>().arguments[0].type!!
+
+    @Test
+    fun `merge cols into list`() {
+        val merge = dataFrameOf("a", "b")(1, null).merge { col("a") }
+        merge.intoList().typeOfElement() shouldBe typeOf<List<Any?>>()
+        merge.by { it }.intoList().typeOfElement() shouldBe typeOf<List<Any?>>()
+        // here we can safely narrow down List<Any?> to List<Any> after notNull because the default transformer creates a List from C
+        merge.notNull().intoList().typeOfElement() shouldBe typeOf<List<Any>>()
+        // if by notNull could go after by { },
+        // we won't be able to do so because non-default transformer could introduce nulls itself:
+        merge.notNull().by { listOf(1, null) }.intoList().typeOfElement() shouldBe typeOf<List<Int?>>()
     }
 
     @Test
