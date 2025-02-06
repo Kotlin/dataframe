@@ -127,6 +127,8 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
     body: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
 ): DataFrame<T> = to { body(this, it.asColumnGroup()).asColumnGroup(it.name()) }
 
+@Refine
+@Interpretable("PerRowCol")
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     infer: Infer = Infer.Nulls,
     noinline expression: RowColumnExpression<T, C, R>,
