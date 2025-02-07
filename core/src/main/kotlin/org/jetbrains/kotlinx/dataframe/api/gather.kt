@@ -74,6 +74,7 @@ public data class Gather<T, C, K, R>(
 public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: String, valueColumn: String): DataFrame<T> =
     gatherImpl(keyColumn, valueColumn)
 
+@AccessApiOverload
 public fun <T, C, K, R> Gather<T, C, K, R>.into(
     keyColumn: ColumnAccessor<K>,
     valueColumn: ColumnAccessor<R>,

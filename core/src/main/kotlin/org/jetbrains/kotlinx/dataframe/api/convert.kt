@@ -110,6 +110,7 @@ public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(t
 public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
     df.replace(columns).with { columnConverter(df, it) }
 
+@Refine
 @Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
@@ -126,6 +127,8 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
     body: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
 ): DataFrame<T> = to { body(this, it.asColumnGroup()).asColumnGroup(it.name()) }
 
+@Refine
+@Interpretable("PerRowCol")
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     infer: Infer = Infer.Nulls,
     noinline expression: RowColumnExpression<T, C, R>,

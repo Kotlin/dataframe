@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
@@ -14,6 +16,8 @@ import kotlin.reflect.typeOf
 
 // region GroupBy
 
+@Refine
+@Interpretable("GroupByInto")
 public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
 
 @AccessApiOverload
