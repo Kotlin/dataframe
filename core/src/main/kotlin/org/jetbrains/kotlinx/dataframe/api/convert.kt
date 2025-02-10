@@ -36,8 +36,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
-import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
+import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
