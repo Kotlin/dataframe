@@ -131,6 +131,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("dropNA.kt")
+  public void testDropNA() {
+    runTest("testData/box/dropNA.kt");
+  }
+
+  @Test
   @TestMetadata("dropNulls.kt")
   public void testDropNulls() {
     runTest("testData/box/dropNulls.kt");
@@ -209,9 +215,21 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("groupByAdd.kt")
+  public void testGroupByAdd() {
+    runTest("testData/box/groupByAdd.kt");
+  }
+
+  @Test
   @TestMetadata("groupBy_DataRow.kt")
   public void testGroupBy_DataRow() {
     runTest("testData/box/groupBy_DataRow.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_extractSchema.kt")
+  public void testGroupBy_extractSchema() {
+    runTest("testData/box/groupBy_extractSchema.kt");
   }
 
   @Test
@@ -224,6 +242,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("groupBy_toDataFrame.kt")
   public void testGroupBy_toDataFrame() {
     runTest("testData/box/groupBy_toDataFrame.kt");
+  }
+
+  @Test
+  @TestMetadata("infer.kt")
+  public void testInfer() {
+    runTest("testData/box/infer.kt");
   }
 
   @Test
@@ -287,6 +311,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("merge.kt")
+  public void testMerge() {
+    runTest("testData/box/merge.kt");
+  }
+
+  @Test
+  @TestMetadata("modifySchemaInAggregate.kt")
+  public void testModifySchemaInAggregate() {
+    runTest("testData/box/modifySchemaInAggregate.kt");
+  }
+
+  @Test
   @TestMetadata("moveAfter.kt")
   public void testMoveAfter() {
     runTest("testData/box/moveAfter.kt");
@@ -338,6 +374,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("parametrizedDataFrame.kt")
   public void testParametrizedDataFrame() {
     runTest("testData/box/parametrizedDataFrame.kt");
+  }
+
+  @Test
+  @TestMetadata("perRowCol.kt")
+  public void testPerRowCol() {
+    runTest("testData/box/perRowCol.kt");
   }
 
   @Test
@@ -437,9 +479,21 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("renameMapping.kt")
+  public void testRenameMapping() {
+    runTest("testData/box/renameMapping.kt");
+  }
+
+  @Test
   @TestMetadata("renameToCamelCase.kt")
   public void testRenameToCamelCase() {
     runTest("testData/box/renameToCamelCase.kt");
+  }
+
+  @Test
+  @TestMetadata("reorder.kt")
+  public void testReorder() {
+    runTest("testData/box/reorder.kt");
   }
 
   @Test
@@ -449,9 +503,21 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("schemaFromImplicitReceiver.kt")
+  public void testSchemaFromImplicitReceiver() {
+    runTest("testData/box/schemaFromImplicitReceiver.kt");
+  }
+
+  @Test
   @TestMetadata("select.kt")
   public void testSelect() {
     runTest("testData/box/select.kt");
+  }
+
+  @Test
+  @TestMetadata("selectColsOf.kt")
+  public void testSelectColsOf() {
+    runTest("testData/box/selectColsOf.kt");
   }
 
   @Test
@@ -509,6 +575,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("toDataFrame_local_class.kt")
+  public void testToDataFrame_local_class() {
+    runTest("testData/box/toDataFrame_local_class.kt");
+  }
+
+  @Test
   @TestMetadata("toDataFrame_nested.kt")
   public void testToDataFrame_nested() {
     runTest("testData/box/toDataFrame_nested.kt");
@@ -530,6 +602,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("toDataFrame_nullableSubtree.kt")
   public void testToDataFrame_nullableSubtree() {
     runTest("testData/box/toDataFrame_nullableSubtree.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrame_private_class.kt")
+  public void testToDataFrame_private_class() {
+    runTest("testData/box/toDataFrame_private_class.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrame_private_properties.kt")
+  public void testToDataFrame_private_properties() {
+    runTest("testData/box/toDataFrame_private_properties.kt");
   }
 
   @Test

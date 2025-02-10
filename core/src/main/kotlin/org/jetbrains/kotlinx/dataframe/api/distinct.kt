@@ -19,7 +19,6 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-
 /**
  * ## The Distinct Operation
  *
@@ -36,6 +35,7 @@ import kotlin.reflect.KProperty
  * @see {@include [DocumentationUrls.Distinct]}
  */
 @ExcludeFromSources
+@Suppress("ClassName")
 private interface DistinctDocs {
     interface DISTINCT_PARAM
 }
@@ -99,7 +99,6 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = d
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
-
 
 /**
  * {@include [DistinctDocs]}

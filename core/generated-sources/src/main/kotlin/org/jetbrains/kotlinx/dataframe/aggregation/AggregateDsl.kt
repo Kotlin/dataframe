@@ -17,7 +17,7 @@ public abstract class AggregateDsl<out T> :
     DataFrame<T>,
     ColumnSelectionDsl<T> {
 
-    @Interpretable("GroupByInto")
+    @Interpretable("AggregateDslInto")
     public inline infix fun <reified R> R.into(name: String): NamedValue =
         internal().yield(pathOf(name), this, typeOf<R>())
 

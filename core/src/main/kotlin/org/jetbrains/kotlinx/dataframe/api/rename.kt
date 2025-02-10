@@ -24,6 +24,8 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
+@Refine
+@Interpretable("RenameMapping")
 public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> =
     rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
         .into(*mappings.map { it.second }.toTypedArray())
