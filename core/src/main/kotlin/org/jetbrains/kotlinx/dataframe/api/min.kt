@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -164,6 +165,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.min(
 public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
     min(name) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMinOf")
 public fun <T, C : Comparable<C>> Grouped<T>.minOf(
     name: String? = null,
     expression: RowExpression<T, C>,
