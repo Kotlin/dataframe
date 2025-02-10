@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -168,6 +169,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.minOf(
     expression: RowExpression<T, C>,
 ): DataFrame<T> = Aggregators.min.aggregateOfDelegated(this, name) { minOfOrNull(expression) }
 
+@Interpretable("GroupByReduceExpression")
 public fun <T, G, R : Comparable<R>> GroupBy<T, G>.minBy(rowExpression: RowExpression<G, R?>): ReducedGroupBy<T, G> =
     reduce { minByOrNull(rowExpression) }
 

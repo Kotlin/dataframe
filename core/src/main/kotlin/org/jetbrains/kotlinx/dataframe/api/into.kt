@@ -79,6 +79,8 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.columnName, expression)
 
+@Refine
+@Interpretable("GroupByReduceInto")
 public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
 
 @AccessApiOverload
