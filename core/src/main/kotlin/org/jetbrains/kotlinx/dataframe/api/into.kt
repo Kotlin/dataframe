@@ -89,9 +89,4 @@ public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): Dat
 @AccessApiOverload
 public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
 
-public fun <T, G> ReducedGroupBy<T, G>.concat(): DataFrame<G> =
-    groupBy.groups.values()
-        .map { reducer(it, it) }
-        .concat()
-
 // endregion
