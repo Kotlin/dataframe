@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
 
 // region DataColumn
@@ -37,9 +39,13 @@ public fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().count {
 
 // region GroupBy
 
+@Refine
+@Interpretable("GroupByCount0")
 public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
     aggregateValue(resultName) { count() default 0 }
 
+@Refine
+@Interpretable("GroupByCount0")
 public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>): DataFrame<T> =
     aggregateValue(resultName) { count(predicate) default 0 }
 
