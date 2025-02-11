@@ -234,9 +234,9 @@ Select `myColGroup.someCol` and all `String` columns from `myColGroup`:
 
 
 ##### (All) (Cols) Except {collapsible="true"}
-`colSet.except()`, `allExcept {}`, `colGroupA.allColsExcept {}`
+`colSet.except()`, `allExcept {}`, `colGroupA.allColsExcept {}`, `colGroupA.except {}`
 
-Perform a selection of columns using a relative `ColumnsSelector` to exclude from the current selection.
+Exclude a selection of columns from the current selection using a relative `ColumnsSelector`.
 
 This function is best explained in parts:
 
@@ -299,24 +299,22 @@ or
 Note the name change, similar to [`allCols`](ColumnSelectors.md#cols), this makes it clearer that you're selecting
 columns inside the group, 'lifting' them out.
 
-**Experimental: Except on Column Group**
+**On [Column Groups](DataColumn.md#columngroup):** `except {}`
 
-Selects the current [column group](DataColumn.md#columngroup) itself, except for the specified columns.
-This is different from `allColsExcept` in that it does not 'lift' the columns out of the group,
-but instead selects the group itself.
+This variant can be used to exclude some nested columns from a [Column Group](DataColumn.md#columngroup) in the selection.
+In contrast to `allColsExcept`, this function does not 'lift' the columns out of the group, preserving the structure.
 
-These all produce the same result:
+So:
 
-`df.select { colGroup exceptNew { col } }`
+`df.select { colGroup.except { col } }`
 
-`df.select { colGroup }.remove { colGroup.col }`
+is shorthand for:
 
 `df.select { cols(colGroup) except colGroup.col }`
 
-> NOTE: This function is experimental and will definitely change in the future.
-> It's named `exceptNew` until the deprecated `SingleColumn.except()` overloads are removed.
-> Most likely, it'll be renamed to `except` afterward.
-> Until then, it requires `@OptIn(ExperimentalExceptCsDsl::class)` to be used.
+or:
+
+`df.remove { colGroup.col }.select { colGroup }`
 
 ##### Column Name Filters {collapsible="true"}
 `nameContains()`, `colsNameContains()`, `nameStartsWith()`, `colsNameEndsWith()`

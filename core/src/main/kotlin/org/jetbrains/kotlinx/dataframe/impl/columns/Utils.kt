@@ -444,7 +444,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
                     // remove the group if it's empty and removeEmptyGroups is true
                     // else, simply update the parent's data with the adjusted column group
                     nodeToExcept.parent.data =
-                        if (adjustedCurrent.cols().isEmpty() && removeEmptyGroups) {
+                        if (removeEmptyGroups && adjustedCurrent.cols().isEmpty()) {
                             null
                         } else {
                             adjustedCurrent

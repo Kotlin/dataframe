@@ -95,7 +95,7 @@ public interface AllExceptColumnsSelectionDsl {
         /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
         public interface ColumnGroupName
 
-        /** [**`except`**][ColumnsSelectionDsl.except] */
+        /** __`.`__[**`except`**][ColumnsSelectionDsl.except] */
         public interface ColumnGroupExceptName
     }
 
@@ -108,7 +108,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age`  and  `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
