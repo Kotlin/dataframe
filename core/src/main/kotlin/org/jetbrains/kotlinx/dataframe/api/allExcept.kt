@@ -97,8 +97,7 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * ## (All) (Cols) Except
      *
-     * Perform a selection of columns using the {@include [ColumnsSelectionDslLink]} to
-     * exclude from the current selection.
+     * Exclude a selection of columns from the current selection using the {@include [ColumnsSelectionDslLink]}.
      *
      * ### Check out: [Grammar]
      *
@@ -139,7 +138,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`  { userData.age  `[and][ColumnsSelectionDsl.and]` height } }`
      *
-     * ### On [ColumnGroups][ColumnGroup]
+     * ### On [ColumnGroups][ColumnGroup]: All Cols Except
      * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it changes the scope relative to
      * the column group.
      * {@include [LineBreak]}
@@ -157,6 +156,19 @@ public interface AllExceptColumnsSelectionDsl {
      * {@include [LineBreak]}
      * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
+     *
+     * ### On [ColumnGroups][ColumnGroup]: Except
+     * This variant can be used to exclude some nested columns from a [ColumnGroup] in the selection.
+     * In contrast to [allColsExcept][ColumnsSelectionDsl.allColsExcept],
+     * this function does not 'lift' the columns out of the group, preserving the structure.
+     *
+     * So:
+     *
+     * `df.`[select][DataFrame.select]` { colGroup.`[except][SingleColumn.except]` { col } }`
+     *
+     * is shorthand for:
+     *
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
      *
      * ### Examples for this overload
      * {@get [EXAMPLE]}
@@ -184,9 +196,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]` `{@get [ARGUMENT_1]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]` {@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` `{@get [ARGUMENT_2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` {@get [ARGUMENT_2]} \}`
      * }
      */
     private interface ColumnSetInfixDocs {
@@ -201,9 +213,9 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * @include [CommonExceptDocs]
      * {@set [CommonExceptDocs.EXAMPLE]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]{@get [ARGUMENT_1]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]`{@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]{@get [ARGUMENT_2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]`{@get [ARGUMENT_2]} \}`
      * }
      */
     private interface ColumnSetVarargDocs {
@@ -219,8 +231,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
      *   excluded from the [ColumnSet]. The scope of the selector is the same as the outer scope.
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `{ "age" `[and][ColumnsSelectionDsl.and]` height }`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `{ name.firstName }`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] { "age" `[and][ColumnsSelectionDsl.and]` height }
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] { name.firstName }
      */
     public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> = except(selector())
 
@@ -228,8 +240,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [ColumnsResolver] containing the columns that need to be
      *   excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `"age" `[and][ColumnsSelectionDsl.and]` height`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `name.firstName`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age" `[and][ColumnsSelectionDsl.and]` height
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] name.firstName
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> = exceptInternal(other)
 
@@ -237,8 +249,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnsResolvers][ColumnsResolver] containing
      *  the columns that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `(age, userData.height)`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `(name.firstName, name.middleName)`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (age, userData.height)
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] (name.firstName, name.middleName)
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> = except(others.toColumnSet())
 
@@ -246,8 +258,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [String] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `"age"`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `"name"`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age"
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] "name"
      */
     public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> = except(column<Any?>(other))
 
@@ -255,8 +267,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `("age", "height")`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `("name")`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] ("age", "height")
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] ("name")
      */
     public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> = except(others.toColumnSet())
 
@@ -264,8 +276,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [KProperty] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `Person::age`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `Person::name`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] Person::age
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] Person::name
      */
     @AccessApiOverload
     public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> = except(column(other))
@@ -274,8 +286,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `(Person::age, Person::height)`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `(Person::name)`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (Person::age, Person::height)
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] (Person::name)
      */
     @AccessApiOverload
     public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> = except(others.toColumnSet())
@@ -284,8 +296,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetInfixDocs]
      * @set [CommonExceptDocs.PARAM] @param [other\] A [ColumnPath] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ARGUMENT_1] `"userdata"["age"]`
-     * @set [ColumnSetInfixDocs.ARGUMENT_2] `pathOf("name", "firstName")`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "userdata"["age"]
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] pathOf("name", "firstName")
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> = except(column<Any?>(other))
 
@@ -293,8 +305,8 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnSetVarargDocs]
      * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ARGUMENT_1] `(pathOf("age"), "userdata"["height"])`
-     * @set [ColumnSetVarargDocs.ARGUMENT_2] `("name"["firstName"], "name"["middleName"])`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (pathOf("age"), "userdata"["height"])
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] ("name"["firstName"], "name"["middleName"])
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> = except(others.toColumnSet())
 
