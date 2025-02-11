@@ -5,6 +5,11 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_1
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_2
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_1
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_2
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_TYPE
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -13,8 +18,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
@@ -182,6 +187,7 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @ExcludeFromSources
     private interface CommonExceptDocs {
 
         // Example argument
@@ -201,6 +207,7 @@ public interface AllExceptColumnsSelectionDsl {
      *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` {@get [ARGUMENT_2]} \}`
      * }
      */
+    @ExcludeFromSources
     private interface ColumnSetInfixDocs {
 
         // argument
@@ -218,6 +225,7 @@ public interface AllExceptColumnsSelectionDsl {
      *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]`{@get [ARGUMENT_2]} \}`
      * }
      */
+    @ExcludeFromSources
     private interface ColumnSetVarargDocs {
 
         // argument
@@ -321,6 +329,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_2]}` \}`
      */
+    @ExcludeFromSources
     private interface ColumnsSelectionDslDocs {
 
         // argument
@@ -395,6 +404,7 @@ public interface AllExceptColumnsSelectionDsl {
      *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[allColsExcept][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_2]}</code>` \}`
      */
     @Suppress("ClassName")
+    @ExcludeFromSources
     private interface ColumnGroupDocs {
 
         // receiver
@@ -531,34 +541,22 @@ public interface AllExceptColumnsSelectionDsl {
     // region except
 
     /**
-     * ## EXPERIMENTAL: Except on Column Group
+     * @include [CommonExceptDocs]
+     * @set [CommonExceptDocs.EXAMPLE] {@comment <code> blocks are there to prevent double ``}
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_1]}</code>` \}`
      *
-     * Selects the current column group itself, except for the specified columns. This is different from
-     * [allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
-     *
-     * As usual, all overloads for each {@include [AccessApiLink]} are available.
-     *
-     * These produce the same result:
-     *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
-     *
-     * `df.`[select][DataFrame.select]`  { colGroup  `[except][SingleColumn.except]` { col } }`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_2]}</code>` \}`
      */
-    private interface ExperimentalExceptDocs
+    @ExcludeFromSources
+    private interface ColumnGroupExceptDocs : ColumnGroupDocs
 
     /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
      */
     public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
         exceptInternal(selector.toColumns())
-
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(EXCEPT_REPLACE),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public fun <C> SingleColumn<DataRow<C>>.except(other: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
-        except { other }
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
@@ -569,45 +567,34 @@ public interface AllExceptColumnsSelectionDsl {
         except { others.toColumnSet() }
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    public fun <C> SingleColumn<DataRow<C>>.except(other: String): SingleColumn<DataRow<C>> =
-        exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
      */
     public fun <C> SingleColumn<DataRow<C>>.except(vararg others: String): SingleColumn<DataRow<C>> =
         exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @AccessApiOverload
-    public fun <C> SingleColumn<DataRow<C>>.except(other: KProperty<C>): SingleColumn<DataRow<C>> =
-        exceptInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
     @AccessApiOverload
     public fun <C> SingleColumn<DataRow<C>>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    public fun <C> SingleColumn<DataRow<C>>.except(other: ColumnPath): SingleColumn<DataRow<C>> =
-        exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
      */
     public fun <C> SingleColumn<DataRow<C>>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
      */
     public fun String.except(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
         columnGroup(this).except(selector)
@@ -629,45 +616,34 @@ public interface AllExceptColumnsSelectionDsl {
         except { others.toColumnSet() }
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    public fun String.except(other: String): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
      */
     public fun String.except(vararg others: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @AccessApiOverload
-    public fun String.except(other: KProperty<*>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
     @AccessApiOverload
     public fun String.except(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    public fun String.except(other: ColumnPath): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
      */
     public fun String.except(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
      */
     @AccessApiOverload
     public fun <C> KProperty<C>.except(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
@@ -692,30 +668,18 @@ public interface AllExceptColumnsSelectionDsl {
         except { others.toColumnSet() }
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @AccessApiOverload
-    public fun <C> KProperty<C>.except(other: String): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
      */
     @AccessApiOverload
     public fun <C> KProperty<C>.except(vararg others: String): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    @AccessApiOverload
-    public fun <C> KProperty<DataRow<C>>.except(other: String): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
@@ -724,30 +688,18 @@ public interface AllExceptColumnsSelectionDsl {
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @AccessApiOverload
-    public fun <C> KProperty<C>.except(other: KProperty<*>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
     @AccessApiOverload
     public fun <C> KProperty<C>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    @AccessApiOverload
-    public fun <C> KProperty<DataRow<C>>.except(other: KProperty<*>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
@@ -756,30 +708,18 @@ public interface AllExceptColumnsSelectionDsl {
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @AccessApiOverload
-    public fun <C> KProperty<C>.except(other: ColumnPath): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
      */
     @AccessApiOverload
     public fun <C> KProperty<C>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    @AccessApiOverload
-    public fun <C> KProperty<DataRow<C>>.except(other: ColumnPath): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowExceptNew")
@@ -788,7 +728,9 @@ public interface AllExceptColumnsSelectionDsl {
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
      */
     public fun ColumnPath.except(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(selector.toColumns<Any?, Any?>())
@@ -810,36 +752,26 @@ public interface AllExceptColumnsSelectionDsl {
         except { others.toColumnSet() }
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    public fun ColumnPath.except(other: String): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
      */
     public fun ColumnPath.except(vararg others: String): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
      */
-    @AccessApiOverload
-    public fun ColumnPath.except(other: KProperty<*>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptInternal(column(other))
-
     @AccessApiOverload
     public fun ColumnPath.except(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
 
     /**
-     * @include [ExperimentalExceptDocs]
-     */
-    public fun ColumnPath.except(other: ColumnPath): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
      */
     public fun ColumnPath.except(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
         columnGroup(this).exceptInternal(others.toColumnSet())
