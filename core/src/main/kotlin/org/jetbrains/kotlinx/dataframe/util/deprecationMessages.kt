@@ -76,7 +76,8 @@ internal const val COL_REPLACE = "col"
 
 internal const val ALL_COLS_EXCEPT =
     "This overload is blocked to prevent issues with column accessors. Use the `{}` overload instead."
-internal const val ALL_COLS_REPLACE = "allColsExcept { other }"
-internal const val ALL_COLS_REPLACE_VARARG = "allColsExcept { others.toColumnSet() }"
-
+internal const val ALL_COLS_EXCEPT_REPLACE = "this.allColsExcept { other }"
+internal const val ALL_COLS_EXCEPT_REPLACE_VARARG = "this.allColsExcept { others.toColumnSet() }"
+internal const val EXCEPT_REPLACE = "this.except { other }"
+internal const val EXCEPT_REPLACE_VARARG = "this.except { others.toColumnSet() }"
 // endregion
