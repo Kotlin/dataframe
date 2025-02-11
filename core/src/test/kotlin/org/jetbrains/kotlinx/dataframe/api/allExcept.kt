@@ -17,6 +17,24 @@ import org.junit.Test
 class AllExceptTests : ColumnsSelectionDslTests() {
 
     @Test
+    fun `issue 761`() {
+        val renamed = df.rename { colsAtAnyDepth() except name.firstName }.into { it.name.uppercase() }
+        renamed.columnNames() shouldBe listOf("NAME", "AGE", "CITY", "WEIGHT", "ISHAPPY")
+        renamed.getColumnGroup("NAME").columnNames() shouldBe listOf("firstName", "LASTNAME")
+
+        val df2 = dataFrameOf("a.b", "a.c.d", "d.e", "d.f")(1, 3.0, 2, "b")
+            .move { all() }.into { it.name.split(".").toPath() }
+        df2.select { cols("a") except "a"["b"] }.let {
+            it.getColumnGroup("a").getColumnOrNull("b") shouldBe null
+            it[pathOf("a", "c", "d")].single() shouldBe 3.0
+        }
+        df2.select { cols("a") except "a"["c"]["d"] }.let {
+            it.getColumnGroup("a").getColumnOrNull("c") shouldBe null
+            it[pathOf("a", "b")].single() shouldBe 1
+        }
+    }
+
+    @Test
     fun `exceptions`() {
         shouldThrow<IllegalStateException> {
             dfGroup.select {
@@ -70,12 +88,15 @@ class AllExceptTests : ColumnsSelectionDslTests() {
         ).shouldAllBeEqual()
 
         listOf(
-            df.select { name and name.firstName }.alsoDebug(),
+            df.select { cols(name) except name.firstName },
+            df.select { (name and name.firstName and name.firstName) except name.firstName },
+            df.select { (name and name and name.firstName).except(name.firstName).simplify() },
         ).shouldAllBeEqual()
 
-        df.select { (name and name.firstName and name.firstName) except name.firstName }.alsoDebug()
-
-        df.select { (name and name and name.firstName) except name.firstName }.alsoDebug()
+        df.getColumns { (name and name and name.firstName).except(name.firstName) }.forEach {
+            it.isColumnGroup() shouldBe true
+            it.asColumnGroup().columnNames() shouldBe listOf("lastName")
+        }
     }
 
     @Test
@@ -280,6 +301,105 @@ class AllExceptTests : ColumnsSelectionDslTests() {
                     }
                 }
             },
+        ).shouldAllBeEqual()
+    }
+
+    @Test
+    fun `except experiments`() {
+        val firstNameAccessor = column<String>("firstName")
+        listOf(
+            df.select { name }.remove { name.firstName }.alsoDebug(),
+            df.select { cols(name) except name.firstName },
+            df.select { name except { cols { "first" in it.name } } },
+            df.select { name.except { cols { "first" in it.name } and cols { "first" in it.name } } },
+            df.select { name except { firstName } },
+            df.select { name.except { firstNameAccessor } },
+            df.select { name except { firstName and firstName } },
+            df.select { name.except { firstNameAccessor and firstNameAccessor } },
+//            df.select { name exceptNew name.firstName }, // not allowed
+//            df.select { name.exceptNew(name.firstName and name.firstName) }, // not allowed
+//            df.select { name exceptNew firstNameAccessor }, // not allowed
+//            df.select { name.exceptNew(firstNameAccessor and firstNameAccessor) }, // not allowed
+            df.select { name except "firstName" },
+            df.select { name.except("firstName") },
+            df.select { name.except("firstName", "firstName") },
+            df.select { name except Name::firstName },
+            df.select { name.except(Name::firstName) },
+            df.select { name.except(Name::firstName, Name::firstName) },
+            df.select { name except pathOf("firstName") },
+            df.select { name.except(pathOf("firstName")) },
+            df.select { name.except(pathOf("firstName"), pathOf("firstName")) },
+            df.select { "name" except { cols { "first" in it.name } } },
+            df.select { "name".except { cols { "first" in it.name } and cols { "first" in it.name } } },
+            df.select { "name".except { firstNameAccessor } },
+            df.select { "name".except { firstNameAccessor and firstNameAccessor } },
+//            df.select { "name" exceptNew name.firstName }, // not allowed
+//            df.select { "name".exceptNew(name.firstName and name.firstName) }, // not allowed
+//            df.select { "name" exceptNew firstNameAccessor }, // not allowed
+//            df.select { "name".exceptNew(firstNameAccessor and firstNameAccessor) }, // not allowed
+            df.select { "name" except "firstName" },
+            df.select { "name".except("firstName") },
+            df.select { "name".except("firstName", "firstName") },
+            df.select { "name" except Name::firstName },
+            df.select { "name".except(Name::firstName) },
+            df.select { "name".except(Name::firstName, Name::firstName) },
+            df.select { "name" except pathOf("firstName") },
+            df.select { "name".except(pathOf("firstName")) },
+            df.select { "name".except(pathOf("firstName"), pathOf("firstName")) },
+//            df.select { Person::name exceptNew name.firstName }, // not allowed
+//            df.select { Person::name.exceptNew(name.firstName and name.firstName) }, // not allowed
+//            df.select { Person::name exceptNew firstNameAccessor }, // not allowed
+//            df.select { Person::name.exceptNew(firstNameAccessor and firstNameAccessor) }, // not allowed
+            df.select { Person::name except "firstName" },
+            df.select { Person::name.except("firstName") },
+            df.select { Person::name.except("firstName", "firstName") },
+            df.select { Person::name except Name::firstName },
+            df.select { Person::name.except(Name::firstName) },
+            df.select { Person::name.except(Name::firstName, Name::firstName) },
+            df.select { Person::name except pathOf("firstName") },
+            df.select { Person::name.except(pathOf("firstName")) },
+            df.select { Person::name.except(pathOf("firstName"), pathOf("firstName")) },
+            df.select { NonDataSchemaPerson::name except { cols { "first" in it.name } } },
+            df.select {
+                NonDataSchemaPerson::name.except {
+                    cols { "first" in it.name } and
+                        cols { "first" in it.name }
+                }
+            },
+            df.select { NonDataSchemaPerson::name except { firstName } },
+            df.select { NonDataSchemaPerson::name.except { firstNameAccessor } },
+            df.select { NonDataSchemaPerson::name except { firstName and firstName } },
+            df.select { NonDataSchemaPerson::name.except { firstNameAccessor and firstNameAccessor } },
+//            df.select { NonDataSchemaPerson::name exceptNew name.firstName }, // not allowed
+//            df.select { NonDataSchemaPerson::name.exceptNew(name.firstName and name.firstName) }, // not allowed
+//            df.select { NonDataSchemaPerson::name exceptNew firstNameAccessor }, // not allowed
+//            df.select { NonDataSchemaPerson::name.exceptNew(firstNameAccessor and firstNameAccessor) }, // not allowed
+            df.select { NonDataSchemaPerson::name except "firstName" },
+            df.select { NonDataSchemaPerson::name.except("firstName") },
+            df.select { NonDataSchemaPerson::name.except("firstName", "firstName") },
+            df.select { NonDataSchemaPerson::name except Name::firstName },
+            df.select { NonDataSchemaPerson::name.except(Name::firstName) },
+            df.select { NonDataSchemaPerson::name.except(Name::firstName, Name::firstName) },
+            df.select { NonDataSchemaPerson::name except pathOf("firstName") },
+            df.select { NonDataSchemaPerson::name.except(pathOf("firstName")) },
+            df.select { NonDataSchemaPerson::name.except(pathOf("firstName"), pathOf("firstName")) },
+            df.select { pathOf("name") except { cols { "first" in it.name } } },
+            df.select { pathOf("name").except { cols { "first" in it.name } and cols { "first" in it.name } } },
+            df.select { pathOf("name").except { firstNameAccessor } },
+            df.select { pathOf("name").except { firstNameAccessor and firstNameAccessor } },
+//            df.select { pathOf("name") exceptNew name.firstName }, // not allowed
+//            df.select { pathOf("name").exceptNew(name.firstName and name.firstName) }, // not allowed
+//            df.select { pathOf("name") exceptNew firstNameAccessor }, // not allowed
+//            df.select { pathOf("name").exceptNew(firstNameAccessor and firstNameAccessor) }, // not allowed
+            df.select { pathOf("name") except "firstName" },
+            df.select { pathOf("name").except("firstName") },
+            df.select { pathOf("name").except("firstName", "firstName") },
+            df.select { pathOf("name") except Name::firstName },
+            df.select { pathOf("name").except(Name::firstName) },
+            df.select { pathOf("name").except(Name::firstName, Name::firstName) },
+            df.select { pathOf("name") except pathOf("firstName") },
+            df.select { pathOf("name").except(pathOf("firstName")) },
+            df.select { pathOf("name").except(pathOf("firstName"), pathOf("firstName")) },
         ).shouldAllBeEqual()
     }
 }
