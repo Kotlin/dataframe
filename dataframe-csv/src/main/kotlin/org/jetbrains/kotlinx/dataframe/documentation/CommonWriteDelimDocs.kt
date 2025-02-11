@@ -31,10 +31,6 @@ import java.io.File
  *
  * $[TO_STR_FUNCTION_LINK]`(delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
- * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better._
- *
  * @comment Some helper arguments for the function links
  * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]
  * @set [TO_STR_FUNCTION_LINK] \[DataFrame.${[TO_STR_FUNCTION_NAME]}\]\[${[TO_STR_FUNCTION_NAME]}\]
