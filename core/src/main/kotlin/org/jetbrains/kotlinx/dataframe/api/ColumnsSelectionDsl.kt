@@ -333,6 +333,10 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [DropColumnsSelectionDsl.Grammar.ColumnGroupWhileName]}**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
          *
+         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExceptName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**`  \}  `**
+         *
+         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExceptName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
+         *
          * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          *
          * {@include [Indent]}`| `{@include [SelectColumnsSelectionDsl.Grammar.ColumnGroupName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
