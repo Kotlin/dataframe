@@ -299,8 +299,26 @@ or
 Note the name change, similar to [`allCols`](ColumnSelectors.md#cols), this makes it clearer that you're selecting
 columns inside the group, 'lifting' them out.
 
-##### Column Name Filters {collapsible="true"}
+**Experimental: Except on Column Group**
 
+Selects the current [column group](DataColumn.md#columngroup) itself, except for the specified columns.
+This is different from `allColsExcept` in that it does not 'lift' the columns out of the group,
+but instead selects the group itself.
+
+These all produce the same result:
+
+`df.select { colGroup exceptNew { col } }`
+
+`df.select { colGroup }.remove { colGroup.col }`
+
+`df.select { cols(colGroup) except colGroup.col }`
+
+> NOTE: This function is experimental and will definitely change in the future.
+> It's named `exceptNew` until the deprecated `SingleColumn.except()` overloads are removed.
+> Most likely, it'll be renamed to `except` afterward.
+> Until then, it requires `@OptIn(ExperimentalExceptCsDsl::class)` to be used.
+
+##### Column Name Filters {collapsible="true"}
 `nameContains()`, `colsNameContains()`, `nameStartsWith()`, `colsNameEndsWith()`
 
 Creates a `ColumnSet` containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
