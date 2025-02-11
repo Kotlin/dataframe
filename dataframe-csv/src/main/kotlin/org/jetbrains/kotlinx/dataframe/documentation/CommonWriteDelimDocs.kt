@@ -4,8 +4,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL
-import org.jetbrains.kotlinx.dataframe.io.toCsv
-import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import java.io.File
 
 /**
