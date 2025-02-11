@@ -5,6 +5,10 @@ Returns a [`DataFrame`](DataFrame.md) in which the given `String` columns are pa
 
 This is a special case of the [convert](convert.md) operation.
 
+This parsing operation is sometimes executed implicitly, for example, when [reading from CSV](read.md) or
+[type converting from `String` columns](convert.md).
+You can recognize this by the `locale` or `parserOptions` arguments in these functions.
+
 <!---FUN parseAll-->
 
 ```kotlin
@@ -25,6 +29,8 @@ df.parse { age and weight }
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseSome.html"/>
 <!---END-->
 
+### Parsing Order
+
 `parse` tries to parse every `String` column into one of supported types in the following order:
 * `Int`
 * `Long`
@@ -34,16 +40,30 @@ df.parse { age and weight }
 * `Duration` (`kotlin.time` and `java.time`)
 * `LocalTime` (`java.time`)
 * `URL` (`java.net`)
-* `Double` (with optional locale settings)
+* [`Double` (with optional locale settings)](#parsing-doubles)
 * `Boolean`
 * `BigDecimal`
 * `JSON` (arrays and objects)
 
+### Parser Options
+
+DataFrame supports multiple parser options that can be used to customize the parsing behavior.
+These can be supplied to the `parse` function (or any other function that can implicitly parse `Strings`)
+as an argument:
+
 Available parser options:
-* `locale: Locale` is used to parse doubles
+* `locale: Locale` is used to [parse doubles](#parsing-doubles)
+  * Default locale is `Locale.getDefault()`
 * `dateTimePattern: String` is used to parse date and time
 * `dateTimeFormatter: DateTimeFormatter` is used to parse date and time
-* `nullStrings: List<String>` is used to treat particular strings as `null` value. Default null strings are **"null"** and **"NULL"**
+* `nullStrings: List<String>` is used to treat particular strings as `null` value
+  * Default null strings are **"null"** and **"NULL"**
+  * When [reading from CSV](read.md), we include even more defaults, like **""**, and **"NA"**.
+  See the KDocs there for the exact details
+* `skipTypes: Set<KType>` types that should be skipped during parsing
+  * Empty set by default; parsing can result in any supported type
+* `useFastDoubleParser: Boolean` is used to enable or disable the [new fast double parser](#parsing-doubles)
+  * Enabled by default
 
 <!---FUN parseWithOptions-->
 
@@ -54,8 +74,13 @@ df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = Date
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseWithOptions.html"/>
 <!---END-->
 
+### Global Parser Options
+
 You can also set global parser options that will be used by default in [`read`](read.md), [`convert`](convert.md),
-and `parse` operations:
+and other `parse` operations.
+These can be seen as a global fallback for the `parserOptions` argument.
+
+For example, to change the locale to French and add a custom date-time pattern:
 
 <!---FUN globalParserOptions-->
 
@@ -63,5 +88,43 @@ and `parse` operations:
 DataFrame.parser.locale = Locale.FRANCE
 DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
 ```
+
+This means that the locale being used by the parser is defined as:
+
+↪ The locale given as function argument directly, or in `parserOptions`, if it is not `null`, else
+
+&nbsp;&nbsp;&nbsp;&nbsp;↪ The locale set by `DataFrame.parser.locale = ...`, if it is not `null`, else
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↪ `Locale.getDefault()`, which is the system's default locale that can be changed with `Locale.setDefault()`.
+
+### Parsing Doubles
+
+DataFrame has a new fast and powerful double parser enabled by default.
+It is based on [the FastDoubleParser library](https://github.com/wrandelshofer/FastDoubleParser) for its
+high performance and configurability
+(in the future, we might expand this support to `Float`, `BigDecimal`, and `BigInteger` as well).
+
+The parser is locale-aware; it will use the locale set by the [parser options](#parser-options) to parse the doubles.
+It also has a fallback mechanism built in, meaning it can recognize characters from
+all other locales (and some from [Wikipedia](https://en.wikipedia.org/wiki/Decimal_separator))
+and parse them correctly as long as they don't conflict with the current locale.
+
+For example, if your locale uses ',' as decimal separator, it will not recognize ',' as thousands separator, but it will
+recognize ''', ' ', '٬', '_', ' ', etc. as such.
+The same holds for characters like "e", "inf", "×10^", "NaN", etc. (ignoring case).
+
+This means you can safely parse `"123'456 789,012.345×10^6"` with a US locale but not `"1.234,5"`.
+
+Aside from this, DataFrame also explicitly recognizes "∞", "inf", "infinity", and "infty" as `Double.POSITIVE_INFINITY`
+(as well as their negative counterparts), "nan", "na", and "n/a" as `Double.NaN`,
+and all forms of whitespace are treated equally.
+
+If `FastDoubleParser` fails to parse a `String` as `Double`, DataFrame will try
+to parse it using the standard `NumberFormat.parse()` function as a last resort.
+
+If you experience any issues with the new parser, you can turn it off by setting
+`useFastDoubleParser = false`, which will use the old `NumberFormat.parse()` function instead.
+
+Please [report](https://github.com/Kotlin/dataframe/issues) any issues you encounter. 
 
 <!---END-->
