@@ -323,7 +323,7 @@ class DelimCsvTsvTests {
         }
 
         val df = DataFrame.readCsv(
-            "../data/jetbrains_repositories.csv",
+            "../data/jetbrains repositories.csv",
             skipLines = 1, // we need to skip the empty lines manually
         )
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
