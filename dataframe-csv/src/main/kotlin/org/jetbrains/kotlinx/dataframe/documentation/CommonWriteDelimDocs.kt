@@ -4,8 +4,6 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode.ALL
-import org.jetbrains.kotlinx.dataframe.io.toCsv
-import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import java.io.File
 
 /**
@@ -30,10 +28,6 @@ import java.io.File
  * Converting to a [String] can be done like this:
  *
  * $[TO_STR_FUNCTION_LINK]`(delimiter = ",")`
- *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
- * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better._
  *
  * @comment Some helper arguments for the function links
  * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]
