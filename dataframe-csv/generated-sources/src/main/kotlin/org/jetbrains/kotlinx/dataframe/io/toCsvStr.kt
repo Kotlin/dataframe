@@ -35,10 +35,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.writeDelimImpl
  *
  * [DataFrame.toCsvStr][toCsvStr]`(delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
- * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better._
- *
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.

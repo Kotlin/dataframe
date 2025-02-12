@@ -56,9 +56,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readCSV][org.jetbrains.kotlinx.dataframe.io.readCSV]`()` functions.
- * They'll hopefully be faster and better._
- *
  * @param text The raw data to read in the form of a [String].
  * @param delimiter The field delimiter character. Default: ','.
  *
@@ -103,8 +100,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
