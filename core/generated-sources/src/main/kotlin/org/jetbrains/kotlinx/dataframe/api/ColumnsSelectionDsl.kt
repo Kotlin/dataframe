@@ -363,6 +363,10 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][org.jetbrains.kotlinx.dataframe.api.DropColumnsSelectionDsl.dropColsWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`except`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**`  }  `**
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`except`**][org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.except]**`(`**[`columnNoAccessor`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnNoAccessorDef]**`,`**` ..`**`)`**
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| (`__`.`__[**`firstCol`**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`| `__`.`__[**`lastCol`**][org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.lastCol]`| `__`.`__[**`singleCol`**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]`) [ `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`select`**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**

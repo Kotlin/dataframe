@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
+import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
@@ -45,6 +46,12 @@ public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options
 public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> =
     parse(options) { columns.toColumnSet() }
 
+/**
+ * Global counterpart of [ParserOptions].
+ * Settings changed here will affect the defaults for all parsing operations.
+ *
+ * The default values are set by [Parsers.resetToDefault].
+ */
 public interface GlobalParserOptions {
 
     public fun addDateTimePattern(pattern: String)
@@ -54,7 +61,7 @@ public interface GlobalParserOptions {
     /** This function can be called to skip some types. Parsing will be attempted for all other types. */
     public fun addSkipType(type: KType)
 
-    /** Whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now. */
+    /** Whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter. */
     public var useFastDoubleParser: Boolean
 
     public fun resetToDefault()
@@ -91,7 +98,7 @@ public interface GlobalParserOptions {
  *   `["null", "NULL", "NA", "N/A"]`.
  * @param skipTypes a set of types that should be skipped during parsing. Parsing will be attempted for all other types.
  *   By default, it's an empty set. To skip all types except a specified one, use [convertTo] instead.
- * @param useFastDoubleParser whether to use the new _experimental_ FastDoubleParser, defaults to `false` for now.
+ * @param useFastDoubleParser whether to use [FastDoubleParser], defaults to `true`. Please report any issues you encounter.
  */
 public class ParserOptions(
     public val locale: Locale? = null,

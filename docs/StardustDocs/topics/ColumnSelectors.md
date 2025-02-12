@@ -234,9 +234,9 @@ Select `myColGroup.someCol` and all `String` columns from `myColGroup`:
 
 
 ##### (All) (Cols) Except {collapsible="true"}
-`colSet.except()`, `allExcept {}`, `colGroupA.allColsExcept {}`
+`colSet.except()`, `allExcept {}`, `colGroupA.allColsExcept {}`, `colGroupA.except {}`
 
-Perform a selection of columns using a relative `ColumnsSelector` to exclude from the current selection.
+Exclude a selection of columns from the current selection using a relative `ColumnsSelector`.
 
 This function is best explained in parts:
 
@@ -299,8 +299,24 @@ or
 Note the name change, similar to [`allCols`](ColumnSelectors.md#cols), this makes it clearer that you're selecting
 columns inside the group, 'lifting' them out.
 
-##### Column Name Filters {collapsible="true"}
+**On [Column Groups](DataColumn.md#columngroup):** `except {}`
 
+This variant can be used to exclude some nested columns from a [Column Group](DataColumn.md#columngroup) in the selection.
+In contrast to `allColsExcept`, this function does not 'lift' the columns out of the group, preserving the structure.
+
+So:
+
+`df.select { colGroup.except { col } }`
+
+is shorthand for:
+
+`df.select { cols(colGroup) except colGroup.col }`
+
+or:
+
+`df.remove { colGroup.col }.select { colGroup }`
+
+##### Column Name Filters {collapsible="true"}
 `nameContains()`, `colsNameContains()`, `nameStartsWith()`, `colsNameEndsWith()`
 
 Creates a `ColumnSet` containing columns from the top-level, specified [column group](DataColumn.md#columngroup),
