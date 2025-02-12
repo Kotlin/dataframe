@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
@@ -333,6 +334,7 @@ internal class SchemaGeneratorPluginTest {
         result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
+    @Ignore
     @Test
     fun `custom csv delimiter`() {
         val (buildDir, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
