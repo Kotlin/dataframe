@@ -21,8 +21,7 @@ public class TsvDeephaven(private val delimiter: Char = DelimParams.TSV_DELIMITE
 
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
-    // if the user adds the dataframe-csv module, this will override old TSV reading method in DataFrame.read()
-    override val testOrder: Int = TSV().testOrder - 1
+    override val testOrder: Int = 30_000
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
         val arguments = MethodArguments().add("delimiter", typeOf<Char>(), "'%L'", delimiter)
