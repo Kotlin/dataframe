@@ -44,7 +44,7 @@ df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 * `Int` (and `Char`)
 * `Long`
 * `Float`
-* `Double`
+* `Double` (See [parsing doubles](parse.md#parsing-doubles) for `String` to `Double` conversion)
 * `BigDecimal`
 * `BigInteger`
 * `LocalDateTime` (kotlinx.datetime and java.time)
