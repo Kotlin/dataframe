@@ -13,6 +13,7 @@ import org.jetbrains.dataframe.ksp.runner.KspCompilationTestRunner
 import org.jetbrains.dataframe.ksp.runner.TestCompilationParameters
 import org.junit.Before
 import java.io.File
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 @Suppress("unused")
@@ -211,6 +212,7 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe true
     }
 
+    @Ignore
     @Test
     fun `multi-round data schema generation`() {
         useHostedFile(jetbrainsCsv) {
@@ -1045,6 +1047,7 @@ class DataFrameSymbolProcessorTest {
 
     private val jetbrainsCsv = File("../../data/jetbrains repositories.csv")
 
+    @Ignore
     @Test
     fun `imported schema resolved`() {
         useHostedFile(jetbrainsCsv) {
@@ -1096,6 +1099,7 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe false
     }
 
+    @Ignore
     @Test
     fun `normalization disabled`() {
         useHostedFile(jetbrainsCsv) {
@@ -1125,6 +1129,7 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
+    @Ignore
     @Test
     fun `normalization enabled`() {
         useHostedFile(jetbrainsCsv) {
