@@ -56,9 +56,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *
  * [DataFrame.readDelimStr][readDelimStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readDelim][org.jetbrains.kotlinx.dataframe.io.readDelim]`()` functions.
- * They'll hopefully be faster and better._
- *
  * @param text The raw data to read in the form of a [String].
  * @param delimiter The field delimiter character. Default: ','.
  *

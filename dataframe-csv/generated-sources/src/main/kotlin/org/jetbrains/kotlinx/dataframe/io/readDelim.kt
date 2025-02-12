@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
-import org.jetbrains.kotlinx.dataframe.io.Compression
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -71,9 +70,6 @@ import kotlin.io.path.inputStream
  * You can also read "raw" delimiter-separated text data from a [String] like this:
  *
  * [DataFrame.readDelimStr][readDelimStr]`("a,b,c", delimiter = ",")`
- *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readDelim][org.jetbrains.kotlinx.dataframe.io.readDelim]`()` functions.
- * They'll hopefully be faster and better._
  *
  * @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
@@ -228,9 +224,6 @@ public fun DataFrame.Companion.readDelim(
  *
  * [DataFrame.readDelimStr][readDelimStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readDelim][org.jetbrains.kotlinx.dataframe.io.readDelim]`()` functions.
- * They'll hopefully be faster and better._
- *
  * @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
@@ -383,9 +376,6 @@ public fun DataFrame.Companion.readDelim(
  * You can also read "raw" delimiter-separated text data from a [String] like this:
  *
  * [DataFrame.readDelimStr][readDelimStr]`("a,b,c", delimiter = ",")`
- *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readDelim][org.jetbrains.kotlinx.dataframe.io.readDelim]`()` functions.
- * They'll hopefully be faster and better._
  *
  * @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
@@ -540,9 +530,6 @@ public fun DataFrame.Companion.readDelim(
  *
  * [DataFrame.readDelimStr][readDelimStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readDelim][org.jetbrains.kotlinx.dataframe.io.readDelim]`()` functions.
- * They'll hopefully be faster and better._
- *
  * @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
@@ -696,9 +683,6 @@ public fun DataFrame.Companion.readDelim(
  * You can also read "raw" delimiter-separated text data from a [String] like this:
  *
  * [DataFrame.readDelimStr][readDelimStr]`("a,b,c", delimiter = ",")`
- *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readDelim][org.jetbrains.kotlinx.dataframe.io.readDelim]`()` functions.
- * They'll hopefully be faster and better._
  *
  * @param inputStream Represents the file to read.
  * @param delimiter The field delimiter character. Default: ','.
