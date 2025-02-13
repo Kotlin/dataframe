@@ -227,9 +227,21 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("groupBy_count.kt")
+  public void testGroupBy_count() {
+    runTest("testData/box/groupBy_count.kt");
+  }
+
+  @Test
   @TestMetadata("groupBy_extractSchema.kt")
   public void testGroupBy_extractSchema() {
     runTest("testData/box/groupBy_extractSchema.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_maxOfMinOf.kt")
+  public void testGroupBy_maxOfMinOf() {
+    runTest("testData/box/groupBy_maxOfMinOf.kt");
   }
 
   @Test
@@ -464,6 +476,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("read_localFile.kt")
   public void testRead_localFile() {
     runTest("testData/box/read_localFile.kt");
+  }
+
+  @Test
+  @TestMetadata("reducedGroupBy.kt")
+  public void testReducedGroupBy() {
+    runTest("testData/box/reducedGroupBy.kt");
   }
 
   @Test
