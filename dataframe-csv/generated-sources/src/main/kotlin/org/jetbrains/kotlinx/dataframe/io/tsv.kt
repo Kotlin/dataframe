@@ -12,10 +12,10 @@ import kotlin.reflect.typeOf
 
 public class TsvDeephaven(private val delimiter: Char = DelimParams.TSV_DELIMITER) : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): DataFrame<*> =
-        DataFrame.readTsv(inputStream = stream, header = header)
+        DataFrame.readTsv(inputStream = stream, header = header, delimiter = delimiter)
 
     override fun readDataFrame(file: File, header: List<String>): DataFrame<*> =
-        DataFrame.readTsv(file = file, header = header)
+        DataFrame.readTsv(file = file, header = header, delimiter = delimiter)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
 
