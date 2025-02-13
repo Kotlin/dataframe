@@ -12,10 +12,10 @@ import kotlin.reflect.typeOf
 
 public class CsvDeephaven(private val delimiter: Char = DelimParams.CSV_DELIMITER) : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): DataFrame<*> =
-        DataFrame.readCsv(inputStream = stream, header = header)
+        DataFrame.readCsv(inputStream = stream, header = header, delimiter = delimiter)
 
     override fun readDataFrame(file: File, header: List<String>): DataFrame<*> =
-        DataFrame.readCsv(file = file, header = header)
+        DataFrame.readCsv(file = file, header = header, delimiter = delimiter)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "csv"
 
