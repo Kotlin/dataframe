@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnTypes
 import org.jetbrains.kotlinx.dataframe.io.ColType
 import org.jetbrains.kotlinx.dataframe.io.StringColumns
 import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.readCSV
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.readExcel
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.testArrowFeather
@@ -27,7 +27,7 @@ class Read {
     fun readCsvCustom() {
         val file = testCsv("syntheticSample")
         // SampleStart
-        val df = DataFrame.readCSV(
+        val df = DataFrame.readCsv(
             file,
             delimiter = '|',
             header = listOf("A", "B", "C", "D"),
@@ -85,7 +85,7 @@ class Read {
     fun readNumbersWithSpecificLocale() {
         val file = testCsv("numbers")
         // SampleStart
-        val df = DataFrame.readCSV(
+        val df = DataFrame.readCsv(
             file,
             parserOptions = ParserOptions(locale = Locale.UK),
         )
@@ -96,7 +96,7 @@ class Read {
     fun readNumbersWithColType() {
         val file = testCsv("numbers")
         // SampleStart
-        val df = DataFrame.readCSV(
+        val df = DataFrame.readCsv(
             file,
             colTypes = mapOf("colName" to ColType.String),
         )
