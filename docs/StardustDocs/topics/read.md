@@ -68,7 +68,7 @@ By default, CSV files are parsed using `,` as the delimiter. To specify a custom
 <!---FUN readCsvCustom-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     delimiter = '|',
     header = listOf("A", "B", "C", "D"),
@@ -149,7 +149,7 @@ You can deal with it in two ways:
 <!---FUN readNumbersWithSpecificLocale-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     parserOptions = ParserOptions(locale = Locale.UK),
 )
@@ -162,7 +162,7 @@ val df = DataFrame.readCSV(
 <!---FUN readNumbersWithColType-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     colTypes = mapOf("colName" to ColType.String),
 )

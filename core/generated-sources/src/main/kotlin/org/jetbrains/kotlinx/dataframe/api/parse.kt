@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.StringParser
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
-import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS
 import org.jetbrains.kotlinx.dataframe.util.PARSER_OPTIONS_COPY
@@ -27,7 +26,7 @@ import kotlin.reflect.KType
  * These options are used to configure how [DataColumns][DataColumn] of type [String] or [String?][String]
  * should be parsed.
  * You can always pass a [ParserOptions] object to functions that perform parsing, like [tryParse], [parse],
- * or even [DataFrame.readCSV][DataFrame.Companion.readCSV] to override these options.
+ * or even [DataFrame.readCsv][DataFrame.Companion.readCsv] to override these options.
  */
 public val DataFrame.Companion.parser: GlobalParserOptions
     get() = Parsers
