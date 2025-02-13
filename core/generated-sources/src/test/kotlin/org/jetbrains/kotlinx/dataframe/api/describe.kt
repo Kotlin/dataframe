@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.junit.Test
+import java.math.BigDecimal
 
 class DescribeTests {
 
@@ -41,7 +42,9 @@ class DescribeTests {
             mean shouldBe 4.5
             std shouldBe 2.449489742783178
             min shouldBe 1.toBigDecimal()
+            (p25 as BigDecimal).setScale(2) shouldBe 2.75.toBigDecimal()
             median shouldBe 4.toBigDecimal()
+            p75 shouldBe 6.25.toBigDecimal()
             max shouldBe 8.toBigDecimal()
         }
     }
@@ -64,7 +67,9 @@ class DescribeTests {
             mean.isNaN() shouldBe true
             std.isNaN() shouldBe true
             min shouldBe 1.0 // TODO should be NaN too?
+            p25 shouldBe 1.75
             median shouldBe 3.0
+            p75.isNaN shouldBe true
             max.isNaN shouldBe true
         }
     }

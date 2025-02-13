@@ -41,6 +41,9 @@ import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
+import org.jetbrains.kotlinx.dataframe.api.percentile
+import org.jetbrains.kotlinx.dataframe.api.percentileFor
+import org.jetbrains.kotlinx.dataframe.api.percentileOf
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCounts
 import org.jetbrains.kotlinx.dataframe.api.pivotMatches
@@ -225,6 +228,29 @@ class Analyze : TestBase() {
         df.groupBy { city }.median()
         df.pivot { city }.median()
         df.pivot { city }.groupBy { name.lastName }.median()
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun percentileModes() {
+        // SampleStart
+        df.percentile(25.0) // percentile of values per every comparable column
+        df.percentile(25.0) { age and weight } // percentile of all values in `age` and `weight`
+        df.percentileFor(25.0) { age and weight } // percentile of values per `age` and `weight` separately
+        df.percentileOf(25.0) { (weight ?: 0) / age } // percentile of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun percentileAggregations() {
+        // SampleStart
+        df.percentile(25.0)
+        df.age.percentile(25.0)
+        df.groupBy { city }.percentile(25.0)
+        df.pivot { city }.percentile(25.0)
+        df.pivot { city }.groupBy { name.lastName }.percentile(25.0)
         // SampleEnd
     }
 
