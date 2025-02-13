@@ -41,10 +41,6 @@ import kotlin.io.path.writer
  *
  * [DataFrame.toTsvStr][toTsvStr]`(delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
- * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better._
- *
  * @param path The path pointing to a file to write to.
  * @param delimiter The field delimiter character. Default: '\t'.
  *
@@ -113,10 +109,6 @@ public fun AnyFrame.writeTsv(
  * Converting to a [String] can be done like this:
  *
  * [DataFrame.toTsvStr][toTsvStr]`(delimiter = ",")`
- *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
- * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better._
  *
  * @param file The file to write to.
  * @param delimiter The field delimiter character. Default: '\t'.
@@ -187,10 +179,6 @@ public fun AnyFrame.writeTsv(
  *
  * [DataFrame.toTsvStr][toTsvStr]`(delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
- * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better._
- *
  * @param path The path pointing to a file to write to.
  * @param delimiter The field delimiter character. Default: '\t'.
  *
@@ -260,10 +248,6 @@ public fun AnyFrame.writeTsv(
  * Converting to a [String] can be done like this:
  *
  * [DataFrame.toTsvStr][toTsvStr]`(delimiter = ",")`
- *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old
- * [DataFrame.writeCSV][writeCSV]`()` and [DataFrame.toCsv][toCsv]`()` functions.
- * They'll hopefully be better._
  *
  * @param writer The [Appendable] to write to.
  * @param delimiter The field delimiter character. Default: '\t'.

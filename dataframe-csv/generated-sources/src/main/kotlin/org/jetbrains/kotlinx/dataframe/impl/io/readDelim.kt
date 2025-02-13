@@ -98,8 +98,6 @@ import kotlin.time.Duration
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
@@ -153,11 +151,7 @@ internal fun readDelimImpl(
 ): DataFrame<*> {
     // set up the csv specs
     val csvSpecs = with(CsvSpecs.builder()) {
-        // turn on fast double parser if not explicitly set regardless of the global parser options
-        @Suppress("NullableBooleanElvis")
-        val adjustedParserOptions = (parserOptions ?: ParserOptions())
-            .copy(useFastDoubleParser = parserOptions?.useFastDoubleParser ?: true)
-        customDoubleParser(DataFrameCustomDoubleParser(adjustedParserOptions))
+        customDoubleParser(DataFrameCustomDoubleParser(parserOptions))
 
         // use the given nullStrings if provided, else take the global ones + some extras
         val nullStrings = parserOptions?.nullStrings ?: (DataFrame.parser.nulls + DEFAULT_DELIM_NULL_STRINGS)

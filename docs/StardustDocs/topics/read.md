@@ -17,30 +17,12 @@ The input string can be a file path or URL.
 
 ## Read from CSV
 
-To read a CSV file, use the `.readCSV()` function.
+To read a CSV file, use the `.readCsv()` function.
 
-> Since DataFrame v0.15, a new experimental CSV integration is available.
-> It is faster and more flexible than the old one, now being based on
-> [Deephaven CSV](https://github.com/deephaven/deephaven-csv).
-> 
-> To try it in your Kotlin project, add the dependency:
-> 
-> [`org.jetbrains.kotlinx:dataframe-csv:$dataframe_version`](https://central.sonatype.com/artifact/org.jetbrains.kotlinx/dataframe-csv).
-> 
-> To try it in your Kotlin Notebook, modify the %use-magic directive:
-> 
-> `%use dataFrame(enableExperimentalCsv=true)`.
-> 
-> And then use the new `DataFrame.readCsv()` / `DataFrame.readTsv()` / `DataFrame.readDelim()`
-> functions over the old `DataFrame.readCSV()` ones.
-> 
-> The documentation of the old CSV integration still applies to the new one.
-> We will expand it while the new CSV integration stabilizes.
-> 
-> In the meantime, check out this
-> [example notebook](https://github.com/Kotlin/dataframe/blob/0.15.0/examples/notebooks/feature_overviews/0.15/new_features.ipynb)
-> to see the new CSV integration in action.
-> 
+Since DataFrame v0.15, a new experimental CSV integration is available.
+It is faster and more flexible than the old one, now being based on
+[Deephaven CSV](https://github.com/deephaven/deephaven-csv).
+
 {style="note"}
 
 To read a CSV file from a file:
@@ -48,9 +30,9 @@ To read a CSV file from a file:
 ```kotlin
 import java.io.File
 
-DataFrame.readCSV("input.csv")
+DataFrame.readCsv("input.csv")
 // Alternatively
-DataFrame.readCSV(File("input.csv"))
+DataFrame.readCsv(File("input.csv"))
 ```
 
 To read a CSV file from a URL:
@@ -58,7 +40,7 @@ To read a CSV file from a URL:
 ```kotlin
 import java.net.URL
 
-DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"))
+DataFrame.readCsv(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"))
 ```
 
 ### Specify delimiter
@@ -68,7 +50,7 @@ By default, CSV files are parsed using `,` as the delimiter. To specify a custom
 <!---FUN readCsvCustom-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     delimiter = '|',
     header = listOf("A", "B", "C", "D"),
@@ -149,7 +131,7 @@ You can deal with it in two ways:
 <!---FUN readNumbersWithSpecificLocale-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     parserOptions = ParserOptions(locale = Locale.UK),
 )
@@ -162,7 +144,7 @@ val df = DataFrame.readCSV(
 <!---FUN readNumbersWithColType-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     colTypes = mapOf("colName" to ColType.String),
 )
@@ -184,8 +166,8 @@ Like:
 Because the format here `"dd/MMM/yy h:mm a"` differs from the default (`ISO_LOCAL_DATE_TIME`),
 columns like this may be recognized as simple `String` values rather than actual date-time columns.
 
-You can fix this whenever you [parse](parse.md) a string-based column (e.g., using [`DataFrame.readCSV()`](read.md#read-from-csv),
-[`DataFrame.readTSV()`](read.md#read-from-csv), or [`DataColumn<String>.convertTo<>()`](convert.md)) by providing
+You can fix this whenever you [parse](parse.md) a string-based column (e.g., using [`DataFrame.readCsv()`](read.md#read-from-csv),
+[`DataFrame.readTsv()`](read.md#read-from-csv), or [`DataColumn<String>.convertTo<>()`](convert.md)) by providing
 a custom date-time pattern. There are two ways to do this:
 
 1) By providing the date-time pattern as raw string to the `ParserOptions` argument:
@@ -193,7 +175,7 @@ a custom date-time pattern. There are two ways to do this:
 <!---FUN readNumbersWithSpecificDateTimePattern-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
 )
@@ -205,7 +187,7 @@ val df = DataFrame.readCSV(
 <!---FUN readNumbersWithSpecificDateTimeFormatter-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
 )
@@ -224,7 +206,7 @@ The result will be a dataframe with properly parsed `DateTime` columns.
 
 ## Read from JSON
 
-To read a JSON file, use the `.readJSON()` function. JSON files can be read from a file or a URL.
+To read a JSON file, use the `.readJson()` function. JSON files can be read from a file or a URL.
 
 Note that after reading a JSON with a complex structure, you can get hierarchical
 [`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and [`FrameColumn`](DataColumn.md#framecolumn)s.
