@@ -44,9 +44,6 @@ import java.net.URL
  *
  * $[STR_FUNCTION_LINK]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old $[OLD_FUNCTION_LINK]`()` functions.
- * They'll hopefully be faster and better._
- *
  * @comment Some helper arguments for the function links
  * @set [FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}\]\[${[FUNCTION_NAME]}\]
  * @set [STR_FUNCTION_LINK] \[DataFrame.${[FUNCTION_NAME]}Str\]\[${[FUNCTION_NAME]}Str\]

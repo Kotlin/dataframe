@@ -124,6 +124,7 @@ dependencies {
     // Artifact containing all APIs and implementations
     implementation("org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%")
     // Optional formats support
+    implementation("org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
