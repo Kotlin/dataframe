@@ -103,8 +103,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
