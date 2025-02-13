@@ -4,7 +4,6 @@ import java.io.File
 import java.util.Locale
 
 fun main() {
-    Locale.setDefault(Locale.forLanguageTag("C.UTF-8"))
     File("build/dataframes")
         .walkTopDown()
         .filter {
