@@ -86,8 +86,8 @@ dependencies {
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
 
-    // for JupyterCodegenTests only
-    testRuntimeOnly(project(":dataframe-csv"))
+    // for JupyterCodegenTests and samples.api
+    testImplementation(project(":dataframe-csv"))
 }
 
 val samplesImplementation by configurations.getting {
