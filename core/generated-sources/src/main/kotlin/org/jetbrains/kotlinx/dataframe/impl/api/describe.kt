@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.percentileOrNull
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.valuesAreComparable
@@ -62,8 +63,14 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             ColumnDescription::min from inferType {
                 it.convertToComparableOrNull()?.minOrNull()
             }
+            ColumnDescription::p25 from inferType {
+                it.convertToComparableOrNull()?.percentileOrNull(25.0)
+            }
             ColumnDescription::median from inferType {
                 it.convertToComparableOrNull()?.medianOrNull()
+            }
+            ColumnDescription::p75 from inferType {
+                it.convertToComparableOrNull()?.percentileOrNull(75.0)
             }
             ColumnDescription::max from inferType {
                 it.convertToComparableOrNull()?.maxOrNull()

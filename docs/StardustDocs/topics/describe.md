@@ -10,21 +10,27 @@ describe [ columns ]
 
 [`ColumnGroup`](DataColumn.md#columngroup) and [`FrameColumns`](DataColumn.md#framecolumn) are traversed recursively down to `ValueColumns`.
 
-Collected statistics:
-* `name` — column name
-* `path` — path to the column (for hierarchical `DataFrame`)
-* `type` — type of values
-* `count` — number of rows
-* `unique` — number of unique values
-* `nulls` — number of `null` values
-* `top` — the most common not `null` value
-* `freq` — `top` value frequency
-* `mean` — mean value (for numeric columns)
-* `std` — standard deviation (for numeric columns)
-* `min` — minimal value (for comparable columns)
-* `median` — median value (for comparable columns)
-* `max` — maximum value (for comparable columns)
+### Summary Metrics:
 
+- **`name`** — The name of the column.
+- **`path`** — path to the column (for hierarchical `DataFrame`)
+- **`type`** — The data type of the column (e.g., Int, String, Boolean).
+- **`count`** — The total number of non-null values in the column.
+- **`unique`** — The number of unique values in the column.
+- **`nulls`** — The count of null (missing) values in the column.
+- **`top`** — The most frequently occurring value in the column.
+- **`freq`** — The frequency of the most common value.
+- **`mean`** — The arithmetic mean (only for numeric columns).
+- **`std`** — The standard deviation (only for numeric columns).
+- **`min`** — The minimum value in the column.
+- **`p25`** — The 25th percentile value (first quartile).
+- **`median`** — The median value (50th percentile / second quartile).
+- **`p75`** — The 75th percentile value (third quartile).
+- **`max`** — The maximum value in the column.
+
+For non-numeric columns, statistical metrics
+such as `mean` and `std` will return `null`. If column values are incomparable,
+percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
 <!---FUN describe-->
 
 ```kotlin
