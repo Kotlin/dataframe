@@ -2,6 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.deephaven.csv.parsers.Parsers
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Ignore
 import org.junit.Test
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.typeOf
 
@@ -101,5 +103,53 @@ class Read {
             colTypes = mapOf("colName" to ColType.String),
         )
         // SampleEnd
+    }
+
+    @Test
+    fun readDatesWithSpecificDateTimePattern() {
+        val file = testCsv("dates")
+        // SampleStart
+        val df = DataFrame.readCsv(
+            file,
+            parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+        )
+        // SampleEnd
+    }
+
+    @Test
+    fun readDatesWithSpecificDateTimeFormatter() {
+        val file = testCsv("dates")
+        // SampleStart
+        val df = DataFrame.readCsv(
+            file,
+            parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+        )
+        // SampleEnd
+    }
+
+    @Test
+    fun readDatesWithDefaultType() {
+        val file = testCsv("dates")
+        // SampleStart
+        val df = DataFrame.readCsv(
+            file,
+            colTypes = mapOf(ColType.DEFAULT to ColType.String),
+        )
+        // SampleEnd
+    }
+
+    @Test
+    fun readDatesWithDeephavenDateTimeParser() {
+        val file = testCsv("dates")
+        try {
+            // SampleStart
+            val df = DataFrame.readCsv(
+                inputStream = file.openStream(),
+                adjustCsvSpecs = { // it: CsvSpecs.Builder
+                    it.putParserForName("date", Parsers.DATETIME)
+                },
+            )
+            // SampleEnd
+        } catch (_: Exception) {}
     }
 }
