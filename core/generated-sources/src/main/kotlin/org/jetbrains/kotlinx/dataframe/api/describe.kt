@@ -31,105 +31,6 @@ public interface ColumnDescription {
     public val max: Any
 }
 
-/**
- * ### Summary Metrics:
-
- * - **`name`** — The name of the column.
- * - **`path`** — path to the column (for hierarchical `DataFrame`)
- * - **`type`** — The data type of the column (e.g., Int, String, Boolean).
- * - **`count`** — The total number of non-null values in the column.
- * - **`unique`** — The number of unique values in the column.
- * - **`nulls`** — The count of null (missing) values in the column.
- * - **`top`** — The most frequently occurring value in the column.
- * - **`freq`** — The frequency of the most common value.
- * - **`mean`** — The arithmetic mean (only for numeric columns).
- * - **`std`** — The standard deviation (only for numeric columns).
- * - **`min`** — The minimum value in the column.
- * - **`p25`** — The 25th percentile value (first quartile).
- * - **`median`** — The median value (50th percentile / second quartile).
- * - **`p75`** — The 75th percentile value (third quartile).
- * - **`max`** — The maximum value in the column.
- *
- * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
- * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
- */
-internal interface SummaryMetrics
-
-/**
- * ## The Describe Operation
- *
- * Computes descriptive statistics for all columns in a given [DataFrame], including nested columns,
- * returning a [DataFrame] with key summary metrics for each column.
- *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
- *
- * ### Summary Metrics:
- *
- * - **`name`** — The name of the column.
- * - **`path`** — path to the column (for hierarchical `DataFrame`)
- * - **`type`** — The data type of the column (e.g., Int, String, Boolean).
- * - **`count`** — The total number of non-null values in the column.
- * - **`unique`** — The number of unique values in the column.
- * - **`nulls`** — The count of null (missing) values in the column.
- * - **`top`** — The most frequently occurring value in the column.
- * - **`freq`** — The frequency of the most common value.
- * - **`mean`** — The arithmetic mean (only for numeric columns).
- * - **`std`** — The standard deviation (only for numeric columns).
- * - **`min`** — The minimum value in the column.
- * - **`p25`** — The 25th percentile value (first quartile).
- * - **`median`** — The median value (50th percentile / second quartile).
- * - **`p75`** — The 75th percentile value (third quartile).
- * - **`max`** — The maximum value in the column.
- *
- * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
- * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
- */
-internal interface Describe
-
-/**
- * ## The Describe Operation
- *
- * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column.
- *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
- *
- * ### Summary Metrics:
- *
- * - **`name`** — The name of the column.
- * - **`path`** — path to the column (for hierarchical `DataFrame`)
- * - **`type`** — The data type of the column (e.g., Int, String, Boolean).
- * - **`count`** — The total number of non-null values in the column.
- * - **`unique`** — The number of unique values in the column.
- * - **`nulls`** — The count of null (missing) values in the column.
- * - **`top`** — The most frequently occurring value in the column.
- * - **`freq`** — The frequency of the most common value.
- * - **`mean`** — The arithmetic mean (only for numeric columns).
- * - **`std`** — The standard deviation (only for numeric columns).
- * - **`min`** — The minimum value in the column.
- * - **`p25`** — The 25th percentile value (first quartile).
- * - **`median`** — The median value (50th percentile / second quartile).
- * - **`p75`** — The 75th percentile value (third quartile).
- * - **`max`** — The maximum value in the column.
- *
- * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
- * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
- *
- * See [Selecting Columns][Select.SelectSelectingOptions].
- *
- * For more information: [See `describe` on the documentation website.](https://kotlin.github.io/dataframe/describe.html)
- *
- * ### This Describe Overload
- */
-internal interface DescribeWithSelection
-
 // endregion
 
 // region DataColumn
@@ -159,7 +60,7 @@ internal interface DescribeWithSelection
  * - **`max`** — The maximum value in the column.
  *
  * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
+ * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column.
@@ -175,11 +76,11 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
  * ## The Describe Operation
  *
  * Computes descriptive statistics for all columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column.
+ * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
+ * This function provides a statistical summary for all columns, including nested ones,
+ * providing their type, count, unique and missing values, most frequent values,
+ * and statistical measures if applicable.
  *
  * ### Summary Metrics:
  *
@@ -200,7 +101,7 @@ public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescription> = describe
  * - **`max`** — The maximum value in the column.
  *
  * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
+ * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  * (
  * @return A [DataFrame] where each row represents the descriptive statistics of a single column in the input DataFrame.
@@ -215,11 +116,11 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  * ## The Describe Operation
  *
  * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column.
+ * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
+ * This function provides a statistical summary for all columns, including nested ones,
+ * providing their type, count, unique and missing values, most frequent values,
+ * and statistical measures if applicable.
  *
  * ### Summary Metrics:
  *
@@ -240,7 +141,7 @@ public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> =
  * - **`max`** — The maximum value in the column.
  *
  * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
+ * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -288,11 +189,11 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  * ## The Describe Operation
  *
  * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column.
+ * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
+ * This function provides a statistical summary for all columns, including nested ones,
+ * providing their type, count, unique and missing values, most frequent values,
+ * and statistical measures if applicable.
  *
  * ### Summary Metrics:
  *
@@ -313,7 +214,7 @@ public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<
  * - **`max`** — The maximum value in the column.
  *
  * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
+ * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -338,11 +239,11 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
  * ## The Describe Operation
  *
  * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column.
+ * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
+ * This function provides a statistical summary for all columns, including nested ones,
+ * providing their type, count, unique and missing values, most frequent values,
+ * and statistical measures if applicable.
  *
  * ### Summary Metrics:
  *
@@ -363,7 +264,7 @@ public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDe
  * - **`max`** — The maximum value in the column.
  *
  * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
+ * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
@@ -393,11 +294,11 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
  * ## The Describe Operation
  *
  * Computes descriptive statistics for the selected columns in a given [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame], including nested columns,
- * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column.
+ * returning a [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with key summary metrics for each column (with a [ColumnDescription][org.jetbrains.kotlinx.dataframe.api.ColumnDescription] data schema).
  *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
+ * This function provides a statistical summary for all columns, including nested ones,
+ * providing their type, count, unique and missing values, most frequent values,
+ * and statistical measures if applicable.
  *
  * ### Summary Metrics:
  *
@@ -418,7 +319,7 @@ public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReferenc
  * - **`max`** — The maximum value in the column.
  *
  * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
+ * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].

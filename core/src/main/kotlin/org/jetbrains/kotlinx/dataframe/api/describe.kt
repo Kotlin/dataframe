@@ -54,23 +54,25 @@ public interface ColumnDescription {
  * - **`max`** — The maximum value in the column.
  *
  * For non-numeric columns, statistical metrics
- * such as `mean` and `std` will return `null`. If a column is not [Comparable],
+ * such as `mean` and `std` will return `null`. If column values are incomparable,
  * percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
  */
+@ExcludeFromSources
 internal interface SummaryMetrics
 
 /**
  * ## The Describe Operation
  *
  * Computes descriptive statistics for {@get COLUMNS all} columns in a given [DataFrame], including nested columns,
- * returning a [DataFrame] with key summary metrics for each column.
+ * returning a [DataFrame] with key summary metrics for each column (with a [ColumnDescription] data schema).
  *
- * This function provides a statistical summary for each column, including its type, count, uniqueness,
- * missing values, most frequent values, and statistical measures if applicable.
- * It automatically traverses nested column groups to include all non-grouped columns in the summary.
+ * This function provides a statistical summary for all columns, including nested ones,
+ * providing their type, count, unique and missing values, most frequent values,
+ * and statistical measures if applicable.
  *
  * {@include [SummaryMetrics]}
  */
+@ExcludeFromSources
 internal interface Describe
 
 /**
@@ -82,6 +84,7 @@ internal interface Describe
  *
  * ### This Describe Overload
  */
+@ExcludeFromSources
 internal interface DescribeWithSelection
 
 /** {@set [SelectingColumns.OPERATION] [describe][describe]} */

@@ -29,7 +29,7 @@ describe [ columns ]
 - **`max`** — The maximum value in the column.
 
 For non-numeric columns, statistical metrics
-such as `mean` and `std` will return `null`. If a column is not `Comparable`,
+such as `mean` and `std` will return `null`. If column values are incomparable,
 percentile values (`min`, `p25`, `median`, `p75`, `max`) will also return `null`.
 <!---FUN describe-->
 
