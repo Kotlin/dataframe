@@ -122,7 +122,7 @@ class DelimCsvTsvTests {
     fun `read custom compression Csv`() {
         DataFrame.readCsv(
             simpleCsvGz,
-            compression = Compression.Custom { GZIPInputStream(it) },
+            compression = Compression(::GZIPInputStream),
         ) shouldBe DataFrame.readCsv(simpleCsv)
     }
 

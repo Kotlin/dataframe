@@ -65,12 +65,12 @@ import kotlin.io.path.inputStream
  *
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -216,12 +216,12 @@ public fun DataFrame.Companion.readTsv(
  *
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -367,12 +367,12 @@ public fun DataFrame.Companion.readTsv(
  *
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -518,12 +518,12 @@ public fun DataFrame.Companion.readTsv(
  *
  * [DataFrame.readTsvStr][readTsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: '\t'.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -675,7 +675,7 @@ public fun DataFrame.Companion.readTsv(
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles

@@ -10203,6 +10203,65 @@ public final class org/jetbrains/kotlinx/dataframe/io/CommonKt {
 	public static final fun urlAsFile (Ljava/net/URL;)Ljava/io/File;
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Compression$Companion;
+	public abstract fun doFinally (Ljava/io/InputStream;)V
+	public abstract fun doFirst (Ljava/io/InputStream;)V
+	public abstract fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Companion {
+	public final fun of (Ljava/io/File;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/net/URL;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$DefaultImpls {
+	public static fun doFinally (Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/io/InputStream;)V
+	public static fun doFirst (Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/io/InputStream;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Gzip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Gzip;
+	public synthetic fun doFinally (Ljava/io/InputStream;)V
+	public fun doFinally (Ljava/util/zip/GZIPInputStream;)V
+	public synthetic fun doFirst (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/util/zip/GZIPInputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/util/zip/GZIPInputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$None : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$None;
+	public fun doFinally (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/io/InputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Zip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Zip;
+	public synthetic fun doFinally (Ljava/io/InputStream;)V
+	public fun doFinally (Ljava/util/zip/ZipInputStream;)V
+	public synthetic fun doFirst (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/util/zip/ZipInputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/util/zip/ZipInputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/CompressionKt {
+	public static final fun useDecompressed (Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/CsvKt {
 	public static final fun asURL (Ljava/lang/String;)Ljava/net/URL;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;Ljava/util/Map;ILjava/lang/Integer;ZLjava/nio/charset/Charset;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
