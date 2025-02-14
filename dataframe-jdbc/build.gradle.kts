@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    api(project(":core"))
+    api(projects.core)
     implementation(libs.mariadb)
     implementation(libs.kotlinLogging)
     testImplementation(libs.sqlite)

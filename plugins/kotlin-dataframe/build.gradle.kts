@@ -39,8 +39,8 @@ dependencies {
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-annotations-jvm:$kotlinVersion")
 
-    implementation(project(":core"))
-    implementation(project(":dataframe-excel"))
+    implementation(projects.core)
+    implementation(projects.dataframeExcel)
     api(libs.kotlinLogging)
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
 
@@ -72,7 +72,7 @@ tasks.test {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xfriend-paths=${project(":core").projectDir}",
+            "-Xfriend-paths=${projects.core.path}",
             "-Xcontext-receivers",
         )
         optIn.addAll(

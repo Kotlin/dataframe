@@ -19,10 +19,10 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":dataframe-excel"))
-    implementation(project(":dataframe-jdbc"))
-    implementation(project(":dataframe-arrow"))
+    implementation(projects.core)
+    implementation(projects.dataframeExcel)
+    implementation(projects.dataframeJdbc)
+    implementation(projects.dataframeArrow)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

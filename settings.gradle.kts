@@ -4,7 +4,7 @@ rootProject.name = "dataframe"
 
 // treated as a separate project with its own Kotlin version, etc.
 includeBuild("plugins/keywords-generator")
-
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 include("plugins:expressions-converter")

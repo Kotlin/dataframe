@@ -18,11 +18,11 @@ group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     api(libs.kotlin.reflect)
-    implementation(project(":core"))
-    implementation(project(":dataframe-arrow"))
-    implementation(project(":dataframe-openapi-generator"))
-    implementation(project(":dataframe-excel"))
-    implementation(project(":dataframe-jdbc"))
+    implementation(projects.core)
+    implementation(projects.dataframeArrow)
+    implementation(projects.dataframeOpenapiGenerator)
+    implementation(projects.dataframeExcel)
+    implementation(projects.dataframeJdbc)
 
     implementation(libs.kotlin.gradle.plugin.api)
     implementation(libs.kotlin.gradle.plugin)
@@ -53,7 +53,7 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":core").configurations
+                project(projects.core.path).configurations
                     .getByName("instrumentedJars")
                     .artifacts.single()
                     .file.absolutePath

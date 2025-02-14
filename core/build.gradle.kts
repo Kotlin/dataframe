@@ -64,7 +64,7 @@ dependencies {
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
+    kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)

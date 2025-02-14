@@ -18,11 +18,11 @@ repositories {
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":dataframe-arrow"))
-    implementation(project(":dataframe-openapi-generator"))
-    implementation(project(":dataframe-excel"))
-    implementation(project(":dataframe-jdbc"))
+    implementation(projects.core)
+    implementation(projects.dataframeArrow)
+    implementation(projects.dataframeOpenapiGenerator)
+    implementation(projects.dataframeExcel)
+    implementation(projects.dataframeJdbc)
     implementation(libs.ksp.api)
     implementation(libs.kotlin.reflect)
     implementation(libs.h2db)
