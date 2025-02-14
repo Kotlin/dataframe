@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.plugin.impl
 
 import org.jetbrains.kotlin.fir.analysis.checkers.fullyExpandedClassId
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
-import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.renderReadable
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade

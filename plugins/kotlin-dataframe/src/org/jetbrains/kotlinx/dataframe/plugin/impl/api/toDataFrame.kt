@@ -295,7 +295,9 @@ internal fun KotlinTypeFacade.toDataFrame(
                         val columnType = List.constructClassLikeType(
                             arrayOf(type),
                             returnType.isMarkedNullable
-                        ).wrap()
+                        )
+                            .withNullability(makeNullable, session.typeContext)
+                            .wrap()
                         SimpleDataColumn(name, columnType)
                     } else {
                         SimpleFrameColumn(name, convert(type, depth + 1, makeNullable = false))
