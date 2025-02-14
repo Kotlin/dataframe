@@ -55,8 +55,7 @@ dependencies {
     api(project(":dataframe-excel"))
     api(project(":dataframe-openapi"))
     api(project(":dataframe-jdbc"))
-    // TODO enable when it leaves the experimental phase
-    //  api(project(":dataframe-csv"))
+    api(project(":dataframe-csv"))
 
     kover(project(":core"))
     kover(project(":dataframe-arrow"))
