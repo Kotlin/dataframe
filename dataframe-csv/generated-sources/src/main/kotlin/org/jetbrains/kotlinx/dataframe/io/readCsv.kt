@@ -22,8 +22,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
-import org.jetbrains.kotlinx.dataframe.io.Compression
-import org.jetbrains.kotlinx.dataframe.io.Compression.Companion
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -67,15 +65,12 @@ import kotlin.io.path.inputStream
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readCSV][org.jetbrains.kotlinx.dataframe.io.readCSV]`()` functions.
- * They'll hopefully be faster and better._
- *
- * @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -116,8 +111,6 @@ import kotlin.io.path.inputStream
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
@@ -223,15 +216,12 @@ public fun DataFrame.Companion.readCsv(
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readCSV][org.jetbrains.kotlinx.dataframe.io.readCSV]`()` functions.
- * They'll hopefully be faster and better._
- *
- * @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -272,8 +262,6 @@ public fun DataFrame.Companion.readCsv(
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
@@ -379,15 +367,12 @@ public fun DataFrame.Companion.readCsv(
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readCSV][org.jetbrains.kotlinx.dataframe.io.readCSV]`()` functions.
- * They'll hopefully be faster and better._
- *
- * @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -428,8 +413,6 @@ public fun DataFrame.Companion.readCsv(
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
@@ -535,15 +518,12 @@ public fun DataFrame.Companion.readCsv(
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readCSV][org.jetbrains.kotlinx.dataframe.io.readCSV]`()` functions.
- * They'll hopefully be faster and better._
- *
- * @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+ * @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -584,8 +564,6 @@ public fun DataFrame.Companion.readCsv(
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to
@@ -692,15 +670,12 @@ public fun DataFrame.Companion.readCsv(
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * _**NOTE EXPERIMENTAL**: This is a new set of functions, replacing the old [DataFrame.readCSV][org.jetbrains.kotlinx.dataframe.io.readCSV]`()` functions.
- * They'll hopefully be faster and better._
- *
  * @param inputStream Represents the file to read.
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
  * @param compression The compression of the data.
- *   Default: [Compression.None][org.jetbrains.kotlinx.dataframe.io.Compression.None], unless detected otherwise from the input file or url.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param header Optional column titles. Default: empty list.
  *
  *   If non-empty, the data will be read with [header] as the column titles
@@ -741,8 +716,6 @@ public fun DataFrame.Companion.readCsv(
  *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
  *
  *   The only exceptions are:
- *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
- *   regardless of the global setting.
  *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
  *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
  *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses][org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses] to

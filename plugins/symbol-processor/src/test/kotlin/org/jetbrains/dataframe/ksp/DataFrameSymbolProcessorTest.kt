@@ -1043,7 +1043,7 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe false
     }
 
-    private val jetbrainsCsv = File("../../data/jetbrains repositories.csv")
+    private val jetbrainsCsv = File("../../data/jetbrains_repositories.csv")
 
     @Test
     fun `imported schema resolved`() {
@@ -1063,7 +1063,7 @@ class DataFrameSymbolProcessorTest {
                             import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
                             import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
-                            fun resolve() = Schema.readCSV()
+                            fun resolve() = Schema.readCsv()
                             """.trimIndent(),
                         ),
                     ),

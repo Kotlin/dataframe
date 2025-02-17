@@ -2646,57 +2646,57 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnDescri
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_ExtensionsKt {
-	public static final fun ColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun ColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)D
-	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
-	public static final fun ColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/DataRow;)D
-	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun NullableColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Double;
-	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
-	public static final fun NullableColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Double;
-	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
 }
 
@@ -5799,13 +5799,13 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/KeyValueProp
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/KeyValueProperty_ExtensionsKt {
-	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
@@ -6299,13 +6299,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair_ExtensionsKt {
-	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
@@ -8859,9 +8859,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueCount {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ValueCount_ExtensionsKt {
-	public static final fun NullableValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableValueCount_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun ValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ValueCount_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
 }
 
@@ -8883,9 +8883,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValuePropert
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ValueProperty_ExtensionsKt {
-	public static final fun NullableValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
@@ -10203,6 +10203,65 @@ public final class org/jetbrains/kotlinx/dataframe/io/CommonKt {
 	public static final fun urlAsFile (Ljava/net/URL;)Ljava/io/File;
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Compression$Companion;
+	public abstract fun doFinally (Ljava/io/InputStream;)V
+	public abstract fun doFirst (Ljava/io/InputStream;)V
+	public abstract fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Companion {
+	public final fun of (Ljava/io/File;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/net/URL;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$DefaultImpls {
+	public static fun doFinally (Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/io/InputStream;)V
+	public static fun doFirst (Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/io/InputStream;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Gzip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Gzip;
+	public synthetic fun doFinally (Ljava/io/InputStream;)V
+	public fun doFinally (Ljava/util/zip/GZIPInputStream;)V
+	public synthetic fun doFirst (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/util/zip/GZIPInputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/util/zip/GZIPInputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$None : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$None;
+	public fun doFinally (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/io/InputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Zip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Zip;
+	public synthetic fun doFinally (Ljava/io/InputStream;)V
+	public fun doFinally (Ljava/util/zip/ZipInputStream;)V
+	public synthetic fun doFirst (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/util/zip/ZipInputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/util/zip/ZipInputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/CompressionKt {
+	public static final fun useDecompressed (Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/CsvKt {
 	public static final fun asURL (Ljava/lang/String;)Ljava/net/URL;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;Ljava/util/Map;ILjava/lang/Integer;ZLjava/nio/charset/Charset;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -10219,7 +10278,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/CsvKt {
 	public static final fun readDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/Reader;Lorg/apache/commons/csv/CSVFormat;Ljava/util/Map;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLorg/jetbrains/kotlinx/dataframe/io/CSVType;Ljava/util/Map;ILjava/lang/Integer;ZLjava/nio/charset/Charset;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/Reader;Lorg/apache/commons/csv/CSVFormat;Ljava/util/Map;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readDelimStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readDelimStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;)Ljava/lang/String;
 	public static synthetic fun toCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;ILjava/lang/Object;)Ljava/lang/String;
