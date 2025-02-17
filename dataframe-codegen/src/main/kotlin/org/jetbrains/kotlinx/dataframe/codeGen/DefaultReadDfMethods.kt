@@ -12,11 +12,6 @@ import com.squareup.kotlinpoet.typeNameOf
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.MethodArguments
 
-public interface DefaultReadDfMethod {
-    public fun toDeclaration(marker: Marker, visibility: String): String
-
-    public val additionalImports: List<String>
-}
 
 // Used APIs
 private const val CAST = "cast"

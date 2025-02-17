@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -12,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.io.guessFormat
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readCodeForGeneration
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.jupyter.api.Code
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import java.net.URL
 
 /**

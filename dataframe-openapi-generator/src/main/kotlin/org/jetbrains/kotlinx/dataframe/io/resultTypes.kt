@@ -1,11 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
-import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
-import org.jetbrains.kotlinx.dataframe.codeGen.name
 
-/** Represents a query to find a [Marker] with certain name. Produces a [MarkerResult]. */
+/** Represents a query to find a [org.jetbrains.kotlinx.dataframe.codeGen.Marker] with certain name. Produces a [MarkerResult]. */
 internal fun interface GetRefMarker {
 
     /** Produces a [MarkerResult] (either [MarkerResult.CannotFindRefMarker] or [MarkerResult.OpenApiMarker]) for the
@@ -42,7 +40,7 @@ internal sealed interface FieldTypeResult {
 }
 
 /**
- * Represents a call to produce an additional [Marker] from inside a schema component.
+ * Represents a call to produce an additional [org.jetbrains.kotlinx.dataframe.codeGen.Marker] from inside a schema component.
  * Not all objects or enums are named, so this is used to create and produce a name for them.
  */
 internal fun interface ProduceAdditionalMarker {
@@ -73,8 +71,8 @@ internal fun interface RetrievableMarker {
     /**
      * Represents a call to [toMarker] that can be repeated until it returns a [MarkerResult.OpenApiMarker].
      *
-     * @param getRefMarker              A function that returns a [Marker] for a given reference name if successful.
-     * @param produceAdditionalMarker   A function that produces an additional [Marker] for a given name.
+     * @param getRefMarker              A function that returns a [org.jetbrains.kotlinx.dataframe.codeGen.Marker] for a given reference name if successful.
+     * @param produceAdditionalMarker   A function that produces an additional [org.jetbrains.kotlinx.dataframe.codeGen.Marker] for a given name.
      *                                  This is used for `object` types not present in the root of `components/schemas`.
      *
      * @return A [MarkerResult.OpenApiMarker] if successful, otherwise [MarkerResult.CannotFindRefMarker].
@@ -86,7 +84,7 @@ internal fun interface RetrievableMarker {
  * or [OpenApiTypeResult.Enum]. */
 internal sealed interface OpenApiTypeResult {
 
-    /** Property is a reference with name [name] and Marker [marker]. Ref cannot be nullable by OpenAPI spec. */
+    /** Property is a reference with name [org.jetbrains.kotlinx.dataframe.codeGen.name] and Marker [marker]. Ref cannot be nullable by OpenAPI spec. */
     class UsingRef(val marker: OpenApiMarker) : OpenApiTypeResult
 
     /** A marker reference cannot be found at this time, try again later. */

@@ -1,11 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.addAll
 import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
-import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.impl.io.BufferedImageEncoder
 import org.jetbrains.kotlinx.dataframe.impl.io.DataframeConvertableEncoder
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
@@ -20,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
 import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
-import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HtmlData
@@ -51,7 +47,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     val reifiedDisplayConfiguration = value.modifyConfig(display)
     val footer = getFooter(value)
 
-    val df = convertToDataFrame(value)
+    val df = KotlinNotebookPluginUtils.convertToDataFrame(value)
 
     val limit = if (applyRowsLimit) {
         reifiedDisplayConfiguration.rowsLimit ?: df.nrow

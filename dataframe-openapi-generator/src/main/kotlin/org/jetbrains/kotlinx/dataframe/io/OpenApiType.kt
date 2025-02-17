@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import kotlin.reflect.typeOf
 
 /**
- * Represents all types supported by OpenApi with functions to create a [FieldType] from each.
+ * Represents all types supported by OpenApi with functions to create a [org.jetbrains.kotlinx.dataframe.codeGen.FieldType] from each.
  */
 internal sealed class OpenApiType(val name: kotlin.String?) : IsObject {
 

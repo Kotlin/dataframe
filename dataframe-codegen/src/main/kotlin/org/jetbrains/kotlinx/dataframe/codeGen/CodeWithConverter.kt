@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
-import org.jetbrains.kotlinx.jupyter.api.Code
-import org.jetbrains.kotlinx.jupyter.api.VariableName
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
+import org.jetbrains.kotlinx.dataframe.codeGen.VariableName
 
 /**
  * Class representing generated code declarations for a [Marker].

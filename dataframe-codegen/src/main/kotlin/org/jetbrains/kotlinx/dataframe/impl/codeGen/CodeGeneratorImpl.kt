@@ -1,14 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
 import com.squareup.kotlinpoet.buildCodeBlock
-import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.Enum
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.NoFields
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.None
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.TypeAlias
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.WithFields
 import org.jetbrains.dataframe.keywords.HardKeywords
 import org.jetbrains.dataframe.keywords.ModifierKeywords
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -32,9 +24,14 @@ import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.InterfaceGenerationMode.Enum
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.InterfaceGenerationMode.NoFields
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.InterfaceGenerationMode.None
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.InterfaceGenerationMode.TypeAlias
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.InterfaceGenerationMode.WithFields
 import org.jetbrains.kotlinx.dataframe.impl.toSnakeCase
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.jupyter.api.Code
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 

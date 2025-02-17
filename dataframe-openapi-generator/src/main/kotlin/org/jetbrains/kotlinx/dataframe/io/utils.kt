@@ -30,7 +30,7 @@ internal interface IsObject {
     val isObject: Boolean
 }
 
-/** Helper function to create a [GeneratedField] without [GeneratedField.columnSchema]. */
+/** Helper function to create a [org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField] without [org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField.columnSchema]. */
 internal fun generatedFieldOf(
     fieldName: ValidFieldName,
     columnName: String,
@@ -45,7 +45,7 @@ internal fun generatedFieldOf(
         fieldType = fieldType,
     )
 
-/** Helper function to create a [GeneratedField] for enums. */
+/** Helper function to create a [org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField] for enums. */
 internal fun generatedEnumFieldOf(fieldName: ValidFieldName, columnName: String): GeneratedField =
     generatedFieldOf(
         fieldName = fieldName,

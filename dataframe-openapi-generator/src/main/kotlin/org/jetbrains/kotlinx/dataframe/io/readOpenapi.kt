@@ -22,17 +22,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.isNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
-import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Any.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.AnyObject.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrame
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrameList
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsList
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Boolean.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Integer.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Number.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Object.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.String.getType
 import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.typeOf
 
@@ -197,17 +186,17 @@ private fun readOpenApi(
  * Will cause an exception for circular references, however they shouldn't occur in OpenApi specs.
  *
  * Some explanation:
- * OpenApi provides schemas for all the types used. For each type, we want to generate a [Marker]
+ * OpenApi provides schemas for all the types used. For each type, we want to generate a [org.jetbrains.kotlinx.dataframe.codeGen.Marker]
  * (Which can be an interface, enum or typealias). However, the OpenApi schema is not ordered per se,
  * so when we are reading the schema it might be that we have a reference to a (super)type
- * (which are queried using `getRefMarker`) for which we have not yet created a [Marker].
+ * (which are queried using `getRefMarker`) for which we have not yet created a [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
  * In that case, we "pause" that one (by returning `CannotFindRefMarker`) and try to read another type schema first.
  * Circular references cannot exist since it's encoded in JSON, so we never get stuck in an infinite loop.
  * When all markers are "retrieved" (so turned from a [RetrievableMarker] to a [MarkerResult.OpenApiMarker]),
  * we're done and have converted everything!
  * As for `produceAdditionalMarker`: In OpenAPI not all enums/objects have to be defined as a separate schema.
  * Although recommended, you can still define an object anonymously directly as a type. For this, we have
- * `produceAdditionalMarker` since during the conversion of a schema -> [Marker] we get an additional new [Marker].
+ * `produceAdditionalMarker` since during the conversion of a schema -> [org.jetbrains.kotlinx.dataframe.codeGen.Marker] we get an additional new [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
  */
 private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): List<OpenApiMarker> {
     // Convert the schemas to toMarker calls that can be repeated to resolve references.
@@ -291,8 +280,8 @@ private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): 
  * - `type:` if type is something else, generating a type alias for it. This can be a [OpenApiMarker.TypeAlias] or a [OpenApiMarker.MarkerAlias].
  *
  * @param typeName The name of the schema / type to convert.
- * @param getRefMarker Function to retrieve a [Marker] for a given reference name.
- * @param produceAdditionalMarker Function to produce an additional [Marker] on the fly, such as for
+ * @param getRefMarker Function to retrieve a [org.jetbrains.kotlinx.dataframe.codeGen.Marker] for a given reference name.
+ * @param produceAdditionalMarker Function to produce an additional [org.jetbrains.kotlinx.dataframe.codeGen.Marker] on the fly, such as for
  *   inline enums/classes in arrays.
  * @param required Optional list of required properties for this schema.
  *
@@ -701,7 +690,7 @@ private fun Schema<*>.toMarker(
  * It can become an [OpenApiType], [OpenApiMarker] reference or unresolved reference (if `$ref:` is set), enum (if `enum:` is set).
  * `anyOf` and `oneOf` types are merged.
  *
- * These results still have to be converted to [FieldType]s to be able to generate [OpenApiMarker]s from it
+ * These results still have to be converted to [org.jetbrains.kotlinx.dataframe.codeGen.FieldType]s to be able to generate [OpenApiMarker]s from it
  * (unless it's a [OpenApiTypeResult.UsingRef] of course).
  *
  * @receiver Single property of an OpenApi type schema to convert.
@@ -803,16 +792,16 @@ private fun Schema<*>.toOpenApiType(getRefMarker: GetRefMarker): OpenApiTypeResu
 }
 
 /**
- * Converts an [OpenApiType] with [schema] to a [FieldType] if successful.
+ * Converts an [OpenApiType] with [schema] to a [org.jetbrains.kotlinx.dataframe.codeGen.FieldType] if successful.
  *
  * @receiver OpenApiType to convert.
  * @param schema Schema of the property that the [OpenApiType] belongs to.
  *   Used to get extra information if needed (for arrays / objects / format etc.).
  * @param schemaName Name of the schema that the property belongs to. Used in the name generation of the
- *   additionally produced [Marker]s.
- * @param nullable Whether the [FieldType] is supposed to be nullable.
+ *   additionally produced [org.jetbrains.kotlinx.dataframe.codeGen.Marker]s.
+ * @param nullable Whether the [org.jetbrains.kotlinx.dataframe.codeGen.FieldType] is supposed to be nullable.
  * @param getRefMarker Function to attempt to resolve a reference.
- * @param produceAdditionalMarker Function to produce additional [Marker]s if needed.
+ * @param produceAdditionalMarker Function to produce additional [org.jetbrains.kotlinx.dataframe.codeGen.Marker]s if needed.
  * @param required List of required properties. Passed down into child objects.
  * @return [FieldTypeResult]
  */

@@ -1,10 +1,9 @@
-package org.jetbrains.dataframe.impl.codeGen
+package org.jetbrains.kotlinx.dataframe.codeGen
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
-import org.jetbrains.kotlinx.jupyter.api.Code
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 

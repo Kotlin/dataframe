@@ -27,7 +27,6 @@ import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.formatter
 import org.jetbrains.kotlinx.dataframe.io.maxDepth
 import org.jetbrains.kotlinx.dataframe.io.maxWidth
-import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId

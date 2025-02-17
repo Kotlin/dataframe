@@ -13,8 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
-import org.jetbrains.kotlinx.dataframe.testSets.person.city
-import org.jetbrains.kotlinx.dataframe.testSets.person.weight
 import org.junit.Test
 
 @Suppress("ktlint:standard:class-naming")

@@ -55,6 +55,7 @@ dependencies {
     api(projects.dataframeExcel)
     api(projects.dataframeOpenapi)
     api(projects.dataframeJdbc)
+    api(projects.dataframeCodegen)
     // TODO enable when it leaves the experimental phase
     //  api(projects.dataframeCsv)
 

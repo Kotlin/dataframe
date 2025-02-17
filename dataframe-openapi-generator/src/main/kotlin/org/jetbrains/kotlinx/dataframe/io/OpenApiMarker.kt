@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.name
  * Represents the type of Markers that we can use for code generation.
  * This includes [OpenApiMarker.Enum], [OpenApiMarker.Interface] (and [OpenApiMarker.AdditionalPropertyInterface]),
  * [OpenApiMarker.TypeAlias], and [OpenApiMarker.MarkerAlias].
- * It's a bit more flexible than [Marker] and insures the right arguments are given for the right type of [Marker].
+ * It's a bit more flexible than [org.jetbrains.kotlinx.dataframe.codeGen.Marker] and insures the right arguments are given for the right type of [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
  */
 internal sealed class OpenApiMarker private constructor(
     val nullable: Boolean, // in openApi, just like an enum, nullability can be saved in the object
@@ -45,9 +45,9 @@ internal sealed class OpenApiMarker private constructor(
         "MyMarker(name = $name, isOpen = $isOpen, markerType = ${this::class}, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)"
 
     /**
-     * A [Marker] that will be used to generate an enum.
+     * A [org.jetbrains.kotlinx.dataframe.codeGen.Marker] that will be used to generate an enum.
      *
-     * @param nullable whether the enum can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the enum can be null. Needs to be checked when referring to this [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
      * @param fields the fields of the enum, can be created using [generatedEnumFieldOf].
      * @param name the name of the enum.
      * @param visibility the visibility of the enum.
@@ -103,9 +103,9 @@ internal sealed class OpenApiMarker private constructor(
     }
 
     /**
-     * A [Marker] that will be used to generate an interface.
+     * A [org.jetbrains.kotlinx.dataframe.codeGen.Marker] that will be used to generate an interface.
      *
-     * @param nullable whether the object can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the object can be null. Needs to be checked when referring to this [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
      * @param fields the fields of the enum, can be created using [generatedFieldOf].
      * @param name the name of the interface.
      * @param visibility the visibility of the interface.
@@ -166,7 +166,7 @@ internal sealed class OpenApiMarker private constructor(
      * Special type of [Interface] that inherits [AdditionalProperty]. Also generates different read-methods in
      * [DefaultReadOpenApiMethod] including automatic conversion to [AdditionalProperty].
      *
-     * @param nullable whether the object can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the object can be null. Needs to be checked when referring to this [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
      * @param valueType the type of the value of the [AdditionalProperty].
      * @param name the name of the interface.
      * @param visibility the visibility of the interface.
@@ -236,9 +236,9 @@ internal sealed class OpenApiMarker private constructor(
     }
 
     /**
-     * A [Marker] that will be used to generate a type alias that points at a primitive.
+     * A [org.jetbrains.kotlinx.dataframe.codeGen.Marker] that will be used to generate a type alias that points at a primitive.
      *
-     * @param nullable whether the object can be null. Needs to be checked when referring to this [Marker].
+     * @param nullable whether the object can be null. Needs to be checked when referring to this [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
      * @param name the name of the type alias.
      * @param superMarkerName the name of the type that the type alias points at.
      * @param visibility the visibility of the type alias.
@@ -302,7 +302,7 @@ internal sealed class OpenApiMarker private constructor(
     }
 
     /**
-     * A [Marker] that will be used to generate a type alias that points at another [Marker].
+     * A [org.jetbrains.kotlinx.dataframe.codeGen.Marker] that will be used to generate a type alias that points at another [org.jetbrains.kotlinx.dataframe.codeGen.Marker].
      *
      * @param superMarker the type that the type alias points at.
      * @param nullable whether the typealias points at a nullable type.

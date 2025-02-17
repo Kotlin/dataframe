@@ -72,7 +72,7 @@ tasks.test {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xfriend-paths=${projects.core.path}",
+            "-Xfriend-paths=${project(projects.core.path).projectDir}",
             "-Xcontext-receivers",
         )
         optIn.addAll(
