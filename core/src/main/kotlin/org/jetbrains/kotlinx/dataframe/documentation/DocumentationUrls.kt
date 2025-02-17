@@ -80,4 +80,7 @@ internal interface DocumentationUrls {
 
     /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
     interface Distinct
+
+    /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
+    interface Flatten
 }
