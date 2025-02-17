@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideFooter
 import org.jetbrains.kotlinx.dataframe.explainer.WritersideStyle
-import org.jetbrains.kotlinx.dataframe.io.readCSV
+import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import org.junit.Test
 import java.io.File
@@ -16,7 +16,7 @@ class OtherSamples {
 
     @Test
     fun example() {
-        val df = DataFrame.readCSV("../data/titanic.csv", delimiter = ';').take(5)
+        val df = DataFrame.read("../data/movies.csv").take(5)
         // writeTable(df, "exampleName")
     }
 

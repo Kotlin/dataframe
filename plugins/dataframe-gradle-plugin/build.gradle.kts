@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-openapi-generator"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-csv"))
     implementation(project(":dataframe-jdbc"))
 
     implementation(libs.kotlin.gradle.plugin.api)
@@ -53,11 +54,13 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":core").configurations
-                    .getByName("instrumentedJars")
-                    .artifacts.single()
-                    .file.absolutePath
-                    .replace(File.separatorChar, '/'),
+                listOf(":core", ":dataframe-csv").joinToString("\", \"") {
+                    project(it).configurations
+                        .getByName("instrumentedJars")
+                        .artifacts.single()
+                        .file.absolutePath
+                        .replace(File.separatorChar, '/')
+                },
             )
         }
     }
@@ -115,12 +118,14 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
+    dependsOn(":dataframe-csv:publishToMavenLocal")
     dependsOn(":dataframe-jdbc:publishToMavenLocal")
     dependsOn(":dataframe-openapi-generator:publishToMavenLocal")
     dependsOn(":dataframe-openapi:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":dataframe-csv:publishDataframeCsvPublicationToMavenLocal")
     dependsOn(":dataframe-jdbc:publishDataframeJDBCPublicationToMavenLocal")
     dependsOn(":dataframe-openapi-generator:publishDataframeOpenApiPublicationToMavenLocal")
     dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")

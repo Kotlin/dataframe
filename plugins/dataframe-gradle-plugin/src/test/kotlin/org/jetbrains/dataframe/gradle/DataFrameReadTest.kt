@@ -9,6 +9,7 @@ import kotlinx.serialization.SerializationException
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import org.jetbrains.kotlinx.dataframe.io.readSqlTable
 import org.junit.Test
 import java.io.File
@@ -82,7 +83,7 @@ class DataFrameReadTest {
     @Test
     fun `data accessible and readable`() {
         shouldNotThrowAny {
-            DataFrame.read(Paths.get("../../data/jetbrains repositories.csv").absolutePathString())
+            DataFrame.readCsv(Paths.get("../../data/jetbrains repositories.csv").absolutePathString(), skipLines = 1)
         }
     }
 

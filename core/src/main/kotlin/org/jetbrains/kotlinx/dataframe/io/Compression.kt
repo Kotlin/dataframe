@@ -9,15 +9,12 @@ import java.util.zip.InflaterInputStream
 import java.util.zip.ZipInputStream
 
 /**
- * Compression algorithm to use when reading csv files.
+ * Compression algorithm to use when reading files.
  * We support [GZIP][Compression.Gzip] and [ZIP][Compression.Zip] compression out of the box.
  *
- * Custom decompression algorithms can be added by creating an instance of [Custom].
- *
- * @param wrapStream function that wraps any [InputStream] into a decompressing [InflaterInputStream] stream
+ * Custom decompression algorithms can be added by creating an instance of [Compression].
  */
-public sealed class Compression<I : InputStream>(public open val wrapStream: (InputStream) -> I) {
-
+public fun interface Compression<I : InputStream> {
     public companion object {
         public fun of(fileOrUrl: String): Compression<*> =
             when (fileOrUrl.split(".").last()) {
@@ -33,26 +30,25 @@ public sealed class Compression<I : InputStream>(public open val wrapStream: (In
         public fun of(url: URL): Compression<*> = of(url.path)
     }
 
+    /** Wraps any [InputStream] into a decompressing [InflaterInputStream] stream */
+    public fun wrapStream(inputStream: InputStream): I
+
     /** Can be overridden to perform some actions before reading from the input stream. */
-    public open fun doFirst(inputStream: I) {}
+    public fun doFirst(inputStream: I) {}
 
     /**
      * Can be overridden to perform some actions after reading from the input stream.
      * Remember to close the stream if you override this function.
      */
-    public open fun doFinally(inputStream: I) {
+    public fun doFinally(inputStream: I) {
         inputStream.close()
     }
 
-    /**
-     * For .gz / GZIP files.
-     */
-    public data object Gzip : Compression<GZIPInputStream>(wrapStream = ::GZIPInputStream)
+    /** For .gz / GZIP files */
+    public data object Gzip : Compression<GZIPInputStream> by Compression(::GZIPInputStream)
 
-    /**
-     * For .zip / ZIP files.
-     */
-    public data object Zip : Compression<ZipInputStream>(wrapStream = ::ZipInputStream) {
+    /** For .zip / ZIP files */
+    public data object Zip : Compression<ZipInputStream> by Compression(::ZipInputStream) {
 
         override fun doFirst(inputStream: ZipInputStream) {
             // Make sure to call nextEntry once to prepare the stream
@@ -69,21 +65,8 @@ public sealed class Compression<I : InputStream>(public open val wrapStream: (In
         }
     }
 
-    /**
-     * No compression.
-     */
-    public data object None : Compression<InputStream>(wrapStream = { it })
-
-    /**
-     * Custom decompression algorithm.
-     *
-     * Can either be extended or instantiated directly with a custom [wrapStream] function.
-     * @param wrapStream function that wraps any [InputStream] into a decompressing [InputStream]
-     */
-    public open class Custom<I : InputStream>(override val wrapStream: (InputStream) -> I) :
-        Compression<I>(wrapStream = wrapStream) {
-        override fun toString(): String = "Compression.Custom(wrapStream = $wrapStream)"
-    }
+    /** No compression */
+    public data object None : Compression<InputStream> by Compression({ it })
 }
 
 /**

@@ -13,7 +13,7 @@ Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn
 <!---FUN writeCsv-->
 
 ```kotlin
-df.writeCSV(file)
+df.writeCsv(file)
 ```
 
 <!---END-->
@@ -21,8 +21,7 @@ df.writeCSV(file)
 <!---FUN writeCsvStr-->
 
 ```kotlin
-val format = CSVFormat.DEFAULT.builder().setDelimiter(';').setRecordSeparator(System.lineSeparator()).build()
-val csvStr = df.toCsv(format)
+val csvStr = df.toCsvStr(delimiter = ';', recordSeparator = System.lineSeparator())
 ```
 
 <!---END-->
