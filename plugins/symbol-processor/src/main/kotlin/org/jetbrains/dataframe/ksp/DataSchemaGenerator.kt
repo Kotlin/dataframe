@@ -23,11 +23,11 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.CsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
-import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.TsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
@@ -155,14 +155,13 @@ class DataSchemaGenerator(
             codeGenerator.createNewFile(Dependencies(true, importStatement.origin), packageName, "$name.Generated")
 
         val formats = listOf(
-            // TODO new Csv() and Tsv()
-            CSV(delimiter = importStatement.csvOptions.delimiter),
+            CsvDeephaven(delimiter = importStatement.csvOptions.delimiter),
             JSON(
                 typeClashTactic = importStatement.jsonOptions.typeClashTactic,
                 keyValuePaths = importStatement.jsonOptions.keyValuePaths.map(::JsonPath),
             ),
             Excel(),
-            TSV(),
+            TsvDeephaven(),
             ArrowFeather(),
             OpenApi(),
         )

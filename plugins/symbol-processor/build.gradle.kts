@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-openapi-generator"))
     implementation(project(":dataframe-excel"))
+    implementation(project(":dataframe-csv"))
     implementation(project(":dataframe-jdbc"))
     implementation(libs.ksp.api)
     implementation(libs.kotlin.reflect)
