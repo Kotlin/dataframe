@@ -2638,6 +2638,8 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnDescri
 	public abstract fun getMin ()Ljava/lang/Object;
 	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getNulls ()I
+	public abstract fun getP25 ()Ljava/lang/Object;
+	public abstract fun getP75 ()Ljava/lang/Object;
 	public abstract fun getPath ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public abstract fun getStd ()D
 	public abstract fun getTop ()Ljava/lang/Object;
@@ -2662,6 +2664,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun ColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
+	public static final fun ColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun ColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public static final fun ColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -2688,6 +2694,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun NullableColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
 	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
+	public static final fun NullableColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun NullableColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public static final fun NullableColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -6425,6 +6435,67 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/api/PercentileKt {
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Ljava/lang/Comparable;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLjava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLjava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Ljava/lang/Comparable;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
+	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
+	public static final fun rowPercentile (Lorg/jetbrains/kotlinx/dataframe/DataRow;D)Ljava/lang/Object;
+	public static final fun rowPercentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;D)Ljava/lang/Object;
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Pivot : org/jetbrains/kotlinx/dataframe/aggregation/Aggregatable {
 }
 
@@ -9939,6 +10010,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch;
 	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/MergedValuesAggregator;
 	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/NumbersAggregator;
 }
@@ -10700,7 +10772,7 @@ public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {
 	public static final fun shortMean (Ljava/lang/Iterable;)D
 }
 
-public final class org/jetbrains/kotlinx/dataframe/math/MedianKt {
+public final class org/jetbrains/kotlinx/dataframe/math/PercentileKt {
 	public static final fun quickSelect (Ljava/util/List;I)Ljava/lang/Comparable;
 }
 
