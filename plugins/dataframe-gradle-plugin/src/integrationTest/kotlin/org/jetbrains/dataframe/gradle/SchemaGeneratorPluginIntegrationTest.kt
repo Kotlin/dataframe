@@ -358,7 +358,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 import org.jetbrains.kotlinx.dataframe.api.filter
                 
                 fun main() {
-                    val df = MySchema.readCSV()
+                    val df = MySchema.readCsv()
                     val df1 = df.filter { age != null }
                 }
                 """.trimIndent(),

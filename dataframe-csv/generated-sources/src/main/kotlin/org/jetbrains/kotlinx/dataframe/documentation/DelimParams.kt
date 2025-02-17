@@ -4,7 +4,6 @@ import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
@@ -84,7 +83,7 @@ internal object DelimParams {
      *   Columns widths are determined by the header in the data (if present), or manually by setting
      *   [fixedColumnWidths].
      */
-    val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
+    const val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
 
     /**
      * @param fixedColumnWidths The fixed column widths. Default: empty list.
@@ -137,8 +136,6 @@ internal object DelimParams {
      *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
      *
      *   The only exceptions are:
-     *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
-     *   regardless of the global setting.
      *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
      *   will take the global setting + [["", "NA", "N/A", "null", "NULL", "None", "none", "NIL", "nil"]][org.jetbrains.kotlinx.dataframe.io.DEFAULT_DELIM_NULL_STRINGS].
      *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to
