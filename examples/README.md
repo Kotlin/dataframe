@@ -32,7 +32,7 @@ ___
 * titanic ([notebook](notebooks/titanic/Titanic.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/B5YeMMONSAR78FgKQ9yJyW)) &ndash;
 Let's see how the new library will show itself on the famous Titanic dataset.
 ___
-* top 12 German companies ([notebook](notebooks/top%2012%20german%20companies)/[Datalore](https://datalore.jetbrains.com/report/static/KQKedA4jDrKu63O53gEN0z/MDg5pHcGvRdDVQnPLmwjuc)) &ndash;
+* Financial Analyze of the top-12 German companies ([notebook](notebooks/top_12_german_companies)/[Datalore](https://datalore.jetbrains.com/report/static/KQKedA4jDrKu63O53gEN0z/MDg5pHcGvRdDVQnPLmwjuc)) &ndash;
   Analyze key financial metrics for several major German companies.
 ___
 * wine ([notebook](notebooks/wine/WineNetWIthKotlinDL.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/aK9vYHH8pCA8H1KbKB5WsI)) &ndash;
