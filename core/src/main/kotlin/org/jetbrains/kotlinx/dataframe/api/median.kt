@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
-import org.jetbrains.kotlinx.dataframe.math.medianOrNull
+import org.jetbrains.kotlinx.dataframe.math.median
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -45,7 +45,7 @@ public fun AnyRow.rowMedianOrNull(): Any? =
 
 public fun AnyRow.rowMedian(): Any = rowMedianOrNull().suggestIfNull("rowMedian")
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOfOrNull(): T? = valuesOf<T>().medianOrNull()
+public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOfOrNull(): T? = valuesOf<T>().median()
 
 public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOf(): T =
     rowMedianOfOrNull<T>().suggestIfNull("rowMedianOf")
