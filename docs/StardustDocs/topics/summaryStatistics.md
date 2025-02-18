@@ -7,6 +7,7 @@
 * [min/max](minmax.md)
 * [mean](mean.md)
 * [median](median.md)
+* [percentile](percentile.md)
 * [std](std.md)
 * [valueCounts](valueCounts.md)
 
