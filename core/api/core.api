@@ -512,6 +512,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/aggregation/Colu
 public final class org/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl$DefaultImpls {
 	public static fun ColumnSetDataFrameFrameColIndex (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun ColumnSetDataRowColGroupIndex (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
@@ -914,6 +917,24 @@ public final class org/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggrega
 	public static fun dropLastWhile (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Ljava/lang/String;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -923,6 +944,11 @@ public final class org/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggrega
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun filter (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/aggregation/ColumnsForAggregateSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
@@ -1702,6 +1728,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllColumnsSe
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl {
+	public abstract fun KPropertyDataRowExceptNew (Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun KPropertyDataRowExceptNew (Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun KPropertyDataRowExceptNew (Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public abstract fun allColsExcept (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun allColsExcept (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun allColsExcept (Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -1731,6 +1760,24 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptCol
 	public abstract fun allExcept (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun allExcept (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun allExcept (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public abstract fun except (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Ljava/lang/String;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -1740,9 +1787,17 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptCol
 	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public abstract fun except (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$DefaultImpls {
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun allColsExcept (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun allColsExcept (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun allColsExcept (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -1772,6 +1827,24 @@ public final class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelection
 	public static fun allExcept (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun allExcept (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun allExcept (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -1781,9 +1854,17 @@ public final class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelection
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar {
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar$ColumnGroupExceptName {
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptColumnsSelectionDsl$Grammar$ColumnGroupName {
@@ -2557,8 +2638,6 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnDescri
 	public abstract fun getMin ()Ljava/lang/Object;
 	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getNulls ()I
-	public abstract fun getP25 ()Ljava/lang/Object;
-	public abstract fun getP75 ()Ljava/lang/Object;
 	public abstract fun getPath ()Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public abstract fun getStd ()D
 	public abstract fun getTop ()Ljava/lang/Object;
@@ -2567,65 +2646,57 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnDescri
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_ExtensionsKt {
-	public static final fun ColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun ColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)D
-	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun ColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun ColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun ColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
-	public static final fun ColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/DataRow;)D
-	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
-	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun NullableColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_freq (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Double;
-	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_nulls (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun NullableColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableColumnDescription_p25 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableColumnDescription_p75 (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_path (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
-	public static final fun NullableColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_std (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Double;
-	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_top (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_type (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_unique (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
 }
 
@@ -2832,6 +2903,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnsSelec
 public final class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$DefaultImpls {
 	public static fun ColumnSetDataFrameFrameColIndex (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun ColumnSetDataRowColGroupIndex (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
@@ -3232,6 +3306,24 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$Defau
 	public static fun dropLastWhile (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Ljava/lang/String;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -3241,6 +3333,11 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl$Defau
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun filter (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
@@ -3540,6 +3637,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConcatKt {
 	public static final fun concat (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun concat (Lorg/jetbrains/kotlinx/dataframe/DataRow;[Lorg/jetbrains/kotlinx/dataframe/DataRow;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun concat (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun concat (Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun concatRows (Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun concatT (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
@@ -4841,7 +4939,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/InsertKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/IntoKt {
-	public static final fun concat (Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -4869,6 +4966,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/JoinDsl : or
 public final class org/jetbrains/kotlinx/dataframe/api/JoinDsl$DefaultImpls {
 	public static fun ColumnSetDataFrameFrameColIndex (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun ColumnSetDataRowColGroupIndex (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
@@ -5269,6 +5369,24 @@ public final class org/jetbrains/kotlinx/dataframe/api/JoinDsl$DefaultImpls {
 	public static fun dropLastWhile (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Ljava/lang/String;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -5278,6 +5396,11 @@ public final class org/jetbrains/kotlinx/dataframe/api/JoinDsl$DefaultImpls {
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun filter (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/JoinDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
@@ -5676,13 +5799,13 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/KeyValueProp
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/KeyValueProperty_ExtensionsKt {
-	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun KeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun KeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableKeyValueProperty_key (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableKeyValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
@@ -6176,13 +6299,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/NameValuePair_ExtensionsKt {
-	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableNameValuePair_name (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/String;
-	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableNameValuePair_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
@@ -6302,67 +6425,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/ParserOptions {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/PercentileKt {
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Ljava/lang/Comparable;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;)Ljava/lang/Object;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLjava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentile (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLjava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun percentile$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;DLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;DZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun percentileFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;D)Ljava/lang/Comparable;
-	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;DLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Ljava/lang/String;)Ljava/lang/Object;
-	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
-	public static final fun percentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;D[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
-	public static final fun rowPercentile (Lorg/jetbrains/kotlinx/dataframe/DataRow;D)Ljava/lang/Object;
-	public static final fun rowPercentileOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;D)Ljava/lang/Object;
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/Pivot : org/jetbrains/kotlinx/dataframe/aggregation/Aggregatable {
 }
 
@@ -6381,6 +6443,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/PivotDsl : o
 public final class org/jetbrains/kotlinx/dataframe/api/PivotDsl$DefaultImpls {
 	public static fun ColumnSetDataFrameFrameColIndex (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun ColumnSetDataRowColGroupIndex (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
@@ -6781,6 +6846,24 @@ public final class org/jetbrains/kotlinx/dataframe/api/PivotDsl$DefaultImpls {
 	public static fun dropLastWhile (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Ljava/lang/String;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -6790,6 +6873,11 @@ public final class org/jetbrains/kotlinx/dataframe/api/PivotDsl$DefaultImpls {
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun filter (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/PivotDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
@@ -7446,6 +7534,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/SortDsl : or
 public final class org/jetbrains/kotlinx/dataframe/api/SortDsl$DefaultImpls {
 	public static fun ColumnSetDataFrameFrameColIndex (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun ColumnSetDataRowColGroupIndex (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;I)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun KPropertyDataRowExceptNew (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;
 	public static fun KPropertyDataRowGet (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
@@ -7850,6 +7941,24 @@ public final class org/jetbrains/kotlinx/dataframe/api/SortDsl$DefaultImpls {
 	public static fun dropLastWhile (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun dropWhile (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Ljava/lang/String;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Ljava/lang/String;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Ljava/lang/String;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lkotlin/reflect/KProperty;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function0;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
@@ -7859,6 +7968,11 @@ public final class org/jetbrains/kotlinx/dataframe/api/SortDsl$DefaultImpls {
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static fun except (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
 	public static fun filter (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/api/ColumnsSelectionDsl;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
 	public static fun first (Lorg/jetbrains/kotlinx/dataframe/api/SortDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableSingleColumn;
@@ -8745,9 +8859,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValueCount {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ValueCount_ExtensionsKt {
-	public static final fun NullableValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableValueCount_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Integer;
-	public static final fun ValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ValueCount_count (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ValueCount_count (Lorg/jetbrains/kotlinx/dataframe/DataRow;)I
 }
 
@@ -8769,9 +8883,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ValuePropert
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ValueProperty_ExtensionsKt {
-	public static final fun NullableValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun NullableValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun ValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun ValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ValueProperty_value (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
 
@@ -9825,7 +9939,6 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch;
 	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/MergedValuesAggregator;
 	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
-	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/NumbersAggregator;
 }
@@ -10090,6 +10203,65 @@ public final class org/jetbrains/kotlinx/dataframe/io/CommonKt {
 	public static final fun urlAsFile (Ljava/net/URL;)Ljava/io/File;
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/io/Compression$Companion;
+	public abstract fun doFinally (Ljava/io/InputStream;)V
+	public abstract fun doFirst (Ljava/io/InputStream;)V
+	public abstract fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Companion {
+	public final fun of (Ljava/io/File;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/net/URL;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+	public final fun of (Ljava/nio/file/Path;)Lorg/jetbrains/kotlinx/dataframe/io/Compression;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$DefaultImpls {
+	public static fun doFinally (Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/io/InputStream;)V
+	public static fun doFirst (Lorg/jetbrains/kotlinx/dataframe/io/Compression;Ljava/io/InputStream;)V
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Gzip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Gzip;
+	public synthetic fun doFinally (Ljava/io/InputStream;)V
+	public fun doFinally (Ljava/util/zip/GZIPInputStream;)V
+	public synthetic fun doFirst (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/util/zip/GZIPInputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/util/zip/GZIPInputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$None : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$None;
+	public fun doFinally (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/io/InputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/Compression$Zip : org/jetbrains/kotlinx/dataframe/io/Compression {
+	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/io/Compression$Zip;
+	public synthetic fun doFinally (Ljava/io/InputStream;)V
+	public fun doFinally (Ljava/util/zip/ZipInputStream;)V
+	public synthetic fun doFirst (Ljava/io/InputStream;)V
+	public fun doFirst (Ljava/util/zip/ZipInputStream;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public synthetic fun wrapStream (Ljava/io/InputStream;)Ljava/io/InputStream;
+	public fun wrapStream (Ljava/io/InputStream;)Ljava/util/zip/ZipInputStream;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/io/CompressionKt {
+	public static final fun useDecompressed (Ljava/io/InputStream;Lorg/jetbrains/kotlinx/dataframe/io/Compression;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/io/CsvKt {
 	public static final fun asURL (Ljava/lang/String;)Ljava/net/URL;
 	public static final fun read (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/List;Ljava/util/Map;ILjava/lang/Integer;ZLjava/nio/charset/Charset;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -10106,7 +10278,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/CsvKt {
 	public static final fun readDelim (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/Reader;Lorg/apache/commons/csv/CSVFormat;Ljava/util/Map;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;CLjava/util/List;ZLorg/jetbrains/kotlinx/dataframe/io/CSVType;Ljava/util/Map;ILjava/lang/Integer;ZLjava/nio/charset/Charset;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDelim$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/Reader;Lorg/apache/commons/csv/CSVFormat;Ljava/util/Map;ILjava/lang/Integer;Lorg/jetbrains/kotlinx/dataframe/api/ParserOptions;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readDelimStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readDelimStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readDelimStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;CLjava/util/Map;ILjava/lang/Integer;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun toCsv (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;)Ljava/lang/String;
 	public static synthetic fun toCsv$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/apache/commons/csv/CSVFormat;ILjava/lang/Object;)Ljava/lang/String;
@@ -10587,7 +10759,7 @@ public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {
 	public static final fun shortMean (Ljava/lang/Iterable;)D
 }
 
-public final class org/jetbrains/kotlinx/dataframe/math/PercentileKt {
+public final class org/jetbrains/kotlinx/dataframe/math/MedianKt {
 	public static final fun quickSelect (Ljava/util/List;I)Ljava/lang/Comparable;
 }
 

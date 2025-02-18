@@ -42,6 +42,15 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
 
 // endregion
 
+// region ReducedGroupBy
+
+public fun <T, G> ReducedGroupBy<T, G>.concat(): DataFrame<G> =
+    groupBy.groups.values()
+        .map { reducer(it, it) }
+        .concat()
+
+// endregion
+
 // region Iterable
 
 public fun <T> Iterable<DataFrame<T>>.concat(): DataFrame<T> = concatImpl(asList())

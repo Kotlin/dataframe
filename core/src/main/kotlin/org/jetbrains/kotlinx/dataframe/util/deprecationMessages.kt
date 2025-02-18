@@ -11,9 +11,9 @@ package org.jetbrains.kotlinx.dataframe.util
 
 private const val MESSAGE_0_16 = "Will be ERROR in 0.16."
 
-internal const val DF_READ_NO_CSV = "This function is deprecated and should be replaced with `readCSV`. $MESSAGE_0_16"
+internal const val DF_READ_NO_CSV = "This function is deprecated and should be replaced with `readCsv`. $MESSAGE_0_16"
 internal const val DF_READ_NO_CSV_REPLACE =
-    "this.readCSV(fileOrUrl, delimiter, header, colTypes, skipLines, readLines, duplicate, charset)"
+    "this.readCsv(fileOrUrl = fileOrUrl, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
 
 internal const val CREATE_FRAME_COLUMN =
     "Removed from public API as this can likely better be solved by `DataFrame.chunked()`. Replaced by internal df.chunkedImpl(). $MESSAGE_0_16"
@@ -66,6 +66,50 @@ internal const val MINUS_REPLACE = "this.remove(columns)"
 
 private const val MESSAGE_0_17 = "Will be ERROR in 0.17."
 
+internal const val APACHE_CSV =
+    "The Apache-based CSV/TSV reader is deprecated in favor of the new Deephaven CSV reader in dataframe-csv. $MESSAGE_0_17"
+internal const val READ_CSV =
+    "Apache-based readCSV() is deprecated in favor of Deephaven-based readCsv() in dataframe-csv. $MESSAGE_0_17"
+internal const val READ_CSV_IMPORT = "org.jetbrains.kotlinx.dataframe.io.readCsv"
+internal const val READ_CSV_FILE_OR_URL_REPLACE =
+    "this.readCsv(fileOrUrl = fileOrUrl, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+internal const val READ_CSV_FILE_REPLACE =
+    "this.readCsv(file = file, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+internal const val READ_CSV_URL_REPLACE =
+    "this.readCsv(url = url, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+internal const val READ_CSV_STREAM_REPLACE =
+    "this.readCsv(inputStream = stream, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+
+internal const val READ_DELIM =
+    "Apache-based readDelim() is deprecated in favor of Deephaven-based readDelim() in dataframe-csv. $MESSAGE_0_17"
+internal const val READ_DELIM_STREAM_REPLACE =
+    "this.readDelim(inputStream = inStream, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+internal const val READ_DELIM_READER_REPLACE =
+    "this.readDelimStr(text = reader.readText(), delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+
+internal const val READ_TSV =
+    "Apache-based readTSV() is deprecated in favor of Deephaven-based readTsv() in dataframe-csv. $MESSAGE_0_17"
+internal const val READ_TSV_IMPORT = "org.jetbrains.kotlinx.dataframe.io.readTsv"
+internal const val READ_TSV_FILE_OR_URL_REPLACE =
+    "this.readTsv(fileOrUrl = fileOrUrl, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+internal const val READ_TSV_FILE_REPLACE =
+    "this.readTsv(file = file, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+internal const val READ_TSV_URL_REPLACE =
+    "this.readTsv(url = url, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+internal const val READ_TSV_STREAM_REPLACE =
+    "this.readTsv(inputStream = stream, delimiter = delimiter, header = header, colTypes = colTypes, skipLines = skipLines, readLines = readLines, allowMissingColumns = duplicate, parserOptions = parserOptions)"
+
+internal const val WRITE_CSV =
+    "The writeCSV() functions are deprecated in favor of writeCsv() in dataframe-csv. $MESSAGE_0_17"
+internal const val WRITE_CSV_IMPORT = "org.jetbrains.kotlinx.dataframe.io.writeCsv"
+internal const val WRITE_CSV_FILE_REPLACE = "this.writeCsv(file = file)"
+internal const val WRITE_CSV_PATH_REPLACE = "this.writeCsv(path = path)"
+internal const val WRITE_CSV_WRITER_REPLACE = "this.writeCsv(writer = writer)"
+
+internal const val TO_CSV = "toCsv() is deprecated in favor of toCsvStr() in dataframe-csv. $MESSAGE_0_17"
+internal const val TO_CSV_IMPORT = "org.jetbrains.kotlinx.dataframe.io.toCsvStr"
+internal const val TO_CSV_REPLACE = "this.toCsvStr()"
+
 // endregion
 
 // region keep across releases
@@ -76,7 +120,8 @@ internal const val COL_REPLACE = "col"
 
 internal const val ALL_COLS_EXCEPT =
     "This overload is blocked to prevent issues with column accessors. Use the `{}` overload instead."
-internal const val ALL_COLS_REPLACE = "allColsExcept { other }"
-internal const val ALL_COLS_REPLACE_VARARG = "allColsExcept { others.toColumnSet() }"
-
+internal const val ALL_COLS_EXCEPT_REPLACE = "this.allColsExcept { other }"
+internal const val ALL_COLS_EXCEPT_REPLACE_VARARG = "this.allColsExcept { others.toColumnSet() }"
+internal const val EXCEPT_REPLACE = "this.except { other }"
+internal const val EXCEPT_REPLACE_VARARG = "this.except { others.toColumnSet() }"
 // endregion
