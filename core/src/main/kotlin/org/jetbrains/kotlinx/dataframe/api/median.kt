@@ -82,6 +82,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: ColumnRefe
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: KProperty<C?>): C =
     median { columns.toColumnSet() }
 
+@Suppress("UNCHECKED_CAST")
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(columns: ColumnsSelector<T, C?>): C? =
     Aggregators.median.aggregateAll(this, columns) as C?
 
