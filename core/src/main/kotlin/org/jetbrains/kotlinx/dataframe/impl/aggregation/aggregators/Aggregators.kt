@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.std
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.math.median
 import org.jetbrains.kotlinx.dataframe.math.std

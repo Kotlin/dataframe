@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.impl.commonParents
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.commonTypeListifyValues
 import org.jetbrains.kotlinx.dataframe.impl.createType
+import org.jetbrains.kotlinx.dataframe.impl.getCommonNumberClass
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
@@ -17,6 +18,8 @@ import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.junit.Test
 import java.io.Serializable
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -413,5 +416,45 @@ class UtilTests {
             typeOf<List<Nothing?>>(),
             typeOf<Set<Nothing>?>(),
         ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing?>?>()
+    }
+
+    @Test
+    fun `common number types`() {
+        // Same type
+        getCommonNumberClass(Int::class, Int::class) shouldBe Int::class
+        getCommonNumberClass(Double::class, Double::class) shouldBe Double::class
+
+        // Direct parent-child relationships
+        getCommonNumberClass(Int::class, UShort::class) shouldBe Int::class
+        getCommonNumberClass(UInt::class, Int::class) shouldBe UInt::class
+        getCommonNumberClass(Long::class, UInt::class) shouldBe Long::class
+        getCommonNumberClass(Double::class, Float::class) shouldBe Double::class
+
+        // Parent-child relationships for signed/unsigned types
+        getCommonNumberClass(UShort::class, Short::class) shouldBe UShort::class
+        getCommonNumberClass(UByte::class, Byte::class) shouldBe UByte::class
+
+        // Multi-level relationships
+        getCommonNumberClass(Byte::class, Int::class) shouldBe Int::class
+        getCommonNumberClass(UByte::class, Long::class) shouldBe Long::class
+        getCommonNumberClass(Short::class, Double::class) shouldBe Double::class
+
+        // Top-level types
+        getCommonNumberClass(BigDecimal::class, Double::class) shouldBe BigDecimal::class
+        getCommonNumberClass(BigInteger::class, Long::class) shouldBe BigInteger::class
+        getCommonNumberClass(BigDecimal::class, BigInteger::class) shouldBe BigDecimal::class
+
+        // Distant relationships
+        getCommonNumberClass(Byte::class, BigDecimal::class) shouldBe BigDecimal::class
+        getCommonNumberClass(UByte::class, Double::class) shouldBe Double::class
+
+        // Complex type promotions
+        getCommonNumberClass(Int::class, Float::class) shouldBe Double::class
+        getCommonNumberClass(Long::class, Double::class) shouldBe BigDecimal::class
+        getCommonNumberClass(ULong::class, Double::class) shouldBe BigDecimal::class
+        getCommonNumberClass(BigInteger::class, Double::class) shouldBe BigDecimal::class
+
+        // Edge case with null
+        getCommonNumberClass(null, Int::class) shouldBe Int::class
     }
 }
