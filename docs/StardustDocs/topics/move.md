@@ -18,7 +18,7 @@ Can be used to change columns hierarchy by providing `ColumnPath` for every move
 <!---FUN move-->
 
 ```kotlin
-df.move { age }.toLeft()
+df.move { age }.toStart()
 
 df.move { weight }.to(1)
 
