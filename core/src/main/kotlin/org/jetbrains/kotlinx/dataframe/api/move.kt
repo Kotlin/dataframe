@@ -24,6 +24,14 @@ import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT
+import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_LEFT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_RIGHT
+import org.jetbrains.kotlinx.dataframe.util.MOVE_TO_RIGHT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.TO_LEFT
+import org.jetbrains.kotlinx.dataframe.util.TO_LEFT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.TO_RIGHT
+import org.jetbrains.kotlinx.dataframe.util.TO_RIGHT_REPLACE
 import kotlin.reflect.KProperty
 
 // region DataFrame
@@ -245,6 +253,9 @@ private interface SetMoveToStartOperationArg
 @ExcludeFromSources
 private interface CommonMoveToStartDocs
 
+@Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
+
 /**
  * @include [CommonMoveToStartDocs]
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToStartOperationArg]}
@@ -254,6 +265,9 @@ private interface CommonMoveToStartDocs
 @Interpretable("MoveToStart1")
 public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
+@Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
+
 /**
  * @include [CommonMoveToStartDocs]
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToStartOperationArg]}
@@ -261,8 +275,18 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
  */
 public fun <T> DataFrame<T>.moveToStart(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
+@Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
+@AccessApiOverload
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: AnyColumnReference): DataFrame<T> =
+    moveToStart { columns.toColumnSet() }
+
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveToStart(vararg columns: AnyColumnReference): DataFrame<T> =
+    moveToStart { columns.toColumnSet() }
+
+@Deprecated(MOVE_TO_LEFT, ReplaceWith(MOVE_TO_LEFT_REPLACE), DeprecationLevel.ERROR)
+@AccessApiOverload
+public fun <T> DataFrame<T>.moveToLeft(vararg columns: KProperty<*>): DataFrame<T> =
     moveToStart { columns.toColumnSet() }
 
 @AccessApiOverload
@@ -304,6 +328,9 @@ private interface SetMoveToEndOperationArg
 @ExcludeFromSources
 private interface CommonMoveToEndDocs
 
+@Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
+
 /**
  * @include [CommonMoveToEndDocs]
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetMoveToEndOperationArg]}
@@ -313,6 +340,9 @@ private interface CommonMoveToEndDocs
 @Interpretable("MoveToEnd1")
 public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
+@Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
+
 /**
  * @include [CommonMoveToEndDocs]
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetMoveToEndOperationArg]}
@@ -320,8 +350,18 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
  */
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
+@Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
+@AccessApiOverload
+public fun <T> DataFrame<T>.moveToRight(vararg columns: AnyColumnReference): DataFrame<T> =
+    moveToEnd { columns.toColumnSet() }
+
 @AccessApiOverload
 public fun <T> DataFrame<T>.moveToEnd(vararg columns: AnyColumnReference): DataFrame<T> =
+    moveToEnd { columns.toColumnSet() }
+
+@Deprecated(MOVE_TO_RIGHT, ReplaceWith(MOVE_TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
+@AccessApiOverload
+public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame<T> =
     moveToEnd { columns.toColumnSet() }
 
 @AccessApiOverload
@@ -593,6 +633,9 @@ fun <T, C> MoveColsClause<T, C>.before(column: String) = before { column.toColum
 fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBefore(column, false)
 */
 
+@Deprecated(TO_LEFT, ReplaceWith(TO_LEFT_REPLACE), DeprecationLevel.ERROR)
+public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
+
 /**
  * ## Move ToStart
  *
@@ -612,6 +655,9 @@ fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBe
 @Refine
 @Interpretable("MoveToStart0")
 public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
+
+@Deprecated(TO_RIGHT, ReplaceWith(TO_RIGHT_REPLACE), DeprecationLevel.ERROR)
+public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
 /**
  * ## Move ToEnd
