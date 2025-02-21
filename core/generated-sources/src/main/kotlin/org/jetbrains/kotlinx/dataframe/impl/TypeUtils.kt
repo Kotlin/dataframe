@@ -167,35 +167,6 @@ internal fun resolve(actualType: KType, declaredType: KType): Map<KTypeParameter
     return map
 }
 
-internal val numberTypeExtensions: Map<Pair<KClass<*>, KClass<*>>, KClass<*>> by lazy {
-    val map = mutableMapOf<Pair<KClass<*>, KClass<*>>, KClass<*>>()
-
-    fun add(from: KClass<*>, to: KClass<*>) {
-        map[from to to] = to
-        map[to to from] = to
-    }
-
-    val intTypes = listOf(Byte::class, Short::class, Int::class, Long::class)
-    for (i in intTypes.indices) {
-        for (j in i + 1 until intTypes.size) {
-            add(intTypes[i], intTypes[j])
-        }
-        add(intTypes[i], Double::class)
-    }
-    add(Float::class, Double::class)
-    map
-}
-
-internal fun getCommonNumberType(first: KClass<*>?, second: KClass<*>): KClass<*> =
-    when {
-        first == null -> second
-        first == second -> first
-        else -> numberTypeExtensions[first to second] ?: error("Can not find common number type for $first and $second")
-    }
-
-internal fun Iterable<KClass<*>>.commonNumberClass(): KClass<*> =
-    fold(null as KClass<*>?, ::getCommonNumberType) ?: Number::class
-
 internal fun commonParent(classes: Iterable<KClass<*>>): KClass<*>? = commonParents(classes).withMostSuperclasses()
 
 internal fun commonParent(vararg classes: KClass<*>): KClass<*>? = commonParent(classes.toList())
@@ -648,3 +619,27 @@ internal fun Any.asArrayAsListOrNull(): List<*>? =
     }
 
 internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecimal
+
+/**
+ * Returns a set containing the [KClass] of each element in the iterable.
+ *
+ * This can be a heavy operation!
+ *
+ * The [KClass] is determined by retrieving the runtime class of each element.
+ *
+ * @return A set of [KClass] objects representing the runtime types of elements in the iterable.
+ */
+internal fun Iterable<Any>.classes(): Set<KClass<*>> = mapTo(mutableSetOf()) { it::class }
+
+/**
+ * Returns a set of [KType] objects representing the star-projected types of the runtime classes
+ * of all unique elements in the iterable.
+ *
+ * The method internally relies on the [classes] function to collect the runtime classes of the
+ * elements in the iterable and then maps each class to its star-projected type.
+ *
+ * This can be a heavy operation!
+ *
+ * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in the iterable.
+ */
+internal fun Iterable<Any>.types(): Set<KType> = classes().mapTo(mutableSetOf()) { it.createStarProjectedType(false) }

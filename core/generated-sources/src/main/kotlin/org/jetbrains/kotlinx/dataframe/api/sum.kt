@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sum
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 // region DataColumn
@@ -42,7 +43,11 @@ public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expres
 
 // region DataRow
 
-public fun AnyRow.rowSum(): Number = Aggregators.sum.aggregateMixed(values().filterIsInstance<Number>()) ?: 0
+public fun AnyRow.rowSum(): Number =
+    Aggregators.sum.aggregateMixed(
+        values = values().filterIsInstance<Number>(),
+        types = columnTypes().filter { it.isSubtypeOf(typeOf<Number?>()) }.toSet(),
+    ) ?: 0
 
 public inline fun <reified T : Number> AnyRow.rowSumOf(): T = values().filterIsInstance<T>().sum(typeOf<T>())
 
