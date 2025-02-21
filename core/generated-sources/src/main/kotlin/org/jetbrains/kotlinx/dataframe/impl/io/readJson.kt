@@ -229,9 +229,9 @@ internal fun fromJsonListAnyColumns(
 
                             v.longOrNull != null -> collector.add(v.long)
 
-                            v.doubleOrNull != null -> collector.add(v.double)
-
                             v.floatOrNull != null -> collector.add(v.float)
+
+                            v.doubleOrNull != null -> collector.add(v.double)
 
                             else -> error("Malformed JSON element ${v::class}: $v")
                         }
@@ -240,7 +240,7 @@ internal fun fromJsonListAnyColumns(
                     else -> collector.add(v)
                 }
             }
-            val column = collector.toColumn(VALUE_COLUMN_NAME)
+            val column = createColumnGuessingType(VALUE_COLUMN_NAME, collector.values, unifyNumbers = true)
             val res = if (nanIndices.isNotEmpty()) {
                 fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                     var j = 0
@@ -330,7 +330,7 @@ internal fun fromJsonListAnyColumns(
                             }
                         }
                         val valueType = map.values.map {
-                            guessValueType(sequenceOf(it))
+                            guessValueType(sequenceOf(it), unifyNumbers = true)
                         }.commonType()
 
                         valueTypes += valueType
@@ -340,6 +340,7 @@ internal fun fromJsonListAnyColumns(
                             createColumnGuessingType(
                                 values = map.values,
                                 suggestedType = TypeSuggestion.Use(valueType),
+                                unifyNumbers = true,
                             ).named(KeyValueProperty<*>::value.name),
                         )
                     }
@@ -514,7 +515,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         }
                         val valueType =
                             map.values
-                                .map { guessValueType(sequenceOf(it)) }
+                                .map { guessValueType(sequenceOf(it), unifyNumbers = true) }
                                 .commonType()
 
                         dataFrameOf(
@@ -522,6 +523,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             createColumnGuessingType(
                                 values = map.values,
                                 suggestedType = TypeSuggestion.Use(valueType),
+                                unifyNumbers = true,
                             ).named(KeyValueProperty<*>::value.name),
                         )
                     }
@@ -576,9 +578,9 @@ internal fun fromJsonListArrayAndValueColumns(
 
                                         v.longOrNull != null -> collector.add(v.long)
 
-                                        v.doubleOrNull != null -> collector.add(v.double)
-
                                         v.floatOrNull != null -> collector.add(v.float)
+
+                                        v.doubleOrNull != null -> collector.add(v.double)
 
                                         else -> error("Malformed JSON element ${v::class}: $v")
                                     }
@@ -587,7 +589,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                 else -> collector.add(v)
                             }
                         }
-                        val column = collector.toColumn(colName)
+                        val column = createColumnGuessingType(colName, collector.values, unifyNumbers = true)
                         val res = if (nanIndices.isNotEmpty()) {
                             fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                                 var j = 0
