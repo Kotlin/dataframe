@@ -473,7 +473,7 @@ internal fun guessValueType(
 
     if (unifyNumbers) {
         val usedNumberClasses = classes.filter { it.isSubclassOf(Number::class) }
-        val unifiedNumberClass = usedNumberClasses.commonNumberClass() as KClass<Number>
+        val unifiedNumberClass = usedNumberClasses.unifiedNumberClass() as KClass<Number>
         classes -= usedNumberClasses
         classes += unifiedNumberClass
     }
