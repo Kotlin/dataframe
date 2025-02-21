@@ -24,10 +24,10 @@ import kotlin.reflect.typeOf
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the {@get [CumSumDocs.DATA_TYPE]}
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the {@get [CumSumDocs.DATA_TYPE]}
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA\] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
