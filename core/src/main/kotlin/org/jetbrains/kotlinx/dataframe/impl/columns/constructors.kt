@@ -31,11 +31,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.createConverter
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
+import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -197,7 +199,7 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
  *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
  * @param unifyNumbers if `true`, then all numbers encountered in [values] will be converted to the smallest possible
- *   number-type that can hold all the values lossless. Unsigned numbers are not supported.
+ *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers].
  *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
  */
 @PublishedApi
@@ -257,7 +259,7 @@ internal fun <T> createColumnGuessingType(
             to = targetType,
         ) as (Number) -> Number?
 
-        return { value -> if (value is Number) converter(value) else value }
+        return { value -> if (value != null && value is Number) converter(value) else value }
     }
 
     return when (type.classifier!! as KClass<*>) {
@@ -292,7 +294,9 @@ internal fun <T> createColumnGuessingType(
             var isListOfRows: Boolean? = null
             val subType = type.arguments.first().type!! // List<T> -> T
 
-            val needsNumberConversion = unifyNumbers && subType.isSubtypeOf(typeOf<Number?>())
+            val needsNumberConversion = unifyNumbers &&
+                subType.isSubtypeOf(typeOf<Number?>()) &&
+                !subType.isNothing
             val numberConverter: (Any?) -> Any? by lazy { getSafeNumberConverter(subType) }
 
             val lists = values.map { value ->
@@ -334,7 +338,9 @@ internal fun <T> createColumnGuessingType(
         }
 
         else -> {
-            val needsNumberConversion = unifyNumbers && type.isSubtypeOf(typeOf<Number?>())
+            val needsNumberConversion = unifyNumbers &&
+                type.isSubtypeOf(typeOf<Number?>()) &&
+                !type.isNothing
             val numberConverter by lazy { getSafeNumberConverter(type) }
 
             DataColumn.createValueColumn(

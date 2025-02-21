@@ -1,26 +1,36 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.impl.commonNumberClass
-import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
+import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-internal class NumbersAggregator<C : Number>(name: String, aggregate: (Iterable<C>, KType) -> C?) :
-    AggregatorBase<C, C>(name, aggregate) {
+internal class NumbersAggregator(name: String, aggregate: (Iterable<Number>, KType) -> Number?) :
+    AggregatorBase<Number, Number>(name, aggregate) {
 
-    override fun aggregate(columns: Iterable<DataColumn<C?>>): C? = aggregateMixed(columns.mapNotNull { aggregate(it) })
+    override fun aggregate(columns: Iterable<DataColumn<Number?>>): Number? =
+        aggregateMixed(
+            values = columns.mapNotNull { aggregate(it) },
+            types = columns.map { it.type() }.toSet(),
+        )
 
     class Factory(private val aggregate: Iterable<Number>.(KType) -> Number?) : AggregatorProvider<Number, Number> {
         override fun create(name: String) = NumbersAggregator(name, aggregate)
 
-        override operator fun getValue(obj: Any?, property: KProperty<*>): NumbersAggregator<Number> =
-            create(property.name)
+        override operator fun getValue(obj: Any?, property: KProperty<*>): NumbersAggregator = create(property.name)
     }
 
-    fun aggregateMixed(values: Iterable<C>): C? {
-        val classes = values.map { it.javaClass.kotlin }
-        return aggregate(values, classes.commonNumberClass().createStarProjectedType(false))
+    /**
+     * Can aggregate numbers with different types by first converting them to a compatible type.
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun aggregateMixed(values: Iterable<Number>, types: Set<KType>): Number? {
+        val commonType = types.unifiedNumberType()
+        return aggregate(
+            values = values.convertToUnifiedNumberType(commonType),
+            type = commonType,
+        )
     }
 
     override val preservesType = false
