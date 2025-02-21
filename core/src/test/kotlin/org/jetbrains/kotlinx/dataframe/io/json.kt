@@ -228,7 +228,7 @@ class JsonTests {
             """
             [
                 {"a":[ {"b":2}, {"c":3} ]},
-                {"a":[ {"b":4}, {"d":5} ]}
+                {"a":[ {"b":4.0}, {"d":5} ]}
             ]
             """.trimIndent()
         val df = DataFrame.readJsonStr(json).alsoDebug()
@@ -238,7 +238,7 @@ class JsonTests {
         group[0].alsoDebug().let {
             it.columnsCount() shouldBe 3
             it.rowsCount() shouldBe 2
-            it["b"].type() shouldBe typeOf<Int?>()
+            it["b"].type() shouldBe typeOf<Double?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
             it["b"].values.toList() shouldBe listOf(2, null)
