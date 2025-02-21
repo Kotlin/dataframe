@@ -18,6 +18,7 @@ repositories {
     // geo repository should come before Maven Central
     maven("https://repo.osgeo.org/repository/release")
     mavenCentral()
+    mavenLocal()
 }
 
 // https://stackoverflow.com/questions/26993105/i-get-an-error-downloading-javax-media-jai-core1-1-3-from-maven-central

@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.math.median
+import org.jetbrains.kotlinx.dataframe.math.percentile
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.sum
 import kotlin.reflect.KType
@@ -39,6 +40,10 @@ internal object Aggregators {
 
     val mean by withOption<Boolean, Number, Double> { skipNA ->
         changesType({ mean(it, skipNA) }) { mean(skipNA) }
+    }
+
+    val percentile by withOption<Double, Comparable<Any?>, Comparable<Any?>> { percentile ->
+        mergedValuesChangingTypes { type -> percentile(percentile, type) }
     }
 
     val median by mergedValues<Comparable<Any?>, Comparable<Any?>> { median(it) }

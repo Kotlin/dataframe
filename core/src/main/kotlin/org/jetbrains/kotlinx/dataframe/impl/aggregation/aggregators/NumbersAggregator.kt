@@ -1,9 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.impl.commonNumberType
-import org.jetbrains.kotlinx.dataframe.impl.convertToCommonNumberType
-import org.jetbrains.kotlinx.dataframe.impl.types
+import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
+import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
@@ -27,9 +26,9 @@ internal class NumbersAggregator(name: String, aggregate: (Iterable<Number>, KTy
      */
     @Suppress("UNCHECKED_CAST")
     fun aggregateMixed(values: Iterable<Number>, types: Set<KType>): Number? {
-        val commonType = types.commonNumberType()
+        val commonType = types.unifiedNumberType()
         return aggregate(
-            values = values.convertToCommonNumberType(commonType),
+            values = values.convertToUnifiedNumberType(commonType),
             type = commonType,
         )
     }
