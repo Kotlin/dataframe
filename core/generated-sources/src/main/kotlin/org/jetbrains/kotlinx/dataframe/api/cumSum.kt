@@ -22,10 +22,10 @@ import kotlin.reflect.typeOf
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [DataColumn]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [DataColumn]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -104,10 +104,10 @@ private val supportedClasses = setOf(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [DataFrame]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -131,10 +131,10 @@ public fun <T, C> DataFrame<T>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [DataFrame]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -155,10 +155,10 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [DataFrame]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -182,10 +182,10 @@ public fun <T> DataFrame<T>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [DataFrame]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -207,10 +207,10 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [DataFrame]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [DataFrame]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -237,10 +237,10 @@ public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataF
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [GroupBy]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -263,10 +263,10 @@ public fun <T, G, C> GroupBy<T, G>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [GroupBy]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -287,10 +287,10 @@ public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean =
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [GroupBy]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -314,10 +314,10 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [GroupBy]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
@@ -341,10 +341,10 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 /**
  * ## The CumSum Operation
  *
- * Computes the cumulative sums of the values in the each column from the [GroupBy]
- * from the first row to the last row.
+ * Computes the cumulative sums of the values in each column from the [GroupBy]
+ * from the first cell to the last cell.
  *
- * __NOTE:__ If the column contains nullable values and `skipNA` is set to `true`,
+ * __NOTE:__ If the column contains nullable values and [skipNA] is set to `true`,
  * null values are skipped when computing the cumulative sum.
  * Otherwise, any null value encountered will propagate null values in the output from that point onward.
  *
