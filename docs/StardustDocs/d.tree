@@ -153,6 +153,7 @@
                 <toc-element topic="minmax.md"/>
                 <toc-element topic="sum.md"/>
                 <toc-element topic="median.md"/>
+                <toc-element topic="percentile.md"/>
                 <toc-element topic="mean.md"/>
                 <toc-element topic="std.md"/>
                 <toc-element topic="valueCounts.md"/>

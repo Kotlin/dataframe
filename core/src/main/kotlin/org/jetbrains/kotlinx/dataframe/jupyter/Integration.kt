@@ -157,8 +157,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
     override fun Builder.onLoaded() {
         if (version != null) {
             if (enableExperimentalCsv?.toBoolean() == true) {
-                println("Enabling experimental CSV module: dataframe-csv")
-                dependencies("org.jetbrains.kotlinx:dataframe-csv:$version")
+                println("CSV module is already enabled by default now.")
             }
             if (enableExperimentalGeo?.toBoolean() == true) {
                 println("Enabling experimental Geo module: dataframe-geo")
@@ -166,6 +165,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 dependencies("org.jetbrains.kotlinx:dataframe-geo:$version")
             }
             dependencies(
+                "org.jetbrains.kotlinx:dataframe-csv:$version",
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
                 "org.jetbrains.kotlinx:dataframe-jdbc:$version",
                 "org.jetbrains.kotlinx:dataframe-arrow:$version",
