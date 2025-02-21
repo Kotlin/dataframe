@@ -64,7 +64,7 @@ class SumTests {
         df.sum { value3 } shouldBe expected3
     }
 
-    // Issue #1068
+    /** [Issue #1068](https://github.com/Kotlin/dataframe/issues/1068) */
     @Test
     fun `rowSum mixed number types`() {
         dataFrameOf("a", "b")(1, 2f)[0].rowSum().let {
