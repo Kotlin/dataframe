@@ -49,7 +49,10 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * ## Rename to camelCase
  *
  * This function renames all columns in this [DataFrame] to `camelCase` format.
- * All delimiters are removed, words are capitalized except for the first one.
+ *
+ * All delimiters between words are removed, words are capitalized except for the first one.
+ * Places underscore between numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
  *
  * This function supports converting names from `snake_case`, `PascalCase`, and other delimited formats
  * into a consistent `camelCase` representation.
@@ -101,7 +104,9 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  * ## Rename to camelCase
  *
  * Renames the columns, previously selected with [rename] to `camelCase` format.
- * All delimiters are removed, words are capitalized except for the first one.
+ * All delimiters between words are removed, words are capitalized except for the first one.
+ * Places underscore between numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
  *
  * Returns a [DataFrame] with updated column names.
  *
@@ -130,7 +135,9 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.ren
  * ## Rename to camelCase
  *
  * Renames this column to `camelCase` format.
- * All delimiters are removed, words are capitalized except for the first one.
+ * All delimiters between words are removed, words are capitalized except for the first one.
+ * Places underscore between numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
  *
  * Returns a [ColumnReference] with updated name.
  *
@@ -144,7 +151,6 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.ren
  * "doner-case-name" -> "donerCaseName"
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
- *
  * @return a [ColumnReference] with the name converted to camel case format.
  */
 @Suppress("UNCHECKED_CAST")
