@@ -5,11 +5,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
-import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls.Distinct
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
@@ -20,7 +18,7 @@ import kotlin.reflect.KProperty
 /**
  * ## The Flatten Operation
  *
- * Removes {@get [FlattenDocs.GROUPS]} column groups in the DataFrame, replacing them with their leaf columns.
+ * Removes {@get [FlattenDocs.GROUPS]} column groups in the [DataFrame], replacing them with their leaf columns.
  *
  * __NOTE:__ Columns after flattening will keep their original names.
  * Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
