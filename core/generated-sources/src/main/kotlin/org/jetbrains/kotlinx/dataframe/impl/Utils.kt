@@ -346,9 +346,9 @@ internal val CAMEL_DEFAULT_DELIMITERS_REGEX =
  * Converts a string into lowerCamelCase using [delimiters].
  *
  * - Splits words using a unified regex that handles delimiters.
- * - If the string does not contain any letters, it remains unchanged.
+ * - If the string does not contain any letters or numbers, it remains unchanged.
+ * - Places underscore ("_") between numbers.
  * - The first word remains in lowercase, and subsequent words are capitalized.
- * - Fully uppercase words (e.g., "UPPER") are converted to lowercase.
  *
  * Default behavior (with [CAMEL_DEFAULT_DELIMITERS_REGEX]):
  *
