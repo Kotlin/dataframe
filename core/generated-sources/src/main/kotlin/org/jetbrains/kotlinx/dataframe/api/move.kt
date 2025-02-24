@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.Move.MoveSelectingOptions
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -34,16 +33,14 @@ import kotlin.reflect.KProperty
 // region move
 
 /**
- * ## The Move Operation
- *
  * Moves the specified [columns] within the [DataFrame].
  *
  * This function does not immediately move the columns but instead select columns to move and
  * returns a [MoveClause],
  * which serves as an intermediate step. The [MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [MoveClause.to], [MoveClause.toStart],
- * [MoveClause.toEnd], [MoveClause.into], [MoveClause.intoIndexed], [MoveClause.toTop],
- * [MoveClause.after] or [MoveClause.under], that return a new [DataFrame] with updated columns order.
+ * destination of the selected columns using methods such as [to][MoveClause.to], [toStart][MoveClause.toStart],
+ * [toEnd][MoveClause.toEnd], [into][MoveClause.into], [intoIndexed][MoveClause.intoIndexed], [toTop][MoveClause.toTop],
+ * [after][MoveClause.after] or [under][MoveClause.under], that return a new [DataFrame] with updated columns structure.
  * Check out [Grammar].
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -135,22 +132,22 @@ internal interface Move {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
-     * **[`move`][move]****`  {  `**[`columns`][SelectingColumns]**` }`**
+     * **[`move`][move]****`  {  `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * __`.`__[**`into`**][MoveClause.into]**`  {  `**[`pathSelector`][SelectingColumns]**`  }  `**
+     * __`.`__[**`into`**][MoveClause.into]**`  {  `**`targetColumnPaths: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`intoIndexed`**][MoveClause.intoIndexed]**`  {  `**[`pathSelector`][SelectingColumns]**` }`**
+     * `| `__`.`__[**`intoIndexed`**][MoveClause.intoIndexed]**`  {  `**`targetColumnPaths: `[`ColumnsSelector`][ColumnsSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`under`**][MoveClause.under]**`  {  `**[`parentColumn`][SelectingColumns]**` }`**
+     * `| `__`.`__[**`under`**][MoveClause.under]**`  {  `**`parentColumnGroupPath: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`after`**][MoveClause.after]**`  {  `**[`column`][SelectingColumns]**` }`**
+     * `| `__`.`__[**`after`**][MoveClause.after]**`  {  `**`column: `[`ColumnSelector`][ColumnSelector]**` }`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
-     * `| `__`.`__[**`to`**][MoveClause.to]**`(position)`**
+     * `| `__`.`__[**`to`**][MoveClause.to]**`(`**`position: `[`Int`][Int]**`)`**
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      * `| `__`.`__[**`toTop`**][MoveClause.toTop]**`()`**
@@ -165,16 +162,14 @@ internal interface Move {
 }
 
 /**
- * ## The Move Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function does not immediately move the columns but instead select columns to move and
  * returns a [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause],
  * which serves as an intermediate step. The [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [MoveClause.to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [MoveClause.toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
- * [MoveClause.toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [MoveClause.into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [MoveClause.intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [MoveClause.toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [MoveClause.after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [MoveClause.under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
+ * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
+ * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -204,7 +199,7 @@ internal interface Move {
  *
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { columnA and columnB }.after { columnC }
  * df.move { cols(0..3) }.under("info")
  * df.move { colsOf<String>() }.to(5)
@@ -215,16 +210,14 @@ internal interface Move {
 public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<T, C> = MoveClause(this, columns)
 
 /**
- * ## The Move Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * Moves the specified [columns] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
  * This function does not immediately move the columns but instead select columns to move and
  * returns a [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause],
  * which serves as an intermediate step. The [MoveClause][org.jetbrains.kotlinx.dataframe.api.MoveClause] allows specifying the final
- * destination of the selected columns using methods such as [MoveClause.to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [MoveClause.toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
- * [MoveClause.toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [MoveClause.into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [MoveClause.intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [MoveClause.toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
- * [MoveClause.after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [MoveClause.under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * destination of the selected columns using methods such as [to][org.jetbrains.kotlinx.dataframe.api.MoveClause.to], [toStart][org.jetbrains.kotlinx.dataframe.api.MoveClause.toStart],
+ * [toEnd][org.jetbrains.kotlinx.dataframe.api.MoveClause.toEnd], [into][org.jetbrains.kotlinx.dataframe.api.MoveClause.into], [intoIndexed][org.jetbrains.kotlinx.dataframe.api.MoveClause.intoIndexed], [toTop][org.jetbrains.kotlinx.dataframe.api.MoveClause.toTop],
+ * [after][org.jetbrains.kotlinx.dataframe.api.MoveClause.after] or [under][org.jetbrains.kotlinx.dataframe.api.MoveClause.under], that return a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.Move.Grammar].
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
@@ -236,7 +229,7 @@ public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move("columnA", "columnB").after("columnC")
  * df.move("age").under("info")
  * ```
@@ -256,12 +249,10 @@ public fun <T, C> DataFrame<T>.move(vararg columns: KProperty<C>): MoveClause<T,
 // region moveTo
 
 /**
- * ## The MoveTo Operation
- *
  * Moves the specified [columns] to a new position specified by
  * [newColumnIndex] within the [DataFrame].
  *
- * Returns a new [DataFrame] with updated columns order.
+ * Returns a new [DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -343,12 +334,10 @@ internal interface MoveTo {
 }
 
 /**
- * ## The MoveTo Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] to a new position specified by
+ * Moves the specified [columns] to a new position specified by
  * [newColumnIndex] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -377,7 +366,7 @@ internal interface MoveTo {
  *
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  * ### Examples:
- * ```
+ * ```kotlin
  * df.moveTo(0) { length and age }
  * df.moveTo(2) { cols(1..5) }
  * ```
@@ -389,12 +378,10 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector
     move(columns).to(newColumnIndex)
 
 /**
- * ## The MoveTo Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] to a new position specified by
+ * Moves the specified [columns] to a new position specified by
  * [newColumnIndex] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -405,7 +392,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  * ### Examples:
- * ```
+ * ```kotlin
  * df.moveTo(0) { length and age }
  * df.moveTo(2) { cols(1..5) }
  * ```
@@ -428,10 +415,8 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: KPropert
 // region moveToStart
 
 /**
- * ## The MoveToStart Operation
- *
- * Moves the specified [columns] to the [DataFrame] start.
- * Returns a new [DataFrame] with updated columns order.
+ * Moves the specified [columns] to the [DataFrame] start (on top-level).
+ * Returns a new [DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -516,10 +501,8 @@ internal interface MoveToStart {
 public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toStart()
 
 /**
- * ## The MoveToStart Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start.
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -567,10 +550,8 @@ public fun <T> DataFrame<T>.moveToStart(columns: ColumnsSelector<T, *>): DataFra
 public fun <T> DataFrame<T>.moveToLeft(vararg columns: String): DataFrame<T> = moveToStart { columns.toColumnSet() }
 
 /**
- * ## The MoveToStart Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start.
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] start (on top-level).
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -612,10 +593,8 @@ public fun <T> DataFrame<T>.moveToStart(vararg columns: KProperty<*>): DataFrame
 // region moveToEnd
 
 /**
- * ## The MoveToEnd Operation
- *
  * Moves the specified [columns] to the [DataFrame] end.
- * Returns a new [DataFrame] with updated columns order.
+ * Returns a new [DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -700,10 +679,8 @@ internal interface MoveToEnd {
 public fun <T> DataFrame<T>.moveToRight(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toEnd()
 
 /**
- * ## The MoveToEnd Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -751,10 +728,8 @@ public fun <T> DataFrame<T>.moveToEnd(columns: ColumnsSelector<T, *>): DataFrame
 public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = moveToEnd { columns.toColumnSet() }
 
 /**
- * ## The MoveToEnd Operation
- *
- * Moves the specified [columns][org.jetbrains.kotlinx.dataframe.columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns order.
+ * Moves the specified [columns] to the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] end.
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with updated columns structure.
  *
  * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
@@ -799,9 +774,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
 // region into
 
 /**
- * ## Move Into
- *
- * Moves columns, previously selected with [move] into a new position specified with a
+ * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
  * If there are non-existent column groups on this path, they will be created.
  *
@@ -831,7 +804,7 @@ public fun <T> DataFrame<T>.moveToEnd(vararg columns: KProperty<*>): DataFrame<T
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { age and weight }.into { pathOf("info", it.name()) }
  * df.move { age and weight }.into { "info"[it.name()] }
  * df.move { name.firstName and name.lastName }.into { pathOf("fullName", it.name().dropLast(4)) }
@@ -857,9 +830,7 @@ public fun <T, C> MoveClause<T, C>.into(
 public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
 
 /**
- * ## Move IntoIndexed
- *
- * Moves columns, previously selected with [move] into a new position specified with a
+ * Moves columns, previously selected with [move] into a new position specified by a
  * given column path within the [DataFrame].
  * Provides selected column indices.
  * If there are non-existent column groups on this path, they will be created.
@@ -890,7 +861,7 @@ public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(c
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { cols { it.name == "user" } }
  *    .intoIndexed { it, index -> "allUsers"["user$index"] }
  * ```
@@ -912,8 +883,6 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
 // region under
 
 /**
- * ## Move Under
- *
  * Moves columns, previously selected with [move] under a new or
  * an existing column group within the [DataFrame].
  * If the column group doesn't exist, it will be created.
@@ -926,7 +895,7 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move("age", "weight").under("info")
  * df.move { age and weight }.under("info")
  * ```
@@ -943,10 +912,8 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
     column.path().let { path -> under { path } }
 
 /**
- * ## Move Under
- *
  * Moves columns, previously selected with [move] under a new or
- * an existing column group specified with a
+ * an existing column group specified by a
  * column path within the [DataFrame].
  * If there are non-existent column groups on this path, they will be created.
  *
@@ -976,7 +943,7 @@ public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFr
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * // move under an existing column group
  * df.move { age and weight }.under { info }
  * // move under a new column group
@@ -1001,17 +968,15 @@ public fun <T, C> MoveClause<T, C>.under(
 // region to
 
 /**
- * ## Move To
- *
  * Moves columns, previously selected with [move] to a new position specified
  * by [columnIndex] within the [DataFrame].
  *
- * Returns a new [DataFrame] with updated columns order.
+ * Returns a new [DataFrame] with updated columns structure.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { age and weight }.to(0)
  * df.move("age", "weight").to(2)
  * ```
@@ -1022,8 +987,6 @@ public fun <T, C> MoveClause<T, C>.under(
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
 /**
- * ## Move ToTop
- *
  * Moves columns, previously selected with [move] to the top-level within the [DataFrame].
  * Moved columns name can be specified via special ColumnSelectionDsl.
  *
@@ -1034,7 +997,7 @@ public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(c
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { info.age and info.weight }.toTop()
  * df.move { colsAtAnyDepth { it.name() == "number" } }.toTop { it.parentName + it.name() }
  * ```
@@ -1053,24 +1016,6 @@ public fun <T, C> MoveClause<T, C>.toTop(
 // region after
 
 /**
- * ## Move After
- *
- * Moves columns, previously selected with [move] to the position after the
- * specified [column] within the [DataFrame].
- *
- * Returns a new [DataFrame] with updated columns.
- *
- * See [Selecting Columns][SelectingColumns].
- *
- * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
- *
- * ### This After Overload
- */
-internal interface MoveAfter
-
-/**
- * ## Move After
- *
  * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position after the
  * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
@@ -1103,7 +1048,7 @@ internal interface MoveAfter
  * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { age and weight }.after { surname }
  * df.move { cols(0..2) }.after { col(3) }
  * ```
@@ -1116,8 +1061,6 @@ internal interface MoveAfter
 public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, true)
 
 /**
- * ## Move After
- *
  * Moves columns, previously selected with [move][org.jetbrains.kotlinx.dataframe.api.move] to the position after the
  * specified [column][org.jetbrains.kotlinx.dataframe.api.column] within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
  *
@@ -1132,7 +1075,7 @@ public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFram
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move("age", "weight").after("surname")
  * ```
  * @param [column] The [Column Name][String] specifying the column
@@ -1160,16 +1103,14 @@ fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBe
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 
 /**
- * ## Move ToStart
- *
- * Moves columns, previously selected with [move] to the [DataFrame] start.
+ * Moves columns, previously selected with [move] to the [DataFrame] start (on top-level).
  *
  * Returns a new [DataFrame] with updated columns.
  *
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { age and weight }.toStart()
  * df.move { colsOf<String>() }.toStart()
  * df.move("age", "weight").toStart()
@@ -1183,8 +1124,6 @@ public fun <T, C> MoveClause<T, C>.toStart(): DataFrame<T> = to(0)
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
 /**
- * ## Move ToEnd
- *
  * Moves columns, previously selected with [move] to the [DataFrame] end.
  *
  * Returns a new [DataFrame] with updated columns.
@@ -1192,7 +1131,7 @@ public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
  * For more information: [See `move` on the documentation website.](https://kotlin.github.io/dataframe/move.html)
  *
  * ### Examples:
- * ```
+ * ```kotlin
  * df.move { age and weight }.toEnd()
  * df.move { colsOf<String>() }.toEnd()
  * df.move("age", "weight").toEnd()
@@ -1208,7 +1147,7 @@ public fun <T, C> MoveClause<T, C>.toEnd(): DataFrame<T> = to(df.ncol)
  * This class itself does nothing—it is just a transitional step before specifying
  * where to move the selected columns.
  * It must be followed by one of the positioning methods
- * to produce a new [DataFrame] with the updated column order.
+ * to produce a new [DataFrame] with the updated column structure.
  *
  * Use the following methods to finalize the move:
  * - [to] – moves columns to a specific index.
