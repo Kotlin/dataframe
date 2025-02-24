@@ -44,13 +44,16 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
 }
 
 /**
- * ## Rename to camelCase
+ * ## Rename to "camelCase"
  *
- * This function renames all columns in this [DataFrame] to `camelCase` format.
- * All delimiters are removed, words are capitalized except for the first one.
+ * This function renames all columns in this [DataFrame] to the "camelCase" format.
+ *
+ * Removes all delimiters between words and capitalizes each word except the first one.
+ * Adds an underscore between consecutive numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
  *
  * This function supports converting names from `snake_case`, `PascalCase`, and other delimited formats
- * into a consistent `camelCase` representation.
+ * into a consistent "camelCase" representation.
  *
  * [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
  *
@@ -64,7 +67,7 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
  *
- * @return a [DataFrame] with column names converted to camel case format.
+ * @return a [DataFrame] with column names converted to "camelCase" format.
  */
 @Refine
 @Interpretable("RenameToCamelCase")
@@ -96,15 +99,17 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
     renameImpl(transform)
 
 /**
- * ## Rename to camelCase
+ * ## Rename to "camelCase"
  *
- * Renames the columns, previously selected with [rename] to `camelCase` format.
- * All delimiters are removed, words are capitalized except for the first one.
+ * Renames the columns, previously selected with [rename] to "camelCase" format.
+ * All delimiters between words are removed, words are capitalized except for the first one.
+ * Places underscore between numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
  *
  * Returns a [DataFrame] with updated column names.
  *
  * This function supports converting names from `snake_case`, `PascalCase`, and other delimited formats
- * into a consistent `camelCase` representation.
+ * into a consistent "camelCase" representation.
  *
  * ### Examples:
  * ```
@@ -114,7 +119,7 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
  *
- * @return a [DataFrame] with column names converted to camel case format.
+ * @return a [DataFrame] with column names converted to "camelCase" format.
  */
 @Refine
 @Interpretable("RenameToCamelCaseClause")
@@ -127,13 +132,15 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.ren
 /**
  * ## Rename to camelCase
  *
- * Renames this column to `camelCase` format.
- * All delimiters are removed, words are capitalized except for the first one.
+ * Renames this column to "camelCase" format.
+ * All delimiters between words are removed, words are capitalized except for the first one.
+ * Places underscore between numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
  *
  * Returns a [ColumnReference] with updated name.
  *
  * This function supports converting names from `snake_case`, `PascalCase`, and other delimited formats
- * into a consistent `camelCase` representation.
+ * into a consistent "camelCase" representation.
  *
  * ### Examples:
  * ```
@@ -142,8 +149,7 @@ public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.ren
  * "doner-case-name" -> "donerCaseName"
  * "UPPER_CASE_NAME -> upperCaseName"
  * ```
- *
- * @return a [ColumnReference] with the name converted to camel case format.
+ * @return a [ColumnReference] with the name converted to "camelCase" format.
  */
 @Suppress("UNCHECKED_CAST")
 public fun <T, C : ColumnReference<T>> C.renameToCamelCase(): C =

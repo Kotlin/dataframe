@@ -338,16 +338,20 @@ internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries:
     }
 
 // Single regex to split words by non-alphanumeric characters, camelCase, and numbers
-
 internal val CAMEL_DEFAULT_DELIMITERS_REGEX =
-    "[^a-zA-Z0-9]+|(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=\\d)(?=[a-zA-Z])|(?<=[a-zA-Z])(?=\\d)".toRegex()
+    (
+        "[^\\p{L}0-9]+|(?<=[\\p{Ll}])(?=[\\p{Lu}])|(?<=[\\p{Lu}])" +
+            "(?=[\\p{Lu}][\\p{Ll}])|(?<=\\d)(?=[\\p{L}])|(?<=[\\p{L}])(?=\\d)"
+    )
+        .toRegex()
 
 /**
  * Converts a string into lowerCamelCase using [delimiters].
  *
- * - Splits words using a unified regex that handles delimiters.
+ * - Splits this string matching given [delimiters] regular expression
+ * (by default, via [CAMEL_DEFAULT_DELIMITERS_REGEX] - any characters that are not letters or digits).
  * - If the string does not contain any letters or numbers, it remains unchanged.
- * - Places underscore ("_") between numbers.
+ * - Places underscore ("_") between consecutive numbers (that were split before).
  * - The first word remains in lowercase, and subsequent words are capitalized.
  *
  * Default behavior (with [CAMEL_DEFAULT_DELIMITERS_REGEX]):
@@ -382,21 +386,25 @@ internal val CAMEL_DEFAULT_DELIMITERS_REGEX =
  * "10-20-aa" -> "10_20Aa"
  * ```
  *
- * @return trhe formatted string in lowerCamelCase.
+ * @return the formatted string in lowerCamelCase.
  */
-public fun String.toCamelCaseByDelimiters(delimiters: Regex = CAMEL_DEFAULT_DELIMITERS_REGEX): String =
+public fun String.toCamelCaseByDelimiters(
+    delimiters: Regex = CAMEL_DEFAULT_DELIMITERS_REGEX,
+    numberSeparator: String = "_",
+): String =
     if (!this.any { it.isLetter() || it.isDigit() }) {
         this // If the string has no letters, return it unchanged
     } else {
         split(delimiters)
             .filter { it.isNotBlank() }
             .map { it.lowercase() }
-            .joinNumbers("_")
+            .joinNumbers(numberSeparator)
             .joinToCamelCaseString()
     }
 
 /**
  * Joins consecutive numbers in a list with the given [separator].
+ * Assumes that all numbers and strings are separated (after splitting via [CAMEL_DEFAULT_DELIMITERS_REGEX]).
  */
 private fun List<String>.joinNumbers(separator: CharSequence): List<String> {
     val result = mutableListOf<String>()

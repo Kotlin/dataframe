@@ -5,7 +5,7 @@ import org.junit.Test
 
 class ToCamelCase {
     @Test
-    fun defaultDelimitersUseCases() {
+    fun defaultDelimitersSimpleUseCases() {
         val testCases = listOf(
             "hello_world",
             "HelloWorld",
@@ -70,5 +70,17 @@ class ToCamelCase {
         testCases.zip(expected).forEach { (input, expected) ->
             input.toCamelCaseByDelimiters() shouldBe expected
         }
+    }
+
+    @Test
+    fun specialCharacters() {
+        "música_lírica".toCamelCaseByDelimiters() shouldBe "músicaLírica"
+        "тут был Андрей".toCamelCaseByDelimiters() shouldBe "тутБылАндрей"
+        "汉字_拼音".toCamelCaseByDelimiters() shouldBe "汉字拼音"
+        "X Æ A-12 34".toCamelCaseByDelimiters() shouldBe "xÆA12_34"
+        "kæt_wɪð_æk!t".toCamelCaseByDelimiters() shouldBe "kætWɪðÆkT"
+        "Gëëxplodeerd,_of_geïntegreerd?".toCamelCaseByDelimiters() shouldBe "gëëxplodeerdOfGeïntegreerd"
+        "Äüßergewöhnlich_könnte_flüssig_sein,_aber_wie_öfter?".toCamelCaseByDelimiters() shouldBe
+            "äüßergewöhnlichKönnteFlüssigSeinAberWieÖfter"
     }
 }
