@@ -62,7 +62,7 @@ class Read {
         val row = DataRow.readJson(file)
         // SampleEnd
         row.columnNames() shouldBe listOf("A", "B", "C", "D")
-        row.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<Int>(), typeOf<Double>(), typeOf<Boolean>())
+        row.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<Int>(), typeOf<Float>(), typeOf<Boolean>())
     }
 
     @Test
