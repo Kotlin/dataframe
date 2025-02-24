@@ -363,7 +363,30 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
 @Deprecated(GUESS_VALUE_TYPE, level = DeprecationLevel.HIDDEN)
 @PublishedApi
 internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, listifyValues: Boolean = false): KType =
-    guessValueType(values = values, upperBound = upperBound, listifyValues = listifyValues, allColsMakesRow = false)
+    guessValueType(
+        values = values,
+        upperBound = upperBound,
+        listifyValues = listifyValues,
+        allColsMakesRow = false,
+        unifyNumbers = false,
+    )
+
+/** Just for binary compatibility, as it's @PublishedApi. */
+@Deprecated(GUESS_VALUE_TYPE, level = DeprecationLevel.HIDDEN)
+@PublishedApi
+internal fun guessValueType(
+    values: Sequence<Any?>,
+    upperBound: KType? = null,
+    listifyValues: Boolean = false,
+    allColsMakesRow: Boolean = false,
+): KType =
+    guessValueType(
+        values = values,
+        upperBound = upperBound,
+        listifyValues = listifyValues,
+        allColsMakesRow = allColsMakesRow,
+        unifyNumbers = false,
+    )
 
 /**
  * Returns the guessed value type of the given [values] sequence.
@@ -381,6 +404,10 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
  * @param allColsMakesRow if true, then, if all values are non-null columns, we assume
  *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
  *   so the function will return [DataRow].
+ * @param unifyNumbers if true, then all number types encountered will be unified to the smallest possible
+ *   number-type that can hold all number values lossless in [values]. See [commonNumberClass].
+ *   Unsigned numbers are not supported.
+ *   If false, the result of encountering multiple number types would be [Number].
  */
 @PublishedApi
 internal fun guessValueType(
@@ -388,6 +415,7 @@ internal fun guessValueType(
     upperBound: KType? = null,
     listifyValues: Boolean = false,
     allColsMakesRow: Boolean = false,
+    unifyNumbers: Boolean = false,
 ): KType {
     val classes = mutableSetOf<KClass<*>>()
     val collectionClasses = mutableSetOf<KClass<out Collection<*>>>()
@@ -442,6 +470,18 @@ internal fun guessValueType(
     val allListsWithRows = classesInCollection.isNotEmpty() &&
         classesInCollection.all { it.isSubclassOf(DataRow::class) } &&
         !nullsInCollection
+
+    if (unifyNumbers) {
+        val nothingClass = Nothing::class
+        val usedNumberClasses = classes.filter {
+            it.isSubclassOf(Number::class) && it != nothingClass
+        }
+        if (usedNumberClasses.isNotEmpty()) {
+            val unifiedNumberClass = usedNumberClasses.unifiedNumberClass() as KClass<Number>
+            classes -= usedNumberClasses
+            classes += unifiedNumberClass
+        }
+    }
 
     return when {
         classes.isNotEmpty() -> {
