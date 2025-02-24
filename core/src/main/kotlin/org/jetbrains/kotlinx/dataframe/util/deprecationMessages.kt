@@ -60,6 +60,18 @@ internal const val IS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.isUrl"
 internal const val MINUS = "This minus overload will be removed in favor of `remove`. $MESSAGE_0_16"
 internal const val MINUS_REPLACE = "this.remove(columns)"
 
+internal const val MOVE_TO_LEFT = "This `moveToLeft` overload will be removed in favor of `moveToStart`. $MESSAGE_0_16"
+internal const val MOVE_TO_LEFT_REPLACE = "this.moveToStart(columns)"
+
+internal const val MOVE_TO_RIGHT = "This `moveToRight` overload will be removed in favor of `moveToEnd`. $MESSAGE_0_16"
+internal const val MOVE_TO_RIGHT_REPLACE = "this.moveToEnd(columns)"
+
+internal const val TO_LEFT = "This `toLeft` overload will be removed in favor of `toStart`. $MESSAGE_0_16"
+internal const val TO_LEFT_REPLACE = "this.toStart()"
+
+internal const val TO_RIGHT = "This `toRight` overload will be removed in favor of `toEnd`. $MESSAGE_0_16"
+internal const val TO_RIGHT_REPLACE = "this.toEnd()"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
