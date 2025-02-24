@@ -93,15 +93,28 @@ data class Output(val a: Int, val b: Int, val c: Int)
 val result = df2.toListOf<Output>()
 ```
 
+<!---END-->
+
+```kotlin
+data class Output(val a: Int, val b: Int, val c: Int)
+
+val result = df2.toListOf<Output>()
+```
+
 Alternatively, one can create lazy [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-sequence/) objects.
 This avoids holding the entire list of objects in memory as objects are created on the fly as needed.
 
 <!---FUN listInterop5-->
 
 ```kotlin
-data class Output(val a: Int, val b: Int, val c: Int)
+val df = dataFrameOf("name", "lastName", "age")("John", "Doe", 21)
+    .group("name", "lastName").into("fullName")
 
-val result = df2.toSequenceOf<Output>()
+data class FullName(val name: String, val lastName: String)
+
+data class Person(val fullName: FullName, val age: Int)
+
+val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
 ```
 
 <!---END-->
