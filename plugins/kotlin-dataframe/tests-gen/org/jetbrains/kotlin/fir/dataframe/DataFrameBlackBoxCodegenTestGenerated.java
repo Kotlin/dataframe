@@ -233,6 +233,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("groupBy_sum.kt")
+  public void testGroupBy_sum() {
+        runTest("testData/box/groupBy_sum.kt");
+    }
+
+  @Test
   @TestMetadata("groupBy_extractSchema.kt")
   public void testGroupBy_extractSchema() {
     runTest("testData/box/groupBy_extractSchema.kt");
