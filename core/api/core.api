@@ -9554,11 +9554,6 @@ public final class org/jetbrains/kotlinx/dataframe/columns/SingleColumn$DefaultI
 	public static fun resolve (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnResolutionContext;)Ljava/util/List;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/columns/SingleColumnKt {
-	public static final fun isSingleColumn (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;)Z
-	public static final fun isSingleColumnWithGroup (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Ljava/util/List;)Z
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/columns/TypeSuggestion {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion$Companion;
 }
