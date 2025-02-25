@@ -20,6 +20,7 @@ import org.apache.poi.util.DefaultTempFileCreationStrategy
 import org.apache.poi.util.LocaleUtil
 import org.apache.poi.util.LocaleUtil.getUserTimeZone
 import org.apache.poi.util.TempFile
+import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -493,15 +494,19 @@ public fun <T> DataFrame<T>.writeExcel(
     keepFile: Boolean = false,
 ) {
     val factory =
-        if (keepFile) {
-            when (workBookType) {
-                WorkBookType.XLS -> HSSFWorkbook(file.inputStream())
-                WorkBookType.XLSX -> XSSFWorkbook(file.inputStream())
+        // Write to an existing file with `keepFile` flag
+        if (keepFile && file.exists() && file.length() > 0L) {
+            file.inputStream().use { fis ->
+                when (workBookType) {
+                    WorkBookType.XLS -> HSSFWorkbook(fis)
+                    WorkBookType.XLSX -> XSSFWorkbook(fis)
+                }
             }
         } else {
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook()
-                WorkBookType.XLSX -> XSSFWorkbook()
+                // Use streaming mode for a new XLSX file
+                WorkBookType.XLSX -> SXSSFWorkbook()
             }
         }
     return file.outputStream().use {
