@@ -56,4 +56,32 @@ class GroupByTests {
             getFrameColumn("d") into "e"
         }["e"].type() shouldBe typeOf<List<AnyFrame>>()
     }
+
+    @Test
+    fun `sum`() {
+        val personsDf = dataFrameOf("name", "age", "city", "weight")(
+            "Alice", 15, "London", 99.5,
+            "Bob", 20, "Paris", 140.0,
+            "Charlie", 100, "Dubai", 75,
+            "Rose", 1, "Moscow", 45.3,
+            "Dylan", 35, "London", 23.4,
+            "Eve", 40, "Paris", 56.7,
+            "Frank", 55, "Dubai", 78.9,
+            "Grace", 29, "Moscow", 67.8,
+            "Hank", 60, "Paris", 80.2,
+            "Isla", 22, "London", 75.1,
+            )
+
+        val newDf = personsDf.groupBy ( "city" ).sum("age")
+        val i: Any? = newDf["age"][0]
+        i shouldBe 72
+
+        val newDf2 = personsDf.groupBy ( "city" ).sumOf("ageSum") { "age"<Int>() }
+        val i2: Any? = newDf2["ageSum"][0]
+        i2 shouldBe 72
+
+        val newDf3 = personsDf.groupBy ( "city" ).sumFor("age")
+        val i3: Any? = newDf3["age"][0]
+        i3 shouldBe 72
+    }
 }
