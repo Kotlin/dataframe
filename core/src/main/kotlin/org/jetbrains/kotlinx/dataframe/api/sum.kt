@@ -97,7 +97,7 @@ public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(numberColumns())
 public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateFor(this, columns)
 
-// TODO: what's the difference with the sum { columnName } ?
+// TODO: seems like toNumberColumns converted columns to NumberColumns, but it doesn't convert
 public fun <T> Grouped<T>.sumFor(vararg columns: String): DataFrame<T> = sumFor { columns.toNumberColumns() }
 
 @AccessApiOverload
@@ -108,6 +108,8 @@ public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> =
     sumFor { columns.toColumnSet() }
 
+/*@Refine
+@Interpretable("GroupBySum0")*/
 public fun <T, C : Number> Grouped<T>.sum(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateAll(this, name, columns)
 

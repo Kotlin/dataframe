@@ -93,6 +93,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByCount0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByInto
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMaxOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMinOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceExpression
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceInto
@@ -304,6 +305,7 @@ internal inline fun <reified T> String.load(): T {
         "ReorderColumnsByName" -> ReorderColumnsByName()
         "GroupByCount0" -> GroupByCount0()
         "GroupBySumOf" -> GroupBySumOf()
+        "GroupBySum0" -> GroupBySum0()
         "GroupByReducePredicate" -> GroupByReducePredicate()
         "GroupByReduceExpression" -> GroupByReduceExpression()
         "GroupByReduceInto" -> GroupByReduceInto()

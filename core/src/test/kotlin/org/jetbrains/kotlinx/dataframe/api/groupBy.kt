@@ -58,30 +58,55 @@ class GroupByTests {
     }
 
     @Test
-    fun `sum`() {
-        val personsDf = dataFrameOf("name", "age", "city", "weight")(
-            "Alice", 15, "London", 99.5,
-            "Bob", 20, "Paris", 140.0,
-            "Charlie", 100, "Dubai", 75,
-            "Rose", 1, "Moscow", 45.3,
-            "Dylan", 35, "London", 23.4,
-            "Eve", 40, "Paris", 56.7,
-            "Frank", 55, "Dubai", 78.9,
-            "Grace", 29, "Moscow", 67.8,
-            "Hank", 60, "Paris", 80.2,
-            "Isla", 22, "London", 75.1,
+    fun sum() {
+        val personsDf = dataFrameOf("name", "age", "city", "weight", "height")(
+            "Alice", 15, "London", 99.5, "1.85",
+            "Bob", 20, "Paris", 140.0, "1.35",
+            "Charlie", 100, "Dubai", 75, "1.95",
+            "Rose", 1, "Moscow", 45.3, "0.79",
+            "Dylan", 35, "London", 23.4, "1.83",
+            "Eve", 40, "Paris", 56.7, "1.85",
+            "Frank", 55, "Dubai", 78.9, "1.35",
+            "Grace", 29, "Moscow", 67.8, "1.65",
+            "Hank", 60, "Paris", 80.2, "1.75",
+            "Isla", 22, "London", 75.1, "1.85",
             )
 
-        val newDf = personsDf.groupBy ( "city" ).sum("age")
-        val i: Any? = newDf["age"][0]
-        i shouldBe 72
+        // scenario #0: all numerical columns
+        val res0 = personsDf.groupBy ( "city" ).sum()
+        res0.columnNames() shouldBe listOf("city", "age", "weight")
 
-        val newDf2 = personsDf.groupBy ( "city" ).sumOf("ageSum") { "age"<Int>() }
-        val i2: Any? = newDf2["ageSum"][0]
-        i2 shouldBe 72
+        val sum01 = res0["age"][0] as Int
+        sum01 shouldBe 72
+        val sum02 = res0["weight"][0] as Double
+        sum02 shouldBe 198.0
 
-        val newDf3 = personsDf.groupBy ( "city" ).sumFor("age")
-        val i3: Any? = newDf3["age"][0]
-        i3 shouldBe 72
+        // scenario #1: particular column
+        val res1 = personsDf.groupBy ( "city" ).sumFor("age")
+        res1.columnNames() shouldBe listOf("city", "age")
+
+        val sum11 = res1["age"][0] as Int
+        sum11 shouldBe 72
+
+        // scenario #1.1: particular column via sum
+        val res11 = personsDf.groupBy ( "city" ).sum("age")
+        res11.columnNames() shouldBe listOf("city", "age")
+
+        val sum111 = res11["age"][0] as Int
+        sum111 shouldBe 72
+
+        // scenario #2: particular column with new name - schema changes
+        val res2 = personsDf.groupBy ( "city" ).sum("age", name = "newAge")
+        res2.columnNames() shouldBe listOf("city", "newAge")
+        res2.print()
+        val sum21 = res2["newAge"][0] as Int
+        sum21 shouldBe 72
+
+        // scenario #3: create new column via expression
+        val res3 = personsDf.groupBy ( "city" ).sumOf(resultName = "ageSum") { "age"<Int>() * 10 }
+        res3.columnNames() shouldBe listOf("city", "ageSum")
+
+        val sum31 = res3["ageSum"][0] as Int
+        sum31 shouldBe 720
     }
 }
