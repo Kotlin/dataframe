@@ -82,7 +82,7 @@ for Gradle or the [Kotlin Jupyter kernel](gettingStartedJupyterNotebook.md)
 
 </tip>
 
-After your data is transformed, [`DataFrame`](DataFrame.md) instances can be exported 
+After your data is transformed, [`DataFrame`](DataFrame.md) instances can be exported eagerly
 into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
 
 <!---FUN listInterop4-->
@@ -91,6 +91,30 @@ into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-l
 data class Output(val a: Int, val b: Int, val c: Int)
 
 val result = df2.toListOf<Output>()
+```
+
+<!---END-->
+
+```kotlin
+data class Output(val a: Int, val b: Int, val c: Int)
+
+val result = df2.toListOf<Output>()
+```
+
+Alternatively, one can create lazy [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-sequence/) objects.
+This avoids holding the entire list of objects in memory as objects are created on the fly as needed.
+
+<!---FUN listInterop5-->
+
+```kotlin
+val df = dataFrameOf("name", "lastName", "age")("John", "Doe", 21)
+    .group("name", "lastName").into("fullName")
+
+data class FullName(val name: String, val lastName: String)
+
+data class Person(val fullName: FullName, val age: Int)
+
+val persons = df.toListOf<Person>() // [Person(fullName = FullName(name = "John", lastName = "Doe"), age = 21)]
 ```
 
 <!---END-->

@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableSingleColumn
 
@@ -23,11 +22,3 @@ public interface SingleColumn<out C> : ColumnsResolver<C> {
 
     public fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
 }
-
-public fun ColumnsResolver<*>.isSingleColumn(): Boolean = this is SingleColumn<*>
-
-/**
- * Returns true if [this] is a [SingleColumn] and [cols] consists of a single column group.
- */
-public fun ColumnsResolver<*>.isSingleColumnWithGroup(cols: List<ColumnWithPath<*>>): Boolean =
-    isSingleColumn() && cols.singleOrNull()?.isColumnGroup() == true

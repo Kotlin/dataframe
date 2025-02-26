@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.isSingleColumnWithGroup
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet
@@ -8052,14 +8051,16 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
 }
 
 /**
- * If [this] is a [SingleColumn] containing a single [ColumnGroup], it
+ * If [this] is a [SingleColumn] containing a single [ColumnGroup]
+ * (like [SingleColumn][SingleColumn]`<`[AnyRow][AnyRow]`>` or [ColumnsSelectionDsl][ColumnsSelectionDsl]), it
  * returns a [(transformable) ColumnSet][TransformableColumnSet] containing the children of this [ColumnGroup],
- * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this].
+ * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this]
+ * (like when [this] is a [ColumnSet]).
  */
 internal fun ColumnsResolver<*>.allColumnsInternal(removePaths: Boolean = false): TransformableColumnSet<*> =
-    transform {
-        if (isSingleColumnWithGroup(it)) {
-            it.single().let {
+    transform { cols ->
+        if (this is SingleColumn<*> && cols.singleOrNull()?.isColumnGroup() == true) {
+            cols.single().let {
                 if (removePaths) {
                     it.asColumnGroup().columns().map(AnyCol::addPath)
                 } else {
@@ -8067,7 +8068,7 @@ internal fun ColumnsResolver<*>.allColumnsInternal(removePaths: Boolean = false)
                 }
             }
         } else {
-            it
+            cols
         }
     }
 
