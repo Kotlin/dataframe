@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
+import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -47,6 +48,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.readJson
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import org.jetbrains.kotlinx.dataframe.parseJsonStr
@@ -54,6 +56,7 @@ import org.jetbrains.kotlinx.dataframe.testJson
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
+import kotlin.Double
 import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -122,7 +125,7 @@ class JsonTests {
         df.rowsCount() shouldBe 2
         df["a"].type() shouldBe typeOf<Int>()
         df["b"].type() shouldBe typeOf<Comparable<*>>()
-        df["c"].type() shouldBe typeOf<Double?>()
+        df["c"].type() shouldBe typeOf<Float?>()
     }
 
     @Test
@@ -140,7 +143,7 @@ class JsonTests {
         df.rowsCount() shouldBe 2
         df["a"].type() shouldBe typeOf<Int>()
         df["b"].type() shouldBe typeOf<Comparable<*>>()
-        df["c"].type() shouldBe typeOf<Double?>()
+        df["c"].type() shouldBe typeOf<Float?>()
     }
 
     @Test
@@ -199,7 +202,7 @@ class JsonTests {
         val df = DataFrame.readJsonStr(json).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
-        df["a"].type() shouldBe typeOf<List<Number>>()
+        df["a"].type() shouldBe typeOf<List<Double>>()
         df[1]["a"] shouldBe emptyList<Int>()
     }
 
@@ -217,7 +220,7 @@ class JsonTests {
         val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
-        df["a"].type() shouldBe typeOf<List<Number>>()
+        df["a"].type() shouldBe typeOf<List<Double>>()
         df[1]["a"] shouldBe emptyList<Int>()
     }
 
@@ -228,7 +231,7 @@ class JsonTests {
             """
             [
                 {"a":[ {"b":2}, {"c":3} ]},
-                {"a":[ {"b":4}, {"d":5} ]}
+                {"a":[ {"b":4.0}, {"d":5} ]}
             ]
             """.trimIndent()
         val df = DataFrame.readJsonStr(json).alsoDebug()
@@ -238,7 +241,7 @@ class JsonTests {
         group[0].alsoDebug().let {
             it.columnsCount() shouldBe 3
             it.rowsCount() shouldBe 2
-            it["b"].type() shouldBe typeOf<Int?>()
+            it["b"].type() shouldBe typeOf<Double?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
             it["b"].values.toList() shouldBe listOf(2, null)
@@ -249,7 +252,7 @@ class JsonTests {
         group[1].alsoDebug().let {
             it.columnsCount() shouldBe 3
             it.rowsCount() shouldBe 2
-            it["b"].type() shouldBe typeOf<Int?>()
+            it["b"].type() shouldBe typeOf<Double?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
             it["b"].values.toList() shouldBe listOf(4, null)
@@ -383,7 +386,7 @@ class JsonTests {
         ).alsoDebug("df:")
 
         val res = DataFrame.readJsonStr(df.toJson()).alsoDebug("res:")
-        res shouldBe df
+        res shouldBe df.convert { colsOf<Double?>() }.toFloat()
     }
 
     @Test
@@ -396,21 +399,17 @@ class JsonTests {
 
         val res =
             DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS).alsoDebug("res:")
-        res shouldBe df
-    }
-
-    @Test
-    fun `NaN double serialization`() {
-        val df = dataFrameOf("v")(1.1, Double.NaN)
-        df["v"].type() shouldBe typeOf<Double>()
-        DataFrame.readJsonStr(df.toJson()) shouldBe df
+        res shouldBe df.convert { colsOf<Double?>() }.toFloat()
     }
 
     @Test
     fun `NaN double serialization Any`() {
         val df = dataFrameOf("v")(1.1, Double.NaN)
         df["v"].type() shouldBe typeOf<Double>()
-        DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS) shouldBe df
+
+        val df2 = DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS)
+        df2["v"].type() shouldBe typeOf<Float>()
+        df2 shouldBe df.convert("v").toFloat()
     }
 
     @Test
@@ -583,7 +582,7 @@ class JsonTests {
         val group = df["a"] as ColumnGroup<*>
         group.columnsCount() shouldBe 6
         group["b"].type() shouldBe typeOf<Int?>()
-        group["value"].type() shouldBe typeOf<Double?>()
+        group["value"].type() shouldBe typeOf<Float?>()
         group["value1"].type() shouldBe typeOf<String?>()
         group["array"].type() shouldBe nothingType(nullable = true)
 
@@ -922,7 +921,7 @@ class JsonTests {
 
             it["b"].type() shouldBe typeOf<Any?>()
             it["c"].type() shouldBe typeOf<Int?>()
-            it["d"].type() shouldBe typeOf<Any?>()
+            it["d"].type() shouldBe nullableNothingType
 
             it[0].toMap() shouldBe mapOf("b" to 1, "c" to null, "d" to null)
             it[1].toMap() shouldBe mapOf("b" to listOf(1, 2, 3), "c" to 2, "d" to null)
