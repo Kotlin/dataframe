@@ -281,8 +281,8 @@ public fun DataFrame.Companion.readExcel(
  */
 @JvmInline
 public value class StringColumns
-@Interpretable("StringColumns")
-constructor(public val range: String)
+    @Interpretable("StringColumns")
+    constructor(public val range: String)
 
 public fun StringColumns.toFormattingOptions(formatter: DataFormatter = DataFormatter()): FormattingOptions =
     FormattingOptions(range, formatter)
@@ -504,6 +504,7 @@ public fun <T> DataFrame<T>.writeExcel(
         } else {
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook()
+
                 // Use streaming mode for a new XLSX file
                 WorkBookType.XLSX -> SXSSFWorkbook()
             }
