@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
 import org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl
@@ -78,8 +79,9 @@ internal interface AnyKeyValueProperty : KeyValueProperty<Any?> {
     override val value: Any?
 }
 
-internal fun readJson(
+internal fun readJsonImpl(
     parsed: Any?,
+    unifyNumbers: Boolean,
     header: List<String>,
     keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
@@ -89,12 +91,14 @@ internal fun readJson(
             when (parsed) {
                 is JsonArray -> fromJsonListArrayAndValueColumns(
                     records = parsed,
+                    unifyNumbers = unifyNumbers,
                     header = header,
                     keyValuePaths = keyValuePaths,
                 )
 
                 else -> fromJsonListArrayAndValueColumns(
                     records = listOf(parsed),
+                    unifyNumbers = unifyNumbers,
                     keyValuePaths = keyValuePaths,
                 )
             }
@@ -104,12 +108,14 @@ internal fun readJson(
             when (parsed) {
                 is JsonArray -> fromJsonListAnyColumns(
                     records = parsed,
+                    unifyNumbers = unifyNumbers,
                     header = header,
                     keyValuePaths = keyValuePaths,
                 )
 
                 else -> fromJsonListAnyColumns(
                     records = listOf(parsed),
+                    unifyNumbers = unifyNumbers,
                     keyValuePaths = keyValuePaths,
                 )
             }
@@ -123,6 +129,7 @@ internal fun readJson(
  * A.k.a. [TypeClashTactic.ANY_COLUMNS].
  *
  * @param records List of json elements to be converted to a [DataFrame].
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
@@ -130,6 +137,7 @@ internal fun readJson(
  */
 internal fun fromJsonListAnyColumns(
     records: List<*>,
+    unifyNumbers: Boolean,
     keyValuePaths: List<JsonPath> = emptyList(),
     header: List<String> = emptyList(),
     jsonPath: JsonPath = JsonPath(),
@@ -185,6 +193,7 @@ internal fun fromJsonListAnyColumns(
                         val parsed =
                             fromJsonListAnyColumns(
                                 records = listOf(v),
+                                unifyNumbers = unifyNumbers,
                                 keyValuePaths = keyValuePaths,
                                 jsonPath = jsonPath.replaceLastWildcardWithIndex(i),
                             )
@@ -200,6 +209,7 @@ internal fun fromJsonListAnyColumns(
                     is JsonArray -> {
                         val parsed = fromJsonListAnyColumns(
                             records = v,
+                            unifyNumbers = unifyNumbers,
                             keyValuePaths = keyValuePaths,
                             jsonPath = jsonPath.replaceLastWildcardWithIndex(i).appendArrayWithWildcard(),
                         )
@@ -240,7 +250,7 @@ internal fun fromJsonListAnyColumns(
                     else -> collector.add(v)
                 }
             }
-            val column = createColumnGuessingType(VALUE_COLUMN_NAME, collector.values, unifyNumbers = true)
+            val column = createColumnGuessingType(VALUE_COLUMN_NAME, collector.values, unifyNumbers = unifyNumbers)
             val res = if (nanIndices.isNotEmpty()) {
                 fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                     var j = 0
@@ -281,6 +291,7 @@ internal fun fromJsonListAnyColumns(
             }
             val parsed = fromJsonListAnyColumns(
                 records = values,
+                unifyNumbers = unifyNumbers,
                 keyValuePaths = keyValuePaths,
                 jsonPath = jsonPath.appendArrayWithWildcard(),
             )
@@ -320,6 +331,7 @@ internal fun fromJsonListAnyColumns(
                         val map = record.mapValues { (key, value) ->
                             val parsed = fromJsonListAnyColumns(
                                 records = listOf(value),
+                                unifyNumbers = unifyNumbers,
                                 keyValuePaths = keyValuePaths,
                                 jsonPath = jsonPath.append(key),
                             )
@@ -330,7 +342,7 @@ internal fun fromJsonListAnyColumns(
                             }
                         }
                         val valueType = map.values.map {
-                            guessValueType(sequenceOf(it), unifyNumbers = true)
+                            guessValueType(sequenceOf(it), unifyNumbers = unifyNumbers)
                         }.commonType()
 
                         valueTypes += valueType
@@ -340,7 +352,7 @@ internal fun fromJsonListAnyColumns(
                             createColumnGuessingType(
                                 values = map.values,
                                 suggestedType = TypeSuggestion.Use(valueType),
-                                unifyNumbers = true,
+                                unifyNumbers = unifyNumbers,
                             ).named(KeyValueProperty<*>::value.name),
                         )
                     }
@@ -394,6 +406,7 @@ internal fun fromJsonListAnyColumns(
 
                 val parsed = fromJsonListAnyColumns(
                     records = values,
+                    unifyNumbers = unifyNumbers,
                     keyValuePaths = keyValuePaths,
                     jsonPath = jsonPath.append(colName),
                 )
@@ -437,6 +450,7 @@ private fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is Unna
  * A.k.a. [TypeClashTactic.ARRAY_AND_VALUE_COLUMNS].
  *
  * @param records List of json elements to be converted to a [DataFrame].
+ * @param unifyNumbers Whether to [unify the numbers that are read][UnifyingNumbers].
  * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
  *     will be created.
  * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
@@ -444,6 +458,7 @@ private fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is Unna
  */
 internal fun fromJsonListArrayAndValueColumns(
     records: List<*>,
+    unifyNumbers: Boolean,
     keyValuePaths: List<JsonPath> = emptyList(),
     header: List<String> = emptyList(),
     jsonPath: JsonPath = JsonPath(),
@@ -504,6 +519,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         val map = record.mapValues { (key, value) ->
                             val parsed = fromJsonListArrayAndValueColumns(
                                 records = listOf(value),
+                                unifyNumbers = unifyNumbers,
                                 keyValuePaths = keyValuePaths,
                                 jsonPath = jsonPath.append(key),
                             )
@@ -515,7 +531,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         }
                         val valueType =
                             map.values
-                                .map { guessValueType(sequenceOf(it), unifyNumbers = true) }
+                                .map { guessValueType(sequenceOf(it), unifyNumbers = unifyNumbers) }
                                 .commonType()
 
                         dataFrameOf(
@@ -523,7 +539,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             createColumnGuessingType(
                                 values = map.values,
                                 suggestedType = TypeSuggestion.Use(valueType),
-                                unifyNumbers = true,
+                                unifyNumbers = unifyNumbers,
                             ).named(KeyValueProperty<*>::value.name),
                         )
                     }
@@ -589,7 +605,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                 else -> collector.add(v)
                             }
                         }
-                        val column = createColumnGuessingType(colName, collector.values, unifyNumbers = true)
+                        val column = createColumnGuessingType(colName, collector.values, unifyNumbers = unifyNumbers)
                         val res = if (nanIndices.isNotEmpty()) {
                             fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                                 var j = 0
@@ -626,6 +642,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         }
                         val parsed = fromJsonListArrayAndValueColumns(
                             records = values,
+                            unifyNumbers = unifyNumbers,
                             keyValuePaths = keyValuePaths,
                             jsonPath = jsonPath.appendArrayWithWildcard(),
                         )
@@ -663,6 +680,7 @@ internal fun fromJsonListArrayAndValueColumns(
 
                         val parsed = fromJsonListArrayAndValueColumns(
                             records = values,
+                            unifyNumbers = unifyNumbers,
                             keyValuePaths = keyValuePaths,
                             jsonPath = jsonPath.append(colName),
                         )

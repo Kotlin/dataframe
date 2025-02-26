@@ -60,6 +60,8 @@ internal const val IS_URL_IMPORT = "org.jetbrains.kotlinx.dataframe.io.isUrl"
 internal const val MINUS = "This minus overload will be removed in favor of `remove`. $MESSAGE_0_16"
 internal const val MINUS_REPLACE = "this.remove(columns)"
 
+internal const val READ_JSON = "This function is just here for binary compatibility. $MESSAGE_0_16"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17

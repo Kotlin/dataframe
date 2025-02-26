@@ -36,7 +36,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.io.SERIALIZATION_VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
@@ -46,7 +45,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
-import org.jetbrains.kotlinx.dataframe.impl.io.readJson
+import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
@@ -296,6 +295,31 @@ class JsonTests {
             it["c"].values.toList() shouldBe listOf(null, null)
             it["d"].values.toList() shouldBe listOf(null, 5)
         }
+    }
+
+    @Test
+    fun `json and number unification`() {
+        @Language("json")
+        val json =
+            """
+            [
+                {"a":1},
+                {"a":2.0},
+                {"a":3},
+                {"a":4.5}
+            ]
+            """.trimIndent()
+        val df1 = DataFrame.readJsonStr(json, unifyNumbers = true).alsoDebug()
+        df1.columnsCount() shouldBe 1
+        df1.rowsCount() shouldBe 4
+        df1["a"].type() shouldBe typeOf<Double>()
+        df1["a"].values.toList() shouldBe listOf(1.0, 2.0, 3.0, 4.5)
+
+        val df2 = DataFrame.readJsonStr(json, unifyNumbers = false).alsoDebug()
+        df2.columnsCount() shouldBe 1
+        df2.rowsCount() shouldBe 4
+        df2["a"].type() shouldBe typeOf<Number>()
+        df2["a"].values.toList() shouldBe listOf(1, 2.0f, 3, 4.5f)
     }
 
     @Test
@@ -1114,7 +1138,7 @@ class JsonTests {
         // https://github.com/Kotlin/kotlinx.serialization/issues/2511
         val json = Json.decodeFromString<JsonElement>("""[jetbrains, jetbrains-youtrack, youtrack, youtrack-api]""")
         shouldThrow<IllegalStateException> {
-            readJson(json, emptyList())
+            readJsonImpl(json, true, emptyList())
         }
     }
 }
