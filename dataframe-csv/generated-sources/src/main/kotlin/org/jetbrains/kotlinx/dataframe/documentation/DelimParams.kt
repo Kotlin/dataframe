@@ -17,16 +17,28 @@ import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 @Suppress("ktlint:standard:class-naming", "ClassName", "KDocUnresolvedReference")
 internal object DelimParams {
 
-    /** @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param path The file path to read.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface PATH_READ
 
-    /** @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param file The file to read.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface FILE_READ
 
-    /** @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param url The URL from which to fetch the data.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface URL_READ
 
-    /** @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param fileOrUrl The file path or URL to read the data from.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface FILE_OR_URL_READ
 
     /** @param inputStream Represents the file to read. */
