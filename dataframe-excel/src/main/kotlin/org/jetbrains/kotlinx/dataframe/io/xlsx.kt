@@ -281,8 +281,8 @@ public fun DataFrame.Companion.readExcel(
  */
 @JvmInline
 public value class StringColumns
-    @Interpretable("StringColumns")
-    constructor(public val range: String)
+@Interpretable("StringColumns")
+constructor(public val range: String)
 
 public fun StringColumns.toFormattingOptions(formatter: DataFormatter = DataFormatter()): FormattingOptions =
     FormattingOptions(range, formatter)
@@ -496,16 +496,14 @@ public fun <T> DataFrame<T>.writeExcel(
     val factory =
         // Write to an existing file with `keepFile` flag
         if (keepFile && file.exists() && file.length() > 0L) {
-            file.inputStream().use { fis ->
-                when (workBookType) {
-                    WorkBookType.XLS -> HSSFWorkbook(fis)
-                    WorkBookType.XLSX -> XSSFWorkbook(fis)
-                }
+            val fis = file.inputStream()
+            when (workBookType) {
+                WorkBookType.XLS -> HSSFWorkbook(fis)
+                WorkBookType.XLSX -> XSSFWorkbook(fis)
             }
         } else {
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook()
-
                 // Use streaming mode for a new XLSX file
                 WorkBookType.XLSX -> SXSSFWorkbook()
             }
