@@ -310,8 +310,9 @@ DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 ### Column type inference from JSON
 
 Type inference for JSON is much simpler than for CSV.
-JSON string literals are always supposed to have String type. Number literals
-take different `Number` kinds. Boolean literals are converted to `Boolean`.
+JSON string literals always become a `String`.
+Number literals are converted to a unified `Number` type which will fit all encountered numbers.
+Boolean literals are converted to `Boolean`.
 
 Let's take a look at the following JSON:
 
@@ -355,12 +356,12 @@ The corresponding [`DataFrame`](DataFrame.md) schema is:
 ```text
 A: String
 B: Int
-C: Number
+C: Double
 D: Boolean?
 ```
 
 Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C
-has `Number` type because it's the least common type for `Int` and `Double`.
+has the `Double` type because it's the smallest unified number type for `Int` and `Float`.
 
 ### JSON parsing options
 
@@ -370,8 +371,8 @@ By default, if a type clash occurs when reading JSON, a new column group is crea
 any number of object properties:
 
 "value" will be set to the value of the JSON element if it's a primitive, else it will be `null`.\
-"array" will be set to the array of values if the json element is an array, else it will be `[]`.\
-If the json element is an object, then each property will spread out to its own column in the group, else these columns
+"array" will be set to the array of values if the JSON element is an array, else it will be `[]`.\
+If the JSON element is an object, then each property will spread out to its own column in the group, else these columns
 will be `null`.
 
 In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
