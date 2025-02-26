@@ -10077,7 +10077,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/api/ToDataFrameKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ToSequenceKt {
-	public static final fun toSequenceImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KType;)Ljava/lang/Iterable;
+	public static final fun toSequenceImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KType;)Lkotlin/sequences/Sequence;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/UpdateKt {
