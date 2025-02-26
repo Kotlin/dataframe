@@ -147,6 +147,7 @@ public fun <T, C : Number> Grouped<T>.mean(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = mean(name, skipNA) { columns.toColumnSet() }
 
+// TODO: name or resultingName?
 public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
