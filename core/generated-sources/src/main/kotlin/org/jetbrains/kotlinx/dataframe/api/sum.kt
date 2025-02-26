@@ -44,9 +44,9 @@ public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expres
 // region DataRow
 
 public fun AnyRow.rowSum(): Number =
-    Aggregators.sum.aggregateMixed(
+    Aggregators.sum.aggregateUnifyingNumbers(
         values = values().filterIsInstance<Number>(),
-        types = columnTypes().filter { it.isSubtypeOf(typeOf<Number?>()) }.toSet(),
+        numberTypes = columnTypes().filter { it.isSubtypeOf(typeOf<Number?>()) }.toSet(),
     ) ?: 0
 
 public inline fun <reified T : Number> AnyRow.rowSumOf(): T = values().filterIsInstance<T>().sum(typeOf<T>())
