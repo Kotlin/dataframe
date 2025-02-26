@@ -91,7 +91,7 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expres
 // endregion
 
 // region GroupBy
-
+// TODO: why we have no parameter skipNA: Boolean = skipNA_default?
 public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(numberColumns())
 
 public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
