@@ -39,7 +39,7 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 // region DataRow
 
 public fun AnyRow.rowMedianOrNull(): Any? =
-    Aggregators.median.aggregateMixed(
+    Aggregators.median.aggregateCalculatingType(
         values().filterIsInstance<Comparable<Any?>>().asIterable(),
     )
 
