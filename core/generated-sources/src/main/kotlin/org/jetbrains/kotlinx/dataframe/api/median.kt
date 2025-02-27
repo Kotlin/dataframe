@@ -39,8 +39,9 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 // region DataRow
 
 public fun AnyRow.rowMedianOrNull(): Any? =
-    Aggregators.median.aggregateMixed(
-        values().filterIsInstance<Comparable<Any?>>().asIterable(),
+    Aggregators.median.aggregateCalculatingType(
+        values = values().filterIsInstance<Comparable<Any?>>().asIterable(),
+        valueTypes = df().columns().filter { it.valuesAreComparable() }.map { it.type() }.toSet(),
     )
 
 public fun AnyRow.rowMedian(): Any = rowMedianOrNull().suggestIfNull("rowMedian")
