@@ -203,6 +203,8 @@ class GroupByMeanOf : GroupByAggregator(defaultName = "mean")
 
 class GroupByMedianOf : GroupByAggregator(defaultName = "median")
 
+class GroupByStdOf : GroupByAggregator(defaultName = "std")
+
 /**
  * Provides a base implementation for a custom schema modification interpreter
  * that groups data by specified criteria and produces aggregated results.
@@ -276,3 +278,6 @@ class GroupByMin0 : GroupByAggregator3(defaultName = "min")
 
 /** Implementation for `median` */
 class GroupByMax0 : GroupByAggregator3(defaultName = "max")
+
+/** Implementation for `std` */
+class GroupByStd0 : GroupByAggregator3(defaultName = "std")

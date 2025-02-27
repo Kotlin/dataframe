@@ -264,6 +264,13 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
         runTest("testData/box/groupBy_max.kt");
     }
 
+    @Ignore
+    @Test
+    @TestMetadata("groupBy_std.kt")
+    public void testGroupBy_std() {
+        runTest("testData/box/groupBy_std.kt");
+    }
+
   @Test
   @TestMetadata("groupBy_extractSchema.kt")
   public void testGroupBy_extractSchema() {
