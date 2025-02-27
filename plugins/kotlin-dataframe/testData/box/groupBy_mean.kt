@@ -19,36 +19,36 @@ fun box(): String {
     )
 
     // scenario #0: all numerical columns
-    val res0 = personsDf.groupBy { city }.sum()
-    val sum01: Int? = res0.age[0]
-    // TODO: Compilation error - actual type it(kotlin.Number & kotlin.Comparable<*>)
-    // `val sum02: Double? = res0.weight[0]
+    val res0 = personsDf.groupBy { city }.mean()
+    val mean01: Double? = res0.age[0]
+    // TODO: Validate handling of mixed types for numerical columns
+    val mean02: Double? = res0.weight[0]
 
     // scenario #1: particular column
-    val res1 = personsDf.groupBy { city }.sumFor { age }
-    val sum11: Int? = res1.age[0]
+    val res1 = personsDf.groupBy { city }.meanFor { age }
+    val mean11: Double? = res1.age[0]
 
-    // scenario #1.1: particular column via sum
-    val res11 = personsDf.groupBy { city }.sum { age }
-    val sum111: Int? = res11.age[0]
+    // scenario #1.1: particular column via mean
+    val res11 = personsDf.groupBy { city }.mean { age }
+    val mean111: Double? = res11.age[0]
 
     // scenario #2: particular column with new name - schema changes
     // TODO: not supported scenario
-    // val res2 = personsDf.groupBy { city }.sum("age", name = "newAge")
-    // val sum21: Int? = res2.newAge[0]
+    // val res2 = personsDf.groupBy { city }.mean("age", name = "newAge")
+    // val mean21: Double? = res2.newAge[0]
 
     // scenario #2.1: particular column with new name - schema changes but via columnSelector
-    val res21 =  personsDf.groupBy { city }.sum("newAge") { age }
-    val sum211: Int? = res21.newAge[0]
+    val res21 = personsDf.groupBy { city }.mean("newAge") { age }
+    val mean211: Double? = res21.newAge[0]
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector
     // TODO: partially supported scenario - we are taking type from the first column
-    val res22 = personsDf.groupBy { city }.sum("newAge") { age and yearsToRetirement }
-    val sum221: Int? = res22.newAge[0]
+    val res22 = personsDf.groupBy { city }.mean("newAge") { age and yearsToRetirement }
+    val mean221: Double? = res22.newAge[0]
 
     // scenario #3: create new column via expression
-    val res3 = personsDf.groupBy { city }.sumOf("newAge") { age * 10 }
-    val sum3: Int? = res3.newAge[0]
+    val res3 = personsDf.groupBy { city }.meanOf("newAge") { age * 10 }
+    val mean3: Double? = res3.newAge[0]
 
     return "OK"
 }

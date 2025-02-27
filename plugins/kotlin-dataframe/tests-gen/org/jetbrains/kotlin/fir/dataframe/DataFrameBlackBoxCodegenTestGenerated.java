@@ -238,6 +238,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
         runTest("testData/box/groupBy_sum.kt");
     }
 
+    @Test
+    @TestMetadata("groupBy_mean.kt")
+    public void testGroupBy_mean() {
+        runTest("testData/box/groupBy_mean.kt");
+    }
+
+    @Test
+    @TestMetadata("groupBy_median.kt")
+    public void testGroupBy_median() {
+        runTest("testData/box/groupBy_median.kt");
+    }
+
   @Test
   @TestMetadata("groupBy_extractSchema.kt")
   public void testGroupBy_extractSchema() {

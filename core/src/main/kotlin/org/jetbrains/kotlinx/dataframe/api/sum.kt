@@ -108,8 +108,8 @@ public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> =
     sumFor { columns.toColumnSet() }
 
-/*@Refine
-@Interpretable("GroupBySum0")*/
+@Refine
+@Interpretable("GroupBySum0")
 public fun <T, C : Number> Grouped<T>.sum(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateAll(this, name, columns)
 
