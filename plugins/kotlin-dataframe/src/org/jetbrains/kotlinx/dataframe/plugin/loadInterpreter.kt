@@ -91,11 +91,19 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FrameCols0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByAdd
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByCount0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByInto
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMax0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMaxOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMean0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMeanOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedian0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedianOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMin0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMinOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceExpression
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceInto
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReducePredicate
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeId
@@ -302,10 +310,18 @@ internal inline fun <reified T> String.load(): T {
         "MergeBy1" -> MergeBy1()
         "ReorderColumnsByName" -> ReorderColumnsByName()
         "GroupByCount0" -> GroupByCount0()
+        "GroupByMean0" -> GroupByMean0()
+        "GroupByMeanOf" -> GroupByMeanOf()
+        "GroupByMedian0" -> GroupByMedian0()
+        "GroupByMedianOf" -> GroupByMedianOf()
+        "GroupBySumOf" -> GroupBySumOf()
+        "GroupBySum0" -> GroupBySum0()
         "GroupByReducePredicate" -> GroupByReducePredicate()
         "GroupByReduceExpression" -> GroupByReduceExpression()
         "GroupByReduceInto" -> GroupByReduceInto()
+        "GroupByMax0" -> GroupByMax0()
         "GroupByMaxOf" -> GroupByMaxOf()
+        "GroupByMin0" -> GroupByMin0()
         "GroupByMinOf" -> GroupByMinOf()
         else -> error("$this")
     } as T
