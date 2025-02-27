@@ -3,9 +3,6 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithPathImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnWithPathImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnWithPathImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.depth
@@ -65,19 +62,4 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
 
 public val <T> ColumnWithPath<T>.depth: Int get() = path.depth()
 
-public fun ColumnWithPath(column: DataColumn<*>, path: ColumnPath): ColumnWithPath<*> =
-    when (column) {
-        is FrameColumn<*> -> {
-            FrameColumnWithPathImpl(column, path)
-        }
-
-        is ColumnGroup<*> -> {
-            ColumnGroupWithPathImpl(column, path)
-        }
-
-        is ValueColumn<*> -> {
-            ValueColumnWithPathImpl(column, path)
-        }
-
-        else -> error("Can't add path to ${column.javaClass}")
-    }
+public fun ColumnWithPath(column: DataColumn<*>, path: ColumnPath): ColumnWithPath<*> = column.addPath(path)

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -92,6 +93,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("WithoutNulls0")
     public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C & Any> =
         transform { cols -> cols.filter { !it.hasNulls() } } as ColumnSet<C & Any>
 
@@ -101,6 +103,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
      */
+    @Interpretable("WithoutNulls1")
     public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> = asSingleColumn().colsWithoutNulls()
 
     /**
@@ -109,6 +112,7 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
      */
+    @Interpretable("WithoutNulls2")
     public fun SingleColumn<DataRow<*>>.colsWithoutNulls(): ColumnSet<Any> =
         ensureIsColumnGroup().allColumnsInternal().withoutNulls()
 
