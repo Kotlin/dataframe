@@ -263,6 +263,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      * NOTE: This is an identity call and can be omitted in most cases.
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("All0")
     public fun <C> ColumnSet<C>.all(): TransformableColumnSet<C> = allColumnsInternal() as TransformableColumnSet<C>
 
     /**
@@ -271,7 +272,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[select][DataFrame.select]`  {  `[all][ColumnsSelectionDsl.all]`() }`
      */
-    @Interpretable("All0")
+    @Interpretable("All1")
     public fun ColumnsSelectionDsl<*>.all(): TransformableColumnSet<*> = asSingleColumn().allColumnsInternal()
 
     /**
@@ -280,6 +281,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[select][DataFrame.select]` { myGroup.`[allCols][SingleColumn.allCols]`() }`
      */
+    @Interpretable("All2")
     public fun SingleColumn<DataRow<*>>.allCols(): TransformableColumnSet<*> =
         ensureIsColumnGroup().allColumnsInternal()
 
@@ -350,6 +352,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allAfter(column: String): ColumnSet<C> = allAfter(pathOf(column))
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] (myColumn)} */
+    @Interpretable("AllAfter0")
     public fun <C> ColumnSet<C>.allAfter(column: AnyColumnReference): ColumnSet<C> = allAfter(column.path())
 
     /** @include [ColumnSetAllAfterDocs] {@set [ColumnSetAllAfterDocs.Arg] (Type::myColumn)} */
@@ -370,6 +373,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] \ \{ myColumn \}} */
+    @Interpretable("AllAfter1")
     public fun <T> ColumnsSelectionDsl<T>.allAfter(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsAfter(column)
 
@@ -380,6 +384,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnsSelectionDsl<*>.allAfter(column: String): ColumnSet<*> = allAfter(pathOf(column))
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] (myColumn)} */
+    @Interpretable("AllAfter2")
     public fun ColumnsSelectionDsl<*>.allAfter(column: AnyColumnReference): ColumnSet<*> = allAfter(column.path())
 
     /** @include [ColumnsSelectionDslAllAfterDocs] {@set [ColumnsSelectionDslAllAfterDocs.Arg] (Type::myColumn)} */
@@ -564,6 +569,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allFrom(column: String): ColumnSet<C> = allFrom(pathOf(column))
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] (myColumn)} */
+    @Interpretable("AllFrom0")
     public fun <C> ColumnSet<C>.allFrom(column: AnyColumnReference): ColumnSet<C> = allFrom(column.path())
 
     /** @include [ColumnSetAllFromDocs] {@set [ColumnSetAllFromDocs.Arg] (Type::myColumn)} */
@@ -583,6 +589,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] \ \{ myColumn \}} */
+    @Interpretable("AllFrom1")
     public fun <T> ColumnsSelectionDsl<T>.allFrom(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsFrom(column)
 
@@ -593,6 +600,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnsSelectionDsl<*>.allFrom(column: String): ColumnSet<*> = asSingleColumn().allColsFrom(column)
 
     /** @include [ColumnsSelectionDslAllFromDocs] {@set [ColumnsSelectionDslAllFromDocs.Arg] (myColumn)} */
+    @Interpretable("AllFrom2")
     public fun ColumnsSelectionDsl<*>.allFrom(column: AnyColumnReference): ColumnSet<*> =
         asSingleColumn().allColsFrom(column)
 
@@ -776,6 +784,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allBefore(column: String): ColumnSet<C> = allBefore(pathOf(column))
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] (myColumn)} */
+    @Interpretable("AllBefore0")
     public fun <C> ColumnSet<C>.allBefore(column: AnyColumnReference): ColumnSet<C> = allBefore(column.path())
 
     /** @include [ColumnSetAllBeforeDocs] {@set [ColumnSetAllBeforeDocs.Arg] (Type::myColumn)} */
@@ -796,6 +805,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] \ \{ myColumn \}} */
+    @Interpretable("AllBefore1")
     public fun <T> ColumnsSelectionDsl<T>.allBefore(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsBefore(column)
 
@@ -807,6 +817,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnsSelectionDsl<*>.allBefore(column: String): ColumnSet<*> = allBefore(pathOf(column))
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] (myColumn)} */
+    @Interpretable("AllBefore2")
     public fun ColumnsSelectionDsl<*>.allBefore(column: AnyColumnReference): ColumnSet<*> = allBefore(column.path())
 
     /** @include [ColumnsSelectionDslAllBeforeDocs] {@set [ColumnsSelectionDslAllBeforeDocs.Arg] (Type::myColumn)} */
@@ -989,6 +1000,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun <C> ColumnSet<C>.allUpTo(column: String): ColumnSet<C> = allUpTo(pathOf(column))
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] (myColumn)} */
+    @Interpretable("AllUpTo0")
     public fun <C> ColumnSet<C>.allUpTo(column: AnyColumnReference): ColumnSet<C> = allUpTo(column.path())
 
     /** @include [ColumnSetAllUpToDocs] {@set [ColumnSetAllUpToDocs.Arg] (Type::myColumn)} */
@@ -1008,6 +1020,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     }
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] \ \{ myColumn \}} */
+    @Interpretable("AllUpTo1")
     public fun <T> ColumnsSelectionDsl<T>.allUpTo(column: ColumnSelector<T, *>): ColumnSet<*> =
         asSingleColumn().allColsUpTo(column)
 
@@ -1018,6 +1031,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
     public fun ColumnsSelectionDsl<*>.allUpTo(column: String): ColumnSet<*> = asSingleColumn().allColsUpTo(column)
 
     /** @include [ColumnsSelectionDslAllUpToDocs] {@set [ColumnsSelectionDslAllUpToDocs.Arg] (myColumn)} */
+    @Interpretable("AllUpTo2")
     public fun ColumnsSelectionDsl<*>.allUpTo(column: AnyColumnReference): ColumnSet<*> =
         asSingleColumn().allColsUpTo(column)
 
