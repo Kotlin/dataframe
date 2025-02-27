@@ -270,3 +270,9 @@ class GroupByMean0 : GroupByAggregator3(defaultName = "mean")
 
 /** Implementation for `median` */
 class GroupByMedian0 : GroupByAggregator3(defaultName = "median")
+
+/** Implementation for `median` */
+class GroupByMin0 : GroupByAggregator3(defaultName = "min")
+
+/** Implementation for `median` */
+class GroupByMax0 : GroupByAggregator3(defaultName = "max")

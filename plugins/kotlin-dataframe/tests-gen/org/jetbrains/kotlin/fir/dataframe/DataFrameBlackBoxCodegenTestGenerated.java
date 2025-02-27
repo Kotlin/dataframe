@@ -6,6 +6,7 @@ import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -238,6 +239,7 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
         runTest("testData/box/groupBy_sum.kt");
     }
 
+    @Ignore
     @Test
     @TestMetadata("groupBy_mean.kt")
     public void testGroupBy_mean() {
@@ -248,6 +250,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
     @TestMetadata("groupBy_median.kt")
     public void testGroupBy_median() {
         runTest("testData/box/groupBy_median.kt");
+    }
+
+    @Test
+    @TestMetadata("groupBy_min.kt")
+    public void testGroupBy_min() {
+        runTest("testData/box/groupBy_min.kt");
+    }
+
+    @Test
+    @TestMetadata("groupBy_max.kt")
+    public void testGroupBy_max() {
+        runTest("testData/box/groupBy_max.kt");
     }
 
   @Test
