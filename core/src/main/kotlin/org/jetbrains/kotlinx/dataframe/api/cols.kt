@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -382,6 +383,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface ColumnsSelectionDslColsVarargColumnReferenceDocs
 
     /** @include [ColumnsSelectionDslColsVarargColumnReferenceDocs] */
+    @Interpretable("Cols0")
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
