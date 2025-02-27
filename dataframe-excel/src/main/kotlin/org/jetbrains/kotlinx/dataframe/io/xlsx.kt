@@ -490,6 +490,8 @@ public enum class WorkBookType {
  * @param keepFile If `true` and the file already exists, a new sheet will be appended instead of overwriting the file.
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     path: String,
@@ -515,6 +517,8 @@ public fun <T> DataFrame<T>.writeExcel(
  * @param keepFile If `true` and the file already exists, a new sheet will be appended instead of overwriting the file.
  * This may result in higher memory usage and slower performance compared to creating a new file.
  * Defaults to `false`.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     file: File,
@@ -557,6 +561,8 @@ public fun <T> DataFrame<T>.writeExcel(
  * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
  * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
  * @param factory The [Workbook] instance, allowing integration with an existing workbook.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     outputStream: OutputStream,
@@ -585,7 +591,10 @@ public fun <T> DataFrame<T>.writeExcel(
  * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include. Defaults to all columns.
  * @param sheetName The name of the sheet. If null, a default sheet name is used.
  * @param writeHeader Whether to include a header row with column names. Defaults to true.
+ *
  * @return The created [Sheet] instance containing the DataFrame data.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
  */
 public fun <T> DataFrame<T>.writeExcel(
     wb: Workbook,
