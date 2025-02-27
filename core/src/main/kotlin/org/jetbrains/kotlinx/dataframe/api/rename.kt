@@ -317,6 +317,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @Interpretable("Named0")
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
 
     /**
@@ -404,6 +405,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @Interpretable("Named0")
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
 
     /**

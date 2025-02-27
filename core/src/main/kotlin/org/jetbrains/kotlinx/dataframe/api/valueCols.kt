@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -109,6 +110,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
+    @Interpretable("ValueCols0")
     public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         valueColumnsInternal(filter)
 
@@ -120,6 +122,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Interpretable("ValueCols1")
     public fun ColumnsSelectionDsl<*>.valueCols(
         filter: Predicate<ValueColumn<*>> = { true },
     ): TransformableColumnSet<*> = asSingleColumn().valueColumnsInternal(filter)
@@ -132,6 +135,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Interpretable("ValueCols2")
     public fun SingleColumn<DataRow<*>>.valueCols(
         filter: Predicate<ValueColumn<*>> = { true },
     ): TransformableColumnSet<*> = this.ensureIsColumnGroup().valueColumnsInternal(filter)
