@@ -129,6 +129,7 @@ data class CsvOptionsDsl(var delimiter: Char = ',') : Serializable
 data class JsonOptionsDsl(
     var typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
     var keyValuePaths: List<JsonPath> = emptyList(),
+    var unifyNumbers: Boolean = true,
 ) : Serializable
 
 /**

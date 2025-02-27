@@ -1300,6 +1300,7 @@ public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annot
 public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annotations/JsonOptions : java/lang/annotation/Annotation {
 	public abstract fun keyValuePaths ()[Ljava/lang/String;
 	public abstract fun typeClashTactic ()Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;
+	public abstract fun unifyNumbers ()Z
 }
 
 public abstract interface annotation class org/jetbrains/kotlinx/dataframe/annotations/Order : java/lang/annotation/Annotation {
@@ -9930,9 +9931,11 @@ public final class org/jetbrains/kotlinx/dataframe/impl/ExceptionUtilsKt {
 public final class org/jetbrains/kotlinx/dataframe/impl/TypeUtilsKt {
 	public static final fun getValuesType (Ljava/util/List;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;)Lkotlin/reflect/KType;
 	public static final synthetic fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
-	public static final fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZZ)Lkotlin/reflect/KType;
+	public static final synthetic fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZZ)Lkotlin/reflect/KType;
+	public static final fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZZZ)Lkotlin/reflect/KType;
 	public static synthetic fun guessValueType$default (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZILjava/lang/Object;)Lkotlin/reflect/KType;
 	public static synthetic fun guessValueType$default (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZZILjava/lang/Object;)Lkotlin/reflect/KType;
+	public static synthetic fun guessValueType$default (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;ZZZILjava/lang/Object;)Lkotlin/reflect/KType;
 	public static final fun replaceGenericTypeParametersWithUpperbound (Lkotlin/reflect/KType;)Lkotlin/reflect/KType;
 }
 
@@ -10077,7 +10080,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/api/ToDataFrameKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/ToSequenceKt {
-	public static final fun toSequenceImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KType;)Ljava/lang/Iterable;
+	public static final fun toSequenceImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KType;)Lkotlin/sequences/Sequence;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/api/UpdateKt {
@@ -10145,10 +10148,14 @@ public final class org/jetbrains/kotlinx/dataframe/impl/columns/ComputedColumnRe
 public final class org/jetbrains/kotlinx/dataframe/impl/columns/ConstructorsKt {
 	public static final synthetic fun createColumn (Ljava/lang/Iterable;Lkotlin/reflect/KType;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun createColumn$default (Ljava/lang/Iterable;Lkotlin/reflect/KType;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun createColumnGuessingType (Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun createColumnGuessingType (Ljava/lang/String;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final synthetic fun createColumnGuessingType (Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun createColumnGuessingType (Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final synthetic fun createColumnGuessingType (Ljava/lang/String;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun createColumnGuessingType (Ljava/lang/String;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun createColumnGuessingType$default (Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun createColumnGuessingType$default (Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun createColumnGuessingType$default (Ljava/lang/String;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun createColumnGuessingType$default (Ljava/lang/String;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/columns/TypeSuggestion;Ljava/lang/Object;Ljava/lang/Boolean;ZZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final synthetic fun guessColumnType (Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;ZLjava/lang/Object;Ljava/lang/Boolean;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static synthetic fun guessColumnType$default (Ljava/lang/String;Ljava/util/List;Lkotlin/reflect/KType;ZLjava/lang/Object;Ljava/lang/Boolean;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun newColumn (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lkotlin/reflect/KType;Ljava/lang/String;Lorg/jetbrains/kotlinx/dataframe/api/Infer;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -10479,8 +10486,10 @@ public final class org/jetbrains/kotlinx/dataframe/io/HtmlKt {
 
 public final class org/jetbrains/kotlinx/dataframe/io/JSON : org/jetbrains/kotlinx/dataframe/io/SupportedDataFrameFormat {
 	public fun <init> ()V
-	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Ljava/util/List;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Ljava/util/List;)V
 	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Ljava/util/List;Z)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Ljava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun acceptsExtension (Ljava/lang/String;)Z
 	public fun acceptsSample (Lorg/jetbrains/kotlinx/dataframe/io/SupportedFormatSample;)Z
 	public fun createDefaultReadMethod (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;
@@ -10498,26 +10507,42 @@ public final class org/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic : jav
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/JsonKt {
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final synthetic fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final synthetic fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final synthetic fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun readJson (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/File;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/io/InputStream;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun readJsonStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun readJsonStr (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun readJson$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/net/URL;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final synthetic fun readJsonStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun readJsonStr (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final synthetic fun readJsonStr (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun readJsonStr (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun readJsonStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun readJsonStr$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun readJsonStr$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun readJsonStr$default (Lorg/jetbrains/kotlinx/dataframe/DataRow$Companion;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Lorg/jetbrains/kotlinx/dataframe/io/JSON$TypeClashTactic;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun toJson (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Ljava/lang/String;
 	public static final fun toJson (Lorg/jetbrains/kotlinx/dataframe/DataRow;Z)Ljava/lang/String;
 	public static synthetic fun toJson$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Ljava/lang/String;

@@ -18,8 +18,6 @@ import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
-import org.jetbrains.kotlinx.dataframe.samples.api.secondName
-import org.jetbrains.kotlinx.dataframe.samples.api.thirdName
 import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 import kotlin.reflect.typeOf
