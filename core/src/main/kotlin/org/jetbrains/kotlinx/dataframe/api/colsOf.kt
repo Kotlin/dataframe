@@ -248,6 +248,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
+@Interpretable("ColsOf2")
 public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
 ): TransformableColumnSet<C> = colsOf(typeOf<C>(), filter)
