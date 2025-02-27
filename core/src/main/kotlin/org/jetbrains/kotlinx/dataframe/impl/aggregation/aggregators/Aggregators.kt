@@ -10,43 +10,93 @@ import kotlin.reflect.KType
 @PublishedApi
 internal object Aggregators {
 
-    private fun <C> preservesType(aggregate: Iterable<C>.(KType) -> C?) =
-        TwoStepAggregator.Factory(aggregate, aggregate, true)
+    /**
+     * Factory for a simple aggregator that preserves the type of the input values.
+     *
+     * @include [TwoStepAggregator]
+     */
+    private fun <Type> twoStepPreservingType(aggregator: Iterable<Type>.(type: KType) -> Type?) =
+        TwoStepAggregator.Factory(
+            stepOneAggregator = aggregator,
+            stepTwoAggregator = aggregator,
+            preservesType = true,
+        )
 
-    private fun <C : Any, R> mergedValues(aggregate: Iterable<C?>.(KType) -> R?) =
-        MergedValuesAggregator.Factory(aggregate, true)
+    /**
+     * Factory for a simple aggregator that changes the type of the input values.
+     *
+     * @include [TwoStepAggregator]
+     */
+    private fun <Value, Return> twoStepChangingType(
+        stepOneAggregator: Iterable<Value>.(type: KType) -> Return,
+        stepTwoAggregator: Iterable<Return>.(type: KType) -> Return,
+    ) = TwoStepAggregator.Factory(
+        stepOneAggregator = stepOneAggregator,
+        stepTwoAggregator = stepTwoAggregator,
+        preservesType = false,
+    )
 
-    private fun <C : Any, R> mergedValuesChangingTypes(aggregate: Iterable<C?>.(KType) -> R?) =
-        MergedValuesAggregator.Factory(aggregate, false)
+    /**
+     * Factory for a flattening aggregator that preserves the type of the input values.
+     *
+     * @include [FlatteningAggregator]
+     */
+    private fun <Type> flatteningPreservingTypes(aggregate: Iterable<Type?>.(type: KType) -> Type?) =
+        FlatteningAggregator.Factory(
+            aggregator = aggregate,
+            preservesType = true,
+        )
 
-    private fun <C, R> changesType(aggregate1: Iterable<C>.(KType) -> R, aggregate2: Iterable<R>.(KType) -> R) =
-        TwoStepAggregator.Factory(aggregate1, aggregate2, false)
+    /**
+     * Factory for a flattening aggregator that changes the type of the input values.
+     *
+     * @include [FlatteningAggregator]
+     */
+    private fun <Value, Return> flatteningChangingTypes(aggregate: Iterable<Value?>.(type: KType) -> Return?) =
+        FlatteningAggregator.Factory(
+            aggregator = aggregate,
+            preservesType = false,
+        )
 
-    private fun extendsNumbers(aggregate: Iterable<Number>.(KType) -> Number?) = NumbersAggregator.Factory(aggregate)
+    /**
+     * Factory for a two-step aggregator that works only with numbers.
+     *
+     * @include [TwoStepNumbersAggregator]
+     */
+    private fun <Return : Number> twoStepForNumbers(aggregate: Iterable<Number>.(numberType: KType) -> Return?) =
+        TwoStepNumbersAggregator.Factory(aggregate)
 
-    private fun <P, C, R> withOption(getAggregator: (P) -> AggregatorProvider<C, R>) =
-        AggregatorOptionSwitch.Factory(getAggregator)
+    /** @include [AggregatorOptionSwitch1] */
+    private fun <Param1, AggregatorType : Aggregator<*, *>> withOneOption(
+        getAggregator: (Param1) -> AggregatorProvider<AggregatorType>,
+    ) = AggregatorOptionSwitch1.Factory(getAggregator)
 
-    private fun <P1, P2, C, R> withOption2(getAggregator: (P1, P2) -> AggregatorProvider<C, R>) =
-        AggregatorOptionSwitch2.Factory(getAggregator)
+    /** @include [AggregatorOptionSwitch2] */
+    private fun <Param1, Param2, AggregatorType : Aggregator<*, *>> withTwoOptions(
+        getAggregator: (Param1, Param2) -> AggregatorProvider<AggregatorType>,
+    ) = AggregatorOptionSwitch2.Factory(getAggregator)
 
-    val min by preservesType<Comparable<Any?>> { minOrNull() }
+    val min by twoStepPreservingType<Comparable<Any?>> { minOrNull() }
 
-    val max by preservesType<Comparable<Any?>> { maxOrNull() }
+    val max by twoStepPreservingType<Comparable<Any?>> { maxOrNull() }
 
-    val std by withOption2<Boolean, Int, Number, Double> { skipNA, ddof ->
-        mergedValuesChangingTypes { std(it, skipNA, ddof) }
+    val std by withTwoOptions { skipNA: Boolean, ddof: Int ->
+        flatteningChangingTypes<Number, Double> { std(it, skipNA, ddof) }
     }
 
-    val mean by withOption<Boolean, Number, Double> { skipNA ->
-        changesType({ mean(it, skipNA) }) { mean(skipNA) }
+    val mean by withOneOption { skipNA: Boolean ->
+        twoStepChangingType({ mean(it, skipNA) }) { mean(skipNA) }
     }
 
-    val percentile by withOption<Double, Comparable<Any?>, Comparable<Any?>> { percentile ->
-        mergedValuesChangingTypes { type -> percentile(percentile, type) }
+    val percentile by withOneOption { percentile: Double ->
+        flatteningChangingTypes<Comparable<Any?>, Comparable<Any?>> { type ->
+            percentile(percentile, type)
+        }
     }
 
-    val median by mergedValues<Comparable<Any?>, Comparable<Any?>> { median(it) }
+    val median by flatteningPreservingTypes<Comparable<Any?>> {
+        median(it)
+    }
 
-    val sum by extendsNumbers { sum(it) }
+    val sum by twoStepForNumbers { sum(it) }
 }
