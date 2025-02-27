@@ -339,6 +339,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [newName] A [String] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @Interpretable("Named0")
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
 
     /**
@@ -597,6 +598,7 @@ public interface RenameColumnsSelectionDsl {
      * @param [newName] A [String] used to specify the new name of the column.
      * @return A [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] to the renamed column.
      */
+    @Interpretable("Named0")
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
 
     /**
