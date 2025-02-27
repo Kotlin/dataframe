@@ -232,6 +232,7 @@ public interface LastColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.first]
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("Last0")
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
@@ -264,6 +265,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
      */
+    @Interpretable("Last1")
     public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().lastCol(condition)
 
@@ -294,6 +296,7 @@ public interface LastColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.first]
      */
+    @Interpretable("Last2")
     public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().last(condition)
 

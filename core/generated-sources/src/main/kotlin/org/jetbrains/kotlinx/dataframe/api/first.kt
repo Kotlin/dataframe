@@ -234,6 +234,7 @@ public interface FirstColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.last]
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("First0")
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.first(condition)) }
@@ -267,6 +268,7 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
+    @Interpretable("First1")
     public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().firstCol(condition)
 
@@ -298,6 +300,7 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
+    @Interpretable("First2")
     public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().first(condition)
 

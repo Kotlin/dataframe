@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -161,6 +162,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("NameContains0")
     public fun <C> ColumnSet<C>.nameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
@@ -199,6 +201,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
+    @Interpretable("NameContains1")
     public fun ColumnsSelectionDsl<*>.nameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
@@ -237,6 +240,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
+    @Interpretable("NameContains2")
     public fun SingleColumn<DataRow<*>>.colsNameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
@@ -646,6 +650,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains]
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("NameStartsWith0")
     public fun <C> ColumnSet<C>.nameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
@@ -684,6 +689,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains]
      */
+    @Interpretable("NameStartsWith1")
     public fun ColumnsSelectionDsl<*>.nameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
@@ -722,6 +728,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains]
      */
+    @Interpretable("NameStartsWith2")
     public fun SingleColumn<DataRow<*>>.colsNameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
@@ -879,6 +886,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameContains]
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("NameEndsWith0")
     public fun <C> ColumnSet<C>.nameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
@@ -917,6 +925,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]
      */
+    @Interpretable("NameEndsWith1")
     public fun ColumnsSelectionDsl<*>.nameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
@@ -955,6 +964,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]
      */
+    @Interpretable("NameEndsWith2")
     public fun SingleColumn<DataRow<*>>.colsNameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
