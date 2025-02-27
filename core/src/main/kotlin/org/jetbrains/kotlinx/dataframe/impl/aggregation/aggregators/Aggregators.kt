@@ -84,8 +84,23 @@ internal object Aggregators {
         flatteningChangingTypes<Number, Double> { std(it, skipNA, ddof) }
     }
 
-    val mean by withOneOption { skipNA: Boolean ->
-        twoStepChangingType({ mean(it, skipNA) }) { mean(skipNA) }
+    @Suppress("ClassName")
+    object mean {
+        val toNumber = withOption { skipNA: Boolean ->
+            extendsNumbers { mean(it, skipNA) }
+        }.create("meanToNumber")
+
+        val toDouble = withOption { skipNA: Boolean ->
+            changesType(
+                aggregateWithType = { mean(it, skipNA).asDoubleOrNaN() },
+                aggregateWithValues = { mean(skipNA) },
+            )
+        }.create("meanToDouble")
+
+        val toBigDecimal = changesType(
+            aggregateWithType = { mean(it) as BigDecimal? },
+            aggregateWithValues = { filterNotNull().mean() },
+        ).create("meanToBigDecimal")
     }
 
     val percentile by withOneOption { percentile: Double ->

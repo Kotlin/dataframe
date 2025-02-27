@@ -643,3 +643,13 @@ internal fun Iterable<Any>.classes(): Set<KClass<*>> = mapTo(mutableSetOf()) { i
  * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in the iterable.
  */
 internal fun Iterable<Any>.types(): Set<KType> = classes().mapTo(mutableSetOf()) { it.createStarProjectedType(false) }
+
+/**
+ * Casts [this]: [Number] to a [Double]. If [this] is `null`, returns [Double.NaN].
+ */
+internal fun Number?.asDoubleOrNaN(): Double = this as Double? ?: Double.NaN
+
+/**
+ * Casts [this]: [Number] to a [Float]. If [this] is `null`, returns [Float.NaN].
+ */
+internal fun Number?.asFloatOrNaN(): Float = this as Float? ?: Float.NaN
