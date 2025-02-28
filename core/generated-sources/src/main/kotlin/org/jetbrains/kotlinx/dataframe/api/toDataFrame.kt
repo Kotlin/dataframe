@@ -1,5 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -16,9 +26,13 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.index
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.time.temporal.Temporal
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.time.Duration
 
 // region read DataFrame from objects
 
@@ -26,7 +40,21 @@ import kotlin.reflect.KProperty
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
-        properties()
+        when (T::class) {
+            IntArray::class,
+            DoubleArray::class,
+            FloatArray::class,
+            LongArray::class,
+            ShortArray::class,
+            ByteArray::class,
+            CharArray::class,
+            BooleanArray::class,
+            -> {
+                ValueProperty<T>::value from { it }
+            }
+
+            else -> properties()
+        }
     }
 
 @Refine
@@ -310,6 +338,120 @@ public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<Valu
         ValueProperty<U>::value from { it }
     }.cast()
 
+@JvmName("toDataFrameBigDecimal")
+public inline fun <reified B : BigDecimal?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> =
+    toDataFrame {
+        ValueProperty<B>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameBigInteger")
+public inline fun <reified B : BigInteger?> Iterable<B>.toDataFrame(): DataFrame<ValueProperty<B>> =
+    toDataFrame {
+        ValueProperty<B>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameLocalDate")
+public inline fun <reified L : LocalDate?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> =
+    toDataFrame {
+        ValueProperty<L>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameLocalDateTime")
+public inline fun <reified L : LocalDateTime?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> =
+    toDataFrame {
+        ValueProperty<L>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameLocalTime")
+public inline fun <reified L : LocalTime?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> =
+    toDataFrame {
+        ValueProperty<L>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameInstant")
+public inline fun <reified I : Instant?> Iterable<I>.toDataFrame(): DataFrame<ValueProperty<I>> =
+    toDataFrame {
+        ValueProperty<I>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameDuration")
+public inline fun <reified D : Duration?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> =
+    toDataFrame {
+        ValueProperty<D>::value from { it }
+    }.cast()
+
+@JvmName("toDataFramejavatimeLocalDate")
+public inline fun <reified L : java.time.LocalDate?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> =
+    toDataFrame {
+        ValueProperty<L>::value from { it }
+    }.cast()
+
+@JvmName("toDataFramejavatimeLocalDateTime")
+public inline fun <reified L : java.time.LocalDateTime?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> =
+    toDataFrame {
+        ValueProperty<L>::value from { it }
+    }.cast()
+
+@JvmName("toDataFramejavatimeLocalTime")
+public inline fun <reified L : java.time.LocalTime?> Iterable<L>.toDataFrame(): DataFrame<ValueProperty<L>> =
+    toDataFrame {
+        ValueProperty<L>::value from { it }
+    }.cast()
+
+@JvmName("toDataFramejavatimeInstant")
+public inline fun <reified I : java.time.Instant?> Iterable<I>.toDataFrame(): DataFrame<ValueProperty<I>> =
+    toDataFrame {
+        ValueProperty<I>::value from { it }
+    }.cast()
+
+@JvmName("toDataFramejavatimeDuration")
+public inline fun <reified D : java.time.Duration?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> =
+    toDataFrame {
+        ValueProperty<D>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameTemporal")
+public inline fun <reified T : Temporal?> Iterable<T>.toDataFrame(): DataFrame<ValueProperty<T>> =
+    toDataFrame {
+        ValueProperty<T>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameTimeZone")
+public inline fun <reified T : TimeZone?> Iterable<T>.toDataFrame(): DataFrame<ValueProperty<T>> =
+    toDataFrame {
+        ValueProperty<T>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameMonth")
+public inline fun <reified M : Month?> Iterable<M>.toDataFrame(): DataFrame<ValueProperty<M>> =
+    toDataFrame {
+        ValueProperty<M>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameDayOfWeek")
+public inline fun <reified D : DayOfWeek?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> =
+    toDataFrame {
+        ValueProperty<D>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameDateTimePeriod")
+public inline fun <reified D : DateTimePeriod?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> =
+    toDataFrame {
+        ValueProperty<D>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameDateTimeUnit")
+public inline fun <reified D : DateTimeUnit?> Iterable<D>.toDataFrame(): DataFrame<ValueProperty<D>> =
+    toDataFrame {
+        ValueProperty<D>::value from { it }
+    }.cast()
+
+@JvmName("toDataFrameEnum")
+public inline fun <reified E : Enum<*>?> Iterable<E>.toDataFrame(): DataFrame<ValueProperty<E>> =
+    toDataFrame {
+        ValueProperty<E>::value from { it }
+    }.cast()
+
 @DataSchema
 public interface ValueProperty<T> {
     public val value: T
@@ -327,6 +469,7 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame =
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
     map {
+        DatePeriod
         it.key to DataColumn.createByInference(
             name = it.key.last(),
             values = it.value.asList(),
