@@ -149,6 +149,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnRefere
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> =
     minFor { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMin0")
 public fun <T, C : Comparable<C>> Grouped<T>.min(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.min.aggregateAll(this, name, columns)
 
