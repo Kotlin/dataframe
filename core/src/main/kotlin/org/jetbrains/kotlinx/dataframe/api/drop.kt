@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -125,6 +125,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[drop][ColumnSet.drop]`(2) }`
      */
+    @Interpretable("Drop0")
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
 
     /**
@@ -133,6 +134,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[drop][ColumnsSelectionDsl.drop]`(5) }`
      */
+    @Interpretable("Drop1")
     public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
 
     /**
@@ -141,6 +143,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropCols][SingleColumn.dropCols]`(1) }`
      */
+    @Interpretable("Drop2")
     public fun SingleColumn<DataRow<*>>.dropCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().drop(n) }
 
@@ -189,6 +192,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[dropLast][ColumnSet.dropLast]`() }`
      */
+    @Interpretable("DropLast0")
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
 
     /**
@@ -197,6 +201,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
      */
+    @Interpretable("DropLast1")
     public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
 
     /**
@@ -205,6 +210,7 @@ public interface DropColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastCols][SingleColumn.dropLastCols]`() }`
      */
+    @Interpretable("DropLast2")
     public fun SingleColumn<DataRow<*>>.dropLastCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLast(n) }
 
