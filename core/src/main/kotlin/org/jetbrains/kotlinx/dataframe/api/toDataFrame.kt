@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import kotlinx.datetime.DatePeriod
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -243,7 +242,6 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame =
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
     map {
-        DatePeriod
         it.key to DataColumn.createByInference(
             name = it.key.last(),
             values = it.value.asList(),

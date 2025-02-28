@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import kotlinx.datetime.DatePeriod
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -28,9 +27,12 @@ import kotlin.reflect.KProperty
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
+        // check if type is value: primitives, primitive arrays, datetime types etc.
         if (T::class.isValueType) {
+            // if type parameter is value type, create a single `value` column
             ValueProperty<T>::value from { it }
         } else {
+            // otherwise creates columns based on properties
             properties()
         }
     }
@@ -240,7 +242,6 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame =
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame =
     map {
-        DatePeriod
         it.key to DataColumn.createByInference(
             name = it.key.last(),
             values = it.value.asList(),

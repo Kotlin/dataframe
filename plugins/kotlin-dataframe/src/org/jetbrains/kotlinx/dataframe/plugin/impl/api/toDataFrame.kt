@@ -220,18 +220,10 @@ internal fun KotlinTypeFacade.toDataFrame(
             ) ||
             this.toRegularClassSymbol(session)?.isEnumClass ?: false ||
             this.isSubtypeOf(
-                ConeClassLikeTypeImpl(
-                    ConeClassLikeLookupTagImpl(
-                        ClassId(FqName("java.time.temporal"), Name.identifier("TemporalAccessor"))
-                    ), arrayOf(), isNullable = false
-                ), session
+                Names.TEMPORAL_ACCESSOR_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
             ) ||
             this.isSubtypeOf(
-                ConeClassLikeTypeImpl(
-                    ConeClassLikeLookupTagImpl(
-                        ClassId(FqName("java.time.temporal"), Name.identifier("TemporalAmount"))
-                    ), arrayOf(), isNullable = false
-                ), session
+                Names.TEMPORAL_AMOUNT_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
             )
 
     val excludes =
