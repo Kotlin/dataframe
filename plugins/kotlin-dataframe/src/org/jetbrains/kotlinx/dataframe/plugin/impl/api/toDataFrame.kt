@@ -190,6 +190,7 @@ class Exclude1 : AbstractInterpreter<Unit>() {
         dsl.excludeProperties.addAll(properties.arguments.filterIsInstance<FirCallableReferenceAccess>())
     }
 }
+
 @Suppress("INVISIBLE_MEMBER")
 @OptIn(SymbolInternals::class)
 internal fun KotlinTypeFacade.toDataFrame(
@@ -197,27 +198,48 @@ internal fun KotlinTypeFacade.toDataFrame(
     arg: ConeTypeProjection,
     traverseConfiguration: TraverseConfiguration,
 ): PluginDataFrameSchema {
+
     fun ConeKotlinType.isValueType() =
         this.isArrayTypeOrNullableArrayType ||
             this.classId == StandardClassIds.Any ||
             this.classId == StandardClassIds.String ||
             this.classId == StandardClassIds.Boolean ||
-            classId in setOf(Names.DURATION_CLASS_ID, Names. LOCAL_DATE_CLASS_ID, Names.LOCAL_DATE_TIME_CLASS_ID, Names.INSTANT_CLASS_ID) ||
+            classId in setOf(
+            Names.DURATION_CLASS_ID,
+            Names.LOCAL_DATE_CLASS_ID,
+            Names.LOCAL_DATE_TIME_CLASS_ID,
+            Names.INSTANT_CLASS_ID,
+            Names.DATE_TIME_PERIOD_CLASS_ID,
+            Names.DATE_TIME_UNIT_CLASS_ID,
+            Names.TIME_ZONE_CLASS_ID
+        ) ||
             this.isSubtypeOf(session.builtinTypes.numberType.type, session) ||
-            this.isSubtypeOf(StandardClassIds.Number.constructClassLikeType(emptyArray(), isNullable = true), session) ||
+            this.isSubtypeOf(
+                StandardClassIds.Number.constructClassLikeType(emptyArray(), isNullable = true),
+                session
+            ) ||
             this.toRegularClassSymbol(session)?.isEnumClass ?: false ||
             this.isSubtypeOf(
                 ConeClassLikeTypeImpl(
                     ConeClassLikeLookupTagImpl(
-                        ClassId(FqName("java.time.temporal"), Name.identifier("Temporal"))
+                        ClassId(FqName("java.time.temporal"), Name.identifier("TemporalAccessor"))
+                    ), arrayOf(), isNullable = false
+                ), session
+            ) ||
+            this.isSubtypeOf(
+                ConeClassLikeTypeImpl(
+                    ConeClassLikeLookupTagImpl(
+                        ClassId(FqName("java.time.temporal"), Name.identifier("TemporalAmount"))
                     ), arrayOf(), isNullable = false
                 ), session
             )
 
-    val excludes = traverseConfiguration.excludeProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }
+    val excludes =
+        traverseConfiguration.excludeProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }
     val excludedClasses = traverseConfiguration.excludeClasses.mapTo(mutableSetOf()) { it.argument.resolvedType }
     val preserveClasses = traverseConfiguration.preserveClasses.mapNotNullTo(mutableSetOf()) { it.classId }
-    val preserveProperties = traverseConfiguration.preserveProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }
+    val preserveProperties =
+        traverseConfiguration.preserveProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }
 
     fun convert(classLike: ConeKotlinType, depth: Int, makeNullable: Boolean): List<SimpleCol> {
         val symbol = classLike.toRegularClassSymbol(session) ?: return emptyList()
@@ -280,12 +302,29 @@ internal fun KotlinTypeFacade.toDataFrame(
 
                 val fieldKind = returnType.getFieldKind(session)
 
-                val keepSubtree = depth >= maxDepth && !fieldKind.shouldBeConvertedToColumnGroup && !fieldKind.shouldBeConvertedToFrameColumn
+                val keepSubtree =
+                    depth >= maxDepth && !fieldKind.shouldBeConvertedToColumnGroup && !fieldKind.shouldBeConvertedToFrameColumn
                 if (keepSubtree || returnType.isValueType() || returnType.classId in preserveClasses || it in preserveProperties) {
-                    SimpleDataColumn(name, TypeApproximation(returnType.withNullability(ConeNullability.create(makeNullable), session.typeContext)))
+                    SimpleDataColumn(
+                        name,
+                        TypeApproximation(
+                            returnType.withNullability(
+                                ConeNullability.create(makeNullable),
+                                session.typeContext
+                            )
+                        )
+                    )
                 } else if (
-                    returnType.isSubtypeOf(StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection)), session) ||
-                    returnType.isSubtypeOf(StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection), isNullable = true), session)
+                    returnType.isSubtypeOf(
+                        StandardClassIds.Iterable.constructClassLikeType(arrayOf(ConeStarProjection)),
+                        session
+                    ) ||
+                    returnType.isSubtypeOf(
+                        StandardClassIds.Iterable.constructClassLikeType(
+                            arrayOf(ConeStarProjection),
+                            isNullable = true
+                        ), session
+                    )
                 ) {
                     val type: ConeKotlinType = when (val typeArgument = returnType.typeArguments[0]) {
                         is ConeKotlinType -> typeArgument
@@ -304,6 +343,12 @@ internal fun KotlinTypeFacade.toDataFrame(
                     SimpleColumnGroup(name, convert(returnType, depth + 1, returnType.isNullable || makeNullable))
                 }
             }
+    }
+
+    arg.type?.let { type ->
+        if (type.isValueType()) {
+            return PluginDataFrameSchema(listOf(simpleColumnOf("value", type)))
+        }
     }
 
     return when {

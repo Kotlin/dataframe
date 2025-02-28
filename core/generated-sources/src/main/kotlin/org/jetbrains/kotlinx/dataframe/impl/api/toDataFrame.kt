@@ -23,7 +23,8 @@ import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
 import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
-import java.time.temporal.Temporal
+import java.time.temporal.TemporalAccessor
+import java.time.temporal.TemporalAmount
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -38,6 +39,8 @@ import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 
 private val valueTypes = setOf(
+    Any::class,
+    Unit::class,
     Char::class,
     UByte::class,
     UShort::class,
@@ -52,16 +55,21 @@ private val valueTypes = setOf(
     kotlinx.datetime.TimeZone::class,
     kotlinx.datetime.DateTimePeriod::class,
     kotlinx.datetime.DateTimeUnit::class,
-    java.time.Duration::class,
 )
 
+/**
+ * Should be aligned with `ConeKotlinType.isValueType()` in
+ * plugins/kotlin-dataframe/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
+ */
 @PublishedApi
 internal val KClass<*>.isValueType: Boolean
     get() =
         this in valueTypes ||
             this.isSubclassOf(Number::class) ||
             this.isSubclassOf(Enum::class) ||
-            this.isSubclassOf(Temporal::class) ||
+            // all java time types
+            this.isSubclassOf(TemporalAccessor::class) ||
+            this.isSubclassOf(TemporalAmount::class) ||
             this.isArray
 
 internal class CreateDataFrameDslImpl<T>(

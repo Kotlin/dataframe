@@ -65,6 +65,9 @@ object Names {
     val LOCAL_DATE_CLASS_ID = kotlinx.datetime.LocalDate::class.classId()
     val LOCAL_DATE_TIME_CLASS_ID = kotlinx.datetime.LocalDateTime::class.classId()
     val INSTANT_CLASS_ID = kotlinx.datetime.Instant::class.classId()
+    val DATE_TIME_PERIOD_CLASS_ID = kotlinx.datetime.DateTimePeriod::class.classId()
+    val DATE_TIME_UNIT_CLASS_ID = kotlinx.datetime.DateTimeUnit::class.classId()
+    val TIME_ZONE_CLASS_ID = kotlinx.datetime.TimeZone::class.classId()
 
     val PAIR = ClassId(FqName("kotlin"), Name.identifier("Pair"))
     val PAIR_CONSTRUCTOR = CallableId(FqName("kotlin"), FqName("Pair"), Name.identifier("Pair"))
