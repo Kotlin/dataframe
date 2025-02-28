@@ -66,7 +66,7 @@ class MediumTests {
             -1, 0, 1,
         )
 
-        df.convert { colsOf<Double>() }.with { (it - rowMean()).roundToInt() } shouldBe expected
+        df.convert { colsOf<Double>() }.with { (it - rowMean().toDouble()).roundToInt() } shouldBe expected
     }
 
     @Test

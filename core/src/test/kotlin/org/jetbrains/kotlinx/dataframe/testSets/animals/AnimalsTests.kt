@@ -33,7 +33,7 @@ class AnimalsTests {
         mean.columnsCount() shouldBe 2
         mean.rowsCount() shouldBe 2
         mean.name.values() shouldBe listOf("age", "visits")
-        mean.value.type() shouldBe typeOf<Double>()
+        mean.value.type() shouldBe typeOf<Double?>()
     }
 
     @Test
@@ -42,7 +42,7 @@ class AnimalsTests {
             .update { age }.with { Double.NaN }
             .update { visits }.withNull()
         val mean = cleared.mean()
-        mean[age] shouldBe Double.NaN
-        (mean[visits.name()] as Double).isNaN() shouldBe true
+        mean[age] shouldBe null
+        mean[visits.name()] shouldBe null
     }
 }

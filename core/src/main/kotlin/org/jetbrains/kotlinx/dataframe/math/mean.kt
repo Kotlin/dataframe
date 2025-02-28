@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
 import org.jetbrains.kotlinx.dataframe.impl.api.toBigDecimal
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
@@ -13,10 +12,10 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-/** @include [Sequence.mean] */
+/** @include [Sequence.meanOrNull] */
 @PublishedApi
-internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Number? =
-    asSequence().mean(type, skipNA)
+internal fun <T : Number> Iterable<T>.meanOrNull(type: KType, skipNA: Boolean = skipNA_default): Number? =
+    asSequence().meanOrNull(type, skipNA)
 
 /**
  * Returns the mean of the numbers in [this].
@@ -24,41 +23,42 @@ internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = skipNA
  * If the input is empty, the return value will be `null`.
  *
  * If the [type] given or input consists of only [Int], [Short], [Byte], [Long], [Double], or [Float],
- * the return type will be [Double]`?` (Never `NaN`).
+ * the return type will be [Double].
  *
- * If the [type] given or the input contains [BigInteger] or [BigDecimal], the return type will be [BigDecimal]`?`.
+ * If the [type] given or the input contains [BigInteger] or [BigDecimal],
+ * the return type will be [BigDecimal].
  * @param type The type of the numbers in the sequence.
  * @param skipNA Whether to skip `NaN` values (default: `false`). Only relevant for [Double] and [Float].
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Number? {
+internal fun <T : Number> Sequence<T>.meanOrNull(type: KType, skipNA: Boolean = skipNA_default): Number? {
     if (type.isMarkedNullable) {
-        return filterNotNull().mean(type.withNullability(false), skipNA)
+        return filterNotNull().meanOrNull(type.withNullability(false), skipNA)
     }
     return when (type.classifier) {
-        // Double -> Double?
-        Double::class -> (this as Sequence<Double>).mean(skipNA).takeUnless { it.isNaN }
+        // Double -> Double
+        Double::class -> (this as Sequence<Double>).meanOrNull(skipNA)
 
-        // Float -> Double?
-        Float::class -> (this as Sequence<Float>).mean(skipNA).takeUnless { it.isNaN }
+        // Float -> Double
+        Float::class -> (this as Sequence<Float>).meanOrNull(skipNA)
 
-        // Int -> Double?
-        Int::class -> (this as Sequence<Int>).map { it.toDouble() }.mean(false).takeUnless { it.isNaN }
+        // Int -> Double
+        Int::class -> (this as Sequence<Int>).map { it.toDouble() }.meanOrNull(false)
 
-        // Short -> Double?
-        Short::class -> (this as Sequence<Short>).map { it.toDouble() }.mean(false).takeUnless { it.isNaN }
+        // Short -> Double
+        Short::class -> (this as Sequence<Short>).map { it.toDouble() }.meanOrNull(false)
 
-        // Byte -> Double?
-        Byte::class -> (this as Sequence<Byte>).map { it.toDouble() }.mean(false).takeUnless { it.isNaN }
+        // Byte -> Double
+        Byte::class -> (this as Sequence<Byte>).map { it.toDouble() }.meanOrNull(false)
 
-        // Long -> Double?
-        Long::class -> (this as Sequence<Long>).map { it.toDouble() }.mean(false).takeUnless { it.isNaN }
+        // Long -> Double
+        Long::class -> (this as Sequence<Long>).map { it.toDouble() }.meanOrNull(false)
 
-        // BigInteger -> BigDecimal?
-        BigInteger::class -> (this as Sequence<BigInteger>).mean()
+        // BigInteger -> BigDecimal
+        BigInteger::class -> (this as Sequence<BigInteger>).meanOrNull()
 
-        // BigDecimal -> BigDecimal?
-        BigDecimal::class -> (this as Sequence<BigDecimal>).mean()
+        // BigDecimal -> BigDecimal
+        BigDecimal::class -> (this as Sequence<BigDecimal>).meanOrNull()
 
         // Number -> Conversion(Common number type) -> Number? (Double or BigDecimal?)
         // fallback case, heavy as it needs to collect all types at runtime
@@ -69,7 +69,7 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA
                 error("Cannot find unified number type for $numberTypes")
             }
             this.convertToUnifiedNumberType(unifiedType)
-                .mean(unifiedType, skipNA)
+                .meanOrNull(unifiedType, skipNA)
         }
 
         // this means the sequence is empty
@@ -79,7 +79,7 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA
     }
 }
 
-internal fun Sequence<Double>.mean(skipNA: Boolean = skipNA_default): Double {
+internal fun Sequence<Double>.meanOrNull(skipNA: Boolean = skipNA_default): Double? {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
@@ -87,17 +87,17 @@ internal fun Sequence<Double>.mean(skipNA: Boolean = skipNA_default): Double {
             if (skipNA) {
                 continue
             } else {
-                return Double.NaN
+                return null
             }
         }
         sum += element
         count++
     }
-    return if (count > 0) sum / count else Double.NaN
+    return if (count > 0) sum / count else null
 }
 
 @JvmName("meanFloat")
-internal fun Sequence<Float>.mean(skipNA: Boolean = skipNA_default): Double {
+internal fun Sequence<Float>.meanOrNull(skipNA: Boolean = skipNA_default): Double? {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
@@ -105,17 +105,17 @@ internal fun Sequence<Float>.mean(skipNA: Boolean = skipNA_default): Double {
             if (skipNA) {
                 continue
             } else {
-                return Double.NaN
+                return null
             }
         }
         sum += element
         count++
     }
-    return if (count > 0) sum / count else Double.NaN
+    return if (count > 0) sum / count else null
 }
 
 @JvmName("bigIntegerMean")
-internal fun Sequence<BigInteger>.mean(): BigDecimal? {
+internal fun Sequence<BigInteger>.meanOrNull(): BigDecimal? {
     var count = 0
     val sum = sumOf {
         count++
@@ -125,7 +125,7 @@ internal fun Sequence<BigInteger>.mean(): BigDecimal? {
 }
 
 @JvmName("bigDecimalMean")
-internal fun Sequence<BigDecimal>.mean(): BigDecimal? {
+internal fun Sequence<BigDecimal>.meanOrNull(): BigDecimal? {
     var count = 0
     val sum = sumOf {
         count++
@@ -135,65 +135,65 @@ internal fun Sequence<BigDecimal>.mean(): BigDecimal? {
 }
 
 @JvmName("doubleMean")
-internal fun Iterable<Double>.mean(skipNA: Boolean = skipNA_default): Double = asSequence().mean(skipNA)
+internal fun Iterable<Double>.meanOrNull(skipNA: Boolean = skipNA_default): Double? = asSequence().meanOrNull(skipNA)
 
 @JvmName("floatMean")
-internal fun Iterable<Float>.mean(skipNA: Boolean = skipNA_default): Double = asSequence().mean(skipNA)
+internal fun Iterable<Float>.meanOrNull(skipNA: Boolean = skipNA_default): Double? = asSequence().meanOrNull(skipNA)
 
 @JvmName("bigDecimalMean")
-internal fun Iterable<BigDecimal>.mean(): BigDecimal? = asSequence().mean()
+internal fun Iterable<BigDecimal>.meanOrNull(): BigDecimal? = asSequence().meanOrNull()
 
 @JvmName("bigIntegerMean")
-internal fun Iterable<BigInteger>.mean(): BigDecimal? = asSequence().mean()
+internal fun Iterable<BigInteger>.meanOrNull(): BigDecimal? = asSequence().meanOrNull()
 
 @JvmName("intMean")
-internal fun Iterable<Int>.mean(): Double =
+internal fun Iterable<Int>.meanOrNull(): Double? =
     if (this is Collection) {
-        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+        if (size > 0) sumOf { it.toDouble() } / size else null
     } else {
         var count = 0
         val sum = sumOf {
             count++
             it.toDouble()
         }
-        if (count > 0) sum / count else Double.NaN
+        if (count > 0) sum / count else null
     }
 
 @JvmName("shortMean")
-internal fun Iterable<Short>.mean(): Double =
+internal fun Iterable<Short>.meanOrNull(): Double? =
     if (this is Collection) {
-        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+        if (size > 0) sumOf { it.toDouble() } / size else null
     } else {
         var count = 0
         val sum = sumOf {
             count++
             it.toDouble()
         }
-        if (count > 0) sum / count else Double.NaN
+        if (count > 0) sum / count else null
     }
 
 @JvmName("byteMean")
-internal fun Iterable<Byte>.mean(): Double =
+internal fun Iterable<Byte>.meanOrNull(): Double? =
     if (this is Collection) {
-        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+        if (size > 0) sumOf { it.toDouble() } / size else null
     } else {
         var count = 0
         val sum = sumOf {
             count++
             it.toDouble()
         }
-        if (count > 0) sum / count else Double.NaN
+        if (count > 0) sum / count else null
     }
 
 @JvmName("longMean")
-internal fun Iterable<Long>.mean(): Double =
+internal fun Iterable<Long>.meanOrNull(): Double? =
     if (this is Collection) {
-        if (size > 0) sumOf { it.toDouble() } / size else Double.NaN
+        if (size > 0) sumOf { it.toDouble() } / size else null
     } else {
         var count = 0
         val sum = sumOf {
             count++
             it.toDouble()
         }
-        if (count > 0) sum / count else Double.NaN
+        if (count > 0) sum / count else null
     }

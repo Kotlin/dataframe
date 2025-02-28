@@ -42,8 +42,8 @@ internal class TwoStepNumbersAggregator<Return : Number>(
 ) : AggregatorBase<Number, Return>(name, aggregator) {
 
     override fun aggregate(values: Iterable<Number>, type: KType): Return? {
-        require(type.isSubtypeOf(typeOf<Number>())) {
-            "${TwoStepNumbersAggregator::class.simpleName}: Type $type is not a subtype of Number"
+        require(type.isSubtypeOf(typeOf<Number?>())) {
+            "${TwoStepNumbersAggregator::class.simpleName}: Type $type is not a subtype of Number?"
         }
         return super.aggregate(values, type)
     }

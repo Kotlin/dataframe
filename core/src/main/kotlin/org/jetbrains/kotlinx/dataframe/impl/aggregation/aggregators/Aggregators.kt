@@ -1,10 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
-import org.jetbrains.kotlinx.dataframe.math.mean
+import org.jetbrains.kotlinx.dataframe.math.meanOrNull
 import org.jetbrains.kotlinx.dataframe.math.median
 import org.jetbrains.kotlinx.dataframe.math.percentile
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.sum
+import java.math.BigDecimal
 import kotlin.reflect.KType
 
 @PublishedApi
@@ -86,21 +87,18 @@ internal object Aggregators {
 
     @Suppress("ClassName")
     object mean {
-        val toNumber = withOption { skipNA: Boolean ->
-            extendsNumbers { mean(it, skipNA) }
-        }.create("meanToNumber")
+        val toNumber = withOneOption { skipNA: Boolean ->
+            twoStepForNumbers { meanOrNull(it, skipNA) }
+        }.create(mean::class.simpleName!!)
 
-        val toDouble = withOption { skipNA: Boolean ->
-            changesType(
-                aggregateWithType = { mean(it, skipNA).asDoubleOrNaN() },
-                aggregateWithValues = { mean(skipNA) },
-            )
-        }.create("meanToDouble")
+        val toDouble = withOneOption { skipNA: Boolean ->
+            twoStepForNumbers { meanOrNull(it, skipNA) as Double? }
+        }.create(mean::class.simpleName!!)
 
-        val toBigDecimal = changesType(
-            aggregateWithType = { mean(it) as BigDecimal? },
-            aggregateWithValues = { filterNotNull().mean() },
-        ).create("meanToBigDecimal")
+        val toBigDecimal =
+            twoStepForNumbers {
+                meanOrNull(it) as BigDecimal?
+            }.create(mean::class.simpleName!!)
     }
 
     val percentile by withOneOption { percentile: Double ->

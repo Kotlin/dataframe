@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTypeInference::class)
+
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -20,11 +22,12 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
-import org.jetbrains.kotlinx.dataframe.math.mean
+import org.jetbrains.kotlinx.dataframe.math.meanOrNull
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 // region DataColumn
@@ -56,7 +59,7 @@ public fun DataColumn<BigInteger?>.mean(): BigDecimal = meanOrNull().suggestIfNu
 public fun DataColumn<BigDecimal?>.mean(): BigDecimal = meanOrNull().suggestIfNull("mean")
 
 @JvmName("meanNumber")
-public fun DataColumn<Number?>.mean(skipNA: Boolean = skipNA_default): Number? = meanOrNull(skipNA)
+public fun DataColumn<Number?>.mean(skipNA: Boolean = skipNA_default): Number = meanOrNull(skipNA).suggestIfNull("mean")
 
 // endregion
 
@@ -96,112 +99,139 @@ public fun DataColumn<Number?>.meanOrNull(skipNA: Boolean = skipNA_default): Num
 
 // region meanOf
 
-@OptIn(ExperimentalTypeInference::class)
 @JvmName("meanOfInt")
-//@OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.meanOf(expression: (T) -> Int?): Double =
-    Aggregators.mean.toDouble(skipNA_default)
-        .cast2<Int?, Double>()
-        .aggregateOf(this, expression)
-        ?: Double.NaN
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOf(expression: (T) -> Int?): Double = meanOfOrNull(expression).suggestIfNull("meanOf")
 
-@OptIn(ExperimentalTypeInference::class)
 @JvmName("meanOfShort")
 @OverloadResolutionByLambdaReturnType
 public fun <T> DataColumn<T>.meanOf(expression: (T) -> Short?): Double =
-    Aggregators.mean.toDouble(skipNA_default)
-        .cast2<Short?, Double>()
-        .aggregateOf(this, expression)
-        ?: Double.NaN
+    meanOfOrNull(expression).suggestIfNull("meanOf")
 
-@OptIn(ExperimentalTypeInference::class)
 @JvmName("meanOfByte")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.meanOf(expression: (T) -> Byte?): Double =
-    Aggregators.mean.toDouble(skipNA_default)
-        .cast2<Byte?, Double>()
-        .aggregateOf(this, expression)
-        ?: Double.NaN
+public fun <T> DataColumn<T>.meanOf(expression: (T) -> Byte?): Double = meanOfOrNull(expression).suggestIfNull("meanOf")
 
-@OptIn(ExperimentalTypeInference::class)
 @JvmName("meanOfLong")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.meanOf(expression: (T) -> Long?): Double =
-    Aggregators.mean.toDouble(skipNA_default)
-        .cast2<Long?, Double>()
-        .aggregateOf(this, expression)
-        ?: Double.NaN
+public fun <T> DataColumn<T>.meanOf(expression: (T) -> Long?): Double = meanOfOrNull(expression).suggestIfNull("meanOf")
 
-@OptIn(ExperimentalTypeInference::class)
 @JvmName("meanOfDouble")
 @OverloadResolutionByLambdaReturnType
 public fun <T> DataColumn<T>.meanOf(skipNA: Boolean = skipNA_default, expression: (T) -> Double?): Double =
-    Aggregators.mean.toDouble(skipNA)
-        .cast2<Double?, Double>()
-        .aggregateOf(this, expression)
-        ?: Double.NaN
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
 
-@OptIn(ExperimentalTypeInference::class)
 @JvmName("meanOfFloat")
 @OverloadResolutionByLambdaReturnType
 public fun <T> DataColumn<T>.meanOf(skipNA: Boolean = skipNA_default, expression: (T) -> Float?): Double =
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+@JvmName("meanOfBigInteger")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOf(expression: (T) -> BigInteger?): BigDecimal =
+    meanOfOrNull(expression).suggestIfNull("meanOf")
+
+@JvmName("meanOfBigDecimal")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOf(expression: (T) -> BigDecimal?): BigDecimal =
+    meanOfOrNull(expression).suggestIfNull("meanOf")
+
+@JvmName("meanOfNumber")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOf(skipNA: Boolean = skipNA_default, expression: (T) -> Number?): Number =
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+// endregion
+
+// region meanOfOrNull
+
+@JvmName("meanOfOrNullInt")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOfOrNull(expression: (T) -> Int?): Double? =
+    Aggregators.mean.toDouble(skipNA_default)
+        .cast2<Int?, Double>()
+        .aggregateOf(this, expression)
+
+@JvmName("meanOfOrNullShort")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOfOrNull(expression: (T) -> Short?): Double? =
+    Aggregators.mean.toDouble(skipNA_default)
+        .cast2<Short?, Double>()
+        .aggregateOf(this, expression)
+
+@JvmName("meanOfOrNullByte")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOfOrNull(expression: (T) -> Byte?): Double? =
+    Aggregators.mean.toDouble(skipNA_default)
+        .cast2<Byte?, Double>()
+        .aggregateOf(this, expression)
+
+@JvmName("meanOfOrNullLong")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOfOrNull(expression: (T) -> Long?): Double? =
+    Aggregators.mean.toDouble(skipNA_default)
+        .cast2<Long?, Double>()
+        .aggregateOf(this, expression)
+
+@JvmName("meanOfOrNullDouble")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOfOrNull(skipNA: Boolean = skipNA_default, expression: (T) -> Double?): Double? =
+    Aggregators.mean.toDouble(skipNA)
+        .cast2<Double?, Double>()
+        .aggregateOf(this, expression)
+
+@JvmName("meanOfOrNullFloat")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.meanOfOrNull(skipNA: Boolean = skipNA_default, expression: (T) -> Float?): Double? =
     Aggregators.mean.toDouble(skipNA)
         .cast2<Float?, Double>()
         .aggregateOf(this, expression)
-        ?: Double.NaN
 
-@OptIn(ExperimentalTypeInference::class)
-@JvmName("meanOfBigInteger")
+@JvmName("meanOfOrNullBigInteger")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.meanOf(expression: (T) -> BigInteger?): BigDecimal? =
+public fun <T> DataColumn<T>.meanOfOrNull(expression: (T) -> BigInteger?): BigDecimal? =
     Aggregators.mean.toBigDecimal
         .cast2<BigInteger?, BigDecimal?>()
         .aggregateOf(this, expression)
 
-@OptIn(ExperimentalTypeInference::class)
-@JvmName("meanOfBigDecimal")
+@JvmName("meanOfOrNullBigDecimal")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.meanOf(expression: (T) -> BigDecimal?): BigDecimal? =
+public fun <T> DataColumn<T>.meanOfOrNull(expression: (T) -> BigDecimal?): BigDecimal? =
     Aggregators.mean.toBigDecimal
         .cast2<BigDecimal?, BigDecimal?>()
         .aggregateOf(this, expression)
 
-@OptIn(ExperimentalTypeInference::class)
-@JvmName("meanOfNumber")
+@JvmName("meanOfOrNullNumber")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.meanOf(skipNA: Boolean = skipNA_default, expression: (T) -> Number?): Number? =
+public fun <T> DataColumn<T>.meanOfOrNull(skipNA: Boolean = skipNA_default, expression: (T) -> Number?): Number? =
     Aggregators.mean.toNumber(skipNA)
         .cast2<Number?, Number?>()
         .aggregateOf(this, expression)
 
-public fun main() {
-    val data = (1..10).toList()
-    val df = data.toDataFrame()
-
-    val mean = df.value.meanOf { if (true) it.toLong() else it.toDouble() }
-    val mean2 = df.value.meanOf { it.toBigInteger() }
-
-    println(mean)
-    println(mean!!::class)
-}
-
 // endregion
 
 // endregion
 
-// region DataRow
-// todo
-public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double =
-    values().filterIsInstance<Number>().map { it.toDouble() }.mean(skipNA)
+// region DataRow - rowMean
 
-public inline fun <reified T : Number> AnyRow.rowMeanOf(): Double =
-    values().filterIsInstance<T>().mean(typeOf<T>()) as Double
+public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Number = rowMeanOrNull(skipNA).suggestIfNull("rowMean")
+
+public fun AnyRow.rowMeanOrNull(skipNA: Boolean = skipNA_default): Number? =
+    Aggregators.mean.toNumber(skipNA).aggregateCalculatingType(
+        values().filterIsInstance<Number>(),
+        columnTypes().filter { it.isSubtypeOf(typeOf<Number?>()) }.toSet(),
+    )
+
+public inline fun <reified T : Number> AnyRow.rowMeanOf(): Number = rowMeanOfOrNull<T>().suggestIfNull("rowMeanOf")
+
+public inline fun <reified T : Number> AnyRow.rowMeanOfOrNull(): Number? =
+    values().filterIsInstance<T>().meanOrNull(typeOf<T>())
 
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.mean(skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA, numberColumns())
+// region meanFor
 
 public fun <T, C : Number> DataFrame<T>.meanFor(
     skipNA: Boolean = skipNA_default,
@@ -223,29 +253,249 @@ public fun <T, C : Number> DataFrame<T>.meanFor(
     skipNA: Boolean = skipNA_default,
 ): DataRow<T> = meanFor(skipNA) { columns.toColumnSet() }
 
-// todo
+// endregion
+
+// region mean
+
+public fun <T> DataFrame<T>.mean(skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA, numberColumns())
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanInt")
+public fun <T> DataFrame<T>.mean(columns: ColumnsSelector<T, Int?>): Double = meanOrNull(columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanShort")
+public fun <T> DataFrame<T>.mean(columns: ColumnsSelector<T, Short?>): Double =
+    meanOrNull(columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanByte")
+public fun <T> DataFrame<T>.mean(columns: ColumnsSelector<T, Byte?>): Double = meanOrNull(columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanLong")
+public fun <T> DataFrame<T>.mean(columns: ColumnsSelector<T, Long?>): Double = meanOrNull(columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanDouble")
+public fun <T> DataFrame<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, Double?>): Double =
+    meanOrNull(skipNA, columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanFloat")
+public fun <T> DataFrame<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, Float?>): Double =
+    meanOrNull(skipNA, columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanBigInteger")
+public fun <T> DataFrame<T>.mean(columns: ColumnsSelector<T, BigInteger?>): BigDecimal =
+    meanOrNull(columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanBigDecimal")
+public fun <T> DataFrame<T>.mean(columns: ColumnsSelector<T, BigDecimal?>): BigDecimal =
+    meanOrNull(columns).suggestIfNull("mean")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanNumber")
 public fun <T, C : Number> DataFrame<T>.mean(
     skipNA: Boolean = skipNA_default,
     columns: ColumnsSelector<T, C?>,
-): Double = Aggregators.mean.toNumber(skipNA).aggregateAll(this, columns) as Double? ?: Double.NaN
+): Number = meanOrNull(skipNA, columns).suggestIfNull("mean")
 
-public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): Double =
-    mean(skipNA) { columns.toNumberColumns() }
+public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): Number =
+    meanOrNull(columns = columns, skipNA = skipNA).suggestIfNull("mean")
 
 @AccessApiOverload
 public fun <T, C : Number> DataFrame<T>.mean(
     vararg columns: ColumnReference<C?>,
     skipNA: Boolean = skipNA_default,
-): Double = mean(skipNA) { columns.toColumnSet() }
+): Number = meanOrNull(columns = columns, skipNA = skipNA).suggestIfNull("mean")
 
 @AccessApiOverload
-public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): Double =
-    mean(skipNA) { columns.toColumnSet() }
+public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): Number =
+    meanOrNull(columns = columns, skipNA = skipNA).suggestIfNull("mean")
 
+// endregion
+
+// region meanOrNull
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullInt")
+public fun <T> DataFrame<T>.meanOrNull(columns: ColumnsSelector<T, Int?>): Double? =
+    Aggregators.mean.toDouble(skipNA_default).aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullShort")
+public fun <T> DataFrame<T>.meanOrNull(columns: ColumnsSelector<T, Short?>): Double? =
+    Aggregators.mean.toDouble(skipNA_default).aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullByte")
+public fun <T> DataFrame<T>.meanOrNull(columns: ColumnsSelector<T, Byte?>): Double? =
+    Aggregators.mean.toDouble(skipNA_default).aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullLong")
+public fun <T> DataFrame<T>.meanOrNull(columns: ColumnsSelector<T, Long?>): Double? =
+    Aggregators.mean.toDouble(skipNA_default).aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullDouble")
+public fun <T> DataFrame<T>.meanOrNull(
+    skipNA: Boolean = skipNA_default,
+    columns: ColumnsSelector<T, Double?>,
+): Double? = Aggregators.mean.toDouble(skipNA).aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullFloat")
+public fun <T> DataFrame<T>.meanOrNull(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, Float?>): Double? =
+    Aggregators.mean.toDouble(skipNA).aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullBigInteger")
+public fun <T> DataFrame<T>.meanOrNull(columns: ColumnsSelector<T, BigInteger?>): BigDecimal? =
+    Aggregators.mean.toBigDecimal.aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullBigDecimal")
+public fun <T> DataFrame<T>.meanOrNull(columns: ColumnsSelector<T, BigDecimal?>): BigDecimal? =
+    Aggregators.mean.toBigDecimal.aggregateAll(this, columns)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullNumber")
+public fun <T, C : Number> DataFrame<T>.meanOrNull(
+    skipNA: Boolean = skipNA_default,
+    columns: ColumnsSelector<T, C?>,
+): Number? = Aggregators.mean.toNumber(skipNA).aggregateAll(this, columns)
+
+public fun <T> DataFrame<T>.meanOrNull(vararg columns: String, skipNA: Boolean = skipNA_default): Number? =
+    meanOrNull(skipNA) { columns.toNumberColumns() }
+
+@AccessApiOverload
+public fun <T, C : Number> DataFrame<T>.meanOrNull(
+    vararg columns: ColumnReference<C?>,
+    skipNA: Boolean = skipNA_default,
+): Number? = meanOrNull(skipNA) { columns.toColumnSet() }
+
+@AccessApiOverload
+public fun <T, C : Number> DataFrame<T>.meanOrNull(
+    vararg columns: KProperty<C?>,
+    skipNA: Boolean = skipNA_default,
+): Number? = meanOrNull(skipNA) { columns.toColumnSet() }
+
+// endregion
+
+// region meanOf
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfInt")
+public fun <T> DataFrame<T>.meanOf(expression: RowExpression<T, Int?>): Double =
+    meanOfOrNull(expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfShort")
+public fun <T> DataFrame<T>.meanOf(skipNA: Boolean = skipNA_default, expression: RowExpression<T, Short?>): Double =
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfByte")
+public fun <T> DataFrame<T>.meanOf(skipNA: Boolean = skipNA_default, expression: RowExpression<T, Byte?>): Double =
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfLong")
+public fun <T> DataFrame<T>.meanOf(skipNA: Boolean = skipNA_default, expression: RowExpression<T, Long?>): Double =
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfDouble")
+public fun <T> DataFrame<T>.meanOf(skipNA: Boolean = skipNA_default, expression: RowExpression<T, Double?>): Double =
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfFloat")
+public fun <T> DataFrame<T>.meanOf(skipNA: Boolean = skipNA_default, expression: RowExpression<T, Float?>): Double =
+    meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfBigInteger")
+public fun <T> DataFrame<T>.meanOf(expression: RowExpression<T, BigInteger?>): BigDecimal =
+    meanOfOrNull(expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfBigDecimal")
+public fun <T> DataFrame<T>.meanOf(expression: RowExpression<T, BigDecimal?>): BigDecimal =
+    meanOfOrNull(expression).suggestIfNull("meanOf")
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOfNumber")
 public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
     skipNA: Boolean = skipNA_default,
     noinline expression: RowExpression<T, D?>,
-): Double = Aggregators.mean.toNumber(skipNA).of(this, expression) as Double? ?: Double.NaN
+): Number = meanOfOrNull(skipNA, expression).suggestIfNull("meanOf")
+
+// endregion
+
+// region meanOfOrNull
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfInt")
+public fun <T> DataFrame<T>.meanOfOrNull(expression: RowExpression<T, Int?>): Double? =
+    Aggregators.mean.toDouble(skipNA_default).of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfShort")
+public fun <T> DataFrame<T>.meanOfOrNull(
+    skipNA: Boolean = skipNA_default,
+    expression: RowExpression<T, Short?>,
+): Double? = Aggregators.mean.toDouble(skipNA).of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfByte")
+public fun <T> DataFrame<T>.meanOfOrNull(
+    skipNA: Boolean = skipNA_default,
+    expression: RowExpression<T, Byte?>,
+): Double? = Aggregators.mean.toDouble(skipNA).of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfLong")
+public fun <T> DataFrame<T>.meanOfOrNull(
+    skipNA: Boolean = skipNA_default,
+    expression: RowExpression<T, Long?>,
+): Double? = Aggregators.mean.toDouble(skipNA).of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfDouble")
+public fun <T> DataFrame<T>.meanOfOrNull(
+    skipNA: Boolean = skipNA_default,
+    expression: RowExpression<T, Double?>,
+): Double? = Aggregators.mean.toDouble(skipNA).of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfFloat")
+public fun <T> DataFrame<T>.meanOfOrNull(
+    skipNA: Boolean = skipNA_default,
+    expression: RowExpression<T, Float?>,
+): Double? = Aggregators.mean.toDouble(skipNA).of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfBigInteger")
+public fun <T> DataFrame<T>.meanOfOrNull(expression: RowExpression<T, BigInteger?>): BigDecimal? =
+    Aggregators.mean.toBigDecimal.of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfBigDecimal")
+public fun <T> DataFrame<T>.meanOfOrNull(expression: RowExpression<T, BigDecimal?>): BigDecimal? =
+    Aggregators.mean.toBigDecimal.of(this, expression)
+
+@OverloadResolutionByLambdaReturnType
+@JvmName("meanOrNullOfNumber")
+public inline fun <T, reified D : Number> DataFrame<T>.meanOfOrNull(
+    skipNA: Boolean = skipNA_default,
+    noinline expression: RowExpression<T, D?>,
+): Number? = Aggregators.mean.toNumber(skipNA).of(this, expression)
+
+// endregion
 
 // endregion
 
@@ -303,7 +553,9 @@ public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.mean.toNumber(skipNA).aggregateOf(this, name, expression)
+): DataFrame<T> =
+    Aggregators.mean.toNumber(skipNA)
+        .aggregateOf(this, name, expression)
 
 // endregion
 

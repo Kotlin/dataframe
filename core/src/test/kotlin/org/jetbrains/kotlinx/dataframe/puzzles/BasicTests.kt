@@ -142,9 +142,9 @@ class BasicTests {
     @Test
     fun `calculate mean age for each animal`() {
         val expected = dataFrameOf("animal", "age")(
-            "cat", Double.NaN,
+            "cat", null,
             "snake", 2.5,
-            "dog", Double.NaN,
+            "dog", null,
         )
 
         df.groupBy { animal }.mean { age } shouldBe expected
@@ -213,7 +213,7 @@ class BasicTests {
         val expected = dataFrameOf("animal", "1", "3", "2")(
             "cat", 2.5, 2.5, null,
             "snake", 4.5, null, 0.5,
-            "dog", 3.0, Double.NaN, 6.0,
+            "dog", 3.0, null, 6.0,
         )
 
         val actualDfAcc = df.pivot(inward = false) { visits }.groupBy { animal }.mean(skipNA = true) { age }

@@ -39,7 +39,7 @@ class DescribeTests {
             nulls shouldBe 1
             top shouldBe 1
             freq shouldBe 1
-            mean shouldBe 4.5
+            mean shouldBe 4.5.toBigDecimal()
             std shouldBe 2.449489742783178
             min shouldBe 1.toBigDecimal()
             (p25 as BigDecimal).setScale(2) shouldBe 2.75.toBigDecimal()
@@ -64,8 +64,8 @@ class DescribeTests {
             nulls shouldBe 0
             top shouldBe 1
             freq shouldBe 1
-            mean.isNaN() shouldBe true
-            std.isNaN() shouldBe true
+            mean shouldBe null
+            std.isNaN shouldBe true
             min shouldBe 1.0 // TODO should be NaN too?
             p25 shouldBe 1.75
             median shouldBe 3.0
