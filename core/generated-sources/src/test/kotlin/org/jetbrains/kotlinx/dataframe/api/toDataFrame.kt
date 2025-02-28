@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.math.BigDecimal
@@ -397,64 +396,6 @@ class CreateDataFrameTests {
     fun `should convert iterables of Enum to DataFrame`() {
         val enums: List<TestEnum?> = listOf(TestEnum.VALUE_ONE, TestEnum.VALUE_TWO, null)
         enums.toDataFrame() shouldBe dataFrameOf("value")(*enums.toTypedArray())
-    }
-
-    /**
-     * Generates `Iterable<T>.toDataFrame()` overloads for all built-in types,
-     * as well as many commonly used value types.
-     * This list can be extended as needed.
-     */
-    @Ignore
-    @Test
-    fun generateValueTypesOverrides() {
-        listOf(
-            "Byte",
-            "Short",
-            "Int",
-            "Long",
-            "String",
-            "Char",
-            "Boolean",
-            "Float",
-            "Double",
-            "UByte",
-            "UShort",
-            "UInt",
-            "ULong",
-            "BigDecimal",
-            "BigInteger",
-            "LocalDate",
-            "LocalDateTime",
-            "LocalTime",
-            "Instant",
-            "Duration",
-            "java.time.LocalDate",
-            "java.time.LocalDateTime",
-            "java.time.LocalTime",
-            "java.time.Instant",
-            "java.time.Duration",
-            "Temporal",
-            "TimeZone",
-            "Month",
-            "DayOfWeek",
-            "DateTimePeriod",
-            "DateTimeUnit",
-            "Enum",
-        ).forEach { typeName ->
-            val typeParameter = typeName.split(".").last().first()
-            val type = if (typeName == "Enum") "Enum<*>" else typeName
-            val jvmNameSuffix = typeName.replace(".", "")
-
-            val func =
-                """
-                @JvmName("toDataFrame$jvmNameSuffix")
-                public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
-                    ValueProperty<$typeParameter>::value from { it }
-                }.cast()
-                """.trimIndent()
-            println(func)
-            println()
-        }
     }
 
     // nullable field here - no generated unwrapping code

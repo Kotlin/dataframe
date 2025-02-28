@@ -38,14 +38,24 @@ import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 
 private val valueTypes = setOf(
+    Char::class,
+    UByte::class,
+    UShort::class,
+    UInt::class,
+    ULong::class,
     String::class,
     Boolean::class,
     kotlin.time.Duration::class,
     kotlinx.datetime.LocalDate::class,
     kotlinx.datetime.LocalDateTime::class,
     kotlinx.datetime.Instant::class,
+    kotlinx.datetime.TimeZone::class,
+    kotlinx.datetime.DateTimePeriod::class,
+    kotlinx.datetime.DateTimeUnit::class,
+    java.time.Duration::class,
 )
 
+@PublishedApi
 internal val KClass<*>.isValueType: Boolean
     get() =
         this in valueTypes ||

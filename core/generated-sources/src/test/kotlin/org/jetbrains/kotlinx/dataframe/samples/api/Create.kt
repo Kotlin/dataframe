@@ -355,7 +355,7 @@ class Create : TestBase() {
     fun readDataFrameFromValues() {
         // SampleStart
         val names = listOf("Alice", "Bob", "Charlie")
-        val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
+        val df = names.toDataFrame() as DataFrame<ValueProperty<String>>
         df.add("length") { value.length }
         // SampleEnd
         df.value.toList() shouldBe names
