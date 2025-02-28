@@ -145,7 +145,8 @@ Its data schema defines the column that can be used right after the conversion f
 
 ```kotlin
 val names = listOf("Alice", "Bob", "Charlie")
-val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
+// TODO fix with plugin???
+val df = names.toDataFrame() as DataFrame<ValueProperty<String>>
 df.add("length") { value.length }
 ```
 
