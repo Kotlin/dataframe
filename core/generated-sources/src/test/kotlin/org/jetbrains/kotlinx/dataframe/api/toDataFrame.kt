@@ -2,6 +2,14 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -13,6 +21,10 @@ import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
+import java.math.BigDecimal
+import java.math.BigInteger
+import java.time.temporal.Temporal
+import kotlin.collections.toTypedArray
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -258,23 +270,143 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun builtInTypes() {
-        val string = listOf("aaa", "aa", null)
-        string.toDataFrame() shouldBe dataFrameOf("value")(*string.toTypedArray())
+    fun `should convert iterables of primitive arrays to DataFrame`() {
+        val intArrays = listOf(intArrayOf(1, 2, 3), intArrayOf(4, 5, 6))
+        intArrays.toDataFrame() shouldBe dataFrameOf("value")(*intArrays.toTypedArray())
 
-        val int = listOf(1, 2, 3)
-        int.toDataFrame() shouldBe dataFrameOf("value")(*int.toTypedArray())
+        val doubleArrays = listOf(doubleArrayOf(1.1, 2.2), doubleArrayOf(3.3, 4.4))
+        doubleArrays.toDataFrame() shouldBe dataFrameOf("value")(*doubleArrays.toTypedArray())
 
-        val doubles = listOf(1.0, 2.0, 3.0)
-        doubles.toDataFrame() shouldBe dataFrameOf("value")(*doubles.toTypedArray())
-
-        val floats = listOf(1.0f, 2.0f, 3.0f)
-        floats.toDataFrame() shouldBe dataFrameOf("value")(*floats.toTypedArray())
+        val booleanArrays = listOf(booleanArrayOf(true, false), booleanArrayOf(false, true))
+        booleanArrays.toDataFrame() shouldBe dataFrameOf("value")(*booleanArrays.toTypedArray())
     }
 
+    @Test
+    fun `should convert iterables of built-in primitive types to DataFrame`() {
+        val bytes: List<Byte?> = listOf(1, 2, null)
+        bytes.toDataFrame() shouldBe dataFrameOf("value")(*bytes.toTypedArray())
+
+        val shorts: List<Short?> = listOf(10, 20, null)
+        shorts.toDataFrame() shouldBe dataFrameOf("value")(*shorts.toTypedArray())
+
+        val ints: List<Int?> = listOf(100, 200, null)
+        ints.toDataFrame() shouldBe dataFrameOf("value")(*ints.toTypedArray())
+
+        val longs: List<Long?> = listOf(1000L, 2000L, null)
+        longs.toDataFrame() shouldBe dataFrameOf("value")(*longs.toTypedArray())
+
+        val floats: List<Float?> = listOf(1.1f, 2.2f, null)
+        floats.toDataFrame() shouldBe dataFrameOf("value")(*floats.toTypedArray())
+
+        val doubles: List<Double?> = listOf(1.1, 2.2, null)
+        doubles.toDataFrame() shouldBe dataFrameOf("value")(*doubles.toTypedArray())
+
+        val booleans: List<Boolean?> = listOf(true, false, null)
+        booleans.toDataFrame() shouldBe dataFrameOf("value")(*booleans.toTypedArray())
+
+        val chars: List<Char?> = listOf('A', 'B', null)
+        chars.toDataFrame() shouldBe dataFrameOf("value")(*chars.toTypedArray())
+
+        val strings: List<String?> = listOf("hello", "world", null)
+        strings.toDataFrame() shouldBe dataFrameOf("value")(*strings.toTypedArray())
+    }
+
+    @Test
+    fun `should convert iterables of unsigned types to DataFrame`() {
+        val ubytes: List<UByte?> = listOf(1u, 2u, null)
+        ubytes.toDataFrame() shouldBe dataFrameOf("value")(*ubytes.toTypedArray())
+
+        val ushorts: List<UShort?> = listOf(100u, 200u, null)
+        ushorts.toDataFrame() shouldBe dataFrameOf("value")(*ushorts.toTypedArray())
+
+        val uints: List<UInt?> = listOf(1000u, 2000u, null)
+        uints.toDataFrame() shouldBe dataFrameOf("value")(*uints.toTypedArray())
+
+        val ulongs: List<ULong?> = listOf(10000u, 20000u, null)
+        ulongs.toDataFrame() shouldBe dataFrameOf("value")(*ulongs.toTypedArray())
+    }
+
+    @Test
+    fun `should convert iterables of BigDecimal and BigInteger to DataFrame`() {
+        val bigDecimals: List<BigDecimal?> = listOf(BigDecimal("1.1"), BigDecimal("2.2"), null)
+        bigDecimals.toDataFrame() shouldBe dataFrameOf("value")(*bigDecimals.toTypedArray())
+
+        val bigIntegers: List<BigInteger?> = listOf(BigInteger("100"), BigInteger("200"), null)
+        bigIntegers.toDataFrame() shouldBe dataFrameOf("value")(*bigIntegers.toTypedArray())
+    }
+
+    @Test
+    fun `should convert iterables of java time types to DataFrame`() {
+        val localDates: List<java.time.LocalDate?> = listOf(java.time.LocalDate.of(2024, 2, 28), null)
+        localDates.toDataFrame() shouldBe dataFrameOf("value")(*localDates.toTypedArray())
+
+        val localDateTimes: List<java.time.LocalDateTime?> =
+            listOf(java.time.LocalDateTime.of(2024, 2, 28, 14, 30), null)
+        localDateTimes.toDataFrame() shouldBe dataFrameOf("value")(*localDateTimes.toTypedArray())
+
+        val localTimes: List<java.time.LocalTime?> = listOf(java.time.LocalTime.of(14, 30), null)
+        localTimes.toDataFrame() shouldBe dataFrameOf("value")(*localTimes.toTypedArray())
+
+        val instants: List<java.time.Instant?> = listOf(java.time.Instant.parse("2024-02-28T14:30:00Z"), null)
+        instants.toDataFrame() shouldBe dataFrameOf("value")(*instants.toTypedArray())
+
+        val durations: List<java.time.Duration?> = listOf(java.time.Duration.ofHours(2), null)
+        durations.toDataFrame() shouldBe dataFrameOf("value")(*durations.toTypedArray())
+
+        val temporals: List<Temporal?> = listOf(
+            java.time.LocalDate.of(2024, 2, 28),
+            java.time.LocalDateTime.of(2024, 2, 28, 14, 30),
+            null,
+        )
+        temporals.toDataFrame() shouldBe dataFrameOf("value")(*temporals.toTypedArray())
+    }
+
+    @Test
+    fun `should convert iterables of kotlinx datetime types to DataFrame`() {
+        val localDates: List<LocalDate?> = listOf(LocalDate(2024, 2, 28), null)
+        localDates.toDataFrame() shouldBe dataFrameOf("value")(*localDates.toTypedArray())
+
+        val localDateTimes: List<LocalDateTime?> = listOf(LocalDateTime(2024, 2, 28, 14, 30, 0), null)
+        localDateTimes.toDataFrame() shouldBe dataFrameOf("value")(*localDateTimes.toTypedArray())
+
+        val instants: List<Instant?> = listOf(Instant.parse("2024-02-28T14:30:00Z"), null)
+        instants.toDataFrame() shouldBe dataFrameOf("value")(*instants.toTypedArray())
+
+        val timeZones: List<TimeZone?> = listOf(TimeZone.of("UTC"), TimeZone.of("Europe/Moscow"), null)
+        timeZones.toDataFrame() shouldBe dataFrameOf("value")(*timeZones.toTypedArray())
+
+        val months: List<Month?> = listOf(Month.JANUARY, Month.FEBRUARY, null)
+        months.toDataFrame() shouldBe dataFrameOf("value")(*months.toTypedArray())
+
+        val daysOfWeek: List<DayOfWeek?> = listOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, null)
+        daysOfWeek.toDataFrame() shouldBe dataFrameOf("value")(*daysOfWeek.toTypedArray())
+
+        val dateTimePeriods: List<DateTimePeriod?> = listOf(DateTimePeriod(years = 1, months = 2), null)
+        dateTimePeriods.toDataFrame().convert("value") { it.toString() } shouldBe
+            dataFrameOf("value")("P1Y2M", "null")
+
+        val dateTimeUnits: List<DateTimeUnit?> = listOf(DateTimeUnit.MonthBased(3), DateTimeUnit.DayBased(7), null)
+        dateTimeUnits.toDataFrame()
+            .convert("value") { it.toString().trim() } shouldBe
+            dataFrameOf("value")("QUARTER", "WEEK", "null")
+    }
+
+    enum class TestEnum { VALUE_ONE, VALUE_TWO }
+
+    @Test
+    fun `should convert iterables of Enum to DataFrame`() {
+        val enums: List<TestEnum?> = listOf(TestEnum.VALUE_ONE, TestEnum.VALUE_TWO, null)
+        enums.toDataFrame() shouldBe dataFrameOf("value")(*enums.toTypedArray())
+    }
+
+    /**
+     * Generates `Iterable<T>.toDataFrame()` overloads for all built-in types,
+     * as well as many commonly used value types.
+     * This list can be extended as needed.
+     */
     @Ignore
     @Test
-    fun generateBuiltInsOverrides() {
+    fun generateValueTypesOverrides() {
         listOf(
             "Byte",
             "Short",
@@ -283,15 +415,39 @@ class CreateDataFrameTests {
             "String",
             "Char",
             "Boolean",
+            "Float",
+            "Double",
             "UByte",
             "UShort",
             "UInt",
             "ULong",
-        ).forEach { type ->
-            val typeParameter = type.first()
+            "BigDecimal",
+            "BigInteger",
+            "LocalDate",
+            "LocalDateTime",
+            "LocalTime",
+            "Instant",
+            "Duration",
+            "java.time.LocalDate",
+            "java.time.LocalDateTime",
+            "java.time.LocalTime",
+            "java.time.Instant",
+            "java.time.Duration",
+            "Temporal",
+            "TimeZone",
+            "Month",
+            "DayOfWeek",
+            "DateTimePeriod",
+            "DateTimeUnit",
+            "Enum",
+        ).forEach { typeName ->
+            val typeParameter = typeName.split(".").last().first()
+            val type = if (typeName == "Enum") "Enum<*>" else typeName
+            val jvmNameSuffix = typeName.replace(".", "")
+
             val func =
                 """
-                @JvmName("toDataFrame$type")
+                @JvmName("toDataFrame$jvmNameSuffix")
                 public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<ValueProperty<$typeParameter>> = toDataFrame {
                     ValueProperty<$typeParameter>::value from { it }
                 }.cast()
