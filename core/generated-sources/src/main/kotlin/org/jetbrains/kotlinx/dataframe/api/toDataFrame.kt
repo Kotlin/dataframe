@@ -28,9 +28,12 @@ import kotlin.reflect.KProperty
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
+        // check if type is value: primitives, primitive arrays, datetime types etc.
         if (T::class.isValueType) {
+            // if type parameter is value type, create a single `value` column
             ValueProperty<T>::value from { it }
         } else {
+            // otherwise creates columns based on properties
             properties()
         }
     }
