@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
 import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.meanOrNull
 import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -56,7 +57,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
                 ?.key
         }
         if (hasNumericCols) {
-            ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }
+            ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().meanOrNull() else null }
             ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
         }
         if (hasComparableCols || hasNumericCols) {
