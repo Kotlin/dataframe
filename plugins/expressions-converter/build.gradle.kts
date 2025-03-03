@@ -40,7 +40,6 @@ tasks.test {
     useJUnitPlatform()
     doFirst {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib", "kotlin-stdlib")
-        setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib-jdk8", "kotlin-stdlib-jdk8")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-reflect", "kotlin-reflect")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-test", "kotlin-test")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-script-runtime", "kotlin-script-runtime")
