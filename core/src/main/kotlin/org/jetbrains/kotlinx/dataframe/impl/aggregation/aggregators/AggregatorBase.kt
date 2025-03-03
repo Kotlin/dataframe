@@ -18,6 +18,7 @@ import kotlin.reflect.full.withNullability
  */
 internal abstract class AggregatorBase<Value, Return>(
     override val name: String,
+    protected val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     protected val aggregator: (values: Iterable<Value>, type: KType) -> Return?,
 ) : Aggregator<Value, Return> {
 
@@ -28,6 +29,9 @@ internal abstract class AggregatorBase<Value, Return>(
      * Uses [aggregator] to compute the result.
      */
     override fun aggregate(values: Iterable<Value>, type: KType): Return? = aggregator(values, type)
+
+    override fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType? =
+        getReturnTypeOrNull(type, emptyInput)
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.

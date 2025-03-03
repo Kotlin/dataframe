@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 
 /**
  * Base interface for all aggregators.
@@ -56,6 +57,11 @@ internal interface Aggregator<Value, Return> {
      * If provided, [valueTypes] can be used to avoid calculating the types of [values] at runtime.
      */
     fun aggregateCalculatingType(values: Iterable<Value>, valueTypes: Set<KType>? = null): Return?
+
+    /**
+     * Function that can give the return type of [aggregate] as [KType], given the type of the input.
+     */
+    fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType?
 }
 
 @PublishedApi
@@ -63,3 +69,7 @@ internal fun <Type> Aggregator<*, *>.cast(): Aggregator<Type, Type> = this as Ag
 
 @PublishedApi
 internal fun <Value, Return> Aggregator<*, *>.cast2(): Aggregator<Value, Return> = this as Aggregator<Value, Return>
+
+internal val preserveReturnTypeNullIfEmpty: (KType, Boolean) -> KType = { type, emptyInput ->
+    type.withNullability(emptyInput)
+}

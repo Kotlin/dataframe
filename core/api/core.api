@@ -10082,6 +10082,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 	public abstract fun aggregate (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Object;
 	public abstract fun aggregate (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
 	public abstract fun aggregateCalculatingType (Ljava/lang/Iterable;Ljava/util/Set;)Ljava/lang/Object;
+	public abstract fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
 	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getPreservesType ()Z
 }

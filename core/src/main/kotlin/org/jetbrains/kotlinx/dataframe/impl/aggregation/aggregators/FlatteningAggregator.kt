@@ -32,9 +32,10 @@ import kotlin.reflect.full.withNullability
  */
 internal class FlatteningAggregator<Value, Return>(
     name: String,
+    getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     aggregator: (values: Iterable<Value>, type: KType) -> Return?,
     override val preservesType: Boolean,
-) : AggregatorBase<Value, Return>(name, aggregator) {
+) : AggregatorBase<Value, Return>(name, getReturnTypeOrNull, aggregator) {
 
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
@@ -54,9 +55,15 @@ internal class FlatteningAggregator<Value, Return>(
      * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     class Factory<Value, Return>(
+        private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
         private val aggregator: (Iterable<Value>, KType) -> Return?,
         private val preservesType: Boolean,
     ) : AggregatorProvider<FlatteningAggregator<Value, Return>> by AggregatorProvider({ name ->
-            FlatteningAggregator(name = name, aggregator = aggregator, preservesType = preservesType)
+            FlatteningAggregator(
+                name = name,
+                getReturnTypeOrNull = getReturnTypeOrNull,
+                aggregator = aggregator,
+                preservesType = preservesType,
+            )
         })
 }

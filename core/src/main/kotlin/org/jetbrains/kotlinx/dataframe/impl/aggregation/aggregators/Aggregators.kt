@@ -1,12 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.math.meanOrNull
+import org.jetbrains.kotlinx.dataframe.math.meanTypeResultOrNull
 import org.jetbrains.kotlinx.dataframe.math.median
 import org.jetbrains.kotlinx.dataframe.math.percentile
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.sum
 import java.math.BigDecimal
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 @PublishedApi
 internal object Aggregators {
@@ -18,6 +21,7 @@ internal object Aggregators {
      */
     private fun <Type> twoStepPreservingType(aggregator: Iterable<Type>.(type: KType) -> Type?) =
         TwoStepAggregator.Factory(
+            getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             stepOneAggregator = aggregator,
             stepTwoAggregator = aggregator,
             preservesType = true,
@@ -29,9 +33,11 @@ internal object Aggregators {
      * @include [TwoStepAggregator]
      */
     private fun <Value, Return> twoStepChangingType(
+        getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
         stepOneAggregator: Iterable<Value>.(type: KType) -> Return,
         stepTwoAggregator: Iterable<Return>.(type: KType) -> Return,
     ) = TwoStepAggregator.Factory(
+        getReturnTypeOrNull = getReturnTypeOrNull,
         stepOneAggregator = stepOneAggregator,
         stepTwoAggregator = stepTwoAggregator,
         preservesType = false,
@@ -44,6 +50,7 @@ internal object Aggregators {
      */
     private fun <Type> flatteningPreservingTypes(aggregate: Iterable<Type?>.(type: KType) -> Type?) =
         FlatteningAggregator.Factory(
+            getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             aggregator = aggregate,
             preservesType = true,
         )
@@ -53,19 +60,27 @@ internal object Aggregators {
      *
      * @include [FlatteningAggregator]
      */
-    private fun <Value, Return> flatteningChangingTypes(aggregate: Iterable<Value?>.(type: KType) -> Return?) =
-        FlatteningAggregator.Factory(
-            aggregator = aggregate,
-            preservesType = false,
-        )
+    private fun <Value, Return> flatteningChangingTypes(
+        getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
+        aggregate: Iterable<Value?>.(type: KType) -> Return?,
+    ) = FlatteningAggregator.Factory(
+        getReturnTypeOrNull = getReturnTypeOrNull,
+        aggregator = aggregate,
+        preservesType = false,
+    )
 
     /**
      * Factory for a two-step aggregator that works only with numbers.
      *
      * @include [TwoStepNumbersAggregator]
      */
-    private fun <Return : Number> twoStepForNumbers(aggregate: Iterable<Number>.(numberType: KType) -> Return?) =
-        TwoStepNumbersAggregator.Factory(aggregate)
+    private fun <Return : Number> twoStepForNumbers(
+        getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
+        aggregate: Iterable<Number>.(numberType: KType) -> Return?,
+    ) = TwoStepNumbersAggregator.Factory(
+        getReturnTypeOrNull = getReturnTypeOrNull,
+        aggregate = aggregate,
+    )
 
     /** @include [AggregatorOptionSwitch1] */
     private fun <Param1, AggregatorType : Aggregator<*, *>> withOneOption(
@@ -82,27 +97,29 @@ internal object Aggregators {
     val max by twoStepPreservingType<Comparable<Any?>> { maxOrNull() }
 
     val std by withTwoOptions { skipNA: Boolean, ddof: Int ->
-        flatteningChangingTypes<Number, Double> { std(it, skipNA, ddof) }
+        flatteningChangingTypes<Number, Double>(
+            getReturnTypeOrNull = { type, emptyInput -> typeOf<Double>().withNullability(emptyInput) },
+        ) { std(it, skipNA, ddof) }
     }
 
     @Suppress("ClassName")
     object mean {
         val toNumber = withOneOption { skipNA: Boolean ->
-            twoStepForNumbers { meanOrNull(it, skipNA) }
+            twoStepForNumbers(::meanTypeResultOrNull) { meanOrNull(it, skipNA) }
         }.create(mean::class.simpleName!!)
 
         val toDouble = withOneOption { skipNA: Boolean ->
-            twoStepForNumbers { meanOrNull(it, skipNA) as Double? }
+            twoStepForNumbers(::meanTypeResultOrNull) { meanOrNull(it, skipNA) as Double? }
         }.create(mean::class.simpleName!!)
 
         val toBigDecimal =
-            twoStepForNumbers {
+            twoStepForNumbers(::meanTypeResultOrNull) {
                 meanOrNull(it) as BigDecimal?
             }.create(mean::class.simpleName!!)
     }
 
     val percentile by withOneOption { percentile: Double ->
-        flatteningChangingTypes<Comparable<Any?>, Comparable<Any?>> { type ->
+        flatteningChangingTypes<Comparable<Any?>, Comparable<Any?>>(preserveReturnTypeNullIfEmpty) { type ->
             percentile(percentile, type)
         }
     }
@@ -111,5 +128,7 @@ internal object Aggregators {
         median(it)
     }
 
-    val sum by twoStepForNumbers { sum(it) }
+    val sum by twoStepForNumbers(
+        getReturnTypeOrNull = { type, _ -> type.withNullability(false) },
+    ) { sum(it) }
 }

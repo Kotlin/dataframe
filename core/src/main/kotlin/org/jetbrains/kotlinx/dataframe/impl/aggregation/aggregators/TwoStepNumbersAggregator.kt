@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.impl.types
 import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberType
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -38,8 +39,9 @@ import kotlin.reflect.typeOf
  */
 internal class TwoStepNumbersAggregator<Return : Number>(
     name: String,
+    getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     aggregator: (values: Iterable<Number>, numberType: KType) -> Return?,
-) : AggregatorBase<Number, Return>(name, aggregator) {
+) : AggregatorBase<Number, Return>(name, getReturnTypeOrNull, aggregator) {
 
     override fun aggregate(values: Iterable<Number>, type: KType): Return? {
         require(type.isSubtypeOf(typeOf<Number?>())) {
@@ -48,11 +50,22 @@ internal class TwoStepNumbersAggregator<Return : Number>(
         return super.aggregate(values, type)
     }
 
-    override fun aggregate(columns: Iterable<DataColumn<Number?>>): Return? =
-        aggregateCalculatingType(
-            values = columns.mapNotNull { aggregate(it) },
-            valueTypes = null, // makes the operation heavy
+    override fun aggregate(columns: Iterable<DataColumn<Number?>>): Return? {
+        val (values, types) = columns.mapNotNull { col ->
+            val value = aggregate(col) ?: return@mapNotNull null
+            val type = calculateReturnTypeOrNull(
+                type = col.type().withNullability(false),
+                emptyInput = col.size() == 0,
+            ) ?: value::class.starProjectedType // heavy fallback type calculation
+
+            value to type
+        }.unzip()
+
+        return aggregateCalculatingType(
+            values = values,
+            valueTypes = types.toSet(),
         )
+    }
 
     /**
      * Special case of [aggregate] with [Iterable] that calculates the [unified number type][UnifyingNumbers]
@@ -71,8 +84,14 @@ internal class TwoStepNumbersAggregator<Return : Number>(
 
     override val preservesType = false
 
-    class Factory<Return : Number>(private val aggregate: Iterable<Number>.(numberType: KType) -> Return?) :
-        AggregatorProvider<TwoStepNumbersAggregator<Return>> by AggregatorProvider({ name ->
-            TwoStepNumbersAggregator(name = name, aggregator = aggregate)
+    class Factory<Return : Number>(
+        private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
+        private val aggregate: Iterable<Number>.(numberType: KType) -> Return?,
+    ) : AggregatorProvider<TwoStepNumbersAggregator<Return>> by AggregatorProvider({ name ->
+            TwoStepNumbersAggregator(
+                name = name,
+                getReturnTypeOrNull = getReturnTypeOrNull,
+                aggregator = aggregate,
+            )
         })
 }

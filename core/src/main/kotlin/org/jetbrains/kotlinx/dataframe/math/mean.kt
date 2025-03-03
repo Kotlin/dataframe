@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.math
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
 import org.jetbrains.kotlinx.dataframe.impl.api.toBigDecimal
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.types
 import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberType
@@ -78,6 +80,27 @@ internal fun <T : Number> Sequence<T>.meanOrNull(type: KType, skipNA: Boolean = 
         else -> throw IllegalArgumentException("Unable to compute the mean for type ${renderType(type)}")
     }
 }
+
+internal fun meanTypeResultOrNull(type: KType, emptyInput: Boolean): KType? =
+    when (val type = type.withNullability(false)) {
+        typeOf<Double>(),
+        typeOf<Float>(),
+        typeOf<Int>(),
+        typeOf<Short>(),
+        typeOf<Byte>(),
+        typeOf<Long>(),
+        -> typeOf<Double>().withNullability(emptyInput)
+
+        typeOf<BigInteger>(),
+        typeOf<BigDecimal>(),
+        -> typeOf<BigDecimal>().withNullability(emptyInput)
+
+        nothingType -> nullableNothingType
+
+        typeOf<Number>() -> null
+
+        else -> throw IllegalArgumentException("Unable to compute the mean for type ${renderType(type)}")
+    }
 
 internal fun Sequence<Double>.meanOrNull(skipNA: Boolean = skipNA_default): Double? {
     var count = 0

@@ -1,9 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.impl.classes
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.size
 import kotlin.reflect.KType
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 
 /**
@@ -38,10 +39,11 @@ import kotlin.reflect.full.withNullability
  */
 internal class TwoStepAggregator<Value, Return>(
     name: String,
+    getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     stepOneAggregator: (values: Iterable<Value>, type: KType) -> Return?,
     private val stepTwoAggregator: (values: Iterable<Return>, type: KType) -> Return?,
     override val preservesType: Boolean,
-) : AggregatorBase<Value, Return>(name, stepOneAggregator) {
+) : AggregatorBase<Value, Return>(name, getReturnTypeOrNull, stepOneAggregator) {
 
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
@@ -49,17 +51,18 @@ internal class TwoStepAggregator<Value, Return>(
      * This function calls [stepOneAggregator] on each column and then [stepTwoAggregator] on the results.
      */
     override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return? {
-        val columnValues = columns.mapNotNull {
+        val (values, types) = columns.mapNotNull { col ->
             // uses stepOneAggregator
-            aggregate(it)
-        }
-        val commonType = if (preservesType) {
-            columns.map { it.type() }.commonType().withNullability(false)
-        } else {
-            // heavy!
-            columnValues.classes().commonType(false)
-        }
-        return stepTwoAggregator(columnValues, commonType)
+            val value = aggregate(col) ?: return@mapNotNull null
+            val type = calculateReturnTypeOrNull(
+                type = col.type().withNullability(false),
+                emptyInput = col.size() == 0,
+            ) ?: value::class.starProjectedType // heavy fallback type calculation
+
+            value to type
+        }.unzip()
+        val commonType = types.commonType()
+        return stepTwoAggregator(values, commonType)
     }
 
     /**
@@ -71,12 +74,14 @@ internal class TwoStepAggregator<Value, Return>(
      * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     class Factory<Value, Return>(
+        private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
         private val stepOneAggregator: (Iterable<Value>, KType) -> Return?,
         private val stepTwoAggregator: (Iterable<Return>, KType) -> Return?,
         private val preservesType: Boolean,
     ) : AggregatorProvider<TwoStepAggregator<Value, Return>> by AggregatorProvider({ name ->
             TwoStepAggregator(
                 name = name,
+                getReturnTypeOrNull = getReturnTypeOrNull,
                 stepOneAggregator = stepOneAggregator,
                 stepTwoAggregator = stepTwoAggregator,
                 preservesType = preservesType,
