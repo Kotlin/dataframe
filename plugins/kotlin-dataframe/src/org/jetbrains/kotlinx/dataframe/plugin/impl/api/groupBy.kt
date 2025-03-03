@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Present
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
+import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.add
 import org.jetbrains.kotlinx.dataframe.plugin.impl.data.ColumnWithPathApproximation
@@ -199,4 +200,88 @@ abstract class GroupByAggregator(val defaultName: String) : AbstractSchemaModifi
 }
 
 class GroupByMaxOf : GroupByAggregator(defaultName = "max")
+
 class GroupByMinOf : GroupByAggregator(defaultName = "min")
+
+class GroupByMeanOf : GroupByAggregator(defaultName = "mean")
+
+class GroupByMedianOf : GroupByAggregator(defaultName = "median")
+
+class GroupByStdOf : GroupByAggregator(defaultName = "std")
+
+/**
+ * Provides a base implementation for a custom schema modification interpreter
+ * that groups data by specified criteria and produces aggregated results.
+ *
+ * The class uses a `defaultName` to define a fallback name for the result column
+ * if no specific name is provided. It leverages `Arguments` properties to define
+ * and resolve the group-by receiver, result name, and expression type.
+ *
+ * Key Components:
+ * - `receiver`: Represents the input data that will be grouped.
+ * - `resultName`: Optional name for the resulting aggregated column. Defaults to `defaultName`.
+ * - `expression`: Defines the type of the expression for aggregation.
+ */
+abstract class GroupByAggregator2(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+    val Arguments.resultName: String? by arg(defaultValue = Present(null))
+    val Arguments.expression by type()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val aggregated = makeNullable(simpleColumnOf(resultName ?: defaultName, expression.type))
+        return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+    }
+}
+
+/** Implementation for `sumOf` */
+class GroupBySumOf : GroupByAggregator2(defaultName = "sum")
+
+/**
+ * Provides a base implementation for a custom schema modification interpreter
+ * that groups data by specified criteria and produces aggregated results.
+ *
+ * The class uses a `defaultName` to define a fallback name for the result column
+ * if no specific name is provided. It leverages `Arguments` properties to define
+ * and resolve the group-by receiver, result name, and expression type.
+ *
+ * Key Components:
+ * - `receiver`: Represents the input data that will be grouped.
+ * - `resultName`: Optional name for the resulting aggregated column. Defaults to `defaultName`.
+ * - `columns`: ColumnsResolver to define which columns to include in the grouping operation.
+ */
+abstract class GroupByAggregator3(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+    val Arguments.name: String? by arg(defaultValue = Present(null))
+    val Arguments.columns: ColumnsResolver? by arg()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        if (name == null) {
+            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
+            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+        } else {
+            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
+            // TODO: how to handle type of multiple columns
+            val aggregated =
+                makeNullable(simpleColumnOf(name ?: defaultName, (resolvedColumns[0] as SimpleDataColumn).type.type))
+            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+        }
+    }
+}
+
+/** Implementation for `sum` */
+class GroupBySum0 : GroupByAggregator3(defaultName = "sum")
+
+/** Implementation for `mean` */
+class GroupByMean0 : GroupByAggregator3(defaultName = "mean")
+
+/** Implementation for `median` */
+class GroupByMedian0 : GroupByAggregator3(defaultName = "median")
+
+/** Implementation for `median` */
+class GroupByMin0 : GroupByAggregator3(defaultName = "min")
+
+/** Implementation for `median` */
+class GroupByMax0 : GroupByAggregator3(defaultName = "max")
+
+/** Implementation for `std` */
+class GroupByStd0 : GroupByAggregator3(defaultName = "std")
