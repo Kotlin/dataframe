@@ -214,6 +214,7 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("FrameCols1")
     public fun ColumnsSelectionDsl<*>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
     ): TransformableColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
@@ -250,6 +251,7 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("FrameCols2")
     public fun SingleColumn<DataRow<*>>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
     ): TransformableColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)

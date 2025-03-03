@@ -23,6 +23,7 @@ public data class Reorder<T, C>(
     public fun <R> cast(): Reorder<T, R> = this as Reorder<T, R>
 }
 
+@Interpretable("Reorder")
 public fun <T, C> DataFrame<T>.reorder(selector: ColumnsSelector<T, C>): Reorder<T, C> = Reorder(this, selector, false)
 
 @AccessApiOverload
@@ -37,6 +38,8 @@ public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reo
 public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: ColumnExpression<C, V>): DataFrame<T> =
     reorderImpl(false, expression)
 
+@Refine
+@Interpretable("ByName")
 public fun <T, C> Reorder<T, C>.byName(desc: Boolean = false): DataFrame<T> =
     if (desc) byDesc { it.name } else by { it.name }
 

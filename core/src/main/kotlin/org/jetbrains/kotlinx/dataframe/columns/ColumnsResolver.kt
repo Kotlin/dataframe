@@ -31,12 +31,12 @@ public sealed interface ColumnsResolver<out C> {
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
 }
 
-public class ColumnResolutionContext internal constructor(
-    internal val df: DataFrame<*>,
-    internal val unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
+public class ColumnResolutionContext(
+    public val df: DataFrame<*>,
+    public val unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
 ) {
 
     public val allowMissingColumns: Boolean = unresolvedColumnsPolicy != UnresolvedColumnsPolicy.Fail
 }
 
-internal enum class UnresolvedColumnsPolicy { Fail, Skip, Create }
+public enum class UnresolvedColumnsPolicy { Fail, Skip, Create }

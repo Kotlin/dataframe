@@ -120,6 +120,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
+    @Interpretable("ColsAtAnyDepth0")
     public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
 
@@ -131,7 +132,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
      */
-    @Interpretable("ColsAtAnyDepth0")
+    @Interpretable("ColsAtAnyDepth1")
     public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
 
@@ -141,6 +142,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
+    @Interpretable("ColsAtAnyDepth2")
     public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 
