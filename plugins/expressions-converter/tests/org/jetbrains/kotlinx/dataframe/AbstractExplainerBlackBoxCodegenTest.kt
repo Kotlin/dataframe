@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.TestJdkKind
@@ -32,12 +33,13 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
     override fun TestConfigurationBuilder.configuration() {
         globalDefaults {
             frontend = FrontendKinds.ClassicFrontend
-            targetPlatform = JvmPlatforms.defaultJvmPlatform
+            targetPlatform = JvmPlatforms.jvm11
             dependencyKind = DependencyKind.Binary
             targetBackend = TargetBackend.JVM_IR
         }
         defaultDirectives {
-            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
+            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK_11
+            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_11
             +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
         }
         facadeStep(::ClassicFrontendFacade)
