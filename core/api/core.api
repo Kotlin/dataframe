@@ -4539,6 +4539,16 @@ public final class org/jetbrains/kotlinx/dataframe/codeGen/ExtensionsCodeGenerat
 	public final fun create ()Lorg/jetbrains/kotlinx/dataframe/codeGen/ExtensionsCodeGenerator;
 }
 
+public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/FieldKind {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/codeGen/FieldKind$Companion;
+	public fun getShouldBeConvertedToColumnGroup ()Z
+	public fun getShouldBeConvertedToFrameColumn ()Z
+}
+
+public final class org/jetbrains/kotlinx/dataframe/codeGen/FieldKind$Companion {
+	public final fun of (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/codeGen/FieldKind;
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/FieldType {
 }
 
