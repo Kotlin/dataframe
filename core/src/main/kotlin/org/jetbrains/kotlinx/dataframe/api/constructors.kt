@@ -413,29 +413,78 @@ public class DataFrameBuilder(private val header: List<String>) {
 }
 
 /**
- * Helper class for implementing operations when column names can be potentially duplicated.
- * For example, operations involving multiple dataframes, computed columns or parsing some third-party data
+ * A builder class for dynamically constructing a DataFrame with provided columns.
+ * Allows adding columns manually while automatically handling duplicate column names by assigning unique names.
+ *
+ * @property checkDuplicateValues Whether to check for duplicate column (with identical names and values)
+ * when adding new columns. `true` by default.
  */
-public class DynamicDataFrameBuilder {
-    private var cols: MutableList<AnyCol> = mutableListOf()
+public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean = true) {
+    private var cols: MutableMap<String, AnyCol> = mutableMapOf()
     private val generator = ColumnNameGenerator()
 
+    /**
+     * Adds a column to the builder, ensuring its name is unique.
+     *
+     * - If a column with the same name already exists, the new column is renamed to a unique name.
+     * - If [checkDuplicateValues] is `true`, the method checks whether the new column has identical values
+     *   to an existing column with the same name. If the values match, the column is not added.
+     *
+     * @param col The column to add to the DataFrame builder.
+     * @return The final unique name assigned to the column.
+     */
     public fun add(col: AnyCol): String {
-        val uniqueName = if (col.name().isEmpty()) {
+        val originalName = col.name()
+        if (checkDuplicateValues && generator.contains(originalName)) {
+            if (cols[originalName] == col) return originalName
+        }
+        val uniqueName = if (originalName.isEmpty()) {
             generator.addUnique(UNNAMED_COLUMN_PREFIX)
         } else {
-            generator.addUnique(col.name())
+            generator.addUnique(originalName)
         }
-        val renamed = if (uniqueName != col.name()) {
+        val renamed = if (uniqueName != originalName) {
             col.rename(uniqueName)
         } else {
             col
         }
-        cols.add(renamed)
+        cols.put(uniqueName, renamed)
         return uniqueName
     }
 
-    public fun toDataFrame(): DataFrame<*> = dataFrameOf(cols)
+    /**
+     * Adds a column to the builder from the given iterable of values, ensuring the column's name is unique.
+     *
+     * The method automatically converts the given iterable into a column using the specified or default name
+     * and infers the type of the column's elements.
+     *
+     * - If a column with the same name already exists, the new column is renamed to a unique name.
+     * - If the [checkDuplicateValues] property of the builder is `true`, the method checks whether the new column
+     *   has identical values to an existing column with the same name. If the values match, the column is not added.
+     *
+     * @param T The inferred type of the elements in the column.
+     * @param values The iterable collection of values to be added as a new column.
+     * @param name The name of the new column. If empty, a unique name will be generated automatically.
+     * @return The final unique name assigned to the column.
+     */
+    public inline fun <reified T> add(values: Iterable<T>, name: String = ""): String =
+        add(values.toColumn(name, Infer.Type))
+
+    /**
+     * Retrieves a column from the builder by its name.
+     *
+     * @param column The name of the column to retrieve.
+     * @return The column corresponding to the specified name, or `null` if no such column exists.
+     */
+    public fun get(column: String): AnyCol? = cols[column]
+
+    /**
+     * Converts the current `DynamicDataFrameBuilder` instance into a `DataFrame`.
+     * The resulting `DataFrame` is constructed from the columns stored in the builder.
+     *
+     * @return A `DataFrame` containing the columns defined in the `DynamicDataFrameBuilder`.
+     */
+    public fun toDataFrame(): DataFrame<*> = cols.values.toDataFrame()
 }
 
 /**
