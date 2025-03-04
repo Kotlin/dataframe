@@ -38,6 +38,7 @@ import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 
+// non-standard value types (not supertypes, but exact types)
 private val valueTypes = setOf(
     Any::class,
     Unit::class,
@@ -58,6 +59,7 @@ private val valueTypes = setOf(
 )
 
 /**
+ * Checks if `KClass` is a value type (number, datetime, string, etc.)
  * Should be aligned with `ConeKotlinType.isValueType()` in
  * plugins/kotlin-dataframe/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
  */
@@ -67,7 +69,7 @@ internal val KClass<*>.isValueType: Boolean
         this in valueTypes ||
             this.isSubclassOf(Number::class) ||
             this.isSubclassOf(Enum::class) ||
-            // all java time types
+            // all java datetime types
             this.isSubclassOf(TemporalAccessor::class) ||
             this.isSubclassOf(TemporalAmount::class) ||
             this.isArray

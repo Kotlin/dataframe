@@ -201,9 +201,11 @@ internal fun KotlinTypeFacade.toDataFrame(
 
     fun ConeKotlinType.isValueType() =
         this.isArrayTypeOrNullableArrayType ||
+            this.classId == StandardClassIds.Unit ||
             this.classId == StandardClassIds.Any ||
             this.classId == StandardClassIds.String ||
-            this.classId == StandardClassIds.Boolean ||
+            this.classId in StandardClassIds.primitiveTypes ||
+            this.classId in StandardClassIds.unsignedTypes ||
             classId in setOf(
             Names.DURATION_CLASS_ID,
             Names.LOCAL_DATE_CLASS_ID,
@@ -213,7 +215,6 @@ internal fun KotlinTypeFacade.toDataFrame(
             Names.DATE_TIME_UNIT_CLASS_ID,
             Names.TIME_ZONE_CLASS_ID
         ) ||
-            this.isSubtypeOf(session.builtinTypes.numberType.type, session) ||
             this.isSubtypeOf(
                 StandardClassIds.Number.constructClassLikeType(emptyArray(), isNullable = true),
                 session

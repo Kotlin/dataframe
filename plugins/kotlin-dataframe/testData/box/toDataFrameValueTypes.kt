@@ -88,6 +88,43 @@ fun box(): String {
     val doubleColNullable: DataColumn<Double?> = doubleDfNullable.value
     doubleColNullable.print()
 
+    // UByte
+    val uByteDf = listOf<UByte>(1u, 2u, 3u).toDataFrame()
+    val uByteCol: DataColumn<UByte> = uByteDf.value
+    uByteCol.print()
+
+    val uByteDfNullable = listOf<UByte?>(1u, 2u, null).toDataFrame()
+    val uByteColNullable: DataColumn<UByte?> = uByteDfNullable.value
+    uByteColNullable.print()
+
+    // UShort
+    val uShortDf = listOf<UShort>(1u, 2u, 3u).toDataFrame()
+    val uShortCol: DataColumn<UShort> = uShortDf.value
+    uShortCol.print()
+
+    val uShortDfNullable = listOf<UShort?>(1u, 2u, null).toDataFrame()
+    val uShortColNullable: DataColumn<UShort?> = uShortDfNullable.value
+    uShortColNullable.print()
+
+    // UInt
+    val uIntDf = listOf<UInt>(1u, 2u, 3u).toDataFrame()
+    val uIntCol: DataColumn<UInt> = uIntDf.value
+    uIntCol.print()
+
+    val uIntDfNullable = listOf<UInt?>(1u, 2u, null).toDataFrame()
+    val uIntColNullable: DataColumn<UInt?> = uIntDfNullable.value
+    uIntColNullable.print()
+
+    // ULong
+    val uLongDf = listOf<ULong>(1uL, 2uL, 3uL).toDataFrame()
+    val uLongCol: DataColumn<ULong> = uLongDf.value
+    uLongCol.print()
+
+    val uLongDfNullable = listOf<ULong?>(1uL, 2uL, null).toDataFrame()
+    val uLongColNullable: DataColumn<ULong?> = uLongDfNullable.value
+    uLongColNullable.print()
+
+
     // BigDecimal
     val bigDecimalDf = listOf(BigDecimal("10.5"), BigDecimal("20.3"), BigDecimal("30.7")).toDataFrame()
     val bigDecimalCol: DataColumn<BigDecimal> = bigDecimalDf.value
