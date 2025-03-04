@@ -145,6 +145,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStd0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStdOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
@@ -448,6 +449,7 @@ internal inline fun <reified T> String.load(): T {
         "GroupByMedianOf" -> GroupByMedianOf()
         "GroupBySumOf" -> GroupBySumOf()
         "GroupBySum0" -> GroupBySum0()
+        "GroupBySum1" -> GroupBySum1()
         "GroupByReducePredicate" -> GroupByReducePredicate()
         "GroupByReduceExpression" -> GroupByReduceExpression()
         "GroupByReduceInto" -> GroupByReduceInto()

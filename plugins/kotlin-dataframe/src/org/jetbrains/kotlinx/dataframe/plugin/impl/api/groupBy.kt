@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
 import org.jetbrains.kotlin.fir.expressions.FirReturnExpression
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.isSubtypeOf
 import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlinx.dataframe.plugin.InterpretationErrorReporter
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
@@ -285,3 +286,19 @@ class GroupByMax0 : GroupByAggregator3(defaultName = "max")
 
 /** Implementation for `std` */
 class GroupByStd0 : GroupByAggregator3(defaultName = "std")
+
+abstract class GroupByAggregator4() : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val resolvedColumns = receiver.groups.columns()
+            .filter {
+                it is SimpleDataColumn
+                    && it.type.type.isSubtypeOf(session.builtinTypes.numberType.type, session)
+            }
+
+        return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+    }
+}
+
+class GroupBySum1 : GroupByAggregator4()

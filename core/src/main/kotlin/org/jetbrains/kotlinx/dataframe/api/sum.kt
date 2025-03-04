@@ -91,13 +91,15 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expres
 // endregion
 
 // region GroupBy
-// TODO: why we have no parameter skipNA: Boolean = skipNA_default?
+@Refine
+@Interpretable("GroupBySum1")
 public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(numberColumns())
 
+@Refine
+@Interpretable("GroupBySum0")
 public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateFor(this, columns)
 
-// TODO: seems like toNumberColumns converted columns to NumberColumns, but it doesn't convert
 public fun <T> Grouped<T>.sumFor(vararg columns: String): DataFrame<T> = sumFor { columns.toNumberColumns() }
 
 @AccessApiOverload

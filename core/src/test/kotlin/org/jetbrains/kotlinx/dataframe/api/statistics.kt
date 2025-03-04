@@ -70,6 +70,13 @@ class StatisticsTests {
 
         val sum31 = res3["newAge"][0] as Int
         sum31 shouldBe 720
+
+        // scenario #3.1: create new column via expression with Double type
+        val res31 = personsDf.groupBy("city").sumOf(resultName = "newAge") { "weight"<Double>() * 10 }
+        res31.columnNames() shouldBe listOf("city", "newAge")
+
+        val sum311 = res31["newAge"][0] as Double
+        sum311 shouldBe 1980.0
     }
 
     @Test
