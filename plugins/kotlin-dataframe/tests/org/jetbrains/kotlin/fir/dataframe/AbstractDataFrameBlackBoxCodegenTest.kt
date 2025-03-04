@@ -40,7 +40,7 @@ open class AbstractDataFrameBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCo
     override fun configure(builder: TestConfigurationBuilder) {
         super.configure(builder)
         builder.defaultDirectives {
-            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
+            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK_11
             +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
             +IGNORE_DEXING
         }
