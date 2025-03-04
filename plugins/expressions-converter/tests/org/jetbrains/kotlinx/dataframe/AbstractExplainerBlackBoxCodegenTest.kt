@@ -23,16 +23,18 @@ import org.jetbrains.kotlin.test.model.DependencyKind
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.services.RuntimeClasspathProvider
+import org.jetbrains.kotlin.test.services.TemporaryDirectoryManager
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.JvmEnvironmentConfigurator
+import org.jetbrains.kotlinx.dataframe.services.TemporaryDirectoryManagerImplFixed
 import java.io.File
 
 open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
 
     override fun TestConfigurationBuilder.configuration() {
         globalDefaults {
-            frontend = FrontendKinds.ClassicFrontend
+            frontend = FrontendKinds.ClassicAndFIR
             targetPlatform = JvmPlatforms.jvm11
             dependencyKind = DependencyKind.Binary
             targetBackend = TargetBackend.JVM_IR
@@ -65,6 +67,7 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
         useConfigurators(::JvmEnvironmentConfigurator, ::CommonEnvironmentConfigurator, ::PluginAnnotationsProvider)
         useCustomRuntimeClasspathProviders(::MyClasspathProvider)
         useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+        useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
     }
 
     class MyClasspathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
