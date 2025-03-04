@@ -32,8 +32,8 @@ class ConstructorsTests {
     fun `duplicated name`() {
         val builder = DynamicDataFrameBuilder()
         val columnName = "columnName"
-        val columnA = columnOf(1, 2, 3) named "columnName"
-        val columnB = columnOf(4, 5, 6)named "columnName"
+        val columnA = columnOf(1, 2, 3) named columnName
+        val columnB = columnOf(4, 5, 6) named columnName
         builder.add(columnA)
         builder.add(columnB)
         val df = builder.toDataFrame()
@@ -45,8 +45,8 @@ class ConstructorsTests {
     fun `get by new name`() {
         val builder = DynamicDataFrameBuilder()
         val columnName = "columnName"
-        val columnA = columnOf(1, 2, 3) named "columnName"
-        val columnB = columnOf(4, 5, 6)named "columnName"
+        val columnA = columnOf(1, 2, 3) named columnName
+        val columnB = columnOf(4, 5, 6) named columnName
         builder.add(columnA)
         val newName = builder.add(columnB)
         builder.get(newName)!!.values shouldBe columnB.values
@@ -56,8 +56,8 @@ class ConstructorsTests {
     fun `duplicated column`() {
         val builder = DynamicDataFrameBuilder()
         val columnName = "columnName"
-        val columnA = columnOf(1, 2, 3) named "columnName"
-        val columnB = columnOf(4, 5, 6)named "columnName"
+        val columnA = columnOf(1, 2, 3) named columnName
+        val columnB = columnOf(4, 5, 6) named columnName
         builder.add(columnA)
         builder.add(columnB)
         builder.add(columnA)
