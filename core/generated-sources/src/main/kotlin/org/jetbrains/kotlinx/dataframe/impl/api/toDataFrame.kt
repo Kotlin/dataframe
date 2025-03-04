@@ -74,6 +74,13 @@ internal val KClass<*>.isValueType: Boolean
             this.isSubclassOf(TemporalAmount::class) ||
             this.isArray
 
+/**
+ * Checks if `KClass` has properties.
+ */
+@PublishedApi
+internal val KClass<*>.hasProperties: Boolean
+    get() = this.memberProperties.isNotEmpty()
+
 internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
     private val clazz: KClass<*>,

@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.hasProperties
 import org.jetbrains.kotlinx.dataframe.impl.api.isValueType
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -27,9 +28,10 @@ import kotlin.reflect.KProperty
 @Interpretable("toDataFrameDefault")
 public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
-        // check if type is value: primitives, primitive arrays, datetime types etc.
-        if (T::class.isValueType) {
-            // if type parameter is value type, create a single `value` column
+        // check if type is value: primitives, primitive arrays, datetime types etc.,
+        // or has no properties
+        if (T::class.isValueType || !T::class.hasProperties) {
+            // create a single `value` column
             ValueProperty<T>::value from { it }
         } else {
             // otherwise creates columns based on properties

@@ -557,6 +557,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("toDataFrameNoPropertiesType.kt")
+  public void testToDataFrameNoPropertiesType() {
+    runTest("testData/box/toDataFrameNoPropertiesType.kt");
+  }
+
+  @Test
   @TestMetadata("toDataFrameValueTypes.kt")
   public void testToDataFrameValueTypes() {
     runTest("testData/box/toDataFrameValueTypes.kt");

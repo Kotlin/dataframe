@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.fir.scopes.collectAllFunctions
 import org.jetbrains.kotlin.fir.scopes.collectAllProperties
 import org.jetbrains.kotlin.fir.scopes.unsubstitutedScope
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
-import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeFlexibleType
@@ -35,7 +35,6 @@ import org.jetbrains.kotlin.fir.types.canBeNull
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.fir.types.isArrayTypeOrNullableArrayType
 import org.jetbrains.kotlin.fir.types.isNullable
 import org.jetbrains.kotlin.fir.types.isStarProjection
@@ -49,8 +48,6 @@ import org.jetbrains.kotlin.fir.types.upperBoundIfFlexible
 import org.jetbrains.kotlin.fir.types.withArguments
 import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlin.name.StandardClassIds.List
 import org.jetbrains.kotlinx.dataframe.codeGen.*
@@ -227,6 +224,12 @@ internal fun KotlinTypeFacade.toDataFrame(
                 Names.TEMPORAL_AMOUNT_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
             )
 
+    fun ConeKotlinType.hasProperties(): Boolean {
+        val symbol = this.toRegularClassSymbol(session) as? FirClassSymbol<*> ?: return false
+        val scope = symbol.unsubstitutedScope(session, ScopeSession(), withForcedTypeCalculator = false, memberRequiredPhase = null)
+        return scope.collectAllProperties().isNotEmpty()
+    }
+
     val excludes =
         traverseConfiguration.excludeProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }
     val excludedClasses = traverseConfiguration.excludeClasses.mapTo(mutableSetOf()) { it.argument.resolvedType }
@@ -339,7 +342,7 @@ internal fun KotlinTypeFacade.toDataFrame(
     }
 
     arg.type?.let { type ->
-        if (type.isValueType()) {
+        if (type.isValueType() || !type.hasProperties()) {
             return PluginDataFrameSchema(listOf(simpleColumnOf("value", type)))
         }
     }

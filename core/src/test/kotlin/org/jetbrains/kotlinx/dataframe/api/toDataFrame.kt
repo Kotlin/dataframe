@@ -269,7 +269,7 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun `should convert iterables of primitive arrays to DataFrame`() {
+    fun `should convert iterables of primitive arrays to DataFrame with value column`() {
         val intArrays = listOf(intArrayOf(1, 2, 3), intArrayOf(4, 5, 6))
         intArrays.toDataFrame() shouldBe dataFrameOf("value")(*intArrays.toTypedArray())
 
@@ -281,7 +281,7 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun `should convert iterables of built-in primitive types to DataFrame`() {
+    fun `should convert iterables of built-in primitive types to DataFrame with value column`() {
         val bytes: List<Byte?> = listOf(1, 2, null)
         bytes.toDataFrame() shouldBe dataFrameOf("value")(*bytes.toTypedArray())
 
@@ -311,7 +311,7 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun `should convert iterables of unsigned types to DataFrame`() {
+    fun `should convert iterables of unsigned types to DataFrame with value column`() {
         val ubytes: List<UByte?> = listOf(1u, 2u, null)
         ubytes.toDataFrame() shouldBe dataFrameOf("value")(*ubytes.toTypedArray())
 
@@ -326,7 +326,7 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun `should convert iterables of BigDecimal and BigInteger to DataFrame`() {
+    fun `should convert iterables of BigDecimal and BigInteger to DataFrame with value column`() {
         val bigDecimals: List<BigDecimal?> = listOf(BigDecimal("1.1"), BigDecimal("2.2"), null)
         bigDecimals.toDataFrame() shouldBe dataFrameOf("value")(*bigDecimals.toTypedArray())
 
@@ -335,7 +335,7 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun `should convert iterables of java time types to DataFrame`() {
+    fun `should convert iterables of java time types to DataFrame with value column`() {
         val localDates: List<java.time.LocalDate?> = listOf(java.time.LocalDate.of(2024, 2, 28), null)
         localDates.toDataFrame() shouldBe dataFrameOf("value")(*localDates.toTypedArray())
 
@@ -361,7 +361,7 @@ class CreateDataFrameTests {
     }
 
     @Test
-    fun `should convert iterables of kotlinx datetime types to DataFrame`() {
+    fun `should convert iterables of kotlinx datetime types to DataFrame with value column`() {
         val localDates: List<LocalDate?> = listOf(LocalDate(2024, 2, 28), null)
         localDates.toDataFrame() shouldBe dataFrameOf("value")(*localDates.toTypedArray())
 
@@ -393,9 +393,27 @@ class CreateDataFrameTests {
     enum class TestEnum { VALUE_ONE, VALUE_TWO }
 
     @Test
-    fun `should convert iterables of Enum to DataFrame`() {
+    fun `should convert iterables of Enum to DataFrame with value column`() {
         val enums: List<TestEnum?> = listOf(TestEnum.VALUE_ONE, TestEnum.VALUE_TWO, null)
         enums.toDataFrame() shouldBe dataFrameOf("value")(*enums.toTypedArray())
+    }
+
+    interface Animal {
+        fun say(): String
+    }
+
+    class Dog(val name: String) : Animal {
+        override fun say() = "bark"
+    }
+
+    class Cat(val name: String) : Animal {
+        override fun say() = "meow"
+    }
+
+    @Test
+    fun `should convert list of type with no properties to DataFrame with value column`() {
+        val animals: List<Animal> = listOf(Dog("dog"), Cat("cat"))
+        animals.toDataFrame() shouldBe dataFrameOf("value")(*animals.toTypedArray())
     }
 
     // nullable field here - no generated unwrapping code
