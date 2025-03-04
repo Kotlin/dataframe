@@ -103,6 +103,8 @@ public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
 
 public fun <T> Grouped<T>.mean(skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA, numberColumns())
 
+@Refine
+@Interpretable("GroupByMean0")
 public fun <T, C : Number> Grouped<T>.meanFor(
     skipNA: Boolean = skipNA_default,
     columns: ColumnsForAggregateSelector<T, C?>,
@@ -124,7 +126,7 @@ public fun <T, C : Number> Grouped<T>.meanFor(
 ): DataFrame<T> = meanFor(skipNA) { columns.toColumnSet() }
 
 @Refine
-@Interpretable("GroupBySum0")
+@Interpretable("GroupByMean0")
 public fun <T, C : Number> Grouped<T>.mean(
     name: String? = null,
     skipNA: Boolean = skipNA_default,

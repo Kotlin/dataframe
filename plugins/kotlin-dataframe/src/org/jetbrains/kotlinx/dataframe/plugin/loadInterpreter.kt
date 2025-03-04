@@ -128,12 +128,16 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByAdd
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByCount0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByInto
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMax0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMax1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMaxOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMean0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMean1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMeanOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedian0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedian1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedianOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMin0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMin1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMinOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceExpression
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceInto
@@ -143,6 +147,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStd0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStd1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStdOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
@@ -444,8 +449,10 @@ internal inline fun <reified T> String.load(): T {
         "ByName" -> ByName()
         "GroupByCount0" -> GroupByCount0()
         "GroupByMean0" -> GroupByMean0()
+        "GroupByMean1" -> GroupByMean1()
         "GroupByMeanOf" -> GroupByMeanOf()
         "GroupByMedian0" -> GroupByMedian0()
+        "GroupByMedian1" -> GroupByMedian1()
         "GroupByMedianOf" -> GroupByMedianOf()
         "GroupBySumOf" -> GroupBySumOf()
         "GroupBySum0" -> GroupBySum0()
@@ -454,10 +461,13 @@ internal inline fun <reified T> String.load(): T {
         "GroupByReduceExpression" -> GroupByReduceExpression()
         "GroupByReduceInto" -> GroupByReduceInto()
         "GroupByMax0" -> GroupByMax0()
+        "GroupByMax1" -> GroupByMax1()
         "GroupByMaxOf" -> GroupByMaxOf()
         "GroupByMin0" -> GroupByMin0()
+        "GroupByMin1" -> GroupByMin1()
         "GroupByMinOf" -> GroupByMinOf()
         "GroupByStd0" -> GroupByStd0()
+        "GroupByStd1" -> GroupByStd1()
         "GroupByStdOf" -> GroupByStdOf()
         "DataFrameXs" -> DataFrameXs()
         "GroupByXs" -> GroupByXs()

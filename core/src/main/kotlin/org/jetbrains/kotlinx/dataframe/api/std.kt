@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -102,10 +104,13 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupByStd1")
 public fun <T> Grouped<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataFrame<T> =
     stdFor(skipNA, ddof, numberColumns())
 
+@Refine
+@Interpretable("GroupByStd0")
 public fun <T> Grouped<T>.stdFor(
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
@@ -132,6 +137,8 @@ public fun <T, C : Number> Grouped<T>.stdFor(
     ddof: Int = ddof_default,
 ): DataFrame<T> = stdFor(skipNA, ddof) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByStd0")
 public fun <T> Grouped<T>.std(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
@@ -162,6 +169,8 @@ public fun <T> Grouped<T>.std(
     ddof: Int = ddof_default,
 ): DataFrame<T> = std(name, skipNA, ddof) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByStdOf")
 public inline fun <T, reified R : Number> Grouped<T>.stdOf(
     name: String? = null,
     skipNA: Boolean = skipNA_default,

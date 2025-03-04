@@ -105,9 +105,12 @@ public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupByMedian1")
 public fun <T> Grouped<T>.median(): DataFrame<T> = medianFor(interComparableColumns())
 
+@Refine
+@Interpretable("GroupByMedian0")
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.median.aggregateFor(this, columns)
 

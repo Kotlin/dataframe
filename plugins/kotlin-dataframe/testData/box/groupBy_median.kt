@@ -19,18 +19,46 @@ fun box(): String {
     )
 
     // scenario #0: all numerical columns
-    val res0 = personsDf.groupBy { city }.median()
+    /*val res0 = personsDf.groupBy { city }.median()
     val median01: Int? = res0.age[0]
     // TODO: Compilation error - actual type it(kotlin.Number & kotlin.Comparable<*>)
     // `val median02: Double? = res0.weight[0]
+    res0.compareSchemas()*/
 
+
+    /*
+
+    Comparison result: None
+Runtime:
+city: String
+newAge: Comparable<Any?>
+Compile:
+city: String
+newAge: Int?
+
+java.lang.IllegalArgumentException: Comparison result: None
+Runtime:
+city: String
+newAge: Comparable<Any?>
+Compile:
+city: String
+newAge: Int?
+
+how to create type Comparable<Any?> - Comparable<*>
+
+TODO: need to add in FirSession support for the FirImplicitComparableTypeRef
+
+
+     */
     // scenario #1: particular column
     val res1 = personsDf.groupBy { city }.medianFor { age }
     val median11: Int? = res1.age[0]
+    res1.compareSchemas()
 
     // scenario #1.1: particular column via median
     val res11 = personsDf.groupBy { city }.median { age }
     val median111: Int? = res11.age[0]
+    res11.compareSchemas()
 
     // scenario #2: particular column with new name - schema changes
     // TODO: not supported scenario
@@ -40,15 +68,18 @@ fun box(): String {
     // scenario #2.1: particular column with new name - schema changes but via columnSelector
     val res21 = personsDf.groupBy { city }.median("newAge") { age }
     val median211: Int? = res21.newAge[0]
+    res21.compareSchemas()
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector
     // TODO: partially supported scenario - we are taking type from the first column
     val res22 = personsDf.groupBy { city }.median("newAge") { age and yearsToRetirement }
     val median221: Int? = res22.newAge[0]
+    res22.compareSchemas()
 
     // scenario #3: create new column via expression
     val res3 = personsDf.groupBy { city }.medianOf("newAge") { age * 10 }
     val median3: Int? = res3.newAge[0]
+    res3.compareSchemas()
 
     return "OK"
 }

@@ -8,13 +8,13 @@ class StatisticsTests {
     private val personsDf = dataFrameOf("name", "age", "city", "weight", "height", "yearsToRetirement")(
         "Alice", 15, "London", 99.5, "1.85", 50,
         "Bob", 20, "Paris", 140.0, "1.35", 45,
-        "Charlie", 100, "Dubai", 75, "1.95", 0,
-        "Rose", 1, "Moscow", 45.3, "0.79", 64,
+        "Charlie", 100, "Dubai", 75.0, "1.95", 0,
+        "Rose", 1, "Moscow", 45.33, "0.79", 64,
         "Dylan", 35, "London", 23.4, "1.83", 30,
-        "Eve", 40, "Paris", 56.7, "1.85", 25,
+        "Eve", 40, "Paris", 56.72, "1.85", 25,
         "Frank", 55, "Dubai", 78.9, "1.35", 10,
         "Grace", 29, "Moscow", 67.8, "1.65", 36,
-        "Hank", 60, "Paris", 80.2, "1.75", 5,
+        "Hank", 60, "Paris", 80.22, "1.75", 5,
         "Isla", 22, "London", 75.1, "1.85", 43,
     )
 
@@ -131,6 +131,13 @@ class StatisticsTests {
 
         val mean31 = res3["newAge"][0] as Double
         mean31 shouldBe 240
+
+        // scenario #3.1: create new column via expression with Double
+        val res31 = personsDf.groupBy("city").meanOf(name = "newAge") { "weight"<Double>() * 10 }
+        res31.columnNames() shouldBe listOf("city", "newAge")
+
+        val mean311 = res31["newAge"][0] as Double
+        mean311 shouldBe 660.0
     }
 
     @Test
@@ -191,6 +198,13 @@ class StatisticsTests {
 
         val median31 = res3["newAge"][0] as Int
         median31 shouldBe 220
+
+        // scenario #3.1: create new column via expression with Double
+        val res31 = personsDf.groupBy("city").medianOf(name = "newAge") { "weight"<Double>() * 10 }
+        res31.columnNames() shouldBe listOf("city", "newAge")
+
+        val median311 = res31["newAge"][0] as Double
+        median311 shouldBe 751.0
     }
 
     @Test
@@ -245,6 +259,13 @@ class StatisticsTests {
 
         val std31 = res3["newAge"][0] as Double
         std31 shouldBe 101.4889156509222
+
+        // scenario #3.1: create new column via expression with Double
+        val res31 = personsDf.groupBy("city").stdOf(name = "newAge") { "weight"<Double>() * 10 }
+        res31.columnNames() shouldBe listOf("city", "newAge")
+
+        val std311 = res31["newAge"][0] as Double
+        std311 shouldBe 388.57560396916324
     }
 
     @Test
@@ -305,6 +326,13 @@ class StatisticsTests {
 
         val min31 = res3["newAge"][0] as Int
         min31 shouldBe 150
+
+        // scenario #3.1: create new column via expression with Double
+        val res31 = personsDf.groupBy("city").minOf(name = "newAge") { "weight"<Double>() * 10 }
+        res31.columnNames() shouldBe listOf("city", "newAge")
+
+        val min311 = res31["newAge"][0] as Double
+        min311 shouldBe 234.0
 
         // scenario #4: particular column via minBy
         val res4 = personsDf.groupBy("city").minBy("age").values()
@@ -382,6 +410,13 @@ class StatisticsTests {
 
         val max31 = res3["newAge"][0] as Int
         max31 shouldBe 350
+
+        // scenario #3.1: create new column via expression with Double
+        val res31 = personsDf.groupBy("city").maxOf(name = "newAge") { "weight"<Double>() * 10 }
+        res31.columnNames() shouldBe listOf("city", "newAge")
+
+        val max311 = res31["newAge"][0] as Double
+        max311 shouldBe 995.0
 
         // scenario #4: particular column via maxBy
         val res4 = personsDf.groupBy("city").maxBy("age").values()

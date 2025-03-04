@@ -1,12 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.plugin.impl.api
 
+import org.jetbrains.kotlin.KtSourceElement
+import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.expressions.FirAnonymousFunctionExpression
 import org.jetbrains.kotlin.fir.expressions.FirExpression
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
 import org.jetbrains.kotlin.fir.expressions.FirReturnExpression
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.impl.FirImplicitBuiltinTypeRef
 import org.jetbrains.kotlin.fir.types.isSubtypeOf
 import org.jetbrains.kotlin.fir.types.resolvedType
+import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlinx.dataframe.plugin.InterpretationErrorReporter
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractInterpreter
@@ -273,7 +277,7 @@ abstract class GroupByAggregator3(val defaultName: String) : AbstractSchemaModif
 class GroupBySum0 : GroupByAggregator3(defaultName = "sum")
 
 /** Implementation for `mean` */
-class GroupByMean0 : GroupByAggregator3(defaultName = "mean")
+class GroupByMean0 : GroupByAggregatorMean(defaultName = "mean")
 
 /** Implementation for `median` */
 class GroupByMedian0 : GroupByAggregator3(defaultName = "median")
@@ -302,3 +306,94 @@ abstract class GroupByAggregator4() : AbstractSchemaModificationInterpreter() {
 }
 
 class GroupBySum1 : GroupByAggregator4()
+
+
+
+class GroupByStd1 : GroupByAggregator4()
+
+class GroupByMean1 : GroupByAggregator4()
+
+private fun ConeKotlinType.isSubtypeOfComparable(session: FirSession): Boolean {
+    val comparableTypes: List<FirImplicitBuiltinTypeRef> = listOf(
+        session.builtinTypes.booleanType,
+        session.builtinTypes.numberType,
+        session.builtinTypes.byteType,
+        session.builtinTypes.shortType,
+        session.builtinTypes.intType,
+        session.builtinTypes.longType,
+        session.builtinTypes.doubleType,
+        session.builtinTypes.floatType,
+        session.builtinTypes.uIntType,
+        session.builtinTypes.charType,
+        session.builtinTypes.stringType
+    )
+
+    return comparableTypes.any { it.type.isSubtypeOf(this, session)  }
+}
+
+ /** class FirImplicitThrowableTypeRef(
+    source: KtSourceElement?
+) : FirImplicitBuiltinTypeRef(source, StandardClassIds.Comparable) */
+
+abstract class GroupByAggregatorComparable() : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val resolvedColumns = receiver.groups.columns()
+            .filter {
+                it is SimpleDataColumn
+                    && it.type.type.isSubtypeOfComparable(session)
+            }
+
+        return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+    }
+}
+
+abstract class GroupByAggregatorComparable2(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+    val Arguments.name: String? by arg(defaultValue = Present(null))
+    val Arguments.columns: ColumnsResolver? by arg()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        if (name == null) { // TODO: add an example, should be double type
+            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
+            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+        } else {
+            val aggregated =
+                makeNullable(
+                    simpleColumnOf(
+                        name ?: defaultName,
+                        session.builtinTypes.doubleType.type
+                    )
+                ) // I need session.builtinTypes.Comparable<Any?> somehow
+            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+        }
+    }
+}
+
+
+class GroupByMax1 : GroupByAggregatorComparable()
+
+class GroupByMin1 : GroupByAggregatorComparable()
+
+class GroupByMedian1 : GroupByAggregatorComparable()
+
+abstract class GroupByAggregatorMean(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+    val Arguments.name: String? by arg(defaultValue = Present(null))
+    val Arguments.columns: ColumnsResolver? by arg()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        if (name == null) { // TODO: add an example, should be double type
+            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
+            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+        } else {
+            val aggregated =
+                makeNullable(simpleColumnOf(name ?: defaultName, session.builtinTypes.doubleType.type))
+            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+        }
+    }
+}
+
+
+
