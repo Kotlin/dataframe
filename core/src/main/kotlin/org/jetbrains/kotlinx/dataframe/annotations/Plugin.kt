@@ -15,15 +15,9 @@ public annotation class Interpretable(val interpreter: String)
  */
 public annotation class Refine
 
-internal annotation class OptInRefine
-
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE, AnnotationTarget.EXPRESSION)
 public annotation class DisableInterpretation
-
-@Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.EXPRESSION)
-public annotation class Import
 
 @Target(AnnotationTarget.PROPERTY)
 public annotation class Order(val order: Int)
