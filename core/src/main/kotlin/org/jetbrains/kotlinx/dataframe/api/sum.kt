@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -89,9 +91,12 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expres
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupBySum1")
 public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(numberColumns())
 
+@Refine
+@Interpretable("GroupBySum0")
 public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateFor(this, columns)
 
@@ -105,6 +110,8 @@ public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> =
     sumFor { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupBySum0")
 public fun <T, C : Number> Grouped<T>.sum(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.sum.aggregateAll(this, name, columns)
 
@@ -119,6 +126,8 @@ public fun <T, C : Number> Grouped<T>.sum(vararg columns: ColumnReference<C?>, n
 public fun <T, C : Number> Grouped<T>.sum(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
     sum(name) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupBySumOf")
 public inline fun <T, reified R : Number> Grouped<T>.sumOf(
     resultName: String? = null,
     crossinline expression: RowExpression<T, R?>,
