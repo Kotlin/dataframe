@@ -10,9 +10,6 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
-import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
@@ -116,8 +113,6 @@ internal fun isCompressed(url: URL) = isCompressed(url.path)
     message = APACHE_CSV,
     level = DeprecationLevel.HIDDEN, // clashes with the new readDelim
 )
-@Refine
-@Interpretable("ReadDelimStr")
 public fun DataFrame.Companion.readDelimStr(
     text: String,
     delimiter: Char = ',',
@@ -154,8 +149,6 @@ public fun DataFrame.Companion.read(
     replaceWith = ReplaceWith(READ_CSV_FILE_OR_URL_REPLACE, READ_CSV_IMPORT),
     level = DeprecationLevel.WARNING,
 )
-@OptInRefine
-@Interpretable("ReadCSV0")
 public fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
     delimiter: Char = ',',
