@@ -149,6 +149,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: ColumnRefere
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: KProperty<C?>): DataFrame<T> =
     maxFor { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMax0")
 public fun <T, C : Comparable<C>> Grouped<T>.max(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.max.aggregateAll(this, name, columns)
 

@@ -118,6 +118,7 @@ public fun <T> Grouped<T>.stdFor(
     ddof: Int = ddof_default,
 ): DataFrame<T> = stdFor(skipNA, ddof) { columns.toColumnsSetOf() }
 
+@AccessApiOverload
 public fun <T, C : Number> Grouped<T>.stdFor(
     vararg columns: ColumnReference<C?>,
     skipNA: Boolean = skipNA_default,
@@ -138,6 +139,7 @@ public fun <T> Grouped<T>.std(
     columns: ColumnsSelector<T, Number?>,
 ): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateAll(this, name, columns)
 
+@AccessApiOverload
 public fun <T> Grouped<T>.std(
     vararg columns: ColumnReference<Number?>,
     name: String? = null,
