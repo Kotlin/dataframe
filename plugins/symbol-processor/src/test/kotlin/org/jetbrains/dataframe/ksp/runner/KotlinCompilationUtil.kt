@@ -26,7 +26,7 @@ internal object KotlinCompilationUtil {
         // workaround for https://github.com/tschuchortdev/kotlin-compile-testing/issues/105
         compilation.kotlincArguments += "-Xjava-source-roots=${javaSrcRoot.absolutePath}"
         compilation.jvmDefault = "all"
-        compilation.jvmTarget = JvmTarget.JVM_1_8.description
+        compilation.jvmTarget = JvmTarget.JVM_11.description
         compilation.inheritClassPath = false
         compilation.verbose = false
         compilation.classpaths = Classpaths.inheritedClasspath + classpaths

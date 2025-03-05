@@ -65,7 +65,6 @@ dependencies {
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
-    implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
     implementation(libs.commonsIo)
@@ -362,11 +361,6 @@ tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
 
 kotlin {
     explicitApi()
-}
-
-tasks.withType<JavaCompile> {
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
 tasks.withType<KotlinCompile> {
