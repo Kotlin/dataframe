@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
+import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -59,10 +60,10 @@ class StdTests {
         val empty = DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false))
         val nullable = DataColumn.createValueColumn("", listOf(null), nothingType(true))
 
-        empty.values().std(empty.type) shouldBe Double.NaN
-        nullable.values().std(nullable.type) shouldBe Double.NaN
+        empty.values().std(empty.type).shouldBeNaN()
+        nullable.values().std(nullable.type).shouldBeNaN()
 
-        empty.std() shouldBe Double.NaN
-        nullable.std() shouldBe Double.NaN
+        empty.std().shouldBeNaN()
+        nullable.std().shouldBeNaN()
     }
 }

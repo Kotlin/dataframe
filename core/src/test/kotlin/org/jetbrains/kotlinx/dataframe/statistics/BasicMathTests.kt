@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
+import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -18,10 +19,10 @@ class BasicMathTests {
 
     @Test
     fun `mean with nans and nulls`() {
-        columnOf(10, 20, Double.NaN, null).mean() shouldBe Double.NaN
+        columnOf(10, 20, Double.NaN, null).mean().shouldBeNaN()
         columnOf(10, 20, Double.NaN, null).mean(skipNA = true) shouldBe 15
 
-        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).mean() shouldBe Double.NaN
-        DataColumn.createValueColumn("", listOf(null), nothingType(true)).mean() shouldBe Double.NaN
+        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).mean().shouldBeNaN()
+        DataColumn.createValueColumn("", listOf(null), nothingType(true)).mean().shouldBeNaN()
     }
 }
