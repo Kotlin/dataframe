@@ -416,7 +416,8 @@ public class DataFrameBuilder(private val header: List<String>) {
  * A builder class for dynamically constructing a DataFrame with provided columns.
  * Allows adding columns manually while automatically handling duplicate column names by assigning unique names.
  *
- * @property checkDuplicateValues Whether to check for duplicate column (with identical names and values)
+ * @property checkDuplicateValues Whether to check for duplicate column (with identical names and values). If `true`,
+ * doesn't add a new column if the identical one is already in the builder.
  * when adding new columns. `true` by default.
  */
 public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean = true) {
@@ -479,10 +480,10 @@ public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean =
     public fun get(column: String): AnyCol? = cols[column]
 
     /**
-     * Converts the current `DynamicDataFrameBuilder` instance into a `DataFrame`.
-     * The resulting `DataFrame` is constructed from the columns stored in the builder.
+     * Converts the current [DynamicDataFrameBuilder] instance into a [DataFrame].
+     * The resulting [DataFrame] is constructed from the columns stored in the builder.
      *
-     * @return A `DataFrame` containing the columns defined in the `DynamicDataFrameBuilder`.
+     * @return A [DataFrame] containing the columns defined in the [DynamicDataFrameBuilder].
      */
     public fun toDataFrame(): DataFrame<*> = cols.values.toDataFrame()
 }
