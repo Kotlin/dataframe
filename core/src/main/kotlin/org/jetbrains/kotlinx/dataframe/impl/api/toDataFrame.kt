@@ -75,11 +75,13 @@ internal val KClass<*>.isValueType: Boolean
             this.isArray
 
 /**
- * Checks if `KClass` has properties.
+ * Checks if `KClass` has public properties / getter functions (for pojo-like classes).
  */
 @PublishedApi
 internal val KClass<*>.hasProperties: Boolean
-    get() = this.memberProperties.isNotEmpty()
+    get() = this.memberProperties.any { it.visibility == KVisibility.PUBLIC } ||
+        // check pojo-like classes
+        this.memberFunctions.any { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
 
 internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,

@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.fir.scopes.collectAllProperties
 import org.jetbrains.kotlin.fir.scopes.unsubstitutedScope
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
+import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeFlexibleType
@@ -224,11 +225,26 @@ internal fun KotlinTypeFacade.toDataFrame(
                 Names.TEMPORAL_AMOUNT_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
             )
 
+    fun FirNamedFunctionSymbol.isGetterLike(): Boolean {
+        val functionName = this.name.asString()
+        return (functionName.startsWith("get") || functionName.startsWith("is")) &&
+            this.valueParameterSymbols.isEmpty() &&
+            this.typeParameterSymbols.isEmpty()
+    }
+
     fun ConeKotlinType.hasProperties(): Boolean {
         val symbol = this.toRegularClassSymbol(session) as? FirClassSymbol<*> ?: return false
-        val scope = symbol.unsubstitutedScope(session, ScopeSession(), withForcedTypeCalculator = false, memberRequiredPhase = null)
-        return scope.collectAllProperties().isNotEmpty()
+        val scope = symbol.unsubstitutedScope(
+            session,
+            ScopeSession(),
+            withForcedTypeCalculator = false,
+            memberRequiredPhase = null
+        )
+
+        return scope.collectAllProperties().any { it.visibility == Visibilities.Public } ||
+            scope.collectAllFunctions().any { it.visibility == Visibilities.Public && it.isGetterLike() }
     }
+
 
     val excludes =
         traverseConfiguration.excludeProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }

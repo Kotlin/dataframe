@@ -398,6 +398,14 @@ class CreateDataFrameTests {
         enums.toDataFrame() shouldBe dataFrameOf("value")(*enums.toTypedArray())
     }
 
+    class NoPublicPropsClass(private val a: Int, private val b: String)
+
+    @Test
+    fun `should convert class with no public properties to DataFrame with value column`() {
+        val objs: List<NoPublicPropsClass> = listOf(NoPublicPropsClass(1, "a"), NoPublicPropsClass(2, "b"))
+        objs.toDataFrame() shouldBe dataFrameOf("value")(*objs.toTypedArray())
+    }
+
     interface Animal {
         fun say(): String
     }
