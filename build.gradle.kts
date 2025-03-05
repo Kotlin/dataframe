@@ -89,16 +89,8 @@ fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
-    libs.plugins.kover.get().pluginId,
-    // TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
-    libs.kotestAssertions.get().name,
-    // Can't be updated to 7.4.0+ due to Java 8 compatibility
-    libs.android.gradle.api.get().group,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
-    // Can't be updated to 2.1.0+ due to Java 8 compatibility
-    libs.plugins.simpleGit.get().pluginId,
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
