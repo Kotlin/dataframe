@@ -139,7 +139,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
-kotlin.jvmToolchain(11)
+kotlin.jvmToolchain(21)
 
 allprojects {
     tasks.withType<KotlinCompile> {
@@ -165,7 +165,7 @@ allprojects {
         }
 
         // set the java toolchain version to 11 for all subprojects for CI stability
-        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(11)
+        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(21)
 
         // Attempts to configure buildConfig for each sub-project that uses it
         try {
