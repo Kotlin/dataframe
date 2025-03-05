@@ -1,33 +1,72 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
-import kotlin.reflect.KProperty
-
+/**
+ * Wrapper around an [aggregator factory][AggregatorProvider] for aggregators that require a single parameter.
+ *
+ * Aggregators are cached by their parameter value.
+ * @see AggregatorOptionSwitch2
+ */
 @PublishedApi
-internal class AggregatorOptionSwitch<P, C, R>(val name: String, val getAggregator: (P) -> AggregatorProvider<C, R>) {
-
-    private val cache = mutableMapOf<P, Aggregator<C, R>>()
-
-    operator fun invoke(option: P) = cache.getOrPut(option) { getAggregator(option).create(name) }
-
-    class Factory<P, C, R>(val getAggregator: (P) -> AggregatorProvider<C, R>) {
-        operator fun getValue(obj: Any?, property: KProperty<*>) = AggregatorOptionSwitch(property.name, getAggregator)
-    }
-}
-
-@PublishedApi
-internal class AggregatorOptionSwitch2<P1, P2, C, R>(
+internal class AggregatorOptionSwitch1<in Param1, out AggregatorType : Aggregator<*, *>>(
     val name: String,
-    val getAggregator: (P1, P2) -> AggregatorProvider<C, R>,
+    val getAggregator: (param1: Param1) -> AggregatorProvider<AggregatorType>,
 ) {
 
-    private val cache = mutableMapOf<Pair<P1, P2>, Aggregator<C, R>>()
+    private val cache: MutableMap<Param1, AggregatorType> = mutableMapOf()
 
-    operator fun invoke(option1: P1, option2: P2) =
-        cache.getOrPut(option1 to option2) {
-            getAggregator(option1, option2).create(name)
+    operator fun invoke(param1: Param1): AggregatorType =
+        cache.getOrPut(param1) {
+            getAggregator(param1).create(name)
         }
 
-    class Factory<P1, P2, C, R>(val getAggregator: (P1, P2) -> AggregatorProvider<C, R>) {
-        operator fun getValue(obj: Any?, property: KProperty<*>) = AggregatorOptionSwitch2(property.name, getAggregator)
-    }
+    /**
+     * Creates [AggregatorOptionSwitch1].
+     *
+     * Used like:
+     * ```kt
+     * val myAggregator by AggregatorOptionSwitch1.Factory { param1: Param1 ->
+     *   MyAggregator.Factory(param1)
+     * }
+     */
+    class Factory<in Param1, out AggregatorType : Aggregator<*, *>>(
+        val getAggregator: (Param1) -> AggregatorProvider<AggregatorType>,
+    ) : Provider<AggregatorOptionSwitch1<Param1, AggregatorType>> by Provider({ name ->
+            AggregatorOptionSwitch1(name, getAggregator)
+        })
+}
+
+/**
+ * Wrapper around an [aggregator factory][AggregatorProvider] for aggregators that require two parameters.
+ *
+ * Aggregators are cached by their parameter values.
+ * @see AggregatorOptionSwitch1
+ */
+@PublishedApi
+internal class AggregatorOptionSwitch2<in Param1, in Param2, out AggregatorType : Aggregator<*, *>>(
+    val name: String,
+    val getAggregator: (param1: Param1, param2: Param2) -> AggregatorProvider<AggregatorType>,
+) {
+
+    private val cache: MutableMap<Pair<Param1, Param2>, AggregatorType> = mutableMapOf()
+
+    operator fun invoke(param1: Param1, param2: Param2): AggregatorType =
+        cache.getOrPut(param1 to param2) {
+            getAggregator(param1, param2).create(name)
+        }
+
+    /**
+     * Creates [AggregatorOptionSwitch2].
+     *
+     * Used like:
+     * ```kt
+     * val myAggregator by AggregatorOptionSwitch2.Factory { param1: Param1, param2: Param2 ->
+     *   MyAggregator.Factory(param1, param2)
+     * }
+     * ```
+     */
+    class Factory<in Param1, in Param2, out AggregatorType : Aggregator<*, *>>(
+        val getAggregator: (Param1, Param2) -> AggregatorProvider<AggregatorType>,
+    ) : Provider<AggregatorOptionSwitch2<Param1, Param2, AggregatorType>> by Provider({ name ->
+            AggregatorOptionSwitch2(name, getAggregator)
+        })
 }

@@ -2,23 +2,74 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 
+/**
+ * Base interface for all aggregators.
+ *
+ * Aggregators are used to compute a single value from an [Iterable] of values, a single [DataColumn],
+ * or multiple [DataColumns][DataColumn].
+ *
+ * The [AggregatorBase] class is a base implementation of this interface.
+ *
+ * @param Value The type of the values to be aggregated.
+ *   This can be nullable for [Iterables][Iterable] or not, depending on the use case.
+ *   For columns, [Value] will always be considered nullable; nulls are filtered out from columns anyway.
+ * @param Return The type of the resulting value. It doesn't matter if this is nullable or not, as the aggregator
+ *   will always return a [Return]`?`.
+ */
 @PublishedApi
-internal interface Aggregator<C, R> {
+internal interface Aggregator<in Value, out Return> {
 
+    /** The name of this aggregator. */
     val name: String
 
-    fun aggregate(column: DataColumn<C?>): R?
-
+    /** If `true`, [Value][Value]`  ==  ` [Return][Return]. */
     val preservesType: Boolean
 
-    fun aggregate(columns: Iterable<DataColumn<C?>>): R?
+    /**
+     * Base function of [Aggregator].
+     *
+     * Aggregates the given values, taking [type] into account, and computes a single resulting value.
+     *
+     * When using [AggregatorBase], this can be supplied by the [AggregatorBase.aggregator] argument.
+     */
+    fun aggregate(values: Iterable<Value>, type: KType): Return?
 
-    fun aggregate(values: Iterable<C>, type: KType): R?
+    /**
+     * Aggregates the data in the given column and computes a single resulting value.
+     * Nulls are filtered out by default, then the aggregation function (with [Iterable] and [KType]) is called.
+     *
+     * See [AggregatorBase.aggregate].
+     */
+    fun aggregate(column: DataColumn<Value?>): Return?
+
+    /**
+     * Aggregates the data in the multiple given columns and computes a single resulting value.
+     *
+     * Must be overridden when using [AggregatorBase].
+     */
+    fun aggregate(columns: Iterable<DataColumn<Value?>>): Return?
+
+    /**
+     * Special case of [aggregate] with [Iterable] that calculates the common type of the values at runtime.
+     * This is a heavy operation and should be avoided when possible.
+     * If provided, [valueTypes] can be used to avoid calculating the types of [values] at runtime.
+     */
+    fun aggregateCalculatingType(values: Iterable<Value>, valueTypes: Set<KType>? = null): Return?
+
+    /**
+     * Function that can give the return type of [aggregate] as [KType], given the type of the input.
+     */
+    fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType?
 }
 
 @PublishedApi
-internal fun <T> Aggregator<*, *>.cast(): Aggregator<T, T> = this as Aggregator<T, T>
+internal fun <Type> Aggregator<*, *>.cast(): Aggregator<Type, Type> = this as Aggregator<Type, Type>
 
 @PublishedApi
-internal fun <T, P> Aggregator<*, *>.cast2(): Aggregator<T, P> = this as Aggregator<T, P>
+internal fun <Value, Return> Aggregator<*, *>.cast2(): Aggregator<Value, Return> = this as Aggregator<Value, Return>
+
+internal val preserveReturnTypeNullIfEmpty: (KType, Boolean) -> KType = { type, emptyInput ->
+    type.withNullability(emptyInput)
+}
