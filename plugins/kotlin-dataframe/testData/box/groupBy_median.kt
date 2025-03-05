@@ -8,48 +8,38 @@ fun box(): String {
     val personsDf = dataFrameOf("name", "age", "city", "weight", "height", "yearsToRetirement")(
         "Alice", 15, "London", 99.5, "1.85", 50,
         "Bob", 20, "Paris", 140.0, "1.35", 45,
-        "Charlie", 100, "Dubai", 75, "1.95", 0,
-        "Rose", 1, "Moscow", 45.3, "0.79", 64,
+        "Charlie", 100, "Dubai", 75.0, "1.95", 0,
+        "Rose", 1, "Moscow", 45.33, "0.79", 64,
         "Dylan", 35, "London", 23.4, "1.83", 30,
-        "Eve", 40, "Paris", 56.7, "1.85", 25,
+        "Eve", 40, "Paris", 56.72, "1.85", 25,
         "Frank", 55, "Dubai", 78.9, "1.35", 10,
         "Grace", 29, "Moscow", 67.8, "1.65", 36,
-        "Hank", 60, "Paris", 80.2, "1.75", 5,
+        "Hank", 60, "Paris", 80.22, "1.75", 5,
         "Isla", 22, "London", 75.1, "1.85", 43,
     )
 
+    /**
+     * java.lang.IllegalArgumentException: Comparison result: None
+     * Runtime:
+     * city: String
+     * name: String
+     * age: Int
+     * height: String
+     * yearsToRetirement: Int
+     * Compile:
+     * weight: Any
+     * city: String
+     * age: Int
+     * yearsToRetirement: Int
+     */
+
     // scenario #0: all numerical columns
-    /*val res0 = personsDf.groupBy { city }.median()
+    val res0 = personsDf.groupBy { city }.median()
     val median01: Int? = res0.age[0]
     // TODO: Compilation error - actual type it(kotlin.Number & kotlin.Comparable<*>)
     // `val median02: Double? = res0.weight[0]
-    res0.compareSchemas()*/
+    res0.compareSchemas()
 
-
-    /*
-
-    Comparison result: None
-Runtime:
-city: String
-newAge: Comparable<Any?>
-Compile:
-city: String
-newAge: Int?
-
-java.lang.IllegalArgumentException: Comparison result: None
-Runtime:
-city: String
-newAge: Comparable<Any?>
-Compile:
-city: String
-newAge: Int?
-
-how to create type Comparable<Any?> - Comparable<*>
-
-TODO: need to add in FirSession support for the FirImplicitComparableTypeRef
-
-
-     */
     // scenario #1: particular column
     val res1 = personsDf.groupBy { city }.medianFor { age }
     val median11: Int? = res1.age[0]
@@ -67,7 +57,7 @@ TODO: need to add in FirSession support for the FirImplicitComparableTypeRef
 
     // scenario #2.1: particular column with new name - schema changes but via columnSelector
     val res21 = personsDf.groupBy { city }.median("newAge") { age }
-    val median211: Int? = res21.newAge[0]
+    val median211: Int?= res21.newAge[0]
     res21.compareSchemas()
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector
@@ -78,7 +68,7 @@ TODO: need to add in FirSession support for the FirImplicitComparableTypeRef
 
     // scenario #3: create new column via expression
     val res3 = personsDf.groupBy { city }.medianOf("newAge") { age * 10 }
-    val median3: Int? = res3.newAge[0]
+    val median3: kotlin.Comparable<kotlin.Any?>? = res3.newAge[0]
     res3.compareSchemas()
 
     return "OK"
