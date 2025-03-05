@@ -100,7 +100,8 @@ public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupByMean1")
 public fun <T> Grouped<T>.mean(skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA, numberColumns())
 
 @Refine

@@ -113,7 +113,10 @@ fun KotlinTypeFacade.aggregate(
     }
 }
 
-fun KotlinTypeFacade.createPluginDataFrameSchema(keys: List<ColumnWithPathApproximation>, moveToTop: Boolean): PluginDataFrameSchema {
+fun KotlinTypeFacade.createPluginDataFrameSchema(
+    keys: List<ColumnWithPathApproximation>,
+    moveToTop: Boolean
+): PluginDataFrameSchema {
     fun addToHierarchy(
         path: List<String>,
         column: SimpleCol,
@@ -206,15 +209,27 @@ abstract class GroupByAggregator(val defaultName: String) : AbstractSchemaModifi
     }
 }
 
-class GroupByMeanOf : GroupByAggregator(defaultName = "mean")
-
-class GroupByStdOf : GroupByAggregator(defaultName = "std")
-
 class GroupByMaxOf : GroupByAggregator(defaultName = "max")
 
 class GroupByMinOf : GroupByAggregator(defaultName = "min")
 
-abstract class GroupByAggregatorExpressionComparable(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+abstract class GroupByAggregatorExpressionMean(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+    val Arguments.name: String? by arg(defaultValue = Present(null))
+    val Arguments.expression by type()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val aggregated = makeNullable(simpleColumnOf(name ?: defaultName, session.builtinTypes.doubleType.type))
+        return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+    }
+}
+
+class GroupByMeanOf : GroupByAggregatorExpressionMean(defaultName = "mean")
+
+class GroupByStdOf : GroupByAggregatorExpressionMean(defaultName = "std")
+
+abstract class GroupByAggregatorExpressionComparable(val defaultName: String) :
+    AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
     val Arguments.name: String? by arg(defaultValue = Present(null))
     val Arguments.expression by type()
@@ -290,9 +305,6 @@ abstract class GroupByAggregator3(val defaultName: String) : AbstractSchemaModif
 /** Implementation for `sum` */
 class GroupBySum0 : GroupByAggregator3(defaultName = "sum")
 
-/** Implementation for `std` */
-class GroupByStd0 : GroupByAggregator3(defaultName = "std")
-
 /** Implementation for `median` */
 class GroupByMedian0 : GroupByAggregator3(defaultName = "median")
 
@@ -301,6 +313,33 @@ class GroupByMin0 : GroupByAggregator3(defaultName = "min")
 
 /** Implementation for `median` */
 class GroupByMax0 : GroupByAggregator3(defaultName = "max")
+
+abstract class GroupByAggregatorMean(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
+    val Arguments.name: String? by arg(defaultValue = Present(null))
+    val Arguments.columns: ColumnsResolver? by arg()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        if (name == null) {
+            val resolvedColumns = columns?.resolve(receiver.keys)
+                ?.map { col ->
+                    simpleColumnOf(col.column.name, session.builtinTypes.doubleType.type)
+                }!!.toList()
+            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+
+        } else {
+            val aggregated =
+                makeNullable(simpleColumnOf(name ?: defaultName, session.builtinTypes.doubleType.type))
+            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+        }
+    }
+}
+
+/** Implementation for `mean` */
+class GroupByMean0 : GroupByAggregatorMean(defaultName = "mean")
+
+/** Implementation for `std` */
+class GroupByStd0 : GroupByAggregatorMean(defaultName = "std")
 
 abstract class GroupByAggregator4() : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
@@ -318,9 +357,25 @@ abstract class GroupByAggregator4() : AbstractSchemaModificationInterpreter() {
 
 class GroupBySum1 : GroupByAggregator4()
 
-class GroupByStd1 : GroupByAggregator4()
+abstract class GroupByAggregator4Mean() : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
 
-class GroupByMean1 : GroupByAggregator4()
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val resolvedColumns = receiver.groups.columns()
+            .filter {
+                it is SimpleDataColumn
+                    && it.type.type.isSubtypeOf(session.builtinTypes.numberType.type, session)
+            }.map { col ->
+                simpleColumnOf(col.name, session.builtinTypes.doubleType.type)
+            }.toList()
+
+        return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+    }
+}
+
+class GroupByMean1 : GroupByAggregator4Mean()
+
+class GroupByStd1 : GroupByAggregator4Mean()
 
 private fun ConeKotlinType.isSubtypeOfComparable(session: FirSession): Boolean {
     val comparableTypes: List<FirImplicitBuiltinTypeRef> = listOf(
@@ -337,7 +392,7 @@ private fun ConeKotlinType.isSubtypeOfComparable(session: FirSession): Boolean {
         session.builtinTypes.stringType
     )
 
-    return comparableTypes.any { it.type.isSubtypeOf(this, session)  }
+    return comparableTypes.any { it.type.isSubtypeOf(this, session) }
 }
 
 abstract class GroupByAggregatorComparable() : AbstractSchemaModificationInterpreter() {
@@ -360,56 +415,11 @@ class GroupByMin1 : GroupByAggregatorComparable()
 
 class GroupByMedian1 : GroupByAggregatorComparable()
 
-/*abstract class GroupByAggregatorComparable2(val defaultName: String) : AbstractSchemaModificationInterpreter() {
-    val Arguments.receiver by groupBy()
-    val Arguments.name: String? by arg(defaultValue = Present(null))
-    val Arguments.columns: ColumnsResolver? by arg()
-
-    override fun Arguments.interpret(): PluginDataFrameSchema {
-        if (name == null) {
-            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
-            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
-        } else {
-            val type = createComparableType(session)
-
-            val aggregated =
-                makeNullable(
-                    simpleColumnOf(
-                        name ?: defaultName,
-                        type
-                    )
-                )
-            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
-        }
-    }
-}*/
-
 private fun createComparableType(session: FirSession): ConeKotlinType {
     val lookupTag = ConeClassLikeLookupTagImpl(StandardClassIds.Comparable)
     val type = lookupTag.constructType(arrayOf(session.builtinTypes.nullableAnyType.type), isNullable = false).type
     return type
 }
-
-
-abstract class GroupByAggregatorMean(val defaultName: String) : AbstractSchemaModificationInterpreter() {
-    val Arguments.receiver by groupBy()
-    val Arguments.name: String? by arg(defaultValue = Present(null))
-    val Arguments.columns: ColumnsResolver? by arg()
-
-    override fun Arguments.interpret(): PluginDataFrameSchema {
-        if (name == null) { // TODO: add an example, should be double type
-            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
-            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
-        } else {
-            val aggregated =
-                makeNullable(simpleColumnOf(name ?: defaultName, session.builtinTypes.doubleType.type))
-            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
-        }
-    }
-}
-
-/** Implementation for `mean` */
-class GroupByMean0 : GroupByAggregatorMean(defaultName = "mean")
 
 
 
