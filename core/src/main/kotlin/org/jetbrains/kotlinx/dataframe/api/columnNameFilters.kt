@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -146,6 +147,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameContains][ColumnSet.nameContains]`("my", ignoreCase = true) }`
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("NameContains0")
     public fun <C> ColumnSet<C>.nameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
@@ -157,6 +159,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[nameContains][ColumnsSelectionDsl.colsNameContains]`("my") }`
      */
+    @Interpretable("NameContains1")
     public fun ColumnsSelectionDsl<*>.nameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
@@ -168,6 +171,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameContains][SingleColumn.colsNameContains]`("my") }`
      */
+    @Interpretable("NameContains2")
     public fun SingleColumn<DataRow<*>>.colsNameContains(
         text: CharSequence,
         ignoreCase: Boolean = false,
@@ -348,6 +352,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameStartsWith][ColumnSet.nameStartsWith]`("order-") }`
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("NameStartsWith0")
     public fun <C> ColumnSet<C>.nameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
@@ -359,6 +364,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order-") }`
      */
+    @Interpretable("NameStartsWith1")
     public fun ColumnsSelectionDsl<*>.nameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
@@ -370,6 +376,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameStartsWith][SingleColumn.colsNameStartsWith]`("order-") }`
      */
+    @Interpretable("NameStartsWith2")
     public fun SingleColumn<DataRow<*>>.colsNameStartsWith(
         prefix: CharSequence,
         ignoreCase: Boolean = false,
@@ -434,6 +441,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[nameEndsWith][ColumnSet.nameEndsWith]`("-order") }`
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("NameEndsWith0")
     public fun <C> ColumnSet<C>.nameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
@@ -445,6 +453,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[nameEndsWith][ColumnsSelectionDsl.nameEndsWith]`("-order") }`
      */
+    @Interpretable("NameEndsWith1")
     public fun ColumnsSelectionDsl<*>.nameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,
@@ -456,6 +465,7 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { someGroupCol.`[colsNameEndsWith][SingleColumn.colsNameEndsWith]`("-order") }`
      */
+    @Interpretable("NameEndsWith2")
     public fun SingleColumn<DataRow<*>>.colsNameEndsWith(
         suffix: CharSequence,
         ignoreCase: Boolean = false,

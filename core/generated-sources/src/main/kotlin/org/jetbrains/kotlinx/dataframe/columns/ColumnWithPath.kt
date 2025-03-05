@@ -61,3 +61,5 @@ public interface ColumnWithPath<out T> : DataColumn<T> {
 }
 
 public val <T> ColumnWithPath<T>.depth: Int get() = path.depth()
+
+public fun ColumnWithPath(column: DataColumn<*>, path: ColumnPath): ColumnWithPath<*> = column.addPath(path)

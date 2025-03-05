@@ -4,9 +4,10 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
 
 fun box(): String {
-    val df = DataFrame.readJsonStr("""
-        |{"a": 123}
-        |""".trimMargin())
-    df.a
+    compareSchemas(
+        df.select { cols(name, age, city, weight, isHappy) },
+        df.select { all() },
+    )
+
     return "OK"
 }

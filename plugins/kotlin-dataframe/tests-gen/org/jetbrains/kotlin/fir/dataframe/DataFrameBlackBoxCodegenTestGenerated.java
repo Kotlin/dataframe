@@ -413,66 +413,6 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
-  @TestMetadata("read.kt")
-  public void testRead() {
-    runTest("testData/box/read.kt");
-  }
-
-  @Test
-  @TestMetadata("readCSV.kt")
-  public void testReadCSV() {
-    runTest("testData/box/readCSV.kt");
-  }
-
-  @Test
-  @TestMetadata("readExcel.kt")
-  public void testReadExcel() {
-    runTest("testData/box/readExcel.kt");
-  }
-
-  @Test
-  @TestMetadata("readExcel_stringColumns.kt")
-  public void testReadExcel_stringColumns() {
-    runTest("testData/box/readExcel_stringColumns.kt");
-  }
-
-  @Test
-  @TestMetadata("readJson.kt")
-  public void testReadJson() {
-    runTest("testData/box/readJson.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_const.kt")
-  public void testReadJsonStr_const() {
-    runTest("testData/box/readJsonStr_const.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_datarow.kt")
-  public void testReadJsonStr_datarow() {
-    runTest("testData/box/readJsonStr_datarow.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_localProperty.kt")
-  public void testReadJsonStr_localProperty() {
-    runTest("testData/box/readJsonStr_localProperty.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_memberProperty.kt")
-  public void testReadJsonStr_memberProperty() {
-    runTest("testData/box/readJsonStr_memberProperty.kt");
-  }
-
-  @Test
-  @TestMetadata("read_localFile.kt")
-  public void testRead_localFile() {
-    runTest("testData/box/read_localFile.kt");
-  }
-
-  @Test
   @TestMetadata("reducedGroupBy.kt")
   public void testReducedGroupBy() {
     runTest("testData/box/reducedGroupBy.kt");
@@ -506,6 +446,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("reorder.kt")
   public void testReorder() {
     runTest("testData/box/reorder.kt");
+  }
+
+  @Test
+  @TestMetadata("reorderRange.kt")
+  public void testReorderRange() {
+    runTest("testData/box/reorderRange.kt");
   }
 
   @Test
@@ -665,18 +611,6 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
-  @TestMetadata("trimIndent.kt")
-  public void testTrimIndent() {
-    runTest("testData/box/trimIndent.kt");
-  }
-
-  @Test
-  @TestMetadata("trimMargin.kt")
-  public void testTrimMargin() {
-    runTest("testData/box/trimMargin.kt");
-  }
-
-  @Test
   @TestMetadata("ungroup.kt")
   public void testUngroup() {
     runTest("testData/box/ungroup.kt");
@@ -700,6 +634,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
     runTest("testData/box/wrongReceiver.kt");
   }
 
+  @Test
+  @TestMetadata("xs.kt")
+  public void testXs() {
+    runTest("testData/box/xs.kt");
+  }
+
   @Nested
   @TestMetadata("testData/box/colKinds")
   @TestDataPath("$PROJECT_ROOT")
@@ -719,6 +659,112 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
     @TestMetadata("toDataFrame.kt")
     public void testToDataFrame() {
       runTest("testData/box/colKinds/toDataFrame.kt");
+    }
+  }
+
+  @Nested
+  @TestMetadata("testData/box/csDsl")
+  @TestDataPath("$PROJECT_ROOT")
+  public class CsDsl {
+    @Test
+    @TestMetadata("all.kt")
+    public void testAll() {
+      runTest("testData/box/csDsl/all.kt");
+    }
+
+    @Test
+    public void testAllFilesPresentInCsDsl() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/csDsl"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
+
+    @Test
+    @TestMetadata("colGroups.kt")
+    public void testColGroups() {
+      runTest("testData/box/csDsl/colGroups.kt");
+    }
+
+    @Test
+    @TestMetadata("cols.kt")
+    public void testCols() {
+      runTest("testData/box/csDsl/cols.kt");
+    }
+
+    @Test
+    @TestMetadata("colsAtAnyDepth.kt")
+    public void testColsAtAnyDepth() {
+      runTest("testData/box/csDsl/colsAtAnyDepth.kt");
+    }
+
+    @Test
+    @TestMetadata("colsOf.kt")
+    public void testColsOf() {
+      runTest("testData/box/csDsl/colsOf.kt");
+    }
+
+    @Test
+    @TestMetadata("columnNameFIlters.kt")
+    public void testColumnNameFIlters() {
+      runTest("testData/box/csDsl/columnNameFIlters.kt");
+    }
+
+    @Test
+    @TestMetadata("columnRange.kt")
+    public void testColumnRange() {
+      runTest("testData/box/csDsl/columnRange.kt");
+    }
+
+    @Test
+    @TestMetadata("drop.kt")
+    public void testDrop() {
+      runTest("testData/box/csDsl/drop.kt");
+    }
+
+    @Test
+    @TestMetadata("first.kt")
+    public void testFirst() {
+      runTest("testData/box/csDsl/first.kt");
+    }
+
+    @Test
+    @TestMetadata("frameCols.kt")
+    public void testFrameCols() {
+      runTest("testData/box/csDsl/frameCols.kt");
+    }
+
+    @Test
+    @TestMetadata("last.kt")
+    public void testLast() {
+      runTest("testData/box/csDsl/last.kt");
+    }
+
+    @Test
+    @TestMetadata("rename.kt")
+    public void testRename() {
+      runTest("testData/box/csDsl/rename.kt");
+    }
+
+    @Test
+    @TestMetadata("single.kt")
+    public void testSingle() {
+      runTest("testData/box/csDsl/single.kt");
+    }
+
+    @Test
+    @TestMetadata("take.kt")
+    public void testTake() {
+      runTest("testData/box/csDsl/take.kt");
+    }
+
+    @Test
+    @TestMetadata("valueCols.kt")
+    public void testValueCols() {
+      runTest("testData/box/csDsl/valueCols.kt");
+    }
+
+    @Test
+    @TestMetadata("withoutNulls.kt")
+    public void testWithoutNulls() {
+      runTest("testData/box/csDsl/withoutNulls.kt");
     }
   }
 }

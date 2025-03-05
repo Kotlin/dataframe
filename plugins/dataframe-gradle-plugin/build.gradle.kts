@@ -91,12 +91,12 @@ gradlePlugin {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+    compilerOptions.jvmTarget = JvmTarget.JVM_11
 }
 
 tasks.withType<JavaCompile>().all {
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
 }
 
 sourceSets {
