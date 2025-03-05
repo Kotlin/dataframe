@@ -18,21 +18,6 @@ fun box(): String {
         "Isla", 22, "London", 75.1, "1.85", 43,
     )
 
-    /**
-     * java.lang.IllegalArgumentException: Comparison result: None
-     * Runtime:
-     * city: String
-     * name: String
-     * age: Int
-     * height: String
-     * yearsToRetirement: Int
-     * Compile:
-     * weight: Any
-     * city: String
-     * age: Int
-     * yearsToRetirement: Int
-     */
-
     // scenario #0: all numerical columns
     val res0 = personsDf.groupBy { city }.median()
     val median01: Int? = res0.age[0]

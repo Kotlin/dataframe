@@ -51,7 +51,7 @@ fun box(): String {
     res22.compareSchemas()
 
     // scenario #3: create new column via expression
-    val res3 = personsDf.groupBy { city }.maxOf("newAge") { age / 2 }
+    val res3 = personsDf.groupBy { city }.maxOf("newAge") { age / 10 }
     val max3: Int? = res3.newAge[0]
     res3.compareSchemas()
 

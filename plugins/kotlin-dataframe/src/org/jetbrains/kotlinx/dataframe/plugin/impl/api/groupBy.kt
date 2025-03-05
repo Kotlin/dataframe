@@ -206,13 +206,13 @@ abstract class GroupByAggregator(val defaultName: String) : AbstractSchemaModifi
     }
 }
 
-class GroupByMaxOf : GroupByAggregator(defaultName = "max")
-
-class GroupByMinOf : GroupByAggregator(defaultName = "min")
-
 class GroupByMeanOf : GroupByAggregator(defaultName = "mean")
 
 class GroupByStdOf : GroupByAggregator(defaultName = "std")
+
+class GroupByMaxOf : GroupByAggregator(defaultName = "max")
+
+class GroupByMinOf : GroupByAggregator(defaultName = "min")
 
 abstract class GroupByAggregatorExpressionComparable(val defaultName: String) : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
@@ -290,14 +290,17 @@ abstract class GroupByAggregator3(val defaultName: String) : AbstractSchemaModif
 /** Implementation for `sum` */
 class GroupBySum0 : GroupByAggregator3(defaultName = "sum")
 
-/** Implementation for `mean` */
-class GroupByMean0 : GroupByAggregatorMean(defaultName = "mean")
-
 /** Implementation for `std` */
 class GroupByStd0 : GroupByAggregator3(defaultName = "std")
 
 /** Implementation for `median` */
 class GroupByMedian0 : GroupByAggregator3(defaultName = "median")
+
+/** Implementation for `median` */
+class GroupByMin0 : GroupByAggregator3(defaultName = "min")
+
+/** Implementation for `median` */
+class GroupByMax0 : GroupByAggregator3(defaultName = "max")
 
 abstract class GroupByAggregator4() : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
@@ -318,12 +321,6 @@ class GroupBySum1 : GroupByAggregator4()
 class GroupByStd1 : GroupByAggregator4()
 
 class GroupByMean1 : GroupByAggregator4()
-
-class GroupByMax1 : GroupByAggregator4()
-
-class GroupByMin1 : GroupByAggregator4()
-
-class GroupByMedian1 : GroupByAggregatorComparable()
 
 private fun ConeKotlinType.isSubtypeOfComparable(session: FirSession): Boolean {
     val comparableTypes: List<FirImplicitBuiltinTypeRef> = listOf(
@@ -357,7 +354,13 @@ abstract class GroupByAggregatorComparable() : AbstractSchemaModificationInterpr
     }
 }
 
-abstract class GroupByAggregatorComparable2(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+class GroupByMax1 : GroupByAggregatorComparable()
+
+class GroupByMin1 : GroupByAggregatorComparable()
+
+class GroupByMedian1 : GroupByAggregatorComparable()
+
+/*abstract class GroupByAggregatorComparable2(val defaultName: String) : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
     val Arguments.name: String? by arg(defaultValue = Present(null))
     val Arguments.columns: ColumnsResolver? by arg()
@@ -379,23 +382,13 @@ abstract class GroupByAggregatorComparable2(val defaultName: String) : AbstractS
             return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
         }
     }
-}
+}*/
 
 private fun createComparableType(session: FirSession): ConeKotlinType {
     val lookupTag = ConeClassLikeLookupTagImpl(StandardClassIds.Comparable)
     val type = lookupTag.constructType(arrayOf(session.builtinTypes.nullableAnyType.type), isNullable = false).type
     return type
 }
-
-
-
-/** Implementation for `median` */
-class GroupByMin0 : GroupByAggregatorComparable2(defaultName = "min")
-
-/** Implementation for `median` */
-class GroupByMax0 : GroupByAggregatorComparable2(defaultName = "max")
-
-
 
 
 abstract class GroupByAggregatorMean(val defaultName: String) : AbstractSchemaModificationInterpreter() {
@@ -414,6 +407,10 @@ abstract class GroupByAggregatorMean(val defaultName: String) : AbstractSchemaMo
         }
     }
 }
+
+/** Implementation for `mean` */
+class GroupByMean0 : GroupByAggregatorMean(defaultName = "mean")
+
 
 
 
