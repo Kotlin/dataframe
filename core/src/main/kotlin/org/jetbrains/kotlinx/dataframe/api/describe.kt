@@ -25,7 +25,7 @@ public interface ColumnDescription {
     public val nulls: Int
     public val top: Any
     public val freq: Int
-    public val mean: Number?
+    public val mean: Double
     public val std: Double
     public val min: Any
     public val p25: Any

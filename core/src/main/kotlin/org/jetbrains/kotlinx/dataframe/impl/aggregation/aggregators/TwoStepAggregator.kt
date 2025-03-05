@@ -37,7 +37,7 @@ import kotlin.reflect.full.withNullability
  *   It is run on the results of [stepOneAggregator].
  * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
  */
-internal class TwoStepAggregator<Value, Return>(
+internal class TwoStepAggregator<in Value, out Return>(
     name: String,
     getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     stepOneAggregator: (values: Iterable<Value>, type: KType) -> Return?,
@@ -73,7 +73,7 @@ internal class TwoStepAggregator<Value, Return>(
      *   It is run on the results of [stepOneAggregator].
      * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
-    class Factory<Value, Return>(
+    class Factory<in Value, out Return>(
         private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
         private val stepOneAggregator: (Iterable<Value>, KType) -> Return?,
         private val stepTwoAggregator: (Iterable<Return>, KType) -> Return?,

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.junit.Test
@@ -39,7 +40,7 @@ class DescribeTests {
             nulls shouldBe 1
             top shouldBe 1
             freq shouldBe 1
-            mean shouldBe 4.5.toBigDecimal()
+            mean shouldBe 4.5
             std shouldBe 2.449489742783178
             min shouldBe 1.toBigDecimal()
             (p25 as BigDecimal).setScale(2) shouldBe 2.75.toBigDecimal()
@@ -64,8 +65,8 @@ class DescribeTests {
             nulls shouldBe 0
             top shouldBe 1
             freq shouldBe 1
-            mean shouldBe null
-            std.isNaN shouldBe true
+            mean.shouldBeNaN()
+            std.shouldBeNaN()
             min shouldBe 1.0 // TODO should be NaN too?
             p25 shouldBe 1.75
             median shouldBe 3.0

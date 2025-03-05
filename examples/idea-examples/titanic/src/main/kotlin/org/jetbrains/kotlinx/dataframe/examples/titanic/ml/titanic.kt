@@ -24,10 +24,11 @@ private val model = Sequential.of(
     Input(9),
     Dense(50, Activations.Relu, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros()),
     Dense(50, Activations.Relu, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros()),
-    Dense(2, Activations.Linear, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros()),
+    Dense(2, Activations.Linear, kernelInitializer = HeNormal(SEED), biasInitializer = Zeros())
 )
 
 fun main() {
+
     // Set Locale for correct number parsing
     Locale.setDefault(Locale.FRANCE)
 
@@ -36,7 +37,7 @@ fun main() {
     // Calculating imputing values
     val (train, test) = df
         // imputing
-        .fillNulls { sibsp and parch and age and fare }.perCol { it.mean()?.toDouble() }
+        .fillNulls { sibsp and parch and age and fare }.perCol { it.mean() }
         .fillNulls { sex }.with { "female" }
         // one hot encoding
         .pivotMatches { pclass and sex }
@@ -49,7 +50,7 @@ fun main() {
         it.compile(
             optimizer = Adam(),
             loss = Losses.SOFT_MAX_CROSS_ENTROPY_WITH_LOGITS,
-            metric = Metrics.ACCURACY,
+            metric = Metrics.ACCURACY
         )
 
         it.summary()

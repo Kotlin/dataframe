@@ -19,7 +19,7 @@ import kotlin.reflect.full.withNullability
  *   will always return a [Return]`?`.
  */
 @PublishedApi
-internal interface Aggregator<Value, Return> {
+internal interface Aggregator<in Value, out Return> {
 
     /** The name of this aggregator. */
     val name: String

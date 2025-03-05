@@ -7,7 +7,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
  * @see AggregatorOptionSwitch2
  */
 @PublishedApi
-internal class AggregatorOptionSwitch1<Param1, AggregatorType : Aggregator<*, *>>(
+internal class AggregatorOptionSwitch1<in Param1, out AggregatorType : Aggregator<*, *>>(
     val name: String,
     val getAggregator: (param1: Param1) -> AggregatorProvider<AggregatorType>,
 ) {
@@ -28,7 +28,7 @@ internal class AggregatorOptionSwitch1<Param1, AggregatorType : Aggregator<*, *>
      *   MyAggregator.Factory(param1)
      * }
      */
-    class Factory<Param1, AggregatorType : Aggregator<*, *>>(
+    class Factory<in Param1, out AggregatorType : Aggregator<*, *>>(
         val getAggregator: (Param1) -> AggregatorProvider<AggregatorType>,
     ) : Provider<AggregatorOptionSwitch1<Param1, AggregatorType>> by Provider({ name ->
             AggregatorOptionSwitch1(name, getAggregator)
@@ -42,7 +42,7 @@ internal class AggregatorOptionSwitch1<Param1, AggregatorType : Aggregator<*, *>
  * @see AggregatorOptionSwitch1
  */
 @PublishedApi
-internal class AggregatorOptionSwitch2<Param1, Param2, AggregatorType : Aggregator<*, *>>(
+internal class AggregatorOptionSwitch2<in Param1, in Param2, out AggregatorType : Aggregator<*, *>>(
     val name: String,
     val getAggregator: (param1: Param1, param2: Param2) -> AggregatorProvider<AggregatorType>,
 ) {
@@ -64,7 +64,7 @@ internal class AggregatorOptionSwitch2<Param1, Param2, AggregatorType : Aggregat
      * }
      * ```
      */
-    class Factory<Param1, Param2, AggregatorType : Aggregator<*, *>>(
+    class Factory<in Param1, in Param2, out AggregatorType : Aggregator<*, *>>(
         val getAggregator: (Param1, Param2) -> AggregatorProvider<AggregatorType>,
     ) : Provider<AggregatorOptionSwitch2<Param1, Param2, AggregatorType>> by Provider({ name ->
             AggregatorOptionSwitch2(name, getAggregator)

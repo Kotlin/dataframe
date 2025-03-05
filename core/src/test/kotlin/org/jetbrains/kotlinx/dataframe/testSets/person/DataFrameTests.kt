@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -123,7 +122,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -179,12 +177,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.math.meanOrNull
+import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -820,8 +817,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy meanOf`() {
-        typed.groupBy { name }.meanOf { age * 2 }.schema() shouldBe typed
-            .groupBy { name }.aggregate { mean { age } * 2 into "mean" }.schema()
+        typed.groupBy { name }.meanOf { age * 2 } shouldBe typed
+            .groupBy { name }.aggregate { mean { age } * 2 into "mean" }
     }
 
     @Test
@@ -1488,7 +1485,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `column stats`() {
-        typed.age.mean() shouldBe typed.age.toList().meanOrNull()
+        typed.age.mean() shouldBe typed.age.toList().mean()
         typed.age.min() shouldBe typed.age.toList().minOrNull()
         typed.age.max() shouldBe typed.age.toList().maxOrNull()
         typed.age.sum() shouldBe typed.age.toList().sum()
@@ -2113,8 +2110,8 @@ class DataFrameTests : BaseTest() {
             it.kind() shouldBe ColumnKind.Group
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")
-            group.columnTypes().forEach {
-                it shouldBeIn setOf(typeOf<Double?>(), nullableNothingType)
+            group.columns().forEach {
+                it.type() shouldBe typeOf<Double?>()
             }
         }
     }

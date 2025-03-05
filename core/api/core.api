@@ -2633,7 +2633,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColumnDescri
 	public abstract fun getCount ()I
 	public abstract fun getFreq ()I
 	public abstract fun getMax ()Ljava/lang/Object;
-	public abstract fun getMean ()Ljava/lang/Number;
+	public abstract fun getMean ()D
 	public abstract fun getMedian ()Ljava/lang/Object;
 	public abstract fun getMin ()Ljava/lang/Object;
 	public abstract fun getName ()Ljava/lang/String;
@@ -2655,7 +2655,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Number;
+	public static final fun ColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)D
 	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun ColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun ColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -2685,7 +2685,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/ColumnDescription_Extensi
 	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_max (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Number;
+	public static final fun NullableColumnDescription_mean (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Double;
 	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun NullableColumnDescription_median (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun NullableColumnDescription_min (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
@@ -5995,10 +5995,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/MaxKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
+	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)D
 	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Number;
-	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Number;
-	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Number;
+	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
+	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)D
+	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)D
+	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)D
 	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -6011,10 +6013,12 @@ public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
 	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun mean (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)D
 	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Number;
+	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
+	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)D
+	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)D
+	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)D
 	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -6027,20 +6031,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
 	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun mean$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun meanBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/math/BigDecimal;
-	public static final fun meanBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/math/BigDecimal;
-	public static final fun meanBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)D
-	public static final fun meanByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)D
-	public static final fun meanDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)D
-	public static final fun meanDouble (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
-	public static synthetic fun meanDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)D
-	public static synthetic fun meanDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
-	public static final fun meanFloat (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)D
-	public static final fun meanFloat (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
-	public static synthetic fun meanFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)D
-	public static synthetic fun meanFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
 	public static final fun meanFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun meanFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun meanFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
@@ -6073,100 +6063,10 @@ public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
 	public static synthetic fun meanFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun meanFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun meanFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun meanInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)D
-	public static final fun meanInt (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)D
-	public static final fun meanLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)D
-	public static final fun meanLong (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)D
-	public static final fun meanNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Number;
-	public static final fun meanNumber (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Number;
-	public static synthetic fun meanNumber$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static synthetic fun meanNumber$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Number;
-	public static final fun meanOfBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/math/BigDecimal;
-	public static final fun meanOfBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanOfBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/math/BigDecimal;
-	public static final fun meanOfBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanOfByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)D
-	public static final fun meanOfByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
-	public static synthetic fun meanOfByte$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
-	public static final fun meanOfDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;)D
-	public static final fun meanOfDouble (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
-	public static synthetic fun meanOfDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)D
-	public static synthetic fun meanOfDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
-	public static final fun meanOfFloat (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;)D
-	public static final fun meanOfFloat (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
-	public static synthetic fun meanOfFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)D
-	public static synthetic fun meanOfFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
-	public static final fun meanOfInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)D
-	public static final fun meanOfInt (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)D
-	public static final fun meanOfLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)D
-	public static final fun meanOfLong (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
-	public static synthetic fun meanOfLong$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
-	public static final fun meanOfNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;)Ljava/lang/Number;
-	public static synthetic fun meanOfNumber$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Number;
-	public static final fun meanOfOrNullBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/math/BigDecimal;
-	public static final fun meanOfOrNullBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/math/BigDecimal;
-	public static final fun meanOfOrNullByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Double;
-	public static final fun meanOfOrNullDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;)Ljava/lang/Double;
-	public static synthetic fun meanOfOrNullDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOfOrNullFloat (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;)Ljava/lang/Double;
-	public static synthetic fun meanOfOrNullFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOfOrNullInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Double;
-	public static final fun meanOfOrNullLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Double;
-	public static final fun meanOfOrNullNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;)Ljava/lang/Number;
-	public static synthetic fun meanOfOrNullNumber$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Number;
-	public static final fun meanOfOrNullShort (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Double;
-	public static final fun meanOfShort (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)D
-	public static final fun meanOfShort (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
-	public static synthetic fun meanOfShort$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
-	public static final fun meanOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Number;
-	public static final fun meanOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Number;
-	public static final fun meanOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Number;
-	public static synthetic fun meanOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static synthetic fun meanOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static synthetic fun meanOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static final fun meanOrNullBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/math/BigDecimal;
-	public static final fun meanOrNullBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanOrNullBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/math/BigDecimal;
-	public static final fun meanOrNullBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanOrNullByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Double;
-	public static final fun meanOrNullByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static final fun meanOrNullDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Double;
-	public static final fun meanOrNullDouble (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOrNullFloat (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Double;
-	public static final fun meanOrNullFloat (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOrNullInt (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Double;
-	public static final fun meanOrNullInt (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static final fun meanOrNullLong (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Double;
-	public static final fun meanOrNullLong (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static final fun meanOrNullNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Number;
-	public static final fun meanOrNullNumber (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Number;
-	public static synthetic fun meanOrNullNumber$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static synthetic fun meanOrNullNumber$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Number;
-	public static final fun meanOrNullOfBigDecimal (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanOrNullOfBigInteger (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/math/BigDecimal;
-	public static final fun meanOrNullOfByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullOfByte$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOrNullOfDouble (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullOfDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOrNullOfFloat (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullOfFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOrNullOfInt (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static final fun meanOrNullOfLong (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullOfLong$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOrNullOfShort (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static synthetic fun meanOrNullOfShort$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
-	public static final fun meanOrNullShort (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Double;
-	public static final fun meanOrNullShort (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Double;
-	public static final fun meanShort (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)D
-	public static final fun meanShort (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)D
-	public static final fun rowMean (Lorg/jetbrains/kotlinx/dataframe/DataRow;Z)Ljava/lang/Number;
-	public static synthetic fun rowMean$default (Lorg/jetbrains/kotlinx/dataframe/DataRow;ZILjava/lang/Object;)Ljava/lang/Number;
-	public static final fun rowMeanOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;Z)Ljava/lang/Number;
-	public static synthetic fun rowMeanOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataRow;ZILjava/lang/Object;)Ljava/lang/Number;
+	public static final fun meanOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Double;
+	public static synthetic fun meanOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Double;
+	public static final fun rowMean (Lorg/jetbrains/kotlinx/dataframe/DataRow;Z)D
+	public static synthetic fun rowMean$default (Lorg/jetbrains/kotlinx/dataframe/DataRow;ZILjava/lang/Object;)D
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/MedianKt {
@@ -10030,8 +9930,6 @@ public final class org/jetbrains/kotlinx/dataframe/impl/DataFrameSize {
 
 public final class org/jetbrains/kotlinx/dataframe/impl/ExceptionUtilsKt {
 	public static final fun suggestIfNull (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
-	public static final fun suggestIfNull (Ljava/math/BigDecimal;Ljava/lang/String;)Ljava/math/BigDecimal;
-	public static final fun suggestIfNull (Ljava/math/BigInteger;Ljava/lang/String;)Ljava/math/BigInteger;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/TypeUtilsKt {
@@ -10127,18 +10025,12 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators {
 	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators;
 	public final fun getMax ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
+	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/FlatteningAggregator;
 	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
 	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepNumbersAggregator;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators$mean {
-	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators$mean;
-	public final fun getToBigDecimal ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepNumbersAggregator;
-	public final fun getToDouble ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
-	public final fun getToNumber ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoAggregationKt {
@@ -10923,8 +10815,8 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/RenderedContent$Compa
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {
-	public static final fun meanOrNull (Ljava/lang/Iterable;Lkotlin/reflect/KType;Z)Ljava/lang/Number;
-	public static synthetic fun meanOrNull$default (Ljava/lang/Iterable;Lkotlin/reflect/KType;ZILjava/lang/Object;)Ljava/lang/Number;
+	public static final fun mean (Ljava/lang/Iterable;Lkotlin/reflect/KType;Z)D
+	public static synthetic fun mean$default (Ljava/lang/Iterable;Lkotlin/reflect/KType;ZILjava/lang/Object;)D
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/PercentileKt {

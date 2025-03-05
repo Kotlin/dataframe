@@ -16,7 +16,7 @@ import kotlin.reflect.full.withNullability
  * @param name The name of this aggregator.
  * @param aggregator Functional argument for the [aggregate] function.
  */
-internal abstract class AggregatorBase<Value, Return>(
+internal abstract class AggregatorBase<in Value, out Return>(
     override val name: String,
     protected val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     protected val aggregator: (values: Iterable<Value>, type: KType) -> Return?,

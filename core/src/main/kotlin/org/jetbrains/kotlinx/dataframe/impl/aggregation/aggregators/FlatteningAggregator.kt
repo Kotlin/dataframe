@@ -30,7 +30,7 @@ import kotlin.reflect.full.withNullability
  *   Note that it must be able to handle `null` values for the [Iterable] overload of [aggregate].
  * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
  */
-internal class FlatteningAggregator<Value, Return>(
+internal class FlatteningAggregator<in Value, out Return>(
     name: String,
     getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     aggregator: (values: Iterable<Value>, type: KType) -> Return?,
@@ -54,7 +54,7 @@ internal class FlatteningAggregator<Value, Return>(
      * @param aggregator Functional argument for the [aggregate] function.
      * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
-    class Factory<Value, Return>(
+    class Factory<in Value, out Return>(
         private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
         private val aggregator: (Iterable<Value>, KType) -> Return?,
         private val preservesType: Boolean,

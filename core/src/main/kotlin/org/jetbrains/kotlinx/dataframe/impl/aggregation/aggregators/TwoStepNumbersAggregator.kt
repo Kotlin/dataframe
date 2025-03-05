@@ -37,7 +37,7 @@ import kotlin.reflect.typeOf
  *   While it takes a [Number] argument, you can assume that all values are of the same specific type, however,
  *   this type can be different for different calls to [aggregator].
  */
-internal class TwoStepNumbersAggregator<Return : Number>(
+internal class TwoStepNumbersAggregator<out Return : Number>(
     name: String,
     getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
     aggregator: (values: Iterable<Number>, numberType: KType) -> Return?,
@@ -84,7 +84,7 @@ internal class TwoStepNumbersAggregator<Return : Number>(
 
     override val preservesType = false
 
-    class Factory<Return : Number>(
+    class Factory<out Return : Number>(
         private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
         private val aggregate: Iterable<Number>.(numberType: KType) -> Return?,
     ) : AggregatorProvider<TwoStepNumbersAggregator<Return>> by AggregatorProvider({ name ->
