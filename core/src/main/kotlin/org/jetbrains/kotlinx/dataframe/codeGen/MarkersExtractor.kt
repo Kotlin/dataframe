@@ -18,17 +18,37 @@ import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
 internal fun KType.getFieldKind(): FieldKind =
-    when {
-        jvmErasure == DataFrame::class -> Frame
-        jvmErasure == List::class && (arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true) -> ListToFrame
-        jvmErasure == DataRow::class -> Group
-        jvmErasure.hasAnnotation<DataSchema>() -> ObjectToGroup
-        else -> Default
-    }
+    FieldKind.of(
+        this,
+        isDataFrame = { jvmErasure == DataFrame::class },
+        isListToFrame = {
+            jvmErasure == List::class && (arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true)
+        },
+        isDataRow = { jvmErasure == DataRow::class },
+        isObjectToGroup = { jvmErasure.hasAnnotation<DataSchema>() },
+    )
 
-internal sealed interface FieldKind {
-    val shouldBeConvertedToColumnGroup: Boolean get() = false
-    val shouldBeConvertedToFrameColumn: Boolean get() = false
+public sealed interface FieldKind {
+    public val shouldBeConvertedToColumnGroup: Boolean get() = false
+    public val shouldBeConvertedToFrameColumn: Boolean get() = false
+
+    public companion object {
+        // Should be in sync with compiler plugin
+        public fun <T> of(
+            value: T,
+            isDataFrame: (T) -> Boolean,
+            isListToFrame: (T) -> Boolean,
+            isDataRow: (T) -> Boolean,
+            isObjectToGroup: (T) -> Boolean,
+        ): FieldKind =
+            when {
+                isDataFrame(value) -> Frame
+                isListToFrame(value) -> ListToFrame
+                isDataRow(value) -> Group
+                isObjectToGroup(value) -> ObjectToGroup
+                else -> Default
+            }
+    }
 }
 
 internal data object Frame : FieldKind {
