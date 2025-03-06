@@ -65,7 +65,8 @@ import kotlin.io.path.inputStream
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression].
+ * @param path The file path to read.
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -216,7 +217,8 @@ public fun DataFrame.Companion.readCsv(
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression].
+ * @param file The file to read.
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -367,7 +369,8 @@ public fun DataFrame.Companion.readCsv(
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression].
+ * @param url The URL from which to fetch the data.
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
@@ -518,7 +521,8 @@ public fun DataFrame.Companion.readCsv(
  *
  * [DataFrame.readCsvStr][readCsvStr]`("a,b,c", delimiter = ",")`
  *
- * @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression].
+ * @param fileOrUrl The file path or URL to read the data from.
+ *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
  * @param delimiter The field delimiter character. Default: ','.
  *
  *   Ignored if [hasFixedWidthColumns] is `true`.
