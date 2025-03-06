@@ -216,6 +216,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [DataFrame.flatten]
      * @see [ColumnsSelectionDsl.simplify]
      */
+    @Interpretable("ColsAtAnyDepth0")
     public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
 
@@ -274,7 +275,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [DataFrame.flatten]
      * @see [ColumnsSelectionDsl.simplify]
      */
-    @Interpretable("ColsAtAnyDepth0")
+    @Interpretable("ColsAtAnyDepth1")
     public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
 
@@ -331,6 +332,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @see [DataFrame.flatten]
      * @see [ColumnsSelectionDsl.simplify]
      */
+    @Interpretable("ColsAtAnyDepth2")
     public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 

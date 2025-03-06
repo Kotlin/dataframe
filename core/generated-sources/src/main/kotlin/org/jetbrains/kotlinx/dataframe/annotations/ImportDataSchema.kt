@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.io.JSON
 
 /**
@@ -80,4 +81,6 @@ public annotation class JsonOptions(
      * `["""$["store"]["book"][*]["author"]"""]`
      */
     public val keyValuePaths: Array<String> = [],
+    /** Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default. */
+    public val unifyNumbers: Boolean = true,
 )

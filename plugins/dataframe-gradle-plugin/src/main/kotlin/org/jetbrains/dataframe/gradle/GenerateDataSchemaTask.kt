@@ -117,7 +117,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
             val formats = listOf(
                 CsvDeephaven(delimiter = csvOptions.delimiter),
-                JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
+                JSON(
+                    typeClashTactic = jsonOptions.typeClashTactic,
+                    keyValuePaths = jsonOptions.keyValuePaths,
+                    unifyNumbers = jsonOptions.unifyNumbers,
+                ),
                 Excel(),
                 TsvDeephaven(),
                 ArrowFeather(),

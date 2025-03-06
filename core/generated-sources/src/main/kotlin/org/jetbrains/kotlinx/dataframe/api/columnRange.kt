@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -298,6 +299,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
+    @Interpretable("ColumnRange")
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         createColumnSet { context ->
             val startPath = this@rangeTo.resolveSingle(context)!!.path

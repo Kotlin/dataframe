@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -108,6 +109,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
+    @Interpretable("ColGroups0")
     public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         columnGroupsInternal(filter)
 
@@ -119,6 +121,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
+    @Interpretable("ColGroups1")
     public fun ColumnsSelectionDsl<*>.colGroups(
         filter: Predicate<ColumnGroup<*>> = { true },
     ): TransformableColumnSet<AnyRow> = asSingleColumn().columnGroupsInternal(filter)
@@ -131,6 +134,7 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[colGroups][SingleColumn.colGroups]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
+    @Interpretable("ColGroups2")
     public fun SingleColumn<DataRow<*>>.colGroups(
         filter: Predicate<ColumnGroup<*>> = { true },
     ): TransformableColumnSet<AnyRow> = this.ensureIsColumnGroup().columnGroupsInternal(filter)

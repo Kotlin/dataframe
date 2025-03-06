@@ -20,14 +20,13 @@ import org.apache.poi.util.DefaultTempFileCreationStrategy
 import org.apache.poi.util.LocaleUtil
 import org.apache.poi.util.LocaleUtil.getUserTimeZone
 import org.apache.poi.util.TempFile
+import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -181,8 +180,6 @@ public fun DataFrame.Companion.readExcel(
  * ensuring unique column names will make the columns be named according to excel columns, like "A", "B", "C" etc.
  * for unstructured data.
  */
-@Refine
-@Interpretable("ReadExcel")
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
     sheetName: String? = null,
@@ -279,9 +276,7 @@ public fun DataFrame.Companion.readExcel(
  * @param range comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
  */
 @JvmInline
-public value class StringColumns
-    @Interpretable("StringColumns")
-    constructor(public val range: String)
+public value class StringColumns(public val range: String)
 
 public fun StringColumns.toFormattingOptions(formatter: DataFormatter = DataFormatter()): FormattingOptions =
     FormattingOptions(range, formatter)
@@ -470,6 +465,28 @@ private fun Cell?.cellValue(sheetName: String): Any? {
     return getValueFromType(cellType)
 }
 
+public enum class WorkBookType {
+    XLS,
+    XLSX,
+}
+
+/**
+ * Writes this DataFrame to an Excel file as a single sheet.
+ *
+ * Implemented with [Apache POI](https://poi.apache.org) using `HSSFWorkbook` for XLS files,
+ * `XSSFWorkbook` for standard XLSX files, and `SXSSFWorkbook` for memory-efficient streaming when creating new XLSX files.
+ *
+ * @param path The path to the file where the data will be written.
+ * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
+ * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
+ * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
+ * @param workBookType The [type of workbook][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
+ * @param keepFile If `true` and the file already exists, a new sheet will be appended instead of overwriting the file.
+ * This may result in higher memory usage and slower performance compared to creating a new file.
+ * Defaults to `false`.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ */
 public fun <T> DataFrame<T>.writeExcel(
     path: String,
     columnsSelector: ColumnsSelector<T, *> = { all() },
@@ -479,11 +496,24 @@ public fun <T> DataFrame<T>.writeExcel(
     keepFile: Boolean = false,
 ): Unit = writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
 
-public enum class WorkBookType {
-    XLS,
-    XLSX,
-}
-
+/**
+ * Writes this DataFrame to an Excel file as a single sheet.
+ *
+ * Implemented with [Apache POI](https://poi.apache.org) using `HSSFWorkbook` for XLS files,
+ * `XSSFWorkbook` for standard XLSX files,
+ * and `SXSSFWorkbook` for memory-efficient streaming when creating new XLSX files.
+ *
+ * @param file The file where the data will be written.
+ * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
+ * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
+ * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
+ * @param workBookType The [type of workbook][WorkBookType] to create (e.g., XLS or XLSX). Defaults to XLSX.
+ * @param keepFile If `true` and the file already exists, a new sheet will be appended instead of overwriting the file.
+ * This may result in higher memory usage and slower performance compared to creating a new file.
+ * Defaults to `false`.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ */
 public fun <T> DataFrame<T>.writeExcel(
     file: File,
     columnsSelector: ColumnsSelector<T, *> = { all() },
@@ -493,15 +523,19 @@ public fun <T> DataFrame<T>.writeExcel(
     keepFile: Boolean = false,
 ) {
     val factory =
-        if (keepFile) {
+        // Write to an existing file with `keepFile` flag
+        if (keepFile && file.exists() && file.length() > 0L) {
+            val fis = file.inputStream()
             when (workBookType) {
-                WorkBookType.XLS -> HSSFWorkbook(file.inputStream())
-                WorkBookType.XLSX -> XSSFWorkbook(file.inputStream())
+                WorkBookType.XLS -> HSSFWorkbook(fis)
+                WorkBookType.XLSX -> XSSFWorkbook(fis)
             }
         } else {
             when (workBookType) {
                 WorkBookType.XLS -> HSSFWorkbook()
-                WorkBookType.XLSX -> XSSFWorkbook()
+
+                // Use streaming mode for a new XLSX file
+                WorkBookType.XLSX -> SXSSFWorkbook()
             }
         }
     return file.outputStream().use {
@@ -509,6 +543,21 @@ public fun <T> DataFrame<T>.writeExcel(
     }
 }
 
+/**
+ * Writes this DataFrame to an Excel file using an existing [Workbook] instance into given [OutputStream].
+ *
+ * Uses [Apache POI](https://poi.apache.org).
+ * Supports [XSSFWorkbook] and [SXSSFWorkbook] for XLSX and [HSSFWorkbook] for XLS,
+ * and allows users to manage the workbook externally.
+ *
+ * @param outputStream The output stream where the Excel data will be written.
+ * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include in the file. The default is all columns.
+ * @param sheetName The name of the sheet in the Excel file. If null, the default name will be used.
+ * @param writeHeader A flag indicating whether to write the header row in the Excel file. Defaults to true.
+ * @param factory The [Workbook] instance, allowing integration with an existing workbook.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ */
 public fun <T> DataFrame<T>.writeExcel(
     outputStream: OutputStream,
     columnsSelector: ColumnsSelector<T, *> = { all() },
@@ -522,6 +571,25 @@ public fun <T> DataFrame<T>.writeExcel(
     wb.close()
 }
 
+/**
+ * Creates a new [Sheet] in the given [Workbook] and writes this DataFrame content into it.
+ *
+ * Uses [Apache POI](https://poi.apache.org).
+ * Supports [XSSFWorkbook] and [SXSSFWorkbook] for XLSX and [HSSFWorkbook] for XLS,
+ * and allows users to manage the workbook externally.
+ *
+ * Automatically handles datetime types.
+ * Skips null values to prevent Apache POI from treating empty cells incorrectly.
+ *
+ * @param wb The [Workbook] where the sheet will be created.
+ * @param columnsSelector A [selector][ColumnsSelector] to determine which columns to include. Defaults to all columns.
+ * @param sheetName The name of the sheet. If null, a default sheet name is used.
+ * @param writeHeader Whether to include a header row with column names. Defaults to true.
+ *
+ * @return The created [Sheet] instance containing the DataFrame data.
+ *
+ * @throws [IllegalArgumentException] if the [sheetName] is invalid or workbook already contains a sheet with this name.
+ */
 public fun <T> DataFrame<T>.writeExcel(
     wb: Workbook,
     columnsSelector: ColumnsSelector<T, *> = { all() },

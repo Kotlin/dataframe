@@ -89,16 +89,10 @@ fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
-    libs.plugins.kover.get().pluginId,
-    // TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
-    libs.kotestAssertions.get().name,
-    // Can't be updated to 7.4.0+ due to Java 8 compatibility
-    libs.android.gradle.api.get().group,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
-    // Can't be updated to 2.1.0+ due to Java 8 compatibility
-    libs.plugins.simpleGit.get().pluginId,
+    // need to revise our tests to update
+    libs.android.gradle.api.get().group,
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
@@ -139,18 +133,25 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
-kotlin.jvmToolchain(11)
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+    }
+}
 
 allprojects {
     tasks.withType<KotlinCompile> {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_1_8
+            jvmTarget = JvmTarget.JVM_11
+            freeCompilerArgs.add("-Xjdk-release=11")
         }
     }
 
     tasks.withType<JavaCompile> {
-        sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-        targetCompatibility = JavaVersion.VERSION_1_8.toString()
+        sourceCompatibility = JavaVersion.VERSION_11.toString()
+        targetCompatibility = JavaVersion.VERSION_11.toString()
+        options.release.set(11)
     }
 
     // Attempts to configure ktlint for each sub-project that uses the plugin
@@ -165,7 +166,7 @@ allprojects {
         }
 
         // set the java toolchain version to 11 for all subprojects for CI stability
-        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(11)
+        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(21)
 
         // Attempts to configure buildConfig for each sub-project that uses it
         try {
