@@ -8,7 +8,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 /**
- * Base class for [aggregators][Aggregator].
+ * Abstract base class for [aggregators][Aggregator].
  *
  * Aggregators are used to compute a single value from an [Iterable] of values, a single [DataColumn],
  * or multiple [DataColumns][DataColumn].
@@ -18,37 +18,52 @@ import kotlin.reflect.full.withNullability
  */
 internal abstract class AggregatorBase<in Value, out Return>(
     override val name: String,
-    protected val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-    protected val aggregator: (values: Iterable<Value>, type: KType) -> Return?,
+    protected val getReturnTypeOrNull: CalculateReturnTypeOrNull,
+    protected val aggregator: Aggregate<Value, Return>,
 ) : Aggregator<Value, Return> {
 
     /**
      * Base function of [Aggregator].
      *
      * Aggregates the given values, taking [type] into account, and computes a single resulting value.
+     *
      * Uses [aggregator] to compute the result.
+     *
+     * When the exact [type] is unknown, use [aggregateCalculatingType].
      */
     override fun aggregate(values: Iterable<Value>, type: KType): Return? = aggregator(values, type)
 
+    /**
+     * Function that can give the return type of [aggregate] as [KType], given the type of the input.
+     * This allows aggregators to avoid runtime type calculations.
+     *
+     * Uses [getReturnTypeOrNull] to calculate the return type.
+     *
+     * @param type The type of the input values.
+     * @param emptyInput If `true`, the input values are considered empty. This often affects the return type.
+     * @return The return type of [aggregate] as [KType].
+     */
     override fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType? =
         getReturnTypeOrNull(type, emptyInput)
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
-     * Nulls are filtered out before calling the aggregation function with [Iterable] and [KType].
+     *
+     * Nulls are filtered out by default, then [aggregate] (with [Iterable] and [KType]) is called.
      */
+    @Suppress("UNCHECKED_CAST")
     override fun aggregate(column: DataColumn<Value?>): Return? =
-        if (column.hasNulls()) {
-            aggregate(column.asSequence().filterNotNull().asIterable(), column.type().withNullability(false))
-        } else {
-            aggregate(column.asIterable() as Iterable<Value>, column.type().withNullability(false))
-        }
+        aggregate(
+            values =
+                if (column.hasNulls()) {
+                    column.asSequence().filterNotNull().asIterable()
+                } else {
+                    column.asIterable() as Iterable<Value>
+                },
+            type = column.type().withNullability(false),
+        )
 
-    /**
-     * Special case of [aggregate] with [Iterable] that calculates the common type of the values at runtime.
-     * This is a heavy operation and should be avoided when possible.
-     * If provided, [valueTypes] can be used to avoid calculating the types of [values] at runtime.
-     */
+    /** @include [Aggregator.aggregateCalculatingType] */
     override fun aggregateCalculatingType(values: Iterable<Value>, valueTypes: Set<KType>?): Return? {
         val commonType = if (valueTypes != null) {
             valueTypes.commonType(false)

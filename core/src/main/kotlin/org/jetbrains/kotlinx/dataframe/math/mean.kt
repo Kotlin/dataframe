@@ -1,11 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 @PublishedApi
 internal fun <T : Number> Iterable<T?>.mean(type: KType, skipNA: Boolean = skipNA_default): Double =
@@ -41,6 +43,11 @@ internal fun <T : Number> Sequence<T?>.mean(type: KType, skipNA: Boolean = skipN
 
         else -> throw IllegalArgumentException("Unable to compute the mean for type ${renderType(type)}")
     }
+}
+
+// T: Number? -> Double
+internal val meanTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
+    typeOf<Double>()
 }
 
 internal fun Sequence<Double>.mean(skipNA: Boolean = skipNA_default): Double {

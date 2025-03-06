@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.impl.commonType
-import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 /**
@@ -21,19 +20,21 @@ import kotlin.reflect.full.withNullability
  *     -> Return?
  * ```
  *
- * This is essential for aggregators that depend on the distribution of all values across the dataframe.
+ * This is essential for aggregators that depend on the distribution of all values across the dataframe, like
+ * the median, percentile, and standard deviation.
  *
  * See [TwoStepAggregator] for different behavior for multiple columns.
  *
  * @param name The name of this aggregator.
+ * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull] function.
  * @param aggregator Functional argument for the [aggregate] function.
  *   Note that it must be able to handle `null` values for the [Iterable] overload of [aggregate].
  * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
  */
 internal class FlatteningAggregator<in Value, out Return>(
     name: String,
-    getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-    aggregator: (values: Iterable<Value>, type: KType) -> Return?,
+    getReturnTypeOrNull: CalculateReturnTypeOrNull,
+    aggregator: Aggregate<Value, Return>,
     override val preservesType: Boolean,
 ) : AggregatorBase<Value, Return>(name, getReturnTypeOrNull, aggregator) {
 
@@ -51,12 +52,13 @@ internal class FlatteningAggregator<in Value, out Return>(
     /**
      * Creates [FlatteningAggregator].
      *
+     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull] function.
      * @param aggregator Functional argument for the [aggregate] function.
      * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     class Factory<in Value, out Return>(
-        private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-        private val aggregator: (Iterable<Value>, KType) -> Return?,
+        private val getReturnTypeOrNull: CalculateReturnTypeOrNull,
+        private val aggregator: Aggregate<Value, Return>,
         private val preservesType: Boolean,
     ) : AggregatorProvider<FlatteningAggregator<Value, Return>> by AggregatorProvider({ name ->
             FlatteningAggregator(

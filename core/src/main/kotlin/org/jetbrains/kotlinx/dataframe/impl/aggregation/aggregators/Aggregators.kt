@@ -1,13 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.math.mean
+import org.jetbrains.kotlinx.dataframe.math.meanTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.median
 import org.jetbrains.kotlinx.dataframe.math.percentile
 import org.jetbrains.kotlinx.dataframe.math.std
+import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.sum
-import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
+import org.jetbrains.kotlinx.dataframe.math.sumTypeConversion
 
 @PublishedApi
 internal object Aggregators {
@@ -17,7 +17,7 @@ internal object Aggregators {
      *
      * @include [TwoStepAggregator]
      */
-    private fun <Type> twoStepPreservingType(aggregator: Iterable<Type>.(type: KType) -> Type?) =
+    private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type>) =
         TwoStepAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             stepOneAggregator = aggregator,
@@ -31,9 +31,9 @@ internal object Aggregators {
      * @include [TwoStepAggregator]
      */
     private fun <Value, Return> twoStepChangingType(
-        getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-        stepOneAggregator: Iterable<Value>.(type: KType) -> Return,
-        stepTwoAggregator: Iterable<Return>.(type: KType) -> Return,
+        getReturnTypeOrNull: CalculateReturnTypeOrNull,
+        stepOneAggregator: Aggregate<Value, Return>,
+        stepTwoAggregator: Aggregate<Return, Return>,
     ) = TwoStepAggregator.Factory(
         getReturnTypeOrNull = getReturnTypeOrNull,
         stepOneAggregator = stepOneAggregator,
@@ -46,7 +46,7 @@ internal object Aggregators {
      *
      * @include [FlatteningAggregator]
      */
-    private fun <Type> flatteningPreservingTypes(aggregate: Iterable<Type?>.(type: KType) -> Type?) =
+    private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type>) =
         FlatteningAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             aggregator = aggregate,
@@ -59,8 +59,8 @@ internal object Aggregators {
      * @include [FlatteningAggregator]
      */
     private fun <Value, Return> flatteningChangingTypes(
-        getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-        aggregate: Iterable<Value?>.(type: KType) -> Return?,
+        getReturnTypeOrNull: CalculateReturnTypeOrNull,
+        aggregate: Aggregate<Value, Return>,
     ) = FlatteningAggregator.Factory(
         getReturnTypeOrNull = getReturnTypeOrNull,
         aggregator = aggregate,
@@ -73,8 +73,8 @@ internal object Aggregators {
      * @include [TwoStepNumbersAggregator]
      */
     private fun <Return : Number> twoStepForNumbers(
-        getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-        aggregate: Iterable<Number>.(numberType: KType) -> Return?,
+        getReturnTypeOrNull: CalculateReturnTypeOrNull,
+        aggregate: Aggregate<Number, Return>,
     ) = TwoStepNumbersAggregator.Factory(
         getReturnTypeOrNull = getReturnTypeOrNull,
         aggregate = aggregate,
@@ -102,9 +102,7 @@ internal object Aggregators {
 
     // T: Number? -> Double
     val std by withTwoOptions { skipNA: Boolean, ddof: Int ->
-        flatteningChangingTypes<Number, Double>(
-            getReturnTypeOrNull = { _, emptyInput -> typeOf<Double>().withNullability(emptyInput) },
-        ) { type ->
+        flatteningChangingTypes<Number, Double>(stdTypeConversion) { type ->
             std(type, skipNA, ddof)
         }
     }
@@ -113,7 +111,7 @@ internal object Aggregators {
     // step two: Double -> Double
     val mean by withOneOption { skipNA: Boolean ->
         twoStepChangingType(
-            getReturnTypeOrNull = { _, _ -> typeOf<Double>() },
+            getReturnTypeOrNull = meanTypeConversion,
             stepOneAggregator = { type -> mean(type, skipNA) },
             stepTwoAggregator = { mean(skipNA) },
         )
@@ -132,9 +130,7 @@ internal object Aggregators {
     }
 
     // T: Number -> T
-    val sum by twoStepForNumbers(
-        getReturnTypeOrNull = { type, _ -> type.withNullability(false) },
-    ) { type ->
+    val sum by twoStepForNumbers(sumTypeConversion) { type ->
         sum(type)
     }
 }

@@ -29,7 +29,7 @@ internal class AggregatorOptionSwitch1<in Param1, out AggregatorType : Aggregato
      * }
      */
     class Factory<in Param1, out AggregatorType : Aggregator<*, *>>(
-        val getAggregator: (Param1) -> AggregatorProvider<AggregatorType>,
+        val getAggregator: (param1: Param1) -> AggregatorProvider<AggregatorType>,
     ) : Provider<AggregatorOptionSwitch1<Param1, AggregatorType>> by Provider({ name ->
             AggregatorOptionSwitch1(name, getAggregator)
         })
@@ -65,7 +65,7 @@ internal class AggregatorOptionSwitch2<in Param1, in Param2, out AggregatorType 
      * ```
      */
     class Factory<in Param1, in Param2, out AggregatorType : Aggregator<*, *>>(
-        val getAggregator: (Param1, Param2) -> AggregatorProvider<AggregatorType>,
+        val getAggregator: (param1: Param1, param2: Param2) -> AggregatorProvider<AggregatorType>,
     ) : Provider<AggregatorOptionSwitch2<Param1, Param2, AggregatorType>> by Provider({ name ->
             AggregatorOptionSwitch2(name, getAggregator)
         })

@@ -2,8 +2,6 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.impl.commonType
-import org.jetbrains.kotlinx.dataframe.size
-import kotlin.reflect.KType
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 
@@ -32,6 +30,7 @@ import kotlin.reflect.full.withNullability
  * See [FlatteningAggregator] for different behavior for multiple columns.
  *
  * @param name The name of this aggregator.
+ * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull] function.
  * @param stepOneAggregator Functional argument for the [aggregate] function, used within a [DataColumn] or [Iterable].
  * @param stepTwoAggregator Functional argument for the aggregation function used between different columns.
  *   It is run on the results of [stepOneAggregator].
@@ -39,9 +38,9 @@ import kotlin.reflect.full.withNullability
  */
 internal class TwoStepAggregator<in Value, out Return>(
     name: String,
-    getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-    stepOneAggregator: (values: Iterable<Value>, type: KType) -> Return?,
-    private val stepTwoAggregator: (values: Iterable<Return>, type: KType) -> Return?,
+    getReturnTypeOrNull: CalculateReturnTypeOrNull,
+    stepOneAggregator: Aggregate<Value, Return>,
+    private val stepTwoAggregator: Aggregate<Return, Return>,
     override val preservesType: Boolean,
 ) : AggregatorBase<Value, Return>(name, getReturnTypeOrNull, stepOneAggregator) {
 
@@ -49,6 +48,8 @@ internal class TwoStepAggregator<in Value, out Return>(
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      *
      * This function calls [stepOneAggregator] on each column and then [stepTwoAggregator] on the results.
+     *
+     * Post-step-one types are calculated by [calculateReturnTypeOrNull].
      */
     override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return? {
         val (values, types) = columns.mapNotNull { col ->
@@ -68,15 +69,16 @@ internal class TwoStepAggregator<in Value, out Return>(
     /**
      * Creates [TwoStepAggregator].
      *
+     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull] function.
      * @param stepOneAggregator Functional argument for the [aggregate] function, used within a [DataColumn] or [Iterable].
      * @param stepTwoAggregator Functional argument for the aggregation function used between different columns.
      *   It is run on the results of [stepOneAggregator].
      * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     class Factory<in Value, out Return>(
-        private val getReturnTypeOrNull: (type: KType, emptyInput: Boolean) -> KType?,
-        private val stepOneAggregator: (Iterable<Value>, KType) -> Return?,
-        private val stepTwoAggregator: (Iterable<Return>, KType) -> Return?,
+        private val getReturnTypeOrNull: CalculateReturnTypeOrNull,
+        private val stepOneAggregator: Aggregate<Value, Return>,
+        private val stepTwoAggregator: Aggregate<Return, Return>,
         private val preservesType: Boolean,
     ) : AggregatorProvider<TwoStepAggregator<Value, Return>> by AggregatorProvider({ name ->
             TwoStepAggregator(
