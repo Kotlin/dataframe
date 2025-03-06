@@ -133,18 +133,25 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
-kotlin.jvmToolchain(21)
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+    }
+}
 
 allprojects {
     tasks.withType<KotlinCompile> {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11
+            freeCompilerArgs.add("-Xjdk-release=11")
         }
     }
 
     tasks.withType<JavaCompile> {
         sourceCompatibility = JavaVersion.VERSION_11.toString()
         targetCompatibility = JavaVersion.VERSION_11.toString()
+        options.release.set(11)
     }
 
     // Attempts to configure ktlint for each sub-project that uses the plugin
