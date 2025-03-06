@@ -91,6 +91,8 @@ fun String.findVersion(): Version {
 val dependencyUpdateExclusions = listOf(
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
+    // need to revise our tests to update
+    libs.android.gradle.api.get().group,
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
