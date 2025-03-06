@@ -40,7 +40,7 @@ sl4j = "2.0.16"
 junit = "4.13.2"
 junit-jupiter = "5.11.3"
 junit-platform = "1.11.3"
-kotestAsserions = "6.0.0.M2"
+kotestAsserions = "6.0.0.M1"
 
 jsoup = "1.18.3"
 arrow = "18.1.0"

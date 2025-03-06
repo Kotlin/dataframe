@@ -4742,6 +4742,10 @@ public final class org/jetbrains/kotlinx/dataframe/columns/ColumnPath : java/uti
 	public fun add (Ljava/lang/String;)Z
 	public fun addAll (ILjava/util/Collection;)Z
 	public fun addAll (Ljava/util/Collection;)Z
+	public synthetic fun addFirst (Ljava/lang/Object;)V
+	public fun addFirst (Ljava/lang/String;)V
+	public synthetic fun addLast (Ljava/lang/Object;)V
+	public fun addLast (Ljava/lang/String;)V
 	public fun clear ()V
 	public final fun component1 ()Ljava/util/List;
 	public final fun contains (Ljava/lang/Object;)Z
@@ -4785,6 +4789,10 @@ public final class org/jetbrains/kotlinx/dataframe/columns/ColumnPath : java/uti
 	public fun remove (I)Ljava/lang/String;
 	public fun remove (Ljava/lang/Object;)Z
 	public fun removeAll (Ljava/util/Collection;)Z
+	public synthetic fun removeFirst ()Ljava/lang/Object;
+	public fun removeFirst ()Ljava/lang/String;
+	public synthetic fun removeLast ()Ljava/lang/Object;
+	public fun removeLast ()Ljava/lang/String;
 	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
 	public fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;
 	public synthetic fun rename (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;
