@@ -1121,7 +1121,7 @@ class JsonTests {
     @Test
     fun `serialize column with list of objects`() {
         val df = dataFrameOf("col")(Regex(".+").findAll("abc").toList())
-        val json = shouldNotThrowAny { df.toJson() }
+        val json = shouldNotThrowAny { df.toJson() }!!
         val list = DataFrame.readJsonStr(json)["col"][0].shouldBeInstanceOf<List<*>>()
         list[0].shouldBeInstanceOf<String>()
     }
