@@ -7,8 +7,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.isNothing
-import org.jetbrains.kotlinx.dataframe.impl.projectTo
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
@@ -21,8 +19,11 @@ import kotlin.contracts.contract
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
+import kotlin.reflect.KVariance
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 public fun AnyCol.isColumnGroup(): Boolean {
@@ -62,21 +63,24 @@ public fun AnyCol.isList(): Boolean = typeClass == List::class
 public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
 
 /**
- * Returns `true` if [this] column is inter-comparable, i.e.
+ * Returns `true` if [this] column is intra-comparable, i.e.
  * its values can be compared with each other and thus ordered.
  *
  * If true, operations like [`min()`][AnyCol.min], [`max()`][AnyCol.max], [`median()`][AnyCol.median], etc.
  * will work.
  *
- * Technically, this means the values' common type is a subtype of [Comparable] with
- * the type argument not being [Nothing].
+ * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
  */
 public fun AnyCol.valuesAreComparable(): Boolean =
-    isSubtypeOf<Comparable<*>?>() &&
-        type().projectTo(Comparable::class).arguments[0].let {
-            it != KTypeProjection.STAR &&
-                it.type?.isNothing != true
-        }
+    isValueColumn() &&
+        isSubtypeOf(
+            Comparable::class.createType(
+                arguments = listOf(
+                    KTypeProjection(KVariance.IN, type().withNullability(false)),
+                ),
+                nullable = hasNulls(),
+            ),
+        )
 
 @PublishedApi
 internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()
