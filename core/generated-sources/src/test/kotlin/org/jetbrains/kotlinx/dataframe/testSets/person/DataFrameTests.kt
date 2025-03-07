@@ -2462,11 +2462,30 @@ class DataFrameTests : BaseTest() {
         ).toDataFrame()
 
         df.int.valuesAreComparable() shouldBe true
-        df.comparableInt.valuesAreComparable() shouldBe true
+        // Comparable<Int> is not comparable to Comparable<Int>
+        df.comparableInt.valuesAreComparable() shouldBe false
         df.string.valuesAreComparable() shouldBe true
-        df.comparableString.valuesAreComparable() shouldBe true
+        // Comparable<String> is not comparable to Comparable<String>
+        df.comparableString.valuesAreComparable() shouldBe false
         df.comparableStar.valuesAreComparable() shouldBe false
         df.comparableNothing.valuesAreComparable() shouldBe false
+    }
+
+    // https://github.com/Kotlin/dataframe/pull/1077#discussion_r1981352374
+    @Test
+    fun `values are comparable difficult`() {
+        val i = 1
+        val i1 = object : Comparable<Int> {
+            override fun compareTo(other: Int): Int = other
+
+            override fun toString(): String = "i1"
+        }
+        val col by columnOf(i, i1)
+
+        // We cannot calculate min/max for this column because Int does not implement Comparable<Comparable<Int>>
+        // aka i1.compareTo(i) would work but i.compareTo(i1) would not
+        dataFrameOf(col).max().isEmpty() shouldBe true
+        dataFrameOf(col).min().isEmpty() shouldBe true
     }
 
     @Test
