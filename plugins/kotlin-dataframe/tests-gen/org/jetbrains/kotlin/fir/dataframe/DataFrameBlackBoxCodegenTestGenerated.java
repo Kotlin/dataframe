@@ -30,6 +30,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("aggregateDataFrame.kt")
+  public void testAggregateDataFrame() {
+    runTest("testData/box/aggregateDataFrame.kt");
+  }
+
+  @Test
   public void testAllFilesPresentInBox() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
   }

@@ -70,6 +70,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddDslNamedGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddDslStringInvoke
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddId
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Aggregate
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AggregateRow
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.All0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.All1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.All2
@@ -395,6 +396,7 @@ internal inline fun <reified T> String.load(): T {
         "ToTop" -> ToTop()
         "Update0" -> Update0()
         "Aggregate" -> Aggregate()
+        "AggregateRow" -> AggregateRow()
         "DataFrameOf3" -> DataFrameOf3()
         "ValueCounts" -> ValueCounts()
         "RenameToCamelCase" -> RenameToCamelCase()

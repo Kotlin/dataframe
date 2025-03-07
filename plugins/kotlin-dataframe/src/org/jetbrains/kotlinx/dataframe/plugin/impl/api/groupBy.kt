@@ -72,6 +72,18 @@ class Aggregate : AbstractSchemaModificationInterpreter() {
     }
 }
 
+class AggregateRow : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
+    val Arguments.body: FirAnonymousFunctionExpression by arg(lens = Interpreter.Id)
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        return aggregate(
+            GroupBy(PluginDataFrameSchema.EMPTY, receiver),
+            InterpretationErrorReporter.DEFAULT,
+            body
+        )
+    }
+}
+
 fun KotlinTypeFacade.aggregate(
     groupBy: GroupBy,
     reporter: InterpretationErrorReporter,

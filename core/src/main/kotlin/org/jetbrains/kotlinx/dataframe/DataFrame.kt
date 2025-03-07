@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -71,6 +73,8 @@ public interface DataFrame<out T> :
 
     // endregion
 
+    @Refine
+    @Interpretable("AggregateRow")
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
 
     // region get columns
