@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.interComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegated
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
@@ -149,7 +150,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.median(vararg columns: KProperty<C?
 public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
     name: String? = null,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.median.aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.median.cast<R?>().aggregateOf(this, name, expression)
 
 // endregion
 
@@ -236,6 +237,6 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(vararg columns: KProper
 
 public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.medianOf(
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.median.aggregateOf(this, expression)
+): DataFrame<T> = Aggregators.median.cast<R?>().aggregateOf(this, expression)
 
 // endregion
