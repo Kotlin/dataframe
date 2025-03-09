@@ -137,3 +137,15 @@ internal fun Iterable<Number>.convertToUnifiedNumberType(
         converter(it) ?: error("Can not convert $it to $commonNumberType")
     }
 }
+
+/** @include [Iterable.convertToUnifiedNumberType] */
+@JvmName("convertToUnifiedNumberTypeSequence")
+@Suppress("UNCHECKED_CAST")
+internal fun Sequence<Number>.convertToUnifiedNumberType(
+    commonNumberType: KType = asIterable().types().unifiedNumberType(),
+): Sequence<Number> {
+    val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
+    return map {
+        converter(it) ?: error("Can not convert $it to $commonNumberType")
+    }
+}

@@ -5302,8 +5302,14 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 	public abstract fun aggregate (Ljava/lang/Iterable;)Ljava/lang/Object;
 	public abstract fun aggregate (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Object;
 	public abstract fun aggregate (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
+	public abstract fun aggregateCalculatingType (Ljava/lang/Iterable;Ljava/util/Set;)Ljava/lang/Object;
+	public abstract fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
 	public abstract fun getName ()Ljava/lang/String;
 	public abstract fun getPreservesType ()Z
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator$DefaultImpls {
+	public static synthetic fun aggregateCalculatingType$default (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Ljava/lang/Iterable;Ljava/util/Set;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorKt {
@@ -5311,17 +5317,18 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public static final fun cast2 (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch {
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1 {
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function1;
 	public final fun getName ()Ljava/lang/String;
 	public final fun invoke (Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch$Factory {
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1$Factory : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider {
 	public fun <init> (Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun create (Ljava/lang/String;)Ljava/lang/Object;
+	public fun create (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function1;
-	public final fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2 {
@@ -5331,21 +5338,22 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public final fun invoke (Ljava/lang/Object;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Factory {
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Factory : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider {
 	public fun <init> (Lkotlin/jvm/functions/Function2;)V
+	public synthetic fun create (Ljava/lang/String;)Ljava/lang/Object;
+	public fun create (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function2;
-	public final fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators {
 	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators;
-	public final fun getMax ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
-	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch;
-	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/MergedValuesAggregator;
-	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
-	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch;
+	public final fun getMax ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
+	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
+	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/FlatteningAggregator;
+	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
+	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
-	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/NumbersAggregator;
+	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepNumbersAggregator;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoAggregationKt {

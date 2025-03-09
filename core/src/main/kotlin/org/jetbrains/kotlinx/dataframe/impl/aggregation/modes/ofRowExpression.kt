@@ -30,7 +30,7 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
 internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(
     frame: DataFrame<T>,
     crossinline expression: RowExpression<T, C>,
-): R? = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) } // TODO: inline
+): R? = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) }
 
 @PublishedApi
 internal fun <T, C, R> Aggregator<*, R>.aggregateOfDelegated(
@@ -50,7 +50,7 @@ internal inline fun <T, reified C, R> Aggregator<*, R>.of(
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.of(data: DataColumn<C>, crossinline expression: (C) -> V): R? =
-    aggregateOf(data.values()) { expression(it) } // TODO: inline
+    aggregateOf(data.values()) { expression(it) }
 
 @PublishedApi
 internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
@@ -75,7 +75,8 @@ internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
     val type = typeOf<R>()
     return aggregateInternal {
         val value = aggregator.aggregateOf(df, expression)
-        yield(path, value, type, null, false)
+        val inferType = !aggregator.preservesType
+        yield(path, value, type, null, inferType)
     }
 }
 

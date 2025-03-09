@@ -194,3 +194,23 @@ internal fun Iterable<Number>.convertToUnifiedNumberType(
         converter(it) ?: error("Can not convert $it to $commonNumberType")
     }
 }
+
+/** Converts the elements of the given iterable of numbers into a common numeric type based on complexity.
+ * The common numeric type is determined using the provided [commonNumberType] parameter
+ * or calculated with [Iterable.unifiedNumberType][kotlin.collections.Iterable.unifiedNumberType] from the iterable's elements if not explicitly specified.
+ *
+ * @param commonNumberType The desired common numeric type to convert the elements to.
+ *   This is determined by default using the types of the elements in the iterable.
+ * @return A new iterable of numbers where each element is converted to the specified or inferred common number type.
+ * @throws IllegalStateException if an element cannot be converted to the common number type.
+ * @see UnifyingNumbers */
+@JvmName("convertToUnifiedNumberTypeSequence")
+@Suppress("UNCHECKED_CAST")
+internal fun Sequence<Number>.convertToUnifiedNumberType(
+    commonNumberType: KType = asIterable().types().unifiedNumberType(),
+): Sequence<Number> {
+    val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
+    return map {
+        converter(it) ?: error("Can not convert $it to $commonNumberType")
+    }
+}
