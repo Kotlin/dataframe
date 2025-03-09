@@ -34,7 +34,16 @@ internal class IntegrationGeo : JupyterIntegration() {
         import("org.jetbrains.kotlinx.dataframe.geo.geotools.*")
         import("org.jetbrains.kotlinx.dataframe.geo.geocode.*")
         import("org.geotools.referencing.CRS")
-        import("org.locationtech.jts.geom.*")
+
+        import("org.locationtech.jts.geom.Geometry")
+        import("org.locationtech.jts.geom.Point")
+        import("org.locationtech.jts.geom.MultiPoint")
+        import("org.locationtech.jts.geom.LineString")
+        import("org.locationtech.jts.geom.MultiLineString")
+        import("org.locationtech.jts.geom.Polygon")
+        import("org.locationtech.jts.geom.MultiPolygon")
+        import("org.locationtech.jts.geom.Envelope")
+
         onLoaded {
             useSchema<WithGeometry>()
             useSchema<WithPolygonGeometry>()
@@ -44,6 +53,7 @@ internal class IntegrationGeo : JupyterIntegration() {
             useSchema<WithLineStringGeometry>()
             useSchema<WithMultiLineStringGeometry>()
         }
+
         val replCodeGeneratorImpl = ReplCodeGeneratorImpl()
         replCodeGeneratorImpl.process(WithGeometry::class)
         replCodeGeneratorImpl.process(WithPolygonGeometry::class)
