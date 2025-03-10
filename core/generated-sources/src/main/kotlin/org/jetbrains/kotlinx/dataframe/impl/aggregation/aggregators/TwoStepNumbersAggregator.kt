@@ -13,22 +13,23 @@ import kotlin.reflect.typeOf
 
 /**
  * [Aggregator] made specifically for number calculations.
+ * Mixed number types are [unified][UnifyingNumbers].
  *
  * Nulls are filtered from columns.
  *
- * When called on multiple columns (with potentially different [Number] types),
+ * When called on multiple columns (with potentially mixed [Number] types),
  * this [Aggregator] works in two steps:
  *
- * First, it aggregates within a [DataColumn]/[Iterable] with their (given) [Number] type,
- * and then between different columns
+ * First, it aggregates within a [DataColumn]/[Iterable] with their (given) [Number] type
+ * (potentially unifying the types), and then between different columns
  * using the results of the first and the newly calculated [unified number][UnifyingNumbers] type of those results.
  *
  * ```
  * Iterable<Column<Number?>>
  *     -> Iterable<Iterable<Number>> // nulls filtered out
- *     -> aggregator(Iterable<Number>, colType) // called on each iterable
+ *     -> aggregator(Iterable<specific Number>, unified number type of common colType) // called on each iterable
  *     -> Iterable<Return> // nulls filtered out
- *     -> aggregator(Iterable<Return>, unified number type of common valueType)
+ *     -> aggregator(Iterable<specific Return>, unified number type of common valueType)
  *     -> Return?
  * ```
  *
@@ -43,22 +44,6 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
     getReturnTypeOrNull: CalculateReturnTypeOrNull,
     aggregator: Aggregate<Number, Return>,
 ) : AggregatorBase<Number, Return>(name, getReturnTypeOrNull, aggregator) {
-
-    /**
-     * Base function of [Aggregator].
-     *
-     * Aggregates the given values, taking [type] into account, and computes a single resulting value.
-     *
-     * Uses [aggregator] to compute the result.
-     *
-     * When the exact [type] is unknown, use [aggregateCalculatingType].
-     */
-    override fun aggregate(values: Iterable<Number>, type: KType): Return? {
-        require(type.isSubtypeOf(typeOf<Number?>())) {
-            "${TwoStepNumbersAggregator::class.simpleName}: Type $type is not a subtype of Number?"
-        }
-        return super.aggregate(values, type)
-    }
 
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
@@ -86,6 +71,33 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
     }
 
     /**
+     * Base function of [Aggregator].
+     *
+     * Aggregates the given values, taking [type] into account, and computes a single resulting value.
+     *
+     * Uses [aggregator] to compute the result.
+     *
+     * This function is modified to call [aggregateCalculatingType] when it encounters mixed number types.
+     * This is not optimal and should be avoided by calling [aggregateCalculatingType] with known number types directly.
+     *
+     * When the exact [type] is unknown, use [aggregateCalculatingType].
+     */
+    override fun aggregate(values: Iterable<Number>, type: KType): Return? {
+        require(type.isSubtypeOf(typeOf<Number?>())) {
+            "${TwoStepNumbersAggregator::class.simpleName}: Type $type is not a subtype of Number?"
+        }
+
+        // If the type is not a specific number, but rather a mixed Number, we unify the types first.
+        // This is heavy and could be avoided by calling aggregate with a specific number type
+        // or calling aggregateCalculatingType with all known number types
+        return if (type.withNullability(false) == typeOf<Number>()) {
+            aggregateCalculatingType(values)
+        } else {
+            super.aggregate(values, type)
+        }
+    }
+
+    /**
      * Special case of [aggregate] with [Iterable] that calculates the [unified number type][UnifyingNumbers]
      * of the values at runtime and converts all numbers to this type before aggregating.
      * This is a heavy operation and should be avoided when possible.
@@ -99,7 +111,7 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
     @Suppress("UNCHECKED_CAST")
     override fun aggregateCalculatingType(values: Iterable<Number>, valueTypes: Set<KType>?): Return? {
         val commonType = (valueTypes ?: values.types()).unifiedNumberType().withNullability(false)
-        return aggregate(
+        return super.aggregate(
             values = values.convertToUnifiedNumberType(commonType),
             type = commonType,
         )
