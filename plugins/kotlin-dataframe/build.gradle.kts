@@ -39,7 +39,7 @@ dependencies {
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-annotations-jvm:$kotlinVersion")
 
-    implementation(project(":core", "shadow"))
+    implementation(project(":dataframe-compiler-plugin-core", "shadow"))
     testRuntimeOnly(project(":core"))
     testRuntimeOnly(project(":dataframe-csv"))
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
