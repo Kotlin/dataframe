@@ -37,5 +37,6 @@
     - `Level.ERROR` messages and their functions are removed.
     - Update regions in the file accordingly.
 21. Update Notebook examples, both in the project and on Datalore.
+    - Dev notebooks may contain updated code for release Notebook examples.
 
 (Activities that need to be done for **R**elease **C**andidate releases are marked as such)
