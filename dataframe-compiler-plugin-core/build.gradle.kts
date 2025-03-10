@@ -15,7 +15,21 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":core")) {
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-reflect")
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib")
+        exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-datetime-jvm")
+        exclude(group = "commons-io", module = "commons-io")
+        exclude(group = "commons-io", module = "commons-csv")
+        exclude(group = "org.apache.commons", module = "commons-csv")
+        exclude(group = "org.slf4j", module = "slf4j-api")
+        exclude(group = "io.github.microutils", module = "kotlin-logging-jvm")
+        exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-serialization-core-jvm")
+        exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-serialization-json-jvm")
+        exclude(group = "commons-codec", module = "commons-codec")
+        exclude(group = "com.squareup", module = "kotlinpoet-jvm")
+        exclude(group = "ch.randelshofer", module = "fastdoubleparser")
+    }
 }
 
 tasks.withType<ShadowJar> {
