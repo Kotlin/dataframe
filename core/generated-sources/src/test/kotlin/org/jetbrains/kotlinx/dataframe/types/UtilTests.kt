@@ -422,11 +422,11 @@ class UtilTests {
     /**
      * See [UnifyingNumbers] for more information.
      * ```
-     *            BigDecimal
+     *           (BigDecimal)
      *            /      \
-     *      BigInteger    \
+     *     (BigInteger)   \
      *        /   \        \
-     *    ULong   Long    Double
+     * <~ ULong   Long ~> Double ..
      * ..   |    /   |   /   |  \..
      *   \  |   /    |  /    |
      *     UInt     Int    Float
