@@ -30,6 +30,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("aggregateDataFrame.kt")
+  public void testAggregateDataFrame() {
+    runTest("testData/box/aggregateDataFrame.kt");
+  }
+
+  @Test
   public void testAllFilesPresentInBox() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
   }
@@ -500,6 +506,24 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("toDataFrame.kt")
   public void testToDataFrame() {
     runTest("testData/box/toDataFrame.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameNoPropertiesType.kt")
+  public void testToDataFrameNoPropertiesType() {
+    runTest("testData/box/toDataFrameNoPropertiesType.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameNoPublicPropertiesType.kt")
+  public void testToDataFrameNoPublicPropertiesType() {
+    runTest("testData/box/toDataFrameNoPublicPropertiesType.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameValueTypes.kt")
+  public void testToDataFrameValueTypes() {
+    runTest("testData/box/toDataFrameValueTypes.kt");
   }
 
   @Test

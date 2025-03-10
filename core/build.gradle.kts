@@ -185,6 +185,7 @@ tasks.withType<ShadowJar> {
         exclude(dependency("org.jetbrains.kotlinx:kotlinx-datetime-jvm:.*"))
         exclude(dependency("commons-io:commons-io:.*"))
         exclude(dependency("commons-io:commons-csv:.*"))
+        exclude(dependency("org.apache.commons:commons-csv:.*"))
         exclude(dependency("org.slf4j:slf4j-api:.*"))
         exclude(dependency("io.github.microutils:kotlin-logging-jvm:.*"))
         exclude(dependency("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:.*"))
