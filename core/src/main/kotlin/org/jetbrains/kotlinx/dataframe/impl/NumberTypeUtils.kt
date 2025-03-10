@@ -202,7 +202,8 @@ internal fun Sequence<Number>.convertToUnifiedNumberType(
     }
 }
 
-internal val primitiveNumberTypes =
+@PublishedApi
+internal val primitiveNumberTypes: Set<KType> =
     setOf(
         typeOf<Byte>(),
         typeOf<Short>(),
