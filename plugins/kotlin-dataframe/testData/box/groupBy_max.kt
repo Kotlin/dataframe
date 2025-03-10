@@ -21,9 +21,9 @@ fun box(): String {
     // scenario #0: all numerical columns
     val res0 = personsDf.groupBy { city }.max()
     val max01: Int? = res0.age[0]
+    val max02: Double? = res0.weight[0]
     res0.compareSchemas()
-    // TODO: INITIALIZER_TYPE_MISMATCH: Initializer type mismatch: expected 'kotlin.Double?', actual 'it(kotlin.Number & kotlin.Comparable<*>)'
-    // val max02: Double? = res0.weight[0]
+
 
     // scenario #1: particular column
     val res1 = personsDf.groupBy { city }.maxFor { age }
@@ -46,6 +46,7 @@ fun box(): String {
     res21.compareSchemas()
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector
+    // TODO: handle multiple columns https://github.com/Kotlin/dataframe/issues/1090
     val res22 = personsDf.groupBy { city }.max("newAge") { age and yearsToRetirement }
     val max221: Int? = res22.newAge[0]
     res22.compareSchemas()

@@ -21,8 +21,7 @@ fun box(): String {
     // scenario #0: all numerical columns
     val res0 = personsDf.groupBy { city }.sum()
     val sum01: Int? = res0.age[0]
-    // TODO: Compilation error - actual type it(kotlin.Number & kotlin.Comparable<*>)
-    // `val sum02: Double? = res0.weight[0]
+    val sum02: Double? = res0.weight[0]
     res0.compareSchemas()
 
     // scenario #1: particular column
@@ -46,7 +45,7 @@ fun box(): String {
     res21.compareSchemas()
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector
-    // TODO: partially supported scenario - we are taking type from the first column
+    // TODO: handle multiple columns https://github.com/Kotlin/dataframe/issues/1090
     val res22 = personsDf.groupBy { city }.sum("newAge") { age and yearsToRetirement }
     val sum221: Int? = res22.newAge[0]
     res22.compareSchemas()
@@ -55,21 +54,16 @@ fun box(): String {
     val res3 = personsDf.groupBy { city }.sumOf("newAge") { age * 10 }
     val sum3: Int? = res3.newAge[0]
 
-// TODO: expression has type Number, not a particular Int or Double
-/* Comparison result: None
-Runtime:
-city: String
-newAge: Number
-Compile:
-city: String
-newAge: Int? */
-    // res3.compareSchemas()
-
     // scenario #3.1: create new column via expression on Double column
-    // CANNOT_INFER_PARAMETER_TYPE: Cannot infer type for this parameter
-    // val res31 = personsDf.groupBy { city }.sumOf("newAge") { weight * 10 }
-    // val sum31: Double? = res31.newAge[0]
-    // res31.compareSchemas()
+    /*Runtime:
+    city: String
+    newAge: Number
+    Compile:
+    city: String
+    newAge: Double?
+    val res31 = personsDf.groupBy { city }.sumOf("newAge") { weight * 10 }
+    val sum31: Double? = res31.newAge[0]
+    res31.compareSchemas()*/
 
     return "OK"
 }

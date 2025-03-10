@@ -21,8 +21,7 @@ fun box(): String {
     // scenario #0: all numerical columns
     val res0 = personsDf.groupBy { city }.median()
     val median01: Int? = res0.age[0]
-    // TODO: Compilation error - actual type it(kotlin.Number & kotlin.Comparable<*>)
-    // `val median02: Double? = res0.weight[0]
+    val median02: Double? = res0.weight[0]
     res0.compareSchemas()
 
     // scenario #1: particular column
@@ -46,14 +45,14 @@ fun box(): String {
     res21.compareSchemas()
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector
-    // TODO: partially supported scenario - we are taking type from the first column
+    // TODO: handle multiple columns https://github.com/Kotlin/dataframe/issues/1090
     val res22 = personsDf.groupBy { city }.median("newAge") { age and yearsToRetirement }
     val median221: Int? = res22.newAge[0]
     res22.compareSchemas()
 
     // scenario #3: create new column via expression
     val res3 = personsDf.groupBy { city }.medianOf("newAge") { age * 10 }
-    val median3: kotlin.Comparable<kotlin.Any?>? = res3.newAge[0]
+    val median3: Int? = res3.newAge[0]
     res3.compareSchemas()
 
     return "OK"

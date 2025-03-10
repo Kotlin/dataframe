@@ -21,8 +21,7 @@ fun box(): String {
     // scenario #0: all numerical columns
     val res0 = personsDf.groupBy { city }.std()
     val std01: Double? = res0.age[0]
-    // TODO: Compilation error - actual type it(kotlin.Number & kotlin.Comparable<*>)
-    // `val std02: Double? = res0.weight[0]
+    val std02: Double? = res0.weight[0]
     res0.compareSchemas()
 
     // scenario #1: particular column
@@ -46,7 +45,7 @@ fun box(): String {
     res21.compareSchemas()
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector
-    // TODO: partially supported scenario - we are taking type from the first column
+    // TODO: handle multiple columns https://github.com/Kotlin/dataframe/issues/1090
     val res22 = personsDf.groupBy { city }.std("newAge") { age and yearsToRetirement }
     val std221: Double? = res22.newAge[0]
     res22.compareSchemas()
