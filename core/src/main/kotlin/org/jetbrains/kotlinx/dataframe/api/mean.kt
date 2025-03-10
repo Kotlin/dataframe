@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
@@ -98,9 +100,12 @@ public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupByMean1")
 public fun <T> Grouped<T>.mean(skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA, numberColumns())
 
+@Refine
+@Interpretable("GroupByMean0")
 public fun <T, C : Number> Grouped<T>.meanFor(
     skipNA: Boolean = skipNA_default,
     columns: ColumnsForAggregateSelector<T, C?>,
@@ -121,6 +126,8 @@ public fun <T, C : Number> Grouped<T>.meanFor(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = meanFor(skipNA) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMean0")
 public fun <T, C : Number> Grouped<T>.mean(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
@@ -147,6 +154,8 @@ public fun <T, C : Number> Grouped<T>.mean(
     skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = mean(name, skipNA) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMeanOf")
 public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
     skipNA: Boolean = skipNA_default,
