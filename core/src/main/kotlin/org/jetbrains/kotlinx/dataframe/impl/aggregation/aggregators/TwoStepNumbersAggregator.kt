@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.types
@@ -93,11 +94,14 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
             "${TwoStepNumbersAggregator::class.simpleName}: Type $type is not a subtype of Number?"
         }
 
-        // If the type is not a specific number, but rather a mixed Number, we unify the types first.
-        // This is heavy and could be avoided by calling aggregate with a specific number type
-        // or calling aggregateCalculatingType with all known number types
         return when (type.withNullability(false)) {
+            // If the type is not a specific number, but rather a mixed Number, we unify the types first.
+            // This is heavy and could be avoided by calling aggregate with a specific number type
+            // or calling aggregateCalculatingType with all known number types
             typeOf<Number>() -> aggregateCalculatingType(values)
+
+            // Nothing can occur when values are empty
+            nothingType -> super.aggregate(values, type)
 
             !in primitiveNumberTypes -> throw IllegalArgumentException(
                 "Cannot calculate $name of ${renderType(type)}, only primitive numbers are supported.",
@@ -130,7 +134,7 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
                 "Number unification of Long -> Double happened during aggregation. Loss of precision may have occurred."
             }
         }
-        if (commonType !in primitiveNumberTypes) {
+        if (commonType !in primitiveNumberTypes && commonType != nothingType) {
             throw IllegalArgumentException(
                 "Cannot calculate $name of ${renderType(commonType)}, only primitive numbers are supported.",
             )
