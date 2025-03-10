@@ -64,7 +64,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
         )
 
     /** Special case of [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator.aggregate] with [Iterable] that calculates the common type of the values at runtime.
-     * This is a heavy operation and should be avoided when possible.
+     * Without [valueTypes], this is a heavy operation and should be avoided when possible.
      *
      * @param values The values to be aggregated.
      * @param valueTypes The types of the values.
