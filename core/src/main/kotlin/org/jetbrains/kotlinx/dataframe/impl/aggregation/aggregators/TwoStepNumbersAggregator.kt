@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
+import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
 import org.jetbrains.kotlinx.dataframe.impl.types
 import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberType
@@ -11,9 +13,11 @@ import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
+private val logger = KotlinLogging.logger { }
+
 /**
  * [Aggregator] made specifically for number calculations.
- * Mixed number types are [unified][UnifyingNumbers].
+ * Mixed number types are [unified][UnifyingNumbers] to [primitives][PRIMITIVES_ONLY].
  *
  * Nulls are filtered from columns.
  *
@@ -110,9 +114,18 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
      */
     @Suppress("UNCHECKED_CAST")
     override fun aggregateCalculatingType(values: Iterable<Number>, valueTypes: Set<KType>?): Return? {
-        val commonType = (valueTypes ?: values.types()).unifiedNumberType().withNullability(false)
+        val valueTypes = valueTypes ?: values.types()
+        val commonType = valueTypes
+            .unifiedNumberType(PRIMITIVES_ONLY)
+            .withNullability(false)
+
+        if (commonType == typeOf<Double>() && (typeOf<ULong>() in valueTypes || typeOf<Long>() in valueTypes)) {
+            logger.warn {
+                "Number unification of Long -> Double happened during aggregation. Loss of precision may have occurred."
+            }
+        }
         return super.aggregate(
-            values = values.convertToUnifiedNumberType(commonType),
+            values = values.convertToUnifiedNumberType(commonNumberType = commonType),
             type = commonType,
         )
     }
