@@ -201,3 +201,13 @@ internal fun Sequence<Number>.convertToUnifiedNumberType(
         converter(it) ?: error("Can not convert $it to $commonNumberType")
     }
 }
+
+internal val primitiveNumberTypes =
+    setOf(
+        typeOf<Byte>(),
+        typeOf<Short>(),
+        typeOf<Int>(),
+        typeOf<Long>(),
+        typeOf<Float>(),
+        typeOf<Double>(),
+    )

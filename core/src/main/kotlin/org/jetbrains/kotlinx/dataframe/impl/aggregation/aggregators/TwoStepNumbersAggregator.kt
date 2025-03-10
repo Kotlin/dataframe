@@ -5,6 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
+import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.types
 import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberType
 import kotlin.reflect.KType
@@ -94,10 +96,14 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
         // If the type is not a specific number, but rather a mixed Number, we unify the types first.
         // This is heavy and could be avoided by calling aggregate with a specific number type
         // or calling aggregateCalculatingType with all known number types
-        return if (type.withNullability(false) == typeOf<Number>()) {
-            aggregateCalculatingType(values)
-        } else {
-            super.aggregate(values, type)
+        return when (type.withNullability(false)) {
+            typeOf<Number>() -> aggregateCalculatingType(values)
+
+            !in primitiveNumberTypes -> throw IllegalArgumentException(
+                "Cannot calculate $name of ${renderType(type)}, only primitive numbers are supported.",
+            )
+
+            else -> super.aggregate(values, type)
         }
     }
 
@@ -124,6 +130,12 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
                 "Number unification of Long -> Double happened during aggregation. Loss of precision may have occurred."
             }
         }
+        if (commonType !in primitiveNumberTypes) {
+            throw IllegalArgumentException(
+                "Cannot calculate $name of ${renderType(commonType)}, only primitive numbers are supported.",
+            )
+        }
+
         return super.aggregate(
             values = values.convertToUnifiedNumberType(commonNumberType = commonType),
             type = commonType,
