@@ -114,7 +114,7 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
     /**
      * Special case of [aggregate] with [Iterable] that calculates the [unified number type][UnifyingNumbers]
      * of the values at runtime and converts all numbers to this type before aggregating.
-     * This is a heavy operation and should be avoided when possible.
+     * Without [valueTypes], this is a heavy operation and should be avoided when possible.
      *
      * @param values The numbers to be aggregated.
      * @param valueTypes The types of the numbers.
