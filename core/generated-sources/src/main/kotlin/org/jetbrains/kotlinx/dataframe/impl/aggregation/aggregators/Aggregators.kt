@@ -175,22 +175,23 @@ internal object Aggregators {
      * Factory for a two-step aggregator that works only with numbers.
      *
      * [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] made specifically for number calculations.
+     * Mixed number types are [unified][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers] to [primitives][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY].
      *
      * Nulls are filtered from columns.
      *
-     * When called on multiple columns (with potentially different [Number] types),
+     * When called on multiple columns (with potentially mixed [Number] types),
      * this [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] works in two steps:
      *
-     * First, it aggregates within a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]/[Iterable] with their (given) [Number] type,
-     * and then between different columns
+     * First, it aggregates within a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]/[Iterable] with their (given) [Number] type
+     * (potentially unifying the types), and then between different columns
      * using the results of the first and the newly calculated [unified number][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers] type of those results.
      *
      * ```
      * Iterable<Column<Number?>>
      *     -> Iterable<Iterable<Number>> // nulls filtered out
-     *     -> aggregator(Iterable<Number>, colType) // called on each iterable
+     *     -> aggregator(Iterable<specific Number>, unified number type of common colType) // called on each iterable
      *     -> Iterable<Return> // nulls filtered out
-     *     -> aggregator(Iterable<Return>, unified number type of common valueType)
+     *     -> aggregator(Iterable<specific Return>, unified number type of common valueType)
      *     -> Return?
      * ```
      *
