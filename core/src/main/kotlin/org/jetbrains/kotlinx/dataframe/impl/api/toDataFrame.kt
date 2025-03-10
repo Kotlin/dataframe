@@ -23,7 +23,8 @@ import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
 import org.jetbrains.kotlinx.dataframe.impl.schema.sortWithConstructor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
-import java.time.temporal.Temporal
+import java.time.temporal.TemporalAccessor
+import java.time.temporal.TemporalAmount
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -37,22 +38,50 @@ import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.typeOf
 
+// non-standard value types (not supertypes, but exact types)
 private val valueTypes = setOf(
+    Any::class,
+    Unit::class,
+    Char::class,
+    UByte::class,
+    UShort::class,
+    UInt::class,
+    ULong::class,
     String::class,
     Boolean::class,
     kotlin.time.Duration::class,
     kotlinx.datetime.LocalDate::class,
     kotlinx.datetime.LocalDateTime::class,
     kotlinx.datetime.Instant::class,
+    kotlinx.datetime.TimeZone::class,
+    kotlinx.datetime.DateTimePeriod::class,
+    kotlinx.datetime.DateTimeUnit::class,
 )
 
+/**
+ * Checks if `KClass` is a value type (number, datetime, string, etc.)
+ * Should be aligned with `ConeKotlinType.isValueType()` in
+ * plugins/kotlin-dataframe/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
+ */
+@PublishedApi
 internal val KClass<*>.isValueType: Boolean
     get() =
         this in valueTypes ||
             this.isSubclassOf(Number::class) ||
             this.isSubclassOf(Enum::class) ||
-            this.isSubclassOf(Temporal::class) ||
+            // all java datetime types
+            this.isSubclassOf(TemporalAccessor::class) ||
+            this.isSubclassOf(TemporalAmount::class) ||
             this.isArray
+
+/**
+ * Checks if `KClass` has public properties / getter functions (for pojo-like classes).
+ */
+@PublishedApi
+internal val KClass<*>.hasProperties: Boolean
+    get() = this.memberProperties.any { it.visibility == KVisibility.PUBLIC } ||
+        // check pojo-like classes
+        this.memberFunctions.any { it.visibility == KVisibility.PUBLIC && it.isGetterLike() }
 
 internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
