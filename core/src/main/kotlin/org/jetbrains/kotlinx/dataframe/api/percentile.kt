@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.interComparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
@@ -63,7 +63,7 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowPercentileOf(percentile:
 // region DataFrame
 
 public fun <T> DataFrame<T>.percentile(percentile: Double): DataRow<T> =
-    percentileFor(percentile, interComparableColumns())
+    percentileFor(percentile, intraComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.percentileFor(
     percentile: Double,
@@ -128,7 +128,7 @@ public inline fun <T, reified R : Comparable<R>> DataFrame<T>.percentileOf(
 // region GroupBy
 
 public fun <T> Grouped<T>.percentile(percentile: Double): DataFrame<T> =
-    percentileFor(percentile, interComparableColumns())
+    percentileFor(percentile, intraComparableColumns())
 
 public fun <T, C : Comparable<C>> Grouped<T>.percentileFor(
     percentile: Double,
@@ -177,14 +177,14 @@ public inline fun <T, reified R : Comparable<R>> Grouped<T>.percentileOf(
     percentile: Double,
     name: String? = null,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.percentile(percentile).cast<R?>().aggregateOf(this, name, expression)
 
 // endregion
 
 // region Pivot
 
 public fun <T> Pivot<T>.percentile(percentile: Double, separate: Boolean = false): DataRow<T> =
-    percentileFor(percentile, separate, interComparableColumns())
+    percentileFor(percentile, separate, intraComparableColumns())
 
 public fun <T, C : Comparable<C>> Pivot<T>.percentileFor(
     percentile: Double,
@@ -238,7 +238,7 @@ public inline fun <T, reified R : Comparable<R>> Pivot<T>.percentileOf(
 // region PivotGroupBy
 
 public fun <T> PivotGroupBy<T>.percentile(percentile: Double, separate: Boolean = false): DataFrame<T> =
-    percentileFor(percentile, separate, interComparableColumns())
+    percentileFor(percentile, separate, intraComparableColumns())
 
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentileFor(
     percentile: Double,
@@ -289,6 +289,6 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentile(
 public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.percentileOf(
     percentile: Double,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateOf(this, expression)
+): DataFrame<T> = Aggregators.percentile(percentile).cast<R?>().aggregateOf(this, expression)
 
 // endregion
