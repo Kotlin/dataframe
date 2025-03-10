@@ -7,10 +7,15 @@ import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
 import org.jetbrains.kotlin.fir.expressions.FirReturnExpression
 import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.ConeNullability
+import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.fir.types.impl.FirImplicitBuiltinTypeRef
+import org.jetbrains.kotlin.fir.types.isNullable
 import org.jetbrains.kotlin.fir.types.isSubtypeOf
 import org.jetbrains.kotlin.fir.types.resolvedType
+import org.jetbrains.kotlin.fir.types.typeContext
+import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlinx.dataframe.plugin.InterpretationErrorReporter
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
@@ -34,7 +39,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.type
 import org.jetbrains.kotlinx.dataframe.plugin.interpret
 import org.jetbrains.kotlinx.dataframe.plugin.loadInterpreter
-import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
 
 class GroupBy(val keys: PluginDataFrameSchema, val groups: PluginDataFrameSchema) {
     companion object {
@@ -252,9 +256,9 @@ class GroupByMedianOf : GroupByAggregatorExpressionComparable(defaultName = "med
  * and resolve the group-by receiver, result name, and expression type.
  *
  * Key Components:
- * - `receiver`: Represents the input data that will be grouped.
- * - `resultName`: Optional name for the resulting aggregated column. Defaults to `defaultName`.
- * - `expression`: Defines the type of the expression for aggregation.
+ * - [receiver] Represents the input data that will be grouped.
+ * - [resultName] Optional name for the resulting aggregated column. Defaults to `defaultName`.
+ * - [expression] Defines the type of the expression for aggregation.
  */
 abstract class GroupByAggregatorExpressionSum(val defaultName: String) : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
@@ -402,7 +406,7 @@ abstract class GroupByAggregatorComparable() : AbstractSchemaModificationInterpr
         val resolvedColumns = receiver.groups.columns()
             .filter {
                 it is SimpleDataColumn
-                    && it.type.type.isSubtypeOfComparable(session)
+                    && isIntraComparable(it, session)
             }
 
         return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
@@ -419,6 +423,14 @@ private fun createComparableType(session: FirSession): ConeKotlinType {
     val lookupTag = ConeClassLikeLookupTagImpl(StandardClassIds.Comparable)
     val type = lookupTag.constructType(arrayOf(session.builtinTypes.nullableAnyType.type), isNullable = false).type
     return type
+}
+
+private fun isIntraComparable(col: SimpleDataColumn, session: FirSession): Boolean {
+    val comparable = StandardClassIds.Comparable.constructClassLikeType(
+        typeArguments = arrayOf(col.type.type.withNullability(ConeNullability.NOT_NULL, session.typeContext)),
+        isNullable = col.type.type.isNullable,
+    )
+    return col.type.type.isSubtypeOf(comparable, session)
 }
 
 

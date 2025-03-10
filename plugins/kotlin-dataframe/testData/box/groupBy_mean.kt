@@ -21,6 +21,7 @@ fun box(): String {
     // scenario #0: all numerical columns
     val res0 = personsDf.groupBy { city }.mean()
     val mean01: Double? = res0.age[0]
+    res0.compareSchemas()
     // TODO: Validate handling of mixed types for numerical columns
     //val mean02: Double? = res0.weight[0]
     //res0.compareSchemas()
