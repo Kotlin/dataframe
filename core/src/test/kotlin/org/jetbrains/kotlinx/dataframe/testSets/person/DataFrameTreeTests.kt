@@ -552,7 +552,7 @@ class DataFrameTreeTests : BaseTest() {
         moved.nameAndCity.columnsCount() shouldBe 2
         moved.nameAndCity.select { all() } shouldBe dataFrameOf(
             typed2.nameAndCity.city,
-            typed2.nameAndCity.name
+            typed2.nameAndCity.name,
         )
     }
 

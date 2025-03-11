@@ -31,10 +31,12 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         val sourceSegments = sourcePath.toList()
         val targetSegments = targetPath.toList()
 
-        if (sourceSegments.size <= targetSegments.size && 
-            sourceSegments.indices.all { targetSegments[it] == sourceSegments[it] }) {
+        if (sourceSegments.size <= targetSegments.size &&
+            sourceSegments.indices.all { targetSegments[it] == sourceSegments[it] }
+        ) {
             throw IllegalArgumentException(
-                "Cannot move column '${sourcePath.joinToString()}' after its child column '${targetPath.joinToString()}'")
+                "Cannot move column '${sourcePath.joinToString()}' after its child column '${targetPath.joinToString()}'",
+            )
         }
     }
 

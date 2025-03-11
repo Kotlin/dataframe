@@ -116,7 +116,7 @@ class MoveTests {
     fun `move after with column selector`() {
         val df = grouped.move { colsAtAnyDepth { it.name == "r" || it.name == "w" } }
             .after { "a"["c"]["d"] }
-        df.columnNames() shouldBe listOf("q", "a", "b", "e",)
+        df.columnNames() shouldBe listOf("q", "a", "b", "e")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "w", "r")
     }
 
