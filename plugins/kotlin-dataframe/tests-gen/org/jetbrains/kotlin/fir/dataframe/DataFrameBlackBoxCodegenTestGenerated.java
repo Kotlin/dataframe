@@ -287,6 +287,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("insertAfter.kt")
+  public void testInsertAfter() {
+    runTest("testData/box/insertAfter.kt");
+  }
+
+  @Test
+  @TestMetadata("insertAfterNested.kt")
+  public void testInsertAfterNested() {
+    runTest("testData/box/insertAfterNested.kt");
+  }
+
+  @Test
   @TestMetadata("inventNamesForLocalClasses.kt")
   public void testInventNamesForLocalClasses() {
     runTest("testData/box/inventNamesForLocalClasses.kt");
@@ -344,6 +356,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("moveAfter.kt")
   public void testMoveAfter() {
     runTest("testData/box/moveAfter.kt");
+  }
+
+  @Test
+  @TestMetadata("moveAfterNested.kt")
+  public void testMoveAfterNested() {
+    runTest("testData/box/moveAfterNested.kt");
   }
 
   @Test

@@ -128,6 +128,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceExpression
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceInto
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReducePredicate
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByXs
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InsertAfter0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last2
@@ -286,6 +287,7 @@ internal inline fun <reified T> String.load(): T {
         "Under2" -> Under2()
         "Under3" -> Under3()
         "Under4" -> Under4()
+        "InsertAfter0" -> InsertAfter0()
         "Join0" -> Join0()
         "Match0" -> Match0()
         "Rename" -> Rename()
