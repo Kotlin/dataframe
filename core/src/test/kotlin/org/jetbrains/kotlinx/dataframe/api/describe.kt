@@ -37,12 +37,12 @@ class DescribeTests {
             nulls shouldBe 1
             top shouldBe 1
             freq shouldBe 1
-            this.mean shouldBe 3.5
+            mean shouldBe 3.5
             std shouldBe 1.8708286933869707
             min shouldBe 1.0
-            p25 shouldBe 2.25
-            median shouldBe 3.5
-            p75 shouldBe 4.75
+            p25 shouldBe 2.0
+            median shouldBe 3.0
+            p75 shouldBe 4.0
             max shouldBe 6.0
         }
     }
