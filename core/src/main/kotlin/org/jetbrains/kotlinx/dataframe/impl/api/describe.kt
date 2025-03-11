@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.isNumber
+import org.jetbrains.kotlinx.dataframe.api.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
 import org.jetbrains.kotlinx.dataframe.api.mean
@@ -29,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.isBigNumber
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.kind
@@ -38,7 +38,7 @@ import org.jetbrains.kotlinx.dataframe.type
 internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
     val allCols = cols.collectAll(false)
 
-    val hasNumericCols = allCols.any { it.isNumber() }
+    val hasNumericCols = allCols.any { it.isPrimitiveNumber() }
     val hasComparableCols = allCols.any { it.valuesAreComparable() }
     val hasLongPaths = allCols.any { it.path().size > 1 }
     var df = allCols.toDataFrame {
@@ -56,8 +56,8 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
                 ?.key
         }
         if (hasNumericCols) {
-            ColumnDescription::mean from { if (it.isNumber()) it.asNumbers().mean() else null }
-            ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
+            ColumnDescription::mean from { if (it.isPrimitiveNumber()) it.asNumbers().mean() else null }
+            ColumnDescription::std from { if (it.isPrimitiveNumber()) it.asNumbers().std() else null }
         }
         if (hasComparableCols || hasNumericCols) {
             ColumnDescription::min from inferType {
@@ -115,13 +115,8 @@ private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<
     when {
         valuesAreComparable() -> asComparable()
 
-        // Found incomparable number types, convert all to Double or BigDecimal first
-        isNumber() ->
-            if (any { it?.isBigNumber() == true }) {
-                map { (it as Number?)?.toBigDecimal() }
-            } else {
-                map { (it as Number?)?.toDouble() }
-            }.cast()
+        // Found incomparable number types, convert all to Double first
+        isPrimitiveNumber() -> map { (it as Number?)?.toDouble() }.cast()
 
         else -> null
     }

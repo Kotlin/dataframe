@@ -14,11 +14,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.interComparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegated
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
@@ -42,8 +41,9 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 // region DataRow
 
 public fun AnyRow.rowMedianOrNull(): Any? =
-    Aggregators.median.aggregateMixed(
-        values().filterIsInstance<Comparable<Any?>>().asIterable(),
+    Aggregators.median.aggregateCalculatingType(
+        values = values().filterIsInstance<Comparable<Any?>>().asIterable(),
+        valueTypes = df().columns().filter { it.valuesAreComparable() }.map { it.type() }.toSet(),
     )
 
 public fun AnyRow.rowMedian(): Any = rowMedianOrNull().suggestIfNull("rowMedian")
@@ -57,7 +57,7 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOf(): T =
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.median(): DataRow<T> = medianFor(interComparableColumns())
+public fun <T> DataFrame<T>.median(): DataRow<T> = medianFor(intraComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
     Aggregators.median.aggregateFor(this, columns)
@@ -108,7 +108,7 @@ public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(
 // region GroupBy
 @Refine
 @Interpretable("GroupByMedian1")
-public fun <T> Grouped<T>.median(): DataFrame<T> = medianFor(interComparableColumns())
+public fun <T> Grouped<T>.median(): DataFrame<T> = medianFor(intraComparableColumns())
 
 @Refine
 @Interpretable("GroupByMedian0")
@@ -156,7 +156,7 @@ public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
 
 // region Pivot
 
-public fun <T> Pivot<T>.median(separate: Boolean = false): DataRow<T> = medianFor(separate, interComparableColumns())
+public fun <T> Pivot<T>.median(separate: Boolean = false): DataRow<T> = medianFor(separate, intraComparableColumns())
 
 public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     separate: Boolean = false,
@@ -200,7 +200,7 @@ public inline fun <T, reified R : Comparable<R>> Pivot<T>.medianOf(
 // region PivotGroupBy
 
 public fun <T> PivotGroupBy<T>.median(separate: Boolean = false): DataFrame<T> =
-    medianFor(separate, interComparableColumns())
+    medianFor(separate, intraComparableColumns())
 
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
