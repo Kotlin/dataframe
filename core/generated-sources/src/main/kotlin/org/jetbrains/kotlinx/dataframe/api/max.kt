@@ -133,9 +133,12 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupByMax1")
 public fun <T> Grouped<T>.max(): DataFrame<T> = maxFor(intraComparableColumns())
 
+@Refine
+@Interpretable("GroupByMax0")
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.max.aggregateFor(this, columns)
 
@@ -149,6 +152,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: ColumnRefere
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: KProperty<C?>): DataFrame<T> =
     maxFor { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMax0")
 public fun <T, C : Comparable<C>> Grouped<T>.max(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.max.aggregateAll(this, name, columns)
 

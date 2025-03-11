@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -104,9 +106,12 @@ public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupByMedian1")
 public fun <T> Grouped<T>.median(): DataFrame<T> = medianFor(intraComparableColumns())
 
+@Refine
+@Interpretable("GroupByMedian0")
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.median.aggregateFor(this, columns)
 
@@ -120,6 +125,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: ColumnRef
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: KProperty<C?>): DataFrame<T> =
     medianFor { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMedian0")
 public fun <T, C : Comparable<C>> Grouped<T>.median(
     name: String? = null,
     columns: ColumnsSelector<T, C?>,
@@ -138,6 +145,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.median(
 public fun <T, C : Comparable<C>> Grouped<T>.median(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
     median(name) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMedianOf")
 public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
     name: String? = null,
     crossinline expression: RowExpression<T, R?>,

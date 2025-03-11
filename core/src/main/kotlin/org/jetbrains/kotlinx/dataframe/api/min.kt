@@ -133,9 +133,12 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: KProperty<C?>
 // endregion
 
 // region GroupBy
-
+@Refine
+@Interpretable("GroupByMin1")
 public fun <T> Grouped<T>.min(): DataFrame<T> = minFor(intraComparableColumns())
 
+@Refine
+@Interpretable("GroupByMin0")
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.min.aggregateFor(this, columns)
 
@@ -149,6 +152,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnRefere
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> =
     minFor { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMin0")
 public fun <T, C : Comparable<C>> Grouped<T>.min(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.min.aggregateAll(this, name, columns)
 
