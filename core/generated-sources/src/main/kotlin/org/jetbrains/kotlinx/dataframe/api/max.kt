@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.interComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegated
@@ -55,7 +55,7 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(): T = rowMaxOfOrN
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.max(): DataRow<T> = maxFor(intraComparableColumns())
+public fun <T> DataFrame<T>.max(): DataRow<T> = maxFor(interComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
     Aggregators.max.aggregateFor(this, columns)
@@ -133,9 +133,12 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>
 // endregion
 
 // region GroupBy
+@Refine
+@Interpretable("GroupByMax1")
+public fun <T> Grouped<T>.max(): DataFrame<T> = maxFor(interComparableColumns())
 
-public fun <T> Grouped<T>.max(): DataFrame<T> = maxFor(intraComparableColumns())
-
+@Refine
+@Interpretable("GroupByMax0")
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
     Aggregators.max.aggregateFor(this, columns)
 
@@ -149,6 +152,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: ColumnRefere
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: KProperty<C?>): DataFrame<T> =
     maxFor { columns.toColumnSet() }
 
+@Refine
+@Interpretable("GroupByMax0")
 public fun <T, C : Comparable<C>> Grouped<T>.max(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
     Aggregators.max.aggregateAll(this, name, columns)
 
@@ -246,7 +251,7 @@ public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: KProperty<C?>): Reduced
 
 // region PivotGroupBy
 
-public fun <T> PivotGroupBy<T>.max(separate: Boolean = false): DataFrame<T> = maxFor(separate, intraComparableColumns())
+public fun <T> PivotGroupBy<T>.max(separate: Boolean = false): DataFrame<T> = maxFor(separate, interComparableColumns())
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
     separate: Boolean = false,
