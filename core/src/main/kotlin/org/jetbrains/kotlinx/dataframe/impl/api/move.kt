@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
@@ -26,17 +27,51 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     val removeRoot = removeResult.removedColumns.first().getRoot()
 
     val refNode = removeRoot.getOrPut(targetPath) {
-        val parentPath = it.dropLast(1)
-        val parent = if (parentPath.isEmpty()) df else df.getColumnGroup(parentPath)
-        val index = parent.getColumnIndex(it.last())
-        val col = df.getColumn(index)
+        val path = it.toList()
+
+        // Find the group reference (if any) and adjust the path
+        val groupRefIndex = path.indexOfFirst { it.isEmpty() }
+
+        // Calculate effective path and column name based on group reference
+        val effectivePath = if (groupRefIndex >= 0) {
+            // Nested column reference
+            path.take(groupRefIndex)
+        } else {
+            path.dropLast(1)
+        }
+
+        val columnName = if (groupRefIndex >= 0) {
+            // Use the next segment after group reference, or previous if no next segment
+            path.getOrNull(groupRefIndex + 1) ?: path[groupRefIndex - 1]
+        } else {
+            path.last()
+        }
+
+        // Get the parent group using ColumnPath
+        val parent = if (effectivePath.isEmpty()) {
+            df
+        } else {
+            df.getColumnGroup(ColumnPath(effectivePath))
+        }
+
+        // Get the column index and the column itself
+        val index = parent.getColumnIndex(columnName)
+        val col = parent.getColumn(index)
+
         ColumnPosition(index, false, col)
     }
 
     val parentPath = targetPath.dropLast(1)
     val toInsert = removeResult.removedColumns.map {
-        val path = parentPath + it.name
-        ColumnToInsert(path, it.toColumnWithPath<C>().data, refNode)
+        val sourceCol = it.toColumnWithPath<C>()
+        val sourcePath = sourceCol.path
+        val path = if (sourcePath.size > 1) {
+            // If source is nested, preserve its structure under the target parent
+            parentPath + sourcePath.last()
+        } else {
+            parentPath + sourceCol.name()
+        }
+        ColumnToInsert(path, sourceCol.data, refNode)
     }
     return removeResult.df.insertImpl(toInsert)
 }

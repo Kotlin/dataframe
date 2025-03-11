@@ -527,6 +527,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun moveAfter() {
         val moved = typed2.move { age }.after { nameAndCity.name }
+        println(moved)
         moved.columnsCount() shouldBe 2
         moved.nameAndCity.columnsCount() shouldBe 3
         moved.nameAndCity.select { all() } shouldBe dataFrameOf(
@@ -542,6 +543,17 @@ class DataFrameTreeTests : BaseTest() {
         moved.columnsCount() shouldBe 4
         moved.nameAndCity.columnsCount() shouldBe 1
         moved.remove { nameAndCity } shouldBe typed2.select { age and nameAndCity.name and weight }
+    }
+
+    @Test
+    fun `move nested column after nested column`() {
+        val moved = typed2.move { nameAndCity.name }.after { nameAndCity.city }
+        moved.columnsCount() shouldBe 3
+        moved.nameAndCity.columnsCount() shouldBe 2
+        moved.nameAndCity.select { all() } shouldBe dataFrameOf(
+            typed2.nameAndCity.city,
+            typed2.nameAndCity.name
+        )
     }
 
     @Test
