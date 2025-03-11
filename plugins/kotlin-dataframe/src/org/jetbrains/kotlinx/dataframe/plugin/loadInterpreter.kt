@@ -37,11 +37,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Match0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Preserve0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Preserve1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Properties0
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Read0
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadCSV0
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadDelimStr
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadJson0
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadJsonStr
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Remove0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Rename
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameInto
@@ -75,6 +70,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddDslNamedGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddDslStringInvoke
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AddId
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Aggregate
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AggregateRow
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.All0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.All1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.All2
@@ -107,7 +103,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf3
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameXs
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataRowReadJsonStr
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop2
@@ -127,7 +122,17 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FrameCols2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByAdd
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByCount0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByInto
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMax0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMax1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMaxOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMean0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMean1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMeanOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedian0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedian1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMedianOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMin0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMin1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByMinOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceExpression
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceInto
@@ -136,6 +141,12 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByXs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStd0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStd1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStdOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeId
@@ -163,9 +174,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Named0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairToConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PerRowCol
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReadExcel
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameMapping
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.StringColumnsConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameDefault
@@ -284,7 +293,6 @@ internal inline fun <reified T> String.load(): T {
         "With0" -> With0()
         "PerRowCol" -> PerRowCol()
         "Explode0" -> Explode0()
-        "Read0" -> Read0()
         "Insert0" -> Insert0()
         "Insert1" -> Insert1()
         "Insert2" -> Insert2()
@@ -296,8 +304,6 @@ internal inline fun <reified T> String.load(): T {
         "Under4" -> Under4()
         "Join0" -> Join0()
         "Match0" -> Match0()
-        "ReadJson0" -> ReadJson0()
-        "ReadCSV0" -> ReadCSV0()
         "Rename" -> Rename()
         "RenameMapping" -> RenameMapping()
         "Select0" -> Select0()
@@ -317,9 +323,6 @@ internal inline fun <reified T> String.load(): T {
         "RenameInto" -> RenameInto()
         "DataFrameGroupBy" -> DataFrameGroupBy()
         "AggregateDslInto" -> AggregateDslInto()
-        "ReadJsonStr" -> ReadJsonStr()
-        "DataRowReadJsonStr" -> DataRowReadJsonStr()
-        "ReadDelimStr" -> ReadDelimStr()
         "GroupByToDataFrame" -> GroupByToDataFrame()
         "GroupByInto" -> GroupByInto()
         "ToDataFrameFrom0" -> ToDataFrameFrom()
@@ -397,8 +400,6 @@ internal inline fun <reified T> String.load(): T {
         "DataFrameOf0" -> DataFrameOf0()
         "DataFrameBuilderInvoke0" -> DataFrameBuilderInvoke0()
         "ToDataFrameColumn" -> ToDataFrameColumn()
-        "StringColumns" -> StringColumnsConstructor()
-        "ReadExcel" -> ReadExcel()
         "FillNulls0" -> FillNulls0()
         "UpdateWith0" -> UpdateWith0()
         "Flatten0" -> Flatten0()
@@ -411,6 +412,7 @@ internal inline fun <reified T> String.load(): T {
         "ToTop" -> ToTop()
         "Update0" -> Update0()
         "Aggregate" -> Aggregate()
+        "AggregateRow" -> AggregateRow()
         "DataFrameOf3" -> DataFrameOf3()
         "ValueCounts" -> ValueCounts()
         "RenameToCamelCase" -> RenameToCamelCase()
@@ -432,11 +434,27 @@ internal inline fun <reified T> String.load(): T {
         "Reorder" -> Reorder()
         "ByName" -> ByName()
         "GroupByCount0" -> GroupByCount0()
+        "GroupByMean0" -> GroupByMean0()
+        "GroupByMean1" -> GroupByMean1()
+        "GroupByMeanOf" -> GroupByMeanOf()
+        "GroupByMedian0" -> GroupByMedian0()
+        "GroupByMedian1" -> GroupByMedian1()
+        "GroupByMedianOf" -> GroupByMedianOf()
+        "GroupBySumOf" -> GroupBySumOf()
+        "GroupBySum0" -> GroupBySum0()
+        "GroupBySum1" -> GroupBySum1()
         "GroupByReducePredicate" -> GroupByReducePredicate()
         "GroupByReduceExpression" -> GroupByReduceExpression()
         "GroupByReduceInto" -> GroupByReduceInto()
+        "GroupByMax0" -> GroupByMax0()
+        "GroupByMax1" -> GroupByMax1()
         "GroupByMaxOf" -> GroupByMaxOf()
+        "GroupByMin0" -> GroupByMin0()
+        "GroupByMin1" -> GroupByMin1()
         "GroupByMinOf" -> GroupByMinOf()
+        "GroupByStd0" -> GroupByStd0()
+        "GroupByStd1" -> GroupByStd1()
+        "GroupByStdOf" -> GroupByStdOf()
         "DataFrameXs" -> DataFrameXs()
         "GroupByXs" -> GroupByXs()
         else -> error("$this")

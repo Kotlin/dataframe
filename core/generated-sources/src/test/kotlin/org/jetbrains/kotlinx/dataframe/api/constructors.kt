@@ -31,12 +31,39 @@ class ConstructorsTests {
     @Test
     fun `duplicated name`() {
         val builder = DynamicDataFrameBuilder()
-        val column by columnOf(1, 2, 3)
-        builder.add(column)
-        builder.add(column)
+        val columnName = "columnName"
+        val columnA = columnOf(1, 2, 3) named columnName
+        val columnB = columnOf(4, 5, 6) named columnName
+        builder.add(columnA)
+        builder.add(columnB)
         val df = builder.toDataFrame()
         df.columnsCount() shouldBe 2
-        df.columnNames() shouldBe listOf(column.name(), "${column.name()}1")
+        df.columnNames() shouldBe listOf(columnName, "${columnName}1")
+    }
+
+    @Test
+    fun `get by new name`() {
+        val builder = DynamicDataFrameBuilder()
+        val columnName = "columnName"
+        val columnA = columnOf(1, 2, 3) named columnName
+        val columnB = columnOf(4, 5, 6) named columnName
+        builder.add(columnA)
+        val newName = builder.add(columnB)
+        builder.get(newName)!!.values shouldBe columnB.values
+    }
+
+    @Test
+    fun `duplicated column`() {
+        val builder = DynamicDataFrameBuilder()
+        val columnName = "columnName"
+        val columnA = columnOf(1, 2, 3) named columnName
+        val columnB = columnOf(4, 5, 6) named columnName
+        builder.add(columnA)
+        builder.add(columnB)
+        builder.add(columnA)
+        val df = builder.toDataFrame()
+        df.columnsCount() shouldBe 2
+        df.columnNames() shouldBe listOf(columnName, "${columnName}1")
     }
 
     @Test

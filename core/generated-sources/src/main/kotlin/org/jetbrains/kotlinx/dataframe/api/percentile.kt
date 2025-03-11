@@ -177,7 +177,7 @@ public inline fun <T, reified R : Comparable<R>> Grouped<T>.percentileOf(
     percentile: Double,
     name: String? = null,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.percentile(percentile).cast<R?>().aggregateOf(this, name, expression)
 
 // endregion
 
@@ -289,6 +289,6 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentile(
 public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.percentileOf(
     percentile: Double,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateOf(this, expression)
+): DataFrame<T> = Aggregators.percentile(percentile).cast<R?>().aggregateOf(this, expression)
 
 // endregion

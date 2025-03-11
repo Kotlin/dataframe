@@ -6,6 +6,7 @@ import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("addId.kt")
   public void testAddId() {
     runTest("testData/box/addId.kt");
+  }
+
+  @Test
+  @TestMetadata("aggregateDataFrame.kt")
+  public void testAggregateDataFrame() {
+    runTest("testData/box/aggregateDataFrame.kt");
   }
 
   @Test
@@ -233,6 +240,44 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("groupBy_sum.kt")
+  public void testGroupBy_sum() {
+        runTest("testData/box/groupBy_sum.kt");
+    }
+
+    @Ignore
+    @Test
+    @TestMetadata("groupBy_mean.kt")
+    public void testGroupBy_mean() {
+        runTest("testData/box/groupBy_mean.kt");
+    }
+
+    @Test
+    @TestMetadata("groupBy_median.kt")
+    public void testGroupBy_median() {
+        runTest("testData/box/groupBy_median.kt");
+    }
+
+    @Test
+    @TestMetadata("groupBy_min.kt")
+    public void testGroupBy_min() {
+        runTest("testData/box/groupBy_min.kt");
+    }
+
+    @Test
+    @TestMetadata("groupBy_max.kt")
+    public void testGroupBy_max() {
+        runTest("testData/box/groupBy_max.kt");
+    }
+
+    @Ignore
+    @Test
+    @TestMetadata("groupBy_std.kt")
+    public void testGroupBy_std() {
+        runTest("testData/box/groupBy_std.kt");
+    }
+
+  @Test
   @TestMetadata("groupBy_extractSchema.kt")
   public void testGroupBy_extractSchema() {
     runTest("testData/box/groupBy_extractSchema.kt");
@@ -413,66 +458,6 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
-  @TestMetadata("read.kt")
-  public void testRead() {
-    runTest("testData/box/read.kt");
-  }
-
-  @Test
-  @TestMetadata("readCSV.kt")
-  public void testReadCSV() {
-    runTest("testData/box/readCSV.kt");
-  }
-
-  @Test
-  @TestMetadata("readExcel.kt")
-  public void testReadExcel() {
-    runTest("testData/box/readExcel.kt");
-  }
-
-  @Test
-  @TestMetadata("readExcel_stringColumns.kt")
-  public void testReadExcel_stringColumns() {
-    runTest("testData/box/readExcel_stringColumns.kt");
-  }
-
-  @Test
-  @TestMetadata("readJson.kt")
-  public void testReadJson() {
-    runTest("testData/box/readJson.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_const.kt")
-  public void testReadJsonStr_const() {
-    runTest("testData/box/readJsonStr_const.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_datarow.kt")
-  public void testReadJsonStr_datarow() {
-    runTest("testData/box/readJsonStr_datarow.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_localProperty.kt")
-  public void testReadJsonStr_localProperty() {
-    runTest("testData/box/readJsonStr_localProperty.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_memberProperty.kt")
-  public void testReadJsonStr_memberProperty() {
-    runTest("testData/box/readJsonStr_memberProperty.kt");
-  }
-
-  @Test
-  @TestMetadata("read_localFile.kt")
-  public void testRead_localFile() {
-    runTest("testData/box/read_localFile.kt");
-  }
-
-  @Test
   @TestMetadata("reducedGroupBy.kt")
   public void testReducedGroupBy() {
     runTest("testData/box/reducedGroupBy.kt");
@@ -563,6 +548,24 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("toDataFrameNoPropertiesType.kt")
+  public void testToDataFrameNoPropertiesType() {
+    runTest("testData/box/toDataFrameNoPropertiesType.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameNoPublicPropertiesType.kt")
+  public void testToDataFrameNoPublicPropertiesType() {
+    runTest("testData/box/toDataFrameNoPublicPropertiesType.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameValueTypes.kt")
+  public void testToDataFrameValueTypes() {
+    runTest("testData/box/toDataFrameValueTypes.kt");
+  }
+
+  @Test
   @TestMetadata("toDataFrame_column.kt")
   public void testToDataFrame_column() {
     runTest("testData/box/toDataFrame_column.kt");
@@ -650,18 +653,6 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("transformReplaceFunctionCall.kt")
   public void testTransformReplaceFunctionCall() {
     runTest("testData/box/transformReplaceFunctionCall.kt");
-  }
-
-  @Test
-  @TestMetadata("trimIndent.kt")
-  public void testTrimIndent() {
-    runTest("testData/box/trimIndent.kt");
-  }
-
-  @Test
-  @TestMetadata("trimMargin.kt")
-  public void testTrimMargin() {
-    runTest("testData/box/trimMargin.kt");
   }
 
   @Test
