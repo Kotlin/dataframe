@@ -24,6 +24,20 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     val removeResult = df.removeImpl(columns = columns)
 
     val targetPath = df.getColumnWithPath(column).path
+    val sourcePaths = removeResult.removedColumns.map { it.toColumnWithPath<C>().path }
+
+    // Check if any source path is a prefix of the target path
+    sourcePaths.forEach { sourcePath ->
+        val sourceSegments = sourcePath.toList()
+        val targetSegments = targetPath.toList()
+
+        if (sourceSegments.size <= targetSegments.size && 
+            sourceSegments.indices.all { targetSegments[it] == sourceSegments[it] }) {
+            throw IllegalArgumentException(
+                "Cannot move column '${sourcePath.joinToString()}' after its child column '${targetPath.joinToString()}'")
+        }
+    }
+
     val removeRoot = removeResult.removedColumns.first().getRoot()
 
     val refNode = removeRoot.getOrPut(targetPath) {
