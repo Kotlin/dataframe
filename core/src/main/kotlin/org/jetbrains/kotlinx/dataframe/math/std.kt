@@ -2,11 +2,13 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.ddof_default
 import org.jetbrains.kotlinx.dataframe.api.skipNA_default
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
@@ -33,6 +35,11 @@ internal fun <T : Number> Iterable<T?>.std(
         Nothing::class -> Double.NaN
         else -> throw IllegalArgumentException("Unable to compute the std for type ${renderType(type)}")
     }
+}
+
+/** T: Number? -> Double */
+internal val stdTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
+    typeOf<Double>()
 }
 
 @JvmName("doubleStd")

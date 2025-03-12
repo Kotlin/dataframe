@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
@@ -30,7 +31,7 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
 internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(
     frame: DataFrame<T>,
     crossinline expression: RowExpression<T, C>,
-): R? = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) } // TODO: inline
+): R? = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) }
 
 @PublishedApi
 internal fun <T, C, R> Aggregator<*, R>.aggregateOfDelegated(
@@ -50,7 +51,7 @@ internal inline fun <T, reified C, R> Aggregator<*, R>.of(
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.of(data: DataColumn<C>, crossinline expression: (C) -> V): R? =
-    aggregateOf(data.values()) { expression(it) } // TODO: inline
+    aggregateOf(data.values()) { expression(it) }
 
 @PublishedApi
 internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
@@ -72,10 +73,20 @@ internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
     aggregator: Aggregator<C, R>,
 ): DataFrame<T> {
     val path = pathOf(resultName ?: aggregator.name)
-    val type = typeOf<R>()
+    val expressionResultType = typeOf<C>()
     return aggregateInternal {
         val value = aggregator.aggregateOf(df, expression)
-        yield(path, value, type, null, false)
+        val returnType = aggregator.calculateReturnTypeOrNull(
+            type = expressionResultType,
+            emptyInput = df.isEmpty(),
+        )
+        yield(
+            path = path,
+            value = value,
+            type = returnType,
+            default = null,
+            guessType = returnType == null,
+        )
     }
 }
 

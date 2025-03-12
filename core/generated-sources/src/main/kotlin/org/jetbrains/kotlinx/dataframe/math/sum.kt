@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.math
 
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 
 @PublishedApi
 internal fun <T, R : Number> Iterable<T>.sumOf(type: KType, selector: (T) -> R?): R {
@@ -94,6 +96,11 @@ internal fun <T : Number> Iterable<T?>.sum(type: KType): T =
 
         else -> throw IllegalArgumentException("sum is not supported for $type")
     }
+
+/** T: Number? -> T */
+internal val sumTypeConversion: CalculateReturnTypeOrNull = { type, _ ->
+    type.withNullability(false)
+}
 
 @PublishedApi
 internal fun Iterable<BigDecimal>.sum(): BigDecimal {
