@@ -37,6 +37,9 @@ import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
+//  can be enabled for showing logs for these tests
+private const val SHOW_LOGS = false
+
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DelimCsvTsvTests {
 
@@ -45,12 +48,14 @@ class DelimCsvTsvTests {
 
     @Before
     fun setLogger() {
+        if (!SHOW_LOGS) return
         loggerBefore = System.getProperty(logLevel)
-        System.setProperty(logLevel, "debug")
+        System.setProperty(logLevel, "trace")
     }
 
     @After
     fun restoreLogger() {
+        if (!SHOW_LOGS) return
         if (loggerBefore != null) {
             System.setProperty(logLevel, loggerBefore)
         }
@@ -518,29 +523,32 @@ class DelimCsvTsvTests {
 
         dutchDf["price"].type() shouldBe typeOf<Double?>()
 
-        // while negative numbers in RTL languages cannot be parsed, thanks to Java, others work
-        @Language("csv")
-        val arabicCsv =
-            """
-            الاسم; السعر;
-            أ;١٢٫٤٥;
-            ب;١٣٫٣٥;
-            ج;١٠٠٫١٢٣;
-            د;٢٠٤٫٢٣٥;
-            هـ;ليس رقم;
-            و;null;
-            """.trimIndent()
+        // skipping this test on windows due to lack of support for Arabic locales
+        if (!System.getProperty("os.name").startsWith("Windows")) {
+            // while negative numbers in RTL languages cannot be parsed thanks to Java, others work
+            @Language("csv")
+            val arabicCsv =
+                """
+                الاسم; السعر;
+                أ;١٢٫٤٥;
+                ب;١٣٫٣٥;
+                ج;١٠٠٫١٢٣;
+                د;٢٠٤٫٢٣٥;
+                هـ;ليس رقم;
+                و;null;
+                """.trimIndent()
 
-        val easternArabicDf = DataFrame.readCsvStr(
-            arabicCsv,
-            delimiter = ';',
-            parserOptions = ParserOptions(
-                locale = Locale.forLanguageTag("ar-001"),
-            ),
-        )
+            val easternArabicDf = DataFrame.readCsvStr(
+                arabicCsv,
+                delimiter = ';',
+                parserOptions = ParserOptions(
+                    locale = Locale.forLanguageTag("ar-001"),
+                ),
+            )
 
-        easternArabicDf["السعر"].type() shouldBe typeOf<Double?>()
-        easternArabicDf["الاسم"].type() shouldBe typeOf<String>() // apparently not a char
+            easternArabicDf["السعر"].type() shouldBe typeOf<Double?>()
+            easternArabicDf["الاسم"].type() shouldBe typeOf<String>() // apparently not a char
+        }
     }
 
     @Test

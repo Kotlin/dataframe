@@ -165,7 +165,7 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
             }
         }.also {
             if (it == null) {
-                logger.debug { "Could not parse '$this' as Double with NumberFormat with locale '$locale'." }
+                logger.trace { "Could not parse '$this' as Double with NumberFormat with locale '$locale'." }
             }
         }
 
@@ -185,7 +185,7 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
             try {
                 return parser.parseDouble(ba, offset, length)
             } catch (e: Exception) {
-                logger.debug(e) {
+                logger.trace(e) {
                     "Failed to parse '${
                         ba.toString(charset)
                     }' from a ByteArray to Double with FastDoubleParser with locale '$locale'."
@@ -207,7 +207,7 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
             try {
                 return parser.parseDouble(cs)
             } catch (e: Exception) {
-                logger.debug(e) {
+                logger.trace(e) {
                     "Failed to parse '$cs' from a CharSequence to Double with FastDoubleParser with locale '$locale'."
                 }
             }
@@ -227,7 +227,7 @@ public class FastDoubleParser(private val parserOptions: ParserOptions? = null) 
             try {
                 return parser.parseDouble(ca, offset, length)
             } catch (e: Exception) {
-                logger.debug(e) {
+                logger.trace(e) {
                     "Failed to parse '${
                         ca.joinToString("")
                     }' as from a CharArray to Double with FastDoubleParser with locale '$locale'."
