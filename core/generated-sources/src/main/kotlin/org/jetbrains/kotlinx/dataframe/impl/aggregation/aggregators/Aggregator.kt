@@ -24,9 +24,6 @@ internal interface Aggregator<in Value, out Return> {
     /** The name of this aggregator. */
     val name: String
 
-    /** If `true`, [Value][Value]`  ==  ` [Return][Return]. */
-    val preservesType: Boolean
-
     /**
      * Base function of [Aggregator].
      *
@@ -72,6 +69,17 @@ internal interface Aggregator<in Value, out Return> {
      * @return The return type of [aggregate] as [KType].
      */
     fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType?
+
+    /**
+     * Function that can give the return type of [aggregate] with columns as [KType],
+     * given the multiple types of the input.
+     * This allows aggregators to avoid runtime type calculations.
+     *
+     * @param colTypes The types of the input columns.
+     * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
+     * @return The return type of [aggregate] as [KType].
+     */
+    fun calculateReturnTypeOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType?
 }
 
 @PublishedApi

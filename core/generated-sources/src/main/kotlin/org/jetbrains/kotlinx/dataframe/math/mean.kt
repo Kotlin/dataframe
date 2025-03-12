@@ -45,7 +45,7 @@ internal fun <T : Number> Sequence<T?>.mean(type: KType, skipNA: Boolean = skipN
     }
 }
 
-// T: Number? -> Double
+/** T: Number? -> Double */
 internal val meanTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
     typeOf<Double>()
 }

@@ -100,3 +100,5 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
 
 internal val AnyBaseCol.size: Int get() = size()
+
+internal val AnyBaseCol.isEmpty: Boolean get() = size() == 0

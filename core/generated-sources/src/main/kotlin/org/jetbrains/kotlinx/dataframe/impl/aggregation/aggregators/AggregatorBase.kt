@@ -94,4 +94,15 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * Must be overridden to use.
      */
     abstract override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return?
+
+    /**
+     * Function that can give the return type of [aggregate] with columns as [KType],
+     * given the multiple types of the input.
+     * This allows aggregators to avoid runtime type calculations.
+     *
+     * @param colTypes The types of the input columns.
+     * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
+     * @return The return type of [aggregate] as [KType].
+     */
+    abstract override fun calculateReturnTypeOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType?
 }

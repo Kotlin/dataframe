@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.columns.isEmpty
 import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
@@ -52,8 +53,28 @@ internal fun <T, C, R> PivotGroupBy<T>.aggregateAll(
     aggregate {
         val cols = get(columns)
         if (cols.size == 1) {
-            internal().yield(emptyPath(), aggregator.aggregate(cols[0]))
+            val returnType = aggregator.calculateReturnTypeOrNull(
+                type = cols[0].type(),
+                emptyInput = cols[0].isEmpty,
+            )
+            internal().yield(
+                path = emptyPath(),
+                value = aggregator.aggregate(cols[0]),
+                type = returnType,
+                default = null,
+                guessType = returnType == null,
+            )
         } else {
-            internal().yield(emptyPath(), aggregator.aggregate(cols))
+            val returnType = aggregator.calculateReturnTypeOrNull(
+                colTypes = cols.map { it.type() }.toSet(),
+                colsEmpty = cols.any { it.isEmpty },
+            )
+            internal().yield(
+                path = emptyPath(),
+                value = aggregator.aggregate(cols),
+                type = returnType,
+                default = null,
+                guessType = returnType == null,
+            )
         }
     }

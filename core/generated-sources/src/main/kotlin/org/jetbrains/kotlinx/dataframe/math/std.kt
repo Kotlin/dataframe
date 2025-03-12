@@ -37,7 +37,7 @@ internal fun <T : Number> Iterable<T?>.std(
     }
 }
 
-// T: Number? -> Double
+/** T: Number? -> Double */
 internal val stdTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
     typeOf<Double>()
 }

@@ -33,24 +33,21 @@ internal object Aggregators {
      *     -> Return?
      * ```
      *
-     * It can also be used as a "simple" aggregator by providing the same function for both steps,
-     * requires [preservesType][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator.preservesType] be set to `true`.
+     * It can also be used as a "simple" aggregator by providing the same function for both steps.
      *
      * See [FlatteningAggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator] for different behavior for multiple columns.
      *
      * @param name The name of this aggregator.
-     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase.calculateReturnTypeOrNull] function.
+     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator.calculateReturnTypeOrNull] function.
      * @param stepOneAggregator Functional argument for the [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator.aggregate] function, used within a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] or [Iterable].
      * @param stepTwoAggregator Functional argument for the aggregation function used between different columns.
      *   It is run on the results of [stepOneAggregator].
-     * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type>) =
         TwoStepAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             stepOneAggregator = aggregator,
             stepTwoAggregator = aggregator,
-            preservesType = true,
         )
 
     /**
@@ -74,17 +71,15 @@ internal object Aggregators {
      *     -> Return?
      * ```
      *
-     * It can also be used as a "simple" aggregator by providing the same function for both steps,
-     * requires [preservesType][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator.preservesType] be set to `true`.
+     * It can also be used as a "simple" aggregator by providing the same function for both steps.
      *
      * See [FlatteningAggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator] for different behavior for multiple columns.
      *
      * @param name The name of this aggregator.
-     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase.calculateReturnTypeOrNull] function.
+     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator.calculateReturnTypeOrNull] function.
      * @param stepOneAggregator Functional argument for the [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator.aggregate] function, used within a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] or [Iterable].
      * @param stepTwoAggregator Functional argument for the aggregation function used between different columns.
      *   It is run on the results of [stepOneAggregator].
-     * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     private fun <Value, Return> twoStepChangingType(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
@@ -94,7 +89,6 @@ internal object Aggregators {
         getReturnTypeOrNull = getReturnTypeOrNull,
         stepOneAggregator = stepOneAggregator,
         stepTwoAggregator = stepTwoAggregator,
-        preservesType = false,
     )
 
     /**
@@ -121,16 +115,14 @@ internal object Aggregators {
      * See [TwoStepAggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator] for different behavior for multiple columns.
      *
      * @param name The name of this aggregator.
-     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase.calculateReturnTypeOrNull] function.
+     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.calculateReturnTypeOrNull] function.
      * @param aggregator Functional argument for the [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.aggregate] function.
      *   Note that it must be able to handle `null` values for the [Iterable] overload of [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.aggregate].
-     * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type>) =
         FlatteningAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             aggregator = aggregate,
-            preservesType = true,
         )
 
     /**
@@ -157,10 +149,9 @@ internal object Aggregators {
      * See [TwoStepAggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepAggregator] for different behavior for multiple columns.
      *
      * @param name The name of this aggregator.
-     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase.calculateReturnTypeOrNull] function.
+     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.calculateReturnTypeOrNull] function.
      * @param aggregator Functional argument for the [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.aggregate] function.
      *   Note that it must be able to handle `null` values for the [Iterable] overload of [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.aggregate].
-     * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     private fun <Value, Return> flatteningChangingTypes(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
@@ -168,7 +159,6 @@ internal object Aggregators {
     ) = FlatteningAggregator.Factory(
         getReturnTypeOrNull = getReturnTypeOrNull,
         aggregator = aggregate,
-        preservesType = false,
     )
 
     /**
@@ -196,7 +186,7 @@ internal object Aggregators {
      * ```
      *
      * @param name The name of this aggregator.
-     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase.calculateReturnTypeOrNull] function.
+     * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepNumbersAggregator.calculateReturnTypeOrNull] function.
      * @param aggregator Functional argument for the [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.TwoStepNumbersAggregator.aggregate] function, used within a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] or [Iterable].
      *   While it takes a [Number] argument, you can assume that all values are of the same specific type, however,
      *   this type can be different for different calls to [aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase.aggregator].

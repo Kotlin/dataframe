@@ -22,7 +22,6 @@ internal object Aggregators {
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             stepOneAggregator = aggregator,
             stepTwoAggregator = aggregator,
-            preservesType = true,
         )
 
     /**
@@ -38,7 +37,6 @@ internal object Aggregators {
         getReturnTypeOrNull = getReturnTypeOrNull,
         stepOneAggregator = stepOneAggregator,
         stepTwoAggregator = stepTwoAggregator,
-        preservesType = false,
     )
 
     /**
@@ -50,7 +48,6 @@ internal object Aggregators {
         FlatteningAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             aggregator = aggregate,
-            preservesType = true,
         )
 
     /**
@@ -64,7 +61,6 @@ internal object Aggregators {
     ) = FlatteningAggregator.Factory(
         getReturnTypeOrNull = getReturnTypeOrNull,
         aggregator = aggregate,
-        preservesType = false,
     )
 
     /**

@@ -2,8 +2,10 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.columns.isEmpty
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY
+import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
@@ -65,7 +67,7 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
             val value = aggregate(col) ?: return@mapNotNull null
             val type = calculateReturnTypeOrNull(
                 type = col.type().withNullability(false),
-                emptyInput = col.size() == 0,
+                emptyInput = col.isEmpty,
             ) ?: value::class.starProjectedType // heavy fallback type calculation
 
             value to type
@@ -75,6 +77,28 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
             values = values,
             valueTypes = types.toSet(),
         )
+    }
+
+    /**
+     * Function that can give the return type of [aggregate] with columns as [KType],
+     * given the multiple types of the input.
+     * This allows aggregators to avoid runtime type calculations.
+     *
+     * @param colTypes The types of the input columns.
+     * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
+     * @return The return type of [aggregate] as [KType].
+     */
+    @Suppress("UNCHECKED_CAST")
+    override fun calculateReturnTypeOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType? {
+        val typesAfterStepOne = colTypes.map { type ->
+            calculateReturnTypeOrNull(type = type.withNullability(false), emptyInput = colsEmpty)
+        }
+        if (typesAfterStepOne.anyNull()) return null
+        val commonType = (typesAfterStepOne as List<KType>)
+            .toSet()
+            .unifiedNumberType(PRIMITIVES_ONLY)
+            .withNullability(false)
+        return commonType
     }
 
     /**
@@ -145,8 +169,6 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
             type = commonType,
         )
     }
-
-    override val preservesType = false
 
     /**
      * Creates [TwoStepNumbersAggregator].

@@ -97,7 +97,7 @@ internal fun <T : Number> Iterable<T?>.sum(type: KType): T =
         else -> throw IllegalArgumentException("sum is not supported for $type")
     }
 
-// T: Number? -> T
+/** T: Number? -> T */
 internal val sumTypeConversion: CalculateReturnTypeOrNull = { type, _ ->
     type.withNullability(false)
 }
