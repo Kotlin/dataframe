@@ -149,13 +149,13 @@ class StatisticsTests {
             "name",
             "age",
             "height",
-            "yearsToRetirement"
+            "yearsToRetirement",
         ) // TODO: why double values from weight are not in the list? are they not Comparable?
 
         val median01 = res0["age"][0] as Int
         median01 shouldBe 22
-        //val median02 = res0["weight"][0] as Double
-        //median02 shouldBe 66.0
+        // val median02 = res0["weight"][0] as Double
+        // median02 shouldBe 66.0
 
         // scenario #1: particular column
         val res1 = personsDf.groupBy("city").medianFor("age")
@@ -277,13 +277,13 @@ class StatisticsTests {
             "name",
             "age",
             "height",
-            "yearsToRetirement"
+            "yearsToRetirement",
         ) // TODO: why it's working for height and doesn't work for Double column weight
 
         val min01 = res0["age"][0] as Int
         min01 shouldBe 15
-        //val min02 = res0["weight"][0] as Double
-        //min02 shouldBe 38.85756039691633
+        // val min02 = res0["weight"][0] as Double
+        // min02 shouldBe 38.85756039691633
 
         // scenario #1: particular column
         val res1 = personsDf.groupBy("city").minFor("age")
@@ -342,7 +342,7 @@ class StatisticsTests {
             "age",
             "weight",
             "height",
-            "yearsToRetirement"
+            "yearsToRetirement",
         ) // TODO: why is here weight presented? looks like inconsitency
 
         val min41 = res4["age"][0] as Int
@@ -366,8 +366,8 @@ class StatisticsTests {
 
         val max01 = res0["age"][0] as Int
         max01 shouldBe 35
-        //val max02 = res0["weight"][0] as Double
-        //max02 shouldBe 140.0
+        // val max02 = res0["weight"][0] as Double
+        // max02 shouldBe 140.0
 
         // scenario #1: particular column
         val res1 = personsDf.groupBy("city").maxFor("age")
@@ -426,7 +426,7 @@ class StatisticsTests {
             "age",
             "weight",
             "height",
-            "yearsToRetirement"
+            "yearsToRetirement",
         ) // TODO: weight is here?
 
         val max41 = res4["age"][0] as Int
@@ -442,4 +442,3 @@ class StatisticsTests {
         max51 shouldBe 35
     }
 }
-
