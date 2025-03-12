@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 /**
@@ -29,13 +30,11 @@ import kotlin.reflect.full.withNullability
  * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull] function.
  * @param aggregator Functional argument for the [aggregate] function.
  *   Note that it must be able to handle `null` values for the [Iterable] overload of [aggregate].
- * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
  */
 internal class FlatteningAggregator<in Value, out Return>(
     name: String,
     getReturnTypeOrNull: CalculateReturnTypeOrNull,
     aggregator: Aggregate<Value, Return>,
-    override val preservesType: Boolean,
 ) : AggregatorBase<Value, Return>(name, getReturnTypeOrNull, aggregator) {
 
     /**
@@ -50,22 +49,33 @@ internal class FlatteningAggregator<in Value, out Return>(
     }
 
     /**
+     * Function that can give the return type of [aggregate] with columns as [KType],
+     * given the multiple types of the input.
+     * This allows aggregators to avoid runtime type calculations.
+     *
+     * @param colTypes The types of the input columns.
+     * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
+     * @return The return type of [aggregate] as [KType].
+     */
+    override fun calculateReturnTypeOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType? {
+        val commonType = colTypes.commonType().withNullability(false)
+        return calculateReturnTypeOrNull(commonType, colsEmpty)
+    }
+
+    /**
      * Creates [FlatteningAggregator].
      *
      * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull] function.
      * @param aggregator Functional argument for the [aggregate] function.
-     * @param preservesType If `true`, [Value][Value]`  ==  `[Return][Return].
      */
     class Factory<in Value, out Return>(
         private val getReturnTypeOrNull: CalculateReturnTypeOrNull,
         private val aggregator: Aggregate<Value, Return>,
-        private val preservesType: Boolean,
     ) : AggregatorProvider<FlatteningAggregator<Value, Return>> by AggregatorProvider({ name ->
             FlatteningAggregator(
                 name = name,
                 getReturnTypeOrNull = getReturnTypeOrNull,
                 aggregator = aggregator,
-                preservesType = preservesType,
             )
         })
 }

@@ -5310,9 +5310,9 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 	public abstract fun aggregate (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
 	public abstract fun aggregateCalculatingType (Ljava/lang/Iterable;Ljava/util/Set;)Ljava/lang/Object;
 	public static synthetic fun aggregateCalculatingType$default (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Ljava/lang/Iterable;Ljava/util/Set;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun calculateReturnTypeOrNull (Ljava/util/Set;Z)Lkotlin/reflect/KType;
 	public abstract fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
 	public abstract fun getName ()Ljava/lang/String;
-	public abstract fun getPreservesType ()Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorKt {

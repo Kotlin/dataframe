@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.columns.isEmpty
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
@@ -48,7 +49,13 @@ internal fun <T, C, R> AggregateInternalDsl<T>.aggregateFor(
     cols.forEach { col ->
         val path = getPath(col, isSingle)
         val value = aggregator.aggregate(col.data)
-        val inferType = !aggregator.preservesType
-        yield(path, value, col.type, col.default, inferType)
+        val returnType = aggregator.calculateReturnTypeOrNull(col.data.type, col.data.isEmpty)
+        yield(
+            path = path,
+            value = value,
+            type = returnType,
+            default = col.default,
+            guessType = returnType == null,
+        )
     }
 }

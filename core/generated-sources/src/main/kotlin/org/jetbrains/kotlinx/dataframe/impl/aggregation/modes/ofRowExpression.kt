@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
@@ -72,11 +73,20 @@ internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
     aggregator: Aggregator<C, R>,
 ): DataFrame<T> {
     val path = pathOf(resultName ?: aggregator.name)
-    val type = typeOf<R>()
+    val expressionResultType = typeOf<C>()
     return aggregateInternal {
         val value = aggregator.aggregateOf(df, expression)
-        val inferType = !aggregator.preservesType
-        yield(path, value, type, null, inferType)
+        val returnType = aggregator.calculateReturnTypeOrNull(
+            type = expressionResultType,
+            emptyInput = df.isEmpty(),
+        )
+        yield(
+            path = path,
+            value = value,
+            type = returnType,
+            default = null,
+            guessType = returnType == null,
+        )
     }
 }
 
