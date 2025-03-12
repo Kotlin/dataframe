@@ -148,9 +148,10 @@ class StatisticsTests {
             "city",
             "name",
             "age",
+            "weight",
             "height",
             "yearsToRetirement",
-        ) // TODO: why double values from weight are not in the list? are they not Comparable?
+        )
 
         val median01 = res0["age"][0] as Int
         median01 shouldBe 22
@@ -276,9 +277,10 @@ class StatisticsTests {
             "city",
             "name",
             "age",
+            "weight",
             "height",
             "yearsToRetirement",
-        ) // TODO: why it's working for height and doesn't work for Double column weight
+        )
 
         val min01 = res0["age"][0] as Int
         min01 shouldBe 15
@@ -362,7 +364,7 @@ class StatisticsTests {
     fun `max on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").max()
-        res0.columnNames() shouldBe listOf("city", "name", "age", "height", "yearsToRetirement") // TODO: DOUBLE weight?
+        res0.columnNames() shouldBe listOf("city", "name", "age", "weight", "height", "yearsToRetirement")
 
         val max01 = res0["age"][0] as Int
         max01 shouldBe 35
