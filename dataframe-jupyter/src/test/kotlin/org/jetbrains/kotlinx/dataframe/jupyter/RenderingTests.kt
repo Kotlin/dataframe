@@ -14,9 +14,9 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.intellij.lang.annotations.Language
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
+import org.jetbrains.kotlinx.dataframe.jupyter.SerializationKeys.DATA
+import org.jetbrains.kotlinx.dataframe.jupyter.SerializationKeys.KOTLIN_DATAFRAME
+import org.jetbrains.kotlinx.dataframe.jupyter.SerializationKeys.METADATA
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.BeforeClass

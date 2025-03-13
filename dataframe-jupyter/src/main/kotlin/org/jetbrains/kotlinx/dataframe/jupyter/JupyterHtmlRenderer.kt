@@ -142,6 +142,8 @@ internal object SerializationKeys {
     const val NROW = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
     const val COLUMNS = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
     const val KOTLIN_DATAFRAME = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
+    const val DATA = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+    const val METADATA = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
 }
 
 @Suppress("INVISIBLE_REFERENCE")

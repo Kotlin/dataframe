@@ -3,14 +3,13 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import org.jetbrains.jupyter.parser.JupyterParser
 import org.jetbrains.jupyter.parser.notebook.CodeCell
 import org.jetbrains.jupyter.parser.notebook.Output
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.util.Locale
 
 class SampleNotebooksTests : DataFrameJupyterTest() {
+
     @Test
-    @Ignore
     fun puzzles() = exampleTest("puzzles", "40 puzzles")
 
     @Test
@@ -26,18 +25,16 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         )
 
     @Test
-    @Ignore
     fun titanic() =
         exampleTest(
             dir = "titanic",
             notebookName = "Titanic",
             replacer = CodeReplacer.byMap(
-                "../../idea-examples/" to "$IDEA_EXAMPLES_PATH/",
+                testFile("titanic", "titanic.csv"),
             ),
         )
 
     @Test
-    @Ignore
     fun wine() =
         exampleTest(
             dir = "wine",
@@ -48,7 +45,6 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         )
 
     @Test
-    @Ignore
     fun netflix() {
         val currentLocale = Locale.getDefault()
         try {
@@ -68,12 +64,11 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     }
 
     @Test
-    @Ignore
     fun movies() =
         exampleTest(
             dir = "movies",
             replacer = CodeReplacer.byMap(
-                "ml-latest/movies.csv" to "$IDEA_EXAMPLES_PATH/movies/src/main/resources/movies.csv",
+                testFile("movies", "movies.csv"),
             ),
             // There is no tags data in repository
             cellClause = CellClause.stopAfter { cell ->
