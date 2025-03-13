@@ -15,6 +15,7 @@ include("dataframe-openapi")
 include("dataframe-excel")
 include("dataframe-jdbc")
 include("dataframe-csv")
+include("dataframe-jupyter")
 include("core")
 
 include("examples:idea-examples:titanic")
