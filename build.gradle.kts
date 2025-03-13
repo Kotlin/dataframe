@@ -27,6 +27,7 @@ plugins {
         alias(simpleGit) apply false
         alias(dependencyVersions)
         alias(buildconfig) apply false
+        alias(restrikt) apply false
 
         // dependence on our own plugin
         alias(dataframe) apply false
