@@ -26,8 +26,8 @@ repositories {
 fun ExternalModuleDependency.excludeJaiCore() = exclude("javax.media", "jai_core")
 
 dependencies {
-    api(project(":core"))
-    implementation(project(":dataframe-jupyter"))
+    api(projects.core)
+    implementation(projects.dataframeJupyter)
 
     implementation(libs.geotools.main) { excludeJaiCore() }
     implementation(libs.geotools.shapefile) { excludeJaiCore() }
@@ -49,10 +49,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    val friendModule = project(":core")
-    val jarTask = friendModule.tasks.getByName("jar") as Jar
-    val jarPath = jarTask.archiveFile.get().asFile.absolutePath
-    (this as BaseKotlinCompile).friendPaths.from(jarPath)
+    (this as BaseKotlinCompile).friendPaths.from(projects.core.path)
 }
 
 kotlinPublications {

@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    api(project(":core"))
+    api(projects.core)
 
     // for csv reading
     api(libs.deephavenCsv)
@@ -34,7 +34,7 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
 
-    testApi(project(":core"))
+    testApi(projects.core)
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)

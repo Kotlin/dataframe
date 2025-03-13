@@ -63,7 +63,7 @@ dependencies {
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
+    kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
 
     api(libs.commonsCsv)
     implementation(libs.commonsIo)
@@ -85,7 +85,7 @@ dependencies {
     testImplementation(libs.sl4jsimple)
 
     // for samples.api
-    testImplementation(project(":dataframe-csv"))
+    testImplementation(projects.dataframeCsv)
 }
 
 val samplesImplementation by configurations.getting {

@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    api(project(":core"))
+    api(projects.core)
 }
 
 kotlinPublications {

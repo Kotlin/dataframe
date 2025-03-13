@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -17,15 +18,15 @@ repositories {
 }
 
 dependencies {
-    compileOnly(project(":core"))
+    compileOnly(projects.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.serialization.json)
-    testImplementation(project(":core"))
-    testImplementation(project(":dataframe-arrow"))
-    testImplementation(project(":dataframe-csv"))
-    testImplementation(project(":dataframe-excel"))
-    testImplementation(project(":dataframe-jdbc"))
+    testImplementation(projects.core)
+    testImplementation(projects.dataframeArrow)
+    testImplementation(projects.dataframeCsv)
+    testImplementation(projects.dataframeExcel)
+    testImplementation(projects.dataframeJdbc)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
@@ -36,11 +37,7 @@ kotlin {
 }
 
 tasks.withType<KotlinCompile> {
-    compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xfriend-paths=${project(":core").projectDir}",
-        )
-    }
+    (this as BaseKotlinCompile).friendPaths.from(projects.core.path)
 }
 
 tasks.processJupyterApiResources {
