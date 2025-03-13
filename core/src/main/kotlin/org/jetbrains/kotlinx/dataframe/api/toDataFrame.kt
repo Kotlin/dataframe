@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.impl.api.canBeUnfolded
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.hasProperties
 import org.jetbrains.kotlinx.dataframe.impl.api.isValueType
@@ -30,7 +31,7 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
     toDataFrame {
         // check if type is value: primitives, primitive arrays, datetime types etc.,
         // or has no properties
-        if (T::class.isValueType || !T::class.hasProperties) {
+        if (!T::class.canBeUnfolded) {
             // create a single `value` column
             ValueProperty<T>::value from { it }
         } else {

@@ -81,13 +81,3 @@ public fun AnyCol.valuesAreComparable(): Boolean =
                 nullable = hasNulls(),
             ),
         )
-
-@PublishedApi
-internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()
-
-internal fun KClass<*>.isPrimitive(): Boolean =
-    isSubclassOf(Number::class) ||
-        this == String::class ||
-        this == Char::class ||
-        this == Array::class ||
-        isSubclassOf(Collection::class)
