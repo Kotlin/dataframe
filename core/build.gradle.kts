@@ -13,7 +13,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(jupyter.api)
         alias(korro)
         alias(kover)
         alias(ktlint)
@@ -22,6 +21,7 @@ plugins {
         alias(buildconfig)
         alias(binary.compatibility.validator)
         alias(shadow)
+        alias(restrikt)
 
         // generates keywords using the :generator module
         alias(keywordGenerator)
@@ -37,13 +37,10 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
 repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven(jupyterApiTCRepo)
 }
 
 kotlin.sourceSets {
@@ -88,8 +85,17 @@ dependencies {
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
 
-    // for JupyterCodegenTests and samples.api
+    // for samples.api
     testImplementation(project(":dataframe-csv"))
+}
+
+restrikt2 {
+    enabled = true
+    automaticInternalHiding = false
+    toplevelPrivateConstructor = false
+    annotationProcessing = true
+    ignoreDefaultAnnotations = true
+    hideFromKotlinAnnotations = setOf("org/jetbrains/kotlinx/dataframe/annotations/FriendlyInternal")
 }
 
 val samplesImplementation by configurations.getting {
@@ -178,6 +184,9 @@ tasks.withType<KorroTask> {
 
 // region shadow
 
+// The :core:shadowJar task creates core-*-all.jar, which holds a shrunk version of :core
+// used only by the DataFrame Kotlin Compiler plugin.
+// Any dependency or package not used by the plugin should be excluded here.
 tasks.withType<ShadowJar> {
     dependencies {
         exclude(dependency("org.jetbrains.kotlin:kotlin-reflect:.*"))
@@ -423,10 +432,6 @@ tasks.test {
             }
         }
     }
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
 }
 
 kotlinPublications {

@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -31,7 +31,6 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -165,6 +164,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 dependencies("org.jetbrains.kotlinx:dataframe-geo:$version")
             }
             dependencies(
+                "org.jetbrains.kotlinx:dataframe-core:$version",
                 "org.jetbrains.kotlinx:dataframe-csv:$version",
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
                 "org.jetbrains.kotlinx:dataframe-jdbc:$version",
@@ -237,11 +237,11 @@ internal class Integration(private val notebook: Notebook, private val options: 
             )
             render<ColumnGroup<*>>(
                 {
-                    """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"""
+                    """ColumnGroup: name = "${it.name()}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}"""
                 },
             )
             render<AnyCol>(
-                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
+                { """DataColumn: name = "${it.name()}", type = ${renderType(it.type())}, size = ${it.size()}""" },
             )
             render<AnyFrame>(
                 { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },

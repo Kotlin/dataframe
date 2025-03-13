@@ -19,7 +19,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization) apply false
-        alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
         alias(ktlint)
@@ -28,6 +27,7 @@ plugins {
         alias(simpleGit) apply false
         alias(dependencyVersions)
         alias(buildconfig) apply false
+        alias(restrikt) apply false
 
         // dependence on our own plugin
         alias(dataframe) apply false
@@ -64,6 +64,7 @@ dependencies {
     kover(project(":dataframe-jdbc"))
     kover(project(":dataframe-csv"))
     kover(project(":plugins:kotlin-dataframe"))
+    kover(project(":dataframe-jupyter"))
 }
 
 enum class Version : Comparable<Version> {
