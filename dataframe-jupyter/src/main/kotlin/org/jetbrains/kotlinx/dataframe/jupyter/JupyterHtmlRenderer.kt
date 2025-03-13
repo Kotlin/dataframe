@@ -1,18 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.addAll
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.take
-import org.jetbrains.kotlinx.dataframe.impl.io.BufferedImageEncoder
-import org.jetbrains.kotlinx.dataframe.impl.io.DataframeConvertableEncoder
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
-import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
-import org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
@@ -21,8 +16,6 @@ import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
 import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.convertToDataFrame
-import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelVersion
@@ -54,9 +47,9 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     val df = convertToDataFrame(value)
 
     val limit = if (applyRowsLimit) {
-        reifiedDisplayConfiguration.rowsLimit ?: df.nrow
+        reifiedDisplayConfiguration.rowsLimit ?: df.rowsCount()
     } else {
-        df.nrow
+        df.rowsCount()
     }
 
     val html = DataFrameHtmlData
@@ -81,10 +74,10 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() -> {
                 buildJsonObject {
-                    put(NROW, df.size.nrow)
-                    put(NCOL, df.size.ncol)
-                    putJsonArray(COLUMNS) { addAll(df.columnNames()) }
-                    put(KOTLIN_DATAFRAME, encodeFrame(df.take(limit)))
+                    put(SerializationKeys.NROW, df.rowsCount())
+                    put(SerializationKeys.NCOL, df.columnsCount())
+                    putJsonArray(SerializationKeys.COLUMNS) { addAll(df.columnNames()) }
+                    put(SerializationKeys.KOTLIN_DATAFRAME, encodeFrame(df.take(limit)))
                 }.toString()
             }
 
@@ -140,3 +133,26 @@ internal fun Notebook.renderAsIFrameAsNeeded(
 }
 
 internal fun DataFrameHtmlData.toJupyterHtmlData() = HtmlData(style, body, script)
+
+// region friend module error suppression
+
+@Suppress("INVISIBLE_REFERENCE")
+internal object SerializationKeys {
+    const val NCOL = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
+    const val NROW = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
+    const val COLUMNS = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
+    const val KOTLIN_DATAFRAME = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
+}
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun encodeFrame(frame: AnyFrame): JsonArray = org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame(frame)
+
+@Suppress("INVISIBLE_REFERENCE", "ktlint:standard:function-naming")
+private fun DataframeConvertableEncoder(encoders: List<CustomEncoder>, rowLimit: Int? = null) =
+    org.jetbrains.kotlinx.dataframe.impl.io.DataframeConvertableEncoder(encoders, rowLimit)
+
+@Suppress("INVISIBLE_REFERENCE", "ktlint:standard:function-naming")
+private fun BufferedImageEncoder(options: Base64ImageEncodingOptions) =
+    org.jetbrains.kotlinx.dataframe.impl.io.BufferedImageEncoder(options)
+
+// endregion

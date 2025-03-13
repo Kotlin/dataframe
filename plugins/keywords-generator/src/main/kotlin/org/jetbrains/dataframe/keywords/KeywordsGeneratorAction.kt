@@ -18,7 +18,7 @@ abstract class KeywordsGeneratorAction : WorkAction<KeywordsGeneratorAction.Para
         var srcDir: File
     }
 
-    private val taskPackageName = "org.jetbrains.dataframe.keywords"
+    private val taskPackageName = "org.jetbrains.kotlinx.dataframe.keywords"
 
     override fun execute() {
         parameters.srcDir.deleteRecursively()

@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
-import org.jetbrains.kotlinx.jupyter.api.Code
 import java.net.URL
 
 // TODO: helper functions created to support existing hierarchy https://github.com/Kotlin/dataframe/issues/450

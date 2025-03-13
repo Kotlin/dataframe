@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.internallyRenderable
-import org.jetbrains.kotlinx.dataframe.io.renderValueForHtml
+import org.jetbrains.kotlinx.dataframe.io.RendererDecimalFormat
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.Renderable
@@ -23,3 +23,17 @@ internal class JupyterCellRenderer(private val notebook: Notebook, private val h
 
     override fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String? = null
 }
+
+internal fun internallyRenderable(value: Any?): Boolean =
+    when (value) {
+        is AnyFrame, is Double, is List<*>, null, "" -> true
+        else -> false
+    }
+
+// region friend module error suppression
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun renderValueForHtml(value: Any?, truncate: Int, format: RendererDecimalFormat) =
+    org.jetbrains.kotlinx.dataframe.io.renderValueForHtml(value, truncate, format)
+
+// endregion
