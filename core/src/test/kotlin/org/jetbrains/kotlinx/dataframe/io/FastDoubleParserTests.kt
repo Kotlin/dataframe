@@ -9,6 +9,9 @@ import org.junit.Test
 import java.text.NumberFormat
 import java.util.Locale
 
+// can be enabled for showing logs for these tests
+private const val SHOW_LOGS = false
+
 class FastDoubleParserTests {
 
     private val logLevel = "org.slf4j.simpleLogger.log.${FastDoubleParser::class.qualifiedName}"
@@ -16,12 +19,14 @@ class FastDoubleParserTests {
 
     @Before
     fun setLogger() {
+        if (!SHOW_LOGS) return
         loggerBefore = System.getProperty(logLevel)
-        System.setProperty(logLevel, "debug")
+        System.setProperty(logLevel, "trace")
     }
 
     @After
     fun restoreLogger() {
+        if (!SHOW_LOGS) return
         if (loggerBefore != null) {
             System.setProperty(logLevel, loggerBefore)
         }
