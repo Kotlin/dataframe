@@ -54,9 +54,9 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     val df = convertToDataFrame(value)
 
     val limit = if (applyRowsLimit) {
-        reifiedDisplayConfiguration.rowsLimit ?: df.nrow
+        reifiedDisplayConfiguration.rowsLimit ?: df.rowsCount()
     } else {
-        df.nrow
+        df.rowsCount()
     }
 
     val html = DataFrameHtmlData
@@ -81,8 +81,8 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         val jsonEncodedDf = when {
             !ideBuildNumber.supportsDynamicNestedTables() -> {
                 buildJsonObject {
-                    put(NROW, df.size.nrow)
-                    put(NCOL, df.size.ncol)
+                    put(NROW, df.rowsCount())
+                    put(NCOL, df.columnsCount())
                     putJsonArray(COLUMNS) { addAll(df.columnNames()) }
                     put(KOTLIN_DATAFRAME, encodeFrame(df.take(limit)))
                 }.toString()

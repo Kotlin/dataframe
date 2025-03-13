@@ -4,7 +4,10 @@ import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 
-abstract class DataFrameJupyterTest : JupyterReplTestCase(ReplProvider.forLibrariesTesting(listOf("dataframe")))
+abstract class DataFrameJupyterTest :
+    JupyterReplTestCase(
+        ReplProvider.forLibrariesTesting(listOf("dataframe-jupyter")),
+    )
 
 fun interface CodeReplacer {
     fun replace(code: String): String
