@@ -76,6 +76,15 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             },
         )
 
+    @Test
+    fun top12GermanCompanies() =
+        exampleTest(
+            dir = "top_12_german_companies",
+            replacer = CodeReplacer.byMap(
+                testFile("top_12_german_companies", "top_12_german_companies.csv"),
+            ),
+        )
+
     private fun doTest(
         notebookPath: String,
         replacer: CodeReplacer,
@@ -95,9 +104,9 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
                 val code = codeCellData.code
                 val codeToExecute = replacer.replace(code)
 
-                println("Executing code:\n$codeToExecute")
+                // println("Executing code:\n$codeToExecute")
                 val cellResult = execRendered(codeToExecute)
-                println(cellResult)
+                // println(cellResult)
             }
         } finally {
             cleanup()
@@ -118,7 +127,6 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     data class CodeCellData(val code: String, val outputs: List<Output>)
 
     companion object {
-        const val IDEA_EXAMPLES_PATH = "../examples/idea-examples"
         const val NOTEBOOK_EXAMPLES_PATH = "../examples/notebooks/dev"
 
         fun testFile(folder: String, fileName: String) = fileName to "$NOTEBOOK_EXAMPLES_PATH/$folder/$fileName"
