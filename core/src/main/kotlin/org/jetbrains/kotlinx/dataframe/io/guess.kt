@@ -9,8 +9,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException

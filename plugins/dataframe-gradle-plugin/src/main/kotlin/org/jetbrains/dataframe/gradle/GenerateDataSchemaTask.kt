@@ -7,8 +7,8 @@ import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult

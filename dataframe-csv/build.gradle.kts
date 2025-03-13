@@ -8,7 +8,6 @@ plugins {
         alias(serialization)
         alias(kover)
         alias(ktlint)
-        alias(jupyter.api)
         alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
@@ -18,12 +17,9 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
 repositories {
     mavenLocal()
     mavenCentral()
-    maven(jupyterApiTCRepo)
 }
 
 dependencies {
