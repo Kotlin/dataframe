@@ -22,7 +22,6 @@ df.convert { age }.with { it.toDouble() }
 df.convert { colsAtAnyDepth().colsOf<String>() }.with { it.toCharArray().toList() }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convert.html"/>
 <!---END-->
 
 ColumnGroup can be converted using DataFrame API, for example:
@@ -33,7 +32,6 @@ ColumnGroup can be converted using DataFrame API, for example:
 df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsFrame.html"/>
 <!---END-->
 
 `convert` supports automatic type conversions between the following types:
@@ -61,7 +59,6 @@ df.convert { name.firstName and name.lastName }.to { it.length() }
 df.convert { weight }.toFloat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertTo.html"/>
 <!---END-->
 
 Automatic conversion from `String` to [enum classes](https://kotlinlang.org/docs/enum-classes.html#enum-classes.md)
@@ -78,7 +75,6 @@ dataFrameOf("direction")("NORTH", "WEST")
     .convert("direction").to<Direction>()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToEnum.html"/>
 <!---END-->
 
 And finally, [Value classes](https://kotlinlang.org/docs/inline-classes.html) can be used with `convert` too.
@@ -96,5 +92,4 @@ dataFrameOf("value")("1", "2") // note that values are strings; conversion is do
     .convert("value").to<IntClass>()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertToValueClass.html"/>
 <!---END-->

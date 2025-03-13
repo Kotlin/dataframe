@@ -69,7 +69,6 @@ listOf(a, b).concat()
 df.groupBy { name }.concat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html"/>
 <!---END-->
 
 [`FrameColumn`](DataColumn.md#framecolumn):

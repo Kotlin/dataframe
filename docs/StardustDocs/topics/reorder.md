@@ -39,7 +39,6 @@ df.reorder { age..isHappy }.byName()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorder.html"/>
 <!---END-->
 
 When a subset of columns is selected they will be reordered among their original positions. Positions of other columns will not change. 
@@ -66,7 +65,6 @@ When exactly one [`ColumnGroup`](DataColumn.md#columngroup) is selected, reorder
 df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reorderInGroup.html"/>
 <!---END-->
 
 ## reorderColumnsBy

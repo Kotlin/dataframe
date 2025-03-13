@@ -42,7 +42,6 @@ df.insert("year of birth") { 2021 - "age"<Int>() }.after("age")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insert.html"/>
 <!---END-->
 
 Insert previously created column:
@@ -54,5 +53,4 @@ val score by columnOf(4, 5, 3, 5, 4, 5, 3)
 df.insert(score).at(2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.insertColumn.html"/>
 <!---END-->

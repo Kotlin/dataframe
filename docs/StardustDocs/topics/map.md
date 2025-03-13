@@ -122,5 +122,4 @@ df.mapToFrame {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.mapMany.html"/>
 <!---END-->

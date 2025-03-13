@@ -39,7 +39,6 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.add.html"/>
 <!---END-->
 
 See [row expressions](DataRow.md#row-expressions)
@@ -56,7 +55,6 @@ df.add("fibonacci") {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addRecurrent.html"/>
 <!---END-->
 
 ## Create and add several columns to [`DataFrame`](DataFrame.md)
@@ -132,7 +130,6 @@ df.add {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addMany.html"/>
 <!---END-->
 
 ### Create columns using intermediate result
@@ -206,7 +203,6 @@ df.add(score)
 df + score
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addExisting.html"/>
 <!---END-->
 
 ## Add all columns from another [`DataFrame`](DataFrame.md)
@@ -217,7 +213,6 @@ df + score
 df.add(df1, df2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html"/>
 <!---END-->
 
 ## addId

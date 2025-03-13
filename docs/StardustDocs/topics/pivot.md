@@ -48,7 +48,6 @@ df.pivot("city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html"/>
 <!---END-->
 
 To pivot several columns at once you can combine them using `and` or `then` infix function:
@@ -85,7 +84,6 @@ df.pivot { "city" then "name"["firstName"] }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html"/>
 <!---END-->
 
 ## pivot + groupBy
@@ -125,7 +123,6 @@ df.groupBy("name").pivot("city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html"/>
 <!---END-->
 
 To group by all columns except pivoted use `groupByOther`:
@@ -136,7 +133,6 @@ To group by all columns except pivoted use `groupByOther`:
 df.pivot { city }.groupByOther()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html"/>
 <!---END-->
 
 ## Aggregation
@@ -172,7 +168,6 @@ df.pivot("city").aggregate { minBy("age")["name"] }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate.html"/>
 <!---END-->
 
 <!---FUN pivotAggregate1-->
@@ -216,7 +211,6 @@ df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html"/>
 <!---END-->
 
 Shortcuts for common aggregation functions are also available:
@@ -252,7 +246,6 @@ df.groupBy("name").pivot("city").median("age")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html"/>
 <!---END-->
 
 By default, when aggregation function produces several values for single data group, 
@@ -337,7 +330,6 @@ df.pivot("city").groupBy("name").default(0).min()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault.html"/>
 <!---END-->
 
 <!---FUN pivotDefault1-->
@@ -377,7 +369,6 @@ df.pivot("city").groupBy("name").aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault1.html"/>
 <!---END-->
 
 ### Pivot inside aggregate
@@ -431,7 +422,6 @@ df.groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotInAggregate.html"/>
 <!---END-->
 
 ### pivotCounts
@@ -455,7 +445,6 @@ df.groupBy { name }.aggregate {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCounts.html"/>
 <!---END-->
 
 ### pivotMatches
@@ -478,5 +467,4 @@ df.groupBy { name }.aggregate {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotMatches.html"/>
 <!---END-->

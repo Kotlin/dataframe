@@ -35,7 +35,6 @@ df.rename("name").into("fullName")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.rename.html"/>
 <!---END-->
 
 
@@ -72,5 +71,4 @@ df.rename("age").into {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.renameExpression.html"/>
 <!---END-->
