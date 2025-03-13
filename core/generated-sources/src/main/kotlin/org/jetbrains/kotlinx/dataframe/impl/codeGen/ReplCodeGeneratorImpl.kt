@@ -1,20 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
-import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
