@@ -13,7 +13,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(jupyter.api)
         alias(korro)
         alias(kover)
         alias(ktlint)
@@ -37,13 +36,10 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
 repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven(jupyterApiTCRepo)
 }
 
 kotlin.sourceSets {
@@ -67,7 +63,7 @@ dependencies {
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
+    kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
 
     api(libs.commonsCsv)
     implementation(libs.commonsIo)
@@ -88,8 +84,8 @@ dependencies {
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
 
-    // for JupyterCodegenTests and samples.api
-    testImplementation(project(":dataframe-csv"))
+    // for samples.api
+    testImplementation(projects.dataframeCsv)
 }
 
 val samplesImplementation by configurations.getting {
@@ -423,10 +419,6 @@ tasks.test {
             }
         }
     }
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
 }
 
 kotlinPublications {
