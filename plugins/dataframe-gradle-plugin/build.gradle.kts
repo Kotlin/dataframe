@@ -18,12 +18,12 @@ group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     api(libs.kotlin.reflect)
-    implementation(project(":core"))
-    implementation(project(":dataframe-arrow"))
-    implementation(project(":dataframe-openapi-generator"))
-    implementation(project(":dataframe-excel"))
-    implementation(project(":dataframe-csv"))
-    implementation(project(":dataframe-jdbc"))
+    implementation(projects.core)
+    implementation(projects.dataframeArrow)
+    implementation(projects.dataframeOpenapiGenerator)
+    implementation(projects.dataframeExcel)
+    implementation(projects.dataframeCsv)
+    implementation(projects.dataframeJdbc)
 
     implementation(libs.kotlin.gradle.plugin.api)
     implementation(libs.kotlin.gradle.plugin)

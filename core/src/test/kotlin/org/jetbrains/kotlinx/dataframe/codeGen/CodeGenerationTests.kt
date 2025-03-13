@@ -1,10 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
-import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.generate
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -16,9 +12,9 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toCodeString
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
