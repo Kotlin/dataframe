@@ -3,7 +3,6 @@ plugins {
         alias(kotlin.jvm)
         alias(ktlint)
         alias(publisher)
-        alias(jupyter.api)
         alias(binary.compatibility.validator)
     }
 }

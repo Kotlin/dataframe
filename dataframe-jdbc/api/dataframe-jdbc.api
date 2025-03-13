@@ -28,7 +28,7 @@ public final class org/jetbrains/kotlinx/dataframe/io/Jdbc : org/jetbrains/kotli
 
 public final class org/jetbrains/kotlinx/dataframe/io/JdbcSchemaKt {
 	public static final fun buildCodeForDB (Ljava/net/URL;Ljava/lang/String;)Ljava/lang/String;
-	public static final fun getDatabaseCodeGenReader (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function2;
+	public static final fun getDatabaseCodeGenReader (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function2;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/io/ReadJdbcKt {

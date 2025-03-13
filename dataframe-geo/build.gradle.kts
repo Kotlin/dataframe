@@ -27,6 +27,7 @@ fun ExternalModuleDependency.excludeJaiCore() = exclude("javax.media", "jai_core
 
 dependencies {
     api(project(":core"))
+    implementation(project(":dataframe-jupyter"))
 
     implementation(libs.geotools.main) { excludeJaiCore() }
     implementation(libs.geotools.shapefile) { excludeJaiCore() }
