@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -31,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -38,11 +37,9 @@ import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
-import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
+import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
-import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.FieldHandler
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
@@ -56,6 +53,7 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 
 /** Users will get an error if their Kotlin Jupyter kernel is older than this version. */
@@ -196,7 +194,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         resources {
             if (!config.display.isolatedOutputs) {
                 js("DataFrame") {
-                    if (config.display.localTesting) {
+                    if (config.display.localTesting()) {
                         classPath("init.js")
                     } else {
                         // Update this commit when new version of init.js is pushed
@@ -247,7 +245,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
             )
             render<FormattedFrame<*>>(
-                { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
+                { "DataFrame: rowsCount = ${it.df().rowsCount()}, columnsCount = ${it.df().columnsCount()}" },
                 modifyConfig = { getDisplayConfiguration(it) },
             )
             render<GroupBy<*, *>>({ "GroupBy" })
@@ -344,3 +342,36 @@ public fun KotlinKernelHost.useSchemas(schemaClasses: Iterable<KClass<*>>) {
 public fun KotlinKernelHost.useSchemas(vararg schemaClasses: KClass<*>): Unit = useSchemas(schemaClasses.asIterable())
 
 public inline fun <reified T> KotlinKernelHost.useSchema(): Unit = useSchemas(T::class)
+
+// region friend module error suppression
+
+@Suppress("INVISIBLE_REFERENCE")
+private interface ReplCodeGenerator : org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator {
+
+    companion object {
+        fun create(): ReplCodeGenerator =
+            object :
+                ReplCodeGenerator,
+                org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator by
+                org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl() {}
+    }
+}
+
+@Suppress("INVISIBLE_REFERENCE")
+private val supportedFormats
+    get() = org.jetbrains.kotlinx.dataframe.io.supportedFormats
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun KClass<*>.createStarProjectedType(nullable: Boolean) =
+    org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType(this, nullable)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun renderType(type: KType?) = org.jetbrains.kotlinx.dataframe.impl.renderType(type)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun <T> FormattedFrame<T>.df() = df
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun DisplayConfiguration.localTesting() = localTesting
+
+// endregion
