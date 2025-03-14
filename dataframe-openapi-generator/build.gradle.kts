@@ -21,8 +21,8 @@ repositories {
 }
 
 dependencies {
-    api(project(":core"))
-    api(project(":dataframe-openapi"))
+    api(projects.core)
+    api(projects.dataframeOpenapi)
 
     implementation(libs.sl4j)
     implementation(libs.kotlinLogging)
@@ -33,7 +33,8 @@ dependencies {
         exclude("jakarta.validation")
     }
 
-    testApi(project(":core"))
+    testApi(projects.core)
+    testApi(projects.dataframeJupyter)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
