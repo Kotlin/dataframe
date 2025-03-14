@@ -37,7 +37,7 @@ kotlin {
 }
 
 tasks.withType<KotlinCompile> {
-    (this as BaseKotlinCompile).friendPaths.from(projects.core.path)
+    (this as BaseKotlinCompile).friendPaths.from(project(projects.core.path).projectDir)
 }
 
 tasks.processJupyterApiResources {

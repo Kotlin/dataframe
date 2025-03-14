@@ -3,11 +3,25 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import org.jetbrains.jupyter.parser.JupyterParser
 import org.jetbrains.jupyter.parser.notebook.CodeCell
 import org.jetbrains.jupyter.parser.notebook.Output
+import org.jetbrains.kotlinx.dataframe.BuildConfig
+import org.junit.Assume
+import org.junit.Before
 import org.junit.Test
 import java.io.File
 import java.util.Locale
 
+/**
+ * Runs the example notebooks in the dev folder (`/examples/notebooks/dev`), only when
+ * debug mode is on:
+ * `kotlin.dataframe.debug=true`
+ */
 class SampleNotebooksTests : DataFrameJupyterTest() {
+
+    /**
+     * Skips the test if debug mode is off.
+     */
+    @Before
+    fun checkDebugMode() = Assume.assumeTrue(BuildConfig.DEBUG)
 
     @Test
     fun puzzles() = exampleTest("puzzles", "40 puzzles")
