@@ -270,12 +270,15 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
     return maxIndex
 }
 
-internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
-    if (this == Nothing::class) {
+internal fun createStarProjectedType(klass: KClass<*>, nullable: Boolean): KType =
+    if (klass == Nothing::class) {
         nothingType(nullable) // would be Void otherwise
     } else {
-        this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+        klass.starProjectedType.let { if (nullable) it.withNullability(true) else it }
     }
+
+@JvmName("createStarProjectedTypeExt")
+internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType = createStarProjectedType(this, nullable)
 
 internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
