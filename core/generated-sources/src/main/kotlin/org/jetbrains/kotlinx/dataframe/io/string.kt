@@ -198,12 +198,6 @@ internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalForm
                 ?: value.toString()
     }
 
-internal fun internallyRenderable(value: Any?): Boolean =
-    when (value) {
-        is AnyFrame, is Double, is List<*>, null, "" -> true
-        else -> false
-    }
-
 internal fun Double.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
 
 internal fun Float.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
