@@ -1,0 +1,5 @@
+public final class org/jetbrains/kotlinx/dataframe/jupyter/IntegrationKt {
+	public static final fun useSchemas (Lorg/jetbrains/kotlinx/jupyter/api/KotlinKernelHost;Ljava/lang/Iterable;)V
+	public static final fun useSchemas (Lorg/jetbrains/kotlinx/jupyter/api/KotlinKernelHost;[Lkotlin/reflect/KClass;)V
+}
+

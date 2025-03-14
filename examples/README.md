@@ -45,7 +45,11 @@ ___
 * imdb sql database ([notebook](https://github.com/zaleslaw/KotlinDataFrame-SQL-Examples/blob/master/notebooks/imdb.ipynb)) &ndash; In this notebook, we use Kotlin DataFrame and Kandy library to analyze data from [IMDB](https://datasets.imdbws.com/) (SQL dump for the MariaDB database with the name "imdb" could be downloaded by this [link](https://drive.google.com/file/d/10HnOu0Yem2Tkz_34SfvDoHTVqF_8b4N7/view?usp=sharing)).
 
 ---
-* 0.14 Feature Overview [notebook](notebooks/feature_overviews/0.14/new_features.ipynb)
-  Overview of new features available in 0.14
+* Feature Overviews [notebook folder](notebooks/feature_overviews)
+  Overview of new features available a given version
 
-These example notebooks are tested by the [:core module](../core/src/test/kotlin/org/jetbrains/kotlinx/dataframe/jupyter).
+The example notebooks always target the latest stable version of the library.
+Notebooks compatible with the latest dev/master version are located in the [dev](notebooks/dev) folder.
+
+These [dev versions](notebooks/dev) are tested by the 
+[:dataframe-jupyter module](../dataframe-jupyter/src/test/kotlin/org/jetbrains/kotlinx/dataframe/jupyter).
