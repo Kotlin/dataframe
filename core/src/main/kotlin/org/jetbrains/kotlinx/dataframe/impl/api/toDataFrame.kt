@@ -56,6 +56,8 @@ private val valueTypes = setOf(
     kotlinx.datetime.TimeZone::class,
     kotlinx.datetime.DateTimePeriod::class,
     kotlinx.datetime.DateTimeUnit::class,
+    Map::class,
+    MutableMap::class,
 )
 
 /**
@@ -76,7 +78,6 @@ internal val KClass<*>.isValueType: Boolean
         this in valueTypes ||
             this.isSubclassOf(Number::class) ||
             this.isSubclassOf(Enum::class) ||
-            this.isSubclassOf(Map::class) ||
             // all java datetime types
             this.isSubclassOf(TemporalAccessor::class) ||
             this.isSubclassOf(TemporalAmount::class) ||
