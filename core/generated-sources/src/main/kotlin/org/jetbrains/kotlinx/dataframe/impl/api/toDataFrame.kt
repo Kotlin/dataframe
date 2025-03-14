@@ -59,6 +59,13 @@ private val valueTypes = setOf(
 )
 
 /**
+ * Check
+ */
+@PublishedApi
+internal val KClass<*>.canBeUnfolded: Boolean
+    get() = (!this.isValueType) && this.hasProperties
+
+/**
  * Checks if `KClass` is a value type (number, datetime, string, etc.)
  * Should be aligned with `ConeKotlinType.isValueType()` in
  * plugins/kotlin-dataframe/src/org/jetbrains/kotlinx/dataframe/plugin/impl/api/toDataFrame.kt
@@ -69,6 +76,7 @@ internal val KClass<*>.isValueType: Boolean
         this in valueTypes ||
             this.isSubclassOf(Number::class) ||
             this.isSubclassOf(Enum::class) ||
+            this.isSubclassOf(Map::class) ||
             // all java datetime types
             this.isSubclassOf(TemporalAccessor::class) ||
             this.isSubclassOf(TemporalAmount::class) ||
