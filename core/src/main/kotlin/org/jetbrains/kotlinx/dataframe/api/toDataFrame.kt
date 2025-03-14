@@ -13,8 +13,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.canBeUnfolded
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.hasProperties
-import org.jetbrains.kotlinx.dataframe.impl.api.isValueType
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
