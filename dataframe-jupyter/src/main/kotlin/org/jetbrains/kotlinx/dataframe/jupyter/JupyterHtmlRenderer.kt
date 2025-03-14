@@ -1,13 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.addAll
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
-import kotlinx.serialization.json.putJsonArray
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
@@ -72,14 +66,8 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
 
         // TODO Do we need to handle the improved meta data here as well?
         val jsonEncodedDf = when {
-            !ideBuildNumber.supportsDynamicNestedTables() -> {
-                buildJsonObject {
-                    put(SerializationKeys.NROW, df.rowsCount())
-                    put(SerializationKeys.NCOL, df.columnsCount())
-                    putJsonArray(SerializationKeys.COLUMNS) { addAll(df.columnNames()) }
-                    put(SerializationKeys.KOTLIN_DATAFRAME, encodeFrame(df.take(limit)))
-                }.toString()
-            }
+            !ideBuildNumber.supportsDynamicNestedTables() ->
+                encodeFrameNoDynamicNestedTables(df, limit).toString()
 
             else -> {
                 val encoders = buildList<CustomEncoder> {
@@ -137,17 +125,8 @@ internal fun DataFrameHtmlData.toJupyterHtmlData() = HtmlData(style, body, scrip
 // region friend module error suppression
 
 @Suppress("INVISIBLE_REFERENCE")
-internal object SerializationKeys {
-    const val NCOL = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
-    const val NROW = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
-    const val COLUMNS = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.COLUMNS
-    const val KOTLIN_DATAFRAME = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
-    const val DATA = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
-    const val METADATA = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
-}
-
-@Suppress("INVISIBLE_REFERENCE")
-private fun encodeFrame(frame: AnyFrame): JsonArray = org.jetbrains.kotlinx.dataframe.impl.io.encodeFrame(frame)
+private fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int) =
+    org.jetbrains.kotlinx.dataframe.impl.io.encodeFrameNoDynamicNestedTables(df, limit)
 
 @Suppress("INVISIBLE_REFERENCE", "ktlint:standard:function-naming")
 private fun DataframeConvertableEncoder(encoders: List<CustomEncoder>, rowLimit: Int? = null) =

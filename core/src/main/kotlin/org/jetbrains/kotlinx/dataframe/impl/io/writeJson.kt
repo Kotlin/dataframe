@@ -8,9 +8,11 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.addAll
 import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
+import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import kotlinx.serialization.json.putJsonObject
 import org.jetbrains.kotlinx.dataframe.AnyCol
@@ -399,5 +401,17 @@ internal fun encodeDataFrameWithMetadata(
                 rowLimit = nestedRowLimit,
                 customEncoders = customEncoders,
             ),
+        )
+    }
+
+@OptIn(ExperimentalSerializationApi::class)
+internal fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int): JsonObject =
+    buildJsonObject {
+        put(NROW, df.rowsCount())
+        put(NCOL, df.columnsCount())
+        putJsonArray(COLUMNS) { addAll(df.columnNames()) }
+        put(
+            KOTLIN_DATAFRAME,
+            encodeFrame(df.take(limit)),
         )
     }

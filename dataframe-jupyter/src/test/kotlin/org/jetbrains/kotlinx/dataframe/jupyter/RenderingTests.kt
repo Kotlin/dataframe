@@ -617,3 +617,14 @@ class RenderingTests : JupyterReplTestCase() {
         }
     }
 }
+
+// region friend module error suppression
+
+@Suppress("INVISIBLE_REFERENCE")
+internal object SerializationKeys {
+    const val DATA = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.DATA
+    const val METADATA = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.METADATA
+    const val KOTLIN_DATAFRAME = org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.KOTLIN_DATAFRAME
+}
+
+// endregion
