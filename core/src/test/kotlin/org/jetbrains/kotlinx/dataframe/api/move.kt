@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.junit.Test
@@ -90,5 +91,65 @@ class MoveTests {
         shouldNotThrowAny {
             df.move("1").after("2") shouldBe dataFrameOf("2", "1")(2, 1)
         }
+    }
+
+    @Test
+    fun `move after in nested structure`() {
+        val df = grouped.move { "a"["b"] }
+            .after { "a"["c"]["d"] }
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
+        df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "b")
+    }
+
+    @Test
+    fun `move after multiple columns`() {
+        val df = grouped.move { "a"["b"] and "b"["c"] }
+            .after { "a"["c"]["d"] }
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
+        df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "b", "c")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("d")
+    }
+
+    @Test
+    fun `move after with column selector`() {
+        val df = grouped.move { colsAtAnyDepth { it.name == "r" || it.name == "w" } }
+            .after { "a"["c"]["d"] }
+        df.columnNames() shouldBe listOf("q", "a", "b", "e")
+        df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "w", "r")
+    }
+
+    @Test
+    fun `move after between groups`() {
+        val df = grouped.move { "a"["b"] }.after { "b"["c"] }
+        df.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
+        df["a"].asColumnGroup().columnNames() shouldBe listOf("c")
+        df["b"].asColumnGroup().columnNames() shouldBe listOf("c", "b", "d")
+    }
+
+    @Test
+    fun `should throw when moving parent after child`() {
+        // Simple case: direct parent-child relationship
+        shouldThrow<IllegalArgumentException> {
+            grouped.move("a").after { "a"["b"] }
+        }.message shouldBe "Cannot move column 'a' after its child column 'a/b'"
+
+        // Nested case: deeper parent-child relationship
+        shouldThrow<IllegalArgumentException> {
+            grouped.move("a").after { "a"["c"]["d"] }
+        }.message shouldBe "Cannot move column 'a' after its child column 'a/c/d'"
+
+        // Group case: moving group after its nested column
+        shouldThrow<IllegalArgumentException> {
+            grouped.move { "a"["c"] }.after { "a"["c"]["d"] }
+        }.message shouldBe "Cannot move column 'a/c' after its child column 'a/c/d'"
+    }
+
+    @Test
+    fun `should throw when moving column after itself`() {
+        shouldThrow<IllegalArgumentException> {
+            grouped.move { "a"["b"] }.after { "a"["b"] }
+        }.message shouldBe "Cannot move column 'a/b' after its child column 'a/b'"
     }
 }

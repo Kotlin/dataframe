@@ -79,6 +79,8 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathO
 
 // region after
 
+@Refine
+@Interpretable("InsertAfter0")
 public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = after(df.getColumnPath(column))
 
 public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this.column).move(this.column).after(column)

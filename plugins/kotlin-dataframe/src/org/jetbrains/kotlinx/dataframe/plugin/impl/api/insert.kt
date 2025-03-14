@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.plugin.impl.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -119,6 +120,17 @@ internal class Under4 : AbstractInterpreter<PluginDataFrameSchema>() {
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return receiver.df.asDataFrame()
             .insert(receiver.column.asDataColumn()).under(pathOf(column))
+            .toPluginDataFrameSchema()
+    }
+}
+
+internal class InsertAfter0 : AbstractInterpreter<PluginDataFrameSchema>() {
+    val Arguments.column: SingleColumnApproximation by arg()
+    val Arguments.receiver: InsertClauseApproximation by arg()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        return receiver.df.asDataFrame()
+            .insert(receiver.column.asDataColumn()).after(column.col.path)
             .toPluginDataFrameSchema()
     }
 }
