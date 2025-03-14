@@ -50,9 +50,9 @@ tasks.test {
 
 kotlinPublications {
     publication {
-        publicationName.set("dataframe-jupyter")
-        artifactId.set("dataframe-jupyter")
-        description.set("Kotlin DataFrame integration with Kotlin Jupyter")
-        packageName.set("dataframe-jupyter")
+        publicationName = "dataframeJupyter"
+        artifactId = project.name
+        description = "Kotlin DataFrame integration with Kotlin Jupyter"
+        packageName = artifactId
     }
 }
