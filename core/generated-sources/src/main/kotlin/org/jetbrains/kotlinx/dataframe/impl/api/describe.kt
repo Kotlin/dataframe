@@ -29,7 +29,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.isBigNumber
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.kind
@@ -111,17 +111,20 @@ private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
     }
 
 /** Converts a column to a comparable column if it is not already comparable. */
-private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<Any?>>? =
-    when {
+@Suppress("UNCHECKED_CAST")
+private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<Any>?>? {
+    return when {
         valuesAreComparable() -> asComparable()
 
-        // Found incomparable number types, convert all to Double or BigDecimal first
-        isNumber() ->
-            if (any { it?.isBigNumber() == true }) {
-                map { (it as Number?)?.toBigDecimal() }
-            } else {
-                map { (it as Number?)?.toDouble() }
-            }.cast()
+        // Found incomparable number types, convert all to Double first
+        isNumber() -> cast<Number?>().map {
+            if (it?.isPrimitiveNumber() == false) {
+                // Cannot calculate statistics of a non-primitive number type
+                return@convertToComparableOrNull null
+            }
+            it?.toDouble() as Comparable<Any>?
+        }
 
         else -> null
     }
+}

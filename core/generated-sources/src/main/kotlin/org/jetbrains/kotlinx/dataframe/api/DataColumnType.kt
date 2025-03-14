@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
@@ -51,6 +52,8 @@ public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 
 public fun AnyCol.isBigNumber(): Boolean = isSubtypeOf<BigInteger?>() || isSubtypeOf<BigDecimal?>()
+
+public fun AnyCol.isPrimitiveNumber(): Boolean = type().withNullability(false) in primitiveNumberTypes
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 

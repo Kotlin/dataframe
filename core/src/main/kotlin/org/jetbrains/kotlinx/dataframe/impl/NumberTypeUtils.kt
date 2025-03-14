@@ -173,36 +173,62 @@ internal fun Iterable<KClass<*>>.unifiedNumberClass(
  * or calculated with [Iterable.unifiedNumberType] from the iterable's elements if not explicitly specified.
  *
  * @param commonNumberType The desired common numeric type to convert the elements to.
- *   This is determined by default using the types of the elements in the iterable.
+ *   By default, (or if `null`), this is determined using the types of the elements in the iterable.
  * @return A new iterable of numbers where each element is converted to the specified or inferred common number type.
  * @throws IllegalStateException if an element cannot be converted to the common number type.
  * @see UnifyingNumbers
  */
 @Suppress("UNCHECKED_CAST")
-internal fun Iterable<Number>.convertToUnifiedNumberType(
+@JvmName("convertNullableIterableToUnifiedNumberType")
+internal fun Iterable<Number?>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
-    commonNumberType: KType = this.types().unifiedNumberType(options),
-): Iterable<Number> {
+    commonNumberType: KType? = null,
+): Iterable<Number?> {
+    val commonNumberType = commonNumberType ?: this.filterNotNull().types().unifiedNumberType(options)
     val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
     return map {
+        if (it == null) return@map null
         converter(it) ?: error("Can not convert $it to $commonNumberType")
     }
 }
 
 /** @include [Iterable.convertToUnifiedNumberType] */
-@JvmName("convertToUnifiedNumberTypeSequence")
 @Suppress("UNCHECKED_CAST")
-internal fun Sequence<Number>.convertToUnifiedNumberType(
+@JvmName("convertIterableToUnifiedNumberType")
+internal fun Iterable<Number>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
-    commonNumberType: KType = asIterable().types().unifiedNumberType(options),
-): Sequence<Number> {
+    commonNumberType: KType? = null,
+): Iterable<Number> =
+    (this as Iterable<Number?>)
+        .convertToUnifiedNumberType(options, commonNumberType) as Iterable<Number>
+
+/** @include [Iterable.convertToUnifiedNumberType] */
+@Suppress("UNCHECKED_CAST")
+@JvmName("convertNullableSequenceToUnifiedNumberType")
+internal fun Sequence<Number?>.convertToUnifiedNumberType(
+    options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
+    commonNumberType: KType? = null,
+): Sequence<Number?> {
+    val commonNumberType = commonNumberType ?: this.filterNotNull().asIterable().types().unifiedNumberType(options)
     val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
     return map {
+        if (it == null) return@map null
         converter(it) ?: error("Can not convert $it to $commonNumberType")
     }
 }
 
-internal val primitiveNumberTypes =
+/** @include [Iterable.convertToUnifiedNumberType] */
+@Suppress("UNCHECKED_CAST")
+@JvmName("convert=SequenceToUnifiedNumberType")
+internal fun Sequence<Number>.convertToUnifiedNumberType(
+    options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
+    commonNumberType: KType? = null,
+): Sequence<Number> =
+    (this as Sequence<Number?>)
+        .convertToUnifiedNumberType(options, commonNumberType) as Sequence<Number>
+
+@PublishedApi
+internal val primitiveNumberTypes: Set<KType> =
     setOf(
         typeOf<Byte>(),
         typeOf<Short>(),
@@ -211,3 +237,11 @@ internal val primitiveNumberTypes =
         typeOf<Float>(),
         typeOf<Double>(),
     )
+
+internal fun Any.isPrimitiveNumber(): Boolean =
+    this is Byte ||
+        this is Short ||
+        this is Int ||
+        this is Long ||
+        this is Float ||
+        this is Double

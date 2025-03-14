@@ -31,10 +31,7 @@ public inline fun <C, reified R> ColumnReference<C>.map(
 
 // region DataColumn
 
-public inline fun <T, reified R> DataColumn<T>.map(
-    infer: Infer = Infer.Nulls,
-    crossinline transform: (T) -> R,
-): DataColumn<R> {
+public inline fun <T, reified R> DataColumn<T>.map(infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }

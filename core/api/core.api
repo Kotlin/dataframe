@@ -1975,6 +1975,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
 	public static final fun isList (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isPrimitive (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
+	public static final fun isPrimitiveNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isSubtypeOf (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/reflect/KType;)Z
 	public static final fun isValueColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun valuesAreComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
@@ -4159,6 +4160,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/TypeConversionsKt {
 	public static final fun asComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun asComparable (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static final fun asComparable (Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/SingleColumn;
+	public static final fun asComparableNullable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun asDataColumn (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnGroup;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun asDataColumn (Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public static final fun asDataFrame (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
@@ -5254,6 +5256,10 @@ public final class org/jetbrains/kotlinx/dataframe/impl/ExceptionUtilsKt {
 	public static final fun suggestIfNull (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/NumberTypeUtilsKt {
+	public static final fun getPrimitiveNumberTypes ()Ljava/util/Set;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/TypeUtilsKt {
 	public static final fun getValuesType (Ljava/util/List;Lkotlin/reflect/KType;Lorg/jetbrains/kotlinx/dataframe/api/Infer;)Lkotlin/reflect/KType;
 	public static final synthetic fun guessValueType (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
@@ -5359,6 +5365,10 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoAggr
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/OfRowExpressionKt {
 	public static final fun aggregateOfDelegated (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/RowKt {
+	public static final fun aggregateOfRow (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/jvm/functions/Function2;)Ljava/lang/Object;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/WithinAllColumnsKt {
