@@ -49,7 +49,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    (this as BaseKotlinCompile).friendPaths.from(projects.core.path)
+    (this as BaseKotlinCompile).friendPaths.from(project(projects.core.path).projectDir)
 }
 
 kotlinPublications {

@@ -6,7 +6,9 @@ import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
 
 abstract class DataFrameJupyterTest :
     JupyterReplTestCase(
-        ReplProvider.forLibrariesTesting(listOf("dataframe-jupyter")),
+        ReplProvider.forLibrariesTesting(
+            setOf("dataframe", "dataframe-jupyter"),
+        ),
     )
 
 fun interface CodeReplacer {

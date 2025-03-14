@@ -37,11 +37,15 @@ kotlin {
 }
 
 tasks.withType<KotlinCompile> {
-    (this as BaseKotlinCompile).friendPaths.from(projects.core.path)
+    (this as BaseKotlinCompile).friendPaths.from(project(projects.core.path).projectDir)
 }
 
 tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
+}
+
+tasks.test {
+    maxHeapSize = "2048m"
 }
 
 kotlinPublications {
