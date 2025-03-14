@@ -398,6 +398,14 @@ class CreateDataFrameTests {
         enums.toDataFrame() shouldBe dataFrameOf("value")(*enums.toTypedArray())
     }
 
+    @Test
+    fun `should convert iterables of non-JSON Map to DataFrame with value column`() {
+        val maps: List<Map<*, *>?> = listOf(mapOf(1 to null, 2 to "val"), mapOf(3 to 1, 4 to true), null)
+        val df = maps.toDataFrame()
+        df.columnNames() shouldBe listOf("value")
+        df["value"].toList() shouldBe maps
+    }
+
     class NoPublicPropsClass(private val a: Int, private val b: String)
 
     @Test
