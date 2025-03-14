@@ -8,7 +8,6 @@ plugins {
         alias(serialization)
         alias(kover)
         alias(ktlint)
-        alias(jupyter.api)
         alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
@@ -18,16 +17,13 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
 repositories {
     mavenLocal()
     mavenCentral()
-    maven(jupyterApiTCRepo)
 }
 
 dependencies {
-    api(project(":core"))
+    api(projects.core)
 
     // for csv reading
     api(libs.deephavenCsv)
@@ -38,7 +34,7 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
 
-    testApi(project(":core"))
+    testApi(projects.core)
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)

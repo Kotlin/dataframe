@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 
 plugins {
     id("java")
@@ -39,9 +40,9 @@ dependencies {
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-annotations-jvm:$kotlinVersion")
 
-    implementation(project(":dataframe-compiler-plugin-core", "shadow"))
-    testRuntimeOnly(project(":core"))
-    testRuntimeOnly(project(":dataframe-csv"))
+    implementation(project(projects.dataframeCompilerPluginCore.path, "shadow"))
+    testRuntimeOnly(projects.core)
+    testRuntimeOnly(projects.dataframeCsv)
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-compiler-internal-test-framework:$kotlinVersion")
 
@@ -73,9 +74,9 @@ tasks.test {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    (this as BaseKotlinCompile).friendPaths.from(project(projects.core.path).projectDir)
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xfriend-paths=${project(":core").projectDir}",
             "-Xcontext-receivers",
         )
         optIn.addAll(
