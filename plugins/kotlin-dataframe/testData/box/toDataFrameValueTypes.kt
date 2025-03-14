@@ -197,6 +197,12 @@ fun box(): String {
     val enumColNullable: DataColumn<EnumExample?> = enumDfNullable.value
     enumColNullable.print()
 
+    // Non-JSON Map
+
+    val mapsDfNullable = listOf(mapOf(1 to null, 2 to "val"), mapOf(3 to 1, 4 to true), null).toDataFrame()
+    val mapsColNullable: DataColumn<Map<*, *>?> = mapsDfNullable.value
+    mapsColNullable.print()
+
     return "OK"
 }
 

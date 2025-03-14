@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.api.canBeUnfolded
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.typeClass
 import kotlin.reflect.KProperty
@@ -17,7 +18,7 @@ public inline fun <reified T> DataColumn<T>.unfold(): AnyCol =
         ColumnKind.Group, ColumnKind.Frame -> this
 
         else -> when {
-            isPrimitive() -> this
+            !typeClass.canBeUnfolded -> this
 
             else -> values()
                 .createDataFrameImpl(typeClass) { (this as CreateDataFrameDsl<T>).properties() }

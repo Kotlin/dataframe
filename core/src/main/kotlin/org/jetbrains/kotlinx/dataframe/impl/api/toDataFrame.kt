@@ -56,7 +56,16 @@ private val valueTypes = setOf(
     kotlinx.datetime.TimeZone::class,
     kotlinx.datetime.DateTimePeriod::class,
     kotlinx.datetime.DateTimeUnit::class,
+    Map::class,
+    MutableMap::class,
 )
+
+/**
+ * Check
+ */
+@PublishedApi
+internal val KClass<*>.canBeUnfolded: Boolean
+    get() = (!this.isValueType) && this.hasProperties
 
 /**
  * Checks if `KClass` is a value type (number, datetime, string, etc.)
