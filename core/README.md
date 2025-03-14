@@ -9,10 +9,9 @@ or [:dataframe-jdbc](../dataframe-jdbc), however, this is has not happened yet f
 
 At the moment, these integrations are still part of the `:core` module:
 
-- csv/tsv
+- (deprecated) csv/tsv
 - html
 - json
-- jupyter
 
 ### Korro code samples
 
@@ -36,10 +35,10 @@ We can also generate "normal" DataFrame samples for the website. This can be don
 [OtherSamples class](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/OtherSamples.kt). Generated
 HTML files will be stored in [docs/StardustDocs/snippets/manual](../docs/StardustDocs/snippets/manual).
 
-### KDoc Preprocesor
+### KoDEx
 
-The code you're working on needs to be edited in [src](src), but the KDocs are processed by the
-[KDoc Preprocessor](https://github.com/Jolanrensen/docProcessorGradlePlugin) when the project is published (or the task
+The code you're working on needs to be edited in [src](src), but the KDocs are processed by
+[KoDEx](https://github.com/Jolanrensen/kodex) when the project is published (or the task
 is run manually). The generated sources with adjusted KDocs will be overwritten
 in [generated-sources](generated-sources).
 See the [KDoc Preprocessing Guide](../KDOC_PREPROCESSING.md) for more information.
