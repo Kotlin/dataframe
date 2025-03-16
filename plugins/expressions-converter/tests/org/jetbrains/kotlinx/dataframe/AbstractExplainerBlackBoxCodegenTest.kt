@@ -35,13 +35,13 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
     override fun TestConfigurationBuilder.configuration() {
         globalDefaults {
             frontend = FrontendKinds.ClassicAndFIR
-            targetPlatform = JvmPlatforms.jvm11
+            targetPlatform = JvmPlatforms.jvm8
             dependencyKind = DependencyKind.Binary
             targetBackend = TargetBackend.JVM_IR
         }
         defaultDirectives {
-            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK_11
-            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_11
+            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
+            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_1_8
             +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
         }
         facadeStep(::ClassicFrontendFacade)

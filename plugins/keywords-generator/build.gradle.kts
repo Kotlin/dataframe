@@ -28,15 +28,15 @@ dependencies {
 kotlin {
     jvmToolchain(21)
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
-        freeCompilerArgs.add("-Xjdk-release=11")
+        jvmTarget = JvmTarget.JVM_1_8
+        freeCompilerArgs.add("-Xjdk-release=8")
     }
 }
 
 tasks.withType<JavaCompile> {
-    sourceCompatibility = JavaVersion.VERSION_11.toString()
-    targetCompatibility = JavaVersion.VERSION_11.toString()
-    options.release.set(11)
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    options.release.set(8)
 }
 
 gradlePlugin {
