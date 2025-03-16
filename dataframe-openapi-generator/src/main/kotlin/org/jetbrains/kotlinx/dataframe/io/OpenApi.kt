@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
 import java.io.InputStream
 

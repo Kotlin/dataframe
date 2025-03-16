@@ -136,22 +136,46 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
 kotlin {
     jvmToolchain(21)
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
+        jvmTarget = JvmTarget.JVM_1_8
     }
 }
 
-allprojects {
-    tasks.withType<KotlinCompile> {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
-            freeCompilerArgs.add("-Xjdk-release=11")
-        }
-    }
+// DataFrame targets Java 8 for maximum compatibility.
+// This is, however, not always possible thanks to external dependencies.
+// In those cases, we default to Java 11.
+val modulesUsingJava11 = with(projects) {
+    setOf(
+        dataframeJupyter,
+        dataframeGeo,
+        examples.ideaExamples.titanic,
+    )
+}.map { it.path }
 
-    tasks.withType<JavaCompile> {
-        sourceCompatibility = JavaVersion.VERSION_11.toString()
-        targetCompatibility = JavaVersion.VERSION_11.toString()
-        options.release.set(11)
+allprojects {
+    if (path in modulesUsingJava11) {
+        tasks.withType<KotlinCompile> {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_11
+                freeCompilerArgs.add("-Xjdk-release=11")
+            }
+        }
+        tasks.withType<JavaCompile> {
+            sourceCompatibility = JavaVersion.VERSION_11.toString()
+            targetCompatibility = JavaVersion.VERSION_11.toString()
+            options.release.set(11)
+        }
+    } else {
+        tasks.withType<KotlinCompile> {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_1_8
+                freeCompilerArgs.add("-Xjdk-release=8")
+            }
+        }
+        tasks.withType<JavaCompile> {
+            sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+            targetCompatibility = JavaVersion.VERSION_1_8.toString()
+            options.release.set(8)
+        }
     }
 
     // Attempts to configure ktlint for each sub-project that uses the plugin

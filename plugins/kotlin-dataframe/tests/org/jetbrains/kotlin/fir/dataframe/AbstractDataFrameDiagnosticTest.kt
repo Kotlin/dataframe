@@ -53,8 +53,8 @@ abstract class AbstractDataFrameDiagnosticTest : AbstractKotlinCompilerTest() {
             +FirDiagnosticsDirectives.ENABLE_PLUGIN_PHASES
             +FirDiagnosticsDirectives.FIR_DUMP
             FirDiagnosticsDirectives.FIR_PARSER with FirParser.LightTree
-            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK_11
-            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_11
+            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
+            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_1_8
         }
 
         useDirectives(Directives)

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
@@ -88,15 +86,6 @@ gradlePlugin {
             tags = listOf("dataframe", "kotlin")
         }
     }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    compilerOptions.jvmTarget = JvmTarget.JVM_11
-}
-
-tasks.withType<JavaCompile>().all {
-    sourceCompatibility = JavaVersion.VERSION_11.toString()
-    targetCompatibility = JavaVersion.VERSION_11.toString()
 }
 
 sourceSets {
