@@ -20,14 +20,15 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
+import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sum
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 // region DataColumn
@@ -46,13 +47,18 @@ public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expres
 // region DataRow
 
 public fun AnyRow.rowSum(): Number =
-    Aggregators.sum.aggregateCalculatingType(
-        values = values().filterIsInstance<Number>(),
-        valueTypes = columnTypes().filter { it.isSubtypeOf(typeOf<Number?>()) }.toSet(),
-    ) ?: 0
+    Aggregators.sum.aggregateOfRow(this) {
+        colsOf<Number?> { it.isPrimitiveNumber() }
+    } ?: 0.0
 
-public inline fun <reified T : Number> AnyRow.rowSumOf(): T = values().filterIsInstance<T>().sum(typeOf<T>())
-
+public inline fun <reified T : Number> AnyRow.rowSumOf(): Number /*todo*/ {
+    require(typeOf<T>() in primitiveNumberTypes) {
+        "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
+    }
+    return Aggregators.sum
+        .aggregateOfRow(this) { colsOf<T>() }
+        ?: 0.0
+}
 // endregion
 
 // region DataFrame
