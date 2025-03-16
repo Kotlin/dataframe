@@ -1,194 +1,3 @@
-public final class org/jetbrains/dataframe/impl/codeGen/CodeGenResult {
-	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/util/List;)V
-	public final fun component1 ()Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
-	public final fun component2 ()Ljava/util/List;
-	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/util/List;)Lorg/jetbrains/dataframe/impl/codeGen/CodeGenResult;
-	public static synthetic fun copy$default (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenResult;Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/dataframe/impl/codeGen/CodeGenResult;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCode ()Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
-	public final fun getNewMarkers ()Ljava/util/List;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class org/jetbrains/dataframe/impl/codeGen/CodeGenerator : org/jetbrains/kotlinx/dataframe/codeGen/ExtensionsCodeGenerator {
-	public static final field Companion Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator$Companion;
-	public abstract fun generate (Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;ZLorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
-	public abstract fun generate (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;Z)Lorg/jetbrains/dataframe/impl/codeGen/CodeGenResult;
-	public static synthetic fun generate$default (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator;Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;ZLorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
-	public static synthetic fun generate$default (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;ZILjava/lang/Object;)Lorg/jetbrains/dataframe/impl/codeGen/CodeGenResult;
-}
-
-public final class org/jetbrains/dataframe/impl/codeGen/CodeGenerator$Companion {
-	public final fun create (Z)Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator;
-	public static synthetic fun create$default (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator$Companion;ZILjava/lang/Object;)Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator;
-}
-
-public final class org/jetbrains/dataframe/impl/codeGen/CodeGeneratorKt {
-	public static final fun generate (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator;Lkotlin/reflect/KClass;Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;Z)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
-}
-
-public final class org/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode : java/lang/Enum {
-	public static final field Enum Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;
-	public static final field NoFields Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;
-	public static final field None Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;
-	public static final field TypeAlias Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;
-	public static final field WithFields Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;
-	public static fun values ()[Lorg/jetbrains/dataframe/impl/codeGen/InterfaceGenerationMode;
-}
-
-public final class org/jetbrains/dataframe/keywords/HardKeywords : java/lang/Enum {
-	public static final field AS Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field AS_SAFE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field BREAK Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field CLASS Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field CONTINUE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field Companion Lorg/jetbrains/dataframe/keywords/HardKeywords$Companion;
-	public static final field DO Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field ELSE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field FALSE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field FOR Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field FUN Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field IF Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field IN Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field INTERFACE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field IS Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field NOT_IN Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field NOT_IS Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field NULL Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field OBJECT Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field PACKAGE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field RETURN Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field SUPER Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field THIS Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field THROW Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field TRUE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field TRY Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field TYPEALIAS Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field TYPEOF Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field VAL Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field VAR Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field WHEN Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static final field WHILE Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/dataframe/keywords/HardKeywords;
-	public static fun values ()[Lorg/jetbrains/dataframe/keywords/HardKeywords;
-}
-
-public final class org/jetbrains/dataframe/keywords/HardKeywords$Companion {
-	public final fun getVALUES ()Ljava/util/List;
-}
-
-public final class org/jetbrains/dataframe/keywords/ModifierKeywords : java/lang/Enum {
-	public static final field ABSTRACT Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field ACTUAL Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field ANNOTATION Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field COMPANION Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field CONST Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field CONTRACT Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field CROSSINLINE Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field Companion Lorg/jetbrains/dataframe/keywords/ModifierKeywords$Companion;
-	public static final field DATA Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field ENUM Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field EXPECT Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field EXTERNAL Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field FINAL Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field FUN Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field HEADER Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field IMPL Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field IN Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field INFIX Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field INLINE Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field INNER Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field INTERNAL Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field LATEINIT Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field NOINLINE Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field OPEN Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field OPERATOR Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field OUT Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field OVERRIDE Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field PRIVATE Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field PROTECTED Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field PUBLIC Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field REIFIED Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field SEALED Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field SUSPEND Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field TAILREC Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field VALUE Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static final field VARARG Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-	public static fun values ()[Lorg/jetbrains/dataframe/keywords/ModifierKeywords;
-}
-
-public final class org/jetbrains/dataframe/keywords/ModifierKeywords$Companion {
-	public final fun getVALUES ()Ljava/util/List;
-}
-
-public final class org/jetbrains/dataframe/keywords/SoftKeywords : java/lang/Enum {
-	public static final field ABSTRACT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field ACTUAL Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field ANNOTATION Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field BY Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field CATCH Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field COMPANION Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field CONST Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field CONSTRUCTOR Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field CONTEXT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field CONTRACT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field CROSSINLINE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field Companion Lorg/jetbrains/dataframe/keywords/SoftKeywords$Companion;
-	public static final field DATA Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field DELEGATE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field DYNAMIC Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field ENUM Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field EXPECT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field EXTERNAL Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field FIELD Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field FILE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field FINAL Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field FINALLY Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field GET Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field HEADER Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field IMPL Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field IMPORT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field INFIX Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field INIT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field INLINE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field INNER Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field INTERNAL Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field LATEINIT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field NOINLINE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field OPEN Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field OPERATOR Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field OUT Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field OVERRIDE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field PARAM Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field PRIVATE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field PROPERTY Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field PROTECTED Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field PUBLIC Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field RECEIVER Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field REIFIED Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field SEALED Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field SET Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field SETPARAM Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field SUSPEND Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field TAILREC Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field VALUE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field VARARG Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static final field WHERE Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-	public static fun values ()[Lorg/jetbrains/dataframe/keywords/SoftKeywords;
-}
-
-public final class org/jetbrains/dataframe/keywords/SoftKeywords$Companion {
-	public final fun getVALUES ()Ljava/util/List;
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/ColumnsContainer : org/jetbrains/kotlinx/dataframe/ColumnsScope {
 	public abstract fun columns ()Ljava/util/List;
 	public abstract fun columnsCount ()I
@@ -4506,6 +4315,36 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/BaseFiel
 	public abstract fun getFieldType ()Lorg/jetbrains/kotlinx/dataframe/codeGen/FieldType;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult {
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/util/List;)V
+	public final fun component1 ()Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/util/List;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
+	public static synthetic fun copy$default (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/util/List;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCode ()Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
+	public final fun getNewMarkers ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator : org/jetbrains/kotlinx/dataframe/codeGen/ExtensionsCodeGenerator {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;
+	public abstract fun generate (Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;ZLorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
+	public abstract fun generate (Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;Z)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
+	public static synthetic fun generate$default (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;Lorg/jetbrains/kotlinx/dataframe/codeGen/Marker;Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;ZLorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
+	public static synthetic fun generate$default (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;Lorg/jetbrains/kotlinx/dataframe/schema/DataFrameSchema;Ljava/lang/String;ZZZLorg/jetbrains/kotlinx/dataframe/codeGen/MarkerVisibility;Ljava/lang/Iterable;Lorg/jetbrains/kotlinx/dataframe/codeGen/DefaultReadDfMethod;Lorg/jetbrains/kotlinx/dataframe/codeGen/NameNormalizer;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion {
+	public final fun create (Z)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;
+	public static synthetic fun create$default (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/codeGen/CodeGeneratorKt {
+	public static final fun generate (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator;Lkotlin/reflect/KClass;Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;Z)Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter$Companion;
 	public static final field EMPTY_DECLARATIONS Ljava/lang/String;
@@ -4624,6 +4463,17 @@ public final class org/jetbrains/kotlinx/dataframe/codeGen/GeneratedFieldKt {
 	public static final fun toNotNullable (Lorg/jetbrains/kotlinx/dataframe/codeGen/FieldType;)Lorg/jetbrains/kotlinx/dataframe/codeGen/FieldType;
 	public static final fun toNullable (Lorg/jetbrains/kotlinx/dataframe/codeGen/BaseField;)Lorg/jetbrains/kotlinx/dataframe/codeGen/BaseField;
 	public static final fun toNullable (Lorg/jetbrains/kotlinx/dataframe/codeGen/FieldType;)Lorg/jetbrains/kotlinx/dataframe/codeGen/FieldType;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode : java/lang/Enum {
+	public static final field Enum Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;
+	public static final field NoFields Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;
+	public static final field None Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;
+	public static final field TypeAlias Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;
+	public static final field WithFields Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/codeGen/InterfaceGenerationMode;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/codeGen/IsolatedMarker {
@@ -5445,7 +5295,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/CodeGeneratorImp
 	public static final fun isQuoted (Ljava/lang/String;)Z
 	public static final fun quoteIfNeeded (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
-	public static final fun toStandaloneSnippet (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenResult;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
+	public static final fun toStandaloneSnippet (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenResult;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
 	public static final fun toStandaloneSnippet (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
 }
 
@@ -5470,8 +5320,8 @@ public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/NameNormalizerIm
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/SchemaReaderKt {
-	public static final fun getUrlCodeGenReader (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function4;
-	public static final fun getUrlDfReader (Lorg/jetbrains/dataframe/impl/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function2;
+	public static final fun getUrlCodeGenReader (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function4;
+	public static final fun getUrlDfReader (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeGenerator$Companion;)Lkotlin/jvm/functions/Function2;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/impl/columns/ColumnsResolverTransformer {
@@ -6075,11 +5925,6 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchemaKt {
 	public static final fun importDataSchema (Ljava/net/URL;)Lorg/jetbrains/kotlinx/dataframe/jupyter/ImportDataSchema;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/jupyter/IntegrationKt {
-	public static final fun useSchemas (Lorg/jetbrains/kotlinx/jupyter/api/KotlinKernelHost;Ljava/lang/Iterable;)V
-	public static final fun useSchemas (Lorg/jetbrains/kotlinx/jupyter/api/KotlinKernelHost;[Lkotlin/reflect/KClass;)V
-}
-
 public final class org/jetbrains/kotlinx/dataframe/jupyter/JupyterConfiguration {
 	public fun <init> ()V
 	public final fun getDisplay ()Lorg/jetbrains/kotlinx/dataframe/io/DisplayConfiguration;
@@ -6144,6 +5989,156 @@ public final class org/jetbrains/kotlinx/dataframe/jupyter/RenderedContent$Compa
 	public final fun text (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/jupyter/RenderedContent;
 	public final fun textWithLength (Ljava/lang/String;I)Lorg/jetbrains/kotlinx/dataframe/jupyter/RenderedContent;
 	public final fun truncatedText (Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/jupyter/RenderedContent;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/keywords/HardKeywords : java/lang/Enum {
+	public static final field AS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field AS_SAFE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field BREAK Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field CLASS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field CONTINUE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords$Companion;
+	public static final field DO Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field ELSE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field FALSE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field FOR Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field FUN Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field IF Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field IN Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field INTERFACE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field IS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field NOT_IN Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field NOT_IS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field NULL Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field OBJECT Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field PACKAGE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field RETURN Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field SUPER Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field THIS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field THROW Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field TRUE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field TRY Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field TYPEALIAS Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field TYPEOF Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field VAL Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field VAR Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field WHEN Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static final field WHILE Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/keywords/HardKeywords;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/keywords/HardKeywords$Companion {
+	public final fun getVALUES ()Ljava/util/List;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords : java/lang/Enum {
+	public static final field ABSTRACT Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field ACTUAL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field ANNOTATION Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field COMPANION Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field CONST Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field CONTRACT Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field CROSSINLINE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords$Companion;
+	public static final field DATA Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field ENUM Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field EXPECT Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field EXTERNAL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field FINAL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field FUN Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field HEADER Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field IMPL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field IN Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field INFIX Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field INLINE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field INNER Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field INTERNAL Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field LATEINIT Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field NOINLINE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field OPEN Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field OPERATOR Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field OUT Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field OVERRIDE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field PRIVATE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field PROTECTED Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field PUBLIC Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field REIFIED Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field SEALED Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field SUSPEND Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field TAILREC Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field VALUE Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static final field VARARG Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/keywords/ModifierKeywords$Companion {
+	public final fun getVALUES ()Ljava/util/List;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords : java/lang/Enum {
+	public static final field ABSTRACT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field ACTUAL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field ANNOTATION Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field BY Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field CATCH Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field COMPANION Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field CONST Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field CONSTRUCTOR Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field CONTEXT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field CONTRACT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field CROSSINLINE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Companion;
+	public static final field DATA Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field DELEGATE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field DYNAMIC Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field ENUM Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field EXPECT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field EXTERNAL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field FIELD Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field FILE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field FINAL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field FINALLY Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field GET Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field HEADER Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field IMPL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field IMPORT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field INFIX Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field INIT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field INLINE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field INNER Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field INTERNAL Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field LATEINIT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field NOINLINE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field OPEN Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field OPERATOR Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field OUT Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field OVERRIDE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field PARAM Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field PRIVATE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field PROPERTY Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field PROTECTED Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field PUBLIC Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field RECEIVER Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field REIFIED Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field SEALED Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field SET Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field SETPARAM Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field SUSPEND Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field TAILREC Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field VALUE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field VARARG Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static final field WHERE Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+	public static fun values ()[Lorg/jetbrains/kotlinx/dataframe/keywords/SoftKeywords;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Companion {
+	public final fun getVALUES ()Ljava/util/List;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {

@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.google.devtools.ksp.gradle.KspTask
 import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
@@ -13,7 +12,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(jupyter.api)
         alias(korro)
         alias(kover)
         alias(ktlint)
@@ -21,7 +19,6 @@ plugins {
         alias(simpleGit)
         alias(buildconfig)
         alias(binary.compatibility.validator)
-        alias(shadow)
 
         // generates keywords using the :generator module
         alias(keywordGenerator)
@@ -37,13 +34,10 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
 repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven(jupyterApiTCRepo)
 }
 
 kotlin.sourceSets {
@@ -67,7 +61,7 @@ dependencies {
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
+    kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
 
     api(libs.commonsCsv)
     implementation(libs.commonsIo)
@@ -88,8 +82,8 @@ dependencies {
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
 
-    // for JupyterCodegenTests and samples.api
-    testImplementation(project(":dataframe-csv"))
+    // for samples.api
+    testImplementation(projects.dataframeCsv)
 }
 
 val samplesImplementation by configurations.getting {
@@ -175,38 +169,6 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
 tasks.withType<KorroTask> {
     dependsOn(copySamplesOutputs)
 }
-
-// region shadow
-
-tasks.withType<ShadowJar> {
-    dependencies {
-        exclude(dependency("org.jetbrains.kotlin:kotlin-reflect:.*"))
-        exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib:.*"))
-        exclude(dependency("org.jetbrains.kotlinx:kotlinx-datetime-jvm:.*"))
-        exclude(dependency("commons-io:commons-io:.*"))
-        exclude(dependency("commons-io:commons-csv:.*"))
-        exclude(dependency("org.apache.commons:commons-csv:.*"))
-        exclude(dependency("org.slf4j:slf4j-api:.*"))
-        exclude(dependency("io.github.microutils:kotlin-logging-jvm:.*"))
-        exclude(dependency("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:.*"))
-        exclude(dependency("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:.*"))
-        exclude(dependency("commons-codec:commons-codec:.*"))
-        exclude(dependency("com.squareup:kotlinpoet-jvm:.*"))
-        exclude(dependency("ch.randelshofer:fastdoubleparser:.*"))
-    }
-    exclude("org/jetbrains/kotlinx/dataframe/jupyter/**")
-    exclude("org/jetbrains/kotlinx/dataframe/io/**")
-    exclude("org/jetbrains/kotlinx/dataframe/documentation/**")
-    exclude("org/jetbrains/kotlinx/dataframe/impl/io/**")
-    exclude("io/github/oshai/kotlinlogging/**")
-    exclude("apache/**")
-    exclude("**.html")
-    exclude("**.js")
-    exclude("**.css")
-    minimize()
-}
-
-// endregion
 
 // region docPreprocessor
 
@@ -423,10 +385,6 @@ tasks.test {
             }
         }
     }
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
 }
 
 kotlinPublications {

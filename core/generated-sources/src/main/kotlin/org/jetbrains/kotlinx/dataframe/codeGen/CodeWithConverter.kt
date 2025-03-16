@@ -1,8 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
-import org.jetbrains.kotlinx.jupyter.api.Code
-import org.jetbrains.kotlinx.jupyter.api.VariableName
-
 /**
  * Class representing generated code declarations for a [Marker].
  *
@@ -28,3 +25,6 @@ public data class CodeWithConverter(val declarations: Code, val converter: (Vari
             else -> declarations + "\n" + converter(name)
         }
 }
+
+public typealias Code = String
+public typealias VariableName = String

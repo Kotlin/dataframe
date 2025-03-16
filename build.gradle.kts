@@ -19,7 +19,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization) apply false
-        alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
         alias(ktlint)
@@ -50,20 +49,21 @@ configurations {
 }
 
 dependencies {
-    api(project(":core"))
-    api(project(":dataframe-arrow"))
-    api(project(":dataframe-excel"))
-    api(project(":dataframe-openapi"))
-    api(project(":dataframe-jdbc"))
-    api(project(":dataframe-csv"))
+    api(projects.core)
+    api(projects.dataframeArrow)
+    api(projects.dataframeExcel)
+    api(projects.dataframeOpenapi)
+    api(projects.dataframeJdbc)
+    api(projects.dataframeCsv)
 
-    kover(project(":core"))
-    kover(project(":dataframe-arrow"))
-    kover(project(":dataframe-excel"))
-    kover(project(":dataframe-openapi"))
-    kover(project(":dataframe-jdbc"))
-    kover(project(":dataframe-csv"))
-    kover(project(":plugins:kotlin-dataframe"))
+    kover(projects.core)
+    kover(projects.dataframeArrow)
+    kover(projects.dataframeExcel)
+    kover(projects.dataframeOpenapi)
+    kover(projects.dataframeJdbc)
+    kover(projects.dataframeCsv)
+    kover(projects.plugins.kotlinDataframe)
+    kover(projects.dataframeJupyter)
 }
 
 enum class Version : Comparable<Version> {

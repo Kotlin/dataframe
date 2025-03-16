@@ -8,14 +8,14 @@ import io.swagger.v3.oas.models.media.Schema
 import io.swagger.v3.parser.core.models.AuthorizationValue
 import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
+import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
@@ -23,16 +23,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.isNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Any.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.AnyObject.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrame
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrameList
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsList
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Boolean.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Integer.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Number.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Object.getType
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.String.getType
 import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.typeOf
 

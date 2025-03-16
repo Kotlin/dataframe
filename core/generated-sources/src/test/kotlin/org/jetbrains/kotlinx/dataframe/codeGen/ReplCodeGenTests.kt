@@ -2,8 +2,6 @@ package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
-import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -11,7 +9,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.process
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.city
 import org.jetbrains.kotlinx.dataframe.testSets.person.weight
