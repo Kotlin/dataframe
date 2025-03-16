@@ -20,7 +20,7 @@ dependencies {
     testImplementation(libs.kotlin.compiler)
     testImplementation(libs.kotlin.compiler.internal.test.framework)
 
-    testRuntimeOnly(project(":core"))
+    testRuntimeOnly(projects.core)
 
     testRuntimeOnly(libs.kotlin.test)
     testRuntimeOnly(libs.kotlin.script.runtime)

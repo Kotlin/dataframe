@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
-import org.jetbrains.kotlinx.jupyter.util.findNthSubstring
 import org.junit.Ignore
 import org.junit.Test
 import java.awt.Desktop
@@ -38,4 +37,18 @@ class HtmlRenderingTests : BaseTest() {
         html shouldContain "href"
         html.findNthSubstring(address, 2) shouldNotBe -1
     }
+}
+
+internal fun String.findNthSubstring(s: String, n: Int, start: Int = 0): Int {
+    if (n < 1 || start == -1) return -1
+
+    var i = start
+
+    for (k in 1..n) {
+        i = indexOf(s, i)
+        if (i == -1) return -1
+        i += s.length
+    }
+
+    return i - s.length
 }

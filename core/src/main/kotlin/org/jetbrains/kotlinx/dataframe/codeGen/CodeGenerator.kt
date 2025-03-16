@@ -1,12 +1,5 @@
-package org.jetbrains.dataframe.impl.codeGen
+package org.jetbrains.kotlinx.dataframe.codeGen
 
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
-import org.jetbrains.kotlinx.dataframe.codeGen.Marker
-import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
-import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
-import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.FullyQualifiedNames
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ShortNames
