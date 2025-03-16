@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
@@ -5,7 +7,6 @@ plugins {
         alias(serialization)
         alias(kover)
         alias(ktlint)
-        alias(jupyter.api)
         alias(binary.compatibility.validator)
     }
 }
@@ -39,6 +40,7 @@ dependencies {
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
+    testImplementation(libs.kotlin.jupyter.test.kit)
 }
 
 kotlinPublications {
@@ -52,4 +54,17 @@ kotlinPublications {
 
 kotlin {
     explicitApi()
+}
+
+// uses jupyter for testing, so requires java 11 for that
+tasks.compileTestKotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        freeCompilerArgs.add("-Xjdk-release=11")
+    }
+}
+tasks.compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
+    options.release.set(11)
 }

@@ -4,3 +4,5 @@ This module, published as `dataframe-geo`, contains all logic and tests for Data
 with geographical data.
 
 Experimental.
+
+This module targets java 11 because of the restriction from `org.jetbrains.kotlin.jupyter`.

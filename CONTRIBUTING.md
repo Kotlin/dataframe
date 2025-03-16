@@ -90,9 +90,6 @@ so do familiarize yourself with the following guidelines.
   * Note, any version above 21 should work in theory, but JDK 21 is the only version we test with,
   so it is the recommended version.
 
-* JDK == 11 referred to by the `JDK_11_0` environment variable or `gradle.properties`/`local.properties`.
-  * This is used for testing our compiler plugins.
-
 * We recommend using [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) as the IDE. This
 has the best support for Kotlin, compiler plugins, Gradle, and [Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html) of course.
 
