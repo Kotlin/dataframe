@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
+import org.jetbrains.kotlinx.dataframe.codeGen.Code
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
@@ -23,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.isNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
-import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.typeOf
 
 /** Parse and read OpenApi specification to [DataSchema] interfaces. */

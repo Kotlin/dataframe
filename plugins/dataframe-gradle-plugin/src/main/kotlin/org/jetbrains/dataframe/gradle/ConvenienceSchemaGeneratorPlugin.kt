@@ -42,7 +42,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
         // regardless whether we add KSP or the user adds it, when it's added,
         // configure it to depend on symbol-processor-all
         target.plugins.whenPluginAdded {
-            if ("com.google.devtools.ksp" in this.javaClass.packageName) {
+            if (this::class.qualifiedName?.contains("com.google.devtools.ksp") == true) {
                 val isMultiplatform by lazy {
                     when {
                         target.plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> false
