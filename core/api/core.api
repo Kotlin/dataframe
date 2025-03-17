@@ -1777,7 +1777,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataColumnTypeKt {
-	public static final fun isBigNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isColumnGroup (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isComparable (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
 	public static final fun isFrameColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
@@ -2844,8 +2843,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
 	public static synthetic fun meanFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun meanFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun meanFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun meanOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Double;
-	public static synthetic fun meanOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Double;
 	public static final fun rowMean (Lorg/jetbrains/kotlinx/dataframe/DataRow;Z)D
 	public static synthetic fun rowMean$default (Lorg/jetbrains/kotlinx/dataframe/DataRow;ZILjava/lang/Object;)D
 }
