@@ -25,7 +25,7 @@ internal fun <T : Number> Sequence<T?>.mean(type: KType, skipNA: Boolean = skipN
     return when (type.withNullability(false)) {
         typeOf<Double>() -> (this as Sequence<Double>).mean(skipNA)
 
-        typeOf<Float>() -> (this as Sequence<Float>).mean(skipNA)
+        typeOf<Float>() -> (this as Sequence<Float>).map { it.toDouble() }.mean(skipNA)
 
         typeOf<Int>() -> (this as Sequence<Int>).map { it.toDouble() }.mean(false)
 
@@ -76,81 +76,3 @@ internal fun Sequence<Double>.mean(skipNA: Boolean = skipNA_default): Double {
     }
     return if (count > 0) sum / count else Double.NaN
 }
-
-@JvmName("meanFloat")
-internal fun Sequence<Float>.mean(skipNA: Boolean = skipNA_default): Double {
-    var count = 0
-    var sum: Double = 0.toDouble()
-    for (element in this) {
-        if (element.isNaN()) {
-            if (skipNA) {
-                continue
-            } else {
-                return Double.NaN
-            }
-        }
-        sum += element
-        count++
-    }
-    return if (count > 0) sum / count else Double.NaN
-}
-
-@JvmName("doubleMean")
-internal fun Iterable<Double>.mean(skipNA: Boolean = skipNA_default): Double = asSequence().mean(skipNA)
-
-@JvmName("floatMean")
-internal fun Iterable<Float>.mean(skipNA: Boolean = skipNA_default): Double = asSequence().mean(skipNA)
-
-@JvmName("intMean")
-internal fun Iterable<Int>.mean(): Double =
-    if (this is Collection) {
-        if (isNotEmpty()) sumOf { it.toDouble() } / size else Double.NaN
-    } else {
-        var count = 0
-        val sum = sumOf {
-            count++
-            it.toDouble()
-        }
-        if (count > 0) sum / count else Double.NaN
-    }
-
-@JvmName("shortMean")
-internal fun Iterable<Short>.mean(): Double =
-    if (this is Collection) {
-        if (isNotEmpty()) sumOf { it.toDouble() } / size else Double.NaN
-    } else {
-        var count = 0
-        val sum = sumOf {
-            count++
-            it.toDouble()
-        }
-        if (count > 0) sum / count else Double.NaN
-    }
-
-@JvmName("byteMean")
-internal fun Iterable<Byte>.mean(): Double =
-    if (this is Collection) {
-        if (isNotEmpty()) sumOf { it.toDouble() } / size else Double.NaN
-    } else {
-        var count = 0
-        val sum = sumOf {
-            count++
-            it.toDouble()
-        }
-        if (count > 0) sum / count else Double.NaN
-    }
-
-@JvmName("longMean")
-internal fun Iterable<Long>.mean(): Double =
-    if (this is Collection) {
-        if (isNotEmpty()) sumOf { it.toDouble() } / size else Double.NaN
-    } else {
-        var count = 0
-        val sum = sumOf {
-            count++
-            it.toDouble()
-        }
-        if (count > 0) sum / count else Double.NaN
-    }.also {
-        logger.warn { "Converting Longs to Doubles to calculate the mean, loss of precision may occur." }
-    }

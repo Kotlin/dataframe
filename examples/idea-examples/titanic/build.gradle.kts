@@ -20,6 +20,8 @@ application.mainClass = "org.jetbrains.kotlinx.dataframe.examples.titanic.ml.Tit
 dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
     implementation(project(":"))
+
+    // note: needs to target java 11 for these dependencies
     implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.5.2")
     implementation("org.jetbrains.kotlinx:kotlin-deeplearning-impl:0.5.2")
     implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.2")

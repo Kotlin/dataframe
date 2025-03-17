@@ -6,7 +6,6 @@ import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -240,47 +239,15 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
-  @TestMetadata("groupBy_sum.kt")
-  public void testGroupBy_sum() {
-        runTest("testData/box/groupBy_sum.kt");
-    }
-
-    @Ignore
-    @Test
-    @TestMetadata("groupBy_mean.kt")
-    public void testGroupBy_mean() {
-        runTest("testData/box/groupBy_mean.kt");
-    }
-
-    @Test
-    @TestMetadata("groupBy_median.kt")
-    public void testGroupBy_median() {
-        runTest("testData/box/groupBy_median.kt");
-    }
-
-    @Test
-    @TestMetadata("groupBy_min.kt")
-    public void testGroupBy_min() {
-        runTest("testData/box/groupBy_min.kt");
-    }
-
-    @Test
-    @TestMetadata("groupBy_max.kt")
-    public void testGroupBy_max() {
-        runTest("testData/box/groupBy_max.kt");
-    }
-
-    @Ignore
-    @Test
-    @TestMetadata("groupBy_std.kt")
-    public void testGroupBy_std() {
-        runTest("testData/box/groupBy_std.kt");
-    }
-
-  @Test
   @TestMetadata("groupBy_extractSchema.kt")
   public void testGroupBy_extractSchema() {
     runTest("testData/box/groupBy_extractSchema.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_max.kt")
+  public void testGroupBy_max() {
+    runTest("testData/box/groupBy_max.kt");
   }
 
   @Test
@@ -290,9 +257,39 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("groupBy_mean.kt")
+  public void testGroupBy_mean() {
+    runTest("testData/box/groupBy_mean.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_median.kt")
+  public void testGroupBy_median() {
+    runTest("testData/box/groupBy_median.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_min.kt")
+  public void testGroupBy_min() {
+    runTest("testData/box/groupBy_min.kt");
+  }
+
+  @Test
   @TestMetadata("groupBy_refine.kt")
   public void testGroupBy_refine() {
     runTest("testData/box/groupBy_refine.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_std.kt")
+  public void testGroupBy_std() {
+    runTest("testData/box/groupBy_std.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_sum.kt")
+  public void testGroupBy_sum() {
+    runTest("testData/box/groupBy_sum.kt");
   }
 
   @Test
@@ -323,6 +320,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("insert.kt")
   public void testInsert() {
     runTest("testData/box/insert.kt");
+  }
+
+  @Test
+  @TestMetadata("insertAfter.kt")
+  public void testInsertAfter() {
+    runTest("testData/box/insertAfter.kt");
+  }
+
+  @Test
+  @TestMetadata("insertAfterNested.kt")
+  public void testInsertAfterNested() {
+    runTest("testData/box/insertAfterNested.kt");
   }
 
   @Test
@@ -383,6 +392,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("moveAfter.kt")
   public void testMoveAfter() {
     runTest("testData/box/moveAfter.kt");
+  }
+
+  @Test
+  @TestMetadata("moveAfterNested.kt")
+  public void testMoveAfterNested() {
+    runTest("testData/box/moveAfterNested.kt");
   }
 
   @Test
