@@ -377,9 +377,27 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("joinKinds.kt")
+  public void testJoinKinds() {
+    runTest("testData/box/joinKinds.kt");
+  }
+
+  @Test
   @TestMetadata("join_1.kt")
   public void testJoin_1() {
     runTest("testData/box/join_1.kt");
+  }
+
+  @Test
+  @TestMetadata("join_matchColumnGroups.kt")
+  public void testJoin_matchColumnGroups() {
+    runTest("testData/box/join_matchColumnGroups.kt");
+  }
+
+  @Test
+  @TestMetadata("join_mergeColumnGroups.kt")
+  public void testJoin_mergeColumnGroups() {
+    runTest("testData/box/join_mergeColumnGroups.kt");
   }
 
   @Test
