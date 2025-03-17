@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
  * @param columns selector of which columns inside the [row] to aggregate
  */
 @PublishedApi
-internal fun <V, R> Aggregator<V, R>.aggregateOfRow(row: AnyRow, columns: ColumnsSelector<*, V?>): R? {
+internal fun <V, R> Aggregator<V, R>.aggregateOfRow(row: AnyRow, columns: ColumnsSelector<*, V?>): R {
     val filteredColumns = row.df().getColumns(columns)
     return aggregateCalculatingType(
         values = filteredColumns.mapNotNull { row[it] },

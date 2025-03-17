@@ -19,19 +19,19 @@ import kotlin.reflect.typeOf
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     values: Iterable<C>,
     noinline transform: (C) -> V,
-): R? = aggregate(values.asSequence().map(transform).asIterable(), typeOf<V>())
+): R = aggregate(values.asSequence().map(transform).asIterable(), typeOf<V>())
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     column: DataColumn<C>,
     noinline transform: (C) -> V,
-): R? = aggregateOf(column.values(), transform)
+): R = aggregateOf(column.values(), transform)
 
 @PublishedApi
 internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(
     frame: DataFrame<T>,
     crossinline expression: RowExpression<T, C>,
-): R? = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) }
+): R = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) }
 
 @PublishedApi
 internal fun <T, C, R> Aggregator<*, R>.aggregateOfDelegated(
@@ -47,10 +47,10 @@ internal fun <T, C, R> Aggregator<*, R>.aggregateOfDelegated(
 internal inline fun <T, reified C, R> Aggregator<*, R>.of(
     data: DataFrame<T>,
     crossinline expression: RowExpression<T, C>,
-): R? = aggregateOf(data as DataFrame<T>, expression)
+): R = aggregateOf(data as DataFrame<T>, expression)
 
 @PublishedApi
-internal inline fun <C, reified V, R> Aggregator<V, R>.of(data: DataColumn<C>, crossinline expression: (C) -> V): R? =
+internal inline fun <C, reified V, R> Aggregator<V, R>.of(data: DataColumn<C>, crossinline expression: (C) -> V): R =
     aggregateOf(data.values()) { expression(it) }
 
 @PublishedApi
