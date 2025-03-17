@@ -37,6 +37,9 @@ import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
+//  can be enabled for showing logs for these tests
+private const val SHOW_LOGS = false
+
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DelimCsvTsvTests {
 
@@ -45,12 +48,14 @@ class DelimCsvTsvTests {
 
     @Before
     fun setLogger() {
+        if (!SHOW_LOGS) return
         loggerBefore = System.getProperty(logLevel)
-        System.setProperty(logLevel, "debug")
+        System.setProperty(logLevel, "trace")
     }
 
     @After
     fun restoreLogger() {
+        if (!SHOW_LOGS) return
         if (loggerBefore != null) {
             System.setProperty(logLevel, loggerBefore)
         }
