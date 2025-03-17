@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTypeInference::class)
+
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -13,19 +15,16 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.impl.zero
-import org.jetbrains.kotlinx.dataframe.math.sumOf
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -52,8 +51,37 @@ public fun DataColumn<Double?>.sum(): Double = Aggregators.sum.aggregate(this) a
 @JvmName("sumNumber")
 public fun DataColumn<Number?>.sum(): Number = Aggregators.sum.aggregate(this)
 
-public inline fun <T, reified R : Number> DataColumn<T>.sumOf(noinline expression: (T) -> R): R? =
-    (Aggregators.sum as Aggregator<*, *>).cast<R>().aggregateOf(this, expression)
+@JvmName("sumOfInt")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.sumOf(expression: (T) -> Int?): Int = Aggregators.sum.aggregateOf(this, expression) as Int
+
+@JvmName("sumOfShort")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.sumOf(expression: (T) -> Short?): Int =
+    Aggregators.sum.aggregateOf(this, expression) as Int
+
+@JvmName("sumOfByte")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.sumOf(expression: (T) -> Byte?): Int = Aggregators.sum.aggregateOf(this, expression) as Int
+
+@JvmName("sumOfLong")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.sumOf(expression: (T) -> Long?): Long =
+    Aggregators.sum.aggregateOf(this, expression) as Long
+
+@JvmName("sumOfFloat")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.sumOf(expression: (T) -> Float?): Float =
+    Aggregators.sum.aggregateOf(this, expression) as Float
+
+@JvmName("sumOfDouble")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.sumOf(expression: (T) -> Double?): Double =
+    Aggregators.sum.aggregateOf(this, expression) as Double
+
+@JvmName("sumOfNumber")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataColumn<T>.sumOf(expression: (T) -> Number?): Number = Aggregators.sum.aggregateOf(this, expression)
 
 // endregion
 

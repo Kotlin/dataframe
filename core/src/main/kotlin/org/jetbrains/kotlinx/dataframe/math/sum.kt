@@ -8,40 +8,6 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.sequences.filterNotNull
 
-@PublishedApi
-internal fun <T, R : Number> Iterable<T>.sumOf(type: KType, selector: (T) -> R?): Number =
-    asSequence().sumOf(type, selector)
-
-@Suppress("UNCHECKED_CAST")
-@PublishedApi
-internal fun <T, R : Number> Sequence<T>.sumOf(type: KType, selector: (T) -> R?): Number {
-    if (type.isMarkedNullable) {
-        return filterNotNull().sumOf(type.withNullability(false), selector)
-    }
-    return when (type.withNullability(false)) {
-        typeOf<Double>() -> sumOf(selector as (T) -> Double)
-
-        typeOf<Float>() -> map(selector as (T) -> Float).sum()
-
-        typeOf<Int>() -> sumOf(selector as (T) -> Int)
-
-        // Note: returns Int
-        typeOf<Short>() -> map(selector as (T) -> Short).sum()
-
-        // Note: returns Int
-        typeOf<Byte>() -> map(selector as (T) -> Byte).sum()
-
-        typeOf<Long>() -> sumOf(selector as (T) -> Long)
-
-        nothingType -> 0.0
-
-        typeOf<Number>() ->
-            error("Encountered non-specific Number type in sumOf function. This should not occur.")
-
-        else -> throw IllegalArgumentException("sumOf is not supported for $type")
-    }
-}
-
 internal fun Iterable<Number?>.sum(type: KType): Number = asSequence().sum(type)
 
 @Suppress("UNCHECKED_CAST")
