@@ -133,23 +133,23 @@ class MoveTests {
         // Simple case: direct parent-child relationship
         shouldThrow<IllegalArgumentException> {
             grouped.move("a").after { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a' after its child column 'a/b'"
+        }.message shouldBe "Cannot move column 'a' after its own child column 'a/b'"
 
         // Nested case: deeper parent-child relationship
         shouldThrow<IllegalArgumentException> {
             grouped.move("a").after { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a' after its child column 'a/c/d'"
+        }.message shouldBe "Cannot move column 'a' after its own child column 'a/c/d'"
 
         // Group case: moving group after its nested column
         shouldThrow<IllegalArgumentException> {
             grouped.move { "a"["c"] }.after { "a"["c"]["d"] }
-        }.message shouldBe "Cannot move column 'a/c' after its child column 'a/c/d'"
+        }.message shouldBe "Cannot move column 'a/c' after its own child column 'a/c/d'"
     }
 
     @Test
     fun `should throw when moving column after itself`() {
         shouldThrow<IllegalArgumentException> {
             grouped.move { "a"["b"] }.after { "a"["b"] }
-        }.message shouldBe "Cannot move column 'a/b' after its child column 'a/b'"
+        }.message shouldBe "Cannot move column 'a/b' after its own child column 'a/b'"
     }
 }
