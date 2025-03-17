@@ -198,10 +198,14 @@ internal fun KotlinTypeFacade.toDataFrame(
     traverseConfiguration: TraverseConfiguration,
 ): PluginDataFrameSchema {
 
+    val anyType = session.builtinTypes.nullableAnyType.type
+
     fun ConeKotlinType.isValueType() =
         this.isArrayTypeOrNullableArrayType ||
             this.classId == StandardClassIds.Unit ||
             this.classId == StandardClassIds.Any ||
+            this.classId == StandardClassIds.Map ||
+            this.classId == StandardClassIds.MutableMap ||
             this.classId == StandardClassIds.String ||
             this.classId in StandardClassIds.primitiveTypes ||
             this.classId in StandardClassIds.unsignedTypes ||
@@ -225,6 +229,7 @@ internal fun KotlinTypeFacade.toDataFrame(
             this.isSubtypeOf(
                 Names.TEMPORAL_AMOUNT_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
             )
+
 
     fun FirNamedFunctionSymbol.isGetterLike(): Boolean {
         val functionName = this.name.asString()

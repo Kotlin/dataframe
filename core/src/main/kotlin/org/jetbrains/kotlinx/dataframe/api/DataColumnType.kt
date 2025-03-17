@@ -15,12 +15,10 @@ import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVariance
 import kotlin.reflect.full.createType
-import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -85,13 +83,3 @@ public fun AnyCol.valuesAreComparable(): Boolean =
                 nullable = hasNulls(),
             ),
         )
-
-@PublishedApi
-internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()
-
-internal fun KClass<*>.isPrimitive(): Boolean =
-    isSubclassOf(Number::class) ||
-        this == String::class ||
-        this == Char::class ||
-        this == Array::class ||
-        isSubclassOf(Collection::class)
