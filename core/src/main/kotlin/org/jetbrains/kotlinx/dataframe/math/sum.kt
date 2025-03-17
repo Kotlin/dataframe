@@ -85,6 +85,8 @@ internal val sumTypeConversion: CalculateReturnTypeOrNull = { type, _ ->
         typeOf<Byte>(),
         -> typeOf<Int>()
 
+        typeOf<Long>() -> typeOf<Long>()
+
         typeOf<Double>() -> typeOf<Double>()
 
         typeOf<Float>() -> typeOf<Float>()

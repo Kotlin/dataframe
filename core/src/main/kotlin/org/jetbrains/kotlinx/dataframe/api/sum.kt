@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
-import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
@@ -26,18 +25,32 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.impl.zero
-import org.jetbrains.kotlinx.dataframe.math.sum
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 // region DataColumn
 
-@JvmName("sumT")
-public fun <T : Number> DataColumn<T>.sum(): T = values.sum(type())
+@JvmName("sumInt")
+public fun DataColumn<Int?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
 
-@JvmName("sumTNullable")
-public fun <T : Number> DataColumn<T?>.sum(): T = values.sum(type())
+@JvmName("sumShort")
+public fun DataColumn<Short?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
+
+@JvmName("sumByte")
+public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
+
+@JvmName("sumLong")
+public fun DataColumn<Long?>.sum(): Long = Aggregators.sum.aggregate(this) as Long
+
+@JvmName("sumFloat")
+public fun DataColumn<Float?>.sum(): Float = Aggregators.sum.aggregate(this) as Float
+
+@JvmName("sumDouble")
+public fun DataColumn<Double?>.sum(): Double = Aggregators.sum.aggregate(this) as Double
+
+@JvmName("sumNumber")
+public fun DataColumn<Number?>.sum(): Number = Aggregators.sum.aggregate(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expression: (T) -> R): R? =
     (Aggregators.sum as Aggregator<*, *>).cast<R>().of(this, expression)
@@ -49,7 +62,7 @@ public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expres
 public fun AnyRow.rowSum(): Number =
     Aggregators.sum.aggregateOfRow(this) {
         colsOf<Number?> { it.isPrimitiveNumber() }
-    } ?: 0.0
+    }
 
 public inline fun <reified T : Number> AnyRow.rowSumOf(): Number /*todo*/ {
     require(typeOf<T>() in primitiveNumberTypes) {
@@ -57,7 +70,6 @@ public inline fun <reified T : Number> AnyRow.rowSumOf(): Number /*todo*/ {
     }
     return Aggregators.sum
         .aggregateOfRow(this) { colsOf<T>() }
-        ?: 0.0
 }
 // endregion
 
