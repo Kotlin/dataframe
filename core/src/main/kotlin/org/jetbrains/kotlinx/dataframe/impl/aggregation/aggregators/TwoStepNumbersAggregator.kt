@@ -24,7 +24,7 @@ private val logger = KotlinLogging.logger { }
  * [Aggregator] made specifically for number calculations.
  * Mixed number types are [unified][UnifyingNumbers] to [primitives][PRIMITIVES_ONLY].
  *
- * Nulls are filtered from columns.
+ * Nulls are filtered out.
  *
  * When called on multiple columns (with potentially mixed [Number] types),
  * this [Aggregator] works in two steps:
@@ -39,7 +39,7 @@ private val logger = KotlinLogging.logger { }
  *     -> aggregator(Iterable<specific Number>, unified number type of common colType) // called on each iterable
  *     -> Iterable<Return> // nulls filtered out
  *     -> aggregator(Iterable<specific Return>, unified number type of common valueType)
- *     -> Return?
+ *     -> Return
  * ```
  *
  * @param name The name of this aggregator.
@@ -48,7 +48,7 @@ private val logger = KotlinLogging.logger { }
  *   While it takes a [Number] argument, you can assume that all values are of the same specific type, however,
  *   this type can be different for different calls to [aggregator].
  */
-internal class TwoStepNumbersAggregator<out Return : Number>(
+internal class TwoStepNumbersAggregator<out Return : Number?>(
     name: String,
     getReturnTypeOrNull: CalculateReturnTypeOrNull,
     aggregator: Aggregate<Number, Return>,
@@ -62,7 +62,7 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
      * After the first aggregation, the number types are found by [calculateReturnTypeOrNull] and then
      * unified using [aggregateCalculatingType].
      */
-    override fun aggregate(columns: Iterable<DataColumn<Number?>>): Return? {
+    override fun aggregate(columns: Iterable<DataColumn<Number?>>): Return {
         val (values, types) = columns.mapNotNull { col ->
             val value = aggregate(col) ?: return@mapNotNull null
             val type = calculateReturnTypeOrNull(
@@ -113,11 +113,10 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
      *
      * When the exact [type] is unknown, use [aggregateCalculatingType].
      */
-    override fun aggregate(values: Iterable<Number>, type: KType): Return? {
+    override fun aggregate(values: Iterable<Number?>, type: KType): Return {
         require(type.isSubtypeOf(typeOf<Number?>())) {
             "${TwoStepNumbersAggregator::class.simpleName}: Type $type is not a subtype of Number?"
         }
-
         return when (type.withNullability(false)) {
             // If the type is not a specific number, but rather a mixed Number, we unify the types first.
             // This is heavy and could be avoided by calling aggregate with a specific number type
@@ -147,8 +146,8 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
      *   If `null`, the types of [values] will be calculated at runtime (heavy!).
      */
     @Suppress("UNCHECKED_CAST")
-    override fun aggregateCalculatingType(values: Iterable<Number>, valueTypes: Set<KType>?): Return? {
-        val valueTypes = valueTypes ?: values.types()
+    override fun aggregateCalculatingType(values: Iterable<Number?>, valueTypes: Set<KType>?): Return {
+        val valueTypes = valueTypes ?: values.filterNotNull().types()
         val commonType = valueTypes
             .unifiedNumberType(PRIMITIVES_ONLY)
             .withNullability(false)
@@ -176,7 +175,7 @@ internal class TwoStepNumbersAggregator<out Return : Number>(
      * @param getReturnTypeOrNull Functional argument for the [calculateReturnTypeOrNull] function.
      * @param aggregator Functional argument for the [aggregate] function, used within a [DataColumn] or [Iterable].
      */
-    class Factory<out Return : Number>(
+    class Factory<out Return : Number?>(
         private val getReturnTypeOrNull: CalculateReturnTypeOrNull,
         private val aggregate: Aggregate<Number, Return>,
     ) : AggregatorProvider<TwoStepNumbersAggregator<Return>> by AggregatorProvider({ name ->

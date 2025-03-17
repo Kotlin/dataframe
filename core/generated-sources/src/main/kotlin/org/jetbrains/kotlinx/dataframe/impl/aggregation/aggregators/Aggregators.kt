@@ -30,7 +30,7 @@ internal object Aggregators {
      *     -> stepOneAggregator(Iterable<Value>, colType) // called on each iterable
      *     -> Iterable<Return> // nulls filtered out
      *     -> stepTwoAggregator(Iterable<Return>, common valueType)
-     *     -> Return?
+     *     -> Return
      * ```
      *
      * It can also be used as a "simple" aggregator by providing the same function for both steps.
@@ -43,7 +43,7 @@ internal object Aggregators {
      * @param stepTwoAggregator Functional argument for the aggregation function used between different columns.
      *   It is run on the results of [stepOneAggregator].
      */
-    private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type>) =
+    private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type?>) =
         TwoStepAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             stepOneAggregator = aggregator,
@@ -68,7 +68,7 @@ internal object Aggregators {
      *     -> stepOneAggregator(Iterable<Value>, colType) // called on each iterable
      *     -> Iterable<Return> // nulls filtered out
      *     -> stepTwoAggregator(Iterable<Return>, common valueType)
-     *     -> Return?
+     *     -> Return
      * ```
      *
      * It can also be used as a "simple" aggregator by providing the same function for both steps.
@@ -106,7 +106,7 @@ internal object Aggregators {
      * Iterable<Column<Value?>>
      *     -> Iterable<Value> // flattened without nulls
      *     -> aggregator(Iterable<Value>, common colType)
-     *     -> Return?
+     *     -> Return
      * ```
      *
      * This is essential for aggregators that depend on the distribution of all values across the dataframe, like
@@ -119,7 +119,7 @@ internal object Aggregators {
      * @param aggregator Functional argument for the [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.aggregate] function.
      *   Note that it must be able to handle `null` values for the [Iterable] overload of [aggregate][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.FlatteningAggregator.aggregate].
      */
-    private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type>) =
+    private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type?>) =
         FlatteningAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             aggregator = aggregate,
@@ -140,7 +140,7 @@ internal object Aggregators {
      * Iterable<Column<Value?>>
      *     -> Iterable<Value> // flattened without nulls
      *     -> aggregator(Iterable<Value>, common colType)
-     *     -> Return?
+     *     -> Return
      * ```
      *
      * This is essential for aggregators that depend on the distribution of all values across the dataframe, like
@@ -182,7 +182,7 @@ internal object Aggregators {
      *     -> aggregator(Iterable<specific Number>, unified number type of common colType) // called on each iterable
      *     -> Iterable<Return> // nulls filtered out
      *     -> aggregator(Iterable<specific Return>, unified number type of common valueType)
-     *     -> Return?
+     *     -> Return
      * ```
      *
      * @param name The name of this aggregator.
@@ -191,7 +191,7 @@ internal object Aggregators {
      *   While it takes a [Number] argument, you can assume that all values are of the same specific type, however,
      *   this type can be different for different calls to [aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase.aggregator].
      */
-    private fun <Return : Number> twoStepForNumbers(
+    private fun <Return : Number?> twoStepForNumbers(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         aggregate: Aggregate<Number, Return>,
     ) = TwoStepNumbersAggregator.Factory(
@@ -235,11 +235,9 @@ internal object Aggregators {
     // step one: T: Number? -> Double
     // step two: Double -> Double
     val mean by withOneOption { skipNA: Boolean ->
-        twoStepChangingType(
-            getReturnTypeOrNull = meanTypeConversion,
-            stepOneAggregator = { type -> mean(type, skipNA) },
-            stepTwoAggregator = { mean(skipNA) },
-        )
+        twoStepForNumbers(meanTypeConversion) { type ->
+            mean(type, skipNA)
+        }
     }
 
     // T: Comparable<T>? -> T

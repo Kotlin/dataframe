@@ -8,7 +8,7 @@ import kotlin.reflect.full.withNullability
 /**
  * Simple [Aggregator] implementation with flattening behavior for multiple columns.
  *
- * Nulls are filtered from columns.
+ * Nulls are filtered out.
  *
  * When called on multiple columns,
  * the columns are flattened into a single list of values, filtering nulls as usual;
@@ -18,7 +18,7 @@ import kotlin.reflect.full.withNullability
  * Iterable<Column<Value?>>
  *     -> Iterable<Value> // flattened without nulls
  *     -> aggregator(Iterable<Value>, common colType)
- *     -> Return?
+ *     -> Return
  * ```
  *
  * This is essential for aggregators that depend on the distribution of all values across the dataframe, like
@@ -42,7 +42,7 @@ internal class FlatteningAggregator<in Value, out Return>(
      * The columns are flattened into a single list of values, filtering nulls as usual;
      * then the aggregation function is with the common type of the columns.
      */
-    override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return? {
+    override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return {
         val commonType = columns.map { it.type() }.commonType().withNullability(false)
         val allValues = columns.asSequence().flatMap { it.values() }.filterNotNull()
         return aggregate(allValues.asIterable(), commonType)

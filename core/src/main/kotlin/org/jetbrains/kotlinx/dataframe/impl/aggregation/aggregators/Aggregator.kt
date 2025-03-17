@@ -13,10 +13,8 @@ import kotlin.reflect.full.withNullability
  * The [AggregatorBase] class is a base implementation of this interface.
  *
  * @param Value The type of the values to be aggregated.
- *   This can be nullable for [Iterables][Iterable] or not, depending on the use case.
- *   For columns, [Value] will always be considered nullable; nulls are filtered out from columns anyway.
- * @param Return The type of the resulting value. It doesn't matter if this is nullable or not, as the aggregator
- *   will always return a [Return]`?`.
+ *   The input can always have nulls, they are filtered out.
+ * @param Return The type of the resulting value. Can optionally be nullable.
  */
 @PublishedApi
 internal interface Aggregator<in Value, out Return> {
@@ -27,26 +25,27 @@ internal interface Aggregator<in Value, out Return> {
     /**
      * Base function of [Aggregator].
      *
-     * Aggregates the given values, taking [type] into account, and computes a single resulting value.
+     * Aggregates the given values, taking [type] into account,
+     * filtering nulls, and computes a single resulting value.
      *
      * When using [AggregatorBase], this can be supplied by the [AggregatorBase.aggregator] argument.
      *
      * When the exact [type] is unknown, use [aggregateCalculatingType].
      */
-    fun aggregate(values: Iterable<Value>, type: KType): Return?
+    fun aggregate(values: Iterable<Value?>, type: KType): Return
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
-     * Nulls are filtered out by default, then [aggregate] (with [Iterable] and [KType]) is called.
+     * Calls [aggregate] (with [Iterable] and [KType]).
      *
      * See [AggregatorBase.aggregate].
      */
-    fun aggregate(column: DataColumn<Value?>): Return?
+    fun aggregate(column: DataColumn<Value?>): Return
 
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      */
-    fun aggregate(columns: Iterable<DataColumn<Value?>>): Return?
+    fun aggregate(columns: Iterable<DataColumn<Value?>>): Return
 
     /**
      * Special case of [aggregate] with [Iterable] that calculates the common type of the values at runtime.
@@ -58,7 +57,7 @@ internal interface Aggregator<in Value, out Return> {
      *   It should contain all types of [values].
      *   If `null`, the types of [values] will be calculated at runtime (heavy!).
      */
-    fun aggregateCalculatingType(values: Iterable<Value>, valueTypes: Set<KType>? = null): Return?
+    fun aggregateCalculatingType(values: Iterable<Value?>, valueTypes: Set<KType>? = null): Return
 
     /**
      * Function that can give the return type of [aggregate] as [KType], given the type of the input.
@@ -82,17 +81,22 @@ internal interface Aggregator<in Value, out Return> {
     fun calculateReturnTypeOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType?
 }
 
+@Suppress("UNCHECKED_CAST")
 @PublishedApi
 internal fun <Type> Aggregator<*, *>.cast(): Aggregator<Type, Type> = this as Aggregator<Type, Type>
 
+@Suppress("UNCHECKED_CAST")
 @PublishedApi
 internal fun <Value, Return> Aggregator<*, *>.cast2(): Aggregator<Value, Return> = this as Aggregator<Value, Return>
 
 /** Type alias for [Aggregator.calculateReturnTypeOrNull] */
 internal typealias CalculateReturnTypeOrNull = (type: KType, emptyInput: Boolean) -> KType?
 
-/** Type alias for [Aggregator.aggregate]. */
-internal typealias Aggregate<Value, Return> = Iterable<Value>.(type: KType) -> Return?
+/**
+ * Type alias for the argument for [Aggregator.aggregate].
+ * Nulls have already been filtered out when this argument is called.
+ */
+internal typealias Aggregate<Value, Return> = Iterable<Value & Any>.(type: KType) -> Return
 
 /** Common case for [CalculateReturnTypeOrNull], preserves return type, but makes it nullable for empty inputs. */
 internal val preserveReturnTypeNullIfEmpty: CalculateReturnTypeOrNull = { type, emptyInput ->
