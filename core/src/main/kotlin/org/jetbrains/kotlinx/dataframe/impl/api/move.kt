@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
@@ -35,7 +36,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
             sourceSegments.indices.all { targetSegments[it] == sourceSegments[it] }
         ) {
             throw IllegalArgumentException(
-                "Cannot move column '${sourcePath.joinToString()}' after its child column '${targetPath.joinToString()}'",
+                "Cannot move column '${sourcePath.joinToString()}' after its own child column '${targetPath.joinToString()}'",
             )
         }
     }
@@ -43,7 +44,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     val removeRoot = removeResult.removedColumns.first().getRoot()
 
     val refNode = removeRoot.getOrPut(targetPath) {
-        val path = it.toList()
+        val path = it.asList()
 
         // Find the group reference (if any) and adjust the path
         val groupRefIndex = path.indexOfFirst { it.isEmpty() }

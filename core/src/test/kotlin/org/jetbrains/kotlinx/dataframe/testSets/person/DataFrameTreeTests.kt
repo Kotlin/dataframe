@@ -527,7 +527,6 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun moveAfter() {
         val moved = typed2.move { age }.after { nameAndCity.name }
-        println(moved)
         moved.columnsCount() shouldBe 2
         moved.nameAndCity.columnsCount() shouldBe 3
         moved.nameAndCity.select { all() } shouldBe dataFrameOf(
