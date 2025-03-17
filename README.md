@@ -22,6 +22,10 @@ Kotlin DataFrame aims to reconcile Kotlin's static typing with the dynamic natur
 
 Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter). Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
 
+## Do you use Kotlin DataFrame or have you used it in the past?
+Join us for a one-hour interview and get a USD 100 Amazon Gift Card or a one-year JetBrains All Products Pack subscription.
+Simply [fill out a form](https://surveys.jetbrains.com/s3/kdf) and schedule a session if your profile matches our study criteria.
+
 ## Documentation
 
 Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) for details.
