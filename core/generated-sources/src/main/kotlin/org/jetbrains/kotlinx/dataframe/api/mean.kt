@@ -27,10 +27,12 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 /*
+ * TODO KDocs:
  * Calculating the mean is supported for all primitive number types.
+ * Nulls are filtered from columns.
  * The return type is always Double, Double.NaN for empty input, never null.
- * (this may introduce loss of precision for Longs).
- * For mixed primitive number types [TwoStepNumbersAggregator], unifies the numbers before calculating the mean.
+ * (May introduce loss of precision for Longs).
+ * For mixed primitive number types, [TwoStepNumbersAggregator] unifies the numbers before calculating the mean.
  */
 
 // region DataColumn
