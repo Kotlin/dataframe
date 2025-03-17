@@ -61,7 +61,14 @@ private val valueTypes = setOf(
 )
 
 /**
- * Check
+ * Determines whether a class can be unfolded into its properties.
+ *
+ * A class is considered **unfoldable** if it has at least one public property
+ * or getter-like function. This excludes:
+ * - **Value types** such as primitives, enums, and date-time types.
+ * - **Classes without properties**, including empty or marker classes.
+ *
+ * @return `true` if the class has unfoldable properties, `false` otherwise.
  */
 @PublishedApi
 internal val KClass<*>.canBeUnfolded: Boolean
