@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
@@ -54,4 +55,17 @@ kotlinPublications {
         description = "Annotation preprocessor for DataFrame"
         packageName = artifactId
     }
+}
+
+// uses java 11 for testing
+tasks.compileTestKotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        freeCompilerArgs.add("-Xjdk-release=11")
+    }
+}
+tasks.compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
+    options.release.set(11)
 }
