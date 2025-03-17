@@ -8,7 +8,7 @@ import kotlin.reflect.full.withNullability
 /**
  * Simple [Aggregator] implementation with flattening behavior for multiple columns.
  *
- * Nulls are filtered from columns.
+ * Nulls are filtered out.
  *
  * When called on multiple columns,
  * the columns are flattened into a single list of values, filtering nulls as usual;

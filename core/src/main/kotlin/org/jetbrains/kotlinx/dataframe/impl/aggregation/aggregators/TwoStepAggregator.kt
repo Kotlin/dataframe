@@ -10,7 +10,7 @@ import kotlin.reflect.full.withNullability
 /**
  * A slightly more advanced [Aggregator] implementation.
  *
- * Nulls are filtered from columns.
+ * Nulls are filtered out.
  *
  * When called on multiple columns, this [Aggregator] works in two steps:
  * First, it aggregates within a [DataColumn]/[Iterable] ([stepOneAggregator]) with their (given) type,
