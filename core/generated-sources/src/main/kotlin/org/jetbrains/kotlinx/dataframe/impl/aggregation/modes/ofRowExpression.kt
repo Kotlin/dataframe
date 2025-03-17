@@ -13,13 +13,18 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     values: Iterable<C>,
     noinline transform: (C) -> V,
-): R = aggregate(values.asSequence().map(transform).asIterable(), typeOf<V>())
+): R =
+    aggregate(
+        values = values.asSequence().mapNotNull(transform).asIterable(),
+        type = typeOf<V>().withNullability(false),
+    )
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
