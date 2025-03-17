@@ -545,6 +545,17 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `move nested column after nested column`() {
+        val moved = typed2.move { nameAndCity.name }.after { nameAndCity.city }
+        moved.columnsCount() shouldBe 3
+        moved.nameAndCity.columnsCount() shouldBe 2
+        moved.nameAndCity.select { all() } shouldBe dataFrameOf(
+            typed2.nameAndCity.city,
+            typed2.nameAndCity.name,
+        )
+    }
+
+    @Test
     fun splitFrameColumnsIntoRows() {
         val grouped = typed.groupBy { city }
         val groupCol = grouped.groups.name()
