@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.math.median
@@ -101,7 +100,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: KPro
 
 public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(
     crossinline expression: RowExpression<T, R?>,
-): R? = Aggregators.median.of(this, expression) as R?
+): R? = Aggregators.median.aggregateOf(this, expression) as R?
 
 // endregion
 

@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast2
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.math.std
 import kotlin.reflect.KProperty
@@ -99,7 +98,7 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
     crossinline expression: RowExpression<T, R?>,
-): Double = Aggregators.std(skipNA, ddof).of(this, expression) ?: .0
+): Double = Aggregators.std(skipNA, ddof).aggregateOf(this, expression) ?: .0
 
 // endregion
 
