@@ -83,9 +83,15 @@ public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
     return this as ValueColumn<Number>
 }
 
-public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
+public fun <T : Any> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
     require(valuesAreComparable())
     return this as DataColumn<Comparable<T>>
+}
+
+@JvmName("asComparableNullable")
+public fun <T : Any?> DataColumn<T?>.asComparable(): DataColumn<Comparable<T>?> {
+    require(valuesAreComparable())
+    return this as DataColumn<Comparable<T>?>
 }
 
 public fun <T> ColumnReference<T?>.castToNotNullable(): ColumnReference<T> = cast()
