@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.math.percentile
@@ -121,7 +120,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.percentileOrNull(percentile: Doub
 public inline fun <T, reified R : Comparable<R>> DataFrame<T>.percentileOf(
     percentile: Double,
     crossinline expression: RowExpression<T, R?>,
-): R? = Aggregators.percentile(percentile).of(this, expression) as R?
+): R? = Aggregators.percentile(percentile).aggregateOf(this, expression) as R?
 
 // endregion
 

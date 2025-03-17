@@ -52,8 +52,8 @@ public fun DataColumn<Double?>.sum(): Double = Aggregators.sum.aggregate(this) a
 @JvmName("sumNumber")
 public fun DataColumn<Number?>.sum(): Number = Aggregators.sum.aggregate(this)
 
-public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expression: (T) -> R): R? =
-    (Aggregators.sum as Aggregator<*, *>).cast<R>().of(this, expression)
+public inline fun <T, reified R : Number> DataColumn<T>.sumOf(noinline expression: (T) -> R): R? =
+    (Aggregators.sum as Aggregator<*, *>).cast<R>().aggregateOf(this, expression)
 
 // endregion
 
