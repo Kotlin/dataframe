@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /*
@@ -38,7 +39,7 @@ import kotlin.reflect.typeOf
 // region DataColumn
 
 public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = skipNA_default): Double =
-    Aggregators.mean(skipNA).aggregate(this)!!
+    Aggregators.mean(skipNA).aggregate(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
     skipNA: Boolean = skipNA_default,
@@ -47,7 +48,6 @@ public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
     Aggregators.mean(skipNA)
         .cast2<R?, Double>()
         .aggregateOf(this, expression)
-        ?: Double.NaN
 
 // endregion
 
@@ -56,15 +56,14 @@ public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
 public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double =
     Aggregators.mean(skipNA).aggregateOfRow(this) {
         colsOf<Number?> { it.isPrimitiveNumber() }
-    } ?: Double.NaN
+    }
 
-public inline fun <reified T : Number> AnyRow.rowMeanOf(skipNA: Boolean = skipNA_default): Double {
-    require(typeOf<T>() in primitiveNumberTypes) {
+public inline fun <reified T : Number?> AnyRow.rowMeanOf(skipNA: Boolean = skipNA_default): Double {
+    require(typeOf<T>().withNullability(false) in primitiveNumberTypes) {
         "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
     }
     return Aggregators.mean(skipNA)
         .aggregateOfRow(this) { colsOf<T>() }
-        ?: Double.NaN
 }
 
 // endregion
@@ -97,7 +96,7 @@ public fun <T, C : Number> DataFrame<T>.meanFor(
 public fun <T, C : Number> DataFrame<T>.mean(
     skipNA: Boolean = skipNA_default,
     columns: ColumnsSelector<T, C?>,
-): Double = Aggregators.mean(skipNA).aggregateAll(this, columns) ?: Double.NaN
+): Double = Aggregators.mean(skipNA).aggregateAll(this, columns)
 
 public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): Double =
     mean(skipNA) { columns.toNumberColumns() }
@@ -115,7 +114,7 @@ public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skip
 public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
     skipNA: Boolean = skipNA_default,
     noinline expression: RowExpression<T, D?>,
-): Double = Aggregators.mean(skipNA).of(this, expression) ?: Double.NaN
+): Double = Aggregators.mean(skipNA).of(this, expression)
 
 // endregion
 
