@@ -46,25 +46,13 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     val refNode = removeRoot.getOrPut(targetPath) {
         val path = it.asList()
 
-        // Find the group reference (if any) and adjust the path
-        val groupRefIndex = path.indexOfFirst { it.isEmpty() }
+        // Get parent of a target path
+        val effectivePath = path.dropLast(1)
 
-        // Calculate effective path and column name based on group reference
-        val effectivePath = if (groupRefIndex >= 0) {
-            // Nested column reference
-            path.take(groupRefIndex)
-        } else {
-            path.dropLast(1)
-        }
+        // Get column name (last segment)
+        val columnName = path.last()
 
-        val columnName = if (groupRefIndex >= 0) {
-            // Use the next segment after group reference, or previous if no next segment
-            path.getOrNull(groupRefIndex + 1) ?: path[groupRefIndex - 1]
-        } else {
-            path.last()
-        }
-
-        // Get the parent group using ColumnPath
+        // Get the parent
         val parent = if (effectivePath.isEmpty()) {
             df
         } else {
