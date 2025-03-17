@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -26,7 +27,8 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * Base function of [Aggregator].
      *
      * Aggregates the given values, taking [type] into account,
-     * filtering nulls, and computes a single resulting value.
+     * filtering nulls (only if [type.isMarkedNullable][KType.isMarkedNullable]),
+     * and computes a single resulting value.
      *
      * When using [AggregatorBase], this can be supplied by the [AggregatorBase.aggregator] argument.
      *
@@ -35,7 +37,13 @@ internal abstract class AggregatorBase<in Value, out Return>(
     @Suppress("UNCHECKED_CAST")
     override fun aggregate(values: Iterable<Value?>, type: KType): Return =
         aggregator(
-            values.asSequence().filterNotNull().asIterable(), // TODO make dependant on type's nullability
+            // values =
+            if (type.isMarkedNullable) {
+                values.asSequence().filterNotNull().asIterable()
+            } else {
+                values as Iterable<Value & Any>
+            },
+            // type =
             type.withNullability(false),
         )
 
@@ -66,7 +74,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
 
     /** @include [Aggregator.aggregateCalculatingType] */
     override fun aggregateCalculatingType(values: Iterable<Value?>, valueTypes: Set<KType>?): Return {
-        val commonType = if (valueTypes != null) {
+        val commonType = if (valueTypes != null && valueTypes.isNotEmpty()) {
             valueTypes.commonType(false)
         } else {
             var hasNulls = false
@@ -78,7 +86,11 @@ internal abstract class AggregatorBase<in Value, out Return>(
                     it.javaClass.kotlin
                 }
             }
-            classes.commonType(hasNulls)
+            if (classes.isEmpty()) {
+                nothingType(hasNulls)
+            } else {
+                classes.commonType(hasNulls)
+            }
         }
         return aggregate(values, commonType)
     }

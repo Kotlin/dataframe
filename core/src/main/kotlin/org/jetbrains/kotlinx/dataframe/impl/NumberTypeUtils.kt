@@ -82,6 +82,9 @@ internal fun getUnifiedNumberTypeGraph(
 
             addEdge(typeOf<Short>(), typeOf<UByte>())
             addEdge(typeOf<Short>(), typeOf<Byte>())
+
+            addEdge(typeOf<UByte>(), nothingType)
+            addEdge(typeOf<Byte>(), nothingType)
         }
     }
 
@@ -121,7 +124,11 @@ internal fun getUnifiedNumberType(
             ?: error("Can not find common number type for $first and $second")
     }
 
-    return if (first.isMarkedNullable || second.isMarkedNullable) result.withNullability(true) else result
+    return if (first.isMarkedNullable || second.isMarkedNullable) {
+        result.withNullability(true)
+    } else {
+        result
+    }
 }
 
 /** @include [getUnifiedNumberType] */
@@ -184,7 +191,7 @@ internal fun Iterable<Number?>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
     commonNumberType: KType? = null,
 ): Iterable<Number?> {
-    val commonNumberType = commonNumberType ?: this.filterNotNull().types().unifiedNumberType(options)
+    val commonNumberType = commonNumberType ?: this.types().unifiedNumberType(options)
     val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
     return map {
         if (it == null) return@map null
@@ -209,7 +216,7 @@ internal fun Sequence<Number?>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
     commonNumberType: KType? = null,
 ): Sequence<Number?> {
-    val commonNumberType = commonNumberType ?: this.filterNotNull().asIterable().types().unifiedNumberType(options)
+    val commonNumberType = commonNumberType ?: this.asIterable().types().unifiedNumberType(options)
     val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
     return map {
         if (it == null) return@map null

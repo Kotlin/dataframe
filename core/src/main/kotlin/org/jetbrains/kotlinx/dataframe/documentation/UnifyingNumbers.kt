@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  * potentially losing a little precision, but a warning will be given.
  *
  * See [UnifiedNumberTypeOptions] for these settings.
+ *
+ * At the bottom of the graph is [Nothing]. This can be interpreted as `null`.
  */
 internal interface UnifyingNumbers {
 
@@ -40,6 +42,9 @@ internal interface UnifyingNumbers {
      *      |    /   |
      *      |   /    |
      *    UByte     Byte
+     *        \\     /
+     *        \\    /
+     *       Nothing?
      * ```
      */
     interface Graph

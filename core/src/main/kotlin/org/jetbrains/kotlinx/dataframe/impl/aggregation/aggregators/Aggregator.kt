@@ -26,7 +26,8 @@ internal interface Aggregator<in Value, out Return> {
      * Base function of [Aggregator].
      *
      * Aggregates the given values, taking [type] into account,
-     * filtering nulls, and computes a single resulting value.
+     * filtering nulls (only if [type.isMarkedNullable][KType.isMarkedNullable]),
+     * and computes a single resulting value.
      *
      * When using [AggregatorBase], this can be supplied by the [AggregatorBase.aggregator] argument.
      *
@@ -55,7 +56,7 @@ internal interface Aggregator<in Value, out Return> {
      * @param valueTypes The types of the values.
      *   If provided, this can be used to avoid calculating the types of [values] at runtime with reflection.
      *   It should contain all types of [values].
-     *   If `null`, the types of [values] will be calculated at runtime (heavy!).
+     *   If `null` or empty, the types of [values] will be calculated at runtime (heavy!).
      */
     fun aggregateCalculatingType(values: Iterable<Value?>, valueTypes: Set<KType>? = null): Return
 

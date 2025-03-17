@@ -667,19 +667,26 @@ internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecim
  *
  * The [KClass] is determined by retrieving the runtime class of each element.
  *
+ * [Nothing::class][Nothing] is used for elements that are `null`.
+ *
  * @return A set of [KClass] objects representing the runtime types of elements in the iterable.
  */
-internal fun Iterable<Any>.classes(): Set<KClass<*>> = mapTo(mutableSetOf()) { it::class }
+internal fun Iterable<Any?>.classes(): Set<KClass<*>> =
+    mapTo(mutableSetOf()) {
+        if (it == null) Nothing::class else it::class
+    }
 
 /**
  * Returns a set of [KType] objects representing the star-projected types of the runtime classes
  * of all unique elements in the iterable.
  *
- * The method internally relies on the [classes] function to collect the runtime classes of the
- * elements in the iterable and then maps each class to its star-projected type.
- *
  * This can be a heavy operation!
+ *
+ * [typeOf<Nothing?>()][nullableNothingType] is used for elements that are `null`.
  *
  * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in the iterable.
  */
-internal fun Iterable<Any>.types(): Set<KType> = classes().mapTo(mutableSetOf()) { it.createStarProjectedType(false) }
+internal fun Iterable<Any?>.types(): Set<KType> =
+    mapTo(mutableSetOf()) {
+        if (it == null) nullableNothingType else it::class.createStarProjectedType(false)
+    }
