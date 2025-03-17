@@ -17,7 +17,7 @@ internal object Aggregators {
      *
      * A slightly more advanced [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] implementation.
      *
-     * Nulls are filtered from columns.
+     * Nulls are filtered out.
      *
      * When called on multiple columns, this [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] works in two steps:
      * First, it aggregates within a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]/[Iterable] ([stepOneAggregator]) with their (given) type,
@@ -55,7 +55,7 @@ internal object Aggregators {
      *
      * A slightly more advanced [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] implementation.
      *
-     * Nulls are filtered from columns.
+     * Nulls are filtered out.
      *
      * When called on multiple columns, this [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] works in two steps:
      * First, it aggregates within a [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn]/[Iterable] ([stepOneAggregator]) with their (given) type,
@@ -96,7 +96,7 @@ internal object Aggregators {
      *
      * Simple [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] implementation with flattening behavior for multiple columns.
      *
-     * Nulls are filtered from columns.
+     * Nulls are filtered out.
      *
      * When called on multiple columns,
      * the columns are flattened into a single list of values, filtering nulls as usual;
@@ -130,7 +130,7 @@ internal object Aggregators {
      *
      * Simple [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] implementation with flattening behavior for multiple columns.
      *
-     * Nulls are filtered from columns.
+     * Nulls are filtered out.
      *
      * When called on multiple columns,
      * the columns are flattened into a single list of values, filtering nulls as usual;
@@ -167,7 +167,7 @@ internal object Aggregators {
      * [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] made specifically for number calculations.
      * Mixed number types are [unified][org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers] to [primitives][org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY].
      *
-     * Nulls are filtered from columns.
+     * Nulls are filtered out.
      *
      * When called on multiple columns (with potentially mixed [Number] types),
      * this [Aggregator][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator] works in two steps:
