@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -14,7 +15,7 @@ import kotlin.reflect.full.withNullability
  * or multiple [DataColumns][DataColumn].
  *
  * @param name The name of this aggregator.
- * @param aggregator Functional argument for the [aggregate] function.
+ * @param aggregator Functional argument for the [aggregate] function. Nulls are filtered out before this is called.
  */
 internal abstract class AggregatorBase<in Value, out Return>(
     override val name: String,
@@ -25,13 +26,26 @@ internal abstract class AggregatorBase<in Value, out Return>(
     /**
      * Base function of [Aggregator].
      *
-     * Aggregates the given values, taking [type] into account, and computes a single resulting value.
+     * Aggregates the given values, taking [type] into account,
+     * filtering nulls (only if [type.isMarkedNullable][KType.isMarkedNullable]),
+     * and computes a single resulting value.
      *
-     * Uses [aggregator] to compute the result.
+     * When using [AggregatorBase], this can be supplied by the [AggregatorBase.aggregator] argument.
      *
      * When the exact [type] is unknown, use [aggregateCalculatingType].
      */
-    override fun aggregate(values: Iterable<Value>, type: KType): Return? = aggregator(values, type)
+    @Suppress("UNCHECKED_CAST")
+    override fun aggregate(values: Iterable<Value?>, type: KType): Return =
+        aggregator(
+            // values =
+            if (type.isMarkedNullable) {
+                values.asSequence().filterNotNull().asIterable()
+            } else {
+                values as Iterable<Value & Any>
+            },
+            // type =
+            type.withNullability(false),
+        )
 
     /**
      * Function that can give the return type of [aggregate] as [KType], given the type of the input.
@@ -44,7 +58,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * @return The return type of [aggregate] as [KType].
      */
     override fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType? =
-        getReturnTypeOrNull(type, emptyInput)
+        getReturnTypeOrNull(type.withNullability(false), emptyInput)
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
@@ -52,20 +66,15 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * Nulls are filtered out by default, then [aggregate] (with [Iterable] and [KType]) is called.
      */
     @Suppress("UNCHECKED_CAST")
-    override fun aggregate(column: DataColumn<Value?>): Return? =
+    override fun aggregate(column: DataColumn<Value?>): Return =
         aggregate(
-            values =
-                if (column.hasNulls()) {
-                    column.asSequence().filterNotNull().asIterable()
-                } else {
-                    column.asIterable() as Iterable<Value>
-                },
-            type = column.type().withNullability(false),
+            values = column.asIterable(),
+            type = column.type(),
         )
 
     /** @include [Aggregator.aggregateCalculatingType] */
-    override fun aggregateCalculatingType(values: Iterable<Value>, valueTypes: Set<KType>?): Return? {
-        val commonType = if (valueTypes != null) {
+    override fun aggregateCalculatingType(values: Iterable<Value?>, valueTypes: Set<KType>?): Return {
+        val commonType = if (valueTypes != null && valueTypes.isNotEmpty()) {
             valueTypes.commonType(false)
         } else {
             var hasNulls = false
@@ -77,7 +86,11 @@ internal abstract class AggregatorBase<in Value, out Return>(
                     it.javaClass.kotlin
                 }
             }
-            classes.commonType(hasNulls)
+            if (classes.isEmpty()) {
+                nothingType(hasNulls)
+            } else {
+                classes.commonType(hasNulls)
+            }
         }
         return aggregate(values, commonType)
     }
@@ -86,7 +99,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      * Must be overridden to use.
      */
-    abstract override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return?
+    abstract override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return
 
     /**
      * Function that can give the return type of [aggregate] with columns as [KType],

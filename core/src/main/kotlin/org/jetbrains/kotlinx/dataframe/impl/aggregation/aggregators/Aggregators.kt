@@ -17,7 +17,7 @@ internal object Aggregators {
      *
      * @include [TwoStepAggregator]
      */
-    private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type>) =
+    private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type?>) =
         TwoStepAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             stepOneAggregator = aggregator,
@@ -44,7 +44,7 @@ internal object Aggregators {
      *
      * @include [FlatteningAggregator]
      */
-    private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type>) =
+    private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type?>) =
         FlatteningAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             aggregator = aggregate,
@@ -68,7 +68,7 @@ internal object Aggregators {
      *
      * @include [TwoStepNumbersAggregator]
      */
-    private fun <Return : Number> twoStepForNumbers(
+    private fun <Return : Number?> twoStepForNumbers(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         aggregate: Aggregate<Number, Return>,
     ) = TwoStepNumbersAggregator.Factory(
@@ -106,11 +106,9 @@ internal object Aggregators {
     // step one: T: Number? -> Double
     // step two: Double -> Double
     val mean by withOneOption { skipNA: Boolean ->
-        twoStepChangingType(
-            getReturnTypeOrNull = meanTypeConversion,
-            stepOneAggregator = { type -> mean(type, skipNA) },
-            stepTwoAggregator = { mean(skipNA) },
-        )
+        twoStepForNumbers(meanTypeConversion) { type ->
+            mean(type, skipNA)
+        }
     }
 
     // T: Comparable<T>? -> T
