@@ -1485,7 +1485,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `column stats`() {
-        typed.age.mean() shouldBe typed.age.toList().mean()
+        typed.age.mean() shouldBe typed.age.toList().average()
         typed.age.min() shouldBe typed.age.toList().minOrNull()
         typed.age.max() shouldBe typed.age.toList().maxOrNull()
         typed.age.sum() shouldBe typed.age.toList().sum()

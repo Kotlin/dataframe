@@ -7,13 +7,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
-import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KType
@@ -46,9 +45,14 @@ public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf
 
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 
+/** Returns `true` when this column's type is a subtype of `Number?` */
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 
-public fun AnyCol.isBigNumber(): Boolean = isSubtypeOf<BigInteger?>() || isSubtypeOf<BigDecimal?>()
+/**
+ * Returns `true` when this column has the (nullable) type of either:
+ * [Byte], [Short], [Int], [Long], [Float], or [Double].
+ */
+public fun AnyCol.isPrimitiveNumber(): Boolean = type().withNullability(false) in primitiveNumberTypes
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 

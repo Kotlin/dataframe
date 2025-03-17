@@ -31,7 +31,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
      *
      * When the exact [type] is unknown, use [aggregateCalculatingType].
      */
-    override fun aggregate(values: Iterable<Value>, type: KType): Return? = aggregator(values, type)
+    override fun aggregate(values: Iterable<Value>, type: KType): Return = aggregator(values, type)
 
     /**
      * Function that can give the return type of [aggregate] as [KType], given the type of the input.
@@ -52,7 +52,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * Nulls are filtered out by default, then [aggregate] (with [Iterable] and [KType]) is called.
      */
     @Suppress("UNCHECKED_CAST")
-    override fun aggregate(column: DataColumn<Value?>): Return? =
+    override fun aggregate(column: DataColumn<Value?>): Return =
         aggregate(
             values =
                 if (column.hasNulls()) {
@@ -71,7 +71,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
      *   If provided, this can be used to avoid calculating the types of [values][org.jetbrains.kotlinx.dataframe.values] at runtime with reflection.
      *   It should contain all types of [values][org.jetbrains.kotlinx.dataframe.values].
      * If `null`, the types of [values][org.jetbrains.kotlinx.dataframe.values] will be calculated at runtime (heavy!). */
-    override fun aggregateCalculatingType(values: Iterable<Value>, valueTypes: Set<KType>?): Return? {
+    override fun aggregateCalculatingType(values: Iterable<Value>, valueTypes: Set<KType>?): Return {
         val commonType = if (valueTypes != null) {
             valueTypes.commonType(false)
         } else {
@@ -93,7 +93,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      * Must be overridden to use.
      */
-    abstract override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return?
+    abstract override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return
 
     /**
      * Function that can give the return type of [aggregate] with columns as [KType],
