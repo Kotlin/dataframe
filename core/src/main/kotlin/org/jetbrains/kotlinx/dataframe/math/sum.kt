@@ -45,18 +45,14 @@ internal fun Sequence<Number?>.sum(type: KType): Number {
 
 /** T: Number? -> T */
 internal val sumTypeConversion: CalculateReturnTypeOrNull = { type, _ ->
-    when (type.withNullability(false)) {
-        typeOf<Int>(),
-        typeOf<Short>(),
-        typeOf<Byte>(),
-        -> typeOf<Int>()
+    when (val type = type.withNullability(false)) {
+        // type changes to Int
+        typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>()
 
-        typeOf<Long>() -> typeOf<Long>()
+        // type remains the same
+        typeOf<Int>(), typeOf<Long>(), typeOf<Double>(), typeOf<Float>() -> type
 
-        typeOf<Double>() -> typeOf<Double>()
-
-        typeOf<Float>() -> typeOf<Float>()
-
+        // defaults to Double
         else -> typeOf<Double>()
     }
 }

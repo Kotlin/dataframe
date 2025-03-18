@@ -25,10 +25,9 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-/*
- * TODO KDocs:
+/* TODO KDocs:
  * Calculating the mean is supported for all primitive number types.
- * Nulls are filtered from columns.
+ * Nulls are filtered out.
  * The return type is always Double, Double.NaN for empty input, never null.
  * (May introduce loss of precision for Longs).
  * For mixed primitive number types, [TwoStepNumbersAggregator] unifies the numbers before calculating the mean.
@@ -48,16 +47,13 @@ public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
 // region DataRow
 
 public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double =
-    Aggregators.mean(skipNA).aggregateOfRow(this) {
-        colsOf<Number?> { it.isPrimitiveNumber() }
-    }
+    Aggregators.mean(skipNA).aggregateOfRow(this, primitiveNumberColumns())
 
 public inline fun <reified T : Number?> AnyRow.rowMeanOf(skipNA: Boolean = skipNA_default): Double {
     require(typeOf<T>().withNullability(false) in primitiveNumberTypes) {
         "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
     }
-    return Aggregators.mean(skipNA)
-        .aggregateOfRow(this) { colsOf<T>() }
+    return Aggregators.mean(skipNA).aggregateOfRow(this) { colsOf<T>() }
 }
 
 // endregion
