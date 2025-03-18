@@ -14,12 +14,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast2
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
@@ -38,16 +36,12 @@ import kotlin.reflect.typeOf
 
 // region DataColumn
 
-public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = skipNA_default): Double =
-    Aggregators.mean(skipNA).aggregate(this)
+public fun DataColumn<Number?>.mean(skipNA: Boolean = skipNA_default): Double = Aggregators.mean(skipNA).aggregate(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
     skipNA: Boolean = skipNA_default,
-    noinline expression: (T) -> R?,
-): Double =
-    Aggregators.mean(skipNA)
-        .cast2<R?, Double>()
-        .aggregateOf(this, expression)
+    crossinline expression: (T) -> R?,
+): Double = Aggregators.mean(skipNA).aggregateOf(this, expression)
 
 // endregion
 
@@ -113,8 +107,8 @@ public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skip
 
 public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
     skipNA: Boolean = skipNA_default,
-    noinline expression: RowExpression<T, D?>,
-): Double = Aggregators.mean(skipNA).of(this, expression)
+    crossinline expression: RowExpression<T, D?>,
+): Double = Aggregators.mean(skipNA).aggregateOf(this, expression)
 
 // endregion
 
