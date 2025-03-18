@@ -10,7 +10,7 @@ import kotlin.reflect.full.withNullability
 /**
  * A slightly more advanced [Aggregator] implementation.
  *
- * Nulls are filtered from columns.
+ * Nulls are filtered out.
  *
  * When called on multiple columns, this [Aggregator] works in two steps:
  * First, it aggregates within a [DataColumn]/[Iterable] ([stepOneAggregator]) with their (given) type,
@@ -23,7 +23,7 @@ import kotlin.reflect.full.withNullability
  *     -> stepOneAggregator(Iterable<Value>, colType) // called on each iterable
  *     -> Iterable<Return> // nulls filtered out
  *     -> stepTwoAggregator(Iterable<Return>, common valueType)
- *     -> Return?
+ *     -> Return
  * ```
  *
  * It can also be used as a "simple" aggregator by providing the same function for both steps.
@@ -40,7 +40,7 @@ internal class TwoStepAggregator<in Value, out Return>(
     name: String,
     getReturnTypeOrNull: CalculateReturnTypeOrNull,
     stepOneAggregator: Aggregate<Value, Return>,
-    private val stepTwoAggregator: Aggregate<Return, Return>,
+    private val stepTwoAggregator: Aggregate<Return & Any, Return>,
 ) : AggregatorBase<Value, Return>(name, getReturnTypeOrNull, stepOneAggregator) {
 
     /**
@@ -50,7 +50,7 @@ internal class TwoStepAggregator<in Value, out Return>(
      *
      * Post-step-one types are calculated by [calculateReturnTypeOrNull].
      */
-    override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return? {
+    override fun aggregate(columns: Iterable<DataColumn<Value?>>): Return {
         val (values, types) = columns.mapNotNull { col ->
             // uses stepOneAggregator
             val value = aggregate(col) ?: return@mapNotNull null
@@ -93,7 +93,7 @@ internal class TwoStepAggregator<in Value, out Return>(
     class Factory<in Value, out Return>(
         private val getReturnTypeOrNull: CalculateReturnTypeOrNull,
         private val stepOneAggregator: Aggregate<Value, Return>,
-        private val stepTwoAggregator: Aggregate<Return, Return>,
+        private val stepTwoAggregator: Aggregate<Return & Any, Return>,
     ) : AggregatorProvider<TwoStepAggregator<Value, Return>> by AggregatorProvider({ name ->
             TwoStepAggregator(
                 name = name,

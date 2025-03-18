@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 
 @PublishedApi
-internal fun <T, C, R> Aggregator<*, R>.aggregateAll(data: DataFrame<T>, columns: ColumnsSelector<T, C>): R? =
+internal fun <T, C, R> Aggregator<*, R>.aggregateAll(data: DataFrame<T>, columns: ColumnsSelector<T, C>): R =
     data.aggregateAll(cast2(), columns)
 
 internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
@@ -29,7 +29,7 @@ internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = data.aggregateAll(cast(), columns)
 
-internal fun <T, C, R> DataFrame<T>.aggregateAll(aggregator: Aggregator<C, R>, columns: ColumnsSelector<T, C?>): R? =
+internal fun <T, C, R> DataFrame<T>.aggregateAll(aggregator: Aggregator<C, R>, columns: ColumnsSelector<T, C?>): R =
     aggregator.aggregate(get(columns))
 
 internal fun <T, C, R> Grouped<T>.aggregateAll(

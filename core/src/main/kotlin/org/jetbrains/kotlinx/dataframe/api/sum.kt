@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.zero
@@ -38,8 +37,8 @@ public fun <T : Number> DataColumn<T>.sum(): T = values.sum(type())
 @JvmName("sumTNullable")
 public fun <T : Number> DataColumn<T?>.sum(): T = values.sum(type())
 
-public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expression: (T) -> R): R? =
-    (Aggregators.sum as Aggregator<*, *>).cast<R>().of(this, expression)
+public inline fun <T, reified R : Number> DataColumn<T>.sumOf(noinline expression: (T) -> R): R? =
+    (Aggregators.sum as Aggregator<*, *>).cast<R>().aggregateOf(this, expression)
 
 // endregion
 
