@@ -1,4 +1,5 @@
 @file:OptIn(ExperimentalTypeInference::class)
+@file:Suppress("LocalVariableName")
 
 package org.jetbrains.kotlinx.dataframe.api
 
@@ -20,18 +21,26 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
-import org.jetbrains.kotlinx.dataframe.impl.zero
 import kotlin.experimental.ExperimentalTypeInference
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-// region DataColumn
+/* TODO KDocs
+ * Calculating the sum is supported for all primitive number types.
+ * Nulls are filtered out.
+ * The return type is always the same as the input type (never null), except for `Byte` and `Short`,
+ * which are converted to `Int`.
+ * Empty input will result in 0 in the supplied number type.
+ * For mixed primitive number types, [TwoStepNumbersAggregator] unifies the numbers before calculating the sum.
+ */
 
-@JvmName("sumInt")
-public fun DataColumn<Int?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
+// region DataColumn
 
 @JvmName("sumShort")
 public fun DataColumn<Short?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
@@ -39,71 +48,66 @@ public fun DataColumn<Short?>.sum(): Int = Aggregators.sum.aggregate(this) as In
 @JvmName("sumByte")
 public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
 
-@JvmName("sumLong")
-public fun DataColumn<Long?>.sum(): Long = Aggregators.sum.aggregate(this) as Long
-
-@JvmName("sumFloat")
-public fun DataColumn<Float?>.sum(): Float = Aggregators.sum.aggregate(this) as Float
-
-@JvmName("sumDouble")
-public fun DataColumn<Double?>.sum(): Double = Aggregators.sum.aggregate(this) as Double
-
+@Suppress("UNCHECKED_CAST")
 @JvmName("sumNumber")
-public fun DataColumn<Number?>.sum(): Number = Aggregators.sum.aggregate(this)
-
-@JvmName("sumOfInt")
-@OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.sumOf(expression: (T) -> Int?): Int = Aggregators.sum.aggregateOf(this, expression) as Int
+public fun <T : Number> DataColumn<T?>.sum(): T = Aggregators.sum.aggregate(this) as T
 
 @JvmName("sumOfShort")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.sumOf(expression: (T) -> Short?): Int =
+public fun <C> DataColumn<C>.sumOf(expression: (C) -> Short?): Int =
     Aggregators.sum.aggregateOf(this, expression) as Int
 
 @JvmName("sumOfByte")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.sumOf(expression: (T) -> Byte?): Int = Aggregators.sum.aggregateOf(this, expression) as Int
-
-@JvmName("sumOfLong")
-@OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.sumOf(expression: (T) -> Long?): Long =
-    Aggregators.sum.aggregateOf(this, expression) as Long
-
-@JvmName("sumOfFloat")
-@OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.sumOf(expression: (T) -> Float?): Float =
-    Aggregators.sum.aggregateOf(this, expression) as Float
-
-@JvmName("sumOfDouble")
-@OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.sumOf(expression: (T) -> Double?): Double =
-    Aggregators.sum.aggregateOf(this, expression) as Double
+public fun <C> DataColumn<C>.sumOf(expression: (C) -> Byte?): Int = Aggregators.sum.aggregateOf(this, expression) as Int
 
 @JvmName("sumOfNumber")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataColumn<T>.sumOf(expression: (T) -> Number?): Number = Aggregators.sum.aggregateOf(this, expression)
+public inline fun <C, reified V : Number> DataColumn<C>.sumOf(crossinline expression: (C) -> V?): V =
+    Aggregators.sum.aggregateOf(this, expression) as V
 
 // endregion
 
 // region DataRow
 
-public fun AnyRow.rowSum(): Number =
-    Aggregators.sum.aggregateOfRow(this) {
-        colsOf<Number?> { it.isPrimitiveNumber() }
-    }
+public fun AnyRow.rowSum(): Number = Aggregators.sum.aggregateOfRow(this, primitiveNumberColumns())
 
-public inline fun <reified T : Number> AnyRow.rowSumOf(): Number /*todo*/ {
-    require(typeOf<T>() in primitiveNumberTypes) {
-        "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
+@JvmName("rowSumOfShort")
+public inline fun <reified T : Short?> AnyRow.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
+    rowSumOf(typeOf<T>()) as Int
+
+@JvmName("rowSumOfByte")
+public inline fun <reified T : Byte?> AnyRow.rowSumOf(_kClass: KClass<Byte> = Byte::class): Int =
+    rowSumOf(typeOf<T>()) as Int
+
+@JvmName("rowSumOfInt")
+public inline fun <reified T : Int?> AnyRow.rowSumOf(_kClass: KClass<Int> = Int::class): Int =
+    rowSumOf(typeOf<T>()) as Int
+
+@JvmName("rowSumOfLong")
+public inline fun <reified T : Long?> AnyRow.rowSumOf(_kClass: KClass<Long> = Long::class): Long =
+    rowSumOf(typeOf<T>()) as Long
+
+@JvmName("rowSumOfFloat")
+public inline fun <reified T : Float?> AnyRow.rowSumOf(_kClass: KClass<Float> = Float::class): Float =
+    rowSumOf(typeOf<T>()) as Float
+
+@JvmName("rowSumOfDouble")
+public inline fun <reified T : Double?> AnyRow.rowSumOf(_kClass: KClass<Double> = Double::class): Double =
+    rowSumOf(typeOf<T>()) as Double
+
+// unfortunately, we cannot make a `reified T : Number?` due to clashes
+public fun AnyRow.rowSumOf(type: KType): Number {
+    require(type.withNullability(false) in primitiveNumberTypes) {
+        "Type $type is not a primitive number type. Mean only supports primitive number types."
     }
-    return Aggregators.sum
-        .aggregateOfRow(this) { colsOf<T>() }
+    return Aggregators.sum.aggregateOfRow(this) { colsOf(type) }
 }
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.sum(): DataRow<T> = sumFor(numberColumns())
+public fun <T> DataFrame<T>.sum(): DataRow<T> = sumFor(primitiveNumberColumns())
 
 public fun <T, C : Number> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
     Aggregators.sum.aggregateFor(this, columns)
@@ -118,28 +122,70 @@ public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: KProperty<C?>): DataRow<T> =
     sumFor { columns.toColumnSet() }
 
-public inline fun <T, reified C : Number> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C?>): C =
-    (Aggregators.sum.aggregateAll(this, columns) as C?) ?: C::class.zero()
+@JvmName("sumShort")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataFrame<T>.sum(columns: ColumnsSelector<T, Short?>): Int =
+    Aggregators.sum.aggregateAll(this, columns) as Int
 
+@JvmName("sumByte")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataFrame<T>.sum(columns: ColumnsSelector<T, Byte?>): Int =
+    Aggregators.sum.aggregateAll(this, columns) as Int
+
+@JvmName("sumNumber")
+@OverloadResolutionByLambdaReturnType
+public inline fun <T, reified C : Number> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C?>): C =
+    Aggregators.sum.aggregateAll(this, columns) as C
+
+@JvmName("sumShort")
+@AccessApiOverload
+public fun <T> DataFrame<T>.sum(vararg columns: ColumnReference<Short?>): Int = sum { columns.toColumnSet() }
+
+@JvmName("sumByte")
+@AccessApiOverload
+public fun <T> DataFrame<T>.sum(vararg columns: ColumnReference<Byte?>): Int = sum { columns.toColumnSet() }
+
+@JvmName("sumNumber")
 @AccessApiOverload
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: ColumnReference<C?>): C =
     sum { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsSetOf() }
+public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsSetOf<Number?>() }
 
+@JvmName("sumShort")
+@AccessApiOverload
+public fun <T> DataFrame<T>.sum(vararg columns: KProperty<Short?>): Int = sum { columns.toColumnSet() }
+
+@JvmName("sumByte")
+@AccessApiOverload
+public fun <T> DataFrame<T>.sum(vararg columns: KProperty<Byte?>): Int = sum { columns.toColumnSet() }
+
+@JvmName("sumNumber")
 @AccessApiOverload
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C =
     sum { columns.toColumnSet() }
 
-public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): C =
-    rows().sumOf(typeOf<C>()) { expression(it, it) }
+@JvmName("sumOfShort")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataFrame<T>.sumOf(expression: RowExpression<T, Short?>): Int =
+    Aggregators.sum.aggregateOf(this, expression) as Int
+
+@JvmName("sumOfByte")
+@OverloadResolutionByLambdaReturnType
+public fun <T> DataFrame<T>.sumOf(expression: RowExpression<T, Byte?>): Int =
+    Aggregators.sum.aggregateOf(this, expression) as Int
+
+@JvmName("sumOfNumber")
+@OverloadResolutionByLambdaReturnType
+public inline fun <T, reified C : Number> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C?>): C =
+    Aggregators.sum.aggregateOf(this, expression) as C
 
 // endregion
 
 // region GroupBy
 @Refine
 @Interpretable("GroupBySum1")
-public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(numberColumns())
+public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(primitiveNumberColumns())
 
 @Refine
 @Interpretable("GroupBySum0")
@@ -183,7 +229,7 @@ public inline fun <T, reified R : Number> Grouped<T>.sumOf(
 
 // region Pivot
 
-public fun <T> Pivot<T>.sum(separate: Boolean = false): DataRow<T> = sumFor(separate, numberColumns())
+public fun <T> Pivot<T>.sum(separate: Boolean = false): DataRow<T> = sumFor(separate, primitiveNumberColumns())
 
 public fun <T, R : Number> Pivot<T>.sumFor(
     separate: Boolean = false,
@@ -213,14 +259,14 @@ public fun <T, C : Number> Pivot<T>.sum(vararg columns: ColumnReference<C?>): Da
 @AccessApiOverload
 public fun <T, C : Number> Pivot<T>.sum(vararg columns: KProperty<C?>): DataRow<T> = sum { columns.toColumnSet() }
 
-public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression: RowExpression<T, R>): DataRow<T> =
+public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression: RowExpression<T, R?>): DataRow<T> =
     delegate { sumOf(expression) }
 
 // endregion
 
 // region PivotGroupBy
 
-public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false): DataFrame<T> = sumFor(separate, numberColumns())
+public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false): DataFrame<T> = sumFor(separate, primitiveNumberColumns())
 
 public fun <T, R : Number> PivotGroupBy<T>.sumFor(
     separate: Boolean = false,
@@ -256,7 +302,7 @@ public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: KProperty<C?>): D
     sum { columns.toColumnSet() }
 
 public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(
-    crossinline expression: RowExpression<T, R>,
+    crossinline expression: RowExpression<T, R?>,
 ): DataFrame<T> = Aggregators.sum.aggregateOf(this, expression)
 
 // endregion
