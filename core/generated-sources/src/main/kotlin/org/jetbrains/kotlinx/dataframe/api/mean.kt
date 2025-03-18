@@ -48,16 +48,13 @@ public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
 // region DataRow
 
 public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double =
-    Aggregators.mean(skipNA).aggregateOfRow(this) {
-        colsOf<Number?> { it.isPrimitiveNumber() }
-    }
+    Aggregators.mean(skipNA).aggregateOfRow(this, primitiveNumberColumns())
 
 public inline fun <reified T : Number?> AnyRow.rowMeanOf(skipNA: Boolean = skipNA_default): Double {
     require(typeOf<T>().withNullability(false) in primitiveNumberTypes) {
         "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
     }
-    return Aggregators.mean(skipNA)
-        .aggregateOfRow(this) { colsOf<T>() }
+    return Aggregators.mean(skipNA).aggregateOfRow(this) { colsOf<T>() }
 }
 
 // endregion
