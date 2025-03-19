@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.commonParents
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.commonTypeListifyValues
 import org.jetbrains.kotlinx.dataframe.impl.createType
-import org.jetbrains.kotlinx.dataframe.impl.getUnifiedNumberClass
+import org.jetbrains.kotlinx.dataframe.impl.getUnifiedNumberClassOrNull
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
@@ -426,40 +426,40 @@ class UtilTests {
     @Test
     fun `common number types`() {
         // Same type
-        getUnifiedNumberClass(Int::class, Int::class) shouldBe Int::class
-        getUnifiedNumberClass(Double::class, Double::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(Int::class, Int::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(Double::class, Double::class) shouldBe Double::class
 
         // Direct parent-child relationships
-        getUnifiedNumberClass(Int::class, UShort::class) shouldBe Int::class
-        getUnifiedNumberClass(Long::class, UInt::class) shouldBe Long::class
-        getUnifiedNumberClass(Double::class, Float::class) shouldBe Double::class
-        getUnifiedNumberClass(UShort::class, Short::class) shouldBe Int::class
-        getUnifiedNumberClass(UByte::class, Byte::class) shouldBe Short::class
+        getUnifiedNumberClassOrNull(Int::class, UShort::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(Long::class, UInt::class) shouldBe Long::class
+        getUnifiedNumberClassOrNull(Double::class, Float::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(UShort::class, Short::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(UByte::class, Byte::class) shouldBe Short::class
 
-        getUnifiedNumberClass(UByte::class, UShort::class) shouldBe UShort::class
+        getUnifiedNumberClassOrNull(UByte::class, UShort::class) shouldBe UShort::class
 
         // Multi-level relationships
-        getUnifiedNumberClass(Byte::class, Int::class) shouldBe Int::class
-        getUnifiedNumberClass(UByte::class, Long::class) shouldBe Long::class
-        getUnifiedNumberClass(Short::class, Double::class) shouldBe Double::class
-        getUnifiedNumberClass(UInt::class, Int::class) shouldBe Long::class
+        getUnifiedNumberClassOrNull(Byte::class, Int::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(UByte::class, Long::class) shouldBe Long::class
+        getUnifiedNumberClassOrNull(Short::class, Double::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(UInt::class, Int::class) shouldBe Long::class
 
         // Top-level types
-        getUnifiedNumberClass(BigDecimal::class, Double::class) shouldBe BigDecimal::class
-        getUnifiedNumberClass(BigInteger::class, Long::class) shouldBe BigInteger::class
-        getUnifiedNumberClass(BigDecimal::class, BigInteger::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(BigDecimal::class, Double::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(BigInteger::class, Long::class) shouldBe BigInteger::class
+        getUnifiedNumberClassOrNull(BigDecimal::class, BigInteger::class) shouldBe BigDecimal::class
 
         // Distant relationships
-        getUnifiedNumberClass(Byte::class, BigDecimal::class) shouldBe BigDecimal::class
-        getUnifiedNumberClass(UByte::class, Double::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(Byte::class, BigDecimal::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(UByte::class, Double::class) shouldBe Double::class
 
         // Complex type promotions
-        getUnifiedNumberClass(Int::class, Float::class) shouldBe Double::class
-        getUnifiedNumberClass(Long::class, Double::class) shouldBe BigDecimal::class
-        getUnifiedNumberClass(ULong::class, Double::class) shouldBe BigDecimal::class
-        getUnifiedNumberClass(BigInteger::class, Double::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(Int::class, Float::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(Long::class, Double::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(ULong::class, Double::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(BigInteger::class, Double::class) shouldBe BigDecimal::class
 
         // Edge case with null
-        getUnifiedNumberClass(null, Int::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(null, Int::class) shouldBe Int::class
     }
 }
