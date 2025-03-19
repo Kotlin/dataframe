@@ -15,13 +15,23 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.map
 import org.jetbrains.kotlinx.dataframe.kind
 
 internal fun <T, C> RenameClause<T, C>.renameImpl(newNames: Array<out String>): DataFrame<T> {
-    // associate old column names with new ones
     val selectedColumns = df.getColumnsWithPaths(columns)
+
+    if (selectedColumns.size != newNames.size) {
+        throw IllegalArgumentException(
+            "Selected column count (${selectedColumns.size}) must match new " +
+                "column names count (${newNames.size}).",
+        )
+    }
+
+    // associate old column names with new ones
     val oldToNew = newNames.mapIndexed { index, newName ->
-        selectedColumns[index].name to newName
+        selectedColumns[index].path to newName
     }.toMap()
 
-    return renameImpl { column -> oldToNew[column.name] ?: column.name }
+    return renameImpl { column ->
+        oldToNew[column.path] ?: throw IllegalArgumentException("Unexpected column: $column")
+    }
 }
 
 internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>) -> String): DataFrame<T> {
