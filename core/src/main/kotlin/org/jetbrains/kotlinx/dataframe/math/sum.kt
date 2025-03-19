@@ -50,9 +50,11 @@ internal val sumTypeConversion: CalculateReturnTypeOrNull = { type, _ ->
         typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>()
 
         // type remains the same
-        typeOf<Int>(), typeOf<Long>(), typeOf<Double>(), typeOf<Float>() -> type
+        typeOf<Int>(), typeOf<Long>(), typeOf<Double>(), typeOf<Float>(), typeOf<Number>() -> type
 
-        // defaults to Double
-        else -> typeOf<Double>()
+        nothingType -> typeOf<Double>()
+
+        else ->
+            error("Unable to compute the sum for ${renderType(type)}, Only primitive numbers are supported.")
     }
 }

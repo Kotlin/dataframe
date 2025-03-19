@@ -21,14 +21,13 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveNumberColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveOrMixedNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
-import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /* TODO KDocs
@@ -70,7 +69,7 @@ public inline fun <C, reified V : Number> DataColumn<C>.sumOf(crossinline expres
 
 // region DataRow
 
-public fun AnyRow.rowSum(): Number = Aggregators.sum.aggregateOfRow(this, primitiveNumberColumns())
+public fun AnyRow.rowSum(): Number = Aggregators.sum.aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
 @JvmName("rowSumOfShort")
 public inline fun <reified T : Short?> AnyRow.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
@@ -98,7 +97,7 @@ public inline fun <reified T : Double?> AnyRow.rowSumOf(_kClass: KClass<Double> 
 
 // unfortunately, we cannot make a `reified T : Number?` due to clashes
 public fun AnyRow.rowSumOf(type: KType): Number {
-    require(type.withNullability(false) in primitiveNumberTypes) {
+    require(type.isPrimitiveOrMixedNumber()) {
         "Type $type is not a primitive number type. Mean only supports primitive number types."
     }
     return Aggregators.sum.aggregateOfRow(this) { colsOf(type) }
@@ -107,7 +106,7 @@ public fun AnyRow.rowSumOf(type: KType): Number {
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.sum(): DataRow<T> = sumFor(primitiveNumberColumns())
+public fun <T> DataFrame<T>.sum(): DataRow<T> = sumFor(primitiveOrMixedNumberColumns())
 
 public fun <T, C : Number> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
     Aggregators.sum.aggregateFor(this, columns)
@@ -185,7 +184,7 @@ public inline fun <T, reified C : Number> DataFrame<T>.sumOf(crossinline express
 // region GroupBy
 @Refine
 @Interpretable("GroupBySum1")
-public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(primitiveNumberColumns())
+public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(primitiveOrMixedNumberColumns())
 
 @Refine
 @Interpretable("GroupBySum0")
@@ -229,7 +228,7 @@ public inline fun <T, reified R : Number> Grouped<T>.sumOf(
 
 // region Pivot
 
-public fun <T> Pivot<T>.sum(separate: Boolean = false): DataRow<T> = sumFor(separate, primitiveNumberColumns())
+public fun <T> Pivot<T>.sum(separate: Boolean = false): DataRow<T> = sumFor(separate, primitiveOrMixedNumberColumns())
 
 public fun <T, R : Number> Pivot<T>.sumFor(
     separate: Boolean = false,
@@ -266,7 +265,8 @@ public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression:
 
 // region PivotGroupBy
 
-public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false): DataFrame<T> = sumFor(separate, primitiveNumberColumns())
+public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false): DataFrame<T> =
+    sumFor(separate, primitiveOrMixedNumberColumns())
 
 public fun <T, R : Number> PivotGroupBy<T>.sumFor(
     separate: Boolean = false,

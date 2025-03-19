@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.types
-import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberType
+import org.jetbrains.kotlinx.dataframe.impl.unifiedNumberTypeOrNull
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
@@ -95,11 +95,15 @@ internal class TwoStepNumbersAggregator<out Return : Number?>(
             calculateReturnTypeOrNull(type = type.withNullability(false), emptyInput = colsEmpty)
         }
         if (typesAfterStepOne.anyNull()) return null
-        val commonType = (typesAfterStepOne as List<KType>)
-            .toSet()
-            .unifiedNumberType(PRIMITIVES_ONLY)
-            .withNullability(false)
-        return commonType
+        val typeSet = (typesAfterStepOne as List<KType>).toSet()
+        val unifiedType = typeSet.unifiedNumberTypeOrNull(PRIMITIVES_ONLY)
+            ?.withNullability(false)
+            ?: throw IllegalArgumentException(
+                "Cannot calculate the $name of the number types: ${typeSet.joinToString { renderType(it) }}. " +
+                    "Note, only primitive number types are supported in statistics.",
+            )
+
+        return unifiedType
     }
 
     /**
@@ -151,24 +155,28 @@ internal class TwoStepNumbersAggregator<out Return : Number?>(
     @Suppress("UNCHECKED_CAST")
     override fun aggregateCalculatingType(values: Iterable<Number?>, valueTypes: Set<KType>?): Return {
         val valueTypes = valueTypes?.takeUnless { it.isEmpty() } ?: values.types()
-        val commonType = valueTypes.unifiedNumberType(PRIMITIVES_ONLY)
+        val unifiedType = valueTypes.unifiedNumberTypeOrNull(PRIMITIVES_ONLY)
+            ?: throw IllegalArgumentException(
+                "Cannot calculate the $name of the number types: ${valueTypes.joinToString { renderType(it) }}. " +
+                    "Note, only primitive number types are supported in statistics.",
+            )
 
-        if (commonType.isSubtypeOf(typeOf<Double?>()) &&
+        if (unifiedType.isSubtypeOf(typeOf<Double?>()) &&
             (typeOf<ULong>() in valueTypes || typeOf<Long>() in valueTypes)
         ) {
             logger.warn {
                 "Number unification of Long -> Double happened during aggregation. Loss of precision may have occurred."
             }
         }
-        if (commonType.withNullability(false) !in primitiveNumberTypes && !commonType.isNothing) {
+        if (unifiedType.withNullability(false) !in primitiveNumberTypes && !unifiedType.isNothing) {
             throw IllegalArgumentException(
-                "Cannot calculate $name of ${renderType(commonType)}, only primitive numbers are supported.",
+                "Cannot calculate $name of ${renderType(unifiedType)}, only primitive numbers are supported.",
             )
         }
 
         return super.aggregate(
-            values = values.convertToUnifiedNumberType(commonNumberType = commonType),
-            type = commonType,
+            values = values.convertToUnifiedNumberType(commonNumberType = unifiedType),
+            type = unifiedType,
         )
     }
 
