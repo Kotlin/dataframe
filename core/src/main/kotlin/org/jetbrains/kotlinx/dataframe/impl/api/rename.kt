@@ -15,8 +15,13 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.map
 import org.jetbrains.kotlinx.dataframe.kind
 
 internal fun <T, C> RenameClause<T, C>.renameImpl(newNames: Array<out String>): DataFrame<T> {
-    var i = 0
-    return renameImpl { newNames[i++] }
+    // associate old column names with new ones
+    val selectedColumns = df.getColumnsWithPaths(columns)
+    val oldToNew = newNames.mapIndexed { index, newName ->
+        selectedColumns[index].name to newName
+    }.toMap()
+
+    return renameImpl { column -> oldToNew[column.name] ?: column.name }
 }
 
 internal fun <T, C> RenameClause<T, C>.renameImpl(transform: (ColumnWithPath<C>) -> String): DataFrame<T> {
