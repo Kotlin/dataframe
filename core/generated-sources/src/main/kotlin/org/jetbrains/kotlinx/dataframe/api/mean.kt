@@ -18,17 +18,15 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveNumberColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveOrMixedNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
-import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-/*
- * TODO KDocs:
+/* TODO KDocs:
  * Calculating the mean is supported for all primitive number types.
- * Nulls are filtered from columns.
+ * Nulls are filtered out.
  * The return type is always Double, Double.NaN for empty input, never null.
  * (May introduce loss of precision for Longs).
  * For mixed primitive number types, [TwoStepNumbersAggregator] unifies the numbers before calculating the mean.
@@ -48,16 +46,13 @@ public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
 // region DataRow
 
 public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double =
-    Aggregators.mean(skipNA).aggregateOfRow(this) {
-        colsOf<Number?> { it.isPrimitiveNumber() }
-    }
+    Aggregators.mean(skipNA).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
 public inline fun <reified T : Number?> AnyRow.rowMeanOf(skipNA: Boolean = skipNA_default): Double {
-    require(typeOf<T>().withNullability(false) in primitiveNumberTypes) {
+    require(typeOf<T>().isPrimitiveOrMixedNumber()) {
         "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
     }
-    return Aggregators.mean(skipNA)
-        .aggregateOfRow(this) { colsOf<T>() }
+    return Aggregators.mean(skipNA).aggregateOfRow(this) { colsOf<T>() }
 }
 
 // endregion
@@ -65,7 +60,7 @@ public inline fun <reified T : Number?> AnyRow.rowMeanOf(skipNA: Boolean = skipN
 // region DataFrame
 
 public fun <T> DataFrame<T>.mean(skipNA: Boolean = skipNA_default): DataRow<T> =
-    meanFor(skipNA, primitiveNumberColumns())
+    meanFor(skipNA, primitiveOrMixedNumberColumns())
 
 public fun <T, C : Number> DataFrame<T>.meanFor(
     skipNA: Boolean = skipNA_default,
@@ -116,7 +111,7 @@ public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
 @Refine
 @Interpretable("GroupByMean1")
 public fun <T> Grouped<T>.mean(skipNA: Boolean = skipNA_default): DataFrame<T> =
-    meanFor(skipNA, primitiveNumberColumns())
+    meanFor(skipNA, primitiveOrMixedNumberColumns())
 
 @Refine
 @Interpretable("GroupByMean0")
@@ -181,7 +176,7 @@ public inline fun <T, reified R : Number> Grouped<T>.meanOf(
 // region Pivot
 
 public fun <T> Pivot<T>.mean(skipNA: Boolean = skipNA_default, separate: Boolean = false): DataRow<T> =
-    meanFor(skipNA, separate, primitiveNumberColumns())
+    meanFor(skipNA, separate, primitiveOrMixedNumberColumns())
 
 public fun <T, C : Number> Pivot<T>.meanFor(
     skipNA: Boolean = skipNA_default,
@@ -224,7 +219,7 @@ public inline fun <T, reified R : Number> Pivot<T>.meanOf(
 // region PivotGroupBy
 
 public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNA: Boolean = skipNA_default): DataFrame<T> =
-    meanFor(skipNA, separate, primitiveNumberColumns())
+    meanFor(skipNA, separate, primitiveOrMixedNumberColumns())
 
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     skipNA: Boolean = skipNA_default,

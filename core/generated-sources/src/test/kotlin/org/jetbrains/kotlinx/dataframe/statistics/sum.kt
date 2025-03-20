@@ -2,9 +2,10 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.DataColumn
+import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.rowSum
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumOf
@@ -45,7 +46,7 @@ class SumTests {
     fun `test multiple columns`() {
         val value1 by columnOf(1, 2, 3)
         val value2 by columnOf(4.0, 5.0, 6.0)
-        val value3: DataColumn<Number?> by columnOf(7.0, 8, null)
+        val value3 by columnOf<Number?>(7.0, 8, null)
         val df = dataFrameOf(value1, value2, value3)
         val expected1 = 6
         val expected2 = 15.0
@@ -88,8 +89,21 @@ class SumTests {
 
     @Test
     fun `unknown number type`() {
+        columnOf(1.toBigDecimal(), 2.toBigDecimal()).toDataFrame()
+            .sum()
+            .isEmpty() shouldBe true
+    }
+
+    @Test
+    fun `mixed numbers`() {
+        // mixed number types are picked up implicitly
+        columnOf<Number>(1.0, 2).toDataFrame()
+            .sum()[0] shouldBe 3.0
+
+        // in the slight case a mixed number column contains unsupported numbers
+        // we give a helpful exception telling about primitive support only
         shouldThrow<IllegalArgumentException> {
-            columnOf(1.toBigDecimal(), 2.toBigDecimal()).toDataFrame().sum()
-        }
+            columnOf<Number>(1.0, 2, 3.0.toBigDecimal()).toDataFrame().sum()[0]
+        }.message?.lowercase() shouldContain "primitive"
     }
 }
