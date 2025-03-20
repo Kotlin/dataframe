@@ -40,8 +40,8 @@ private val unifiedNumberTypeGraphs = mutableMapOf<UnifiedNumberTypeOptions, Dir
  * by calling [DirectedAcyclicGraph.findNearestCommonVertex].
  *
  * @param options See [UnifiedNumberTypeOptions]
- * @see getUnifiedNumberClass
- * @see unifiedNumberClass
+ * @see getUnifiedNumberClassOrNull
+ * @see unifiedNumberClassOrNull
  * @see UnifyingNumbers
  */
 internal fun getUnifiedNumberTypeGraph(
@@ -107,11 +107,11 @@ internal fun getUnifiedNumberClassGraph(
  *   If no common class is found, [IllegalStateException] is thrown.
  * @see UnifyingNumbers
  */
-internal fun getUnifiedNumberType(
+internal fun getUnifiedNumberTypeOrNull(
     first: KType?,
     second: KType,
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
-): KType {
+): KType? {
     if (first == null) return second
 
     val firstWithoutNullability = first.withNullability(false)
@@ -121,7 +121,7 @@ internal fun getUnifiedNumberType(
         firstWithoutNullability
     } else {
         getUnifiedNumberTypeGraph(options).findNearestCommonVertex(firstWithoutNullability, secondWithoutNullability)
-            ?: error("Can not find common number type for $first and $second")
+            ?: return null
     }
 
     return if (first.isMarkedNullable || second.isMarkedNullable) {
@@ -131,20 +131,17 @@ internal fun getUnifiedNumberType(
     }
 }
 
-/** @include [getUnifiedNumberType] */
+/** @include [getUnifiedNumberTypeOrNull] */
 @Suppress("IntroduceWhenSubject")
-internal fun getUnifiedNumberClass(
+internal fun getUnifiedNumberClassOrNull(
     first: KClass<*>?,
     second: KClass<*>,
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
-): KClass<*> =
+): KClass<*>? =
     when {
         first == null -> second
-
         first == second -> first
-
         else -> getUnifiedNumberClassGraph(options).findNearestCommonVertex(first, second)
-            ?: error("Can not find common number type for $first and $second")
     }
 
 /**
@@ -156,28 +153,28 @@ internal fun getUnifiedNumberClass(
  *
  * @param options See [UnifiedNumberTypeOptions]
  * @return The nearest common numeric type between the input types.
- *   If no common type is found, it returns [Number].
+ *   If no common type is found, it returns `null`.
  * @see UnifyingNumbers
  */
-internal fun Iterable<KType>.unifiedNumberType(
+internal fun Iterable<KType>.unifiedNumberTypeOrNull(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
-): KType =
+): KType? =
     fold(null as KType?) { a, b ->
-        getUnifiedNumberType(a, b, options)
-    } ?: typeOf<Number>()
+        getUnifiedNumberTypeOrNull(a, b, options) ?: return null
+    }
 
-/** @include [unifiedNumberType] */
-internal fun Iterable<KClass<*>>.unifiedNumberClass(
+/** @include [unifiedNumberTypeOrNull] */
+internal fun Iterable<KClass<*>>.unifiedNumberClassOrNull(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
-): KClass<*> =
+): KClass<*>? =
     fold(null as KClass<*>?) { a, b ->
-        getUnifiedNumberClass(a, b, options)
-    } ?: Number::class
+        getUnifiedNumberClassOrNull(a, b, options) ?: return null
+    }
 
 /**
  * Converts the elements of the given iterable of numbers into a common numeric type based on complexity.
  * The common numeric type is determined using the provided [commonNumberType] parameter
- * or calculated with [Iterable.unifiedNumberType] from the iterable's elements if not explicitly specified.
+ * or calculated with [Iterable.unifiedNumberTypeOrNull] from the iterable's elements if not explicitly specified.
  *
  * @param commonNumberType The desired common numeric type to convert the elements to.
  *   By default, (or if `null`), this is determined using the types of the elements in the iterable.
@@ -191,7 +188,12 @@ internal fun Iterable<Number?>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
     commonNumberType: KType? = null,
 ): Iterable<Number?> {
-    val commonNumberType = commonNumberType ?: this.types().unifiedNumberType(options)
+    val commonNumberType = commonNumberType ?: this.types().let { types ->
+        types.unifiedNumberTypeOrNull(options)
+            ?: throw IllegalArgumentException(
+                "Cannot find unified number type of types: ${types.joinToString { renderType(it) }}",
+            )
+    }
     val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
     return map {
         if (it == null) return@map null
@@ -216,7 +218,12 @@ internal fun Sequence<Number?>.convertToUnifiedNumberType(
     options: UnifiedNumberTypeOptions = UnifiedNumberTypeOptions.DEFAULT,
     commonNumberType: KType? = null,
 ): Sequence<Number?> {
-    val commonNumberType = commonNumberType ?: this.asIterable().types().unifiedNumberType(options)
+    val commonNumberType = commonNumberType ?: this.asIterable().types().let { types ->
+        types.unifiedNumberTypeOrNull(options)
+            ?: throw IllegalArgumentException(
+                "Cannot find unified number type of types: ${types.joinToString { renderType(it) }}",
+            )
+    }
     val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
     return map {
         if (it == null) return@map null
@@ -245,7 +252,28 @@ internal val primitiveNumberTypes: Set<KType> =
         typeOf<Double>(),
     )
 
-internal fun Any.isPrimitiveNumber(): Boolean =
+/** Returns `true` only when this type is exactly `Number` or `Number?`. */
+@PublishedApi
+internal fun KType.isMixedNumber(): Boolean = this == typeOf<Number>() || this == typeOf<Number?>()
+
+/**
+ * Returns `true` when this type is one of the following (nullable) types:
+ * [Byte], [Short], [Int], [Long], [Float], or [Double].
+ */
+@PublishedApi
+internal fun KType.isPrimitiveNumber(): Boolean = this.withNullability(false) in primitiveNumberTypes
+
+/**
+ * Returns `true` when this type is one of the following (nullable) types:
+ * [Byte], [Short], [Int], [Long], [Float], [Double], or [Number].
+ *
+ * Careful: Will return `true` for `Number`.
+ * This type may arise as a supertype from multiple non-primitive number types.
+ */
+@PublishedApi
+internal fun KType.isPrimitiveOrMixedNumber(): Boolean = isPrimitiveNumber() || isMixedNumber()
+
+internal fun Number.isPrimitiveNumber(): Boolean =
     this is Byte ||
         this is Short ||
         this is Int ||

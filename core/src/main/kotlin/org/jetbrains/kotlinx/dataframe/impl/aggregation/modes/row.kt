@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 
@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
  * @param columns selector of which columns inside the [row] to aggregate
  */
 @PublishedApi
-internal fun <V, R> Aggregator<V, R>.aggregateOfRow(row: AnyRow, columns: ColumnsSelector<*, V?>): R {
+internal fun <T, V, R> Aggregator<V, R>.aggregateOfRow(row: DataRow<T>, columns: ColumnsSelector<T, V?>): R {
     val filteredColumns = row.df().getColumns(columns)
     return aggregateCalculatingType(
         values = filteredColumns.mapNotNull { row[it] },
