@@ -68,7 +68,7 @@ tasks.test {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    (this as BaseKotlinCompile).friendPaths.from(project(projects.core.path).projectDir)
+    friendPaths.from(project(projects.core.path).projectDir)
     compilerOptions {
         freeCompilerArgs.addAll(
             "-Xcontext-receivers",
