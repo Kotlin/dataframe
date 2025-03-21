@@ -12,11 +12,12 @@ import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegated
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
@@ -27,17 +28,19 @@ import kotlin.reflect.KProperty
 
 public fun <T : Comparable<T>> DataColumn<T?>.min(): T = minOrNull().suggestIfNull("min")
 
-public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = asSequence().filterNotNull().minOrNull()
+public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = Aggregators.min<T>().aggregate(this)
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minBy(selector: (T) -> R): T =
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.minBy(noinline selector: (T) -> R?): T =
     minByOrNull(selector).suggestIfNull("minBy")
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minByOrNull(selector: (T) -> R): T? = values.minByOrNull(selector)
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.minByOrNull(noinline selector: (T) -> R?): T? =
+    Aggregators.min<R>().aggregateByOrNull(this, selector)
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minOf(selector: (T) -> R): R =
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.minOf(crossinline selector: (T) -> R?): R =
     minOfOrNull(selector).suggestIfNull("minOf")
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minOfOrNull(selector: (T) -> R): R? = values.minOfOrNull(selector)
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.minOfOrNull(crossinline selector: (T) -> R?): R? =
+    Aggregators.min<R>().aggregateOf(this, selector)
 
 // endregion
 
@@ -46,6 +49,8 @@ public fun <T, R : Comparable<R>> DataColumn<T>.minOfOrNull(selector: (T) -> R):
 public fun AnyRow.rowMinOrNull(): Any? = values().filterIsInstance<Comparable<*>>().minWithOrNull(compareBy { it })
 
 public fun AnyRow.rowMin(): Any = rowMinOrNull().suggestIfNull("rowMin")
+
+// todo add rowMinBy?
 
 public inline fun <reified T : Comparable<T>> AnyRow.rowMinOfOrNull(): T? = values().filterIsInstance<T>().minOrNull()
 
@@ -58,7 +63,7 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMinOf(): T = rowMinOfOrN
 public fun <T> DataFrame<T>.min(): DataRow<T> = minFor(intraComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
-    Aggregators.min.aggregateFor(this, columns)
+    Aggregators.min<C>().aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.minFor(vararg columns: String): DataRow<T> = minFor { columns.toComparableColumns() }
 
@@ -84,7 +89,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: KProperty<C?>
     minOrNull(*columns).suggestIfNull("min")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C?>): C? =
-    Aggregators.min.aggregateAll(this, columns) as C?
+    Aggregators.min<C>().aggregateAll(this, columns) as C?
 
 public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any?>? =
     minOrNull { columns.toComparableColumns() }
@@ -140,7 +145,7 @@ public fun <T> Grouped<T>.min(): DataFrame<T> = minFor(intraComparableColumns())
 @Refine
 @Interpretable("GroupByMin0")
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
-    Aggregators.min.aggregateFor(this, columns)
+    Aggregators.min<C>().aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.minFor(vararg columns: String): DataFrame<T> = minFor { columns.toComparableColumns() }
 
@@ -155,7 +160,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?
 @Refine
 @Interpretable("GroupByMin0")
 public fun <T, C : Comparable<C>> Grouped<T>.min(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
-    Aggregators.min.aggregateAll(this, name, columns)
+    Aggregators.min<C>().aggregateAll(this, name, columns)
 
 public fun <T> Grouped<T>.min(vararg columns: String, name: String? = null): DataFrame<T> =
     min(name) { columns.toComparableColumns() }
@@ -175,7 +180,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, 
 public fun <T, C : Comparable<C>> Grouped<T>.minOf(
     name: String? = null,
     expression: RowExpression<T, C>,
-): DataFrame<T> = Aggregators.min.aggregateOfDelegated(this, name) { minOfOrNull(expression) }
+): DataFrame<T> = Aggregators.min<C>().aggregateOfDelegated(this, name) { minOfOrNull(expression) }
 
 @Interpretable("GroupByReduceExpression")
 public fun <T, G, R : Comparable<R>> GroupBy<T, G>.minBy(rowExpression: RowExpression<G, R?>): ReducedGroupBy<T, G> =
@@ -257,7 +262,7 @@ public fun <T> PivotGroupBy<T>.min(separate: Boolean = false): DataFrame<T> = mi
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, R?>,
-): DataFrame<T> = Aggregators.min.aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.min<R>().aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.minFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     minFor(separate) { columns.toComparableColumns() }
@@ -275,7 +280,7 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.minFor(
 ): DataFrame<T> = minFor(separate) { columns.toColumnSet() }
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(columns: ColumnsSelector<T, R?>): DataFrame<T> =
-    Aggregators.min.aggregateAll(this, columns)
+    Aggregators.min<R>().aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.min(vararg columns: String): DataFrame<T> = min { columns.toComparableColumns() }
 

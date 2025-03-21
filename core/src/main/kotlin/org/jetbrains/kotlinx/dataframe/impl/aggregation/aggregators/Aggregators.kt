@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.math.meanTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.median
+import org.jetbrains.kotlinx.dataframe.math.minOrNull
 import org.jetbrains.kotlinx.dataframe.math.percentile
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
@@ -86,13 +87,23 @@ internal object Aggregators {
         getAggregator: (Param1, Param2) -> AggregatorProvider<AggregatorType>,
     ) = AggregatorOptionSwitch2.Factory(getAggregator)
 
+    private fun <Value, Return> AggregatorProvider<Aggregator<Value, Return>>.asByAggregator(
+        aggregatorBy: AggregateBy<Any?, Value, Return>,
+    ) where Value : Any, Value : Comparable<Value> = ByAggregator.Factory(this, aggregatorBy)
+
     // T: Comparable<T> -> T?
-    val min by twoStepPreservingType<Comparable<Any?>> {
-        minOrNull()
+    fun <T : Comparable<T>?> min() = min.cast2<T, T?>()
+
+    private val min by twoStepPreservingType<Comparable<Any?>?> { type ->
+        minOrNull(type)
+    }.asByAggregator { sourceType, valueType, selector ->
+        minByOrNull(selector)
     }
 
     // T: Comparable<T> -> T?
-    val max by twoStepPreservingType<Comparable<Any?>> {
+    fun <T : Comparable<T>?> max() = max.cast2<T, T?>()
+
+    private val max by twoStepPreservingType<Comparable<Any?>> {
         maxOrNull()
     }
 

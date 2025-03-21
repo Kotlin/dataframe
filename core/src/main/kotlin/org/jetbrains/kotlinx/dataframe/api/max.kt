@@ -58,7 +58,7 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(): T = rowMaxOfOrN
 public fun <T> DataFrame<T>.max(): DataRow<T> = maxFor(intraComparableColumns())
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
-    Aggregators.max.aggregateFor(this, columns)
+    Aggregators.max<C>().aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.maxFor(vararg columns: String): DataRow<T> = maxFor { columns.toComparableColumns() }
 
@@ -84,7 +84,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: KProperty<C?>
     maxOrNull(*columns).suggestIfNull("max")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(columns: ColumnsSelector<T, C?>): C? =
-    Aggregators.max.aggregateAll(this, columns) as C?
+    Aggregators.max<C>().aggregateAll(this, columns) as C?
 
 public fun <T> DataFrame<T>.maxOrNull(vararg columns: String): Comparable<Any?>? =
     maxOrNull { columns.toComparableColumns() }
@@ -140,7 +140,7 @@ public fun <T> Grouped<T>.max(): DataFrame<T> = maxFor(intraComparableColumns())
 @Refine
 @Interpretable("GroupByMax0")
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
-    Aggregators.max.aggregateFor(this, columns)
+    Aggregators.max<C>().aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.maxFor(vararg columns: String): DataFrame<T> = maxFor { columns.toComparableColumns() }
 
@@ -155,7 +155,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: KProperty<C?
 @Refine
 @Interpretable("GroupByMax0")
 public fun <T, C : Comparable<C>> Grouped<T>.max(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
-    Aggregators.max.aggregateAll(this, name, columns)
+    Aggregators.max<C>().aggregateAll(this, name, columns)
 
 public fun <T> Grouped<T>.max(vararg columns: String, name: String? = null): DataFrame<T> =
     max(name) { columns.toComparableColumns() }
@@ -175,7 +175,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.max(vararg columns: KProperty<C?>, 
 public fun <T, C : Comparable<C>> Grouped<T>.maxOf(
     name: String? = null,
     expression: RowExpression<T, C>,
-): DataFrame<T> = Aggregators.max.aggregateOfDelegated(this, name) { maxOfOrNull(expression) }
+): DataFrame<T> = Aggregators.max<C>().aggregateOfDelegated(this, name) { maxOfOrNull(expression) }
 
 @Interpretable("GroupByReduceExpression")
 public fun <T, G, R : Comparable<R>> GroupBy<T, G>.maxBy(rowExpression: RowExpression<G, R?>): ReducedGroupBy<T, G> =
@@ -256,7 +256,7 @@ public fun <T> PivotGroupBy<T>.max(separate: Boolean = false): DataFrame<T> = ma
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, R?>,
-): DataFrame<T> = Aggregators.max.aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.max<R>().aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.maxFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
     maxFor(separate) { columns.toComparableColumns() }
@@ -274,7 +274,7 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxFor(
 ): DataFrame<T> = maxFor(separate) { columns.toColumnSet() }
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(columns: ColumnsSelector<T, R?>): DataFrame<T> =
-    Aggregators.max.aggregateAll(this, columns)
+    Aggregators.max<R>().aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.max(vararg columns: String): DataFrame<T> = max { columns.toComparableColumns() }
 
