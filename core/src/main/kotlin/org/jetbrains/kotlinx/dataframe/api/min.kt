@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
 
 public fun <T : Comparable<T>> DataColumn<T?>.min(): T = minOrNull().suggestIfNull("min")
 
-public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = Aggregators.min<T>().aggregate(this)
+public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = Aggregators.min<T>().aggregateSingleColumn(this)
 
 public inline fun <T, reified R : Comparable<R>> DataColumn<T>.minBy(noinline selector: (T) -> R?): T =
     minByOrNull(selector).suggestIfNull("minBy")

@@ -16,10 +16,10 @@ internal object Aggregators {
     /**
      * Factory for a simple aggregator that preserves the type of the input values.
      *
-     * @include [TwoStepAggregator]
+     * @include [TwoStepCommonAggregator]
      */
     private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type?>) =
-        TwoStepAggregator.Factory(
+        TwoStepCommonAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             stepOneAggregator = aggregator,
             stepTwoAggregator = aggregator,
@@ -28,13 +28,13 @@ internal object Aggregators {
     /**
      * Factory for a simple aggregator that changes the type of the input values.
      *
-     * @include [TwoStepAggregator]
+     * @include [TwoStepCommonAggregator]
      */
     private fun <Value, Return> twoStepChangingType(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         stepOneAggregator: Aggregate<Value, Return>,
         stepTwoAggregator: Aggregate<Return, Return>,
-    ) = TwoStepAggregator.Factory(
+    ) = TwoStepCommonAggregator.Factory(
         getReturnTypeOrNull = getReturnTypeOrNull,
         stepOneAggregator = stepOneAggregator,
         stepTwoAggregator = stepTwoAggregator,
@@ -43,10 +43,10 @@ internal object Aggregators {
     /**
      * Factory for a flattening aggregator that preserves the type of the input values.
      *
-     * @include [FlatteningAggregator]
+     * @include [FlatteningCommonAggregator]
      */
     private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type?>) =
-        FlatteningAggregator.Factory(
+        FlatteningCommonAggregator.Factory(
             getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
             aggregator = aggregate,
         )
@@ -54,12 +54,12 @@ internal object Aggregators {
     /**
      * Factory for a flattening aggregator that changes the type of the input values.
      *
-     * @include [FlatteningAggregator]
+     * @include [FlatteningCommonAggregator]
      */
     private fun <Value, Return> flatteningChangingTypes(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         aggregate: Aggregate<Value, Return>,
-    ) = FlatteningAggregator.Factory(
+    ) = FlatteningCommonAggregator.Factory(
         getReturnTypeOrNull = getReturnTypeOrNull,
         aggregator = aggregate,
     )

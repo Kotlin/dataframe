@@ -48,7 +48,7 @@ internal fun <T, C, R> AggregateInternalDsl<T>.aggregateFor(
     val isSingle = cols.size == 1
     cols.forEach { col ->
         val path = getPath(col, isSingle)
-        val value = aggregator.aggregate(col.data)
+        val value = aggregator.aggregateSingleColumn(col.data)
         val returnType = aggregator.calculateReturnTypeOrNull(col.data.type, col.data.isEmpty)
         yield(
             path = path,

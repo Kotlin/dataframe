@@ -21,9 +21,9 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     values: Iterable<C>,
     crossinline transform: (C) -> V?,
 ): R =
-    aggregate(
+    aggregateSingleIterable(
         values = values.asSequence().mapNotNull { transform(it) }.asIterable(),
-        type = typeOf<V>().withNullability(false),
+        valueType = typeOf<V>().withNullability(false),
     )
 
 @PublishedApi

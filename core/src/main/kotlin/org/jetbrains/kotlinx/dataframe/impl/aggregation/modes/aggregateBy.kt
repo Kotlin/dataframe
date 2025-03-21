@@ -49,9 +49,9 @@ internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateBy
 
         else -> {
             // less efficient but more generic
-            val aggregateResult = aggregate(
+            val aggregateResult = aggregateSingleIterable(
                 values = values.asSequence().map { selector(it) }.asIterable(),
-                type = typeOf<V>(),
+                valueType = typeOf<V>(),
             )
             values.first { selector(it) == aggregateResult }
         }

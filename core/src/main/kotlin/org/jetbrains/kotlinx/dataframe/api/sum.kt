@@ -42,14 +42,14 @@ import kotlin.reflect.typeOf
 // region DataColumn
 
 @JvmName("sumShort")
-public fun DataColumn<Short?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
+public fun DataColumn<Short?>.sum(): Int = Aggregators.sum.aggregateSingleColumn(this) as Int
 
 @JvmName("sumByte")
-public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum.aggregate(this) as Int
+public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum.aggregateSingleColumn(this) as Int
 
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNumber")
-public fun <T : Number> DataColumn<T?>.sum(): T = Aggregators.sum.aggregate(this) as T
+public fun <T : Number> DataColumn<T?>.sum(): T = Aggregators.sum.aggregateSingleColumn(this) as T
 
 @JvmName("sumOfShort")
 @OverloadResolutionByLambdaReturnType

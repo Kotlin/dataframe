@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
@@ -27,7 +28,8 @@ import kotlin.reflect.KProperty
 
 public fun <T : Comparable<T>> DataColumn<T?>.median(): T = medianOrNull().suggestIfNull("median")
 
-public fun <T : Comparable<T>> DataColumn<T?>.medianOrNull(): T? = Aggregators.median.cast<T>().aggregate(this)
+public fun <T : Comparable<T>> DataColumn<T?>.medianOrNull(): T? =
+    Aggregators.median.cast<T>().aggregateSingleColumn(this)
 
 public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOfOrNull(noinline expression: (T) -> R?): R? =
     Aggregators.median.cast<R?>().aggregateOf(this, expression)
@@ -40,7 +42,7 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 // region DataRow
 
 public fun AnyRow.rowMedianOrNull(): Any? =
-    Aggregators.median.aggregateCalculatingType(
+    Aggregators.median.aggregateCalculatingValueType(
         values = values().filterIsInstance<Comparable<Any?>>().asIterable(),
         valueTypes = df().columns().filter { it.valuesAreComparable() }.map { it.type() }.toSet(),
     )

@@ -26,7 +26,7 @@ import kotlin.reflect.typeOf
 // region DataColumn
 
 public fun <T : Number> DataColumn<T?>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    Aggregators.std(skipNA, ddof).aggregate(this) ?: .0
+    Aggregators.std(skipNA, ddof).aggregateSingleColumn(this) ?: .0
 
 public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
     skipNA: Boolean = skipNA_default,

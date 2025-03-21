@@ -30,7 +30,7 @@ internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
 ): DataFrame<T> = data.aggregateAll(cast(), columns)
 
 internal fun <T, C, R> DataFrame<T>.aggregateAll(aggregator: Aggregator<C, R>, columns: ColumnsSelector<T, C?>): R =
-    aggregator.aggregate(get(columns))
+    aggregator.aggregateMultipleColumns(get(columns))
 
 internal fun <T, C, R> Grouped<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
@@ -40,9 +40,9 @@ internal fun <T, C, R> Grouped<T>.aggregateAll(
     aggregateInternal {
         val cols = df[columns]
         if (cols.size == 1) {
-            yield(pathOf(name ?: cols[0].name()), aggregator.aggregate(cols[0]))
+            yield(pathOf(name ?: cols[0].name()), aggregator.aggregateSingleColumn(cols[0]))
         } else {
-            yield(pathOf(name ?: aggregator.name), aggregator.aggregate(cols))
+            yield(pathOf(name ?: aggregator.name), aggregator.aggregateMultipleColumns(cols))
         }
     }
 
@@ -59,19 +59,19 @@ internal fun <T, C, R> PivotGroupBy<T>.aggregateAll(
             )
             internal().yield(
                 path = emptyPath(),
-                value = aggregator.aggregate(cols[0]),
+                value = aggregator.aggregateSingleColumn(cols[0]),
                 type = returnType,
                 default = null,
                 guessType = returnType == null,
             )
         } else {
-            val returnType = aggregator.calculateReturnTypeOrNull(
+            val returnType = aggregator.calculateReturnTypeMultipleColumnsOrNull(
                 colTypes = cols.map { it.type() }.toSet(),
                 colsEmpty = cols.any { it.isEmpty },
             )
             internal().yield(
                 path = emptyPath(),
-                value = aggregator.aggregate(cols),
+                value = aggregator.aggregateMultipleColumns(cols),
                 type = returnType,
                 default = null,
                 guessType = returnType == null,

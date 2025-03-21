@@ -34,7 +34,7 @@ import kotlin.reflect.typeOf
 
 // region DataColumn
 
-public fun DataColumn<Number?>.mean(skipNA: Boolean = skipNA_default): Double = Aggregators.mean(skipNA).aggregate(this)
+public fun DataColumn<Number?>.mean(skipNA: Boolean = skipNA_default): Double = Aggregators.mean(skipNA).aggregateSingleColumn(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
     skipNA: Boolean = skipNA_default,
