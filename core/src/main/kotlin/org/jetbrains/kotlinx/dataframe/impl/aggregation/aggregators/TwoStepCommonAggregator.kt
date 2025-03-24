@@ -44,7 +44,7 @@ internal class TwoStepCommonAggregator<in Value, out Return>(
     override val stepTwo: Aggregator<Return & Any, Return> = object :
         AggregatorBase<Return & Any, Return>(name, getReturnTypeOrNull, stepTwoAggregator),
         CommonAggregator<Return & Any, Return> {
-        override fun aggregateMultipleColumns(columns: Iterable<DataColumn<@UnsafeVariance Return?>>): Return =
+        override fun aggregateMultipleColumns(columns: Sequence<DataColumn<@UnsafeVariance Return?>>): Return =
             error("")
 
         override fun calculateReturnTypeMultipleColumnsOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType? =

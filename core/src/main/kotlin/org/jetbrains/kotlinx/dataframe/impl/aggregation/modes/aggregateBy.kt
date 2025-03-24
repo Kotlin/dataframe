@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.Grouped
+import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
@@ -33,7 +34,7 @@ internal fun <T> Grouped<T>.aggregateByOrNull(body: DataFrameExpression<T, DataR
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
 internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateByOrNull(
-    values: Iterable<C>,
+    values: Sequence<C>,
     noinline selector: (C) -> V?,
 ): C? =
     when (name) { // todo?
@@ -49,8 +50,8 @@ internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateBy
 
         else -> {
             // less efficient but more generic
-            val aggregateResult = aggregateSingleIterable(
-                values = values.asSequence().map { selector(it) }.asIterable(),
+            val aggregateResult = aggregateSingleSequence(
+                values = values.map { selector(it) },
                 valueType = typeOf<V>(),
             )
             values.first { selector(it) == aggregateResult }
@@ -61,4 +62,4 @@ internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateBy
 internal inline fun <C, reified V : Comparable<V>?> Aggregator<V, V?>.aggregateByOrNull(
     column: DataColumn<C>,
     noinline selector: (C) -> V?,
-): C? = aggregateByOrNull(column.values(), selector)
+): C? = aggregateByOrNull(column.asSequence(), selector)

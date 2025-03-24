@@ -30,7 +30,7 @@ internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
 ): DataFrame<T> = data.aggregateAll(cast(), columns)
 
 internal fun <T, C, R> DataFrame<T>.aggregateAll(aggregator: Aggregator<C, R>, columns: ColumnsSelector<T, C?>): R =
-    aggregator.aggregateMultipleColumns(get(columns))
+    aggregator.aggregateMultipleColumns(get(columns).asSequence())
 
 internal fun <T, C, R> Grouped<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
@@ -42,7 +42,7 @@ internal fun <T, C, R> Grouped<T>.aggregateAll(
         if (cols.size == 1) {
             yield(pathOf(name ?: cols[0].name()), aggregator.aggregateSingleColumn(cols[0]))
         } else {
-            yield(pathOf(name ?: aggregator.name), aggregator.aggregateMultipleColumns(cols))
+            yield(pathOf(name ?: aggregator.name), aggregator.aggregateMultipleColumns(cols.asSequence()))
         }
     }
 
@@ -71,7 +71,7 @@ internal fun <T, C, R> PivotGroupBy<T>.aggregateAll(
             )
             internal().yield(
                 path = emptyPath(),
-                value = aggregator.aggregateMultipleColumns(cols),
+                value = aggregator.aggregateMultipleColumns(cols.asSequence()),
                 type = returnType,
                 default = null,
                 guessType = returnType == null,

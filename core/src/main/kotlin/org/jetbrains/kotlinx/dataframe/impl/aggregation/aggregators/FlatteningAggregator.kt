@@ -10,10 +10,10 @@ internal interface FlatteningAggregator<in Value, out Return> : Aggregator<Value
      * The columns are flattened into a single list of values, filtering nulls as usual;
      * then the aggregation function is with the common type of the columns.
      */
-    override fun aggregateMultipleColumns(columns: Iterable<DataColumn<Value?>>): Return {
+    override fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return {
         val commonType = calculateValueType(columns.map { it.type() }.toSet())
-        val allValues = columns.asSequence().flatMap { it.values() }.filterNotNull()
-        return aggregateSingleIterable(allValues.asIterable(), commonType.withNullability(false))
+        val allValues = columns.flatMap { it.values() }.filterNotNull()
+        return aggregateSingleSequence(allValues, commonType.withNullability(false))
     }
 
     /**

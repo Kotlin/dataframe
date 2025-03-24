@@ -4,9 +4,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.preserveRetu
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-@PublishedApi
-internal fun <T : Comparable<T>> Iterable<T?>.minOrNull(type: KType): T? = asSequence().minOrNull(type)
-
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
 internal fun <T : Comparable<T>> Sequence<T?>.minOrNull(type: KType): T? {

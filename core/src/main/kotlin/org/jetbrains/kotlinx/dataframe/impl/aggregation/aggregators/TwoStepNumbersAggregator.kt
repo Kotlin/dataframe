@@ -4,7 +4,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase
 import kotlin.reflect.KType
 
 private val logger = KotlinLogging.logger { }
@@ -45,9 +44,9 @@ internal class TwoStepNumbersAggregator<out Return : Number?>(
     TwoStepAggregator<Number, Return>,
     NumbersAggregator<Return> {
 
-    override fun aggregateSingleIterable(values: Iterable<Number?>, valueType: KType): Return =
+    override fun aggregateSingleSequence(values: Sequence<Number?>, valueType: KType): Return =
         aggregateSingleIterableOfNumbers(values, valueType) { values, valueType ->
-            super.aggregateSingleIterable(values, valueType)
+            super.aggregateSingleSequence(values, valueType)
         }
 
     override val stepTwo: AggregatorBase<Return & Any, Return> = StepTwo()
@@ -56,9 +55,9 @@ internal class TwoStepNumbersAggregator<out Return : Number?>(
         AggregatorBase<Number, Return>(name, getReturnTypeOrNull, aggregator),
         FlatteningAggregator<Number, Return>,
         NumbersAggregator<Return> {
-        override fun aggregateSingleIterable(values: Iterable<Number?>, valueType: KType): Return =
+        override fun aggregateSingleSequence(values: Sequence<Number?>, valueType: KType): Return =
             aggregateSingleIterableOfNumbers(values, valueType) { values, valueType ->
-                super.aggregateSingleIterable(values, valueType)
+                super.aggregateSingleSequence(values, valueType)
             }
     }
 

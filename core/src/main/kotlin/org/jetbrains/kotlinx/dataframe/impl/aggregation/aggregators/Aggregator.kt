@@ -33,11 +33,11 @@ internal interface Aggregator<in Value, out Return> {
      *
      * When the exact [valueType] is unknown, use [aggregateCalculatingValueType].
      */
-    fun aggregateSingleIterable(values: Iterable<Value?>, valueType: KType): Return
+    fun aggregateSingleSequence(values: Sequence<Value?>, valueType: KType): Return
 
     fun calculateValueType(valueTypes: Set<KType>): KType
 
-    fun calculateValueType(values: Iterable<Value?>): KType
+    fun calculateValueType(values: Sequence<Value?>): KType
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
@@ -50,7 +50,7 @@ internal interface Aggregator<in Value, out Return> {
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      */
-    fun aggregateMultipleColumns(columns: Iterable<DataColumn<Value?>>): Return
+    fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return
 
     /**
      * Function that can give the return type of [aggregateSingleIterable] as [KType], given the type of the input.
@@ -76,11 +76,11 @@ internal interface Aggregator<in Value, out Return> {
     val ref: Aggregator<Value, Return> get() = this
 }
 
-internal fun <Value, Return> Aggregator<Value, Return>.aggregate(values: Iterable<Value?>, valueType: KType) =
-    aggregateSingleIterable(values, valueType)
+internal fun <Value, Return> Aggregator<Value, Return>.aggregate(values: Sequence<Value?>, valueType: KType) =
+    aggregateSingleSequence(values, valueType)
 
 internal fun <Value, Return> Aggregator<Value, Return>.calculateValueType(
-    values: Iterable<Value?>,
+    values: Sequence<Value?>,
     valueTypes: Set<KType>? = null,
 ) = if (valueTypes != null && valueTypes.isNotEmpty()) {
     calculateValueType(valueTypes)
@@ -89,9 +89,9 @@ internal fun <Value, Return> Aggregator<Value, Return>.calculateValueType(
 }
 
 internal fun <Value, Return> Aggregator<Value, Return>.aggregateCalculatingValueType(
-    values: Iterable<Value?>,
+    values: Sequence<Value?>,
     valueTypes: Set<KType>? = null,
-) = aggregateSingleIterable(
+) = aggregateSingleSequence(
     values = values,
     valueType = calculateValueType(values, valueTypes),
 )
@@ -99,7 +99,7 @@ internal fun <Value, Return> Aggregator<Value, Return>.aggregateCalculatingValue
 internal fun <Value, Return> Aggregator<Value, Return>.aggregate(column: DataColumn<Value?>) =
     aggregateSingleColumn(column)
 
-internal fun <Value, Return> Aggregator<Value, Return>.aggregate(columns: Iterable<DataColumn<Value?>>) =
+internal fun <Value, Return> Aggregator<Value, Return>.aggregate(columns: Sequence<DataColumn<Value?>>) =
     aggregateMultipleColumns(columns)
 
 @Suppress("UNCHECKED_CAST")
@@ -114,13 +114,13 @@ internal fun <Value, Return> Aggregator<*, *>.cast2(): Aggregator<Value, Return>
 internal typealias CalculateReturnTypeOrNull = (type: KType, emptyInput: Boolean) -> KType?
 
 /**
- * Type alias for the argument for [Aggregator.aggregateSingleIterable].
+ * Type alias for the argument for [Aggregator.aggregateSingleSequence].
  * Nulls have already been filtered out when this argument is called.
  */
-internal typealias Aggregate<Value, Return> = Iterable<Value & Any>.(type: KType) -> Return
+internal typealias Aggregate<Value, Return> = Sequence<Value & Any>.(type: KType) -> Return
 
 internal typealias AggregateBy<Source, Value, Return> =
-    Iterable<Source>.(sourceType: KType, valueType: KType, selector: (Source) -> Value) -> Return
+    Sequence<Source>.(sourceType: KType, valueType: KType, selector: (Source) -> Value) -> Return
 
 /** Common case for [CalculateReturnTypeOrNull], preserves return type, but makes it nullable for empty inputs. */
 internal val preserveReturnTypeNullIfEmpty: CalculateReturnTypeOrNull = { type, emptyInput ->

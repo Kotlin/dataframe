@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorBase
+import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
 import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
@@ -37,9 +37,9 @@ internal interface NumbersAggregator<out Return : Number?> : Aggregator<Number, 
      * When the exact [valueType] is unknown, use [aggregateCalculatingType].
      */
     fun aggregateSingleIterableOfNumbers(
-        values: Iterable<Number?>,
+        values: Sequence<Number?>,
         valueType: KType,
-        superAggregateSingleIterable: (Iterable<Number?>, KType) -> @UnsafeVariance Return,
+        superAggregateSingleIterable: (Sequence<Number?>, KType) -> @UnsafeVariance Return,
     ): Return {
         require(valueType.isSubtypeOf(typeOf<Number?>())) {
             "${TwoStepNumbersAggregator::class.simpleName}: Type $valueType is not a subtype of Number?"
@@ -48,7 +48,11 @@ internal interface NumbersAggregator<out Return : Number?> : Aggregator<Number, 
             // If the type is not a specific number, but rather a mixed Number, we unify the types first.
             // This is heavy and could be avoided by calling aggregate with a specific number type
             // or calling aggregateCalculatingType with all known number types
-            typeOf<Number>() -> superAggregateSingleIterable(values, calculateValueType(values))
+            typeOf<Number>() -> {
+                val unifiedNumberType = calculateValueType(values)
+                val unifiedValues = values.convertToUnifiedNumberType(PRIMITIVES_ONLY, unifiedNumberType)
+                superAggregateSingleIterable(unifiedValues, unifiedNumberType)
+            }
 
             // Nothing can occur when values are empty
             nothingType -> superAggregateSingleIterable(values, valueType)
@@ -57,11 +61,15 @@ internal interface NumbersAggregator<out Return : Number?> : Aggregator<Number, 
                 "Cannot calculate $name of ${renderType(valueType)}, only primitive numbers are supported.",
             )
 
-            else -> superAggregateSingleIterable(values, valueType)
+            else -> superAggregateSingleIterable(
+                values.convertToUnifiedNumberType(PRIMITIVES_ONLY, valueType),
+                valueType,
+            )
         }
     }
 
-    override fun calculateValueType(values: Iterable<Number?>): KType = calculateValueType(values.types().toSet())
+    override fun calculateValueType(values: Sequence<Number?>): KType =
+        calculateValueType(values.asIterable().types().toSet())
 
     override fun calculateValueType(valueTypes: Set<KType>): KType {
         val unifiedType = valueTypes.unifiedNumberTypeOrNull(PRIMITIVES_ONLY)

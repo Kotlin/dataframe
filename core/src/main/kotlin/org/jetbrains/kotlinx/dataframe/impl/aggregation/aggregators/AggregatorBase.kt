@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.asIterable
+import org.jetbrains.kotlinx.dataframe.api.asSequence
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -31,13 +31,13 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * When the exact [valueType] is unknown, use [Aggregator.aggregateCalculatingValueType].
      */
     @Suppress("UNCHECKED_CAST")
-    override fun aggregateSingleIterable(values: Iterable<Value?>, valueType: KType): Return =
+    override fun aggregateSingleSequence(values: Sequence<Value?>, valueType: KType): Return =
         aggregateSingle(
             // values =
             if (valueType.isMarkedNullable) {
-                values.asSequence().filterNotNull().asIterable()
+                values.filterNotNull()
             } else {
-                values as Iterable<Value & Any>
+                values as Sequence<Value & Any>
             },
             // type =
             valueType.withNullability(false),
@@ -50,8 +50,8 @@ internal abstract class AggregatorBase<in Value, out Return>(
      */
     @Suppress("UNCHECKED_CAST")
     final override fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
-        aggregateSingleIterable(
-            values = column.asIterable(),
+        aggregateSingleSequence(
+            values = column.asSequence(),
             valueType = column.type(),
         )
 

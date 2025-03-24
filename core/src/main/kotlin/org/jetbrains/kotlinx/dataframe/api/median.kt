@@ -43,7 +43,7 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 
 public fun AnyRow.rowMedianOrNull(): Any? =
     Aggregators.median.aggregateCalculatingValueType(
-        values = values().filterIsInstance<Comparable<Any?>>().asIterable(),
+        values = values().asSequence().filterIsInstance<Comparable<Any?>>(),
         valueTypes = df().columns().filter { it.valuesAreComparable() }.map { it.type() }.toSet(),
     )
 

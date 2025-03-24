@@ -18,7 +18,7 @@ internal interface TwoStepAggregator<in Value, out Return> : Aggregator<Value, R
      *
      * Post-step-one types are calculated by [calculateReturnTypeMultipleColumnsOrNull].
      */
-    override fun aggregateMultipleColumns(columns: Iterable<DataColumn<Value?>>): Return {
+    override fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return {
         val (values, types) = columns.mapNotNull { col ->
             // uses stepOneAggregator
             val value = aggregateSingleColumn(col) ?: return@mapNotNull null
@@ -30,7 +30,7 @@ internal interface TwoStepAggregator<in Value, out Return> : Aggregator<Value, R
             value to type
         }.unzip()
 
-        return stepTwo.aggregateCalculatingValueType(values, types.toSet())
+        return stepTwo.aggregateCalculatingValueType(values.asSequence(), types.toSet())
     }
 
     /**

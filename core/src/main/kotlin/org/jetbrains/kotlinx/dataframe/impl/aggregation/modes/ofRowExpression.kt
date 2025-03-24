@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.rows
@@ -18,11 +19,11 @@ import kotlin.reflect.typeOf
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
-    values: Iterable<C>,
+    values: Sequence<C>,
     crossinline transform: (C) -> V?,
 ): R =
-    aggregateSingleIterable(
-        values = values.asSequence().mapNotNull { transform(it) }.asIterable(),
+    aggregateSingleSequence(
+        values = values.mapNotNull { transform(it) },
         valueType = typeOf<V>().withNullability(false),
     )
 
@@ -30,13 +31,13 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     column: DataColumn<C>,
     crossinline transform: (C) -> V?,
-): R = aggregateOf(column.values(), transform)
+): R = aggregateOf(column.asSequence(), transform)
 
 @PublishedApi
 internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(
     frame: DataFrame<T>,
     crossinline expression: RowExpression<T, C?>,
-): R = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) }
+): R = (this as Aggregator<C, R>).aggregateOf(frame.rows().asSequence()) { expression(it, it) }
 
 @PublishedApi
 internal fun <T, C, R> Aggregator<*, R>.aggregateOfDelegated(

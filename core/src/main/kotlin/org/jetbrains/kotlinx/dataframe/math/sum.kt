@@ -8,8 +8,6 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 import kotlin.sequences.filterNotNull
 
-internal fun Iterable<Number?>.sum(type: KType): Number = asSequence().sum(type)
-
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNullableT")
 @PublishedApi

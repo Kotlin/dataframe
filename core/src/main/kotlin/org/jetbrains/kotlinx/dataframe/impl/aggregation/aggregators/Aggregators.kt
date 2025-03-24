@@ -110,7 +110,7 @@ internal object Aggregators {
     // T: Number? -> Double
     val std by withTwoOptions { skipNA: Boolean, ddof: Int ->
         flatteningChangingTypes<Number, Double>(stdTypeConversion) { type ->
-            std(type, skipNA, ddof)
+            asIterable().std(type, skipNA, ddof)
         }
     }
 
@@ -125,13 +125,13 @@ internal object Aggregators {
     // T: Comparable<T>? -> T
     val percentile by withOneOption { percentile: Double ->
         flatteningPreservingTypes<Comparable<Any?>> { type ->
-            percentile(percentile, type)
+            asIterable().percentile(percentile, type)
         }
     }
 
     // T: Comparable<T>? -> T
     val median by flatteningPreservingTypes<Comparable<Any?>> { type ->
-        median(type)
+        asIterable().median(type)
     }
 
     // T: Number -> T

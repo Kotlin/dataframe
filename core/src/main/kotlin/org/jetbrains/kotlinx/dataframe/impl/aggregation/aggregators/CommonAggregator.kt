@@ -9,7 +9,7 @@ internal interface CommonAggregator<in Value, out Return> : Aggregator<Value, Re
     override fun calculateValueType(valueTypes: Set<KType>): KType = valueTypes.commonType(false)
 
     // heavy
-    override fun calculateValueType(values: Iterable<Value?>): KType {
+    override fun calculateValueType(values: Sequence<Value?>): KType {
         var hasNulls = false
         val classes = values.mapNotNull {
             if (it == null) {
@@ -18,7 +18,7 @@ internal interface CommonAggregator<in Value, out Return> : Aggregator<Value, Re
             } else {
                 it.javaClass.kotlin
             }
-        }
+        }.toSet()
         return if (classes.isEmpty()) {
             nothingType(hasNulls)
         } else {

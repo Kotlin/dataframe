@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCal
  */
 @PublishedApi
 internal fun <T, V, R> Aggregator<V, R>.aggregateOfRow(row: DataRow<T>, columns: ColumnsSelector<T, V?>): R {
-    val filteredColumns = row.df().getColumns(columns)
+    val filteredColumns = row.df().getColumns(columns).asSequence()
     return aggregateCalculatingValueType(
         values = filteredColumns.mapNotNull { row[it] },
         valueTypes = filteredColumns.map { it.type() }.toSet(),
