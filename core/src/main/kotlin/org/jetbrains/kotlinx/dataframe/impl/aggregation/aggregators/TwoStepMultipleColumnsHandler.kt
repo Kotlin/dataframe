@@ -1,0 +1,103 @@
+package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
+
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.columns.isEmpty
+import org.jetbrains.kotlinx.dataframe.impl.anyNull
+import kotlin.reflect.KType
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.withNullability
+
+internal class TwoStepMultipleColumnsHandler<in Value, out Return> : AggregatorMultipleColumnsHandler<Value, Return> {
+
+    private var _stepTwo: Lazy<Aggregator<Return & Any, Return>>
+
+    val stepTwo: Aggregator<Return & Any, Return>
+        get() = _stepTwo.value
+
+    @Suppress("UNCHECKED_CAST")
+    constructor(
+        stepTwoAggregateSingle: Aggregate<Return & Any, Return>,
+        stepTwoGetReturnTypeOrNull: CalculateReturnTypeOrNull? = null,
+        stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
+        stepTwoMultipleColumnsHandler: AggregatorMultipleColumnsHandler<Return & Any, Return>? = null,
+    ) {
+        this._stepTwo = lazy {
+            Aggregator.Factory(
+                inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,
+                multipleColumnsHandler = stepTwoMultipleColumnsHandler ?: NoMultipleColumnsHandler(),
+                aggregationHandler = DefaultAggregationHandler(
+                    getReturnTypeOrNull = stepTwoGetReturnTypeOrNull ?: aggregator!!::calculateReturnTypeOrNull,
+                    aggregateSingle = stepTwoAggregateSingle,
+                ),
+            ).create(aggregator!!.name)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    constructor(
+        stepTwoAggregationHandler: AggregatorAggregationHandler<Return & Any, Return>,
+        stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
+        stepTwoMultipleColumnsHandler: AggregatorMultipleColumnsHandler<Return & Any, Return>? = null,
+    ) {
+        this._stepTwo = lazy {
+            Aggregator.Factory(
+                inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,
+                multipleColumnsHandler = stepTwoMultipleColumnsHandler ?: NoMultipleColumnsHandler(),
+                aggregationHandler = stepTwoAggregationHandler,
+            ).create(aggregator!!.name)
+        }
+    }
+
+    constructor(stepTwo: Aggregator<Return & Any, Return>) {
+        this._stepTwo = lazy { stepTwo }
+    }
+
+    /**
+     * Aggregates the data in the multiple given columns and computes a single resulting value.
+     *
+     * This function calls [stepOneAggregator] on each column and then [stepTwoAggregator] on the results.
+     *
+     * Post-step-one types are calculated by [calculateReturnTypeMultipleColumnsOrNull].
+     */
+    override fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return {
+        val (values, types) = columns.mapNotNull { col ->
+            // uses stepOneAggregator
+            val value = aggregator!!.aggregateSingleColumn(col) ?: return@mapNotNull null
+            val type = aggregator!!.calculateReturnTypeOrNull(
+                type = col.type(),
+                emptyInput = col.isEmpty,
+            ) ?: value::class.starProjectedType // heavy fallback type calculation
+
+            value to type
+        }.unzip()
+
+        return stepTwo.aggregateCalculatingValueType(values.asSequence(), types.toSet())
+    }
+
+    /**
+     * Function that can give the return type of [aggregateSingleSequence] with columns as [KType],
+     * given the multiple types of the input.
+     * This allows aggregators to avoid runtime type calculations.
+     *
+     * @param colTypes The types of the input columns.
+     * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
+     * @return The return type of [aggregateSingleSequence] as [KType].
+     */
+    @Suppress("UNCHECKED_CAST")
+    override fun calculateReturnTypeMultipleColumnsOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType? {
+        val typesAfterStepOne = colTypes.map { type ->
+            aggregator!!.calculateReturnTypeOrNull(type = type, emptyInput = colsEmpty)
+        }
+        if (typesAfterStepOne.anyNull()) return null
+
+        val stepTwoValueType = stepTwo
+            .calculateValueType(typesAfterStepOne.toSet() as Set<KType>)
+
+        return stepTwo.calculateReturnTypeOrNull(
+            type = stepTwoValueType.kType.withNullability(false),
+            emptyInput = colsEmpty,
+        )
+    }
+
+    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = null
+}

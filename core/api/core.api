@@ -2972,7 +2972,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/MinKt {
 	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
@@ -2989,7 +2988,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/MinKt {
 	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
 	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
 	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
@@ -3018,13 +3016,11 @@ public final class org/jetbrains/kotlinx/dataframe/api/MinKt {
 	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Comparable;
 	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
 	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
 	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun minOf$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minOfOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Comparable;
 	public static final fun minOfOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
 	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
 	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
@@ -5167,18 +5163,25 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/Aggregations
 	public static synthetic fun yieldOneOrMany$default (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/util/List;Lkotlin/reflect/KType;Ljava/lang/Object;ILjava/lang/Object;)V
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator {
-	public abstract fun aggregate (Ljava/lang/Iterable;)Ljava/lang/Object;
-	public abstract fun aggregate (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Object;
-	public abstract fun aggregate (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
-	public abstract fun aggregateCalculatingType (Ljava/lang/Iterable;Ljava/util/Set;)Ljava/lang/Object;
-	public static synthetic fun aggregateCalculatingType$default (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Ljava/lang/Iterable;Ljava/util/Set;ILjava/lang/Object;)Ljava/lang/Object;
-	public abstract fun calculateReturnTypeOrNull (Ljava/util/Set;Z)Lkotlin/reflect/KType;
-	public abstract fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator$Companion;
 	public abstract fun getName ()Ljava/lang/String;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator$Companion {
+	public final fun providerOf (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorProvider;
+	public final fun providerOf (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorProvider;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorRefHolder {
+	public abstract fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
+	public abstract fun aggregateSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
+	public abstract fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorKt {
+	public static final fun aggregate (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public static final fun aggregate (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public static final fun cast2 (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
@@ -5213,13 +5216,13 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators {
 	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators;
-	public final fun getMax ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
 	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
-	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/FlatteningAggregator;
-	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
+	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
-	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepNumbersAggregator;
+	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun max ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun min ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoAggregationKt {
@@ -6155,9 +6158,8 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Compani
 	public final fun getVALUES ()Ljava/util/List;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {
-	public static final fun mean (Ljava/lang/Iterable;Lkotlin/reflect/KType;Z)D
-	public static synthetic fun mean$default (Ljava/lang/Iterable;Lkotlin/reflect/KType;ZILjava/lang/Object;)D
+public final class org/jetbrains/kotlinx/dataframe/math/MinKt {
+	public static final fun minOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;)Ljava/lang/Comparable;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/PercentileKt {

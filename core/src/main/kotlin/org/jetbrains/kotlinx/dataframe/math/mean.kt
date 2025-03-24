@@ -8,17 +8,16 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger { }
 
 @Suppress("UNCHECKED_CAST")
-internal fun <T : Number> Sequence<T?>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
+internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
     if (type.isMarkedNullable) {
-        return filterNotNull().mean(type.withNullability(false), skipNA)
+        error("Encountered nullable type ${renderType(type)} in mean function. This should not occur.")
     }
-    return when (type.withNullability(false)) {
+    return when (type) {
         typeOf<Double>() -> (this as Sequence<Double>).mean(skipNA)
 
         typeOf<Float>() -> (this as Sequence<Float>).map { it.toDouble() }.mean(skipNA)

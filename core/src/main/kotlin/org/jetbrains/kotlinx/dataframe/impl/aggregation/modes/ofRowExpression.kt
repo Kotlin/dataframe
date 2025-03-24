@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import kotlin.reflect.full.withNullability
@@ -22,7 +23,7 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     values: Sequence<C>,
     crossinline transform: (C) -> V?,
 ): R =
-    aggregateSingleSequence(
+    aggregate(
         values = values.mapNotNull { transform(it) },
         valueType = typeOf<V>().withNullability(false),
     )

@@ -6,16 +6,15 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
-import kotlin.sequences.filterNotNull
 
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNullableT")
 @PublishedApi
 internal fun Sequence<Number?>.sum(type: KType): Number {
     if (type.isMarkedNullable) {
-        return filterNotNull().sum(type.withNullability(false))
+        error("Encountered nullable type ${renderType(type)} in sum function. This should not occur.")
     }
-    return when (type.withNullability(false)) {
+    return when (type) {
         typeOf<Double>() -> (this as Sequence<Double>).sum()
 
         typeOf<Float>() -> (this as Sequence<Float>).sum()

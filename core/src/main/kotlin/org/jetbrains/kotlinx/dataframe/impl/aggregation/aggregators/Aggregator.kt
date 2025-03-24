@@ -10,74 +10,91 @@ import kotlin.reflect.full.withNullability
  * Aggregators are used to compute a single value from an [Iterable] of values, a single [DataColumn],
  * or multiple [DataColumns][DataColumn].
  *
- * The [AggregatorBase] class is a base implementation of this interface.
+ * [Aggregator] follows a dependency injection pattern:
+ *
+ * Using the constructor or [Aggregator.Factory] function, you can create an [Aggregator] instance with a choice of:
+ * - [AggregatorAggregationHandler] - the base function of the aggregator,
+ *   which computes the result from the input values.
+ *
+ *   Options: [DefaultAggregationHandler]
+ *
+ * - [AggregatorInputHandler] - the input handler, which handles specific type checks, -conversion, and preprocessing of the input values.
+ *
+ *   Options: [NumberInputHandler], [AnyInputHandler]
+ *
+ * - [AggregatorMultipleColumnsHandler] - the multiple columns handler, which specifies how to aggregate multiple columns.
+ *
+ *   Options: [FlatteningMultipleColumnsHandler], [TwoStepMultipleColumnsHandler], [NoMultipleColumnsHandler]
+ *
  *
  * @param Value The type of the values to be aggregated.
  *   The input can always have nulls, they are filtered out.
  * @param Return The type of the resulting value. Can optionally be nullable.
  */
 @PublishedApi
-internal interface Aggregator<in Value, out Return> {
+internal open class Aggregator<in Value, out Return>(
+    val name: String,
+    val aggregationHandler: AggregatorAggregationHandler<Value, Return>,
+    val inputHandler: AggregatorInputHandler<Value, Return>,
+    val multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
+) : AggregatorInputHandler<Value, Return> by inputHandler,
+    AggregatorMultipleColumnsHandler<Value, Return> by multipleColumnsHandler,
+    AggregatorAggregationHandler<Value, Return> by aggregationHandler {
 
-    /** The name of this aggregator. */
-    val name: String
+    constructor(other: Aggregator<Value, Return>) : this(
+        name = other.name,
+        aggregationHandler = other,
+        inputHandler = other,
+        multipleColumnsHandler = other,
+    )
 
-    /**
-     * Base function of [Aggregator].
-     *
-     * Aggregates the given values, taking [valueType] into account,
-     * filtering nulls (only if [type.isMarkedNullable][KType.isMarkedNullable]),
-     * and computes a single resulting value.
-     *
-     * When using [AggregatorBase], this can be supplied by the [AggregatorBase.aggregateSingle] argument.
-     *
-     * When the exact [valueType] is unknown, use [aggregateCalculatingValueType].
-     */
-    fun aggregateSingleSequence(values: Sequence<Value?>, valueType: KType): Return
+    // Set the aggregator reference in all handlers to this instance
+    init {
+        aggregationHandler.aggregator = this
+        inputHandler.aggregator = this
+        multipleColumnsHandler.aggregator = this
+    }
 
-    fun calculateValueType(valueTypes: Set<KType>): KType
+    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = this
 
-    fun calculateValueType(values: Sequence<Value?>): KType
+    override fun toString(): String =
+        "Aggregator(name='$name', aggregationHandler=$aggregationHandler, inputHandler=$inputHandler, multipleColumnsHandler=$multipleColumnsHandler)"
 
-    /**
-     * Aggregates the data in the given column and computes a single resulting value.
-     * Calls [aggregateSingleColumn] (with [Iterable] and [KType]).
-     *
-     * See [AggregatorBase.aggregateSingleIterable].
-     */
-    fun aggregateSingleColumn(column: DataColumn<Value?>): Return
-
-    /**
-     * Aggregates the data in the multiple given columns and computes a single resulting value.
-     */
-    fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return
-
-    /**
-     * Function that can give the return type of [aggregateSingleIterable] as [KType], given the type of the input.
-     * This allows aggregators to avoid runtime type calculations.
-     *
-     * @param type The type of the input values.
-     * @param emptyInput If `true`, the input values are considered empty. This often affects the return type.
-     * @return The return type of [aggregateSingleIterable] as [KType].
-     */
-    fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType?
-
-    /**
-     * Function that can give the return type of [aggregateSingleIterable] with columns as [KType],
-     * given the multiple types of the input.
-     * This allows aggregators to avoid runtime type calculations.
-     *
-     * @param colTypes The types of the input columns.
-     * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
-     * @return The return type of [aggregateSingleIterable] as [KType].
-     */
-    fun calculateReturnTypeMultipleColumnsOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType?
-
-    val ref: Aggregator<Value, Return> get() = this
+    @Suppress("FunctionName")
+    companion object {
+        fun <Value, Return> Factory(
+            aggregationHandler: AggregatorAggregationHandler<Value, Return>,
+            inputHandler: AggregatorInputHandler<Value, Return>,
+            multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
+        ): AggregatorProvider<Aggregator<Value, Return>> =
+            AggregatorProvider { name ->
+                Aggregator(
+                    name = name,
+                    aggregationHandler = aggregationHandler,
+                    inputHandler = inputHandler,
+                    multipleColumnsHandler = multipleColumnsHandler,
+                )
+            }
+    }
 }
 
-internal fun <Value, Return> Aggregator<Value, Return>.aggregate(values: Sequence<Value?>, valueType: KType) =
+internal interface AggregatorRefHolder<in Value, out Return> {
+
+    /**
+     * Reference to the aggregator instance.
+     *
+     * Can only be used once `this` has been passed to [Aggregator].
+     */
+    var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>?
+}
+
+@PublishedApi
+internal fun <Value, Return> Aggregator<Value, Return>.aggregate(values: Sequence<Value?>, valueType: ValueType) =
     aggregateSingleSequence(values, valueType)
+
+@PublishedApi
+internal fun <Value, Return> Aggregator<Value, Return>.aggregate(values: Sequence<Value?>, valueType: KType) =
+    aggregate(values, valueType.toValueType())
 
 internal fun <Value, Return> Aggregator<Value, Return>.calculateValueType(
     values: Sequence<Value?>,

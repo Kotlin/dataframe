@@ -4,12 +4,17 @@ import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import kotlin.reflect.KType
 
-internal interface CommonAggregator<in Value, out Return> : Aggregator<Value, Return> {
+internal class AnyInputHandler<in Value, out Return> : AggregatorInputHandler<Value, Return> {
 
-    override fun calculateValueType(valueTypes: Set<KType>): KType = valueTypes.commonType(false)
+    override fun preprocessAggregation(
+        values: Sequence<Value?>,
+        valueType: ValueType,
+    ): Pair<Sequence<@UnsafeVariance Value?>, KType> = Pair(values, valueType.kType)
+
+    override fun calculateValueType(valueTypes: Set<KType>): ValueType = valueTypes.commonType(false).toValueType()
 
     // heavy
-    override fun calculateValueType(values: Sequence<Value?>): KType {
+    override fun calculateValueType(values: Sequence<Value?>): ValueType {
         var hasNulls = false
         val classes = values.mapNotNull {
             if (it == null) {
@@ -23,6 +28,8 @@ internal interface CommonAggregator<in Value, out Return> : Aggregator<Value, Re
             nothingType(hasNulls)
         } else {
             classes.commonType(hasNulls)
-        }
+        }.toValueType()
     }
+
+    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = null
 }

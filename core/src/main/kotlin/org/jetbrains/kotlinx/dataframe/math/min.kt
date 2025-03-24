@@ -1,16 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.preserveReturnTypeNullIfEmpty
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <T : Comparable<T>> Sequence<T?>.minOrNull(type: KType): T? {
+internal fun <T : Comparable<T>> Sequence<T>.minOrNull(type: KType): T? {
     if (type.isMarkedNullable) {
-        return filterNotNull().minOrNull(type.withNullability(false))
+        error("Encountered nullable type ${renderType(type)} in min function. This should not occur.")
     }
-    return (this as Sequence<T>).minOrNull()
+    return this.minOrNull()
 }
 
 /** T: Comparable<T> -> T(?) */

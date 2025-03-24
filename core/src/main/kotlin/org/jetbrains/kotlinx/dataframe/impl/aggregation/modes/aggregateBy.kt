@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregate
 import org.jetbrains.kotlinx.dataframe.impl.namedValues
 import kotlin.reflect.typeOf
 
@@ -50,7 +51,7 @@ internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateBy
 
         else -> {
             // less efficient but more generic
-            val aggregateResult = aggregateSingleSequence(
+            val aggregateResult = aggregate(
                 values = values.map { selector(it) },
                 valueType = typeOf<V>(),
             )

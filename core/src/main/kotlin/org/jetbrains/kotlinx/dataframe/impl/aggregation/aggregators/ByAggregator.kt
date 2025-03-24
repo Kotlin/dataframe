@@ -1,22 +1,30 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 
 internal class ByAggregator<Source, in Value, out Return>(
     aggregator: Aggregator<Value, Return>,
-    val aggregatorBy: AggregateBy<Source, Value, Return>,
-) : Aggregator<Value, Return> by aggregator {
+    private val aggregatorBy: AggregateBy<Source, Value, Return>,
+) : Aggregator<Value, Return>(aggregator) {
+
+    // Set the aggregator reference in all handlers to this instance
+    init {
+        aggregationHandler.aggregator = this
+        inputHandler.aggregator = this
+        multipleColumnsHandler.aggregator = this
+    }
+
+    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = this
 
     fun <Source> aggregateBy(
-        values: Iterable<Source>,
+        values: Sequence<Source>,
         sourceType: KType,
         valueType: KType,
         selector: (Source) -> Value?,
     ): Return = TODO()
 //        aggregatorBy(
 //            if (valueType.isMarkedNullable) {
-//                values.asSequence().filterNot { selector(it) == null }.asIterable()
+//                values.filterNot { selector(it) == null }
 //            } else {
 //                values
 //            },
@@ -25,9 +33,11 @@ internal class ByAggregator<Source, in Value, out Return>(
 //            selector as (Source) -> Value,
 //        )
 
-    class Factory<Source, in Value, out Return>(
-        private val aggregatorProvider: AggregatorProvider<Aggregator<Value, Return>>,
-        private val aggregatorBy: AggregateBy<Source, Value, Return>,
-    ) : Provider<ByAggregator<Source, Value, Return>> by
-        Provider({ name -> ByAggregator(aggregatorProvider.create(name), aggregatorBy) })
+    @Suppress("FunctionName")
+    companion object {
+        fun <Source, Value, Return> Factory(
+            aggregatorProvider: AggregatorProvider<Aggregator<Value, Return>>,
+            aggregatorBy: AggregateBy<Source, Value, Return>,
+        ) = Provider { name -> ByAggregator(aggregatorProvider.create(name), aggregatorBy) }
+    }
 }

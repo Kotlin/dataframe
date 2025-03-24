@@ -16,65 +16,68 @@ internal object Aggregators {
     /**
      * Factory for a simple aggregator that preserves the type of the input values.
      *
-     * @include [TwoStepCommonAggregator]
+     * @include [TwoStepAggregatorForAny]
      */
     private fun <Type> twoStepPreservingType(aggregator: Aggregate<Type, Type?>) =
-        TwoStepCommonAggregator.Factory(
-            getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
-            stepOneAggregator = aggregator,
-            stepTwoAggregator = aggregator,
+        Aggregator.Factory(
+            aggregationHandler = DefaultAggregationHandler(aggregator, preserveReturnTypeNullIfEmpty),
+            inputHandler = AnyInputHandler(),
+            multipleColumnsHandler = TwoStepMultipleColumnsHandler(aggregator),
         )
 
     /**
      * Factory for a simple aggregator that changes the type of the input values.
      *
-     * @include [TwoStepCommonAggregator]
+     * @include [TwoStepAggregatorForAny]
      */
     private fun <Value, Return> twoStepChangingType(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         stepOneAggregator: Aggregate<Value, Return>,
         stepTwoAggregator: Aggregate<Return, Return>,
-    ) = TwoStepCommonAggregator.Factory(
-        getReturnTypeOrNull = getReturnTypeOrNull,
-        stepOneAggregator = stepOneAggregator,
-        stepTwoAggregator = stepTwoAggregator,
+    ) = Aggregator.Factory(
+        aggregationHandler = DefaultAggregationHandler(stepOneAggregator, getReturnTypeOrNull),
+        inputHandler = AnyInputHandler(),
+        multipleColumnsHandler = TwoStepMultipleColumnsHandler(stepTwoAggregator),
     )
 
     /**
      * Factory for a flattening aggregator that preserves the type of the input values.
      *
-     * @include [FlatteningCommonAggregator]
+     * @include [FlatteningAggregatorForAny]
      */
     private fun <Type> flatteningPreservingTypes(aggregate: Aggregate<Type, Type?>) =
-        FlatteningCommonAggregator.Factory(
-            getReturnTypeOrNull = preserveReturnTypeNullIfEmpty,
-            aggregator = aggregate,
+        Aggregator.Factory(
+            aggregationHandler = DefaultAggregationHandler(aggregate, preserveReturnTypeNullIfEmpty),
+            inputHandler = AnyInputHandler(),
+            multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
         )
 
     /**
      * Factory for a flattening aggregator that changes the type of the input values.
      *
-     * @include [FlatteningCommonAggregator]
+     * @include [FlatteningAggregatorForAny]
      */
     private fun <Value, Return> flatteningChangingTypes(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         aggregate: Aggregate<Value, Return>,
-    ) = FlatteningCommonAggregator.Factory(
-        getReturnTypeOrNull = getReturnTypeOrNull,
-        aggregator = aggregate,
+    ) = Aggregator.Factory(
+        aggregationHandler = DefaultAggregationHandler(aggregate, getReturnTypeOrNull),
+        inputHandler = AnyInputHandler(),
+        multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
     )
 
     /**
      * Factory for a two-step aggregator that works only with numbers.
      *
-     * @include [TwoStepNumbersAggregator]
+     * @include [TwoStepAggregatorForNumbers]
      */
     private fun <Return : Number?> twoStepForNumbers(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         aggregate: Aggregate<Number, Return>,
-    ) = TwoStepNumbersAggregator.Factory(
-        getReturnTypeOrNull = getReturnTypeOrNull,
-        aggregate = aggregate,
+    ) = Aggregator.Factory(
+        aggregationHandler = DefaultAggregationHandler(aggregate, getReturnTypeOrNull),
+        inputHandler = NumberInputHandler(),
+        multipleColumnsHandler = TwoStepMultipleColumnsHandler(aggregate),
     )
 
     /** @include [AggregatorOptionSwitch1] */
@@ -94,7 +97,7 @@ internal object Aggregators {
     // T: Comparable<T> -> T?
     fun <T : Comparable<T>?> min() = min.cast2<T, T?>()
 
-    private val min by twoStepPreservingType<Comparable<Any?>?> { type ->
+    private val min by twoStepPreservingType<Comparable<Any?>> { type ->
         minOrNull(type)
     }.asByAggregator { sourceType, valueType, selector ->
         minByOrNull(selector)

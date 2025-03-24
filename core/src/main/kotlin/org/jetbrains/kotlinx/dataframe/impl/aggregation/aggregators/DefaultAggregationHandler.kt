@@ -13,11 +13,12 @@ import kotlin.reflect.full.withNullability
  *
  * @param name The name of this aggregator.
  */
-internal abstract class AggregatorBase<in Value, out Return>(
-    override val name: String,
-    private val getReturnTypeOrNull: CalculateReturnTypeOrNull,
-    private val aggregateSingle: Aggregate<Value, Return>,
-) : Aggregator<Value, Return> {
+internal class DefaultAggregationHandler<in Value, out Return>(
+    val aggregateSingle: Aggregate<Value, Return>,
+    val getReturnTypeOrNull: CalculateReturnTypeOrNull,
+) : AggregatorAggregationHandler<Value, Return> {
+
+    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = null
 
     /**
      * Base function of [Aggregator].
@@ -26,13 +27,14 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * filtering nulls (only if [type.isMarkedNullable][KType.isMarkedNullable]),
      * and computes a single resulting value.
      *
-     * When using [AggregatorBase], this can be supplied by the [AggregatorBase.aggregateSingle] argument.
+     * When using [AggregatorAggregationHandler], this can be supplied by the [AggregatorAggregationHandler.aggregateSingle] argument.
      *
      * When the exact [valueType] is unknown, use [Aggregator.aggregateCalculatingValueType].
      */
     @Suppress("UNCHECKED_CAST")
-    override fun aggregateSingleSequence(values: Sequence<Value?>, valueType: KType): Return =
-        aggregateSingle(
+    override fun aggregateSingleSequence(values: Sequence<Value?>, valueType: ValueType): Return {
+        val (values, valueType) = aggregator!!.preprocessAggregation(values, valueType)
+        return aggregateSingle(
             // values =
             if (valueType.isMarkedNullable) {
                 values.filterNotNull()
@@ -42,6 +44,7 @@ internal abstract class AggregatorBase<in Value, out Return>(
             // type =
             valueType.withNullability(false),
         )
+    }
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
@@ -49,12 +52,12 @@ internal abstract class AggregatorBase<in Value, out Return>(
      * Nulls are filtered out by default, then [aggregateSingleColumn] (with [Iterable] and [KType]) is called.
      */
     @Suppress("UNCHECKED_CAST")
-    final override fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
+    override fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
         aggregateSingleSequence(
             values = column.asSequence(),
-            valueType = column.type(),
+            valueType = column.type().toValueType(),
         )
 
-    final override fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType? =
+    override fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType? =
         getReturnTypeOrNull(type, emptyInput)
 }

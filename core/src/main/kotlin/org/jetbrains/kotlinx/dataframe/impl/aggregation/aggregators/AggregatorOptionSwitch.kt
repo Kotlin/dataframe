@@ -19,19 +19,22 @@ internal class AggregatorOptionSwitch1<in Param1, out AggregatorType : Aggregato
             getAggregator(param1).create(name)
         }
 
-    /**
-     * Creates [AggregatorOptionSwitch1].
-     *
-     * Used like:
-     * ```kt
-     * val myAggregator by AggregatorOptionSwitch1.Factory { param1: Param1 ->
-     *   MyAggregator.Factory(param1)
-     * }
-     */
-    class Factory<in Param1, out AggregatorType : Aggregator<*, *>>(
-        val getAggregator: (param1: Param1) -> AggregatorProvider<AggregatorType>,
-    ) : Provider<AggregatorOptionSwitch1<Param1, AggregatorType>> by
-        Provider({ name -> AggregatorOptionSwitch1(name, getAggregator) })
+    @Suppress("FunctionName")
+    companion object {
+
+        /**
+         * Creates [AggregatorOptionSwitch1].
+         *
+         * Used like:
+         * ```kt
+         * val myAggregator by AggregatorOptionSwitch1.Factory { param1: Param1 ->
+         *   MyAggregator.Factory(param1)
+         * }
+         */
+        fun <Param1, AggregatorType : Aggregator<*, *>> Factory(
+            getAggregator: (param1: Param1) -> AggregatorProvider<AggregatorType>,
+        ) = Provider { name -> AggregatorOptionSwitch1(name, getAggregator) }
+    }
 }
 
 /**
@@ -53,18 +56,20 @@ internal class AggregatorOptionSwitch2<in Param1, in Param2, out AggregatorType 
             getAggregator(param1, param2).create(name)
         }
 
-    /**
-     * Creates [AggregatorOptionSwitch2].
-     *
-     * Used like:
-     * ```kt
-     * val myAggregator by AggregatorOptionSwitch2.Factory { param1: Param1, param2: Param2 ->
-     *   MyAggregator.Factory(param1, param2)
-     * }
-     * ```
-     */
-    class Factory<in Param1, in Param2, out AggregatorType : Aggregator<*, *>>(
-        val getAggregator: (param1: Param1, param2: Param2) -> AggregatorProvider<AggregatorType>,
-    ) : Provider<AggregatorOptionSwitch2<Param1, Param2, AggregatorType>> by
-        Provider({ name -> AggregatorOptionSwitch2(name, getAggregator) })
+    @Suppress("FunctionName")
+    companion object {
+
+        /**
+         * Creates [AggregatorOptionSwitch2].
+         *
+         * Used like:
+         * ```kt
+         * val myAggregator by AggregatorOptionSwitch2.Factory { param1: Param1, param2: Param2 ->
+         *   MyAggregator.Factory(param1, param2)
+         * }
+         */
+        fun <Param1, Param2, AggregatorType : Aggregator<*, *>> Factory(
+            getAggregator: (param1: Param1, param2: Param2) -> AggregatorProvider<AggregatorType>,
+        ) = Provider { name -> AggregatorOptionSwitch2(name, getAggregator) }
+    }
 }
