@@ -13,12 +13,13 @@ import kotlin.reflect.full.withNullability
  * [Aggregator] follows a dependency injection pattern:
  *
  * Using the constructor or [Aggregator.Factory] function, you can create an [Aggregator] instance with a choice of:
- * - [AggregatorAggregationHandler] - the base function of the aggregator,
+ * - [AggregatorAggregationHandler] - the base functionality of the aggregator,
  *   which computes the result from the input values.
  *
- *   Options: [DefaultAggregationHandler]
+ *   Options: [ReducingAggregationHandler], [SelectingAggregationHandler]
  *
- * - [AggregatorInputHandler] - the input handler, which handles specific type checks, -conversion, and preprocessing of the input values.
+ * - [AggregatorInputHandler] - the input handler,
+ *   which handles specific type checks, conversion, and preprocessing of the input values.
  *
  *   Options: [NumberInputHandler], [AnyInputHandler]
  *
@@ -32,7 +33,7 @@ import kotlin.reflect.full.withNullability
  * @param Return The type of the resulting value. Can optionally be nullable.
  */
 @PublishedApi
-internal open class Aggregator<in Value, out Return>(
+internal class Aggregator<in Value, out Return>(
     val name: String,
     val aggregationHandler: AggregatorAggregationHandler<Value, Return>,
     val inputHandler: AggregatorInputHandler<Value, Return>,
@@ -119,6 +120,16 @@ internal fun <Value, Return> Aggregator<Value, Return>.aggregate(column: DataCol
 internal fun <Value, Return> Aggregator<Value, Return>.aggregate(columns: Sequence<DataColumn<Value?>>) =
     aggregateMultipleColumns(columns)
 
+@PublishedApi
+internal fun <Type> Aggregator<Type, Type?>.indexOfAggregationResult(
+    values: Sequence<Type?>,
+    valueType: ValueType,
+): Int = indexOfAggregationResultSingleSequence(values, valueType)
+
+@PublishedApi
+internal fun <Type> Aggregator<Type, Type?>.indexOfAggregationResult(values: Sequence<Type?>, valueType: KType): Int =
+    indexOfAggregationResultSingleSequence(values, valueType.toValueType())
+
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
 internal fun <Type> Aggregator<*, *>.cast(): Aggregator<Type, Type> = this as Aggregator<Type, Type>
@@ -134,10 +145,9 @@ internal typealias CalculateReturnTypeOrNull = (type: KType, emptyInput: Boolean
  * Type alias for the argument for [Aggregator.aggregateSingleSequence].
  * Nulls have already been filtered out when this argument is called.
  */
-internal typealias Aggregate<Value, Return> = Sequence<Value & Any>.(type: KType) -> Return
+internal typealias Reducer<Value, Return> = Sequence<Value & Any>.(type: KType) -> Return
 
-internal typealias AggregateBy<Source, Value, Return> =
-    Sequence<Source>.(sourceType: KType, valueType: KType, selector: (Source) -> Value) -> Return
+internal typealias IsBetterThanSelector<Type> = Type.(other: Type, valueType: KType) -> Boolean
 
 /** Common case for [CalculateReturnTypeOrNull], preserves return type, but makes it nullable for empty inputs. */
 internal val preserveReturnTypeNullIfEmpty: CalculateReturnTypeOrNull = { type, emptyInput ->

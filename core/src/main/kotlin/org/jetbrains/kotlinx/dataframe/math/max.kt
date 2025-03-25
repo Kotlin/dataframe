@@ -7,14 +7,14 @@ import kotlin.reflect.KType
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <T : Comparable<T>> Sequence<T>.minOrNull(type: KType): T? {
+internal fun <T : Comparable<T>> Sequence<T>.maxOrNull(type: KType): T? {
     if (type.isMarkedNullable) {
-        error("Encountered nullable type ${renderType(type)} in min function. This should not occur.")
+        error("Encountered nullable type ${renderType(type)} in max function. This should not occur.")
     }
-    return this.minOrNull()
+    return this.maxOrNull()
 }
 
-internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(): Int = indexOfBestNotNullBy { this < it }
+internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int = indexOfBestNotNullBy { this > it }
 
 /** T: Comparable<T> -> T(?) */
-internal val minTypeConversion = preserveReturnTypeNullIfEmpty
+internal val maxTypeConversion = preserveReturnTypeNullIfEmpty

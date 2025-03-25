@@ -13,8 +13,8 @@ import kotlin.reflect.full.withNullability
  *
  * @param name The name of this aggregator.
  */
-internal class DefaultAggregationHandler<in Value, out Return>(
-    val aggregateSingle: Aggregate<Value, Return>,
+internal class ReducingAggregationHandler<in Value, out Return>(
+    val reducer: Reducer<Value, Return>,
     val getReturnTypeOrNull: CalculateReturnTypeOrNull,
 ) : AggregatorAggregationHandler<Value, Return> {
 
@@ -34,7 +34,7 @@ internal class DefaultAggregationHandler<in Value, out Return>(
     @Suppress("UNCHECKED_CAST")
     override fun aggregateSingleSequence(values: Sequence<Value?>, valueType: ValueType): Return {
         val (values, valueType) = aggregator!!.preprocessAggregation(values, valueType)
-        return aggregateSingle(
+        return reducer(
             // values =
             if (valueType.isMarkedNullable) {
                 values.filterNotNull()
@@ -57,6 +57,8 @@ internal class DefaultAggregationHandler<in Value, out Return>(
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
+
+    override fun indexOfAggregationResultSingleSequence(values: Sequence<Value?>, valueType: ValueType): Int = -1
 
     override fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType? =
         getReturnTypeOrNull(type, emptyInput)

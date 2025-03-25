@@ -7,49 +7,26 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 
-internal class TwoStepMultipleColumnsHandler<in Value, out Return> : AggregatorMultipleColumnsHandler<Value, Return> {
-
-    private var _stepTwo: Lazy<Aggregator<Return & Any, Return>>
-
-    val stepTwo: Aggregator<Return & Any, Return>
-        get() = _stepTwo.value
-
-    @Suppress("UNCHECKED_CAST")
-    constructor(
-        stepTwoAggregateSingle: Aggregate<Return & Any, Return>,
-        stepTwoGetReturnTypeOrNull: CalculateReturnTypeOrNull? = null,
-        stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
-        stepTwoMultipleColumnsHandler: AggregatorMultipleColumnsHandler<Return & Any, Return>? = null,
-    ) {
-        this._stepTwo = lazy {
-            Aggregator.Factory(
-                inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,
-                multipleColumnsHandler = stepTwoMultipleColumnsHandler ?: NoMultipleColumnsHandler(),
-                aggregationHandler = DefaultAggregationHandler(
-                    getReturnTypeOrNull = stepTwoGetReturnTypeOrNull ?: aggregator!!::calculateReturnTypeOrNull,
-                    aggregateSingle = stepTwoAggregateSingle,
-                ),
-            ).create(aggregator!!.name)
-        }
-    }
+/**
+ *
+ * @param stepTwoAggregationHandler The [aggregation handler][AggregatorAggregationHandler] for the second step.
+ *   If not supplied, the handler of the first step is reused.
+ * @param stepTwoInputHandler The [input handler][AggregatorInputHandler] for the second step.
+ *   If not supplied, the handler of the first step is reused.
+ */
+internal class TwoStepMultipleColumnsHandler<in Value, out Return>(
+    stepTwoAggregationHandler: AggregatorAggregationHandler<Return & Any, Return>? = null,
+    stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
+) : AggregatorMultipleColumnsHandler<Value, Return> {
 
     @Suppress("UNCHECKED_CAST")
-    constructor(
-        stepTwoAggregationHandler: AggregatorAggregationHandler<Return & Any, Return>,
-        stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
-        stepTwoMultipleColumnsHandler: AggregatorMultipleColumnsHandler<Return & Any, Return>? = null,
-    ) {
-        this._stepTwo = lazy {
-            Aggregator.Factory(
-                inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,
-                multipleColumnsHandler = stepTwoMultipleColumnsHandler ?: NoMultipleColumnsHandler(),
-                aggregationHandler = stepTwoAggregationHandler,
-            ).create(aggregator!!.name)
-        }
-    }
-
-    constructor(stepTwo: Aggregator<Return & Any, Return>) {
-        this._stepTwo = lazy { stepTwo }
+    val stepTwo by lazy {
+        Aggregator.Factory(
+            aggregationHandler = stepTwoAggregationHandler
+                ?: aggregator as AggregatorAggregationHandler<Return & Any, Return>,
+            inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,
+            multipleColumnsHandler = NoMultipleColumnsHandler(),
+        ).create(aggregator!!.name)
     }
 
     /**

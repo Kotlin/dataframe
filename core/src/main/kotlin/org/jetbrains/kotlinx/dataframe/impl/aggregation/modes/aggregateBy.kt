@@ -11,8 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregate
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.indexOfAggregationResult
 import org.jetbrains.kotlinx.dataframe.impl.namedValues
 import kotlin.reflect.typeOf
 
@@ -38,26 +37,12 @@ internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateBy
     values: Sequence<C>,
     noinline selector: (C) -> V?,
 ): C? =
-    when (name) { // todo?
-        Aggregators.min<Comparable<Any?>>().name ->
-            values.asSequence()
-                .filterNot { selector(it) == null }
-                .minByOrNull(selector as (C) -> V)
-
-        Aggregators.max<Comparable<Any?>>().name ->
-            values.asSequence()
-                .filterNot { selector(it) == null }
-                .maxByOrNull(selector as (C) -> V)
-
-        else -> {
-            // less efficient but more generic
-            val aggregateResult = aggregate(
-                values = values.map { selector(it) },
-                valueType = typeOf<V>(),
-            )
-            values.first { selector(it) == aggregateResult }
-        }
-    }
+    values.elementAtOrNull(
+        indexOfAggregationResult(
+            values = values.map(selector),
+            valueType = typeOf<V>(),
+        ),
+    )
 
 @PublishedApi
 internal inline fun <C, reified V : Comparable<V>?> Aggregator<V, V?>.aggregateByOrNull(

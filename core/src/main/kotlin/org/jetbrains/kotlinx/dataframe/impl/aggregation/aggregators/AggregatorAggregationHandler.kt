@@ -36,4 +36,15 @@ internal interface AggregatorAggregationHandler<in Value, out Return> : Aggregat
      * @return The return type of [aggregateSingleSequence] as [kotlin.reflect.KType].
      */
     fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType?
+
+    /**
+     * Function that can give the index of the aggregation result in the input [values], if it applies.
+     * This is used for [AggregatorAggregationHandlers][AggregatorAggregationHandler] where
+     * [Value][Value]`  ==  `[Return][Return], and where the result exists in the input.
+     *
+     * Like for [SelectingAggregationHandler].
+     *
+     * Defaults to `-1`.
+     */
+    fun indexOfAggregationResultSingleSequence(values: Sequence<Value?>, valueType: ValueType): Int
 }
