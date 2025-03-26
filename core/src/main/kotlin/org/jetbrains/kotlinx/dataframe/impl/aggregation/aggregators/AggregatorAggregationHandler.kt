@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KType
 
 @PublishedApi
-internal interface AggregatorAggregationHandler<in Value, out Return> : AggregatorRefHolder<Value, Return> {
+internal interface AggregatorAggregationHandler<in Value : Any, out Return : Any?> : AggregatorHandler<Value, Return> {
 
     /**
      * Base function of [Aggregator].
@@ -42,7 +42,7 @@ internal interface AggregatorAggregationHandler<in Value, out Return> : Aggregat
      * This is used for [AggregatorAggregationHandlers][AggregatorAggregationHandler] where
      * [Value][Value]`  ==  `[Return][Return], and where the result exists in the input.
      *
-     * Like for [SelectingAggregationHandler].
+     * Like for [org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler].
      *
      * Defaults to `-1`.
      */

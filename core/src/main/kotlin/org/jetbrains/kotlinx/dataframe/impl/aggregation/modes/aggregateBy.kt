@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.Grouped
-import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
@@ -29,14 +28,13 @@ internal fun <T> Grouped<T>.aggregateByOrNull(body: DataFrameExpression<T, DataR
 
 /**
  * Aggregates the values of the column using the provided [Aggregator] `by` the provided [selector].
- * H
  */
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateByOrNull(
-    values: Sequence<C>,
-    noinline selector: (C) -> V?,
-): C? =
+internal inline fun <T, reified V : R, R : Any?> Aggregator<V & Any, R>.aggregateByOrNull(
+    values: Sequence<T>,
+    noinline selector: (T) -> V,
+): T? =
     values.elementAtOrNull(
         indexOfAggregationResult(
             values = values.map(selector),
@@ -44,8 +42,26 @@ internal inline fun <C, reified V : Comparable<V>> Aggregator<V, V?>.aggregateBy
         ),
     )
 
+/**
+ * Aggregates the values of the column using the provided [Aggregator] `by` the provided [selector].
+ *
+ * Faster implementation than for sequences.
+ */
+@Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal inline fun <C, reified V : Comparable<V>?> Aggregator<V, V?>.aggregateByOrNull(
-    column: DataColumn<C>,
-    noinline selector: (C) -> V?,
-): C? = aggregateByOrNull(column.asSequence(), selector)
+internal inline fun <T, reified V : R, R> Aggregator<V & Any, R>.aggregateByOrNull(
+    values: Iterable<T>,
+    noinline selector: (T) -> V,
+): T? =
+    values.elementAtOrNull(
+        indexOfAggregationResult(
+            values = values.asSequence().map(selector),
+            valueType = typeOf<V>(),
+        ),
+    )
+
+@PublishedApi
+internal inline fun <T, reified V : R, R> Aggregator<V & Any, R>.aggregateByOrNull(
+    column: DataColumn<T>,
+    noinline selector: (T) -> V,
+): T? = aggregateByOrNull(column.values(), selector)

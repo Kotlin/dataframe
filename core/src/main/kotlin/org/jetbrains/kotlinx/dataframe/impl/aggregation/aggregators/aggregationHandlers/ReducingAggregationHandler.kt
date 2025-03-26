@@ -1,19 +1,25 @@
-package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
+package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Reducer
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.toValueType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 /**
- * Abstract base class for [aggregators][Aggregator].
+ * Abstract base class for [aggregators][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator].
  *
  * Aggregators are used to compute a single value from an [Iterable] of values, a single [DataColumn],
  * or multiple [DataColumns][DataColumn].
  *
  * @param name The name of this aggregator.
  */
-internal class ReducingAggregationHandler<in Value, out Return>(
+internal class ReducingAggregationHandler<in Value : Any, out Return : Any?>(
     val reducer: Reducer<Value, Return>,
     val getReturnTypeOrNull: CalculateReturnTypeOrNull,
 ) : AggregatorAggregationHandler<Value, Return> {
@@ -29,7 +35,7 @@ internal class ReducingAggregationHandler<in Value, out Return>(
      *
      * When using [AggregatorAggregationHandler], this can be supplied by the [AggregatorAggregationHandler.aggregateSingle] argument.
      *
-     * When the exact [valueType] is unknown, use [Aggregator.aggregateCalculatingValueType].
+     * When the exact [valueType] is unknown, use [org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType].
      */
     @Suppress("UNCHECKED_CAST")
     override fun aggregateSingleSequence(values: Sequence<Value?>, valueType: ValueType): Return {
@@ -39,7 +45,7 @@ internal class ReducingAggregationHandler<in Value, out Return>(
             if (valueType.isMarkedNullable) {
                 values.filterNotNull()
             } else {
-                values as Sequence<Value & Any>
+                values as Sequence<Value>
             },
             // type =
             valueType.withNullability(false),

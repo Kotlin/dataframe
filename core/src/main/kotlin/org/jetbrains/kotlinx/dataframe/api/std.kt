@@ -26,13 +26,13 @@ import kotlin.reflect.typeOf
 // region DataColumn
 
 public fun <T : Number> DataColumn<T?>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    Aggregators.std(skipNA, ddof).aggregateSingleColumn(this) ?: .0
+    Aggregators.std(skipNA, ddof).aggregateSingleColumn(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
     noinline expression: (T) -> R?,
-): Double = Aggregators.std(skipNA, ddof).cast2<R?, Double>().aggregateOf(this, expression) ?: .0
+): Double = Aggregators.std(skipNA, ddof).cast2<R, Double>().aggregateOf(this, expression)
 
 // endregion
 
@@ -85,7 +85,7 @@ public fun <T> DataFrame<T>.std(
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
     columns: ColumnsSelector<T, Number?>,
-): Double = Aggregators.std(skipNA, ddof).aggregateAll(this, columns) ?: .0
+): Double = Aggregators.std(skipNA, ddof).aggregateAll(this, columns)
 
 public fun <T> DataFrame<T>.std(vararg columns: ColumnReference<Number?>): Double = std { columns.toColumnSet() }
 
@@ -98,7 +98,7 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(
     skipNA: Boolean = skipNA_default,
     ddof: Int = ddof_default,
     crossinline expression: RowExpression<T, R?>,
-): Double = Aggregators.std(skipNA, ddof).aggregateOf(this, expression) ?: .0
+): Double = Aggregators.std(skipNA, ddof).aggregateOf(this, expression)
 
 // endregion
 

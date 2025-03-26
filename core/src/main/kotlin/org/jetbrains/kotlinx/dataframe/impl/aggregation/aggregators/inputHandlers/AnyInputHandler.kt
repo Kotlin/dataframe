@@ -1,10 +1,14 @@
-package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
+package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers
 
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorInputHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.toValueType
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import kotlin.reflect.KType
 
-internal class AnyInputHandler<in Value, out Return> : AggregatorInputHandler<Value, Return> {
+internal class AnyInputHandler<in Value : Any, out Return : Any?> : AggregatorInputHandler<Value, Return> {
 
     override fun preprocessAggregation(
         values: Sequence<Value?>,

@@ -1,8 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.ReducingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.AnyInputHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.NumberInputHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.FlatteningMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.TwoStepMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.math.indexOfMax
+import org.jetbrains.kotlinx.dataframe.math.indexOfMin
+import org.jetbrains.kotlinx.dataframe.math.maxOrNull
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.math.meanTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.median
+import org.jetbrains.kotlinx.dataframe.math.minOrNull
 import org.jetbrains.kotlinx.dataframe.math.percentile
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
@@ -17,11 +27,12 @@ internal object Aggregators {
      *
      * @include [TwoStepAggregatorForAny]
      */
-    private fun <Type> twoStepPreservingType(
-        isBetterThan: IsBetterThanSelector<Type>,
-    ): AggregatorProvider<Aggregator<Type, Type?>> =
-        Aggregator.Factory(
-            aggregationHandler = SelectingAggregationHandler(isBetterThan, preserveReturnTypeNullIfEmpty),
+    private fun <Value : Return & Any, Return : Any?> twoStepSelecting(
+        reducer: Reducer<Value, Return>,
+        indexOfResult: IndexOfResult<Value>,
+    ): AggregatorProvider<Aggregator<Value, Return>> =
+        Aggregator(
+            aggregationHandler = SelectingAggregationHandler(reducer, indexOfResult, preserveReturnTypeNullIfEmpty),
             inputHandler = AnyInputHandler(),
             multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
         )
@@ -31,15 +42,15 @@ internal object Aggregators {
      *
      * @include [TwoStepAggregatorForAny]
      */
-    private fun <Value, Return> twoStepChangingType(
+    private fun <Value : Any, Return : Any?> twoStepReducing(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         stepOneReducer: Reducer<Value, Return>,
         stepTwoReducer: Reducer<Return, Return>,
-    ) = Aggregator.Factory(
+    ) = Aggregator(
         aggregationHandler = ReducingAggregationHandler(stepOneReducer, getReturnTypeOrNull),
         inputHandler = AnyInputHandler(),
         multipleColumnsHandler = TwoStepMultipleColumnsHandler(
-            stepTwoAggregationHandler = ReducingAggregationHandler(stepTwoReducer, getReturnTypeOrNull),
+            ReducingAggregationHandler<Return & Any, Return>(stepTwoReducer, getReturnTypeOrNull),
         ),
     )
 
@@ -48,8 +59,8 @@ internal object Aggregators {
      *
      * @include [FlatteningAggregatorForAny]
      */
-    private fun <Type> flatteningPreservingTypes(reducer: Reducer<Type, Type?>) =
-        Aggregator.Factory(
+    private fun <Type : Any> flatteningPreservingTypes(reducer: Reducer<Type, Type?>) =
+        Aggregator(
             aggregationHandler = ReducingAggregationHandler(reducer, preserveReturnTypeNullIfEmpty),
             inputHandler = AnyInputHandler(),
             multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
@@ -60,10 +71,10 @@ internal object Aggregators {
      *
      * @include [FlatteningAggregatorForAny]
      */
-    private fun <Value, Return> flatteningChangingTypes(
+    private fun <Value : Any, Return : Any?> flatteningChangingTypes(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         reducer: Reducer<Value, Return>,
-    ) = Aggregator.Factory(
+    ) = Aggregator(
         aggregationHandler = ReducingAggregationHandler(reducer, getReturnTypeOrNull),
         inputHandler = AnyInputHandler(),
         multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
@@ -77,7 +88,7 @@ internal object Aggregators {
     private fun <Return : Number?> twoStepForNumbers(
         getReturnTypeOrNull: CalculateReturnTypeOrNull,
         reducer: Reducer<Number, Return>,
-    ) = Aggregator.Factory(
+    ) = Aggregator(
         aggregationHandler = ReducingAggregationHandler(reducer, getReturnTypeOrNull),
         inputHandler = NumberInputHandler(),
         multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
@@ -93,23 +104,21 @@ internal object Aggregators {
         getAggregator: (Param1, Param2) -> AggregatorProvider<AggregatorType>,
     ) = AggregatorOptionSwitch2.Factory(getAggregator)
 
-//    private fun <Value, Return> AggregatorProvider<Aggregator<Value, Return>>.asByAggregator(
-//        aggregatorBy: AggregateBy<Any?, Value, Return>,
-//    ) where Value : Any, Value : Comparable<Value> = ComparingAggregator.Factory(this, aggregatorBy)
+    // T: Comparable<T> -> T?
+    fun <T : Comparable<T>> min() = min.cast2<T, T?>()
+
+    private val min by twoStepSelecting<Comparable<Any?>, Comparable<Any?>?>(
+        reducer = { type -> minOrNull(type) },
+        indexOfResult = { indexOfMin() },
+    )
 
     // T: Comparable<T> -> T?
-    fun <T : Comparable<T>?> min() = min.cast2<T, T?>()
+    fun <T : Comparable<T>> max() = max.cast2<T, T?>()
 
-    private val min by twoStepPreservingType<Comparable<Any?>> { other, type ->
-        this < other
-    }
-
-    // T: Comparable<T> -> T?
-    fun <T : Comparable<T>?> max() = max.cast2<T, T?>()
-
-    private val max by twoStepPreservingType<Comparable<Any?>> { other, type ->
-        this > other
-    }
+    private val max by twoStepSelecting<Comparable<Any?>, Comparable<Any?>?>(
+        reducer = { type -> maxOrNull(type) },
+        indexOfResult = { indexOfMax() },
+    )
 
     // T: Number? -> Double
     val std by withTwoOptions { skipNA: Boolean, ddof: Int ->

@@ -1,10 +1,13 @@
-package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
+package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-internal class FlatteningMultipleColumnsHandler<in Value, out Return> :
+internal class FlatteningMultipleColumnsHandler<in Value : Any, out Return : Any?> :
     AggregatorMultipleColumnsHandler<Value, Return> {
 
     /**
@@ -14,7 +17,7 @@ internal class FlatteningMultipleColumnsHandler<in Value, out Return> :
      */
     override fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return {
         val commonType = aggregator!!.calculateValueType(columns.map { it.type() }.toSet())
-            .run { copy(kType = kType.withNullability(false)) }
+            .run { ValueType(kType = kType.withNullability(false)) }
         val allValues = columns.flatMap { it.values() }.filterNotNull()
         return aggregator!!.aggregateSingleSequence(allValues, commonType)
     }

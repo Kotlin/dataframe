@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KType
 
-internal interface AggregatorMultipleColumnsHandler<in Value, out Return> : AggregatorRefHolder<Value, Return> {
+internal interface AggregatorMultipleColumnsHandler<in Value : Any, out Return : Any?> : AggregatorHandler<Value, Return> {
 
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.

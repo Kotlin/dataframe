@@ -1,7 +1,12 @@
-package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
+package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.isEmpty
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorInputHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import kotlin.reflect.KType
 import kotlin.reflect.full.starProjectedType
@@ -9,19 +14,19 @@ import kotlin.reflect.full.withNullability
 
 /**
  *
- * @param stepTwoAggregationHandler The [aggregation handler][AggregatorAggregationHandler] for the second step.
+ * @param stepTwoAggregationHandler The [aggregation handler][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
- * @param stepTwoInputHandler The [input handler][AggregatorInputHandler] for the second step.
+ * @param stepTwoInputHandler The [input handler][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorInputHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
  */
-internal class TwoStepMultipleColumnsHandler<in Value, out Return>(
+internal class TwoStepMultipleColumnsHandler<in Value : Any, out Return : Any?>(
     stepTwoAggregationHandler: AggregatorAggregationHandler<Return & Any, Return>? = null,
     stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
 ) : AggregatorMultipleColumnsHandler<Value, Return> {
 
     @Suppress("UNCHECKED_CAST")
     val stepTwo by lazy {
-        Aggregator.Factory(
+        Aggregator.Companion.invoke(
             aggregationHandler = stepTwoAggregationHandler
                 ?: aggregator as AggregatorAggregationHandler<Return & Any, Return>,
             inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,

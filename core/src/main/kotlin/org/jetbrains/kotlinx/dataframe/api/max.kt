@@ -84,7 +84,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: KProperty<C?>
     maxOrNull(*columns).suggestIfNull("max")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(columns: ColumnsSelector<T, C?>): C? =
-    Aggregators.max<C>().aggregateAll(this, columns) as C?
+    Aggregators.max<C>().aggregateAll(this, columns)
 
 public fun <T> DataFrame<T>.maxOrNull(vararg columns: String): Comparable<Any?>? =
     maxOrNull { columns.toComparableColumns() }

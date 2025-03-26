@@ -15,24 +15,28 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 
 @PublishedApi
-internal fun <T, C, R> Aggregator<*, R>.aggregateAll(data: DataFrame<T>, columns: ColumnsSelector<T, C?>): R =
-    data.aggregateAll(cast2(), columns)
+internal fun <T, C : Any, R : Any?> Aggregator<*, R>.aggregateAll(
+    data: DataFrame<T>,
+    columns: ColumnsSelector<T, C?>,
+): R = data.aggregateAll(cast2(), columns)
 
-internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
+internal fun <T, C : Any, R : Any?> Aggregator<*, R>.aggregateAll(
     data: Grouped<T>,
     name: String?,
     columns: ColumnsSelector<T, C?>,
 ): DataFrame<T> = data.aggregateAll(cast(), columns, name)
 
-internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
+internal fun <T, C : Any, R : Any?> Aggregator<*, R>.aggregateAll(
     data: PivotGroupBy<T>,
     columns: ColumnsSelector<T, C?>,
 ): DataFrame<T> = data.aggregateAll(cast(), columns)
 
-internal fun <T, C, R> DataFrame<T>.aggregateAll(aggregator: Aggregator<C, R>, columns: ColumnsSelector<T, C?>): R =
-    aggregator.aggregateMultipleColumns(get(columns).asSequence())
+internal fun <T, C : Any, R : Any?> DataFrame<T>.aggregateAll(
+    aggregator: Aggregator<C, R>,
+    columns: ColumnsSelector<T, C?>,
+): R = aggregator.aggregateMultipleColumns(get(columns).asSequence())
 
-internal fun <T, C, R> Grouped<T>.aggregateAll(
+internal fun <T, C : Any, R : Any?> Grouped<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
     columns: ColumnsSelector<T, C?>,
     name: String?,
@@ -46,7 +50,7 @@ internal fun <T, C, R> Grouped<T>.aggregateAll(
         }
     }
 
-internal fun <T, C, R> PivotGroupBy<T>.aggregateAll(
+internal fun <T, C : Any, R : Any?> PivotGroupBy<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
     columns: ColumnsSelector<T, C?>,
 ): DataFrame<T> =

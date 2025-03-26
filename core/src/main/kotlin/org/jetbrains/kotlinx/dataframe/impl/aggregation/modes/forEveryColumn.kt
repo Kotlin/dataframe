@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.type
 
-internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
+internal fun <T, C, R : Any?> Aggregator<*, R>.aggregateFor(
     data: Grouped<T>,
     columns: ColumnsForAggregateSelector<T, C?>,
 ): DataFrame<T> =
@@ -23,7 +23,7 @@ internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
         aggregateFor(columns, cast())
     }
 
-internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
+internal fun <T, C, R : Any?> Aggregator<*, R>.aggregateFor(
     data: PivotGroupBy<T>,
     separate: Boolean,
     columns: ColumnsForAggregateSelector<T, C?>,
@@ -32,7 +32,7 @@ internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
         internal().aggregateFor(columns, cast())
     }
 
-internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
+internal fun <T, C, R : Any?> Aggregator<*, R>.aggregateFor(
     data: DataFrame<T>,
     columns: ColumnsForAggregateSelector<T, C?>,
 ): DataRow<T> =
@@ -40,7 +40,7 @@ internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
         internal().aggregateFor(columns, cast())
     }
 
-internal fun <T, C, R> AggregateInternalDsl<T>.aggregateFor(
+internal fun <T, C : Any, R : Any?> AggregateInternalDsl<T>.aggregateFor(
     columns: ColumnsForAggregateSelector<T, C?>,
     aggregator: Aggregator<C, R>,
 ) {

@@ -24,5 +24,7 @@ internal operator fun <T> Provider<T>.getValue(obj: Any?, property: KProperty<*>
  * ```kt
  * val myAggregator by MyAggregator.Factory
  * ```
+ *
+ * TODO change back to AggregatorProvider<Value, Return>
  */
 internal fun interface AggregatorProvider<out AggregatorType : Aggregator<*, *>> : Provider<AggregatorType>

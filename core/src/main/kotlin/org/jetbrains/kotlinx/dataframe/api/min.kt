@@ -89,7 +89,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: KProperty<C?>
     minOrNull(*columns).suggestIfNull("min")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C?>): C? =
-    Aggregators.min<C>().aggregateAll(this, columns) as C?
+    Aggregators.min<C>().aggregateAll(this, columns)
 
 public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any?>? =
     minOrNull { columns.toComparableColumns() }

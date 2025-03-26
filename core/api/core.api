@@ -5163,20 +5163,38 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/Aggregations
 	public static synthetic fun yieldOneOrMany$default (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/util/List;Lkotlin/reflect/KType;Ljava/lang/Object;ILjava/lang/Object;)V
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler {
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler {
 	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator$Companion;
-	public abstract fun getName ()Ljava/lang/String;
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)V
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;Ljava/lang/String;)V
+	public fun aggregateMultipleColumns (Lkotlin/sequences/Sequence;)Ljava/lang/Object;
+	public fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
+	public fun aggregateSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
+	public fun calculateReturnTypeMultipleColumnsOrNull (Ljava/util/Set;Z)Lkotlin/reflect/KType;
+	public fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+	public fun calculateValueType (Ljava/util/Set;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;
+	public fun calculateValueType (Lkotlin/sequences/Sequence;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;
+	public final fun getAggregationHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;
+	public fun getAggregator ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun getInputHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;
+	public final fun getMultipleColumnsHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;
+	public final fun getName ()Ljava/lang/String;
+	public fun indexOfAggregationResultSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
+	public fun init (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)V
+	public fun preprocessAggregation (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Lkotlin/Pair;
+	public fun setAggregator (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)V
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator$Companion {
-	public final fun providerOf (Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorProvider;
-	public final fun providerOf (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorProvider;
+	public final fun invoke (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorProvider;
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorRefHolder {
+public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorHandler {
 	public abstract fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
 	public abstract fun aggregateSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
 	public abstract fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+	public abstract fun indexOfAggregationResultSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorKt {
@@ -5184,34 +5202,32 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 	public static final fun aggregate (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public static final fun cast2 (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public static final fun indexOfAggregationResult (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;)I
+	public static final fun indexOfAggregationResult (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1 {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1$Companion;
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function1;
 	public final fun getName ()Ljava/lang/String;
 	public final fun invoke (Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1$Factory : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider {
-	public fun <init> (Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun create (Ljava/lang/String;)Ljava/lang/Object;
-	public fun create (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
-	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function1;
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1$Companion {
+	public final fun Factory (Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2 {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Companion;
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
 	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function2;
 	public final fun getName ()Ljava/lang/String;
 	public final fun invoke (Ljava/lang/Object;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Factory : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider {
-	public fun <init> (Lkotlin/jvm/functions/Function2;)V
-	public synthetic fun create (Ljava/lang/String;)Ljava/lang/Object;
-	public fun create (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
-	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function2;
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Companion {
+	public final fun Factory (Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators {
@@ -6156,6 +6172,10 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords : java/
 
 public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Companion {
 	public final fun getVALUES ()Ljava/util/List;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/MaxKt {
+	public static final fun maxOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;)Ljava/lang/Comparable;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/MinKt {

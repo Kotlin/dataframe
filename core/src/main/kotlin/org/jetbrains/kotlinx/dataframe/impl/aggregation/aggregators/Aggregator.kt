@@ -1,6 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.ReducingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.AnyInputHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.NumberInputHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.FlatteningMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.NoMultipleColumnsHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.TwoStepMultipleColumnsHandler
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -12,7 +19,7 @@ import kotlin.reflect.full.withNullability
  *
  * [Aggregator] follows a dependency injection pattern:
  *
- * Using the constructor or [Aggregator.Factory] function, you can create an [Aggregator] instance with a choice of:
+ * Using the constructor or [Aggregator.invoke] function, you can create an [Aggregator] instance with a choice of:
  * - [AggregatorAggregationHandler] - the base functionality of the aggregator,
  *   which computes the result from the input values.
  *
@@ -33,11 +40,11 @@ import kotlin.reflect.full.withNullability
  * @param Return The type of the resulting value. Can optionally be nullable.
  */
 @PublishedApi
-internal class Aggregator<in Value, out Return>(
-    val name: String,
+internal class Aggregator<in Value : Any, out Return : Any?>(
     val aggregationHandler: AggregatorAggregationHandler<Value, Return>,
     val inputHandler: AggregatorInputHandler<Value, Return>,
     val multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
+    val name: String,
 ) : AggregatorInputHandler<Value, Return> by inputHandler,
     AggregatorMultipleColumnsHandler<Value, Return> by multipleColumnsHandler,
     AggregatorAggregationHandler<Value, Return> by aggregationHandler {
@@ -51,53 +58,51 @@ internal class Aggregator<in Value, out Return>(
 
     // Set the aggregator reference in all handlers to this instance
     init {
-        aggregationHandler.aggregator = this
-        inputHandler.aggregator = this
-        multipleColumnsHandler.aggregator = this
+        aggregationHandler.init(this)
+        inputHandler.init(this)
+        multipleColumnsHandler.init(this)
+        init(this)
     }
 
-    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = this
+    override fun init(aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>) {
+        this.aggregator = aggregator
+    }
+
+    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = null
 
     override fun toString(): String =
         "Aggregator(name='$name', aggregationHandler=$aggregationHandler, inputHandler=$inputHandler, multipleColumnsHandler=$multipleColumnsHandler)"
 
-    @Suppress("FunctionName")
     companion object {
-        fun <Value, Return> Factory(
+        operator fun <Value : Any, Return : Any?> invoke(
             aggregationHandler: AggregatorAggregationHandler<Value, Return>,
             inputHandler: AggregatorInputHandler<Value, Return>,
             multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
         ): AggregatorProvider<Aggregator<Value, Return>> =
             AggregatorProvider { name ->
                 Aggregator(
-                    name = name,
                     aggregationHandler = aggregationHandler,
                     inputHandler = inputHandler,
                     multipleColumnsHandler = multipleColumnsHandler,
+                    name = name,
                 )
             }
     }
 }
 
-internal interface AggregatorRefHolder<in Value, out Return> {
-
-    /**
-     * Reference to the aggregator instance.
-     *
-     * Can only be used once `this` has been passed to [Aggregator].
-     */
-    var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>?
-}
+@PublishedApi
+internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
+    values: Sequence<Value?>,
+    valueType: ValueType,
+) = aggregateSingleSequence(values, valueType)
 
 @PublishedApi
-internal fun <Value, Return> Aggregator<Value, Return>.aggregate(values: Sequence<Value?>, valueType: ValueType) =
-    aggregateSingleSequence(values, valueType)
+internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
+    values: Sequence<Value?>,
+    valueType: KType,
+) = aggregate(values, valueType.toValueType())
 
-@PublishedApi
-internal fun <Value, Return> Aggregator<Value, Return>.aggregate(values: Sequence<Value?>, valueType: KType) =
-    aggregate(values, valueType.toValueType())
-
-internal fun <Value, Return> Aggregator<Value, Return>.calculateValueType(
+internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.calculateValueType(
     values: Sequence<Value?>,
     valueTypes: Set<KType>? = null,
 ) = if (valueTypes != null && valueTypes.isNotEmpty()) {
@@ -106,7 +111,7 @@ internal fun <Value, Return> Aggregator<Value, Return>.calculateValueType(
     calculateValueType(values)
 }
 
-internal fun <Value, Return> Aggregator<Value, Return>.aggregateCalculatingValueType(
+internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregateCalculatingValueType(
     values: Sequence<Value?>,
     valueTypes: Set<KType>? = null,
 ) = aggregateSingleSequence(
@@ -114,29 +119,32 @@ internal fun <Value, Return> Aggregator<Value, Return>.aggregateCalculatingValue
     valueType = calculateValueType(values, valueTypes),
 )
 
-internal fun <Value, Return> Aggregator<Value, Return>.aggregate(column: DataColumn<Value?>) =
+internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(column: DataColumn<Value?>) =
     aggregateSingleColumn(column)
 
-internal fun <Value, Return> Aggregator<Value, Return>.aggregate(columns: Sequence<DataColumn<Value?>>) =
+internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(columns: Sequence<DataColumn<Value?>>) =
     aggregateMultipleColumns(columns)
 
 @PublishedApi
-internal fun <Type> Aggregator<Type, Type?>.indexOfAggregationResult(
-    values: Sequence<Type?>,
+internal fun <Value : Return & Any, Return : Any?> Aggregator<Value, Return>.indexOfAggregationResult(
+    values: Sequence<Value?>,
     valueType: ValueType,
 ): Int = indexOfAggregationResultSingleSequence(values, valueType)
 
 @PublishedApi
-internal fun <Type> Aggregator<Type, Type?>.indexOfAggregationResult(values: Sequence<Type?>, valueType: KType): Int =
-    indexOfAggregationResultSingleSequence(values, valueType.toValueType())
+internal fun <Value : Return & Any, Return : Any?> Aggregator<Value, Return>.indexOfAggregationResult(
+    values: Sequence<Value?>,
+    valueType: KType,
+): Int = indexOfAggregationResultSingleSequence(values, valueType.toValueType())
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <Type> Aggregator<*, *>.cast(): Aggregator<Type, Type> = this as Aggregator<Type, Type>
+internal fun <Type : Any?> Aggregator<*, *>.cast(): Aggregator<Type & Any, Type> = this as Aggregator<Type & Any, Type>
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <Value, Return> Aggregator<*, *>.cast2(): Aggregator<Value, Return> = this as Aggregator<Value, Return>
+internal fun <Value : Any, Return : Any?> Aggregator<*, *>.cast2(): Aggregator<Value, Return> =
+    this as Aggregator<Value, Return>
 
 /** Type alias for [Aggregator.calculateReturnTypeMultipleColumnsOrNull] */
 internal typealias CalculateReturnTypeOrNull = (type: KType, emptyInput: Boolean) -> KType?
@@ -147,7 +155,9 @@ internal typealias CalculateReturnTypeOrNull = (type: KType, emptyInput: Boolean
  */
 internal typealias Reducer<Value, Return> = Sequence<Value & Any>.(type: KType) -> Return
 
-internal typealias IsBetterThanSelector<Type> = Type.(other: Type, valueType: KType) -> Boolean
+internal typealias IndexOfResult<Value> = Sequence<Value?>.(type: KType) -> Int
+
+internal typealias IsBetterThanSelector<Value> = (Value & Any).(other: Value & Any, valueType: KType) -> Boolean
 
 /** Common case for [CalculateReturnTypeOrNull], preserves return type, but makes it nullable for empty inputs. */
 internal val preserveReturnTypeNullIfEmpty: CalculateReturnTypeOrNull = { type, emptyInput ->

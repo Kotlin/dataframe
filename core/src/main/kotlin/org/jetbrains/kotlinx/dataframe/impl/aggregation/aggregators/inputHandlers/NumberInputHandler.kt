@@ -1,7 +1,11 @@
-package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
+package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY
+import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorInputHandler
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.toValueType
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
 import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
@@ -16,7 +20,7 @@ import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger { }
 
-internal class NumberInputHandler<out Return> : AggregatorInputHandler<Number, Return> {
+internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Number, Return> {
 
     override fun preprocessAggregation(
         values: Sequence<Number?>,
@@ -31,7 +35,10 @@ internal class NumberInputHandler<out Return> : AggregatorInputHandler<Number, R
             // or calling aggregateCalculatingType with all known number types
             typeOf<Number>() -> {
                 val unifiedType = calculateValueType(values).kType
-                val unifiedValues = values.convertToUnifiedNumberType(PRIMITIVES_ONLY, unifiedType)
+                val unifiedValues = values.convertToUnifiedNumberType(
+                    UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY,
+                    unifiedType,
+                )
                 Pair(unifiedValues, unifiedType)
             }
 
@@ -46,7 +53,10 @@ internal class NumberInputHandler<out Return> : AggregatorInputHandler<Number, R
 
             else -> {
                 val unifiedValues = if (valueType.needsFullConversion) {
-                    values.convertToUnifiedNumberType(PRIMITIVES_ONLY, valueType.kType)
+                    values.convertToUnifiedNumberType(
+                        UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY,
+                        valueType.kType,
+                    )
                 } else {
                     values
                 }
@@ -60,7 +70,7 @@ internal class NumberInputHandler<out Return> : AggregatorInputHandler<Number, R
         calculateValueType(values.asIterable().types().toSet())
 
     override fun calculateValueType(valueTypes: Set<KType>): ValueType {
-        val unifiedType = valueTypes.unifiedNumberTypeOrNull(PRIMITIVES_ONLY)
+        val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY)
             ?: throw IllegalArgumentException(
                 "Cannot calculate the ${aggregator!!.name} of the number types: ${
                     valueTypes.joinToString { renderType(it) }
