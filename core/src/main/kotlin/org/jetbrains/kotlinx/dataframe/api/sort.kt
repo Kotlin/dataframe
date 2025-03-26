@@ -100,7 +100,7 @@ public fun <T, C : DataColumn<T>> C.sortWith(comparator: Comparator<T>): C =
     DataColumn.createByType(name, values().sortedWith(comparator), type) as C
 
 /** @include [CommonDataColumnSortWithDocs] */
-public fun <T, C : DataColumn<T>> C.sortWith(comparator: (T, T) -> Int): C = sortWith(Comparator(comparator))
+public inline fun <T, C : DataColumn<T>> C.sortWith(noinline comparator: (T, T) -> Int): C = sortWith(Comparator(comparator))
 
 // endregion
 
@@ -122,7 +122,7 @@ public fun <T> DataFrame<T>.sortWith(comparator: Comparator<DataRow<T>>): DataFr
     return this[permutation]
 }
 
-public fun <T> DataFrame<T>.sortWith(comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> =
+public inline fun <T> DataFrame<T>.sortWith(noinline comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> =
     sortWith(Comparator(comparator))
 
 public fun <T, C> DataFrame<T>.sortByDesc(columns: SortColumnsSelector<T, C>): DataFrame<T> {

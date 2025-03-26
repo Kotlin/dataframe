@@ -31,9 +31,9 @@ public fun <T> DataColumn<T>.first(): T = get(0)
 
 public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
 
-public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(predicate)
+public inline fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(predicate)
 
-public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values.firstOrNull(predicate)
+public inline fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values.firstOrNull(predicate)
 
 // endregion
 
@@ -48,9 +48,9 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 
-public fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> = rows().first { predicate(it, it) }
+public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> = rows().first { predicate(it, it) }
 
-public fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? = rows().firstOrNull { predicate(it, it) }
+public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? = rows().firstOrNull { predicate(it, it) }
 
 // endregion
 

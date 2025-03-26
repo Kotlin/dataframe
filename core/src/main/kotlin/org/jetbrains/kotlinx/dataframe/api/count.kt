@@ -25,7 +25,7 @@ public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int =
 
 public fun AnyRow.count(): Int = columnsCount()
 
-public fun AnyRow.count(predicate: Predicate<Any?>): Int = values().count(predicate)
+public inline fun AnyRow.count(predicate: Predicate<Any?>): Int = values().count(predicate)
 
 // endregion
 
@@ -33,7 +33,7 @@ public fun AnyRow.count(predicate: Predicate<Any?>): Int = values().count(predic
 
 public fun <T> DataFrame<T>.count(): Int = rowsCount()
 
-public fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().count { predicate(it, it) }
+public inline fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().count { predicate(it, it) }
 
 // endregion
 

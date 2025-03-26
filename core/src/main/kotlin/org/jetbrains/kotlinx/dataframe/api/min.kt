@@ -29,15 +29,15 @@ public fun <T : Comparable<T>> DataColumn<T?>.min(): T = minOrNull().suggestIfNu
 
 public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = asSequence().filterNotNull().minOrNull()
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minBy(selector: (T) -> R): T =
+public inline fun <T, R : Comparable<R>> DataColumn<T>.minBy(selector: (T) -> R): T =
     minByOrNull(selector).suggestIfNull("minBy")
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minByOrNull(selector: (T) -> R): T? = values.minByOrNull(selector)
+public inline fun <T, R : Comparable<R>> DataColumn<T>.minByOrNull(selector: (T) -> R): T? = values.minByOrNull(selector)
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minOf(selector: (T) -> R): R =
+public inline fun <T, R : Comparable<R>> DataColumn<T>.minOf(selector: (T) -> R): R =
     minOfOrNull(selector).suggestIfNull("minOf")
 
-public fun <T, R : Comparable<R>> DataColumn<T>.minOfOrNull(selector: (T) -> R): R? = values.minOfOrNull(selector)
+public inline fun <T, R : Comparable<R>> DataColumn<T>.minOfOrNull(selector: (T) -> R): R? = values.minOfOrNull(selector)
 
 // endregion
 

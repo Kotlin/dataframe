@@ -286,7 +286,7 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  */
 @Refine
 @Interpretable("UpdateWith0")
-public fun <T, C, R : C?> Update<T, C>.with(expression: UpdateExpression<T, C, R>): DataFrame<T> =
+public inline fun <T, C, R : C?> Update<T, C>.with(noinline expression: UpdateExpression<T, C, R>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
     }
