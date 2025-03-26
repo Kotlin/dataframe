@@ -139,6 +139,28 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun asGroupByOverloads() {
+        val rowsColumn by columnOf(typed[0..3], typed[4..5], typed[6..6])
+        val df = dataFrameOf(rowsColumn)
+        val res = df.asGroupBy { rowsColumn }.max()
+        df.asGroupBy("rowsColumn").max() shouldBe res
+        df.asGroupBy(rowsColumn).max() shouldBe res
+    }
+
+    @Test
+    fun moveGroupedColumn() {
+        val df = dataFrameOf(
+            "group" to listOf(typed[0..3], typed[4..5], typed[6..6]),
+            "col" to listOf(1, 2, 3),
+        )
+
+        // We need to match the order of columns in the runtime and in compiler plugin
+        // GroupBy with the same schema should give the same result after aggregation, no matter how it was created
+        // We cannot track position of group in original df, so we align `asGroupBy` with `groupBy` and move `group` column to end
+        df.asGroupBy("group").toDataFrame().columnNames() shouldBe listOf("col", "group")
+    }
+
+    @Test
     fun createFrameColumn2() {
         val id by column(typed.indices())
         val groups by id.map { typed[it..it] }
