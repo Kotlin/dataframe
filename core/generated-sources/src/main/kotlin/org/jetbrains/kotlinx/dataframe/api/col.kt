@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -499,6 +500,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the column.
      * @param [C] The type of the column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.col(col: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(col.path())
 
@@ -1139,6 +1141,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [name] The name of the column.
      * @param [C] The type of the column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.col(name: String): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(name)
 
@@ -1833,6 +1836,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [path] The path to the column.
      * @param [C] The type of the column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.col(path: ColumnPath): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(path)
 
@@ -2246,6 +2250,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the column.
      * @param [C] The type of the column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.col(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().column(property)
 
@@ -2895,6 +2900,7 @@ public interface ColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.col(index: Int): SingleColumn<C> = columnGroup(this).col<C>(index)
 
     /**
