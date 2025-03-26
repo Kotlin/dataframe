@@ -356,12 +356,16 @@ public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor<T>): Colum
 
 // region as GroupedDataFrame
 
-public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> =
-    GroupByImpl(this, getFrameColumn(groupedColumnName).castFrameColumn()) { none() }
+public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> {
+    val groups = getFrameColumn(groupedColumnName)
+    return asGroupBy { groups.cast() }
+}
 
 @AccessApiOverload
-public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> =
-    GroupByImpl(this, getFrameColumn(groupedColumn.name()).castFrameColumn()) { none() }
+public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> {
+    val groups = getFrameColumn(groupedColumn.name()).castFrameColumn<G>()
+    return asGroupBy { groups }
+}
 
 public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
     val groupCol = columns().single { it.isFrameColumn() }.asAnyFrameColumn().castFrameColumn<T>()
@@ -370,7 +374,7 @@ public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
 
 public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G>>): GroupBy<T, G> {
     val column = getColumn(selector).asFrameColumn()
-    return GroupByImpl(this, column) { none() }
+    return GroupByImpl(this.move { column }.toEnd(), column) { none() }
 }
 
 // endregion
