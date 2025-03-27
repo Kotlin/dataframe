@@ -31,18 +31,21 @@ public fun <T> DataColumn<T>.last(): T = get(size - 1)
 
 public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
 
-public fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.last(predicate)
+public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.last(predicate)
 
-public fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = values.lastOrNull(predicate)
+public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = values.lastOrNull(predicate)
 
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
+public inline fun <T> DataFrame<T>.lastOrNull(crossinline predicate: RowFilter<T>): DataRow<T>? =
     rowsReversed().firstOrNull { predicate(it, it) }
 
-public fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
+public inline fun <T> DataFrame<T>.last(crossinline predicate: RowFilter<T>): DataRow<T> =
+    rowsReversed().first {
+        predicate(it, it)
+    }
 
 public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow - 1) else null
 

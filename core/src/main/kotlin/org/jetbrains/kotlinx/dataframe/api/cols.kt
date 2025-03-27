@@ -1105,7 +1105,8 @@ internal fun SingleColumn<DataRow<*>>.colsInternal(refs: Iterable<ColumnReferenc
  * Else, it returns a new [ColumnSet] containing all columns in this [ColumnsResolver] that
  * match the given [predicate].
  */
-internal fun ColumnsResolver<*>.colsInternal(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
+@PublishedApi
+internal inline fun ColumnsResolver<*>.colsInternal(crossinline predicate: ColumnFilter<*>): TransformableColumnSet<*> =
     allColumnsInternal().transform { it.filter(predicate) }
 
 internal fun ColumnsResolver<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =

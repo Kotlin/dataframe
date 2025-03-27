@@ -64,7 +64,8 @@ private interface CommonSelectDocs
  */
 @Refine
 @Interpretable("Select0")
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
+public inline fun <T> DataFrame<T>.select(noinline columns: ColumnsSelector<T, *>): DataFrame<T> =
+    get(columns).toDataFrame().cast()
 
 /**
  * @include [CommonSelectDocs]
@@ -72,14 +73,14 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
 @AccessApiOverload
-public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
+public inline fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
  * @include [CommonSelectDocs]
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectOperationArg]}
  * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame].
  */
-public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
+public inline fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
  * @include [CommonSelectDocs]

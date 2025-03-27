@@ -6,10 +6,10 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 
 // region DataFrame
 
-public fun <T, V> DataFrame<T>.associateBy(transform: RowExpression<T, V>): Map<V, DataRow<T>> =
+public inline fun <T, V> DataFrame<T>.associateBy(crossinline transform: RowExpression<T, V>): Map<V, DataRow<T>> =
     rows().associateBy { transform(it, it) }
 
-public fun <T, K, V> DataFrame<T>.associate(transform: RowExpression<T, Pair<K, V>>): Map<K, V> =
+public inline fun <T, K, V> DataFrame<T>.associate(crossinline transform: RowExpression<T, Pair<K, V>>): Map<K, V> =
     rows().associate { transform(it, it) }
 
 // endregion
