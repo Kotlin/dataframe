@@ -105,17 +105,19 @@ internal object Aggregators {
     ) = AggregatorOptionSwitch2.Factory(getAggregator)
 
     // T: Comparable<T> -> T?
-    fun <T : Comparable<T>> min() = min.cast2<T, T?>()
+    // T : Comparable<T & Any>? -> T?
+    fun <T : Comparable<T & Any>?> min(): Aggregator<T & Any, T?> = min.cast2()
 
-    private val min by twoStepSelecting<Comparable<Any?>, Comparable<Any?>?>(
+    private val min by twoStepSelecting<Comparable<Any>, Comparable<Any>?>(
         reducer = { type -> minOrNull(type) },
         indexOfResult = { indexOfMin() },
     )
 
     // T: Comparable<T> -> T?
-    fun <T : Comparable<T>> max() = max.cast2<T, T?>()
+    // T : Comparable<T & Any>? -> T?
+    fun <T : Comparable<T & Any>?> max(): Aggregator<T & Any, T?> = max.cast2()
 
-    private val max by twoStepSelecting<Comparable<Any?>, Comparable<Any?>?>(
+    private val max by twoStepSelecting<Comparable<Any>, Comparable<Any>?>(
         reducer = { type -> maxOrNull(type) },
         indexOfResult = { indexOfMax() },
     )
