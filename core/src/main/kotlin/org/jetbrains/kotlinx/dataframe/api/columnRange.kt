@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -96,6 +97,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`}
      */
+    @AccessApiOverload
     public operator fun KProperty<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -103,6 +105,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`}
      */
+    @AccessApiOverload
     public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 

@@ -170,13 +170,16 @@ public interface AndColumnsSelectionDsl {
     }
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> =
         toColumnAccessor() and other()
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `"colB"`} */
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `Type::colB`} */
