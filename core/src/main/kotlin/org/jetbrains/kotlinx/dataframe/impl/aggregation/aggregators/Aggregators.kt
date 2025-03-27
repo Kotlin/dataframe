@@ -30,12 +30,11 @@ internal object Aggregators {
     private fun <Value : Return & Any, Return : Any?> twoStepSelecting(
         reducer: Reducer<Value, Return>,
         indexOfResult: IndexOfResult<Value>,
-    ): AggregatorProvider<Aggregator<Value, Return>> =
-        Aggregator(
-            aggregationHandler = SelectingAggregationHandler(reducer, indexOfResult, preserveReturnTypeNullIfEmpty),
-            inputHandler = AnyInputHandler(),
-            multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
-        )
+    ) = Aggregator(
+        aggregationHandler = SelectingAggregationHandler(reducer, indexOfResult, preserveReturnTypeNullIfEmpty),
+        inputHandler = AnyInputHandler(),
+        multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
+    )
 
     /**
      * Factory for a simple aggregator that changes the type of the input values.
@@ -95,13 +94,13 @@ internal object Aggregators {
     )
 
     /** @include [AggregatorOptionSwitch1] */
-    private fun <Param1, AggregatorType : Aggregator<*, *>> withOneOption(
-        getAggregator: (Param1) -> AggregatorProvider<AggregatorType>,
+    private fun <Param1, Value : Any, Return : Any?> withOneOption(
+        getAggregator: (Param1) -> AggregatorProvider<Value, Return>,
     ) = AggregatorOptionSwitch1.Factory(getAggregator)
 
     /** @include [AggregatorOptionSwitch2] */
-    private fun <Param1, Param2, AggregatorType : Aggregator<*, *>> withTwoOptions(
-        getAggregator: (Param1, Param2) -> AggregatorProvider<AggregatorType>,
+    private fun <Param1, Param2, Value : Any, Return : Any?> withTwoOptions(
+        getAggregator: (Param1, Param2) -> AggregatorProvider<Value, Return>,
     ) = AggregatorOptionSwitch2.Factory(getAggregator)
 
     // T: Comparable<T> -> T?

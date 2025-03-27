@@ -78,7 +78,7 @@ internal class Aggregator<in Value : Any, out Return : Any?>(
             aggregationHandler: AggregatorAggregationHandler<Value, Return>,
             inputHandler: AggregatorInputHandler<Value, Return>,
             multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
-        ): AggregatorProvider<Aggregator<Value, Return>> =
+        ): AggregatorProvider<Value, Return> =
             AggregatorProvider { name ->
                 Aggregator(
                     aggregationHandler = aggregationHandler,
