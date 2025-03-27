@@ -113,7 +113,10 @@ internal interface DiffOrNullDocs
  */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
+public inline fun <T> DataRow<T>.diff(
+    firstRowResult: Double,
+    crossinline expression: RowExpression<T, Double>,
+): Double =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
@@ -125,7 +128,7 @@ public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
 // required to resolve `diff(0) { intValue }`
-public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int =
+public inline fun <T> DataRow<T>.diff(firstRowResult: Int, crossinline expression: RowExpression<T, Int>): Int =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
@@ -134,7 +137,7 @@ public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T,
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
-public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T, Long>): Long =
+public inline fun <T> DataRow<T>.diff(firstRowResult: Long, crossinline expression: RowExpression<T, Long>): Long =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
@@ -143,7 +146,7 @@ public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T
  *
  * @return [firstRowValue] for the first row; difference between expression computed for current and previous row for the following rows
  */
-public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
+public inline fun <T> DataRow<T>.diff(firstRowResult: Float, crossinline expression: RowExpression<T, Float>): Float =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
@@ -154,7 +157,7 @@ public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<
  */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? =
+public inline fun <T> DataRow<T>.diffOrNull(crossinline expression: RowExpression<T, Double>): Double? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
@@ -162,7 +165,7 @@ public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Doub
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): Int? =
+public inline fun <T> DataRow<T>.diffOrNull(crossinline expression: RowExpression<T, Int>): Int? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
@@ -170,7 +173,7 @@ public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): Int? =
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? =
+public inline fun <T> DataRow<T>.diffOrNull(crossinline expression: RowExpression<T, Long>): Long? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
@@ -178,7 +181,7 @@ public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? 
  *
  * @return null for the first row; difference between expression computed for current and previous row for the following rows
  */
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
+public inline fun <T> DataRow<T>.diffOrNull(crossinline expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 public fun AnyRow.columnsCount(): Int = df().ncol
@@ -221,7 +224,7 @@ public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
         (relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices),
     )
 
-public fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
+public inline fun <T> DataRow<T>.movingAverage(k: Int, crossinline expression: RowExpression<T, Number>): Double {
     var count = 0
     return backwardIterable().take(k).sumOf {
         count++

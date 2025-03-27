@@ -400,9 +400,9 @@ public interface ColsOfKindColumnsSelectionDsl {
  * @param filter The filter function to apply on each column. Must accept a ColumnWithPath object and return a Boolean.
  * @return A [TransformableColumnSet] containing the columns of given kinds that satisfy the filter.
  */
-internal fun ColumnsResolver<*>.columnsOfKindInternal(
+internal inline fun ColumnsResolver<*>.columnsOfKindInternal(
     kinds: Set<ColumnKind>,
-    filter: ColumnFilter<*>,
+    crossinline filter: ColumnFilter<*>,
 ): TransformableColumnSet<*> = colsInternal { it.kind() in kinds && filter(it) }
 
 // endregion

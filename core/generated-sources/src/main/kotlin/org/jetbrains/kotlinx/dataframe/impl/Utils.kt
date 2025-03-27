@@ -246,6 +246,7 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(): Int {
     return minIndex
 }
 
+@PublishedApi
 internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
     val iterator = iterator()
     if (!iterator.hasNext()) return -1
