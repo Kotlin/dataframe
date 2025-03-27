@@ -116,12 +116,14 @@ internal object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    fun <T : Comparable<T & Any>?> max(): Aggregator<T & Any, T?> = max.cast2()
+    fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
-    private val max by twoStepSelecting<Comparable<Any>, Comparable<Any>?>(
-        reducer = { type -> maxOrNull(type) },
-        indexOfResult = { indexOfMax() },
-    )
+    private val max by withOneOption { skipNaN: Boolean ->
+        twoStepSelecting<Comparable<Any>, Comparable<Any>?>(
+            reducer = { type -> maxOrNull(type, skipNaN) },
+            indexOfResult = { type -> indexOfMax(type, skipNaN) },
+        )
+    }
 
     // T: Number? -> Double
     val std by withTwoOptions { skipNA: Boolean, ddof: Int ->

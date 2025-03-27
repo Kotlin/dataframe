@@ -15,10 +15,10 @@ internal fun <T : Comparable<T>> Sequence<T>.minOrNull(type: KType, skipNaN: Boo
         error("Encountered nullable type ${renderType(type)} in min function. This should not occur.")
     }
     return if (skipNaN && type.canBeNaN) {
-        filterNot { it.isNaN }.minOrNull()
+        filterNot { it.isNaN }
     } else {
-        minOrNull()
-    }
+        this
+    }.minOrNull()
 }
 
 internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(type: KType, skipNaN: Boolean): Int =
