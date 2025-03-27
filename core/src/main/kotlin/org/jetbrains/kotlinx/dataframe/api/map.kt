@@ -33,7 +33,7 @@ public inline fun <C, reified R> ColumnReference<C>.map(
 
 public inline fun <T, reified R> DataColumn<T>.map(
     infer: Infer = Infer.Nulls,
-    crossinline transform: (T) -> R
+    crossinline transform: (T) -> R,
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
@@ -42,7 +42,7 @@ public inline fun <T, reified R> DataColumn<T>.map(
 public inline fun <T, R> DataColumn<T>.map(
     type: KType,
     infer: Infer = Infer.Nulls,
-    crossinline transform: (T) -> R
+    crossinline transform: (T) -> R,
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), values, type, infer).cast()
@@ -134,10 +134,10 @@ public inline fun <T, G, R> GroupBy<T, G>.map(crossinline body: Selector<GroupWi
         body(g, g)
     }
 
-public inline fun <T, G> GroupBy<T, G>.mapToRows(crossinline body: Selector<GroupWithKey<T, G>, DataRow<G>?>): DataFrame<G> =
+public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, DataRow<G>?>): DataFrame<G> =
     map(body).concat()
 
-public inline fun <T, G> GroupBy<T, G>.mapToFrames(noinline body: Selector<GroupWithKey<T, G>, DataFrame<G>>): FrameColumn<G> =
+public fun <T, G> GroupBy<T, G>.mapToFrames(body: Selector<GroupWithKey<T, G>, DataFrame<G>>): FrameColumn<G> =
     DataColumn.createFrameColumn(groups.name, map(body))
 
 // endregion

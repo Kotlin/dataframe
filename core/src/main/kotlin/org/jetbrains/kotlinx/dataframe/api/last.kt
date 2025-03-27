@@ -39,10 +39,13 @@ public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = 
 
 // region DataFrame
 
-public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
+public inline fun <T> DataFrame<T>.lastOrNull(crossinline predicate: RowFilter<T>): DataRow<T>? =
     rowsReversed().firstOrNull { predicate(it, it) }
 
-public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
+public inline fun <T> DataFrame<T>.last(crossinline predicate: RowFilter<T>): DataRow<T> =
+    rowsReversed().first {
+        predicate(it, it)
+    }
 
 public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow - 1) else null
 

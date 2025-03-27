@@ -149,6 +149,8 @@ public interface DataRow<out T> {
 }
 
 internal val AnyRow.values: List<Any?> get() = values()
+
+@PublishedApi
 internal val AnyRow.index: Int get() = index()
 internal val <T> DataRow<T>.prev: DataRow<T>? get() = this.prev()
 internal val <T> DataRow<T>.next: DataRow<T>? get() = this.next()

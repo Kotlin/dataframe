@@ -32,12 +32,14 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(): T? = asSequence().fil
 public inline fun <T, R : Comparable<R>> DataColumn<T>.minBy(selector: (T) -> R): T =
     minByOrNull(selector).suggestIfNull("minBy")
 
-public inline fun <T, R : Comparable<R>> DataColumn<T>.minByOrNull(selector: (T) -> R): T? = values.minByOrNull(selector)
+public inline fun <T, R : Comparable<R>> DataColumn<T>.minByOrNull(selector: (T) -> R): T? =
+    values.minByOrNull(selector)
 
 public inline fun <T, R : Comparable<R>> DataColumn<T>.minOf(selector: (T) -> R): R =
     minOfOrNull(selector).suggestIfNull("minOf")
 
-public inline fun <T, R : Comparable<R>> DataColumn<T>.minOfOrNull(selector: (T) -> R): R? = values.minOfOrNull(selector)
+public inline fun <T, R : Comparable<R>> DataColumn<T>.minOfOrNull(selector: (T) -> R): R? =
+    values.minOfOrNull(selector)
 
 // endregion
 

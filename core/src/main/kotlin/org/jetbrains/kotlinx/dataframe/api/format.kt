@@ -23,29 +23,29 @@ import kotlin.reflect.KProperty
 
 // region format
 
-public inline fun <T, C> DataFrame<T>.format(noinline columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
+public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
 
-public inline fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumnSet() }
+public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumnSet() }
 
 @AccessApiOverload
-public inline fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> =
+public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> =
     format { columns.toColumnSet() }
 
 @AccessApiOverload
-public inline fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> =
+public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> =
     format { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
 
 // endregion
 
-public inline fun <T, C> FormatClause<T, C>.perRowCol(noinline formatter: RowColFormatter<T, C>): FormattedFrame<T> =
+public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> =
     formatImpl(formatter)
 
-public inline fun <T, C> FormatClause<T, C>.with(noinline formatter: CellFormatter<C>): FormattedFrame<T> =
+public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> =
     formatImpl { row, col -> formatter(row[col]) }
 
-public inline fun <T, C> FormatClause<T, C>.where(noinline filter: RowValueFilter<T, C>): FormatClause<T, C> =
+public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> =
     FormatClause(filter = filter, df = df, columns = columns, oldFormatter = oldFormatter)
 
 public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df, null, formatter)

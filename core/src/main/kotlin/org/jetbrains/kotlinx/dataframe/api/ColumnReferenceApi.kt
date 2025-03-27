@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import kotlin.reflect.typeOf
 
-@PublishedApi
 internal val ColumnReference<*>.name: String get() = name()
 
 public inline fun <reified T> ColumnReference<T>.withValues(vararg values: T): ValueColumn<T> =

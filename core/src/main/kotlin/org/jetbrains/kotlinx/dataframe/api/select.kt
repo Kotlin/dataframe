@@ -64,7 +64,8 @@ private interface CommonSelectDocs
  */
 @Refine
 @Interpretable("Select0")
-public inline fun <T> DataFrame<T>.select(noinline columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
+public inline fun <T> DataFrame<T>.select(noinline columns: ColumnsSelector<T, *>): DataFrame<T> =
+    get(columns).toDataFrame().cast()
 
 /**
  * @include [CommonSelectDocs]
