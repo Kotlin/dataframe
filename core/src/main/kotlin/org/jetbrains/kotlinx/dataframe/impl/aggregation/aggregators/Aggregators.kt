@@ -106,12 +106,14 @@ internal object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    fun <T : Comparable<T & Any>?> min(): Aggregator<T & Any, T?> = min.cast2()
+    fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
 
-    private val min by twoStepSelecting<Comparable<Any>, Comparable<Any>?>(
-        reducer = { type -> minOrNull(type) },
-        indexOfResult = { indexOfMin() },
-    )
+    private val min by withOneOption { skipNaN: Boolean ->
+        twoStepSelecting<Comparable<Any>, Comparable<Any>?>(
+            reducer = { type -> minOrNull(type, skipNaN) },
+            indexOfResult = { type -> indexOfMin(type, skipNaN) },
+        )
+    }
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
@@ -131,9 +133,9 @@ internal object Aggregators {
 
     // step one: T: Number? -> Double
     // step two: Double -> Double
-    val mean by withOneOption { skipNA: Boolean ->
+    val mean by withOneOption { skipNaN: Boolean ->
         twoStepForNumbers(meanTypeConversion) { type ->
-            mean(type, skipNA)
+            mean(type, skipNaN)
         }
     }
 
@@ -150,7 +152,9 @@ internal object Aggregators {
     }
 
     // T: Number -> T
-    val sum by twoStepForNumbers(sumTypeConversion) { type ->
-        sum(type)
+    val sum by withOneOption { skipNaN: Boolean ->
+        twoStepForNumbers(sumTypeConversion) { type ->
+            sum(type, skipNaN)
+        }
     }
 }

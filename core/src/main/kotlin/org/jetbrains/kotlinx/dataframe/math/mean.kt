@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.jetbrains.kotlinx.dataframe.api.skipNA_default
+import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -13,14 +13,14 @@ import kotlin.reflect.typeOf
 private val logger = KotlinLogging.logger { }
 
 @Suppress("UNCHECKED_CAST")
-internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
+internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Double {
     if (type.isMarkedNullable) {
         error("Encountered nullable type ${renderType(type)} in mean function. This should not occur.")
     }
     return when (type) {
-        typeOf<Double>() -> (this as Sequence<Double>).mean(skipNA)
+        typeOf<Double>() -> (this as Sequence<Double>).mean(skipNaN)
 
-        typeOf<Float>() -> (this as Sequence<Float>).map { it.toDouble() }.mean(skipNA)
+        typeOf<Float>() -> (this as Sequence<Float>).map { it.toDouble() }.mean(skipNaN)
 
         typeOf<Int>() -> (this as Sequence<Int>).map { it.toDouble() }.mean(false)
 
@@ -55,12 +55,12 @@ internal val meanTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
     typeOf<Double>()
 }
 
-internal fun Sequence<Double>.mean(skipNA: Boolean = skipNA_default): Double {
+internal fun Sequence<Double>.mean(skipNaN: Boolean = skipNaN_default): Double {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
         if (element.isNaN()) {
-            if (skipNA) {
+            if (skipNaN) {
                 continue
             } else {
                 return Double.NaN

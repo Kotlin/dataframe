@@ -10,14 +10,14 @@ import kotlin.reflect.typeOf
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNullableT")
 @PublishedApi
-internal fun Sequence<Number?>.sum(type: KType): Number {
+internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
     if (type.isMarkedNullable) {
         error("Encountered nullable type ${renderType(type)} in sum function. This should not occur.")
     }
     return when (type) {
-        typeOf<Double>() -> (this as Sequence<Double>).sum()
+        typeOf<Double>() -> (this as Sequence<Double>).filterNot { skipNaN && it.isNaN() }.sum()
 
-        typeOf<Float>() -> (this as Sequence<Float>).sum()
+        typeOf<Float>() -> (this as Sequence<Float>).filterNot { skipNaN && it.isNaN() }.sum()
 
         typeOf<Int>() -> (this as Sequence<Int>).sum()
 
