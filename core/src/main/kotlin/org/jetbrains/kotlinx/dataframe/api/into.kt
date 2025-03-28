@@ -32,6 +32,7 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
 ): DataFrame<G> = into(pathOf(columnName ?: groups.name()).cast(), expression)
 
 // @Hide
+@AccessApiOverload
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: ColumnAccessor<V>,
     noinline expression: RowExpression<G, V>,
