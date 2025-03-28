@@ -111,6 +111,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
+    @AccessApiOverload
     public operator fun String.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -221,6 +222,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.allUpTo]
      *
      */
+    @AccessApiOverload
     public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
