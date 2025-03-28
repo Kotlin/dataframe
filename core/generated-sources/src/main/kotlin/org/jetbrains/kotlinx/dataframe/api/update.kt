@@ -436,7 +436,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *  - [Update per col][org.jetbrains.kotlinx.dataframe.api.Update.perCol] to provide a new value for every selected cell giving its column.
  * @param [expression] The [Row Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression] to provide a new value for every selected cell giving its row and column.
  */
-public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
+public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
 /**
@@ -470,7 +470,7 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  */
 @Refine
 @Interpretable("UpdateWith0")
-public fun <T, C, R : C?> Update<T, C>.with(expression: UpdateExpression<T, C, R>): DataFrame<T> =
+public inline fun <T, C, R : C?> Update<T, C>.with(crossinline expression: UpdateExpression<T, C, R>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
     }

@@ -21,6 +21,7 @@ internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val
     override fun group() = frameCol[row.index()]
 }
 
+@PublishedApi
 internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSelector<T, *>): GroupBy<T, T> {
     val nameGenerator = nameGenerator(GroupBy.groupedColumnAccessor.name())
     var keyColumns = getColumnsWithPaths(columns)
