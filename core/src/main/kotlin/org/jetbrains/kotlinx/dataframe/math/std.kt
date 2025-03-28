@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.ddof_default
 import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -38,7 +38,7 @@ internal fun <T : Number> Iterable<T?>.std(
 }
 
 /** T: Number? -> Double */
-internal val stdTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
+internal val stdTypeConversion: CalculateReturnType = { _, _ ->
     typeOf<Double>()
 }
 

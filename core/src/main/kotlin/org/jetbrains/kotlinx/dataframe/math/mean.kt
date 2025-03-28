@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
@@ -51,7 +51,7 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Doubl
 }
 
 /** T: Number? -> Double */
-internal val meanTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
+internal val meanTypeConversion: CalculateReturnType = { _, _ ->
     typeOf<Double>()
 }
 

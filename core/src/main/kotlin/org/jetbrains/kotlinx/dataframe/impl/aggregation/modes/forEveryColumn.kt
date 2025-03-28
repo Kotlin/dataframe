@@ -49,13 +49,13 @@ internal fun <T, C : Any, R : Any?> AggregateInternalDsl<T>.aggregateFor(
     cols.forEach { col ->
         val path = getPath(col, isSingle)
         val value = aggregator.aggregateSingleColumn(col.data)
-        val returnType = aggregator.calculateReturnTypeOrNull(col.data.type, col.data.isEmpty)
+        val returnType = aggregator.calculateReturnType(col.data.type, col.data.isEmpty)
         yield(
             path = path,
             value = value,
             type = returnType,
             default = col.default,
-            guessType = returnType == null,
+            guessType = false,
         )
     }
 }

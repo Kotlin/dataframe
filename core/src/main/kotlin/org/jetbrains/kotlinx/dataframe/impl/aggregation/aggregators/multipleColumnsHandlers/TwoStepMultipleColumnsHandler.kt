@@ -7,16 +7,24 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAg
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorInputHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorMultipleColumnsHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType
-import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import kotlin.reflect.KType
-import kotlin.reflect.full.starProjectedType
-import kotlin.reflect.full.withNullability
 
 /**
+ * Implementation of [AggregatorMultipleColumnsHandler] that aggregates the data in two steps:
+ * - first, it aggregates the data for each of the given columns
+ * - then, it aggregates the results of the first step into a single value
  *
- * @param stepTwoAggregationHandler The [aggregation handler][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler] for the second step.
+ * For the first step, this [aggregator] will be used as usual.
+ *
+ * For the second step, a [new][stepTwo] [Aggregator] will be constructed using the supplied handlers:
+ * [stepTwoAggregationHandler] and [stepTwoInputHandler].
+ * For both arguments, it holds that if they are not supplied or `null`,
+ * the handlers of this [aggregator] will be cast and reused.
+ * In all cases [NoMultipleColumnsHandler] will be used as [AggregatorMultipleColumnsHandler].
+ *
+ * @param stepTwoAggregationHandler The [aggregation handler][AggregatorAggregationHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
- * @param stepTwoInputHandler The [input handler][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorInputHandler] for the second step.
+ * @param stepTwoInputHandler The [input handler][AggregatorInputHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
  */
 internal class TwoStepMultipleColumnsHandler<in Value : Any, out Return : Any?>(
@@ -24,9 +32,13 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, out Return : Any?>(
     stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
 ) : AggregatorMultipleColumnsHandler<Value, Return> {
 
+    /**
+     * The second step [Aggregator] which can take multiple outputs of
+     * this [aggregator] and aggregate it to a single value.
+     */
     @Suppress("UNCHECKED_CAST")
     val stepTwo by lazy {
-        Aggregator.Companion.invoke(
+        Aggregator(
             aggregationHandler = stepTwoAggregationHandler
                 ?: aggregator as AggregatorAggregationHandler<Return & Any, Return>,
             inputHandler = stepTwoInputHandler ?: aggregator as AggregatorInputHandler<Return & Any, Return>,
@@ -37,19 +49,16 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, out Return : Any?>(
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      *
-     * This function calls [stepOneAggregator] on each column and then [stepTwoAggregator] on the results.
-     *
-     * Post-step-one types are calculated by [calculateReturnTypeMultipleColumnsOrNull].
+     * This function calls [aggregator][aggregator] [.aggregateSingleColumn()][Aggregator.aggregateSingleColumn]
+     * on each column and then [stepTwo] [.aggregateSequence()][Aggregator.aggregateSequence] on the results.
      */
     override fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return {
-        val (values, types) = columns.mapNotNull { col ->
-            // uses stepOneAggregator
-            val value = aggregator!!.aggregateSingleColumn(col) ?: return@mapNotNull null
-            val type = aggregator!!.calculateReturnTypeOrNull(
-                type = col.type(),
+        val (values, types) = columns.map { col ->
+            val value = aggregator!!.aggregateSingleColumn(col)
+            val type = aggregator!!.calculateReturnType(
+                valueType = col.type(),
                 emptyInput = col.isEmpty,
-            ) ?: value::class.starProjectedType // heavy fallback type calculation
-
+            )
             value to type
         }.unzip()
 
@@ -57,26 +66,20 @@ internal class TwoStepMultipleColumnsHandler<in Value : Any, out Return : Any?>(
     }
 
     /**
-     * Function that can give the return type of [aggregateSingleSequence] with columns as [KType],
-     * given the multiple types of the input.
+     * Function that can give the return type of [aggregateMultipleColumns], given types of the columns.
      * This allows aggregators to avoid runtime type calculations.
      *
      * @param colTypes The types of the input columns.
      * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
-     * @return The return type of [aggregateSingleSequence] as [KType].
      */
     @Suppress("UNCHECKED_CAST")
-    override fun calculateReturnTypeMultipleColumnsOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType? {
+    override fun calculateReturnTypeMultipleColumns(colTypes: Set<KType>, colsEmpty: Boolean): KType {
         val typesAfterStepOne = colTypes.map { type ->
-            aggregator!!.calculateReturnTypeOrNull(type = type, emptyInput = colsEmpty)
+            aggregator!!.calculateReturnType(valueType = type, emptyInput = colsEmpty)
         }
-        if (typesAfterStepOne.anyNull()) return null
-
-        val stepTwoValueType = stepTwo
-            .calculateValueType(typesAfterStepOne.toSet() as Set<KType>)
-
-        return stepTwo.calculateReturnTypeOrNull(
-            type = stepTwoValueType.kType.withNullability(false),
+        val stepTwoValueType = stepTwo.calculateValueType(typesAfterStepOne.toSet())
+        return stepTwo.calculateReturnType(
+            valueType = stepTwoValueType.kType,
             emptyInput = colsEmpty,
         )
     }

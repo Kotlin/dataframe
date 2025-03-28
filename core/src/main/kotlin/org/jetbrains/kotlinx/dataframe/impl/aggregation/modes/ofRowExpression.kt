@@ -100,8 +100,8 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Grouped<T>.aggregate
     val expressionResultType = typeOf<C>()
     return aggregateInternal {
         val value = aggregator.aggregateOf(df, expression)
-        val returnType = aggregator.calculateReturnTypeOrNull(
-            type = expressionResultType,
+        val returnType = aggregator.calculateReturnType(
+            valueType = expressionResultType,
             emptyInput = df.isEmpty(),
         )
         yield(
@@ -109,7 +109,7 @@ internal inline fun <T, reified C : Any?, reified R : Any?> Grouped<T>.aggregate
             value = value,
             type = returnType,
             default = null,
-            guessType = returnType == null,
+            guessType = false,
         )
     }
 }

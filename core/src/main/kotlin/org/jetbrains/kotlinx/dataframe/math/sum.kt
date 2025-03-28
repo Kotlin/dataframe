@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import kotlin.reflect.KType
@@ -41,7 +41,7 @@ internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
 }
 
 /** T: Number? -> T */
-internal val sumTypeConversion: CalculateReturnTypeOrNull = { type, _ ->
+internal val sumTypeConversion: CalculateReturnType = { type, _ ->
     when (val type = type.withNullability(false)) {
         // type changes to Int
         typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>()

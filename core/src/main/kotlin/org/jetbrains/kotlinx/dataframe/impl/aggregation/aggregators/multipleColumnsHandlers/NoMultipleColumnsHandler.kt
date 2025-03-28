@@ -10,7 +10,7 @@ internal class NoMultipleColumnsHandler<in Value : Any, out Return : Any?> :
 
     override fun aggregateMultipleColumns(columns: Sequence<DataColumn<@UnsafeVariance Value?>>): Return = error("")
 
-    override fun calculateReturnTypeMultipleColumnsOrNull(colTypes: Set<KType>, colsEmpty: Boolean): KType? = error("")
+    override fun calculateReturnTypeMultipleColumns(colTypes: Set<KType>, colsEmpty: Boolean): KType = error("")
 
     override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = null
 }

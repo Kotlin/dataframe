@@ -57,8 +57,8 @@ internal fun <T, C : Any?, R : Any?> PivotGroupBy<T>.aggregateAll(
     aggregate {
         val cols = get(columns)
         if (cols.size == 1) {
-            val returnType = aggregator.calculateReturnTypeOrNull(
-                type = cols[0].type(),
+            val returnType = aggregator.calculateReturnType(
+                valueType = cols[0].type(),
                 emptyInput = cols[0].isEmpty,
             )
             internal().yield(
@@ -66,10 +66,10 @@ internal fun <T, C : Any?, R : Any?> PivotGroupBy<T>.aggregateAll(
                 value = aggregator.aggregateSingleColumn(cols[0]),
                 type = returnType,
                 default = null,
-                guessType = returnType == null,
+                guessType = false,
             )
         } else {
-            val returnType = aggregator.calculateReturnTypeMultipleColumnsOrNull(
+            val returnType = aggregator.calculateReturnTypeMultipleColumns(
                 colTypes = cols.map { it.type() }.toSet(),
                 colsEmpty = cols.any { it.isEmpty },
             )
@@ -78,7 +78,7 @@ internal fun <T, C : Any?, R : Any?> PivotGroupBy<T>.aggregateAll(
                 value = aggregator.aggregateMultipleColumns(cols.asSequence()),
                 type = returnType,
                 default = null,
-                guessType = returnType == null,
+                guessType = false,
             )
         }
     }

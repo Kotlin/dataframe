@@ -4,41 +4,43 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Reducer
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.calculateValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.toValueType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 /**
- * Abstract base class for [aggregators][org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator].
+ * Implementation of [AggregatorAggregationHandler] which functions like a reducer:
+ * it takes a sequence of values and returns a single value, which can be a completely different type.
  *
- * Aggregators are used to compute a single value from an [Iterable] of values, a single [DataColumn],
- * or multiple [DataColumns][DataColumn].
- *
- * @param name The name of this aggregator.
+ * @param reducer This function actually does the reduction.
+ *   Before it is called, nulls are filtered out. The type of the values is passed as [KType] to the reducer.
+ * @param getReturnType This function must be supplied to give the return type of [reducer] given some input type and
+ *   whether the input is empty.
+ * @see [SelectingAggregationHandler]
  */
 internal class ReducingAggregationHandler<in Value : Any, out Return : Any?>(
     val reducer: Reducer<Value, Return>,
-    val getReturnTypeOrNull: CalculateReturnTypeOrNull,
+    val getReturnType: CalculateReturnType,
 ) : AggregatorAggregationHandler<Value, Return> {
-
-    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = null
 
     /**
      * Base function of [Aggregator].
      *
      * Aggregates the given values, taking [valueType] into account,
-     * filtering nulls (only if [type.isMarkedNullable][KType.isMarkedNullable]),
+     * filtering nulls (only if [valueType.type.isMarkedNullable][KType.isMarkedNullable]),
      * and computes a single resulting value.
      *
-     * When using [AggregatorAggregationHandler], this can be supplied by the [AggregatorAggregationHandler.aggregateSingle] argument.
+     * When the exact [valueType] is unknown, use [calculateValueType] or [aggregateCalculatingValueType].
      *
-     * When the exact [valueType] is unknown, use [org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType].
+     * Calls the supplied [reducer].
      */
     @Suppress("UNCHECKED_CAST")
-    override fun aggregateSingleSequence(values: Sequence<Value?>, valueType: ValueType): Return {
+    override fun aggregateSequence(values: Sequence<Value?>, valueType: ValueType): Return {
         val (values, valueType) = aggregator!!.preprocessAggregation(values, valueType)
         return reducer(
             // values =
@@ -54,18 +56,24 @@ internal class ReducingAggregationHandler<in Value : Any, out Return : Any?>(
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
-     *
-     * Nulls are filtered out by default, then [aggregateSingleColumn] (with [Iterable] and [KType]) is called.
+     * Calls [aggregateSequence].
      */
     @Suppress("UNCHECKED_CAST")
     override fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
-        aggregateSingleSequence(
+        aggregateSequence(
             values = column.asSequence(),
             valueType = column.type().toValueType(),
         )
 
+    /** This function always returns `-1` because the result of a reducer is not in the input values. */
     override fun indexOfAggregationResultSingleSequence(values: Sequence<Value?>, valueType: ValueType): Int = -1
 
-    override fun calculateReturnTypeOrNull(type: KType, emptyInput: Boolean): KType? =
-        getReturnTypeOrNull(type, emptyInput)
+    /**
+     * Give the return type of [reducer] given some input type and whether the input is empty.
+     * Calls the supplied [getReturnType].
+     */
+    override fun calculateReturnType(valueType: KType, emptyInput: Boolean): KType =
+        getReturnType(valueType.withNullability(false), emptyInput)
+
+    override var aggregator: Aggregator<@UnsafeVariance Value, @UnsafeVariance Return>? = null
 }
