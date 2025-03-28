@@ -117,12 +117,11 @@ private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<
         valuesAreComparable() -> asComparable()
 
         // Found incomparable number types, convert all to Double first
-        isNumber() -> cast<Number?>().map {
-            if (it?.isPrimitiveNumber() == false) {
-                // Cannot calculate statistics of a non-primitive number type
+        isNumber() -> with(cast<Number?>()) {
+            if (any { it?.isPrimitiveNumber() == false }) {
                 return@convertToComparableOrNull null
             }
-            it?.toDouble() as Comparable<Any>?
+            map { it?.toDouble() as Comparable<Any>? }
         }
 
         else -> null

@@ -29,15 +29,17 @@ public fun <T : Comparable<T>> DataColumn<T?>.max(): T = maxOrNull().suggestIfNu
 
 public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(): T? = asSequence().filterNotNull().maxOrNull()
 
-public fun <T, R : Comparable<R>> DataColumn<T>.maxBy(selector: (T) -> R): T =
+public inline fun <T, R : Comparable<R>> DataColumn<T>.maxBy(selector: (T) -> R): T =
     maxByOrNull(selector).suggestIfNull("maxBy")
 
-public fun <T, R : Comparable<R>> DataColumn<T>.maxByOrNull(selector: (T) -> R): T? = values.maxByOrNull(selector)
+public inline fun <T, R : Comparable<R>> DataColumn<T>.maxByOrNull(selector: (T) -> R): T? =
+    values.maxByOrNull(selector)
 
-public fun <T, R : Comparable<R>> DataColumn<T>.maxOf(selector: (T) -> R): R =
+public inline fun <T, R : Comparable<R>> DataColumn<T>.maxOf(selector: (T) -> R): R =
     maxOfOrNull(selector).suggestIfNull("maxOf")
 
-public fun <T, R : Comparable<R>> DataColumn<T>.maxOfOrNull(selector: (T) -> R): R? = values.maxOfOrNull(selector)
+public inline fun <T, R : Comparable<R>> DataColumn<T>.maxOfOrNull(selector: (T) -> R): R? =
+    values.maxOfOrNull(selector)
 
 // endregion
 
@@ -97,10 +99,10 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: ColumnR
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: KProperty<C?>): C? =
     maxOrNull { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxOf(expression: RowExpression<T, C>): C =
+public inline fun <T, C : Comparable<C>> DataFrame<T>.maxOf(crossinline expression: RowExpression<T, C>): C =
     maxOfOrNull(expression).suggestIfNull("maxOf")
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxOfOrNull(expression: RowExpression<T, C>): C? =
+public inline fun <T, C : Comparable<C>> DataFrame<T>.maxOfOrNull(crossinline expression: RowExpression<T, C>): C? =
     rows().maxOfOrNull { expression(it, it) }
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(expression: RowExpression<T, C?>): DataRow<T> =
@@ -116,8 +118,9 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: ColumnReference<C?>
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: KProperty<C?>): DataRow<T> =
     maxByOrNull(column).suggestIfNull("maxBy")
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(expression: RowExpression<T, C?>): DataRow<T>? =
-    getOrNull(rows().asSequence().map { expression(it, it) }.indexOfMax())
+public inline fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(
+    crossinline expression: RowExpression<T, C?>,
+): DataRow<T>? = getOrNull(rows().asSequence().map { expression(it, it) }.indexOfMax())
 
 public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? =
     maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
