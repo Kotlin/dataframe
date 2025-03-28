@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.type
 import org.jetbrains.kotlinx.dataframe.plugin.interpret
 import org.jetbrains.kotlinx.dataframe.plugin.loadInterpreter
+import kotlin.collections.plus
 
 class GroupBy(val keys: PluginDataFrameSchema, val groups: PluginDataFrameSchema) {
     companion object {
@@ -420,6 +421,12 @@ private fun isIntraComparable(col: SimpleDataColumn, session: FirSession): Boole
     return col.type.type.isSubtypeOf(comparable, session)
 }
 
+class ConcatWithKeys : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
 
-
-
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val originalColumns = receiver.groups.columns()
+        return PluginDataFrameSchema(
+            originalColumns + receiver.keys.columns().filter { it.name !in originalColumns.map { it.name } })
+    }
+}
