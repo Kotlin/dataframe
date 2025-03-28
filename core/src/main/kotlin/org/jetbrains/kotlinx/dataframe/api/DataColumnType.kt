@@ -7,7 +7,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
+import org.jetbrains.kotlinx.dataframe.impl.isMixedNumber
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
@@ -48,11 +50,23 @@ public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 /** Returns `true` when this column's type is a subtype of `Number?` */
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 
+/** Returns `true` only when this column's type is exactly `Number` or `Number?`. */
+public fun AnyCol.isMixedNumber(): Boolean = type().isMixedNumber()
+
 /**
  * Returns `true` when this column has the (nullable) type of either:
  * [Byte], [Short], [Int], [Long], [Float], or [Double].
  */
-public fun AnyCol.isPrimitiveNumber(): Boolean = type().withNullability(false) in primitiveNumberTypes
+public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
+
+/**
+ * Returns `true` when this column has the (nullable) type of either:
+ * [Byte], [Short], [Int], [Long], [Float], [Double], or [Number].
+ *
+ * Careful: Will return `true` if the column contains multiple number types that
+ * might NOT be primitive.
+ */
+public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixedNumber()
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 

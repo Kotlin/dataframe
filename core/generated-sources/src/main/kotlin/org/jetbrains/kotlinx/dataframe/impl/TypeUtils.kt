@@ -477,7 +477,7 @@ internal fun guessValueType(
             it.isSubclassOf(Number::class) && it != nothingClass
         }
         if (usedNumberClasses.isNotEmpty()) {
-            val unifiedNumberClass = usedNumberClasses.unifiedNumberClass() as KClass<Number>
+            val unifiedNumberClass = usedNumberClasses.unifiedNumberClassOrNull() as KClass<Number>
             classes -= usedNumberClasses
             classes += unifiedNumberClass
         }

@@ -32,6 +32,20 @@ class RenameTests : ColumnsSelectionDslTests() {
     }
 
     @Test
+    fun `test rename with String to String pairs`() {
+        val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
+            1, 2, 3,
+            4, 5, 6,
+        )
+
+        simpleDf.rename(
+            "c" to "c_renamed",
+            "a" to "a_renamed",
+            "b" to "b_renamed",
+        ) shouldBe renamedDf
+    }
+
+    @Test
     fun `partial grouped rename`() {
         val renamedDf = dataFrameOf("a_renamed", "b", "c")(
             1, 2, 3,
