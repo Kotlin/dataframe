@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -159,6 +160,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER]}
      */
+    @AccessApiOverload
     public fun <C> valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> = valueCol.ensureIsValueColumn()
 
     /**
@@ -189,6 +191,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
@@ -275,12 +278,14 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
+    @AccessApiOverload
     public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
      * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(name: String): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
@@ -375,12 +380,14 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
+    @AccessApiOverload
     public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
      * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
@@ -414,35 +421,41 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
     /**
      * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER]}
      */
+    @AccessApiOverload
     public fun <C> valueCol(property: KProperty<C>): SingleColumn<C> = valueColumn(property).ensureIsValueColumn()
 
     /**
      * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.valueCol(property: KProperty<C>): SingleColumn<C> =
         valueCol<C>(property.name)
 
     /**
      * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      */
+    @AccessApiOverload
     public fun <C> String.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
      * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @AccessApiOverload
     public fun <C> ColumnPath.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
@@ -515,12 +528,14 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
+    @AccessApiOverload
     public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
      * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**

@@ -206,6 +206,7 @@ public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: String): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
+@AccessApiOverload
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg columns: AnyColumnReference): DataFrame<T> =
     moveTo(newColumnIndex) { columns.toColumnSet() }
 
