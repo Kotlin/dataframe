@@ -135,8 +135,6 @@ public operator fun <T> DataFrame<T>.get(columnRange: ClosedRange<String>): Data
 
 internal val ColumnsContainer<*>.ncol get() = columnsCount()
 internal val AnyFrame.nrow get() = rowsCount()
-
-@PublishedApi
 internal val AnyFrame.indices get() = indices()
 internal val AnyFrame.size: DataFrameSize get() = size()
 

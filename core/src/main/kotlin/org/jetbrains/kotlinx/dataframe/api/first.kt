@@ -48,12 +48,12 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 
-public inline fun <T> DataFrame<T>.first(crossinline predicate: RowFilter<T>): DataRow<T> =
+public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
     rows().first {
         predicate(it, it)
     }
 
-public inline fun <T> DataFrame<T>.firstOrNull(crossinline predicate: RowFilter<T>): DataRow<T>? =
+public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rows().firstOrNull {
         predicate(it, it)
     }

@@ -31,10 +31,7 @@ public inline fun <C, reified R> ColumnReference<C>.map(
 
 // region DataColumn
 
-public inline fun <T, reified R> DataColumn<T>.map(
-    infer: Infer = Infer.Nulls,
-    crossinline transform: (T) -> R,
-): DataColumn<R> {
+public inline fun <T, reified R> DataColumn<T>.map(infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }
@@ -42,7 +39,7 @@ public inline fun <T, reified R> DataColumn<T>.map(
 public inline fun <T, R> DataColumn<T>.map(
     type: KType,
     infer: Infer = Infer.Nulls,
-    crossinline transform: (T) -> R,
+    transform: (T) -> R,
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), values, type, infer).cast()
@@ -50,7 +47,7 @@ public inline fun <T, R> DataColumn<T>.map(
 
 public inline fun <T, reified R> DataColumn<T>.mapIndexed(
     infer: Infer = Infer.Nulls,
-    crossinline transform: (Int, T) -> R,
+    transform: (Int, T) -> R,
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(it, get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
@@ -59,7 +56,7 @@ public inline fun <T, reified R> DataColumn<T>.mapIndexed(
 public inline fun <T, R> DataColumn<T>.mapIndexed(
     type: KType,
     infer: Infer = Infer.Nulls,
-    crossinline transform: (Int, T) -> R,
+    transform: (Int, T) -> R,
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(it, get(it)) }.asList()
     return DataColumn.createByType(name(), values, type, infer).cast()
@@ -69,8 +66,7 @@ public inline fun <T, R> DataColumn<T>.mapIndexed(
 
 // region DataFrame
 
-public inline fun <T, R> DataFrame<T>.map(crossinline transform: RowExpression<T, R>): List<R> =
-    rows().map { transform(it, it) }
+public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
 
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
@@ -127,7 +123,7 @@ public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFr
 
 // region GroupBy
 
-public inline fun <T, G, R> GroupBy<T, G>.map(crossinline body: Selector<GroupWithKey<T, G>, R>): List<R> =
+public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
     keys.rows().mapIndexedNotNull { index, row ->
         val group = groups[index]
         val g = GroupWithKey(row, group)

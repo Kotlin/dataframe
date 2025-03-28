@@ -51,7 +51,7 @@ public fun AnyRow.allNA(): Boolean = owner.columns().all { it[index()].isNA }
 // region DataFrame
 
 /** Returns `true` if all [rows] match the given [predicate] or [rows] is empty. */
-public inline fun <T> DataFrame<T>.all(crossinline predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
+public inline fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
 
 // endregion
 
@@ -1243,7 +1243,7 @@ internal inline fun ColumnsResolver<*>.allFromInternal(crossinline colByPredicat
  * @return a new ColumnSet containing all columns that come before the first column that satisfies the given predicate
  */
 @PublishedApi
-internal fun ColumnsResolver<*>.allBeforeInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+internal inline fun ColumnsResolver<*>.allBeforeInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = true
     return colsInternal {
         if (!take) {

@@ -61,7 +61,7 @@ public fun <T> DataFrame<T>.takeLast(n: Int = 1): DataFrame<T> {
  * Returns a DataFrame containing first rows that satisfy the given [predicate].
  */
 public inline fun <T> DataFrame<T>.takeWhile(crossinline predicate: RowFilter<T>): DataFrame<T> =
-    firstOrNull { !predicate(it, it) }?.let { take(it.index) } ?: this
+    firstOrNull { !predicate(it, it) }?.let { take(it.index()) } ?: this
 
 // endregion
 
