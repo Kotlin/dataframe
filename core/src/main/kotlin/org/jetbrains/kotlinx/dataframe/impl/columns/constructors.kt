@@ -115,8 +115,8 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
 
 // region create Columns
 
-internal fun <C> createColumnSet(
-    resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
+internal inline fun <C> createColumnSet(
+    crossinline resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
 ): ColumnSet<C> =
     object : ColumnSet<C> {
         override fun resolve(context: ColumnResolutionContext) = resolver(context)
@@ -142,8 +142,8 @@ internal fun <C> createTransformableColumnSet(
 
 // region DSL
 
-internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.toColumnSet(
-    createReceiver: (ColumnResolutionContext) -> T,
+internal inline fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.toColumnSet(
+    crossinline createReceiver: (ColumnResolutionContext) -> T,
 ): ColumnSet<C> =
     createColumnSet {
         val receiver = createReceiver(it)

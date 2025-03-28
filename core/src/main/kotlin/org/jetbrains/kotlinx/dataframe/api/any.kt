@@ -14,6 +14,6 @@ public fun <T> DataColumn<T>.any(predicate: Predicate<T>): Boolean = values.any(
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
+public inline fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 
 // endregion
