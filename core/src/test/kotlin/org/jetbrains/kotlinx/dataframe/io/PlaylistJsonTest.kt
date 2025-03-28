@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -220,8 +221,10 @@ class PlaylistJsonTest {
             minBy { snippet.publishedAt }.snippet into "earliest"
         }
 
-        res.columnsCount() shouldBe typed.columnsCount() + 1
-        res.getColumnIndex("earliest") shouldBe typed.getColumnIndex("items") + 1
+        withClue(res.columnNames() to typed.columnNames()) {
+            res.columnsCount() shouldBe typed.columnsCount() + 1
+            res.getColumnIndex("earliest") shouldBe res.columns().indices.last
+        }
 
         val expected = typed.items.map { it.snippet.minBy { publishedAt } }.toList()
         res["earliest"].toList() shouldBe expected
