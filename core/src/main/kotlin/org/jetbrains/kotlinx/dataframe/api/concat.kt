@@ -47,7 +47,7 @@ public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
  * Concatenates all groups in this [GroupBy] into a single [DataFrame],
  * preserving and including all grouping key columns that are not present in the group's columns.
  *
- * Doesn't affect key columns that have the same names as columns inside the groups (even if their content differs).
+ * Doesn't affect key columns that have the same name as columns inside the groups (even if their content differs).
  *
  * This function is especially useful when grouping by expressions or renamed columns,
  * and you want the resulting [DataFrame] to include those keys as part of the output.
