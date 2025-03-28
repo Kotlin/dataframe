@@ -160,12 +160,12 @@ class Modify : TestBase() {
     fun updatePerColumn() {
         val updated =
             // SampleStart
-            df.update { colsOf<Number?>() }.perCol { mean(skipNA = true) }
+            df.update { colsOf<Number?>() }.perCol { mean(skipNaN = true) }
         // SampleEnd
         updated.age.countDistinct() shouldBe 1
         updated.weight.countDistinct() shouldBe 1
 
-        val means = df.meanFor(skipNA = true) { colsOf() }
+        val means = df.meanFor(skipNaN = true) { colsOf() }
         df.update { colsOf<Number?>() }.perCol(means) shouldBe updated
         df.update { colsOf<Number?>() }.perCol(means.toMap() as Map<String, Double>) shouldBe updated
     }
