@@ -20,7 +20,7 @@ class MeanTests {
     @Test
     fun `mean with nans and nulls`() {
         columnOf<Number?>(10, 20, Double.NaN, null).mean().shouldBeNaN()
-        columnOf<Number?>(10, 20, Double.NaN, null).mean(skipNA = true) shouldBe 15
+        columnOf<Number?>(10, 20, Double.NaN, null).mean(skipNaN = true) shouldBe 15
 
         DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).mean().shouldBeNaN()
         DataColumn.createValueColumn("", listOf(null), nothingType(true)).mean().shouldBeNaN()
