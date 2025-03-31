@@ -9,7 +9,9 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.toValueType
 import org.jetbrains.kotlinx.dataframe.impl.convertToUnifiedNumberType
+import org.jetbrains.kotlinx.dataframe.impl.isMixedNumber
 import org.jetbrains.kotlinx.dataframe.impl.isNothing
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.primitiveNumberTypes
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -47,7 +49,7 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
         valueType: ValueType,
     ): Pair<Sequence<Number?>, KType> {
         require(valueType.kType.isSubtypeOf(typeOf<Number?>())) {
-            "${NumberInputHandler::class.simpleName}: Type $valueType is not a subtype of Number?, only primitive numbers are supported in statistics"
+            "Type $valueType is not a subtype of Number?, only primitive numbers are supported in ${aggregator!!.name}."
         }
         return when (valueType.kType.withNullability(false)) {
             // If the type is not a specific number, but rather a mixed Number, we unify the types first.
@@ -55,6 +57,15 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
             // or calling aggregateCalculatingType with all known number types
             typeOf<Number>() -> {
                 val unifiedType = calculateValueType(values).kType
+
+                // If calculateValueType returns Number(?),
+                // it means the values cannot be unified to a primitive number type
+                require(!unifiedType.isMixedNumber()) {
+                    "Types ${
+                        values.asIterable().types().toSet()
+                    } are not all primitive numbers, only those are supported in ${aggregator!!.name}."
+                }
+
                 val unifiedValues = values.convertToUnifiedNumberType(
                     UnifiedNumberTypeOptions.PRIMITIVES_ONLY,
                     unifiedType,
@@ -90,23 +101,21 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
      * this function can be called to calculate it in terms of [number unification][UnifyingNumbers]
      *
      * @throws IllegalArgumentException if the input type is not [Number]`(?)` or a primitive number type.
+     * @return The (primitive) unified number type of the input values.
+     *   If no valid unification can be found or the input is solely [Number]`(?)`, the type [Number]`(?)` is returned.
      */
     override fun calculateValueType(valueTypes: Set<KType>): ValueType {
         val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY)
-            ?: throw IllegalArgumentException(
-                "Cannot calculate the ${aggregator!!.name} of the number types: ${
-                    valueTypes.joinToString { renderType(it) }
-                }. Note, only primitive number types are supported in statistics.",
-            )
+            ?: typeOf<Number>().withNullability(valueTypes.any { it.isMarkedNullable })
 
         if (unifiedType.isSubtypeOf(typeOf<Double?>()) &&
             (typeOf<ULong>() in valueTypes || typeOf<Long>() in valueTypes)
         ) {
             logger.warn {
-                "Number unification of Long -> Double happened during aggregation. Loss of precision may have occurred."
+                "Number unification of Long -> Double happened during ${aggregator!!.name} aggregation. Loss of precision may have occurred."
             }
         }
-        if (unifiedType.withNullability(false) !in primitiveNumberTypes && !unifiedType.isNothing) {
+        if (!unifiedType.isPrimitiveOrMixedNumber() && !unifiedType.isNothing) {
             throw IllegalArgumentException(
                 "Cannot calculate ${aggregator!!.name} of ${
                     renderType(unifiedType)
@@ -124,7 +133,9 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
      * this function can be called to calculate it in terms of [number unification][UnifyingNumbers]
      * by getting the types of [values] at runtime.
      *
-     * @throws IllegalArgumentException if the input type contains a non-primitive number type.
+     * @throws IllegalArgumentException if the input type is not [Number]`(?)` or a primitive number type.
+     * @return The (primitive) unified number type of the input values.
+     *   If no valid unification can be found or the input is solely [Number]`(?)`, the type [Number]`(?)` is returned.
      */
     override fun calculateValueType(values: Sequence<Number?>): ValueType =
         calculateValueType(values.asIterable().types().toSet())

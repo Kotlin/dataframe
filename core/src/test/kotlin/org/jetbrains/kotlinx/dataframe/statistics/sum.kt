@@ -60,10 +60,10 @@ class SumTests {
         df.sumOf { value3() } shouldBe expected3
         df.sum(value1) shouldBe expected1
         df.sum(value2) shouldBe expected2
-        // TODO sum rework, has Number in results df.sum(value3) shouldBe expected3
+        df.sum(value3) shouldBe expected3
         df.sum { value1 } shouldBe expected1
         df.sum { value2 } shouldBe expected2
-        // TODO sum rework, has Number in results df.sum { value3 } shouldBe expected3
+        df.sum { value3 } shouldBe expected3
     }
 
     /** [Issue #1068](https://github.com/Kotlin/dataframe/issues/1068) */
