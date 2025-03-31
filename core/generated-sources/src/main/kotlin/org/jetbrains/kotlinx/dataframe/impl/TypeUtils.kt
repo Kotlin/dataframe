@@ -564,6 +564,9 @@ internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.fir
 
 internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
 
+internal val KType.canBeNaN: Boolean
+    get() = isSubtypeOf(typeOf<Double?>()) || isSubtypeOf(typeOf<Float?>())
+
 @OptIn(ExperimentalUnsignedTypes::class)
 private val primitiveArrayClasses = setOf(
     BooleanArray::class,
