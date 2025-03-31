@@ -11,8 +11,8 @@ Use `skipNA` flag to skip [`NA` values](nanAndNa.md#na) (`null` and `NaN`).
 
 ```kotlin
 df.mean() // mean of values per every numeric column
-df.mean(skipNA = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
-df.meanFor(skipNA = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
+df.mean(skipNaN = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
+df.meanFor(skipNaN = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
 df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
 ```
 
