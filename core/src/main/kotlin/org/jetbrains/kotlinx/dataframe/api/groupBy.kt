@@ -109,4 +109,5 @@ public class ReducedGroupBy<T, G>(
     override fun toString(): String = "ReducedGroupBy(groupBy=$groupBy, reducer=$reducer)"
 }
 
+@PublishedApi
 internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>) = ReducedGroupBy(this, reducer)
