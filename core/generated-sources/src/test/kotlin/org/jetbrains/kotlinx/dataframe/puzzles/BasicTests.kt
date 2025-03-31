@@ -216,8 +216,8 @@ class BasicTests {
             "dog", 3.0, Double.NaN, 6.0,
         )
 
-        val actualDfAcc = df.pivot(inward = false) { visits }.groupBy { animal }.mean(skipNA = true) { age }
-        val actualDfStr = df.pivot("visits", inward = false).groupBy("animal").mean("age", skipNA = true)
+        val actualDfAcc = df.pivot(inward = false) { visits }.groupBy { animal }.mean(skipNaN = true) { age }
+        val actualDfStr = df.pivot("visits", inward = false).groupBy("animal").mean("age", skipNaN = true)
 
         actualDfAcc shouldBe expected
         actualDfStr shouldBe expected
