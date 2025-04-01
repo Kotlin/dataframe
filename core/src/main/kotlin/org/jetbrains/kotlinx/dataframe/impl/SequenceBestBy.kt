@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.api.isNA
+import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.documentation.NA
 
 /**
@@ -105,7 +106,7 @@ internal inline fun <C : R, R : Any?> Sequence<C?>.bestNotNaByOrElse(
     bestByOrElse(
         isBetterThan = { other -> !this.isNA() && (other.isNA() || this.isBetterThan(other)) },
         ifEmpty = ifEmptyOrAllNa,
-    ) ?: ifEmptyOrAllNa()
+    )?.takeUnless { it.isNA() } ?: ifEmptyOrAllNa()
 
 // endregion
 

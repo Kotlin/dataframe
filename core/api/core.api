@@ -6212,11 +6212,8 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Compani
 	public final fun getVALUES ()Ljava/util/List;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/math/MaxKt {
+public final class org/jetbrains/kotlinx/dataframe/math/MinMaxKt {
 	public static final fun maxOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
-}
-
-public final class org/jetbrains/kotlinx/dataframe/math/MinKt {
 	public static final fun minOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
 }
 

@@ -43,7 +43,7 @@ class MinTests {
         columnOf(5.0, 2.0, 8.0, 1.0, 9.0).min() shouldBe 1.0
         columnOf(5.0f, 2.0f, 8.0f, 1.0f, 9.0f).min() shouldBe 1.0f
 
-        // Mixed number types todo
+        // Mixed number types todo https://github.com/Kotlin/dataframe/issues/1113
 //        columnOf<Number>(5, 2L, 8.0f, 1.0, 9.toShort()).min() shouldBe 1.0
     }
 
@@ -174,7 +174,7 @@ class MinTests {
         minFor["c"] shouldBe 3.0
 
         // Test min of all columns as a single value
-        // TODO?
+        // TODO https://github.com/Kotlin/dataframe/issues/1113
         // df.min("a", "b", "c") shouldBe 1
     }
 
@@ -223,7 +223,7 @@ class MinTests {
         allNaN.minOrNull()!!.shouldBeNaN() // All values are NaN, so result is NaN
         allNaN.minOrNull(skipNaN = true).shouldBeNull() // With skipNaN=true and only NaN values, result should be null
 
-        // Test with mixed number types including NaN todo
+        // Test with mixed number types including NaN todo https://github.com/Kotlin/dataframe/issues/1113
 //        val mixedWithNaN = columnOf<Number>(5, 2.0f, Double.NaN, 1L, 9.0)
 //        mixedWithNaN.min().shouldBeNaN() // Default behavior: NaN propagates
 //        mixedWithNaN.min(skipNaN = true) shouldBe 1.0 // Skip NaN values
@@ -247,7 +247,7 @@ class MinTests {
         val minsWithSkipNaN = dfWithNaN.min(skipNaN = true)
         minsWithSkipNaN["a"] shouldBe 4.0 // Min of 5.0 and 4.0, skipping NaN
         minsWithSkipNaN["b"] shouldBe 2.0 // Min of 2.0 and 8.0, skipping NaN
-        // todo minsWithSkipNaN["c"] shouldBe 1.0 // Min of 3.0 and 1.0, skipping NaN
+        // todo minsWithSkipNaN["c"] shouldBe 1.0 https://github.com/Kotlin/dataframe/issues/1113
 
         // Test minFor with NaN values
         val minForWithNaN = dfWithNaN.minFor("a", "b") // Min functions should return NaN if any value is NaN
@@ -285,3 +285,4 @@ class MinTests {
         } shouldBe 0.5 // Only 1.0/2.0 = 0.5 is valid
     }
 }
+typealias ComparableAndNullable<R> = Comparable<R & Any>?

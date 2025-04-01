@@ -174,7 +174,7 @@ class MaxTests {
         maxFor["c"] shouldBe 9.0
 
         // Test max of all columns as a single value
-        // TODO?
+        // TODO https://github.com/Kotlin/dataframe/issues/1113
         // df.max("a", "b", "c") shouldBe 1
     }
 
@@ -223,7 +223,7 @@ class MaxTests {
         allNaN.maxOrNull()!!.shouldBeNaN() // All values are NaN, so result is NaN
         allNaN.maxOrNull(skipNaN = true).shouldBeNull() // With skipNaN=true and only NaN values, result should be null
 
-        // Test with mixed number types including NaN todo
+        // Test with mixed number types including NaN todo https://github.com/Kotlin/dataframe/issues/1113
 //        val mixedWithNaN = columnOf<Number>(5, 2.0f, Double.NaN, 1L, 9.0)
 //        mixedWithNaN.max().shouldBeNaN() // Default behavior: NaN propagates
 //        mixedWithNaN.max(skipNaN = true) shouldBe 1.0 // Skip NaN values
@@ -247,7 +247,7 @@ class MaxTests {
         val maxsWithSkipNaN = dfWithNaN.max(skipNaN = true)
         maxsWithSkipNaN["a"] shouldBe 5.0 // Max of 5.0 and 4.0, skipping NaN
         maxsWithSkipNaN["b"] shouldBe 8.0 // Max of 2.0 and 8.0, skipping NaN
-        // todo maxsWithSkipNaN["c"] shouldBe 1.0 // Max of 3.0 and 1.0, skipping NaN
+        // todo maxsWithSkipNaN["c"] shouldBe 1.0 https://github.com/Kotlin/dataframe/issues/1113
 
         // Test maxFor with NaN values
         val maxForWithNaN = dfWithNaN.maxFor("a", "b") // Max functions should return NaN if any value is NaN
