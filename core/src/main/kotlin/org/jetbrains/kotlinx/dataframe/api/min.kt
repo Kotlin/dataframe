@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.util.ROW_MIN
+import org.jetbrains.kotlinx.dataframe.util.ROW_MIN_OR_NULL
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -55,14 +57,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNul
 
 // region DataRow
 
-@Deprecated("", level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMinOrNull(): Any? =
-    error("") // values().filterIsInstance<Comparable<*>>().minWithOrNull(compareBy { it })
+@Deprecated(ROW_MIN_OR_NULL, level = DeprecationLevel.ERROR)
+public fun AnyRow.rowMinOrNull(): Any? = error(ROW_MIN_OR_NULL)
 
-@Deprecated("", level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMin(): Any = error("") // rowMinOrNull().suggestIfNull("rowMin")
-
-// todo add rowMinBy?
+@Deprecated(ROW_MIN, level = DeprecationLevel.ERROR)
+public fun AnyRow.rowMin(): Any = error(ROW_MIN)
 
 public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMinOfOrNull(skipNaN: Boolean = skipNaN_default): T? =
     Aggregators.min<T>(skipNaN).aggregateOfRow(this) { colsOf<T>() }
@@ -74,7 +73,6 @@ public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMinOf(skipNaN: Bo
 
 // region DataFrame
 
-// TODO intraComparableOrNumber
 public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaN_default): DataRow<T> =
     minFor(skipNaN, intraComparableColumns())
 
@@ -192,7 +190,6 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.minByOrNull
 
 // region GroupBy
 
-// TODO intraComparableOrNumber
 @Refine
 @Interpretable("GroupByMin1")
 public fun <T> Grouped<T>.min(skipNaN: Boolean = skipNaN_default): DataFrame<T> =
@@ -361,7 +358,6 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.minBy(
 
 // region PivotGroupBy
 
-// TODO intraComparableOrNumber
 public fun <T> PivotGroupBy<T>.min(separate: Boolean = false, skipNaN: Boolean = skipNaN_default): DataFrame<T> =
     minFor(separate, skipNaN, intraComparableColumns())
 

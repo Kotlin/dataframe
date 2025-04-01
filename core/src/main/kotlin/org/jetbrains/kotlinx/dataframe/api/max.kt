@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
+import org.jetbrains.kotlinx.dataframe.util.ROW_MAX
+import org.jetbrains.kotlinx.dataframe.util.ROW_MAX_OR_NULL
 import kotlin.reflect.KProperty
 
 // region DataColumn
@@ -55,14 +57,11 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNul
 
 // region DataRow
 
-@Deprecated("", level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMaxOrNull(): Any? =
-    error("") // values().filterIsInstance<Comparable<*>>().maxWithOrNull(compareBy { it })
+@Deprecated(ROW_MAX_OR_NULL, level = DeprecationLevel.ERROR)
+public fun AnyRow.rowMaxOrNull(): Any? = error(ROW_MAX_OR_NULL)
 
-@Deprecated("", level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMax(): Any = error("") // rowMaxOrNull().suggestIfNull("rowMax")
-
-// todo add rowMaxBy?
+@Deprecated(ROW_MAX, level = DeprecationLevel.ERROR)
+public fun AnyRow.rowMax(): Any = error(ROW_MAX)
 
 public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMaxOfOrNull(skipNaN: Boolean = skipNaN_default): T? =
     Aggregators.max<T>(skipNaN).aggregateOfRow(this) { colsOf<T>() }
@@ -74,7 +73,6 @@ public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMaxOf(skipNaN: Bo
 
 // region DataFrame
 
-// TODO intraComparableOrNumber
 public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaN_default): DataRow<T> =
     maxFor(skipNaN, intraComparableColumns())
 
@@ -192,7 +190,6 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.maxByOrNull
 
 // region GroupBy
 
-// TODO intraComparableOrNumber
 @Refine
 @Interpretable("GroupByMax1")
 public fun <T> Grouped<T>.max(skipNaN: Boolean = skipNaN_default): DataFrame<T> =
@@ -361,7 +358,6 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.maxBy(
 
 // region PivotGroupBy
 
-// TODO intraComparableOrNumber
 public fun <T> PivotGroupBy<T>.max(separate: Boolean = false, skipNaN: Boolean = skipNaN_default): DataFrame<T> =
     maxFor(separate, skipNaN, intraComparableColumns())
 

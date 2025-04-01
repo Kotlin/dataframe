@@ -3,6 +3,32 @@ package org.jetbrains.kotlinx.dataframe.impl
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.documentation.NA
 
+/**
+ * Type alias for a function representing a reduction over a sequence of values trying to find the "best" value.
+ *
+ * Return `true` if `this` is considered "better" than `other`, else return `false`.
+ *
+ * This means that if `this` and `other` are considered equally "good", `false` should be returned.
+ *
+ * You add additional constraints to an [IsBetterThan] function in the following fashion:
+ *
+ * Let's say you want a value to álways be returned when it satisfies the condition `isPreferred(it)`,
+ * but in all other cases, you just want the best.
+ * Then you can write:
+ * ```kt
+ * val isBetterThan: IsBetterThan<C>
+ * val newIsBetterThan: IsBetterThan<C> = { other -> isPreferred(this) || (!isPreferred(other) && this.isBetterThan(other)) }
+ * ```
+ *
+ * Alternatively, if you prefer a value not be returned when it satisfies the condition `isNotPreferred()`,
+ * then you can write:
+ * ```kt
+ * val isBetterThan: IsBetterThan<C>
+ * val newIsBetterThan: IsBetterThan<C> = { other -> !isNotPreferred(this) && (isNotPreferred(other) || this.isBetterThan(other)) }
+ * ```
+ * Note that for the latter case, if the source contains only `isNotPreferred()`-satisfying values,
+ * a non-preferred value will still be returned.
+ */
 internal typealias IsBetterThan<C> = C.(other: C) -> Boolean
 
 // region indexOfBestBy
