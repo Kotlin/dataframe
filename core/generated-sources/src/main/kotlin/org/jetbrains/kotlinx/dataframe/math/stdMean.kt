@@ -2,7 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.skipNA_default
+import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.math.sqrt
@@ -16,12 +16,12 @@ internal data class BasicStats(val count: Int, val mean: Double, val variance: D
 }
 
 @JvmName("doubleVarianceAndMean")
-internal fun Iterable<Double>.varianceAndMean(skipNA: Boolean = skipNA_default): BasicStats? {
+internal fun Iterable<Double>.varianceAndMean(skipNaN: Boolean = skipNaN_default): BasicStats? {
     var count = 0
     var sum = .0
     for (element in this) {
         if (element.isNaN()) {
-            if (skipNA) {
+            if (skipNaN) {
                 continue
             } else {
                 return null
@@ -41,12 +41,12 @@ internal fun Iterable<Double>.varianceAndMean(skipNA: Boolean = skipNA_default):
 }
 
 @JvmName("floatVarianceAndMean")
-internal fun Iterable<Float>.varianceAndMean(skipNA: Boolean = skipNA_default): BasicStats? {
+internal fun Iterable<Float>.varianceAndMean(skipNaN: Boolean = skipNaN_default): BasicStats? {
     var count = 0
     var sum = .0
     for (element in this) {
         if (element.isNaN()) {
-            if (skipNA) {
+            if (skipNaN) {
                 continue
             } else {
                 return null
