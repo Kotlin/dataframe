@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCal
 /**
  * Generic function to apply an [Aggregator] ([this]) to aggregate values of a row.
  *
- * [Aggregator.aggregateCalculatingType] is used to deal with mixed types.
+ * [Aggregator.aggregateCalculatingValueType] is used to deal with mixed types.
  *
  * @param row a row to aggregate
  * @param columns selector of which columns inside the [row] to aggregate
@@ -21,7 +21,7 @@ internal fun <T, V : Any?, R : Any?> Aggregator<V & Any, R>.aggregateOfRow(
 ): R {
     val filteredColumns = row.df().getColumns(columns).asSequence()
     return aggregateCalculatingValueType(
-        values = filteredColumns.mapNotNull { row[it] },
+        values = filteredColumns.map { row[it] },
         valueTypes = filteredColumns.map { it.type() }.toSet(),
     )
 }

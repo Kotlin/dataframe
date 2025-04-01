@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.util.GUESS_VALUE_TYPE
 import java.math.BigDecimal
@@ -693,3 +694,16 @@ internal fun Iterable<Any?>.types(): Set<KType> =
     mapTo(mutableSetOf()) {
         if (it == null) nullableNothingType else it::class.createStarProjectedType(false)
     }
+
+/**
+ * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is comparable with itself.
+ */
+internal fun KType.isIntraComparable(): Boolean =
+    this.isSubtypeOf(
+        Comparable::class.createType(
+            arguments = listOf(
+                KTypeProjection(IN, this.withNullability(false)),
+            ),
+            nullable = this.isMarkedNullable,
+        ),
+    )
