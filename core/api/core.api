@@ -1894,7 +1894,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/DataSchemaEn
 
 public final class org/jetbrains/kotlinx/dataframe/api/DefaultsKt {
 	public static final fun getDdof_default ()I
-	public static final fun getSkipNA_default ()Z
+	public static final fun getSkipNaN_default ()Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DescribeKt {
@@ -2386,6 +2386,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/GroupByKt {
 	public static synthetic fun groupBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static synthetic fun groupBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;
 	public static final fun groupByOther (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;)Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;
+	public static final fun reduce (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/GroupClause {
@@ -2685,92 +2686,100 @@ public final class org/jetbrains/kotlinx/dataframe/api/MatchesKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/MaxKt {
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/lang/Comparable;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun maxByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-	public static final fun maxByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxOf (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Comparable;
-	public static final fun maxOf (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun maxOf (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxOf (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun maxOf (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun maxOf$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun maxOfOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Comparable;
-	public static final fun maxOfOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
-	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/lang/Comparable;
-	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
-	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Comparable;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Comparable;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Comparable;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Comparable;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun max (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun max$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static final fun maxBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static synthetic fun maxBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxBy$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static synthetic fun maxBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static synthetic fun maxBy$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static final fun maxByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxByOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun maxFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Comparable;
+	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Comparable;
+	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Comparable;
+	public static final fun maxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Comparable;
+	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static final fun rowMax (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun rowMaxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
@@ -2945,92 +2954,100 @@ public final class org/jetbrains/kotlinx/dataframe/api/MergeWithTransform {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/MinKt {
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/lang/Comparable;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
-	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Comparable;
-	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun minOf (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun minOf$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun minOfOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Ljava/lang/Comparable;
-	public static final fun minOfOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
-	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/lang/Comparable;
-	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
-	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Comparable;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Comparable;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Comparable;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Comparable;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun min (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun min$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static final fun minBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static synthetic fun minBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minBy$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static synthetic fun minBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static synthetic fun minBy$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static final fun minByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minByOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun minFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Comparable;
+	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
+	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Comparable;
+	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Comparable;
+	public static final fun minOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Comparable;
+	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Comparable;
+	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static final fun rowMin (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 	public static final fun rowMinOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
 }
@@ -3376,6 +3393,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/PivotKt {
 	public static synthetic fun pivotMatches$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun pivotMatches$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static synthetic fun pivotMatches$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun reduce (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
 	public static final fun reduce (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
 }
 
@@ -3817,60 +3835,82 @@ public final class org/jetbrains/kotlinx/dataframe/api/StdKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/SumKt {
-	public static final fun rowSum (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Number;
-	public static final fun rowSumOf (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/reflect/KType;)Ljava/lang/Number;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/lang/Number;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun rowSum (Lorg/jetbrains/kotlinx/dataframe/DataRow;Z)Ljava/lang/Number;
+	public static synthetic fun rowSum$default (Lorg/jetbrains/kotlinx/dataframe/DataRow;ZILjava/lang/Object;)Ljava/lang/Number;
+	public static final fun rowSumOf (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/reflect/KType;Z)Ljava/lang/Number;
+	public static synthetic fun rowSumOf$default (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/reflect/KType;ZILjava/lang/Object;)Ljava/lang/Number;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Number;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sum (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Number;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sum$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun sumByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)I
 	public static final fun sumByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)I
 	public static final fun sumByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)I
 	public static final fun sumByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)I
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun sumNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Number;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun sumFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun sumNumber (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Number;
+	public static synthetic fun sumNumber$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Number;
 	public static final fun sumOfByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)I
 	public static final fun sumOfByte (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)I
 	public static final fun sumOfShort (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)I
@@ -5167,59 +5207,76 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/Aggregations
 	public static synthetic fun yieldOneOrMany$default (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/receivers/AggregateInternalDsl;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Ljava/util/List;Lkotlin/reflect/KType;Ljava/lang/Object;ILjava/lang/Object;)V
 }
 
-public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator {
-	public abstract fun aggregate (Ljava/lang/Iterable;)Ljava/lang/Object;
-	public abstract fun aggregate (Ljava/lang/Iterable;Lkotlin/reflect/KType;)Ljava/lang/Object;
-	public abstract fun aggregate (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
-	public abstract fun aggregateCalculatingType (Ljava/lang/Iterable;Ljava/util/Set;)Ljava/lang/Object;
-	public static synthetic fun aggregateCalculatingType$default (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Ljava/lang/Iterable;Ljava/util/Set;ILjava/lang/Object;)Ljava/lang/Object;
-	public abstract fun calculateReturnTypeOrNull (Ljava/util/Set;Z)Lkotlin/reflect/KType;
-	public abstract fun calculateReturnTypeOrNull (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
-	public abstract fun getName ()Ljava/lang/String;
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler, org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler {
+	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;Ljava/lang/String;)V
+	public fun aggregateMultipleColumns (Lkotlin/sequences/Sequence;)Ljava/lang/Object;
+	public fun aggregateSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
+	public fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
+	public fun calculateReturnType (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+	public fun calculateReturnTypeMultipleColumns (Ljava/util/Set;Z)Lkotlin/reflect/KType;
+	public fun calculateValueType (Ljava/util/Set;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;
+	public fun calculateValueType (Lkotlin/sequences/Sequence;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;
+	public final fun getAggregationHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler;
+	public fun getAggregator ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun getInputHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorInputHandler;
+	public final fun getMultipleColumnsHandler ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorMultipleColumnsHandler;
+	public final fun getName ()Ljava/lang/String;
+	public fun indexOfAggregationResultSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
+	public fun init (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)V
+	public fun preprocessAggregation (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Lkotlin/Pair;
+	public fun setAggregator (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorHandler {
+	public abstract fun aggregateSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
+	public abstract fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
+	public abstract fun calculateReturnType (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
+	public abstract fun indexOfAggregationResultSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorKt {
+	public static final fun aggregate (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;)Ljava/lang/Object;
+	public static final fun aggregate (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
 	public static final fun cast (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public static final fun cast2 (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public static final fun indexOfAggregationResult (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;)I
+	public static final fun indexOfAggregationResult (Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1 {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1$Companion;
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function1;
 	public final fun getName ()Ljava/lang/String;
 	public final fun invoke (Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1$Factory : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider {
-	public fun <init> (Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun create (Ljava/lang/String;)Ljava/lang/Object;
-	public fun create (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
-	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function1;
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1$Companion {
+	public final fun Factory (Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2 {
+	public static final field Companion Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Companion;
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
 	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function2;
 	public final fun getName ()Ljava/lang/String;
 	public final fun invoke (Ljava/lang/Object;Ljava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Factory : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider {
-	public fun <init> (Lkotlin/jvm/functions/Function2;)V
-	public synthetic fun create (Ljava/lang/String;)Ljava/lang/Object;
-	public fun create (Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
-	public final fun getGetAggregator ()Lkotlin/jvm/functions/Function2;
+public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2$Companion {
+	public final fun Factory (Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Provider;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators {
 	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators;
-	public final fun getMax ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
 	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
-	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/FlatteningAggregator;
-	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepAggregator;
+	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
-	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/TwoStepNumbersAggregator;
+	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
+	public final fun max (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun min (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/modes/NoAggregationKt {
@@ -6155,9 +6212,12 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Compani
 	public final fun getVALUES ()Ljava/util/List;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/math/MeanKt {
-	public static final fun mean (Ljava/lang/Iterable;Lkotlin/reflect/KType;Z)D
-	public static synthetic fun mean$default (Ljava/lang/Iterable;Lkotlin/reflect/KType;ZILjava/lang/Object;)D
+public final class org/jetbrains/kotlinx/dataframe/math/MaxKt {
+	public static final fun maxOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/MinKt {
+	public static final fun minOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/PercentileKt {
@@ -6170,7 +6230,7 @@ public final class org/jetbrains/kotlinx/dataframe/math/StdKt {
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/SumKt {
-	public static final fun sumNullableT (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;)Ljava/lang/Number;
+	public static final fun sumNullableT (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Number;
 }
 
 public abstract class org/jetbrains/kotlinx/dataframe/schema/ColumnSchema {
