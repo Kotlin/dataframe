@@ -1,6 +1,10 @@
-[//]: # (title: Import OpenAPI Schemas in Gradle project)
+[//]: # (title: Import OpenAPI Schemas in Gradle project (Experimental))
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
+
+<warning>
+OpenAPI 3.0.0 schema support is marked as experimental. It might change or be removed in the future.
+</warning>
 
 JSON schema inference is great, but it's not perfect. However, more and more APIs offer
 [OpenAPI (Swagger)](https://swagger.io/) specifications. 

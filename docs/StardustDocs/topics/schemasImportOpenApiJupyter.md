@@ -2,8 +2,14 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
+<warning>
+OpenAPI 3.0.0 schema support is marked as experimental. It might change or be removed in the future.
+</warning>
+
 Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasImportOpenApiGradle.md),
-you can also do this in Jupyter Notebooks. 
+you can also do this in Jupyter Notebooks.
+This requires enabling the `enableExperimentalOpenApi` setting, like:
+```%use dataframe(..., enableExperimentalOpenApi=true)```.
 
 There is only a slight difference in notation:
 
