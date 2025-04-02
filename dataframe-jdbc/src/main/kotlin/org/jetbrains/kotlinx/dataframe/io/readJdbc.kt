@@ -138,6 +138,8 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the data from the SQL table.
  *
  * @see DriverManager.getConnection
@@ -148,7 +150,17 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true
 ): AnyFrame {
+    if (strictValidation) {
+        require(isValidTableName(tableName)) {
+            "The provided table name '$tableName' is invalid. Please ensure it matches a valid table name in the database schema."
+        }
+    } else {
+        logger.warn { "Strict validation is disabled. Make sure the table name '$tableName' is correct." }
+    }
+
+
     val url = connection.metaData.url
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
@@ -217,7 +229,7 @@ public fun DataFrame.Companion.readSqlQuery(
     inferNullability: Boolean = true,
     dbType: DbType? = null,
 ): AnyFrame {
-    require(isValid(sqlQuery)) {
+    require(isValidSqlQuery(sqlQuery)) {
         "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
             "Also it should not contain any separators like `;`."
     }
@@ -330,11 +342,79 @@ public fun Connection.readDataFrame(
     }
 
 /** SQL query is accepted only if it starts from SELECT */
-private fun isValid(sqlQuery: String): Boolean {
+private fun isValidSqlQuery(sqlQuery: String): Boolean {
     val normalizedSqlQuery = sqlQuery.trim().uppercase()
 
-    return normalizedSqlQuery.startsWith(START_OF_READ_SQL_QUERY) &&
-        !normalizedSqlQuery.contains(MULTIPLE_SQL_QUERY_SEPARATOR)
+    // Check if the query starts with SELECT
+    if (!normalizedSqlQuery.startsWith("SELECT")) {
+        return false
+    }
+
+    // Check that the query does not contain forbidden symbols or constructions
+    val forbiddenPatterns = listOf(
+        ";",               // Separator for multiple SQL queries
+        "--",              // Single-line comments
+        "/*",              // Multi-line comments
+        "'''",             // Prevent triple quotes
+        "'",               // Single quotes
+        "\"",              // Unnecessary double quotes
+        " OR ",            // Logical operator for potential injections
+        "DROP",            // Command for dropping objects
+        "DELETE",          // Command for deleting data
+        "INSERT",          // Command for inserting data
+        "UPDATE",          // Command for updating data
+        "EXEC",            // Execute stored procedures
+        "EXECUTE",         // Alternative for EXEC
+        "CREATE",          // Command for creating objects
+        "ALTER",           // Command for altering structures
+        "GRANT",           // Command for granting permissions
+        "REVOKE",          // Command for revoking permissions
+        "MERGE"            // Command for data modification
+    )
+
+    // Check for the presence of forbidden patterns
+    for (pattern in forbiddenPatterns) {
+        if (normalizedSqlQuery.contains(pattern)) {
+            return false
+        }
+    }
+
+    // If all checks pass, the query is considered safe
+    return true
+}
+
+/** Validates if the given SQL table name is safe */
+private fun isValidTableName(tableName: String): Boolean {
+    val normalizedTableName = tableName.trim().uppercase()
+
+    // Disallow forbidden patterns or keywords
+    val forbiddenPatterns = listOf(
+        ";",               // Separator for SQL statements
+        "--",              // Single-line comments
+        "/*",              // Multi-line comments
+        "DROP",            // Command for dropping objects
+        "DELETE",          // Command for deleting data
+        "INSERT",          // Command for inserting data
+        "UPDATE",          // Command for updating data
+        "EXEC",            // Command for executing stored procedures
+        "EXECUTE",         // Alternative for EXEC
+        "CREATE",          // Command for creating objects
+        "ALTER",           // Command for altering structures
+        "GRANT",           // Command for granting permissions
+        "REVOKE",          // Command for revoking permissions
+        "MERGE"            // Command for sophisticated data modifications
+    )
+
+    // Ensure the table name does not contain forbidden patterns
+    for (pattern in forbiddenPatterns) {
+        if (normalizedTableName.contains(pattern)) {
+            return false
+        }
+    }
+
+    // Ensure the table name contains only valid characters
+    val tableNameRegex = Regex("^[A-Z0-9_]+$")
+    return tableNameRegex.matches(normalizedTableName)
 }
 
 /**

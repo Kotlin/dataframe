@@ -599,6 +599,70 @@ class JdbcTest {
     }
 
     @Test
+    fun `detect SQL injection attempts`() {
+
+        // SQL injection patterns
+        @Language("SQL")
+        val injectionUnion = """
+        SELECT * FROM users WHERE id = 1 UNION SELECT * FROM admin_users
+        """
+
+        @Language("SQL")
+        val injectionAlwaysTrueCondition = """
+        SELECT * FROM users WHERE username = 'admin' OR 1=1
+        """
+
+        @Language("SQL")
+        val injectionComment = """
+        SELECT * FROM accounts WHERE email = 'admin@example.com' -- AND password = 'password'
+        """
+
+        @Language("SQL")
+        val injectionMultilineComment = """
+        SELECT * FROM users /* Possible malicious comment */ WHERE id = 1
+        """
+
+        @Language("SQL")
+        val injectionSemicolon = """
+        SELECT * FROM users WHERE id = 1; DROP TABLE users
+        """
+
+        @Language("SQL")
+        val injectionUnescapedString = """
+        SELECT * FROM users WHERE name = 'test' OR '' = ''
+        """
+
+        @Language("SQL")
+        val injectionSQLWithSingleQuote = """
+        SELECT * FROM users WHERE username = 'admin' AND password = 'pass' OR '1'='1'
+        """
+
+        @Language("SQL")
+        val injectionUsingDropCommand = """
+        DROP TABLE users; SELECT * FROM orders
+        """
+
+        // List all SQL injection patterns
+        val sqlInjectionQueries = listOf(
+            injectionUnion,
+            injectionAlwaysTrueCondition,
+            injectionComment,
+            injectionMultilineComment,
+            injectionSemicolon,
+            injectionUnescapedString,
+            injectionSQLWithSingleQuote,
+            injectionUsingDropCommand
+        )
+
+        // Test each injection query
+        sqlInjectionQueries.forEach { query ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlQuery(connection, query)
+            }
+        }
+    }
+
+    @Test
     fun `read from table with name from reserved SQL keywords`() {
         // Create table Sale
         @Language("SQL")
