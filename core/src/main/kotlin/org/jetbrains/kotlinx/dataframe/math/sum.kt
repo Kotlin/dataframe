@@ -1,26 +1,23 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
-import kotlin.sequences.filterNotNull
-
-internal fun Iterable<Number?>.sum(type: KType): Number = asSequence().sum(type)
 
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNullableT")
 @PublishedApi
-internal fun Sequence<Number?>.sum(type: KType): Number {
+internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
     if (type.isMarkedNullable) {
-        return filterNotNull().sum(type.withNullability(false))
+        error("Encountered nullable type ${renderType(type)} in sum function. This should not occur.")
     }
-    return when (type.withNullability(false)) {
-        typeOf<Double>() -> (this as Sequence<Double>).sum()
+    return when (type) {
+        typeOf<Double>() -> (this as Sequence<Double>).filterNot { skipNaN && it.isNaN() }.sum()
 
-        typeOf<Float>() -> (this as Sequence<Float>).sum()
+        typeOf<Float>() -> (this as Sequence<Float>).filterNot { skipNaN && it.isNaN() }.sum()
 
         typeOf<Int>() -> (this as Sequence<Int>).sum()
 
@@ -44,7 +41,7 @@ internal fun Sequence<Number?>.sum(type: KType): Number {
 }
 
 /** T: Number? -> T */
-internal val sumTypeConversion: CalculateReturnTypeOrNull = { type, _ ->
+internal val sumTypeConversion: CalculateReturnType = { type, _ ->
     when (val type = type.withNullability(false)) {
         // type changes to Int
         typeOf<Short>(), typeOf<Byte>() -> typeOf<Int>()
