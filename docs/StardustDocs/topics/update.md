@@ -58,7 +58,7 @@ Update with value depending on column:
 <!---FUN updatePerColumn-->
 
 ```kotlin
-df.update { colsOf<Number?>() }.perCol { mean(skipNA = true) }
+df.update { colsOf<Number?>() }.perCol { mean(skipNaN = true) }
 ```
 
 <!---END-->
