@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.maxOfOrNull
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowMaxOf
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.junit.Ignore
 import org.junit.Test
 
 class MaxTests {
@@ -26,8 +27,11 @@ class MaxTests {
     fun `max with regular values`() {
         val col = columnOf(5, 2, 8, 1, 9)
         col.max() shouldBe 9
+    }
 
-        val colWithNull = columnOf<Int?>(5, 2, null, 1, 9)
+    @Test
+    fun `max with null`() {
+        val colWithNull = columnOf(5, 2, null, 1, 9)
         colWithNull.max() shouldBe 9
     }
 
@@ -42,9 +46,32 @@ class MaxTests {
         // Floating point types
         columnOf(5.0, 2.0, 8.0, 1.0, 9.0).max() shouldBe 9.0
         columnOf(5.0f, 2.0f, 8.0f, 1.0f, 9.0f).max() shouldBe 9.0f
+    }
 
-        // Mixed number types todo
-//        columnOf<Number>(5, 2L, 8.0f, 1.0, 9.toShort()).max() shouldBe 9.0
+    @Ignore
+    @Test
+    fun `max with mixed numeric type`() {
+        // Mixed number types todo https://github.com/Kotlin/dataframe/issues/1113
+        // columnOf<Number>(5, 2L, 8.0f, 1.0, 9.toShort()).max() shouldBe 9.0
+    }
+
+    @Test
+    fun `max with empty column`() {
+        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).maxOrNull().shouldBeNull()
+    }
+
+    @Test
+    fun `max with just nulls`() {
+        DataColumn.createValueColumn("", listOf(null, null), nothingType(true)).maxOrNull().shouldBeNull()
+    }
+
+    @Test
+    fun `max with just NaNs`() {
+        columnOf(Double.NaN, Double.NaN).max().shouldBeNaN()
+        columnOf(Double.NaN, Double.NaN).maxOrNull()!!.shouldBeNaN()
+
+        // With skipNaN=true and only NaN values, result should be null
+        columnOf(Double.NaN, Double.NaN).maxOrNull(skipNaN = true).shouldBeNull()
     }
 
     @Test
@@ -54,15 +81,6 @@ class MaxTests {
 
         // With skipNaN=true, NaN values should be ignored
         columnOf(5.0, 2.0, Double.NaN, 1.0, null).max(skipNaN = true) shouldBe 5.0
-
-        // Empty columns or columns with only nulls/NaNs
-        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).maxOrNull().shouldBeNull()
-        DataColumn.createValueColumn("", listOf(null), nothingType(true)).maxOrNull().shouldBeNull()
-        columnOf(Double.NaN, Double.NaN).max().shouldBeNaN()
-        columnOf(Double.NaN, Double.NaN).maxOrNull()!!.shouldBeNaN()
-
-        // With skipNaN=true and only NaN values, result should be null
-        columnOf(Double.NaN, Double.NaN).maxOrNull(skipNaN = true).shouldBeNull()
     }
 
     @Test
@@ -87,8 +105,10 @@ class MaxTests {
             Person("Charlie", 35),
         )
 
+        peopleWithNull.maxBy { it?.age ?: Int.MIN_VALUE } shouldBe Person("Charlie", 35)
         peopleWithNull.maxByOrNull { it?.age ?: Int.MIN_VALUE } shouldBe Person("Charlie", 35)
         // can sort by null, as it will be filtered out
+        peopleWithNull.maxBy { it?.age } shouldBe Person("Charlie", 35)
         peopleWithNull.maxByOrNull { it?.age } shouldBe Person("Charlie", 35)
     }
 
@@ -97,11 +117,18 @@ class MaxTests {
         // Test with strings that can be converted to numbers
         val strings = columnOf("5", "2", "8", "1", "9")
         strings.maxOf { it.toInt() } shouldBe 9
+        strings.maxOfOrNull { it.toInt() } shouldBe 9
+    }
 
-        // With null values
+    @Test
+    fun `maxOf with transformer function with nulls`() {
         val stringsWithNull = columnOf("5", "2", null, "1", "9")
+        stringsWithNull.maxOf { it?.toInt() } shouldBe 9
         stringsWithNull.maxOfOrNull { it?.toInt() } shouldBe 9
+    }
 
+    @Test
+    fun `maxOf with transformer function with NaNs`() {
         // Max functions should return NaN if any value is NaN
         val mixedValues = columnOf("5.0", "2.0", "NaN", "1.0", "9.0")
         mixedValues.maxOf {
@@ -116,8 +143,7 @@ class MaxTests {
         } shouldBe 9.0
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowMaxOf with dataframe`() {
         val df = dataFrameOf(
             "a", "b", "c",
@@ -131,7 +157,32 @@ class MaxTests {
         df[0].rowMaxOf<Int>() shouldBe 3
         df[1].rowMaxOf<Float>() shouldBe 4f
         df[2].rowMaxOf<Int>() shouldBe 9
+    }
 
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
+    fun `rowMaxOf with dataframe and nulls`() {
+        val df = dataFrameOf(
+            "a", "b", "c",
+        )(
+            1f, 2, 3,
+            4f, null, 6,
+            7f, 8, 9,
+        )
+
+        // Find maximum value in each row
+        df[0].rowMaxOf<Int>() shouldBe 3
+        df[0].rowMaxOf<Int?>() shouldBe 3 // TODO?
+
+        df[1].rowMaxOf<Float>() shouldBe 4f
+        df[1].rowMaxOf<Int>() shouldBe 6
+        df[1].rowMaxOf<Int?>() shouldBe 6
+
+        df[2].rowMaxOf<Int>() shouldBe 9
+        df[2].rowMaxOf<Int?>() shouldBe 9 // TODO?
+    }
+
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
+    fun `rowMaxOf with dataframe and NaNs`() {
         // Max functions should return NaN if any value is NaN
         val dfWithNaN = dataFrameOf(
             "a", "b", "c",
@@ -151,8 +202,7 @@ class MaxTests {
         dfWithNaN[2].rowMaxOf<Double>(skipNaN = true) shouldBe 8.0
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe max`() {
         val df = dataFrameOf(
             "a", "b", "c",
@@ -172,14 +222,25 @@ class MaxTests {
         val maxFor = df.maxFor("a", "c")
         maxFor["a"] shouldBe 7
         maxFor["c"] shouldBe 9.0
+    }
+
+    @Ignore
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
+    fun `dataframe max mixed number types`() {
+        val df = dataFrameOf(
+            "a", "b", "c",
+        )(
+            1, 2f, 3.0,
+            4, 5f, 6.0,
+            7, 8f, 9.0,
+        )
 
         // Test max of all columns as a single value
         // TODO https://github.com/Kotlin/dataframe/issues/1113
-        // df.max("a", "b", "c") shouldBe 1
+        df.max("a", "b", "c") shouldBe 9
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe maxBy and maxOf`() {
         val df = dataFrameOf(
             "a", "b", "c",
@@ -196,11 +257,10 @@ class MaxTests {
         maxByA["c"] shouldBe 9
 
         // Find maximum value of a + c for each row
-        df.maxOf { "a"<Int>() + "c"<Int>() } shouldBe 16 // 7 + 9 = 18
+        df.maxOf { "a"<Int>() + "c"<Int>() } shouldBe 16 // 7 + 9 = 16
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `max with NaN values for floating point numbers`() {
         // Test with Float.NaN values
         val floatWithNaN = columnOf(5.0f, 2.0f, Float.NaN, 1.0f, 9.0f)
