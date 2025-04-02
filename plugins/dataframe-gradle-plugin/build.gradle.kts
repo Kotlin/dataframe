@@ -18,10 +18,11 @@ dependencies {
     api(libs.kotlin.reflect)
     implementation(projects.core)
     implementation(projects.dataframeArrow)
-    implementation(projects.dataframeOpenapiGenerator)
     implementation(projects.dataframeExcel)
     implementation(projects.dataframeCsv)
     implementation(projects.dataframeJdbc)
+    // experimental
+    implementation(projects.dataframeOpenapiGenerator)
 
     implementation(libs.kotlin.gradle.plugin.api)
     implementation(libs.kotlin.gradle.plugin)

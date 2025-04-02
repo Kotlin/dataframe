@@ -3,7 +3,10 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 import org.jetbrains.kotlinx.dataframe.BuildConfig
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 
-public class JupyterConfiguration {
+public class JupyterConfiguration(
+    /** If true, experimental OpenAPI 3.0.0 types support via importDataSchema() is enabled. Can be set via `%use dataframe(..., enableExperimentalOpenApi=true)` */
+    public val enableExperimentalOpenApi: Boolean = false,
+) {
     public val display: DisplayConfiguration = DisplayConfiguration()
 
     /** Version of the library. */

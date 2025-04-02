@@ -67,8 +67,10 @@ internal class Integration(private val notebook: Notebook, private val options: 
     val version = options["v"]
 
     // TODO temporary settings while these experimental modules are being developed
+
     private val enableExperimentalCsv = options["enableExperimentalCsv"]
     private val enableExperimentalGeo = options["enableExperimentalGeo"]
+    private val enableExperimentalOpenApi = options["enableExperimentalOpenApi"]
 
     private fun KotlinKernelHost.updateImportDataSchemaVariable(
         importDataSchema: ImportDataSchema,
@@ -161,14 +163,19 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 repositories("https://repo.osgeo.org/repository/release")
                 dependencies("org.jetbrains.kotlinx:dataframe-geo:$version")
             }
+            if (enableExperimentalOpenApi?.toBoolean() == true) {
+                println("Enabling experimental OpenAPI 3.0.0 module: dataframe-openapi")
+                dependencies(
+                    "org.jetbrains.kotlinx:dataframe-openapi:$version",
+                    "org.jetbrains.kotlinx:dataframe-openapi-generator:$version",
+                )
+            }
             dependencies(
                 "org.jetbrains.kotlinx:dataframe-core:$version",
                 "org.jetbrains.kotlinx:dataframe-csv:$version",
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
                 "org.jetbrains.kotlinx:dataframe-jdbc:$version",
                 "org.jetbrains.kotlinx:dataframe-arrow:$version",
-                "org.jetbrains.kotlinx:dataframe-openapi:$version",
-                "org.jetbrains.kotlinx:dataframe-openapi-generator:$version",
             )
         }
 
@@ -181,7 +188,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
             )
         }
         val codeGen = ReplCodeGenerator.create()
-        val config = JupyterConfiguration()
+        val config = JupyterConfiguration(enableExperimentalOpenApi = enableExperimentalOpenApi?.toBoolean() == true)
 
         if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
             config.display.isolatedOutputs = true
