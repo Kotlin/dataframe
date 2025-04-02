@@ -22,10 +22,14 @@ import kotlin.reflect.KType
  * the handlers of this [aggregator] will be cast and reused.
  * In all cases [NoMultipleColumnsHandler] will be used as [AggregatorMultipleColumnsHandler].
  *
+ * This is useful for aggregators that do not depend on the distribution of values across multiple columns.
+ * It may be more memory efficient than [FlatteningMultipleColumnsHandler] and could be parallelized in the future.
+ *
  * @param stepTwoAggregationHandler The [aggregation handler][AggregatorAggregationHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
  * @param stepTwoInputHandler The [input handler][AggregatorInputHandler] for the second step.
  *   If not supplied, the handler of the first step is reused.
+ * @see [FlatteningMultipleColumnsHandler]
  */
 internal class TwoStepMultipleColumnsHandler<in Value : Any, out Return : Any?>(
     stepTwoAggregationHandler: AggregatorAggregationHandler<Return & Any, Return>? = null,

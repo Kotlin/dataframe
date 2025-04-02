@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.api.isNA
-import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.documentation.NA
 
 /**

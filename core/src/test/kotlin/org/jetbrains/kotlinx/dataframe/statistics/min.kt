@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.minOfOrNull
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowMinOf
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.junit.Ignore
 import org.junit.Test
 
 class MinTests {
@@ -26,8 +27,11 @@ class MinTests {
     fun `min with regular values`() {
         val col = columnOf(5, 2, 8, 1, 9)
         col.min() shouldBe 1
+    }
 
-        val colWithNull = columnOf<Int?>(5, 2, null, 1, 9)
+    @Test
+    fun `min with null`() {
+        val colWithNull = columnOf(5, 2, null, 1, 9)
         colWithNull.min() shouldBe 1
     }
 
@@ -42,9 +46,32 @@ class MinTests {
         // Floating point types
         columnOf(5.0, 2.0, 8.0, 1.0, 9.0).min() shouldBe 1.0
         columnOf(5.0f, 2.0f, 8.0f, 1.0f, 9.0f).min() shouldBe 1.0f
+    }
 
+    @Ignore
+    @Test
+    fun `min with mixed numeric type`() {
         // Mixed number types todo https://github.com/Kotlin/dataframe/issues/1113
-//        columnOf<Number>(5, 2L, 8.0f, 1.0, 9.toShort()).min() shouldBe 1.0
+        // columnOf<Number>(5, 2L, 8.0f, 1.0, 9.toShort()).min() shouldBe 1.0
+    }
+
+    @Test
+    fun `min with empty column`() {
+        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).minOrNull().shouldBeNull()
+    }
+
+    @Test
+    fun `min with just nulls`() {
+        DataColumn.createValueColumn("", listOf(null, null), nothingType(true)).minOrNull().shouldBeNull()
+    }
+
+    @Test
+    fun `min with just NaNs`() {
+        columnOf(Double.NaN, Double.NaN).min().shouldBeNaN()
+        columnOf(Double.NaN, Double.NaN).minOrNull()!!.shouldBeNaN()
+
+        // With skipNaN=true and only NaN values, result should be null
+        columnOf(Double.NaN, Double.NaN).minOrNull(skipNaN = true).shouldBeNull()
     }
 
     @Test
@@ -54,15 +81,6 @@ class MinTests {
 
         // With skipNaN=true, NaN values should be ignored
         columnOf(5.0, 2.0, Double.NaN, 1.0, null).min(skipNaN = true) shouldBe 1.0
-
-        // Empty columns or columns with only nulls/NaNs
-        DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false)).minOrNull().shouldBeNull()
-        DataColumn.createValueColumn("", listOf(null), nothingType(true)).minOrNull().shouldBeNull()
-        columnOf(Double.NaN, Double.NaN).min().shouldBeNaN()
-        columnOf(Double.NaN, Double.NaN).minOrNull()!!.shouldBeNaN()
-
-        // With skipNaN=true and only NaN values, result should be null
-        columnOf(Double.NaN, Double.NaN).minOrNull(skipNaN = true).shouldBeNull()
     }
 
     @Test
@@ -87,8 +105,10 @@ class MinTests {
             Person("Charlie", 35),
         )
 
+        peopleWithNull.minBy { it?.age ?: Int.MAX_VALUE } shouldBe Person("Bob", 25)
         peopleWithNull.minByOrNull { it?.age ?: Int.MAX_VALUE } shouldBe Person("Bob", 25)
         // can sort by null, as it will be filtered out
+        peopleWithNull.minBy { it?.age } shouldBe Person("Bob", 25)
         peopleWithNull.minByOrNull { it?.age } shouldBe Person("Bob", 25)
     }
 
@@ -97,11 +117,18 @@ class MinTests {
         // Test with strings that can be converted to numbers
         val strings = columnOf("5", "2", "8", "1", "9")
         strings.minOf { it.toInt() } shouldBe 1
+        strings.minOfOrNull { it.toInt() } shouldBe 1
+    }
 
-        // With null values
+    @Test
+    fun `minOf with transformer function with nulls`() {
         val stringsWithNull = columnOf("5", "2", null, "1", "9")
+        stringsWithNull.minOf { it?.toInt() } shouldBe 1
         stringsWithNull.minOfOrNull { it?.toInt() } shouldBe 1
+    }
 
+    @Test
+    fun `minOf with transformer function with NaNs`() {
         // Min functions should return NaN if any value is NaN
         val mixedValues = columnOf("5.0", "2.0", "NaN", "1.0", "9.0")
         mixedValues.minOf {
@@ -116,8 +143,7 @@ class MinTests {
         } shouldBe 1.0
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `rowMinOf with dataframe`() {
         val df = dataFrameOf(
             "a", "b", "c",
@@ -131,7 +157,32 @@ class MinTests {
         df[0].rowMinOf<Int>() shouldBe 2
         df[1].rowMinOf<Float>() shouldBe 4f
         df[2].rowMinOf<Int>() shouldBe 8
+    }
 
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
+    fun `rowMinOf with dataframe and nulls`() {
+        val df = dataFrameOf(
+            "a", "b", "c",
+        )(
+            1f, 2, 3,
+            4f, null, 6,
+            7f, 8, 9,
+        )
+
+        // Find minimum value in each row
+        df[0].rowMinOf<Int>() shouldBe 3
+        df[0].rowMinOf<Int?>() shouldBe 2 // TODO?
+
+        df[1].rowMinOf<Float>() shouldBe 4f
+        df[1].rowMinOf<Int>() shouldBe 6
+        df[1].rowMinOf<Int?>() shouldBe 6
+
+        df[2].rowMinOf<Int>() shouldBe 9
+        df[2].rowMinOf<Int?>() shouldBe 8 // TODO?
+    }
+
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
+    fun `rowMinOf with dataframe and NaNs`() {
         // Min functions should return NaN if any value is NaN
         val dfWithNaN = dataFrameOf(
             "a", "b", "c",
@@ -151,8 +202,7 @@ class MinTests {
         dfWithNaN[2].rowMinOf<Double>(skipNaN = true) shouldBe 7.0
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe min`() {
         val df = dataFrameOf(
             "a", "b", "c",
@@ -172,14 +222,25 @@ class MinTests {
         val minFor = df.minFor("a", "c")
         minFor["a"] shouldBe 1
         minFor["c"] shouldBe 3.0
+    }
+
+    @Ignore
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
+    fun `dataframe min mixed number types`() {
+        val df = dataFrameOf(
+            "a", "b", "c",
+        )(
+            1, 2f, 3.0,
+            4, 5f, 6.0,
+            7, 8f, 9.0,
+        )
 
         // Test min of all columns as a single value
         // TODO https://github.com/Kotlin/dataframe/issues/1113
-        // df.min("a", "b", "c") shouldBe 1
+        df.min("a", "b", "c") shouldBe 1
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `dataframe minBy and minOf`() {
         val df = dataFrameOf(
             "a", "b", "c",
@@ -199,8 +260,7 @@ class MinTests {
         df.minOf { "a"<Int>() + "c"<Int>() } shouldBe 4 // 1 + 3 = 4
     }
 
-    @Suppress("ktlint:standard:argument-list-wrapping")
-    @Test
+    @[Test Suppress("ktlint:standard:argument-list-wrapping")]
     fun `min with NaN values for floating point numbers`() {
         // Test with Float.NaN values
         val floatWithNaN = columnOf(5.0f, 2.0f, Float.NaN, 1.0f, 9.0f)
@@ -222,11 +282,6 @@ class MinTests {
         allNaN.min().shouldBeNaN() // All values are NaN, so result is NaN
         allNaN.minOrNull()!!.shouldBeNaN() // All values are NaN, so result is NaN
         allNaN.minOrNull(skipNaN = true).shouldBeNull() // With skipNaN=true and only NaN values, result should be null
-
-        // Test with mixed number types including NaN todo https://github.com/Kotlin/dataframe/issues/1113
-//        val mixedWithNaN = columnOf<Number>(5, 2.0f, Double.NaN, 1L, 9.0)
-//        mixedWithNaN.min().shouldBeNaN() // Default behavior: NaN propagates
-//        mixedWithNaN.min(skipNaN = true) shouldBe 1.0 // Skip NaN values
 
         // Test with DataFrame containing NaN values
         val dfWithNaN = dataFrameOf(
@@ -285,4 +340,3 @@ class MinTests {
         } shouldBe 0.5 // Only 1.0/2.0 = 0.5 is valid
     }
 }
-typealias ComparableAndNullable<R> = Comparable<R & Any>?
