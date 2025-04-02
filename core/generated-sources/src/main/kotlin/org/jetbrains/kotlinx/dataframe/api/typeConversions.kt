@@ -10,6 +10,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -405,11 +407,15 @@ public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFram
     return asGroupBy { groups }
 }
 
+@Refine
+@Interpretable("AsGroupByDefault")
 public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
     val groupCol = columns().single { it.isFrameColumn() }.asAnyFrameColumn().castFrameColumn<T>()
     return asGroupBy { groupCol }
 }
 
+@Refine
+@Interpretable("AsGroupBy")
 public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G>>): GroupBy<T, G> {
     val column = getColumn(selector).asFrameColumn()
     return GroupByImpl(this.move { column }.toEnd(), column) { none() }
