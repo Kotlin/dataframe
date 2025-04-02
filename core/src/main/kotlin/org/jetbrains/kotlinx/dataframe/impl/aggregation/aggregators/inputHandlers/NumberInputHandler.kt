@@ -132,6 +132,7 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
      * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
      * this function can be called to calculate it in terms of [number unification][UnifyingNumbers]
      * by getting the types of [values] at runtime.
+     * This is heavy because it uses reflection on each value.
      *
      * @throws IllegalArgumentException if the input type is not [Number]`(?)` or a primitive number type.
      * @return The (primitive) unified number type of the input values.

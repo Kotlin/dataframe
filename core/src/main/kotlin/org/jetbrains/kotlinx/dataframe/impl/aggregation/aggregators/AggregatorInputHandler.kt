@@ -21,6 +21,7 @@ internal interface AggregatorInputHandler<in Value : Any, out Return : Any?> : A
      *
      * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
      * this function can be called to calculate it by getting the types of [values] at runtime.
+     * This is heavy because it uses reflection on each value.
      */
     fun calculateValueType(values: Sequence<Value?>): ValueType
 
