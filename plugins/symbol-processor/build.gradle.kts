@@ -21,10 +21,12 @@ group = "org.jetbrains.kotlinx.dataframe"
 dependencies {
     implementation(projects.core)
     implementation(projects.dataframeArrow)
-    implementation(projects.dataframeOpenapiGenerator)
     implementation(projects.dataframeExcel)
     implementation(projects.dataframeCsv)
     implementation(projects.dataframeJdbc)
+    // experimental
+    implementation(projects.dataframeOpenapiGenerator)
+
     implementation(libs.ksp.api)
     implementation(libs.kotlin.reflect)
     implementation(libs.h2db)

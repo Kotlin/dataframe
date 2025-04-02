@@ -52,9 +52,11 @@ dependencies {
     api(projects.core)
     api(projects.dataframeArrow)
     api(projects.dataframeExcel)
-    api(projects.dataframeOpenapi)
     api(projects.dataframeJdbc)
     api(projects.dataframeCsv)
+
+    // experimental, so not included by default:
+    // api(projects.dataframeOpenapi)
 
     kover(projects.core)
     kover(projects.dataframeArrow)
