@@ -257,7 +257,7 @@ internal fun clearTestData(connection: Connection) {
     connection.createStatement().use { st -> st.execute("DROP TABLE IF EXISTS table2") }
 }
 
-@Ignore
+//@Ignore
 class PostgresTest {
     companion object {
         private lateinit var connection: Connection

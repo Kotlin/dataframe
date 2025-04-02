@@ -158,10 +158,10 @@ public fun DataFrame.Companion.readSqlTable(
         "SELECT * FROM $tableName"
     }
 
-    connection.createStatement().use { st ->
+    connection.prepareStatement(selectAllQuery).use { st ->
         logger.debug { "Connection with url:$url is established successfully." }
 
-        st.executeQuery(selectAllQuery).use { rs ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
@@ -228,8 +228,8 @@ public fun DataFrame.Companion.readSqlQuery(
 
     logger.debug { "Executing SQL query: $internalSqlQuery" }
 
-    connection.createStatement().use { st ->
-        st.executeQuery(internalSqlQuery).use { rs ->
+    connection.prepareStatement(internalSqlQuery).use { st ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
@@ -571,8 +571,8 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     val sqlQuery = "SELECT * FROM $tableName"
     val selectFirstRowQuery = determinedDbType.sqlQueryLimit(sqlQuery, limit = 1)
 
-    connection.createStatement().use { st ->
-        st.executeQuery(selectFirstRowQuery).use { rs ->
+    connection.prepareStatement(selectFirstRowQuery).use { st ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, determinedDbType)
         }
@@ -616,8 +616,8 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
 ): DataFrameSchema {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    connection.createStatement().use { st ->
-        st.executeQuery(sqlQuery).use { rs ->
+    connection.prepareStatement(sqlQuery).use { st ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, determinedDbType)
         }
