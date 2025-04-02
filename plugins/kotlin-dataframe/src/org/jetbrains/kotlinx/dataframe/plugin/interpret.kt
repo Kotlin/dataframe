@@ -83,6 +83,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.SingleColumnApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TypeApproximation
+import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
 
 fun <T> KotlinTypeFacade.interpret(
     functionCall: FirFunctionCall,
@@ -400,7 +401,7 @@ private fun KotlinTypeFacade.columnWithPathApproximations(result: FirPropertyAcc
                     is ConeStarProjection -> session.builtinTypes.nullableAnyType.type
                     else -> arg as ConeClassLikeType
                 }
-                SimpleDataColumn(f(result), Marker(type))
+                simpleColumnOf(f(result), type)
             }
             Names.COLUM_GROUP_CLASS_ID -> {
                 val arg = it.typeArguments.single()

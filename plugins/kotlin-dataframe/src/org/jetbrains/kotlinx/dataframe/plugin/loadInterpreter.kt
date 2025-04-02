@@ -87,6 +87,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AllFrom2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AllUpTo0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AllUpTo1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AllUpTo2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AsGroupBy
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AsGroupByDefault
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ByName
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColGroups0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColGroups1
@@ -324,6 +326,8 @@ internal inline fun <reified T> String.load(): T {
         "Exclude1" -> Exclude1()
         "RenameInto" -> RenameInto()
         "DataFrameGroupBy" -> DataFrameGroupBy()
+        "AsGroupBy" -> AsGroupBy()
+        "AsGroupByDefault" -> AsGroupByDefault()
         "AggregateDslInto" -> AggregateDslInto()
         "GroupByToDataFrame" -> GroupByToDataFrame()
         "GroupByInto" -> GroupByInto()
