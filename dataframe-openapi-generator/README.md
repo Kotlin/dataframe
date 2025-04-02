@@ -1,6 +1,6 @@
 ## :dataframe-openapi-generator
 
-This experimental module, published as `dataframe-openapi-generator` contains all logic and tests for DataFrame to be able to import
+This **experimental** module, published as `dataframe-openapi-generator` contains all logic and tests for DataFrame to be able to import
 OpenAPI 3.0.0 specifications as auto-generated data schemas. This module is a sister module to
 [`dataframe-openapi`](../dataframe-openapi):
 

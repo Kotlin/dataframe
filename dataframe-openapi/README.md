@@ -1,6 +1,6 @@
 ## :dataframe-openapi
 
-This experimental module, published as `dataframe-openapi` contains some functions to be able to use auto-generated
+This **experimental** module, published as `dataframe-openapi` contains some functions to be able to use auto-generated
 data schemas from OpenAPI 3.0.0 specifications. This module is a sister module to
 [`dataframe-openapi-generator`](../dataframe-openapi-generator):
 
