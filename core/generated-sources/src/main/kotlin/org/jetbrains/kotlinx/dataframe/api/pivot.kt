@@ -243,6 +243,7 @@ public class ReducedPivot<T>(
     override fun toString(): String = "ReducedPivot(pivot=$pivot, reducer=$reducer)"
 }
 
+@PublishedApi
 internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>) = ReducedPivot(this, reducer)
 
 @PublishedApi

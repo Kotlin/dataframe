@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isMixedNumber
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
@@ -18,11 +19,7 @@ import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.reflect.KType
-import kotlin.reflect.KTypeProjection
-import kotlin.reflect.KVariance
-import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 public fun AnyCol.isColumnGroup(): Boolean {
@@ -87,13 +84,4 @@ public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
  *
  * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
  */
-public fun AnyCol.valuesAreComparable(): Boolean =
-    isValueColumn() &&
-        isSubtypeOf(
-            Comparable::class.createType(
-                arguments = listOf(
-                    KTypeProjection(KVariance.IN, type().withNullability(false)),
-                ),
-                nullable = hasNulls(),
-            ),
-        )
+public fun AnyCol.valuesAreComparable(): Boolean = isValueColumn() && type().isIntraComparable()

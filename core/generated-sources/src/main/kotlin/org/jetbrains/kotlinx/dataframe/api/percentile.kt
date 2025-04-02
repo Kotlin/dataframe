@@ -27,7 +27,7 @@ public fun <T : Comparable<T>> DataColumn<T?>.percentile(percentile: Double): T 
     percentileOrNull(percentile).suggestIfNull("percentile")
 
 public fun <T : Comparable<T>> DataColumn<T?>.percentileOrNull(percentile: Double): T? =
-    Aggregators.percentile(percentile).cast<T>().aggregate(this)
+    Aggregators.percentile(percentile).cast<T>().aggregateSingleColumn(this)
 
 public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileOfOrNull(
     percentile: Double,
@@ -44,7 +44,7 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileOf(
 // region DataRow
 
 public fun AnyRow.rowPercentileOrNull(percentile: Double): Any? =
-    Aggregators.percentile(percentile).aggregate(
+    Aggregators.percentile(percentile).aggregateSingleColumn(
         values().filterIsInstance<Comparable<Any?>>().toValueColumn(),
     )
 

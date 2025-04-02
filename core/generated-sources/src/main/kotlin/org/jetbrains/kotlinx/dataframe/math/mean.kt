@@ -1,31 +1,26 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.jetbrains.kotlinx.dataframe.api.skipNA_default
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnTypeOrNull
+import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger { }
 
-@PublishedApi
-internal fun <T : Number> Iterable<T?>.mean(type: KType, skipNA: Boolean = skipNA_default): Double =
-    asSequence().mean(type, skipNA)
-
 @Suppress("UNCHECKED_CAST")
-internal fun <T : Number> Sequence<T?>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
+internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Double {
     if (type.isMarkedNullable) {
-        return filterNotNull().mean(type.withNullability(false), skipNA)
+        error("Encountered nullable type ${renderType(type)} in mean function. This should not occur.")
     }
-    return when (type.withNullability(false)) {
-        typeOf<Double>() -> (this as Sequence<Double>).mean(skipNA)
+    return when (type) {
+        typeOf<Double>() -> (this as Sequence<Double>).mean(skipNaN)
 
-        typeOf<Float>() -> (this as Sequence<Float>).map { it.toDouble() }.mean(skipNA)
+        typeOf<Float>() -> (this as Sequence<Float>).map { it.toDouble() }.mean(skipNaN)
 
         typeOf<Int>() -> (this as Sequence<Int>).map { it.toDouble() }.mean(false)
 
@@ -56,16 +51,16 @@ internal fun <T : Number> Sequence<T?>.mean(type: KType, skipNA: Boolean = skipN
 }
 
 /** T: Number? -> Double */
-internal val meanTypeConversion: CalculateReturnTypeOrNull = { _, _ ->
+internal val meanTypeConversion: CalculateReturnType = { _, _ ->
     typeOf<Double>()
 }
 
-internal fun Sequence<Double>.mean(skipNA: Boolean = skipNA_default): Double {
+internal fun Sequence<Double>.mean(skipNaN: Boolean = skipNaN_default): Double {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
         if (element.isNaN()) {
-            if (skipNA) {
+            if (skipNaN) {
                 continue
             } else {
                 return Double.NaN
