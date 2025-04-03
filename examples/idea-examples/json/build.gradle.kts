@@ -57,5 +57,5 @@ dataframes {
         name = "org.jetbrains.kotlinx.dataframe.examples.openapi.ApiGuruOpenApiGradle"
     }
 
-    // TODO enableExperimentalOpenApi = true
+    enableExperimentalOpenApi = true
 }
