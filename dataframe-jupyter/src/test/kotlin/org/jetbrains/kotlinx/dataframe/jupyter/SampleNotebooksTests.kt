@@ -100,6 +100,22 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             ),
         )
 
+    @Test
+    fun json() =
+        exampleTest(
+            dir = "json",
+            notebookName = "KeyValueAndOpenApi",
+            cellClause = CellClause {
+                // skip OOM cells
+                it.metadata.tags?.contains("skiptest") != true
+            },
+            replacer = CodeReplacer.byMap(
+                testFile("json", "api_guru_list.json"),
+                testFile("json", "apiGuruMetrics.json"),
+                testFile("json", "ApiGuruOpenApi.yaml"),
+            ),
+        )
+
     private fun doTest(
         notebookPath: String,
         replacer: CodeReplacer,

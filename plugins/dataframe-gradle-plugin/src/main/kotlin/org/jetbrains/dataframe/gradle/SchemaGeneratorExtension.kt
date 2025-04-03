@@ -19,6 +19,9 @@ open class SchemaGeneratorExtension {
     internal var defaultPath: Boolean? = null
     internal var withNormalizationBy: Set<Char>? = null
 
+    /** Can be set to `true` to enable experimental OpenAPI 3.0.0 types support */
+    var enableExperimentalOpenApi: Boolean = false
+
     fun schema(config: Schema.() -> Unit) {
         val schema = Schema(project).apply(config)
         schemas.add(schema)
@@ -46,6 +49,10 @@ open class SchemaGeneratorExtension {
 
     fun withoutNormalization() {
         withNormalizationBy = emptySet()
+    }
+
+    fun enableExperimentalOpenApi(enable: Boolean) {
+        enableExperimentalOpenApi = enable
     }
 }
 

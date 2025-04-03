@@ -38,9 +38,9 @@ Here's a list of the most popular use cases with Data Schemas.
 * [**Schema Definitions from SQL Databases in Gradle Project**](schemasImportSqlGradle.md) <br/>
   When you need to take data from the SQL database.
 
-* [**Import OpenAPI Schemas in Gradle Project**](schemasImportOpenApiGradle.md) <br/>
+* [**Import OpenAPI 3.0.0 Schemas (Experimental) in Gradle Project**](schemasImportOpenApiGradle.md) <br/>
   When you need to take data from the endpoint with OpenAPI Schema.
 
-* [**Import Data Schemas, e.g. from OpenAPI, in Jupyter**](schemasImportOpenApiJupyter.md) <br/>
+* [**Import Data Schemas, e.g. from OpenAPI 3.0.0 (Experimental), in Jupyter**](schemasImportOpenApiJupyter.md) <br/>
   Similar to [importing OpenAPI Data Schemas in Gradle projects](schemasImportOpenApiGradle.md), 
   you can also do this in Jupyter Notebooks.
