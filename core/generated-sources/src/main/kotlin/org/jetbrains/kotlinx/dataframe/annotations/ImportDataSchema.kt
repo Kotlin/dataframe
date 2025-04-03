@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.io.JSON
  * @param csvOptions options to parse CSV data. Not used when data is not Csv
  * @param jsonOptions options to parse JSON data. Not used when data is not Json
  * @param jdbcOptions options to parse data from a database via JDBC. Not used when data is not stored in the database
+ * @param enableExperimentalOpenApi Can be set to `true` to enable experimental OpenAPI 3.0.0 types support
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE)
@@ -40,6 +41,7 @@ public annotation class ImportDataSchema(
     val csvOptions: CsvOptions = CsvOptions(','),
     val jsonOptions: JsonOptions = JsonOptions(),
     val jdbcOptions: JdbcOptions = JdbcOptions(),
+    val enableExperimentalOpenApi: Boolean = false,
 )
 
 public enum class DataSchemaVisibility {
