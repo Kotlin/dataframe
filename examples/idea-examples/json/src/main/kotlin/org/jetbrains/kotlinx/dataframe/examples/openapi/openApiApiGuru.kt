@@ -1,10 +1,12 @@
 @file:ImportDataSchema(
     path = "src/main/resources/ApiGuruOpenApi.yaml",
     name = "ApiGuruOpenApiKsp",
+    enableExperimentalOpenApi = true,
 )
 @file:ImportDataSchema(
     path = "https://raw.githubusercontent.com/1Password/connect/aac5e44b27570036e6b56e9f5b2a398a824ae5fc/docs/openapi/spec.yaml",
     name = "OnePassword",
+    enableExperimentalOpenApi = true,
 )
 
 package org.jetbrains.kotlinx.dataframe.examples.openapi

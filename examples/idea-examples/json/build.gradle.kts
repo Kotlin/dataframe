@@ -20,6 +20,9 @@ repositories {
 dependencies {
     // implementation("org.jetbrains.kotlinx:dataframe:X.Y.Z")
     implementation(project(":"))
+
+    // explicitly depend on openApi
+    implementation(projects.dataframeOpenapi)
 }
 
 tasks.withType<KotlinCompile> {
@@ -53,4 +56,6 @@ dataframes {
         // name is still needed to get the full path
         name = "org.jetbrains.kotlinx.dataframe.examples.openapi.ApiGuruOpenApiGradle"
     }
+
+    enableExperimentalOpenApi = true
 }
