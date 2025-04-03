@@ -57,15 +57,6 @@ private const val DEFAULT_LIMIT = Int.MIN_VALUE
 private const val START_OF_READ_SQL_QUERY = "SELECT"
 
 /**
- * Constant representing the separator used to separate multiple SQL queries.
- *
- * This separator is used when multiple SQL queries need to be executed together.
- * Each query should be separated by this separator to indicate the end of one query
- * and the start of the next query.
- */
-private const val MULTIPLE_SQL_QUERY_SEPARATOR = ";"
-
-/**
  * Represents a column in a database table to keep all required meta-information.
  *
  * @property [name] the name of the column.
@@ -365,80 +356,94 @@ public fun Connection.readDataFrame(
         )
     }
 
-/** SQL query is accepted only if it starts from SELECT */
-private fun isValidSqlQuery(sqlQuery: String): Boolean {
-    val normalizedSqlQuery = sqlQuery.trim().uppercase()
-
-    // Check if the query starts with SELECT
-    if (!normalizedSqlQuery.startsWith("SELECT")) {
-        return false
-    }
-
-    // Check that the query does not contain forbidden symbols or constructions
-    val forbiddenPatterns = listOf(
-        ";",               // Separator for multiple SQL queries
-        "--",              // Single-line comments
-        "/*",              // Multi-line comments
-        "'''",             // Prevent triple quotes
-        "'",               // Single quotes
-        "\"",              // Unnecessary double quotes
-        " OR ",            // Logical operator for potential injections
-        "DROP",            // Command for dropping objects
-        "DELETE",          // Command for deleting data
-        "INSERT",          // Command for inserting data
-        "UPDATE",          // Command for updating data
-        "EXEC",            // Execute stored procedures
-        "EXECUTE",         // Alternative for EXEC
-        "CREATE",          // Command for creating objects
-        "ALTER",           // Command for altering structures
-        "GRANT",           // Command for granting permissions
-        "REVOKE",          // Command for revoking permissions
-        "MERGE"            // Command for data modification
-    )
-
-    // Check for the presence of forbidden patterns
-    for (pattern in forbiddenPatterns) {
-        if (normalizedSqlQuery.contains(pattern)) {
-            return false
-        }
-    }
-
-    // If all checks pass, the query is considered safe
-    return true
-}
-
-/** Validates if the given SQL table name is safe */
-private fun isValidTableName(tableName: String): Boolean {
-    val normalizedTableName = tableName.trim().uppercase()
-
-    // Disallow forbidden patterns or keywords
+/**
+ * Checks if a given string contains forbidden patterns or keywords.
+ * Logs a clear and friendly message if any forbidden pattern is found.
+ */
+private fun containsForbiddenPatterns(input: String): Boolean {
+    // List of forbidden patterns or commands
     val forbiddenPatterns = listOf(
         ";",               // Separator for SQL statements
         "--",              // Single-line comments
-        "/*",              // Multi-line comments
-        "DROP",            // Command for dropping objects
-        "DELETE",          // Command for deleting data
-        "INSERT",          // Command for inserting data
-        "UPDATE",          // Command for updating data
-        "EXEC",            // Command for executing stored procedures
-        "EXECUTE",         // Alternative for EXEC
-        "CREATE",          // Command for creating objects
-        "ALTER",           // Command for altering structures
-        "GRANT",           // Command for granting permissions
-        "REVOKE",          // Command for revoking permissions
-        "MERGE"            // Command for sophisticated data modifications
+        "/*",              // Start of multi-line comments
+        "*/",              // End of multi-line comments
+        "DROP", "DELETE", "INSERT", "UPDATE",
+        "EXEC", "EXECUTE", "CREATE", "ALTER",
+        "GRANT", "REVOKE", "MERGE" // Dangerous SQL commands
     )
 
-    // Ensure the table name does not contain forbidden patterns
     for (pattern in forbiddenPatterns) {
-        if (normalizedTableName.contains(pattern)) {
-            return false
+        if (input.contains(pattern)) {
+            logger.error { "Validation failed: The input contains a forbidden element '$pattern'. Please review the input: '$input'." }
+            return true
         }
     }
+    return false
+}
 
-    // Ensure the table name contains only valid characters
-    val tableNameRegex = Regex("^[A-Z0-9_]+$")
-    return tableNameRegex.matches(normalizedTableName)
+/**
+ * Validates if the SQL query is safe and starts with SELECT.
+ * Ensures proper syntax structure, checks for balanced quotes, and disallows dangerous commands or patterns.
+ */
+private fun isValidSqlQuery(sqlQuery: String): Boolean {
+    val normalizedSqlQuery = sqlQuery.trim().uppercase()
+
+    // Log the query being validated
+    logger.warn { "Validating SQL query: '$sqlQuery'" }
+
+    // Ensure the query starts with "SELECT"
+    if (!normalizedSqlQuery.startsWith("SELECT")) {
+        logger.error { "Validation failed: The SQL query must start with 'SELECT'. Given query: '$sqlQuery'." }
+        return false
+    }
+
+    // Validate against forbidden patterns
+    if (containsForbiddenPatterns(normalizedSqlQuery)) {
+        return false
+    }
+
+    // Check if there are balanced quotes (single and double)
+    val singleQuotes = sqlQuery.count { it == '\'' }
+    val doubleQuotes = sqlQuery.count { it == '"' }
+    if (singleQuotes % 2 != 0) {
+        logger.error { "Validation failed: Unbalanced single quotes in the SQL query. Please correct the query: '$sqlQuery'." }
+        return false
+    }
+    if (doubleQuotes % 2 != 0) {
+        logger.error { "Validation failed: Unbalanced double quotes in the SQL query. Please correct the query: '$sqlQuery'." }
+        return false
+    }
+
+    logger.warn { "SQL query validation succeeded for query: '$sqlQuery'." }
+    return true
+}
+
+/**
+ * Validates if the given SQL table name is safe and logs any validation violations.
+ */
+private fun isValidTableName(tableName: String): Boolean {
+    val normalizedTableName = tableName.trim().uppercase()
+
+    // Log the table name being validated
+    logger.warn { "Validating SQL table name: '$tableName'" }
+
+    // Validate against forbidden patterns
+    if (containsForbiddenPatterns(normalizedTableName)) {
+        return false
+    }
+
+    // Validate the table name structure: letters, numbers, underscores, and dots are allowed
+    val tableNameRegex = Regex("^[A-Z0-9_]+(\\.[A-Z0-9_]+)*$")
+    if (!tableNameRegex.matches(normalizedTableName)) {
+        logger.error {
+            "Validation failed: The table name contains invalid characters. " +
+                "Only letters, numbers, underscores, and dots are allowed. Provided name: '$tableName'."
+        }
+        return false
+    }
+
+    logger.warn { "Table name validation passed for table: '$tableName'." }
+    return true
 }
 
 /**

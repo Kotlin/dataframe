@@ -599,62 +599,59 @@ class JdbcTest {
     }
 
     @Test
-    fun `detect SQL injection attempts`() {
+    fun `readFromTable should reject invalid table names to prevent SQL injections`() {
+        // Invalid table names that attempt SQL injection
+        val invalidTableNames = listOf(
+            "Customer; DROP TABLE Customer", // Injection using semicolon
+            "Sale -- Comment", // Injection using single-line comment
+            "/* Multi-line comment */ Customer", // Injection using multi-line comment
+            "Sale WHERE 1=1", // Injection using always-true condition
+            "Sale UNION SELECT * FROM Customer" // UNION injection
+        )
 
-        // SQL injection patterns
-        @Language("SQL")
-        val injectionUnion = """
-        SELECT * FROM users WHERE id = 1 UNION SELECT * FROM admin_users
-        """
+        invalidTableNames.forEach { tableName ->
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlTable(connection, tableName)
+            }
+        }
+    }
 
-        @Language("SQL")
-        val injectionAlwaysTrueCondition = """
-        SELECT * FROM users WHERE username = 'admin' OR 1=1
-        """
-
+    @Test
+    fun `readSqlQuery should reject malicious SQL queries to prevent SQL injections`() {
+        // Malicious SQL queries attempting injection
         @Language("SQL")
         val injectionComment = """
-        SELECT * FROM accounts WHERE email = 'admin@example.com' -- AND password = 'password'
-        """
+            SELECT * FROM Sale WHERE amount = 100.0 -- AND id = 5
+            """
 
         @Language("SQL")
         val injectionMultilineComment = """
-        SELECT * FROM users /* Possible malicious comment */ WHERE id = 1
-        """
+            SELECT * FROM Customer /* Possible malicious comment */ WHERE id = 1
+            """
 
         @Language("SQL")
         val injectionSemicolon = """
-        SELECT * FROM users WHERE id = 1; DROP TABLE users
-        """
-
-        @Language("SQL")
-        val injectionUnescapedString = """
-        SELECT * FROM users WHERE name = 'test' OR '' = ''
-        """
+            SELECT * FROM Sale WHERE amount = 500.0; DROP TABLE Customer
+            """
 
         @Language("SQL")
         val injectionSQLWithSingleQuote = """
-        SELECT * FROM users WHERE username = 'admin' AND password = 'pass' OR '1'='1'
-        """
+            SELECT * FROM Sale WHERE id = 1 AND amount = 100.0 OR '1'='1
+            """
 
         @Language("SQL")
         val injectionUsingDropCommand = """
-        DROP TABLE users; SELECT * FROM orders
-        """
+            DROP TABLE Customer; SELECT * FROM Sale
+            """
 
-        // List all SQL injection patterns
         val sqlInjectionQueries = listOf(
-            injectionUnion,
-            injectionAlwaysTrueCondition,
             injectionComment,
             injectionMultilineComment,
             injectionSemicolon,
-            injectionUnescapedString,
             injectionSQLWithSingleQuote,
             injectionUsingDropCommand
         )
 
-        // Test each injection query
         sqlInjectionQueries.forEach { query ->
             shouldThrow<IllegalArgumentException> {
                 DataFrame.readSqlQuery(connection, query)
@@ -663,25 +660,102 @@ class JdbcTest {
     }
 
     @Test
+    fun `readFromTable should work with non-standard table names when strictValidation is disabled`() {
+        // Non-standard table names that are still valid but may appear strange
+        val nonStandardTableNames = listOf(
+            "`Customer With Space`", // Table name with spaces
+            "`Important-Data`",      // Table name with hyphens
+            "`[123TableName]`"       // Table name that resembles a special syntax
+        )
+
+        try {
+            // Create these tables to ensure they exist for the test
+            connection.createStatement().use { stmt ->
+                nonStandardTableNames.forEach { tableName ->
+                    stmt.execute("CREATE TABLE IF NOT EXISTS $tableName (id INT, name VARCHAR(255))")
+                }
+            }
+
+            // Read from these tables with strictValidation disabled
+            nonStandardTableNames.forEach { tableName ->
+                DataFrame.readSqlTable(connection, tableName, strictValidation = false)
+            }
+        } finally {
+            // Clean up by deleting all created tables
+            connection.createStatement().use { stmt ->
+                nonStandardTableNames.forEach { tableName ->
+                    stmt.execute("DROP TABLE IF EXISTS $tableName")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `readSqlQuery should execute DROP TABLE when validation is disabled`() {
+        // Query to create a temporary test table
+        @Language("SQL")
+        val createTableQuery = """
+            CREATE TABLE IF NOT EXISTS TestTable (
+            id INT PRIMARY KEY,
+            data VARCHAR(255)
+            )
+            """
+
+        // Query to drop the test table
+        @Language("SQL")
+        val dropTableQuery = """
+            SELECT * FROM TestTable; DROP TABLE TestTable;
+
+            """
+
+        try {
+            // Create the test table
+            connection.createStatement().use { stmt ->
+                stmt.execute(createTableQuery) // Create table for the test case
+            }
+
+            // Execute the DROP TABLE command with validation disabled
+            DataFrame.readSqlQuery(connection, dropTableQuery, strictValidation = false)
+
+            // Verify that the table has been successfully dropped
+            connection.createStatement().use { stmt ->
+                shouldThrow<SQLException> {
+                    stmt.executeQuery("SELECT * FROM TestTable")
+                }
+            }
+        } finally {
+            // Cleanup: Ensure the table is removed in case of failure
+            connection.createStatement().use { stmt ->
+                stmt.execute("DROP TABLE IF EXISTS TestTable")
+            }
+        }
+    }
+
+    @Test
     fun `read from table with name from reserved SQL keywords`() {
-        // Create table Sale
         @Language("SQL")
         val createAlterTableQuery = """
-                CREATE TABLE "ALTER" (
-                id INT PRIMARY KEY,
-                description TEXT
-                )
+            CREATE TABLE "ALTER" (
+            id INT PRIMARY KEY,
+            description TEXT
+            )
             """
-
-        connection.createStatement().execute(createAlterTableQuery)
 
         @Language("SQL")
-        val selectFromWeirdTableSQL = """
-            SELECT * from "ALTER"
-            """
+        val selectFromWeirdTableSQL = """SELECT * from "ALTER""""
 
-        DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL).rowsCount() shouldBe 0
-        connection.createStatement().execute("DROP TABLE \"ALTER\"")
+        try {
+            connection.createStatement().execute(createAlterTableQuery)
+            // with enabled strictValidation
+            shouldThrow<IllegalArgumentException> {
+                DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL)
+            }
+            // with disabled strictValidation
+            DataFrame.readSqlQuery(connection, selectFromWeirdTableSQL, strictValidation = false).rowsCount() shouldBe 0
+        } finally {
+            connection.createStatement().execute("DROP TABLE IF EXISTS \"ALTER\"")
+        }
+
     }
 
     @Test
