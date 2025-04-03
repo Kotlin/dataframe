@@ -144,7 +144,7 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
-    strictValidation: Boolean = true
+    strictValidation: Boolean = true,
 ): AnyFrame {
     if (strictValidation) {
         require(isValidTableName(tableName)) {
@@ -153,7 +153,6 @@ public fun DataFrame.Companion.readSqlTable(
     } else {
         logger.warn { "Strict validation is disabled. Make sure the table name '$tableName' is correct." }
     }
-
 
     val url = connection.metaData.url
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
@@ -339,7 +338,7 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
-            strictValidation
+            strictValidation,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -348,7 +347,7 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
-            strictValidation
+            strictValidation,
         )
 
         else -> throw IllegalArgumentException(
@@ -363,18 +362,29 @@ public fun Connection.readDataFrame(
 private fun containsForbiddenPatterns(input: String): Boolean {
     // List of forbidden patterns or commands
     val forbiddenPatterns = listOf(
-        ";",               // Separator for SQL statements
-        "--",              // Single-line comments
-        "/*",              // Start of multi-line comments
-        "*/",              // End of multi-line comments
-        "DROP", "DELETE", "INSERT", "UPDATE",
-        "EXEC", "EXECUTE", "CREATE", "ALTER",
-        "GRANT", "REVOKE", "MERGE" // Dangerous SQL commands
+        ";", // Separator for SQL statements
+        "--", // Single-line comments
+        "/*", // Start of multi-line comments
+        "*/", // End of multi-line comments
+        "DROP",
+        "DELETE",
+        "INSERT",
+        "UPDATE",
+        "EXEC",
+        "EXECUTE",
+        "CREATE",
+        "ALTER",
+        "GRANT",
+        "REVOKE",
+        "MERGE",
     )
 
     for (pattern in forbiddenPatterns) {
         if (input.contains(pattern)) {
-            logger.error { "Validation failed: The input contains a forbidden element '$pattern'. Please review the input: '$input'." }
+            logger.error {
+                "Validation failed: The input contains a forbidden element '$pattern'. " +
+                    "Please review the input: '$input'."
+            }
             return true
         }
     }
@@ -406,11 +416,17 @@ private fun isValidSqlQuery(sqlQuery: String): Boolean {
     val singleQuotes = sqlQuery.count { it == '\'' }
     val doubleQuotes = sqlQuery.count { it == '"' }
     if (singleQuotes % 2 != 0) {
-        logger.error { "Validation failed: Unbalanced single quotes in the SQL query. Please correct the query: '$sqlQuery'." }
+        logger.error {
+            "Validation failed: Unbalanced single quotes in the SQL query. " +
+                "Please correct the query: '$sqlQuery'."
+        }
         return false
     }
     if (doubleQuotes % 2 != 0) {
-        logger.error { "Validation failed: Unbalanced double quotes in the SQL query. Please correct the query: '$sqlQuery'." }
+        logger.error {
+            "Validation failed: Unbalanced double quotes in the SQL query. " +
+                "Please correct the query: '$sqlQuery'."
+        }
         return false
     }
 

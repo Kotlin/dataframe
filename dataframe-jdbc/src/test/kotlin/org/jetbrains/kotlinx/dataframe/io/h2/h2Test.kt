@@ -606,7 +606,7 @@ class JdbcTest {
             "Sale -- Comment", // Injection using single-line comment
             "/* Multi-line comment */ Customer", // Injection using multi-line comment
             "Sale WHERE 1=1", // Injection using always-true condition
-            "Sale UNION SELECT * FROM Customer" // UNION injection
+            "Sale UNION SELECT * FROM Customer", // UNION injection
         )
 
         invalidTableNames.forEach { tableName ->
@@ -649,7 +649,7 @@ class JdbcTest {
             injectionMultilineComment,
             injectionSemicolon,
             injectionSQLWithSingleQuote,
-            injectionUsingDropCommand
+            injectionUsingDropCommand,
         )
 
         sqlInjectionQueries.forEach { query ->
@@ -664,8 +664,8 @@ class JdbcTest {
         // Non-standard table names that are still valid but may appear strange
         val nonStandardTableNames = listOf(
             "`Customer With Space`", // Table name with spaces
-            "`Important-Data`",      // Table name with hyphens
-            "`[123TableName]`"       // Table name that resembles a special syntax
+            "`Important-Data`", // Table name with hyphens
+            "`[123TableName]`", // Table name that resembles a special syntax
         )
 
         try {
@@ -755,7 +755,6 @@ class JdbcTest {
         } finally {
             connection.createStatement().execute("DROP TABLE IF EXISTS \"ALTER\"")
         }
-
     }
 
     @Test
