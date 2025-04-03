@@ -23,7 +23,7 @@ include("core")
 include("examples:idea-examples:titanic")
 include("examples:idea-examples:movies")
 include("examples:idea-examples:youtube")
-include("examples:idea-examples:json")
+// include("examples:idea-examples:json") TODO
 
 val jupyterApiTCRepo: String by settings
 

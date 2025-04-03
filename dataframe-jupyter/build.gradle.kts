@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -27,6 +26,10 @@ dependencies {
     testImplementation(projects.dataframeCsv)
     testImplementation(projects.dataframeExcel)
     testImplementation(projects.dataframeJdbc)
+    // experimental
+    testImplementation(projects.dataframeOpenapiGenerator)
+    testImplementation(projects.dataframeOpenapi)
+
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
