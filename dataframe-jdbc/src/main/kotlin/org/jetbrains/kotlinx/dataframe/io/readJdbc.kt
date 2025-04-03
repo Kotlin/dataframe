@@ -115,6 +115,8 @@ public data class DbConnectionConfig(val url: String, val user: String = "", val
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the data from the SQL table.
  */
 public fun DataFrame.Companion.readSqlTable(
@@ -123,9 +125,10 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, tableName, limit, inferNullability, dbType)
+        return readSqlTable(connection, tableName, limit, inferNullability, dbType, strictValidation)
     }
 }
 
@@ -192,17 +195,21 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  */
+
 public fun DataFrame.Companion.readSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType)
+        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation)
     }
 }
 
@@ -218,6 +225,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  *
  * @see DriverManager.getConnection
@@ -228,10 +237,15 @@ public fun DataFrame.Companion.readSqlQuery(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame {
-    require(isValidSqlQuery(sqlQuery)) {
-        "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
-            "Also it should not contain any separators like `;`."
+    if (strictValidation) {
+        require(isValidSqlQuery(sqlQuery)) {
+            "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
+                "Also it should not contain any separators like `;`."
+        }
+    } else {
+        logger.warn { "Strict validation is disabled. Ensure the SQL query '$sqlQuery' is correct and safe." }
     }
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
@@ -259,6 +273,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [DbConnectionConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
+ * Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DbConnectionConfig.readDataFrame(
@@ -266,6 +282,7 @@ public fun DbConnectionConfig.readDataFrame(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -274,6 +291,7 @@ public fun DbConnectionConfig.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -282,6 +300,7 @@ public fun DbConnectionConfig.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation,
         )
 
         else -> throw IllegalArgumentException(
@@ -311,6 +330,8 @@ private fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [Connection].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
+ * Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun Connection.readDataFrame(
@@ -318,6 +339,7 @@ public fun Connection.readDataFrame(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -326,6 +348,7 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -334,6 +357,7 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation
         )
 
         else -> throw IllegalArgumentException(
