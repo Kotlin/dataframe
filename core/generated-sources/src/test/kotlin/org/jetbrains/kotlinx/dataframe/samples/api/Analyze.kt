@@ -54,7 +54,6 @@ import org.jetbrains.kotlinx.dataframe.api.stdOf
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
@@ -259,8 +258,8 @@ class Analyze : TestBase() {
     fun meanModes() {
         // SampleStart
         df.mean() // mean of values per every numeric column
-        df.mean(skipNA = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
-        df.meanFor(skipNA = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
+        df.mean(skipNaN = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
+        df.meanFor(skipNaN = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
         df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
         // SampleEnd
     }
@@ -304,7 +303,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun meanAggregationsSkipNA() {
         // SampleStart
-        df.mean(skipNA = true)
+        df.mean(skipNaN = true)
         // SampleEnd
     }
 
