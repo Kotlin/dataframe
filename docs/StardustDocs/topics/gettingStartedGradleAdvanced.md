@@ -128,8 +128,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%")
+
+    // experimental
     implementation("org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%")
     
+    // experimental
     // This artifact is only needed to directly call functions that generate @DataSchema code from OpenAPI specifications
     // It's used by Gradle and KSP plugins internally.
     // Your project needs dataframe-openapi to use generated code
@@ -149,7 +152,14 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%'
+
+    // experimental
     implementation 'org.jetbrains.kotlinx:dataframe-openapi:%dataFrameVersion%'
+
+    // experimental
+    // This artifact is only needed to directly call functions that generate @DataSchema code from OpenAPI specifications
+    // It's used by Gradle and KSP plugins internally.
+    // Your project needs dataframe-openapi to use generated code
     implementation 'org.jetbrains.kotlinx:dataframe-openapi-generator:%dataFrameVersion%'
 }
 ```

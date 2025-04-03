@@ -137,6 +137,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.jdbcOptions.set(schema.jdbcOptions)
             this.defaultPath.set(defaultPath)
             this.delimiters.set(delimiters)
+            this.enableExperimentalOpenApi.set(extension.enableExperimentalOpenApi)
         }
     }
 

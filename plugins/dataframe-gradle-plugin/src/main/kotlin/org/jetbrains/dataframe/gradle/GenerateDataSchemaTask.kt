@@ -65,6 +65,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:Input
     abstract val delimiters: SetProperty<Char>
 
+    @get:Input
+    abstract val enableExperimentalOpenApi: Property<Boolean>
+
     @Suppress("LeakingThis")
     @get:OutputFile
     val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
@@ -103,7 +106,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                         DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
                         DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                         DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
-                        else -> MarkerVisibility.IMPLICIT_PUBLIC
                     },
                     readDfMethod = null,
                     fieldNameNormalizer = NameNormalizer.from(delimiters),
@@ -115,7 +117,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         } else {
             val url = urlOf(data.get())
 
-            val formats = listOf(
+            val formats = listOfNotNull(
                 CsvDeephaven(delimiter = csvOptions.delimiter),
                 JSON(
                     typeClashTactic = jsonOptions.typeClashTactic,
@@ -125,7 +127,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 Excel(),
                 TsvDeephaven(),
                 ArrowFeather(),
-                OpenApi(),
+                if (enableExperimentalOpenApi.get()) OpenApi() else null,
             )
 
             // first try without creating dataframe
@@ -169,7 +171,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                     DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
                     DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                     DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
-                    else -> MarkerVisibility.IMPLICIT_PUBLIC
                 },
                 readDfMethod = readDfMethod,
                 fieldNameNormalizer = NameNormalizer.from(delimiters),
