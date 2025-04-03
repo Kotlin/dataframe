@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.floats.shouldBeNaN
 import io.kotest.matchers.shouldBe
