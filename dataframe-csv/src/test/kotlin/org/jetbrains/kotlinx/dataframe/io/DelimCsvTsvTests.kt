@@ -9,6 +9,9 @@ import io.kotest.matchers.shouldBe
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format.DateTimeFormat
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -23,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toStr
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.junit.After
@@ -32,6 +36,7 @@ import java.io.File
 import java.io.StringWriter
 import java.math.BigDecimal
 import java.net.URL
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
