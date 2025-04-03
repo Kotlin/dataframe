@@ -271,6 +271,7 @@ public fun <T> PivotGroupBy<T>.stdFor(
     ddof: Int = ddof_default,
 ): DataFrame<T> = stdFor(separate, skipNA, ddof) { columns.toColumnsSetOf() }
 
+@AccessApiOverload
 public fun <T, C : Number> PivotGroupBy<T>.stdFor(
     vararg columns: ColumnReference<C?>,
     separate: Boolean = false,
@@ -292,6 +293,7 @@ public fun <T> PivotGroupBy<T>.std(
     columns: ColumnsSelector<T, Number?>,
 ): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateAll(this, columns)
 
+@AccessApiOverload
 public fun <T> PivotGroupBy<T>.std(
     vararg columns: ColumnReference<Number?>,
     skipNA: Boolean = skipNaN_default,

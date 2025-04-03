@@ -356,7 +356,7 @@ Since [v0.3.9](https://github.com/Jolanrensen/KoDEx/releases/tag/v0.3.9) it's al
 exclude a whole file from the `sources.jar` by adding the annotation to the top of the file,
 like `@file:ExcludeFromSources`.
 
-## KoDEX Conventions in DataFrame
+## KoDEx Conventions in DataFrame
 
 ### Common Concepts and Definitions
 
