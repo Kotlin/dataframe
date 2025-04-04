@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
+import kotlin.reflect.KClass
+
 @Target(AnnotationTarget.CLASS)
 public annotation class HasSchema(val schemaArg: Int)
 
@@ -46,3 +48,9 @@ internal annotation class Check
  */
 @Target(AnnotationTarget.FUNCTION)
 internal annotation class AccessApiOverload
+
+/**
+ * Provides argument to `ToSpecificType` interpreter - to what type compiler plugin should convert selected columns
+ */
+@Target(AnnotationTarget.FUNCTION)
+public annotation class Converter<T : Any>(val klass: KClass<T>, val nullable: Boolean = false)
