@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.primitiveOrMixedNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
+import org.jetbrains.kotlinx.dataframe.util.MEAN_NO_SKIPNAN
 import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
@@ -274,5 +275,201 @@ public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
     skipNaN: Boolean = skipNaN_default,
     crossinline expression: RowExpression<T, R?>,
 ): DataFrame<T> = Aggregators.mean(skipNaN).aggregateOf(this, expression)
+
+// endregion
+
+// region binary compatibility
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun DataColumn<Number?>.mean(): Double = mean(skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public inline fun <T, reified R : Number> DataColumn<T>.meanOf(crossinline expression: (T) -> R?): Double =
+    meanOf(skipNaN = skipNaN_default, expression = expression)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun AnyRow.rowMean(): Double = rowMean(skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public inline fun <reified T : Number?> AnyRow.rowMeanOf(): Double = rowMeanOf<T>(skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> DataFrame<T>.mean(): DataRow<T> = mean(skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> DataFrame<T>.meanFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
+    meanFor(skipNaN = skipNaN_default, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> DataFrame<T>.meanFor(vararg columns: String): DataRow<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: ColumnReference<C?>): DataRow<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: KProperty<C?>): DataRow<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> DataFrame<T>.mean(columns: ColumnsSelector<T, C?>): Double =
+    mean(skipNaN = skipNaN_default, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> DataFrame<T>.mean(vararg columns: String): Double = mean(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> DataFrame<T>.mean(vararg columns: ColumnReference<C?>): Double =
+    mean(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>): Double =
+    mean(columns = columns, skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public inline fun <T, reified D : Number> DataFrame<T>.meanOf(crossinline expression: RowExpression<T, D?>): Double =
+    meanOf(skipNaN = skipNaN_default, expression = expression)
+
+@Refine
+@Interpretable("GroupByMean1")
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> Grouped<T>.mean(): DataFrame<T> = mean(skipNaN = skipNaN_default)
+
+@Refine
+@Interpretable("GroupByMean0")
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Grouped<T>.meanFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
+    meanFor(skipNaN = skipNaN_default, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> Grouped<T>.meanFor(vararg columns: String): DataFrame<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: KProperty<C?>): DataFrame<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default)
+
+@Refine
+@Interpretable("GroupByMean0")
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Grouped<T>.mean(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
+    mean(name, skipNaN = skipNaN_default, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> Grouped<T>.mean(vararg columns: String, name: String? = null): DataFrame<T> =
+    mean(columns = columns, name = name, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Grouped<T>.mean(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> =
+    mean(columns = columns, name = name, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Grouped<T>.mean(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
+    mean(columns = columns, name = name, skipNaN = skipNaN_default)
+
+@Refine
+@Interpretable("GroupByMeanOf")
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public inline fun <T, reified R : Number> Grouped<T>.meanOf(
+    name: String? = null,
+    crossinline expression: RowExpression<T, R?>,
+): DataFrame<T> = meanOf(name, skipNaN = skipNaN_default, expression = expression)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> Pivot<T>.mean(separate: Boolean = false): DataRow<T> =
+    mean(skipNaN = skipNaN_default, separate = separate)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Pivot<T>.meanFor(
+    separate: Boolean = false,
+    columns: ColumnsForAggregateSelector<T, C?>,
+): DataRow<T> = meanFor(skipNaN = skipNaN_default, separate = separate, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> Pivot<T>.meanFor(vararg columns: String, separate: Boolean = false): DataRow<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default, separate = separate)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Pivot<T>.meanFor(
+    vararg columns: ColumnReference<C?>,
+    separate: Boolean = false,
+): DataRow<T> = meanFor(columns = columns, skipNaN = skipNaN_default, separate = separate)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> Pivot<T>.meanFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataRow<T> =
+    meanFor(columns = columns, skipNaN = skipNaN_default, separate = separate)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, R : Number> Pivot<T>.mean(columns: ColumnsSelector<T, R?>): DataRow<T> =
+    mean(skipNaN = skipNaN_default, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public inline fun <T, reified R : Number> Pivot<T>.meanOf(crossinline expression: RowExpression<T, R?>): DataRow<T> =
+    meanOf(skipNaN = skipNaN_default, expression = expression)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false): DataFrame<T> = mean(separate, skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> PivotGroupBy<T>.meanFor(
+    separate: Boolean = false,
+    columns: ColumnsForAggregateSelector<T, C?>,
+): DataFrame<T> = meanFor(skipNaN = skipNaN_default, separate = separate, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> PivotGroupBy<T>.meanFor(vararg columns: String, separate: Boolean = false): DataFrame<T> =
+    meanFor(columns = columns, separate = separate, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> PivotGroupBy<T>.meanFor(
+    vararg columns: ColumnReference<C?>,
+    separate: Boolean = false,
+): DataFrame<T> = meanFor(columns = columns, separate = separate, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, C : Number> PivotGroupBy<T>.meanFor(
+    vararg columns: KProperty<C?>,
+    separate: Boolean = false,
+): DataFrame<T> = meanFor(columns = columns, separate = separate, skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, R : Number> PivotGroupBy<T>.mean(columns: ColumnsSelector<T, R?>): DataFrame<T> =
+    mean(skipNaN = skipNaN_default, columns = columns)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T> PivotGroupBy<T>.mean(vararg columns: String): DataFrame<T> =
+    mean(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: ColumnReference<R?>): DataFrame<T> =
+    mean(columns = columns, skipNaN = skipNaN_default)
+
+@AccessApiOverload
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: KProperty<R?>): DataFrame<T> =
+    mean(columns = columns, skipNaN = skipNaN_default)
+
+@Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
+public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
+    crossinline expression: RowExpression<T, R?>,
+): DataFrame<T> = meanOf(skipNaN = skipNaN_default, expression = expression)
 
 // endregion
