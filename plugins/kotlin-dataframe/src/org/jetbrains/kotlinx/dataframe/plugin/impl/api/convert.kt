@@ -1,11 +1,22 @@
 package org.jetbrains.kotlinx.dataframe.plugin.impl.api
 
+import org.jetbrains.kotlin.fir.declarations.getAnnotationByClassId
+import org.jetbrains.kotlin.fir.declarations.getBooleanArgument
+import org.jetbrains.kotlin.fir.declarations.getKClassArgument
+import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
+import org.jetbrains.kotlin.fir.references.toResolvedFunctionSymbol
+import org.jetbrains.kotlin.fir.types.ConeNullability
+import org.jetbrains.kotlin.fir.types.typeContext
+import org.jetbrains.kotlin.fir.types.withNullability
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
+import org.jetbrains.kotlinx.dataframe.plugin.extensions.wrap
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Absent
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractSchemaModificationInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Arguments
+import org.jetbrains.kotlinx.dataframe.plugin.impl.Interpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Present
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
@@ -17,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.enum
 import org.jetbrains.kotlinx.dataframe.plugin.impl.ignore
 import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.type
+import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
 
 internal class Convert0 : AbstractInterpreter<ConvertApproximation>() {
     val Arguments.columns: ColumnsResolver by arg()
@@ -139,4 +151,32 @@ internal class To0 : AbstractInterpreter<PluginDataFrameSchema>() {
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return convertImpl(receiver.schema, receiver.columns, typeArg0)
     }
+}
+
+internal abstract class AbstractToSpecificType : AbstractInterpreter<PluginDataFrameSchema>() {
+    val Arguments.functionCall: FirFunctionCall by arg(lens = Interpreter.Id)
+    val Arguments.receiver: ConvertApproximation by arg()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val converterAnnotation = functionCall.calleeReference.toResolvedFunctionSymbol()?.getAnnotationByClassId(Names.CONVERTER_ANNOTATION, session)
+        val to = converterAnnotation?.getKClassArgument(Name.identifier("klass"), session)
+        val nullable = converterAnnotation?.getBooleanArgument(Name.identifier("nullable"), session)
+        return if (to != null && nullable != null) {
+            val targetType = to.withNullability(ConeNullability.create(nullable), session.typeContext)
+            convertImpl(receiver.schema, receiver.columns, targetType.wrap())
+        } else {
+            PluginDataFrameSchema.EMPTY
+        }
+    }
+}
+
+internal class ToSpecificType : AbstractToSpecificType()
+
+internal class ToSpecificTypeZone : AbstractToSpecificType() {
+    val Arguments.zone by ignore()
+}
+
+internal class ToSpecificTypePattern : AbstractToSpecificType() {
+    val Arguments.pattern by ignore()
+    val Arguments.locale by ignore()
 }
