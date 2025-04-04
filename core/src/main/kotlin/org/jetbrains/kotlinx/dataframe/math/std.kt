@@ -7,25 +7,16 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 @Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <T : Number> Iterable<T?>.std(
-    type: KType,
-    skipNaN: Boolean = skipNaN_default,
-    ddof: Int = ddof_default,
-): Double {
+internal fun <T : Number> Sequence<T?>.std(type: KType, skipNaN: Boolean, ddof: Int): Double {
     if (type.isMarkedNullable) {
-        return when {
-            skipNaN -> filterNotNull().std(type = type.withNullability(false), skipNaN = true, ddof = ddof)
-            contains(null) -> Double.NaN
-            else -> std(type = type.withNullability(false), skipNaN = false, ddof = ddof)
-        }
+        error("Encountered nullable type ${renderType(type)} in std function. This should not occur.")
     }
-    return when (type.classifier) {
-        Double::class -> (this as Iterable<Double>).std(skipNaN, ddof)
+    return when (type) {
+        typeOf<Double>() -> (this as Iterable<Double>).std(skipNaN, ddof)
         Float::class -> (this as Iterable<Float>).std(skipNaN, ddof)
         Int::class, Short::class, Byte::class -> (this as Iterable<Int>).std(ddof)
         Long::class -> (this as Iterable<Long>).std(ddof)
@@ -44,20 +35,20 @@ internal val stdTypeConversion: CalculateReturnType = { _, _ ->
 
 @JvmName("doubleStd")
 internal fun Iterable<Double>.std(skipNaN: Boolean = skipNaN_default, ddof: Int = ddof_default): Double =
-    varianceAndMean(skipNaN)?.std(ddof) ?: Double.NaN
+    calculateBasicStatsOrNull(skipNaN)?.std(ddof) ?: Double.NaN
 
 @JvmName("floatStd")
 internal fun Iterable<Float>.std(skipNaN: Boolean = skipNaN_default, ddof: Int = ddof_default): Double =
-    varianceAndMean(skipNaN)?.std(ddof) ?: Double.NaN
+    calculateBasicStatsOrNull(skipNaN)?.std(ddof) ?: Double.NaN
 
 @JvmName("intStd")
-internal fun Iterable<Int>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
+internal fun Iterable<Int>.std(ddof: Int = ddof_default): Double = calculateBasicStatsOrNull().std(ddof)
 
 @JvmName("longStd")
-internal fun Iterable<Long>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
+internal fun Iterable<Long>.std(ddof: Int = ddof_default): Double = calculateBasicStatsOrNull().std(ddof)
 
 @JvmName("bigDecimalStd")
-internal fun Iterable<BigDecimal>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
+internal fun Iterable<BigDecimal>.std(ddof: Int = ddof_default): Double = calculateBasicStatsOrNull().std(ddof)
 
 @JvmName("bigIntegerStd")
-internal fun Iterable<BigInteger>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
+internal fun Iterable<BigInteger>.std(ddof: Int = ddof_default): Double = calculateBasicStatsOrNull().std(ddof)

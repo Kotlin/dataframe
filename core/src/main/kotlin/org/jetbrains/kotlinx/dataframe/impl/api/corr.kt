@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.isSuitableForCorr
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.math.varianceAndMean
+import org.jetbrains.kotlinx.dataframe.math.calculateBasicStatsOrNull
 import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.math.sqrt
 
@@ -51,7 +51,7 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
     }
 
     val stdMeans = cols.mapValues {
-        it.value.toList().varianceAndMean()
+        it.value.toList().calculateBasicStatsOrNull()
     }
 
     val cache = mutableMapOf<Pair<ColumnPath, ColumnPath>, Double>()
