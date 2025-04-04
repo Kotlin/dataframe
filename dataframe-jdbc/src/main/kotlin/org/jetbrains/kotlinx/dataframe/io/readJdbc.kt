@@ -57,15 +57,6 @@ private const val DEFAULT_LIMIT = Int.MIN_VALUE
 private const val START_OF_READ_SQL_QUERY = "SELECT"
 
 /**
- * Constant representing the separator used to separate multiple SQL queries.
- *
- * This separator is used when multiple SQL queries need to be executed together.
- * Each query should be separated by this separator to indicate the end of one query
- * and the start of the next query.
- */
-private const val MULTIPLE_SQL_QUERY_SEPARATOR = ";"
-
-/**
  * Represents a column in a database table to keep all required meta-information.
  *
  * @property [name] the name of the column.
@@ -115,6 +106,8 @@ public data class DbConnectionConfig(val url: String, val user: String = "", val
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the data from the SQL table.
  */
 public fun DataFrame.Companion.readSqlTable(
@@ -123,9 +116,10 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlTable(connection, tableName, limit, inferNullability, dbType)
+        return readSqlTable(connection, tableName, limit, inferNullability, dbType, strictValidation)
     }
 }
 
@@ -138,6 +132,8 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
+ * @param [strictValidation] if `true`, the method validates that the provided table name is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the data from the SQL table.
  *
  * @see DriverManager.getConnection
@@ -148,7 +144,16 @@ public fun DataFrame.Companion.readSqlTable(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame {
+    if (strictValidation) {
+        require(isValidTableName(tableName)) {
+            "The provided table name '$tableName' is invalid. Please ensure it matches a valid table name in the database schema."
+        }
+    } else {
+        logger.warn { "Strict validation is disabled. Make sure the table name '$tableName' is correct." }
+    }
+
     val url = connection.metaData.url
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
@@ -158,10 +163,10 @@ public fun DataFrame.Companion.readSqlTable(
         "SELECT * FROM $tableName"
     }
 
-    connection.createStatement().use { st ->
+    connection.prepareStatement(selectAllQuery).use { st ->
         logger.debug { "Connection with url:$url is established successfully." }
 
-        st.executeQuery(selectAllQuery).use { rs ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
@@ -180,17 +185,21 @@ public fun DataFrame.Companion.readSqlTable(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [dbConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  */
+
 public fun DataFrame.Companion.readSqlQuery(
     dbConfig: DbConnectionConfig,
     sqlQuery: String,
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame {
     DriverManager.getConnection(dbConfig.url, dbConfig.user, dbConfig.password).use { connection ->
-        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType)
+        return readSqlQuery(connection, sqlQuery, limit, inferNullability, dbType, strictValidation)
     }
 }
 
@@ -206,6 +215,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [connection].
+ * @param [strictValidation] if `true`, the method validates that the provided query is in a valid format.
+ *                           Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  *
  * @see DriverManager.getConnection
@@ -216,10 +227,15 @@ public fun DataFrame.Companion.readSqlQuery(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame {
-    require(isValid(sqlQuery)) {
-        "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
-            "Also it should not contain any separators like `;`."
+    if (strictValidation) {
+        require(isValidSqlQuery(sqlQuery)) {
+            "SQL query should start from SELECT and contain one query for reading data without any manipulation. " +
+                "Also it should not contain any separators like `;`."
+        }
+    } else {
+        logger.warn { "Strict validation is disabled. Ensure the SQL query '$sqlQuery' is correct and safe." }
     }
 
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
@@ -228,8 +244,8 @@ public fun DataFrame.Companion.readSqlQuery(
 
     logger.debug { "Executing SQL query: $internalSqlQuery" }
 
-    connection.createStatement().use { st ->
-        st.executeQuery(internalSqlQuery).use { rs ->
+    connection.prepareStatement(internalSqlQuery).use { st ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return fetchAndConvertDataFromResultSet(tableColumns, rs, determinedDbType, limit, inferNullability)
         }
@@ -247,6 +263,8 @@ public fun DataFrame.Companion.readSqlQuery(
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [DbConnectionConfig].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
+ * Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun DbConnectionConfig.readDataFrame(
@@ -254,6 +272,7 @@ public fun DbConnectionConfig.readDataFrame(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -262,6 +281,7 @@ public fun DbConnectionConfig.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -270,6 +290,7 @@ public fun DbConnectionConfig.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation,
         )
 
         else -> throw IllegalArgumentException(
@@ -299,6 +320,8 @@ private fun isSqlTableName(sqlQueryOrTableName: String): Boolean {
  * @param [inferNullability] indicates how the column nullability should be inferred.
  * @param [dbType] the type of database, could be a custom object, provided by user, optional, default is `null`,
  * in that case the [dbType] will be recognized from the [Connection].
+ * @param [strictValidation] if `true`, the method validates that the provided query or table name is in a valid format.
+ * Default is `true` for strict validation.
  * @return the DataFrame containing the result of the SQL query.
  */
 public fun Connection.readDataFrame(
@@ -306,6 +329,7 @@ public fun Connection.readDataFrame(
     limit: Int = DEFAULT_LIMIT,
     inferNullability: Boolean = true,
     dbType: DbType? = null,
+    strictValidation: Boolean = true,
 ): AnyFrame =
     when {
         isSqlQuery(sqlQueryOrTableName) -> DataFrame.readSqlQuery(
@@ -314,6 +338,7 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation,
         )
 
         isSqlTableName(sqlQueryOrTableName) -> DataFrame.readSqlTable(
@@ -322,6 +347,7 @@ public fun Connection.readDataFrame(
             limit,
             inferNullability,
             dbType,
+            strictValidation,
         )
 
         else -> throw IllegalArgumentException(
@@ -329,12 +355,111 @@ public fun Connection.readDataFrame(
         )
     }
 
-/** SQL query is accepted only if it starts from SELECT */
-private fun isValid(sqlQuery: String): Boolean {
+/**
+ * Checks if a given string contains forbidden patterns or keywords.
+ * Logs a clear and friendly message if any forbidden pattern is found.
+ */
+private fun containsForbiddenPatterns(input: String): Boolean {
+    // List of forbidden patterns or commands
+    val forbiddenPatterns = listOf(
+        ";", // Separator for SQL statements
+        "--", // Single-line comments
+        "/*", // Start of multi-line comments
+        "*/", // End of multi-line comments
+        "DROP",
+        "DELETE",
+        "INSERT",
+        "UPDATE",
+        "EXEC",
+        "EXECUTE",
+        "CREATE",
+        "ALTER",
+        "GRANT",
+        "REVOKE",
+        "MERGE",
+    )
+
+    for (pattern in forbiddenPatterns) {
+        if (input.contains(pattern)) {
+            logger.error {
+                "Validation failed: The input contains a forbidden element '$pattern'. " +
+                    "Please review the input: '$input'."
+            }
+            return true
+        }
+    }
+    return false
+}
+
+/**
+ * Validates if the SQL query is safe and starts with SELECT.
+ * Ensures proper syntax structure, checks for balanced quotes, and disallows dangerous commands or patterns.
+ */
+private fun isValidSqlQuery(sqlQuery: String): Boolean {
     val normalizedSqlQuery = sqlQuery.trim().uppercase()
 
-    return normalizedSqlQuery.startsWith(START_OF_READ_SQL_QUERY) &&
-        !normalizedSqlQuery.contains(MULTIPLE_SQL_QUERY_SEPARATOR)
+    // Log the query being validated
+    logger.warn { "Validating SQL query: '$sqlQuery'" }
+
+    // Ensure the query starts with "SELECT"
+    if (!normalizedSqlQuery.startsWith("SELECT")) {
+        logger.error { "Validation failed: The SQL query must start with 'SELECT'. Given query: '$sqlQuery'." }
+        return false
+    }
+
+    // Validate against forbidden patterns
+    if (containsForbiddenPatterns(normalizedSqlQuery)) {
+        return false
+    }
+
+    // Check if there are balanced quotes (single and double)
+    val singleQuotes = sqlQuery.count { it == '\'' }
+    val doubleQuotes = sqlQuery.count { it == '"' }
+    if (singleQuotes % 2 != 0) {
+        logger.error {
+            "Validation failed: Unbalanced single quotes in the SQL query. " +
+                "Please correct the query: '$sqlQuery'."
+        }
+        return false
+    }
+    if (doubleQuotes % 2 != 0) {
+        logger.error {
+            "Validation failed: Unbalanced double quotes in the SQL query. " +
+                "Please correct the query: '$sqlQuery'."
+        }
+        return false
+    }
+
+    logger.warn { "SQL query validation succeeded for query: '$sqlQuery'." }
+    return true
+}
+
+/**
+ * Validates if the given SQL table name is safe and logs any validation violations.
+ */
+private fun isValidTableName(tableName: String): Boolean {
+    val normalizedTableName = tableName.trim().uppercase()
+
+    // Log the table name being validated
+    logger.warn { "Validating SQL table name: '$tableName'" }
+
+    // Validate against forbidden patterns
+    if (containsForbiddenPatterns(normalizedTableName)) {
+        return false
+    }
+
+    // Validate the table name structure: letters, numbers, underscores, and dots are allowed
+    val tableNameRegex = Regex("^[A-Z0-9_]+(\\.[A-Z0-9_]+)*$")
+    if (!tableNameRegex.matches(normalizedTableName)) {
+        logger.error {
+            "Validation failed: The table name contains invalid characters. " +
+                "Only letters, numbers, underscores, and dots are allowed. Provided name: '$tableName'."
+        }
+        return false
+    }
+
+    logger.warn { "Table name validation passed for table: '$tableName'." }
+    return true
 }
 
 /**
@@ -571,8 +696,8 @@ public fun DataFrame.Companion.getSchemaForSqlTable(
     val sqlQuery = "SELECT * FROM $tableName"
     val selectFirstRowQuery = determinedDbType.sqlQueryLimit(sqlQuery, limit = 1)
 
-    connection.createStatement().use { st ->
-        st.executeQuery(selectFirstRowQuery).use { rs ->
+    connection.prepareStatement(selectFirstRowQuery).use { st ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, determinedDbType)
         }
@@ -616,8 +741,8 @@ public fun DataFrame.Companion.getSchemaForSqlQuery(
 ): DataFrameSchema {
     val determinedDbType = dbType ?: extractDBTypeFromConnection(connection)
 
-    connection.createStatement().use { st ->
-        st.executeQuery(sqlQuery).use { rs ->
+    connection.prepareStatement(sqlQuery).use { st ->
+        st.executeQuery().use { rs ->
             val tableColumns = getTableColumnsMetadata(rs)
             return buildSchemaByTableColumns(tableColumns, determinedDbType)
         }
