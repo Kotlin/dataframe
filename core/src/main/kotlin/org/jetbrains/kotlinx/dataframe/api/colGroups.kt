@@ -178,8 +178,8 @@ public interface ColGroupsColumnsSelectionDsl {
  * @return A [TransformableColumnSet] containing the column groups that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun ColumnsResolver<*>.columnGroupsInternal(
-    filter: (ColumnGroup<*>) -> Boolean,
+internal inline fun ColumnsResolver<*>.columnGroupsInternal(
+    crossinline filter: (ColumnGroup<*>) -> Boolean,
 ): TransformableColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) } as TransformableColumnSet<AnyRow>
 
 // endregion

@@ -52,7 +52,7 @@ public fun AnyRow.allNA(): Boolean = owner.columns().all { it[index()].isNA }
 // region DataFrame
 
 /** Returns `true` if all [rows] match the given [predicate] or [rows] is empty. */
-public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
+public inline fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
 
 // endregion
 
@@ -1204,6 +1204,7 @@ public interface AllColumnsSelectionDsl<out _UNUSED> {
  * else it simply returns a [(transformable) ColumnSet][TransformableColumnSet] from [this]
  * (like when [this] is a [ColumnSet]).
  */
+@PublishedApi
 internal fun ColumnsResolver<*>.allColumnsInternal(removePaths: Boolean = false): TransformableColumnSet<*> =
     transform { cols ->
         if (this is SingleColumn<*> && cols.singleOrNull()?.isColumnGroup() == true) {
@@ -1225,7 +1226,8 @@ internal fun ColumnsResolver<*>.allColumnsInternal(removePaths: Boolean = false)
  * @param colByPredicate a function that takes a ColumnWithPath and returns true if the column matches the predicate, false otherwise
  * @return a new ColumnSet containing all columns after the first column that matches the given predicate
  */
-internal fun ColumnsResolver<*>.allAfterInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+@PublishedApi
+internal inline fun ColumnsResolver<*>.allAfterInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = false
     return colsInternal {
         if (take) {
@@ -1243,7 +1245,8 @@ internal fun ColumnsResolver<*>.allAfterInternal(colByPredicate: ColumnFilter<*>
  * @param colByPredicate the predicate used to determine if a column should be included in the resulting set
  * @return a column set containing all columns that satisfy the predicate
  */
-internal fun ColumnsResolver<*>.allFromInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+@PublishedApi
+internal inline fun ColumnsResolver<*>.allFromInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = false
     return colsInternal {
         if (take) {
@@ -1261,7 +1264,8 @@ internal fun ColumnsResolver<*>.allFromInternal(colByPredicate: ColumnFilter<*>)
  * @param colByPredicate the predicate function used to determine if a column should be included in the returned ColumnSet
  * @return a new ColumnSet containing all columns that come before the first column that satisfies the given predicate
  */
-internal fun ColumnsResolver<*>.allBeforeInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+@PublishedApi
+internal inline fun ColumnsResolver<*>.allBeforeInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = true
     return colsInternal {
         if (!take) {
@@ -1279,7 +1283,8 @@ internal fun ColumnsResolver<*>.allBeforeInternal(colByPredicate: ColumnFilter<*
  * @param colByPredicate a predicate function that takes a ColumnWithPath and returns true if the column satisfies the desired condition.
  * @return a ColumnSet containing all columns up to the first column that satisfies the given predicate.
  */
-internal fun ColumnsResolver<*>.allUpToInternal(colByPredicate: ColumnFilter<*>): ColumnSet<*> {
+@PublishedApi
+internal inline fun ColumnsResolver<*>.allUpToInternal(crossinline colByPredicate: ColumnFilter<*>): ColumnSet<*> {
     var take = true
     return colsInternal {
         if (!take) {

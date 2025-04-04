@@ -72,6 +72,7 @@ internal fun <T> DataColumn<T>.duplicateValuesImpl(n: Int, indicesSorted: Iterab
         }
     }.cast()
 
+@PublishedApi
 internal fun <T> DataFrame<T>.duplicateRowsImpl(n: Int, indicesSorted: Iterable<Int>): DataFrame<T> =
     columns()
         .map { it.duplicateValuesImpl(n, indicesSorted) }
