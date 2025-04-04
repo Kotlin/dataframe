@@ -200,6 +200,9 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Take2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TakeLast0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TakeLast1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TakeLast2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToSpecificType
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToSpecificTypePattern
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToSpecificTypeZone
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCols0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCols1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.WithoutNulls0
@@ -290,6 +293,9 @@ internal inline fun <reified T> String.load(): T {
         "Convert2" -> Convert2()
         "Convert6" -> Convert6()
         "To0" -> To0()
+        "ToSpecificType" -> ToSpecificType()
+        "ToSpecificTypeZone" -> ToSpecificTypeZone()
+        "ToSpecificTypePattern" -> ToSpecificTypePattern()
         "With0" -> With0()
         "PerRowCol" -> PerRowCol()
         "Explode0" -> Explode0()
