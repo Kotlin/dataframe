@@ -80,6 +80,11 @@ internal const val ROW_MIN_OR_NULL = "`rowMinOrNull` is deprecated in favor of `
 internal const val ROW_MAX = "`rowMax` is deprecated in favor of `rowMaxOf`. $MESSAGE_0_16"
 internal const val ROW_MAX_OR_NULL = "`rowMaxOrNull` is deprecated in favor of `rowMaxOfOrNull`. $MESSAGE_0_16"
 
+internal const val SUM_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
+internal const val MAX_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
+internal const val MIN_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
+internal const val MEAN_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
