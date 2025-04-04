@@ -185,6 +185,7 @@ public fun <T, C> Split<T, DataFrame<C>>.into(
 public fun <T, A, B> Split<T, Pair<A, B>>.into(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
+@AccessApiOverload
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.into(
     firstCol: ColumnAccessor<A>,
     secondCol: ColumnAccessor<B>,

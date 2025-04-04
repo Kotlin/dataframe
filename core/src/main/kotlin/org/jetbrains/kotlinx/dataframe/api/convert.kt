@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Converter
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
@@ -284,13 +285,38 @@ public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = c
 
 // region convert URL
 
-public fun <T, R : URL?> Convert<T, R>.toIFrame(
+@JvmName("toIframeFromUrlNullable")
+@Refine
+@Converter(IFRAME::class, nullable = true)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, URL?>.toIFrame(
+    border: Boolean = false,
+    width: Int? = null,
+    height: Int? = null,
+): DataFrame<T> = to { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
+
+@JvmName("toIframeFromUrl")
+@Refine
+@Converter(IFRAME::class, nullable = false)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, URL>.toIFrame(
     border: Boolean = false,
     width: Int? = null,
     height: Int? = null,
 ): DataFrame<T> = to { it.map { IFRAME(it.toString(), border, width, height) } }
 
-public fun <T, R : URL?> Convert<T, R>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
+@JvmName("toImgFromUrlNullable")
+@Refine
+@Converter(IMG::class, nullable = true)
+@Interpretable("ToSpecificType")
+public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
+    to { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
+
+@JvmName("toImgFromUrl")
+@Refine
+@Converter(IMG::class, nullable = false)
+@Interpretable("ToSpecificType")
+public fun <T, R : URL?> Convert<T, URL>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
     to { it.map { IMG(it.toString(), width, height) } }
 
 // endregion
@@ -302,7 +328,17 @@ public fun DataColumn<String>.convertToURL(): DataColumn<URL> = map { URL(it) }
 @JvmName("convertToURLFromStringNullable")
 public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let { URL(it) } }
 
-public fun <T, R : String?> Convert<T, R>.toURL(): DataFrame<T> = to { it.convertToURL() }
+@JvmName("toUrlFromStringNullable")
+@Refine
+@Converter(URL::class, nullable = true)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = to { it.convertToURL() }
+
+@JvmName("toUrlFromString")
+@Refine
+@Converter(URL::class, nullable = false)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, String>.toURL(): DataFrame<T> = to { it.convertToURL() }
 
 // endregion
 
@@ -313,7 +349,17 @@ public fun DataColumn<String>.convertToInstant(): DataColumn<Instant> = map { In
 @JvmName("convertToInstantFromStringNullable")
 public fun DataColumn<String?>.convertToInstant(): DataColumn<Instant?> = map { it?.let { Instant.parse(it) } }
 
-public fun <T, R : String?> Convert<T, R>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
+@JvmName("toInstantFromStringNullable")
+@Refine
+@Converter(Instant::class, nullable = true)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
+
+@JvmName("toInstantFromString")
+@Refine
+@Converter(Instant::class, nullable = false)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
 
 // endregion
 
@@ -352,17 +398,51 @@ public fun DataColumn<String?>.convertToLocalDate(
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") } }
 }
 
+@JvmName("toLocalDateFromTLongNullable")
+@Refine
+@Converter(LocalDate::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Long?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    to { it.convertToLocalDate(zone) }
+
 @JvmName("toLocalDateFromTLong")
-public fun <T, R : Long?> Convert<T, R>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+@Refine
+@Converter(LocalDate::class, nullable = false)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Long>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalDate(zone) }
 
 @JvmName("toLocalDateFromTInt")
-public fun <T, R : Int?> Convert<T, R>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+@Refine
+@Converter(LocalDate::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Int?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalDate(zone) }
 
-public fun <T, R : String?> Convert<T, R>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
+@JvmName("toLocalDateFromTIntNullable")
+@Refine
+@Converter(LocalDate::class, nullable = false)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Int>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    to { it.convertToLocalDate(zone) }
+
+@JvmName("toLocalDateFromStringNullable")
+@Refine
+@Converter(LocalDate::class, nullable = true)
+@Interpretable("ToSpecificTypePattern")
+public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
     to { it.convertToLocalDate(pattern, locale) }
 
+@JvmName("toLocalDateFromString")
+@Refine
+@Converter(LocalDate::class, nullable = false)
+@Interpretable("ToSpecificTypePattern")
+public fun <T> Convert<T, String>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
+    to { it.convertToLocalDate(pattern, locale) }
+
+@Refine
+@Converter(LocalDate::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = to { it.convertTo<LocalDate>() }
 
 // endregion
@@ -402,17 +482,51 @@ public fun DataColumn<String?>.convertToLocalTime(
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") } }
 }
 
+@JvmName("toLocalTimeFromTLongNullable")
+@Refine
+@Converter(LocalTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Long?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    to { it.convertToLocalTime(zone) }
+
 @JvmName("toLocalTimeFromTLong")
-public fun <T, R : Long?> Convert<T, R>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+@Refine
+@Converter(LocalTime::class, nullable = false)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Long>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    to { it.convertToLocalTime(zone) }
+
+@JvmName("toLocalTimeFromTIntNullable")
+@Refine
+@Converter(LocalTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Int?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalTime(zone) }
 
 @JvmName("toLocalTimeFromTInt")
-public fun <T, R : Int?> Convert<T, R>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+@Refine
+@Converter(LocalTime::class, nullable = false)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Int>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalTime(zone) }
 
-public fun <T, R : String?> Convert<T, R>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
+@JvmName("toLocalTimeFromStringNullable")
+@Refine
+@Converter(LocalTime::class, nullable = true)
+@Interpretable("ToSpecificTypePattern")
+public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
     to { it.convertToLocalTime(pattern, locale) }
 
+@JvmName("toLocalTimeFromString")
+@Refine
+@Converter(LocalTime::class, nullable = false)
+@Interpretable("ToSpecificTypePattern")
+public fun <T> Convert<T, String>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
+    to { it.convertToLocalTime(pattern, locale) }
+
+@Refine
+@Converter(LocalTime::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = to { it.convertTo<LocalTime>() }
 
 // endregion
@@ -460,65 +574,155 @@ public fun DataColumn<String?>.convertToLocalDateTime(
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") } }
 }
 
+@JvmName("toLocalDateTimeFromTLongNullable")
+@Refine
+@Converter(LocalDateTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Long?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    to { it.convertToLocalDateTime(zone) }
+
 @JvmName("toLocalDateTimeFromTLong")
-public fun <T, R : Long?> Convert<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+@Refine
+@Converter(LocalDateTime::class, nullable = false)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Long>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    to { it.convertToLocalDateTime(zone) }
+
+@JvmName("toLocalDateTimeFromTInstantNullable")
+@Refine
+@Converter(LocalDateTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Instant?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalDateTime(zone) }
 
 @JvmName("toLocalDateTimeFromTInstant")
-public fun <T, R : Instant?> Convert<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+@Refine
+@Converter(LocalDateTime::class, nullable = false)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Instant>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+    to { it.convertToLocalDateTime(zone) }
+
+@JvmName("toLocalDateTimeFromTIntNullable")
+@Refine
+@Converter(LocalDateTime::class, nullable = true)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Int?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalDateTime(zone) }
 
 @JvmName("toLocalDateTimeFromTInt")
-public fun <T, R : Int?> Convert<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
+@Refine
+@Converter(LocalDateTime::class, nullable = false)
+@Interpretable("ToSpecificTypeZone")
+public fun <T> Convert<T, Int>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
     to { it.convertToLocalDateTime(zone) }
 
-public fun <T, R : String?> Convert<T, R>.toLocalDateTime(
-    pattern: String? = null,
-    locale: Locale? = null,
-): DataFrame<T> = to { it.convertToLocalDateTime(pattern, locale) }
+@JvmName("toLocalDateTimeFromStringNullable")
+@Refine
+@Converter(LocalDateTime::class, nullable = true)
+@Interpretable("ToSpecificTypePattern")
+public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
+    to { it.convertToLocalDateTime(pattern, locale) }
 
+@JvmName("toLocalDateTimeFromString")
+@Refine
+@Converter(LocalDateTime::class, nullable = false)
+@Interpretable("ToSpecificTypePattern")
+public fun <T> Convert<T, String>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
+    to { it.convertToLocalDateTime(pattern, locale) }
+
+@Refine
+@Converter(LocalDateTime::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = to { it.convertTo<LocalDateTime>() }
 
 // endregion
 
 @JvmName("toIntTAny")
+@Refine
+@Converter(Int::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toInt(): DataFrame<T> = to<Int>()
 
+@Refine
+@Converter(Int::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toInt(): DataFrame<T> = to<Int?>()
 
 @JvmName("toLongTAny")
+@Refine
+@Converter(Long::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toLong(): DataFrame<T> = to<Long>()
 
+@Refine
+@Converter(Long::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toLong(): DataFrame<T> = to<Long?>()
 
 @JvmName("toStrTAny")
+@Refine
+@Converter(String::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toStr(): DataFrame<T> = to<String>()
 
+@Refine
+@Converter(String::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toStr(): DataFrame<T> = to<String?>()
 
 @JvmName("toDoubleTAny")
+@Refine
+@Converter(Double::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toDouble(): DataFrame<T> = to<Double>()
 
+@Refine
+@Converter(Double::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toDouble(): DataFrame<T> = to<Double?>()
 
 @JvmName("toFloatTAny")
+@Refine
+@Converter(Float::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toFloat(): DataFrame<T> = to<Float>()
 
+@Refine
+@Converter(Float::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
 
 @JvmName("toBigDecimalTAny")
+@Refine
+@Converter(BigDecimal::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
 
+@Refine
+@Converter(BigDecimal::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
 
 @JvmName("toBigIntegerTAny")
+@Refine
+@Converter(BigInteger::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toBigInteger(): DataFrame<T> = to<BigInteger>()
 
+@Refine
+@Converter(BigInteger::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
 
 @JvmName("toBooleanTAny")
+@Refine
+@Converter(Boolean::class, nullable = false)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toBoolean(): DataFrame<T> = to<Boolean>()
 
+@Refine
+@Converter(Boolean::class, nullable = true)
+@Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toBoolean(): DataFrame<T> = to<Boolean?>()
 
 public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =

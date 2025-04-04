@@ -101,6 +101,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("convertToShortcuts.kt")
+  public void testConvertToShortcuts() {
+    runTest("testData/box/convertToShortcuts.kt");
+  }
+
+  @Test
   @TestMetadata("convert_to.kt")
   public void testConvert_to() {
     runTest("testData/box/convert_to.kt");
