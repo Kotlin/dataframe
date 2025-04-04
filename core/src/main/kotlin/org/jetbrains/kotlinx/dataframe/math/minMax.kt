@@ -58,7 +58,7 @@ private fun <T : Comparable<T>> Sequence<T>.bestOrNull(
         error(
             "Encountered non-comparable type ${
                 renderType(type)
-            } in $name function. Only self-comparable types are supported.",
+            } in $name function. Try converting the values to the same type `T : Comparable<T>`.",
         )
     }
 
