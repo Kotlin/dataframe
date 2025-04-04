@@ -83,6 +83,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("concatWithKeys.kt")
+  public void testConcatWithKeys() {
+    runTest("testData/box/concatWithKeys.kt");
+  }
+
+  @Test
   @TestMetadata("conflictingJvmDeclarations.kt")
   public void testConflictingJvmDeclarations() {
     runTest("testData/box/conflictingJvmDeclarations.kt");

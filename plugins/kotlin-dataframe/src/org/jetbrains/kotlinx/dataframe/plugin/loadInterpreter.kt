@@ -101,6 +101,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnRange
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConcatWithKeys
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf3
@@ -209,6 +210,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.WithoutNulls0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.WithoutNulls1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.WithoutNulls2
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
+
 
 internal fun FirFunctionCall.loadInterpreter(session: FirSession): Interpreter<*>? {
     val interpreter = Stdlib.interpreter(this)
@@ -463,6 +465,7 @@ internal inline fun <reified T> String.load(): T {
         "GroupByStdOf" -> GroupByStdOf()
         "DataFrameXs" -> DataFrameXs()
         "GroupByXs" -> GroupByXs()
+        "ConcatWithKeys" -> ConcatWithKeys()
         else -> error("$this")
     } as T
 }
