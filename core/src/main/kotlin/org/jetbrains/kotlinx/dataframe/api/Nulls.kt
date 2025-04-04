@@ -22,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.NaN
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.typeClass
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -98,8 +100,30 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Up
 
 // endregion
 
+/** Is only `true` if [this] is [Double.NaN] or [Float.NaN]. */
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
 
+/**
+ * Returns `true` if [this] is considered NA.
+ * "NA", in DataFrame, roughly means `null` or `NaN`.
+ *
+ * Overload of `isNA` with contract support.
+ *
+ * @see NA
+ */
+@JvmName("isNaWithContract")
+@Suppress("NOTHING_TO_INLINE")
+@OptIn(ExperimentalContracts::class)
+internal inline fun <T : Any?> T.isNA(): Boolean {
+    contract { returns(false) implies (this@isNA != null) }
+    return isNA
+}
+
+/**
+ * Is `true` if [this] is considered NA.
+ * "NA", in DataFrame, roughly means `null` or `NaN`.
+ * @see NA
+ */
 internal inline val Any?.isNA: Boolean
     get() = when (this) {
         null -> true
@@ -112,10 +136,22 @@ internal inline val Any?.isNA: Boolean
 
 internal inline val AnyCol.canHaveNaN: Boolean get() = typeClass.let { it == Double::class || it == Float::class }
 
+/**
+ * Is `true` when [this] column can have [NA] values.
+ * @see NA
+ */
 internal inline val AnyCol.canHaveNA: Boolean get() = hasNulls() || canHaveNaN || kind() != ColumnKind.Value
 
+/**
+ * Is `true` when [this] is `null` or [Double.NaN].
+ * @see NA
+ */
 internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
 
+/**
+ * Is `true` when [this] is `null` or [Float.NaN].
+ * @see NA
+ */
 internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 
 // region fillNaNs

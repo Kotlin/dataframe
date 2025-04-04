@@ -74,6 +74,12 @@ internal const val TO_LEFT_REPLACE = "this.toStart()"
 internal const val TO_RIGHT = "This `toRight` overload will be removed in favor of `toEnd`. $MESSAGE_0_16"
 internal const val TO_RIGHT_REPLACE = "this.toEnd()"
 
+internal const val ROW_MIN = "`rowMin` is deprecated in favor of `rowMinOf`. $MESSAGE_0_16"
+internal const val ROW_MIN_OR_NULL = "`rowMinOrNull` is deprecated in favor of `rowMinOfOrNull`. $MESSAGE_0_16"
+
+internal const val ROW_MAX = "`rowMax` is deprecated in favor of `rowMaxOf`. $MESSAGE_0_16"
+internal const val ROW_MAX_OR_NULL = "`rowMaxOrNull` is deprecated in favor of `rowMaxOfOrNull`. $MESSAGE_0_16"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17

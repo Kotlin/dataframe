@@ -18,6 +18,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.NaN
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.typeClass
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -299,6 +301,14 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Up
 // endregion
 
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
+
+@JvmName("isNaWithContract")
+@Suppress("NOTHING_TO_INLINE")
+@OptIn(ExperimentalContracts::class)
+internal inline fun <T : Any?> T.isNA(): Boolean {
+    contract { returns(false) implies (this@isNA != null) }
+    return isNA
+}
 
 internal inline val Any?.isNA: Boolean
     get() = when (this) {
