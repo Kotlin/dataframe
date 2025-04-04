@@ -62,9 +62,9 @@ class DescribeTests {
             nulls shouldBe 0
             top shouldBe 1
             freq shouldBe 1
-            this.mean.shouldBeNaN()
+            mean.shouldBeNaN()
             std.shouldBeNaN()
-            min shouldBe 1.0 // TODO should be NaN too?
+            min.isNaN shouldBe true
             p25 shouldBe 1.75
             median shouldBe 3.0
             p75.isNaN shouldBe true
