@@ -64,10 +64,10 @@ public fun AnyRow.rowMinOrNull(): Any? = error(ROW_MIN_OR_NULL)
 @Deprecated(ROW_MIN, level = DeprecationLevel.ERROR)
 public fun AnyRow.rowMin(): Any = error(ROW_MIN)
 
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMinOfOrNull(skipNaN: Boolean = skipNaN_default): T? =
-    Aggregators.min<T>(skipNaN).aggregateOfRow(this) { colsOf<T>() }
+public inline fun <reified T : Comparable<T>> AnyRow.rowMinOfOrNull(skipNaN: Boolean = skipNaN_default): T? =
+    Aggregators.min<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMinOf(skipNaN: Boolean = skipNaN_default): T & Any =
+public inline fun <reified T : Comparable<T>> AnyRow.rowMinOf(skipNaN: Boolean = skipNaN_default): T =
     rowMinOfOrNull<T>(skipNaN).suggestIfNull("rowMinOf")
 
 // endregion
@@ -460,8 +460,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNul
     minOfOrNull(skipNaN = skipNaN_default, selector = selector)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMinOfOrNull(): T? =
-    rowMinOfOrNull(skipNaN = skipNaN_default)
+public inline fun <reified T : Comparable<T>> AnyRow.rowMinOfOrNull(): T? = rowMinOfOrNull<T>(skipNaN = skipNaN_default)
 
 @Deprecated(MIN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMinOf(): T & Any = rowMinOf(skipNaN = skipNaN_default)
