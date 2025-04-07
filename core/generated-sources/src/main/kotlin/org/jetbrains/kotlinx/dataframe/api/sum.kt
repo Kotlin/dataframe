@@ -29,6 +29,7 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /* TODO KDocs
@@ -37,7 +38,7 @@ import kotlin.reflect.typeOf
  * The return type is always the same as the input type (never null), except for `Byte` and `Short`,
  * which are converted to `Int`.
  * Empty input will result in 0 in the supplied number type.
- * For mixed primitive number types, [TwoStepNumbersAggregator] unifies the numbers before calculating the sum.
+ * For mixed primitive number types, the aggregator unifies the numbers before calculating the sum.
  */
 
 // region DataColumn
@@ -50,25 +51,26 @@ public fun DataColumn<Byte?>.sum(): Int = Aggregators.sum(false).aggregateSingle
 
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNumber")
-public fun <T : Number> DataColumn<T?>.sum(skipNaN: Boolean = skipNaN_default): T =
-    Aggregators.sum(skipNaN).aggregateSingleColumn(this) as T
+public fun <T : Number?> DataColumn<T>.sum(skipNaN: Boolean = skipNaN_default): T & Any =
+    Aggregators.sum(skipNaN).aggregateSingleColumn(this) as (T & Any)
 
 @JvmName("sumOfShort")
 @OverloadResolutionByLambdaReturnType
-public fun <C> DataColumn<C>.sumOf(expression: (C) -> Short?): Int =
+public inline fun <C, reified V : Short?> DataColumn<C>.sumOf(crossinline expression: (C) -> V): Int =
     Aggregators.sum(false).aggregateOf(this, expression) as Int
 
 @JvmName("sumOfByte")
 @OverloadResolutionByLambdaReturnType
-public fun <C> DataColumn<C>.sumOf(expression: (C) -> Byte?): Int =
+public inline fun <C, reified V : Byte?> DataColumn<C>.sumOf(crossinline expression: (C) -> V): Int =
     Aggregators.sum(false).aggregateOf(this, expression) as Int
 
+@Suppress("UNCHECKED_CAST")
 @JvmName("sumOfNumber")
 @OverloadResolutionByLambdaReturnType
-public inline fun <C, reified V : Number> DataColumn<C>.sumOf(
+public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
     skipNaN: Boolean = skipNaN_default,
-    crossinline expression: (C) -> V?,
-): V = Aggregators.sum(skipNaN).aggregateOf(this, expression) as V
+    crossinline expression: (C) -> V,
+): V & Any = Aggregators.sum(skipNaN).aggregateOf(this, expression) as (V & Any)
 
 // endregion
 
@@ -77,30 +79,36 @@ public inline fun <C, reified V : Number> DataColumn<C>.sumOf(
 public fun AnyRow.rowSum(skipNaN: Boolean = skipNaN_default): Number =
     Aggregators.sum(skipNaN).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfShort")
-public inline fun <reified T : Short?> AnyRow.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
+public inline fun <reified T : Short> AnyRow.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfByte")
-public inline fun <reified T : Byte?> AnyRow.rowSumOf(_kClass: KClass<Byte> = Byte::class): Int =
+public inline fun <reified T : Byte> AnyRow.rowSumOf(_kClass: KClass<Byte> = Byte::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfInt")
-public inline fun <reified T : Int?> AnyRow.rowSumOf(_kClass: KClass<Int> = Int::class): Int =
+public inline fun <reified T : Int> AnyRow.rowSumOf(_kClass: KClass<Int> = Int::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfLong")
-public inline fun <reified T : Long?> AnyRow.rowSumOf(_kClass: KClass<Long> = Long::class): Long =
+public inline fun <reified T : Long> AnyRow.rowSumOf(_kClass: KClass<Long> = Long::class): Long =
     rowSumOf(typeOf<T>(), false) as Long
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfFloat")
-public inline fun <reified T : Float?> AnyRow.rowSumOf(
+public inline fun <reified T : Float> AnyRow.rowSumOf(
     skipNaN: Boolean = skipNaN_default,
     _kClass: KClass<Float> = Float::class,
 ): Float = rowSumOf(typeOf<T>(), skipNaN) as Float
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfDouble")
-public inline fun <reified T : Double?> AnyRow.rowSumOf(
+public inline fun <reified T : Double> AnyRow.rowSumOf(
     skipNaN: Boolean = skipNaN_default,
     _kClass: KClass<Double> = Double::class,
 ): Double = rowSumOf(typeOf<T>(), skipNaN) as Double
@@ -110,7 +118,9 @@ public fun AnyRow.rowSumOf(type: KType, skipNaN: Boolean = skipNaN_default): Num
     require(type.isPrimitiveOrMixedNumber()) {
         "Type $type is not a primitive number type. Mean only supports primitive number types."
     }
-    return Aggregators.sum(skipNaN).aggregateOfRow(this) { colsOf(type) }
+    return Aggregators.sum(skipNaN).aggregateOfRow(this) {
+        colsOf(type.withNullability(true))
+    }
 }
 // endregion
 
@@ -119,57 +129,58 @@ public fun AnyRow.rowSumOf(type: KType, skipNaN: Boolean = skipNaN_default): Num
 public fun <T> DataFrame<T>.sum(skipNaN: Boolean = skipNaN_default): DataRow<T> =
     sumFor(skipNaN, primitiveOrMixedNumberColumns())
 
-public fun <T, C : Number> DataFrame<T>.sumFor(
+public fun <T, C : Number?> DataFrame<T>.sumFor(
     skipNaN: Boolean = skipNaN_default,
-    columns: ColumnsForAggregateSelector<T, C?>,
+    columns: ColumnsForAggregateSelector<T, C>,
 ): DataRow<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.sumFor(vararg columns: String, skipNaN: Boolean = skipNaN_default): DataRow<T> =
     sumFor(skipNaN) { columns.toColumnsSetOf() }
 
 @AccessApiOverload
-public fun <T, C : Number> DataFrame<T>.sumFor(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> DataFrame<T>.sumFor(
+    vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaN_default,
 ): DataRow<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
 @AccessApiOverload
-public fun <T, C : Number> DataFrame<T>.sumFor(
-    vararg columns: KProperty<C?>,
+public fun <T, C : Number?> DataFrame<T>.sumFor(
+    vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaN_default,
 ): DataRow<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
 @JvmName("sumShort")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataFrame<T>.sum(columns: ColumnsSelector<T, Short?>): Int =
+public fun <T, C : Short?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int =
     Aggregators.sum(false).aggregateAll(this, columns) as Int
 
 @JvmName("sumByte")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataFrame<T>.sum(columns: ColumnsSelector<T, Byte?>): Int =
+public fun <T, C : Byte?> DataFrame<T>.sum(columns: ColumnsSelector<T, C>): Int =
     Aggregators.sum(false).aggregateAll(this, columns) as Int
 
+@Suppress("UNCHECKED_CAST")
 @JvmName("sumNumber")
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified C : Number> DataFrame<T>.sum(
+public fun <T, C : Number?> DataFrame<T>.sum(
     skipNaN: Boolean = skipNaN_default,
-    noinline columns: ColumnsSelector<T, C?>,
-): C = Aggregators.sum(skipNaN).aggregateAll(this, columns) as C
+    columns: ColumnsSelector<T, C>,
+): C & Any = Aggregators.sum(skipNaN).aggregateAll(this, columns) as (C & Any)
 
 @JvmName("sumShort")
 @AccessApiOverload
-public fun <T> DataFrame<T>.sum(vararg columns: ColumnReference<Short?>): Int = sum { columns.toColumnSet() }
+public fun <T, C : Short?> DataFrame<T>.sum(vararg columns: ColumnReference<C>): Int = sum { columns.toColumnSet() }
 
 @JvmName("sumByte")
 @AccessApiOverload
-public fun <T> DataFrame<T>.sum(vararg columns: ColumnReference<Byte?>): Int = sum { columns.toColumnSet() }
+public fun <T, C : Byte?> DataFrame<T>.sum(vararg columns: ColumnReference<C>): Int = sum { columns.toColumnSet() }
 
 @JvmName("sumNumber")
 @AccessApiOverload
-public inline fun <T, reified C : Number> DataFrame<T>.sum(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> DataFrame<T>.sum(
+    vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaN_default,
-): C = sum(skipNaN) { columns.toColumnSet() }
+): C & Any = sum(skipNaN) { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.sum(vararg columns: String, skipNaN: Boolean = skipNaN_default): Number =
     sum(skipNaN) { columns.toColumnsSetOf<Number?>() }
@@ -184,27 +195,28 @@ public fun <T> DataFrame<T>.sum(vararg columns: KProperty<Byte?>): Int = sum { c
 
 @JvmName("sumNumber")
 @AccessApiOverload
-public inline fun <T, reified C : Number> DataFrame<T>.sum(
+public fun <T, C : Number?> DataFrame<T>.sum(
     skipNaN: Boolean = skipNaN_default,
-    vararg columns: KProperty<C?>,
-): C = sum(skipNaN) { columns.toColumnSet() }
+    vararg columns: KProperty<C>,
+): C & Any = sum(skipNaN) { columns.toColumnSet() }
 
 @JvmName("sumOfShort")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataFrame<T>.sumOf(expression: RowExpression<T, Short?>): Int =
+public inline fun <T, reified C : Short?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): Int =
     Aggregators.sum(false).aggregateOf(this, expression) as Int
 
 @JvmName("sumOfByte")
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataFrame<T>.sumOf(expression: RowExpression<T, Byte?>): Int =
+public inline fun <T, reified C : Byte?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): Int =
     Aggregators.sum(false).aggregateOf(this, expression) as Int
 
+@Suppress("UNCHECKED_CAST")
 @JvmName("sumOfNumber")
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified C : Number> DataFrame<T>.sumOf(
+public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(
     skipNaN: Boolean = skipNaN_default,
-    crossinline expression: RowExpression<T, C?>,
-): C = Aggregators.sum(skipNaN).aggregateOf(this, expression) as C
+    crossinline expression: RowExpression<T, C>,
+): C & Any = Aggregators.sum(skipNaN).aggregateOf(this, expression) as (C & Any)
 
 // endregion
 
@@ -216,32 +228,32 @@ public fun <T> Grouped<T>.sum(skipNaN: Boolean = skipNaN_default): DataFrame<T> 
 
 @Refine
 @Interpretable("GroupBySum0")
-public fun <T, C : Number> Grouped<T>.sumFor(
+public fun <T, C : Number?> Grouped<T>.sumFor(
     skipNaN: Boolean = skipNaN_default,
-    columns: ColumnsForAggregateSelector<T, C?>,
+    columns: ColumnsForAggregateSelector<T, C>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.sumFor(vararg columns: String, skipNaN: Boolean = skipNaN_default): DataFrame<T> =
     sumFor(skipNaN) { columns.toNumberColumns() }
 
 @AccessApiOverload
-public fun <T, C : Number> Grouped<T>.sumFor(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> Grouped<T>.sumFor(
+    vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
 @AccessApiOverload
-public fun <T, C : Number> Grouped<T>.sumFor(
-    vararg columns: KProperty<C?>,
+public fun <T, C : Number?> Grouped<T>.sumFor(
+    vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sumFor(skipNaN) { columns.toColumnSet() }
 
 @Refine
 @Interpretable("GroupBySum0")
-public fun <T, C : Number> Grouped<T>.sum(
+public fun <T, C : Number?> Grouped<T>.sum(
     name: String? = null,
     skipNaN: Boolean = skipNaN_default,
-    columns: ColumnsSelector<T, C?>,
+    columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateAll(this, name, columns)
 
 public fun <T> Grouped<T>.sum(
@@ -251,25 +263,25 @@ public fun <T> Grouped<T>.sum(
 ): DataFrame<T> = sum(name, skipNaN) { columns.toNumberColumns() }
 
 @AccessApiOverload
-public fun <T, C : Number> Grouped<T>.sum(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> Grouped<T>.sum(
+    vararg columns: ColumnReference<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sum(name, skipNaN) { columns.toColumnSet() }
 
 @AccessApiOverload
-public fun <T, C : Number> Grouped<T>.sum(
-    vararg columns: KProperty<C?>,
+public fun <T, C : Number?> Grouped<T>.sum(
+    vararg columns: KProperty<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sum(name, skipNaN) { columns.toColumnSet() }
 
 @Refine
 @Interpretable("GroupBySumOf")
-public inline fun <T, reified R : Number> Grouped<T>.sumOf(
+public inline fun <T, reified R : Number?> Grouped<T>.sumOf(
     resultName: String? = null,
     skipNaN: Boolean = skipNaN_default,
-    crossinline expression: RowExpression<T, R?>,
+    crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateOf(this, resultName, expression)
 
 // endregion
@@ -279,10 +291,10 @@ public inline fun <T, reified R : Number> Grouped<T>.sumOf(
 public fun <T> Pivot<T>.sum(separate: Boolean = false, skipNaN: Boolean = skipNaN_default): DataRow<T> =
     sumFor(separate, skipNaN, primitiveOrMixedNumberColumns())
 
-public fun <T, R : Number> Pivot<T>.sumFor(
+public fun <T, R : Number?> Pivot<T>.sumFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaN_default,
-    columns: ColumnsForAggregateSelector<T, R?>,
+    columns: ColumnsForAggregateSelector<T, R>,
 ): DataRow<T> = delegate { sumFor(separate, skipNaN, columns) }
 
 public fun <T> Pivot<T>.sumFor(
@@ -292,40 +304,40 @@ public fun <T> Pivot<T>.sumFor(
 ): DataRow<T> = sumFor(separate, skipNaN) { columns.toNumberColumns() }
 
 @AccessApiOverload
-public fun <T, C : Number> Pivot<T>.sumFor(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> Pivot<T>.sumFor(
+    vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaN_default,
 ): DataRow<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
 @AccessApiOverload
-public fun <T, C : Number> Pivot<T>.sumFor(
-    vararg columns: KProperty<C?>,
+public fun <T, C : Number?> Pivot<T>.sumFor(
+    vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaN_default,
 ): DataRow<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
-public fun <T, C : Number> Pivot<T>.sum(
+public fun <T, C : Number?> Pivot<T>.sum(
     skipNaN: Boolean = skipNaN_default,
-    columns: ColumnsSelector<T, C?>,
+    columns: ColumnsSelector<T, C>,
 ): DataRow<T> = delegate { sum(skipNaN, columns) }
 
 public fun <T> Pivot<T>.sum(vararg columns: String, skipNaN: Boolean = skipNaN_default): DataRow<T> =
     sum(skipNaN) { columns.toNumberColumns() }
 
 @AccessApiOverload
-public fun <T, C : Number> Pivot<T>.sum(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> Pivot<T>.sum(
+    vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaN_default,
 ): DataRow<T> = sum(skipNaN) { columns.toColumnSet() }
 
 @AccessApiOverload
-public fun <T, C : Number> Pivot<T>.sum(vararg columns: KProperty<C?>, skipNaN: Boolean = skipNaN_default): DataRow<T> =
+public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>, skipNaN: Boolean = skipNaN_default): DataRow<T> =
     sum(skipNaN) { columns.toColumnSet() }
 
-public inline fun <T, reified R : Number> Pivot<T>.sumOf(
+public inline fun <T, reified R : Number?> Pivot<T>.sumOf(
     skipNaN: Boolean = skipNaN_default,
-    crossinline expression: RowExpression<T, R?>,
+    crossinline expression: RowExpression<T, R>,
 ): DataRow<T> = delegate { sumOf(skipNaN, expression) }
 
 // endregion
@@ -335,10 +347,10 @@ public inline fun <T, reified R : Number> Pivot<T>.sumOf(
 public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false, skipNaN: Boolean = skipNaN_default): DataFrame<T> =
     sumFor(separate, skipNaN, primitiveOrMixedNumberColumns())
 
-public fun <T, R : Number> PivotGroupBy<T>.sumFor(
+public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaN_default,
-    columns: ColumnsForAggregateSelector<T, R?>,
+    columns: ColumnsForAggregateSelector<T, R>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.sumFor(
@@ -348,42 +360,42 @@ public fun <T> PivotGroupBy<T>.sumFor(
 ): DataFrame<T> = sumFor(separate, skipNaN) { columns.toNumberColumns() }
 
 @AccessApiOverload
-public fun <T, C : Number> PivotGroupBy<T>.sumFor(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
+    vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
 @AccessApiOverload
-public fun <T, C : Number> PivotGroupBy<T>.sumFor(
-    vararg columns: KProperty<C?>,
+public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
+    vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sumFor(separate, skipNaN) { columns.toColumnSet() }
 
-public fun <T, C : Number> PivotGroupBy<T>.sum(
+public fun <T, C : Number?> PivotGroupBy<T>.sum(
     skipNaN: Boolean = skipNaN_default,
-    columns: ColumnsSelector<T, C?>,
+    columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.sum(vararg columns: String, skipNaN: Boolean = skipNaN_default): DataFrame<T> =
     sum(skipNaN) { columns.toNumberColumns() }
 
 @AccessApiOverload
-public fun <T, C : Number> PivotGroupBy<T>.sum(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> PivotGroupBy<T>.sum(
+    vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sum(skipNaN) { columns.toColumnSet() }
 
 @AccessApiOverload
-public fun <T, C : Number> PivotGroupBy<T>.sum(
-    vararg columns: KProperty<C?>,
+public fun <T, C : Number?> PivotGroupBy<T>.sum(
+    vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaN_default,
 ): DataFrame<T> = sum(skipNaN) { columns.toColumnSet() }
 
-public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(
+public inline fun <T, reified R : Number?> PivotGroupBy<T>.sumOf(
     skipNaN: Boolean = skipNaN_default,
-    crossinline expression: RowExpression<T, R?>,
+    crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = Aggregators.sum(skipNaN).aggregateOf(this, expression)
 
 // endregion
@@ -393,11 +405,11 @@ public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(
 @Suppress("UNCHECKED_CAST")
 @JvmName("sumNumber")
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T : Number> DataColumn<T?>.sum(): T = sum(skipNaN = skipNaN_default)
+public fun <T : Number?> DataColumn<T>.sum(): T = sum(skipNaN = skipNaN_default)
 
 @JvmName("sumOfNumber")
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <C, reified V : Number> DataColumn<C>.sumOf(crossinline expression: (C) -> V?): V =
+public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(crossinline expression: (C) -> V): V & Any =
     sumOf(skipNaN = skipNaN_default, expression = expression)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -420,7 +432,7 @@ public fun AnyRow.rowSumOf(type: KType): Number = rowSumOf(type, skipNaN = skipN
 public fun <T> DataFrame<T>.sum(): DataRow<T> = sum(skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> =
+public fun <T, C : Number?> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelector<T, C>): DataRow<T> =
     sumFor(skipNaN = skipNaN_default, columns = columns)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -429,24 +441,24 @@ public fun <T> DataFrame<T>.sumFor(vararg columns: String): DataRow<T> =
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C?>): DataRow<T> =
+public fun <T, C : Number?> DataFrame<T>.sumFor(vararg columns: ColumnReference<C>): DataRow<T> =
     sumFor(columns = columns, skipNaN = skipNaN_default)
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: KProperty<C?>): DataRow<T> =
+public fun <T, C : Number?> DataFrame<T>.sumFor(vararg columns: KProperty<C>): DataRow<T> =
     sumFor(columns = columns, skipNaN = skipNaN_default)
 
 @JvmName("sumNumber")
 @OverloadResolutionByLambdaReturnType
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Number> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C?>): C =
+public inline fun <T, reified C : Number?> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C>): C =
     sum(skipNaN = skipNaN_default, columns = columns)
 
 @JvmName("sumNumber")
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: ColumnReference<C?>): C =
+public inline fun <T, reified C : Number?> DataFrame<T>.sum(vararg columns: ColumnReference<C>): C & Any =
     sum(columns = columns, skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -455,13 +467,13 @@ public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum(columns = 
 @JvmName("sumNumber")
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C =
+public inline fun <T, reified C : Number?> DataFrame<T>.sum(vararg columns: KProperty<C>): C & Any =
     sum(skipNaN = skipNaN_default, columns = columns)
 
 @JvmName("sumOfNumber")
 @OverloadResolutionByLambdaReturnType
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified C : Number> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C?>): C =
+public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): C & Any =
     sumOf(skipNaN = skipNaN_default, expression = expression)
 
 @Refine
@@ -472,7 +484,7 @@ public fun <T> Grouped<T>.sum(): DataFrame<T> = sum(skipNaN = skipNaN_default)
 @Refine
 @Interpretable("GroupBySum0")
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> =
+public fun <T, C : Number?> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C>): DataFrame<T> =
     sumFor(skipNaN = skipNaN_default, columns = columns)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -481,18 +493,18 @@ public fun <T> Grouped<T>.sumFor(vararg columns: String): DataFrame<T> =
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>): DataFrame<T> =
+public fun <T, C : Number?> Grouped<T>.sumFor(vararg columns: ColumnReference<C>): DataFrame<T> =
     sumFor(columns = columns, skipNaN = skipNaN_default)
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> =
+public fun <T, C : Number?> Grouped<T>.sumFor(vararg columns: KProperty<C>): DataFrame<T> =
     sumFor(columns = columns, skipNaN = skipNaN_default)
 
 @Refine
 @Interpretable("GroupBySum0")
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Grouped<T>.sum(name: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> =
+public fun <T, C : Number?> Grouped<T>.sum(name: String? = null, columns: ColumnsSelector<T, C>): DataFrame<T> =
     sum(name, skipNaN = skipNaN_default, columns = columns)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -501,29 +513,29 @@ public fun <T> Grouped<T>.sum(vararg columns: String, name: String? = null): Dat
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Grouped<T>.sum(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> =
+public fun <T, C : Number?> Grouped<T>.sum(vararg columns: ColumnReference<C>, name: String? = null): DataFrame<T> =
     sum(columns = columns, name = name, skipNaN = skipNaN_default)
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Grouped<T>.sum(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> =
+public fun <T, C : Number?> Grouped<T>.sum(vararg columns: KProperty<C>, name: String? = null): DataFrame<T> =
     sum(columns = columns, name = name, skipNaN = skipNaN_default)
 
 @Refine
 @Interpretable("GroupBySumOf")
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Number> Grouped<T>.sumOf(
+public inline fun <T, reified R : Number?> Grouped<T>.sumOf(
     resultName: String? = null,
-    crossinline expression: RowExpression<T, R?>,
+    crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = sumOf(resultName, skipNaN = skipNaN_default, expression = expression)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> Pivot<T>.sum(separate: Boolean = false): DataRow<T> = sum(separate, skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Number> Pivot<T>.sumFor(
+public fun <T, R : Number?> Pivot<T>.sumFor(
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, R?>,
+    columns: ColumnsForAggregateSelector<T, R>,
 ): DataRow<T> = sumFor(separate, skipNaN = skipNaN_default, columns = columns)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -532,18 +544,18 @@ public fun <T> Pivot<T>.sumFor(vararg columns: String, separate: Boolean = false
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Pivot<T>.sumFor(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> Pivot<T>.sumFor(
+    vararg columns: ColumnReference<C>,
     separate: Boolean = false,
 ): DataRow<T> = sumFor(columns = columns, separate = separate, skipNaN = skipNaN_default)
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Pivot<T>.sumFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataRow<T> =
+public fun <T, C : Number?> Pivot<T>.sumFor(vararg columns: KProperty<C>, separate: Boolean = false): DataRow<T> =
     sumFor(columns = columns, separate = separate, skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Pivot<T>.sum(columns: ColumnsSelector<T, C?>): DataRow<T> =
+public fun <T, C : Number?> Pivot<T>.sum(columns: ColumnsSelector<T, C>): DataRow<T> =
     sum(skipNaN = skipNaN_default, columns = columns)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -551,25 +563,25 @@ public fun <T> Pivot<T>.sum(vararg columns: String): DataRow<T> = sum(columns = 
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Pivot<T>.sum(vararg columns: ColumnReference<C?>): DataRow<T> =
+public fun <T, C : Number?> Pivot<T>.sum(vararg columns: ColumnReference<C>): DataRow<T> =
     sum(columns = columns, skipNaN = skipNaN_default)
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> Pivot<T>.sum(vararg columns: KProperty<C?>): DataRow<T> =
+public fun <T, C : Number?> Pivot<T>.sum(vararg columns: KProperty<C>): DataRow<T> =
     sum(columns = columns, skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression: RowExpression<T, R?>): DataRow<T> =
+public inline fun <T, reified R : Number?> Pivot<T>.sumOf(crossinline expression: RowExpression<T, R>): DataRow<T> =
     sumOf(skipNaN = skipNaN_default, expression = expression)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> PivotGroupBy<T>.sum(separate: Boolean = false): DataFrame<T> = sum(separate, skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, R : Number> PivotGroupBy<T>.sumFor(
+public fun <T, R : Number?> PivotGroupBy<T>.sumFor(
     separate: Boolean = false,
-    columns: ColumnsForAggregateSelector<T, R?>,
+    columns: ColumnsForAggregateSelector<T, R>,
 ): DataFrame<T> = sumFor(separate, skipNaN = skipNaN_default, columns = columns)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -578,20 +590,20 @@ public fun <T> PivotGroupBy<T>.sumFor(vararg columns: String, separate: Boolean 
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> PivotGroupBy<T>.sumFor(
-    vararg columns: ColumnReference<C?>,
+public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
+    vararg columns: ColumnReference<C>,
     separate: Boolean = false,
 ): DataFrame<T> = sumFor(columns = columns, separate = separate, skipNaN = skipNaN_default)
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> PivotGroupBy<T>.sumFor(
-    vararg columns: KProperty<C?>,
+public fun <T, C : Number?> PivotGroupBy<T>.sumFor(
+    vararg columns: KProperty<C>,
     separate: Boolean = false,
 ): DataFrame<T> = sumFor(columns = columns, separate = separate, skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> PivotGroupBy<T>.sum(columns: ColumnsSelector<T, C?>): DataFrame<T> =
+public fun <T, C : Number?> PivotGroupBy<T>.sum(columns: ColumnsSelector<T, C>): DataFrame<T> =
     sum(skipNaN = skipNaN_default, columns = columns)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
@@ -600,17 +612,17 @@ public fun <T> PivotGroupBy<T>.sum(vararg columns: String): DataFrame<T> =
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: ColumnReference<C?>): DataFrame<T> =
+public fun <T, C : Number?> PivotGroupBy<T>.sum(vararg columns: ColumnReference<C>): DataFrame<T> =
     sum(columns = columns, skipNaN = skipNaN_default)
 
 @AccessApiOverload
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public fun <T, C : Number> PivotGroupBy<T>.sum(vararg columns: KProperty<C?>): DataFrame<T> =
+public fun <T, C : Number?> PivotGroupBy<T>.sum(vararg columns: KProperty<C>): DataFrame<T> =
     sum(columns = columns, skipNaN = skipNaN_default)
 
 @Deprecated(SUM_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(
-    crossinline expression: RowExpression<T, R?>,
+public inline fun <T, reified R : Number?> PivotGroupBy<T>.sumOf(
+    crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = sumOf(skipNaN = skipNaN_default, expression = expression)
 
 // endregion
