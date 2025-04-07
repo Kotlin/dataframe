@@ -4,7 +4,10 @@ import org.jetbrains.jupyter.parser.JupyterParser
 import org.jetbrains.jupyter.parser.notebook.CodeCell
 import org.jetbrains.jupyter.parser.notebook.Output
 import org.jetbrains.kotlinx.dataframe.BuildConfig
+import org.jetbrains.kotlinx.jupyter.exceptions.causesSequence
+import org.jetbrains.kotlinx.jupyter.repl.result.EvalResultEx
 import org.junit.Assume
+import org.junit.AssumptionViolatedException
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -100,6 +103,22 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             ),
         )
 
+    @Test
+    fun json() =
+        exampleTest(
+            dir = "json",
+            notebookName = "KeyValueAndOpenApi",
+            cellClause = CellClause {
+                // skip OOM cells
+                it.metadata.tags?.contains("skiptest") != true
+            },
+            replacer = CodeReplacer.byMap(
+                testFile("json", "api_guru_list.json"),
+                testFile("json", "apiGuruMetrics.json"),
+                testFile("json", "ApiGuruOpenApi.yaml"),
+            ),
+        )
+
     private fun doTest(
         notebookPath: String,
         replacer: CodeReplacer,
@@ -120,8 +139,24 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
                 val codeToExecute = replacer.replace(code)
 
                 // println("Executing code:\n$codeToExecute")
-                val cellResult = execRendered(codeToExecute)
+                val cellResult = execEx(codeToExecute)
+                if (cellResult is EvalResultEx.AbstractError) {
+                    throw cellResult.error
+                }
+                require(cellResult is EvalResultEx.Success)
+
                 // println(cellResult)
+            }
+        } catch (e: Exception) {
+            if (e.causesSequence()
+                    .filterIsInstance<IllegalStateException>()
+                    .any { it.message?.contains("null DefinitelyNotNullType for") == true }
+            ) {
+                // Issue #1116: https://github.com/Kotlin/dataframe/issues/1116
+                // Cannot finish test until this is solved, so treat this test as "ignored"
+                throw AssumptionViolatedException("Test skipped due to issue #1116")
+            } else {
+                throw e
             }
         } finally {
             cleanup()

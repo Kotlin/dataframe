@@ -61,6 +61,7 @@ class DataSchemaGenerator(
         val jsonOptions: JsonOptions,
         val jdbcOptions: JdbcOptions,
         val isJdbc: Boolean = false,
+        val enableExperimentalOpenApi: Boolean = false,
     )
 
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
@@ -95,6 +96,7 @@ class DataSchemaGenerator(
                     jsonOptions = jsonOptions,
                     jdbcOptions = jdbcOptions,
                     isJdbc = true,
+                    enableExperimentalOpenApi = enableExperimentalOpenApi,
                 )
             }
 
@@ -127,6 +129,7 @@ class DataSchemaGenerator(
             csvOptions = csvOptions,
             jsonOptions = jsonOptions,
             jdbcOptions = jdbcOptions,
+            enableExperimentalOpenApi = enableExperimentalOpenApi,
         )
     }
 
@@ -154,7 +157,7 @@ class DataSchemaGenerator(
         val schemaFile =
             codeGenerator.createNewFile(Dependencies(true, importStatement.origin), packageName, "$name.Generated")
 
-        val formats = listOf(
+        val formats = listOfNotNull(
             CsvDeephaven(delimiter = importStatement.csvOptions.delimiter),
             JSON(
                 typeClashTactic = importStatement.jsonOptions.typeClashTactic,
@@ -163,7 +166,7 @@ class DataSchemaGenerator(
             Excel(),
             TsvDeephaven(),
             ArrowFeather(),
-            OpenApi(),
+            if (importStatement.enableExperimentalOpenApi) OpenApi() else null,
         )
 
         // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450

@@ -25,7 +25,7 @@ class AnimalsTests {
 
     @Test
     fun `ignore nans`() {
-        df.mean("age", skipNA = true) shouldBe 3.4375
+        df.mean("age", skipNaN = true) shouldBe 3.4375
     }
 
     @Test

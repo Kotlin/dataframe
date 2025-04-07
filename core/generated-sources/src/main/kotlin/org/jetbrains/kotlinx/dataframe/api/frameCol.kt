@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -294,6 +295,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         frameCol.ensureIsFrameColumn()
 
@@ -346,6 +348,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
     ): SingleColumn<DataFrame<C>> =
@@ -407,6 +410,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
     ): ColumnAccessor<DataFrame<C>> = this.ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
@@ -460,6 +464,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> String.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -512,6 +517,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -564,6 +570,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> ColumnPath.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -2089,6 +2096,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @AccessApiOverload
     public fun <C> frameCol(property: KProperty<DataFrame<C>>): SingleColumn<DataFrame<C>> =
         frameColumn(property).ensureIsFrameColumn()
 
@@ -2141,6 +2149,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> frameCol(property: KProperty<List<C>>): SingleColumn<DataFrame<C>> =
         frameColumn(property).ensureIsFrameColumn()
 
@@ -2195,6 +2204,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(property: KProperty<DataFrame<C>>): SingleColumn<DataFrame<C>> =
         frameCol<C>(property.name)
 
@@ -2247,6 +2257,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(property: KProperty<List<C>>): SingleColumn<DataFrame<C>> =
         frameCol<C>(property.name)
 
@@ -2299,6 +2310,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
     public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
@@ -2353,6 +2365,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2407,6 +2420,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @AccessApiOverload
     public fun <C> String.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2459,6 +2473,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> String.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2513,6 +2528,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2565,6 +2581,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2619,6 +2636,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @AccessApiOverload
     public fun <C> ColumnPath.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2671,6 +2689,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> ColumnPath.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -3228,6 +3247,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
+    @AccessApiOverload
     public fun KProperty<*>.frameCol(index: Int): SingleColumn<DataFrame<*>> = frameCol<Any?>(index)
 
     /**
@@ -3282,6 +3302,7 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      */
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(index: Int): SingleColumn<DataFrame<C>> = columnGroup(this).frameCol<C>(index)
 
     /**

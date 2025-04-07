@@ -147,11 +147,13 @@ internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> =
 
 // region into
 
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
 ): DataFrame<T> = into(listOf(firstName.name()) + otherNames.map { it.name() })
 
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: KProperty<*>,
     vararg otherNames: KProperty<*>,
@@ -213,11 +215,13 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = inward(names.toList(), extraNamesGenerator)
 
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
 ): DataFrame<T> = inward(listOf(firstName.name()) + otherNames.map { it.name() })
 
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: KProperty<*>,
     vararg otherNames: KProperty<*>,
@@ -237,6 +241,7 @@ public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
 public fun <T, A, B> Split<T, Pair<A, B>>.inward(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
+@AccessApiOverload
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.inward(
     firstCol: ColumnAccessor<A>,
     secondCol: ColumnAccessor<B>,

@@ -41,6 +41,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("asGroupBy.kt")
+  public void testAsGroupBy() {
+    runTest("testData/box/asGroupBy.kt");
+  }
+
+  @Test
   @TestMetadata("castTo.kt")
   public void testCastTo() {
     runTest("testData/box/castTo.kt");
@@ -74,6 +80,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("columnWithStarProjection.kt")
   public void testColumnWithStarProjection() {
     runTest("testData/box/columnWithStarProjection.kt");
+  }
+
+  @Test
+  @TestMetadata("concatWithKeys.kt")
+  public void testConcatWithKeys() {
+    runTest("testData/box/concatWithKeys.kt");
   }
 
   @Test

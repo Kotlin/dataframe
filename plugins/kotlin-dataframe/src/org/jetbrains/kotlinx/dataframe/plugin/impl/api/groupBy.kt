@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.fir.types.resolvedType
 import org.jetbrains.kotlin.fir.types.typeContext
 import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.StandardClassIds
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.plugin.InterpretationErrorReporter
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractInterpreter
@@ -27,15 +28,18 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.add
+import org.jetbrains.kotlinx.dataframe.plugin.impl.asDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.data.ColumnWithPathApproximation
 import org.jetbrains.kotlinx.dataframe.plugin.impl.dataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.groupBy
 import org.jetbrains.kotlinx.dataframe.plugin.impl.ignore
 import org.jetbrains.kotlinx.dataframe.plugin.impl.makeNullable
 import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.toPluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.impl.type
 import org.jetbrains.kotlinx.dataframe.plugin.interpret
 import org.jetbrains.kotlinx.dataframe.plugin.loadInterpreter
+import kotlin.collections.plus
 
 class GroupBy(val keys: PluginDataFrameSchema, val groups: PluginDataFrameSchema) {
     companion object {
@@ -50,6 +54,33 @@ class DataFrameGroupBy : AbstractInterpreter<GroupBy>() {
 
     override fun Arguments.interpret(): GroupBy {
         return GroupBy(keys = createPluginDataFrameSchema(cols.resolve(receiver), moveToTop), groups = receiver)
+    }
+}
+
+class AsGroupBy : AbstractInterpreter<GroupBy>() {
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
+    val Arguments.selector: ColumnsResolver by arg()
+
+    override fun Arguments.interpret(): GroupBy {
+        val column = selector.resolve(receiver).singleOrNull()?.column
+        return if (column is SimpleFrameColumn) {
+            GroupBy(receiver.asDataFrame().remove { selector }.toPluginDataFrameSchema(), PluginDataFrameSchema(column.columns()))
+        } else {
+            GroupBy.EMPTY
+        }
+    }
+}
+
+class AsGroupByDefault : AbstractInterpreter<GroupBy>() {
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
+
+    override fun Arguments.interpret(): GroupBy {
+        val groups = receiver.columns().singleOrNull { it is SimpleFrameColumn } as? SimpleFrameColumn
+        return if (groups != null) {
+            GroupBy(receiver.asDataFrame().remove(groups.name).toPluginDataFrameSchema(), PluginDataFrameSchema(groups.columns()))
+        } else {
+            GroupBy.EMPTY
+        }
     }
 }
 
@@ -420,6 +451,12 @@ private fun isIntraComparable(col: SimpleDataColumn, session: FirSession): Boole
     return col.type.type.isSubtypeOf(comparable, session)
 }
 
+class ConcatWithKeys : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver by groupBy()
 
-
-
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val originalColumns = receiver.groups.columns()
+        return PluginDataFrameSchema(
+            originalColumns + receiver.keys.columns().filter { it.name !in originalColumns.map { it.name } })
+    }
+}

@@ -1167,6 +1167,7 @@ class DataFrameSymbolProcessorTest {
                             @file:ImportDataSchema(
                                 "Petstore", 
                                 "$it",
+                                enableExperimentalOpenApi = true,
                             )
                             package org.example
                             import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
@@ -1289,6 +1290,7 @@ class DataFrameSymbolProcessorTest {
                             @file:ImportDataSchema(
                                 path = "$it",
                                 name = "Petstore",
+                                enableExperimentalOpenApi = true,
                             )
                             package org.example
                             import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
