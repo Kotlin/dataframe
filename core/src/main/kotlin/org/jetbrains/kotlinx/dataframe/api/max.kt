@@ -64,10 +64,10 @@ public fun AnyRow.rowMaxOrNull(): Any? = error(ROW_MAX_OR_NULL)
 @Deprecated(ROW_MAX, level = DeprecationLevel.ERROR)
 public fun AnyRow.rowMax(): Any = error(ROW_MAX)
 
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMaxOfOrNull(skipNaN: Boolean = skipNaN_default): T? =
-    Aggregators.max<T>(skipNaN).aggregateOfRow(this) { colsOf<T>() }
+public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOfOrNull(skipNaN: Boolean = skipNaN_default): T? =
+    Aggregators.max<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMaxOf(skipNaN: Boolean = skipNaN_default): T & Any =
+public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(skipNaN: Boolean = skipNaN_default): T =
     rowMaxOfOrNull<T>(skipNaN).suggestIfNull("rowMaxOf")
 
 // endregion
@@ -460,8 +460,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNul
     maxOfOrNull(skipNaN = skipNaN_default, selector = selector)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMaxOfOrNull(): T? =
-    rowMaxOfOrNull(skipNaN = skipNaN_default)
+public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOfOrNull(): T? = rowMaxOfOrNull<T>(skipNaN = skipNaN_default)
 
 @Deprecated(MAX_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public inline fun <reified T : Comparable<T & Any>?> AnyRow.rowMaxOf(): T & Any = rowMaxOf(skipNaN = skipNaN_default)
