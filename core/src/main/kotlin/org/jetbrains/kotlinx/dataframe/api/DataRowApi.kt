@@ -205,7 +205,7 @@ public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
         (relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices),
     )
 
-public inline fun <T> DataRow<T>.movingAverage(k: Int, crossinline expression: RowExpression<T, Number>): Double {
+public inline fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0
     return backwardIterable().take(k).sumOf {
         count++
