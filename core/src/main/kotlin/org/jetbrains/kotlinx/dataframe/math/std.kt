@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.math.sqrt
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -67,3 +68,17 @@ internal val stdTypeConversion: CalculateReturnType = { _, _ ->
 @JvmName("doubleStd")
 internal fun Sequence<Double>.std(skipNaN: Boolean = skipNaN_default, ddof: Int = ddof_default): Double =
     calculateBasicStatsOrNull(skipNaN)?.std(ddof) ?: Double.NaN
+
+/**
+ * Calculates the standard deviation from a [BasicStats] with optional delta degrees of freedom.
+ *
+ * @param ddof delta degrees of freedom, the bias-correction of std.
+ *   Default is [ddof_default], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
+ *   the "population standard deviation", so `ddof = 0`, can be used.
+ */
+internal fun BasicStats.std(ddof: Int): Double =
+    if (count <= ddof) {
+        Double.NaN
+    } else {
+        sqrt(variance / (count - ddof))
+    }

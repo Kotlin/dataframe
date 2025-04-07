@@ -2,25 +2,9 @@
 
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.ddof_default
 import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
-import kotlin.math.sqrt
 
 internal data class BasicStats(val count: Int, val mean: Double, val variance: Double)
-
-/**
- * Calculates the standard deviation from a [BasicStats] with optional delta degrees of freedom.
- *
- * @param ddof delta degrees of freedom, the bias-correction of std.
- *   Default is [ddof_default], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
- *   the "population standard deviation", so `ddof = 0`, can be used.
- */
-internal fun BasicStats.std(ddof: Int): Double =
-    if (count <= ddof) {
-        Double.NaN
-    } else {
-        sqrt(variance / (count - ddof))
-    }
 
 /**
  * Creates [BasicStats] instance for [this] sequence.
