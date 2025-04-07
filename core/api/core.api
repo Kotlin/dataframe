@@ -315,6 +315,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/AddDsl : org/jetbrains/ko
 	public fun getColumnOrNull (Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public fun getColumnOrNull (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 	public fun getColumnOrNull (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public final fun getColumns ()Ljava/util/List;
 	public final fun getDf ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public final fun group (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun group (Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/api/AddGroup;
@@ -593,8 +594,14 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/AllExceptCol
 public final class org/jetbrains/kotlinx/dataframe/api/AllKt {
 	public static final fun all (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Lkotlin/jvm/functions/Function1;)Z
 	public static final fun all (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Z
+	public static final fun allAfterInternal (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static final fun allBeforeInternal (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
+	public static final fun allColumnsInternal (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Z)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
+	public static synthetic fun allColumnsInternal$default (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
+	public static final fun allFromInternal (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 	public static final fun allNA (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Z
 	public static final fun allNulls (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Z
+	public static final fun allUpToInternal (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/AndColumnsSelectionDsl {
@@ -1022,6 +1029,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroups
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsInGroupsColumnsSelectionDsl$Grammar$PlainDslName {
+}
+
+public final class org/jetbrains/kotlinx/dataframe/api/ColsKt {
+	public static final fun colsInternal (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 }
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/ColsOfColumnsSelectionDsl {
@@ -3867,6 +3878,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/SortKt {
 public final class org/jetbrains/kotlinx/dataframe/api/Split {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)V
 	public final fun cast ()Lorg/jetbrains/kotlinx/dataframe/api/Split;
+	public final fun getColumns ()Lkotlin/jvm/functions/Function2;
+	public final fun getDf ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -4829,6 +4842,10 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/columns/BaseColu
 	public abstract fun values ()Ljava/lang/Iterable;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/columns/BaseColumnKt {
+	public static final fun getValues (Lorg/jetbrains/kotlinx/dataframe/columns/BaseColumn;)Ljava/lang/Iterable;
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/columns/ColumnAccessor : org/jetbrains/kotlinx/dataframe/columns/ColumnReference {
 	public abstract fun get (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
 	public fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;
@@ -5540,6 +5557,14 @@ public final class org/jetbrains/kotlinx/dataframe/impl/api/ConvertToKt {
 	public static synthetic fun convertToImpl$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/reflect/KType;ZLorg/jetbrains/kotlinx/dataframe/api/ExcessiveColumns;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/api/DuplicateKt {
+	public static final fun duplicateRowsImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ILjava/lang/Iterable;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/api/GroupByKt {
+	public static final fun groupByImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/impl/api/InsertKt {
 	public static final fun insertImpl (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
@@ -5658,6 +5683,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/columns/Tra
 
 public final class org/jetbrains/kotlinx/dataframe/impl/columns/UtilsKt {
 	public static final fun asAnyFrameColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Lorg/jetbrains/kotlinx/dataframe/columns/FrameColumn;
+	public static final fun transform (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnsResolver;Lkotlin/jvm/functions/Function1;)Lorg/jetbrains/kotlinx/dataframe/impl/columns/TransformableColumnSet;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/impl/io/FastDoubleParser {

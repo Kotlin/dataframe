@@ -185,8 +185,8 @@ public interface FrameColsColumnsSelectionDsl {
  * @return A [TransformableColumnSet] containing the frame columns that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun ColumnsResolver<*>.frameColumnsInternal(
-    filter: (FrameColumn<*>) -> Boolean,
+internal inline fun ColumnsResolver<*>.frameColumnsInternal(
+    crossinline filter: (FrameColumn<*>) -> Boolean,
 ): TransformableColumnSet<AnyFrame> =
     colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
 
