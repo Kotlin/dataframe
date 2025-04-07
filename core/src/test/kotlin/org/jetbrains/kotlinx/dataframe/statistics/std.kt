@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.columnTypes
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.ddof_default
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.math.std
@@ -21,8 +24,8 @@ class StdTests {
         val df = dataFrameOf(value)
         val expected = 1.0
 
-        value.values().std() shouldBe expected
-        value.values().std(typeOf<Int>()) shouldBe expected
+        value.asSequence().std(typeOf<Int>(), false, ddof_default) shouldBe expected
+
         value.std() shouldBe expected
         df[value].std() shouldBe expected
         df.std { value } shouldBe expected
@@ -35,7 +38,8 @@ class StdTests {
         val df = dataFrameOf(value)
         val expected = 1.0
 
-        value.values().std(typeOf<Byte>()) shouldBe expected
+        value.asSequence().std(typeOf<Byte>(), false, ddof_default) shouldBe expected
+
         value.std() shouldBe expected
         df[value].std() shouldBe expected
         df.std { value } shouldBe expected
@@ -48,8 +52,8 @@ class StdTests {
         val df = dataFrameOf(value)
         val expected = 1.0
 
-        value.values().std() shouldBe expected
-        value.values().std(typeOf<Double>()) shouldBe expected
+        value.asSequence().std(typeOf<Double>(), false, ddof_default) shouldBe expected
+
         value.std() shouldBe expected
         df[value].std() shouldBe expected
         df.std { value } shouldBe expected
@@ -60,9 +64,10 @@ class StdTests {
         val empty = DataColumn.createValueColumn("", emptyList<Nothing>(), nothingType(false))
         val nullable = DataColumn.createValueColumn("", listOf(null), nothingType(true))
 
-        empty.values().std(empty.type).shouldBeNaN()
-        nullable.values().std(nullable.type).shouldBeNaN()
-
+        empty.asSequence().std(empty.type, false, ddof_default).shouldBeNaN()
+        shouldThrow<IllegalStateException> {
+            nullable.asSequence().std(nullable.type, false, ddof_default).shouldBeNaN()
+        }
         empty.std().shouldBeNaN()
         nullable.std().shouldBeNaN()
     }

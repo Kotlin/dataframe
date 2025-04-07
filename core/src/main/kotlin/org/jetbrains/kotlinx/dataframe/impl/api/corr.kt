@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Corr
+import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castToNotNullable
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
@@ -51,7 +52,7 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
     }
 
     val stdMeans = cols.mapValues {
-        it.value.toList().calculateBasicStatsOrNull()
+        it.value.asSequence().calculateBasicStatsOrNull()
     }
 
     val cache = mutableMapOf<Pair<ColumnPath, ColumnPath>, Double>()

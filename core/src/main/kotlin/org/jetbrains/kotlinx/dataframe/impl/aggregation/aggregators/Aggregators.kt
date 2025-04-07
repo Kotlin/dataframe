@@ -121,7 +121,7 @@ internal object Aggregators {
     // T: Number? -> Double
     val std by withTwoOptions { skipNA: Boolean, ddof: Int ->
         flattenReducingForNumbers(stdTypeConversion) { type ->
-           std(type, skipNA, ddof)
+            std(type, skipNA, ddof)
         }
     }
 
