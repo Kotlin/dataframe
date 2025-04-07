@@ -45,7 +45,7 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Doubl
         nothingType -> Double.NaN
 
         else -> throw IllegalArgumentException(
-            "Unable to compute the mean for ${renderType(type)}, Only primitive numbers are supported.",
+            "Unable to compute the mean for ${renderType(type)}. Only primitive numbers are supported.",
         )
     }
 }

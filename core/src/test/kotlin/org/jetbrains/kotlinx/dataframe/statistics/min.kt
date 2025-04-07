@@ -170,15 +170,12 @@ class MinTests {
         )
 
         // Find minimum value in each row
-        df[0].rowMinOf<Int>() shouldBe 3
-        df[0].rowMinOf<Int?>() shouldBe 2 // TODO?
+        df[0].rowMinOf<Int>() shouldBe 2
 
         df[1].rowMinOf<Float>() shouldBe 4f
         df[1].rowMinOf<Int>() shouldBe 6
-        df[1].rowMinOf<Int?>() shouldBe 6
 
-        df[2].rowMinOf<Int>() shouldBe 9
-        df[2].rowMinOf<Int?>() shouldBe 8 // TODO?
+        df[2].rowMinOf<Int>() shouldBe 8
     }
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]

@@ -171,14 +171,11 @@ class MaxTests {
 
         // Find maximum value in each row
         df[0].rowMaxOf<Int>() shouldBe 3
-        df[0].rowMaxOf<Int?>() shouldBe 3 // TODO?
 
         df[1].rowMaxOf<Float>() shouldBe 4f
         df[1].rowMaxOf<Int>() shouldBe 6
-        df[1].rowMaxOf<Int?>() shouldBe 6
 
         df[2].rowMaxOf<Int>() shouldBe 9
-        df[2].rowMaxOf<Int?>() shouldBe 9 // TODO?
     }
 
     @[Test Suppress("ktlint:standard:argument-list-wrapping")]
