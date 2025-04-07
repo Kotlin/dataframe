@@ -29,6 +29,7 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /* TODO KDocs
@@ -78,30 +79,36 @@ public inline fun <C, reified V : Number?> DataColumn<C>.sumOf(
 public fun AnyRow.rowSum(skipNaN: Boolean = skipNaN_default): Number =
     Aggregators.sum(skipNaN).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfShort")
-public inline fun <reified T : Short?> AnyRow.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
+public inline fun <reified T : Short> AnyRow.rowSumOf(_kClass: KClass<Short> = Short::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfByte")
-public inline fun <reified T : Byte?> AnyRow.rowSumOf(_kClass: KClass<Byte> = Byte::class): Int =
+public inline fun <reified T : Byte> AnyRow.rowSumOf(_kClass: KClass<Byte> = Byte::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfInt")
-public inline fun <reified T : Int?> AnyRow.rowSumOf(_kClass: KClass<Int> = Int::class): Int =
+public inline fun <reified T : Int> AnyRow.rowSumOf(_kClass: KClass<Int> = Int::class): Int =
     rowSumOf(typeOf<T>(), false) as Int
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfLong")
-public inline fun <reified T : Long?> AnyRow.rowSumOf(_kClass: KClass<Long> = Long::class): Long =
+public inline fun <reified T : Long> AnyRow.rowSumOf(_kClass: KClass<Long> = Long::class): Long =
     rowSumOf(typeOf<T>(), false) as Long
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfFloat")
-public inline fun <reified T : Float?> AnyRow.rowSumOf(
+public inline fun <reified T : Float> AnyRow.rowSumOf(
     skipNaN: Boolean = skipNaN_default,
     _kClass: KClass<Float> = Float::class,
 ): Float = rowSumOf(typeOf<T>(), skipNaN) as Float
 
+@Suppress("FINAL_UPPER_BOUND")
 @JvmName("rowSumOfDouble")
-public inline fun <reified T : Double?> AnyRow.rowSumOf(
+public inline fun <reified T : Double> AnyRow.rowSumOf(
     skipNaN: Boolean = skipNaN_default,
     _kClass: KClass<Double> = Double::class,
 ): Double = rowSumOf(typeOf<T>(), skipNaN) as Double
@@ -111,7 +118,9 @@ public fun AnyRow.rowSumOf(type: KType, skipNaN: Boolean = skipNaN_default): Num
     require(type.isPrimitiveOrMixedNumber()) {
         "Type $type is not a primitive number type. Mean only supports primitive number types."
     }
-    return Aggregators.sum(skipNaN).aggregateOfRow(this) { colsOf(type) }
+    return Aggregators.sum(skipNaN).aggregateOfRow(this) {
+        colsOf(type.withNullability(true))
+    }
 }
 // endregion
 

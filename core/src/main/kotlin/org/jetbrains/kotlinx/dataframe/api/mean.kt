@@ -50,11 +50,11 @@ public inline fun <T, reified R : Number?> DataColumn<T>.meanOf(
 public fun AnyRow.rowMean(skipNaN: Boolean = skipNaN_default): Double =
     Aggregators.mean(skipNaN).aggregateOfRow(this, primitiveOrMixedNumberColumns())
 
-public inline fun <reified T : Number?> AnyRow.rowMeanOf(skipNaN: Boolean = skipNaN_default): Double {
+public inline fun <reified T : Number> AnyRow.rowMeanOf(skipNaN: Boolean = skipNaN_default): Double {
     require(typeOf<T>().isPrimitiveOrMixedNumber()) {
         "Type ${T::class.simpleName} is not a primitive number type. Mean only supports primitive number types."
     }
-    return Aggregators.mean(skipNaN).aggregateOfRow(this) { colsOf<T>() }
+    return Aggregators.mean(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 }
 
 // endregion
@@ -291,7 +291,7 @@ public inline fun <T, reified R : Number?> DataColumn<T>.meanOf(crossinline expr
 public fun AnyRow.rowMean(): Double = rowMean(skipNaN = skipNaN_default)
 
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
-public inline fun <reified T : Number?> AnyRow.rowMeanOf(): Double = rowMeanOf<T>(skipNaN = skipNaN_default)
+public inline fun <reified T : Number> AnyRow.rowMeanOf(): Double = rowMeanOf<T>(skipNaN = skipNaN_default)
 
 @Deprecated(MEAN_NO_SKIPNAN, level = DeprecationLevel.HIDDEN)
 public fun <T> DataFrame<T>.mean(): DataRow<T> = mean(skipNaN = skipNaN_default)

@@ -27,7 +27,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.typeOf
 
 /* TODO KDocs:
- * Calculating the std is supported for all primitive numebr types.
+ * Calculating the std is supported for all primitive number types.
  * Nulls are filtered out.
  * The return type is always Double, Double.NaN for empty input, never null.
  * (May introduce loss of precision for Longs).
