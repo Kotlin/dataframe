@@ -92,4 +92,10 @@ internal interface DocumentationUrls {
 
     /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
     interface Move
+
+    /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
+    interface Group
+
+    /** [See `group` on the documentation website.]({@include [Url]}/ungroup.html) */
+    interface Ungroup
 }
