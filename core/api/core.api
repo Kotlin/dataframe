@@ -1895,8 +1895,8 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/DataSchemaEn
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DefaultsKt {
-	public static final fun getDdof_default ()I
-	public static final fun getSkipNaN_default ()Z
+	public static final fun getDdofDefault ()I
+	public static final fun getSkipNaNDefault ()Z
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DescribeKt {

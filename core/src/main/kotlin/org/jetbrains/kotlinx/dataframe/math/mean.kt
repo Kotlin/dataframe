@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
+import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -55,7 +55,7 @@ internal val meanTypeConversion: CalculateReturnType = { _, _ ->
     typeOf<Double>()
 }
 
-internal fun Sequence<Double>.mean(skipNaN: Boolean = skipNaN_default): Double {
+internal fun Sequence<Double>.mean(skipNaN: Boolean = skipNaNDefault): Double {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
