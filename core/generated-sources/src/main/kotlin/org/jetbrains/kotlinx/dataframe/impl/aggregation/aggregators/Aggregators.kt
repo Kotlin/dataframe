@@ -66,6 +66,15 @@ internal object Aggregators {
         multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
     )
 
+    private fun <Return : Number?> flattenReducingForNumbers(
+        getReturnType: CalculateReturnType,
+        reducer: Reducer<Number, Return>,
+    ) = Aggregator(
+        aggregationHandler = ReducingAggregationHandler(reducer, getReturnType),
+        inputHandler = NumberInputHandler(),
+        multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
+    )
+
     private fun <Return : Number?> twoStepReducingForNumbers(
         getReturnType: CalculateReturnType,
         reducer: Reducer<Number, Return>,
@@ -117,8 +126,8 @@ internal object Aggregators {
 
     // T: Number? -> Double
     val std by withTwoOptions { skipNA: Boolean, ddof: Int ->
-        flattenReducingForAny<Number, Double>(stdTypeConversion) { type ->
-            asIterable().std(type, skipNA, ddof)
+        flattenReducingForNumbers(stdTypeConversion) { type ->
+            std(type, skipNA, ddof)
         }
     }
 
