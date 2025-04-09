@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.jetbrains.kotlinx.dataframe.api.ddof_default
-import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
+import org.jetbrains.kotlinx.dataframe.api.ddofDefault
+import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -18,7 +18,7 @@ private val logger = KotlinLogging.logger { }
  * Calculates the standard deviation from [this] with optional delta degrees of freedom.
  *
  * @param ddof delta degrees of freedom, the bias-correction of std.
- *   Default is [ddof_default], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
+ *   Default is [ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
  *   the "population standard deviation", so `ddof = 0`, can be used.
  */
 @Suppress("UNCHECKED_CAST")
@@ -66,14 +66,14 @@ internal val stdTypeConversion: CalculateReturnType = { _, _ ->
 }
 
 @JvmName("doubleStd")
-internal fun Sequence<Double>.std(skipNaN: Boolean = skipNaN_default, ddof: Int = ddof_default): Double =
+internal fun Sequence<Double>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): Double =
     calculateBasicStatsOrNull(skipNaN)?.std(ddof) ?: Double.NaN
 
 /**
  * Calculates the standard deviation from a [BasicStats] with optional delta degrees of freedom.
  *
  * @param ddof delta degrees of freedom, the bias-correction of std.
- *   Default is [ddof_default], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
+ *   Default is [ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
  *   the "population standard deviation", so `ddof = 0`, can be used.
  */
 internal fun BasicStats.std(ddof: Int): Double =

@@ -2,7 +2,7 @@
 
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
+import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
 
 internal data class BasicStats(val count: Int, val mean: Double, val variance: Double)
 
@@ -12,7 +12,7 @@ internal data class BasicStats(val count: Int, val mean: Double, val variance: D
  * This contains the [count][BasicStats.count], [mean][BasicStats.mean], and [variance][BasicStats.variance] and
  * can be used to efficiently calculate the [standard deviation][std].
  */
-internal fun Sequence<Double>.calculateBasicStatsOrNull(skipNaN: Boolean = skipNaN_default): BasicStats? {
+internal fun Sequence<Double>.calculateBasicStatsOrNull(skipNaN: Boolean = skipNaNDefault): BasicStats? {
     var count = 0
     var sum = .0
     for (element in this) {

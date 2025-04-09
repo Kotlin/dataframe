@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 @PublishedApi
-internal val skipNaN_default: Boolean = false
+internal val skipNaNDefault: Boolean = false
 
 /**
  * Default delta degrees of freedom for the standard deviation (std).
@@ -15,4 +15,4 @@ internal val skipNaN_default: Boolean = false
  * which is used in libraries like Numpy.
  */
 @PublishedApi
-internal val ddof_default: Int = 1
+internal val ddofDefault: Int = 1
