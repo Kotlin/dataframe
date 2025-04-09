@@ -153,11 +153,12 @@ internal object Aggregators {
         }
     }
 
-    @JvmName("medianComparable")
-    fun <T : Comparable<T & Any>?> median(): Aggregator<T & Any, T?> = median.invoke(skipNaN_default).cast2()
+    fun <T> median(): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        median.invoke(skipNaN_default).cast2()
 
-    @JvmName("medianNumber")
-    fun <T> median(skipNaN: Boolean): Aggregator<T & Any, Double> where T : Comparable<T & Any>?, T : Number? =
+    fun <T> median(skipNaN: Boolean): Aggregator<T & Any, Double>
+        where T : Comparable<T & Any>?, T : Number? =
         median.invoke(skipNaN).cast2()
 
     // T: Comparable<T>? -> T

@@ -13,46 +13,84 @@ import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.intraComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfRow
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
-import org.jetbrains.kotlinx.dataframe.math.median
+import org.jetbrains.kotlinx.dataframe.math.medianOrNull
+import org.jetbrains.kotlinx.dataframe.util.ROW_MEDIAN
+import org.jetbrains.kotlinx.dataframe.util.ROW_MEDIAN_OR_NULL
 import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T : Comparable<T>> DataColumn<T?>.median(): T = medianOrNull().suggestIfNull("median")
+public fun <T : Comparable<T & Any>?> DataColumn<T>.median(): T & Any = medianOrNull().suggestIfNull("median")
 
-public fun <T : Comparable<T>> DataColumn<T?>.medianOrNull(): T? =
-    Aggregators.median.cast<T>().aggregateSingleColumn(this)
+public fun <T : Comparable<T & Any>?> DataColumn<T>.medianOrNull(): T? =
+    Aggregators.median<T>().aggregateSingleColumn(this)
 
-public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOfOrNull(noinline expression: (T) -> R?): R? =
-    Aggregators.median.cast<R?>().aggregateOf(this, expression)
+public fun <T> DataColumn<T>.median(
+    skipNaN: Boolean = skipNaN_default,
+): Double
+    where T : Comparable<T & Any>?, T : Number? = medianOrNull(skipNaN = skipNaN).suggestIfNull("median")
 
-public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline expression: (T) -> R?): R =
-    medianOfOrNull(expression).suggestIfNull("medianOf")
+public fun <T> DataColumn<T>.medianOrNull(
+    skipNaN: Boolean = skipNaN_default,
+): Double?
+    where T : Comparable<T & Any>?, T : Number? = Aggregators.median<T>(skipNaN).aggregateSingleColumn(this)
+
+public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOf(
+    crossinline expression: (T) -> R,
+): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
+
+public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOfOrNull(
+    crossinline expression: (T) -> R,
+): R? = Aggregators.median<R>().aggregateOf(this, expression)
+
+public inline fun <T, reified R> DataColumn<T>.medianOf(
+    skipNaN: Boolean = skipNaN_default,
+    crossinline expression: (T) -> R,
+): Double
+    where R : Comparable<R & Any>?, R : Number? =
+    medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
+
+public inline fun <T, reified R> DataColumn<T>.medianOfOrNull(
+    skipNaN: Boolean = skipNaN_default,
+    crossinline expression: (T) -> R,
+): Double?
+    where R : Comparable<R & Any>?, R : Number? =
+    Aggregators.median<R>(skipNaN).aggregateOf(this, expression)
 
 // endregion
 
 // region DataRow
 
-public fun AnyRow.rowMedianOrNull(): Any? =
-    Aggregators.median.aggregateCalculatingValueType(
-        values = values().asSequence().filterIsInstance<Comparable<Any?>>(),
-        valueTypes = df().columns().filter { it.valuesAreComparable() }.map { it.type() }.toSet(),
-    )
+@Deprecated(ROW_MEDIAN_OR_NULL, level = DeprecationLevel.ERROR)
+public fun AnyRow.rowMedianOrNull(): Nothing? = error(ROW_MEDIAN_OR_NULL)
 
-public fun AnyRow.rowMedian(): Any = rowMedianOrNull().suggestIfNull("rowMedian")
+@Deprecated(ROW_MEDIAN, level = DeprecationLevel.ERROR)
+public fun AnyRow.rowMedian(): Nothing = error(ROW_MEDIAN)
 
-public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOfOrNull(): T? = valuesOf<T>().median()
+public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOfOrNull(): T? =
+    Aggregators.median<T>().aggregateOfRow(this) { colsOf<T?>() }
 
 public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOf(): T =
     rowMedianOfOrNull<T>().suggestIfNull("rowMedianOf")
+
+public inline fun <reified T> AnyRow.rowMedianOfOrNull(
+    skipNaN: Boolean = skipNaN_default,
+): Double?
+    where T : Comparable<T>, T : Number =
+    Aggregators.median<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
+
+public inline fun <reified T> AnyRow.rowMedianOf(
+    skipNaN: Boolean = skipNaN_default,
+): Double
+    where T : Comparable<T>, T : Number = rowMedianOfOrNull<T>(skipNaN).suggestIfNull("rowMedianOf")
 
 // endregion
 

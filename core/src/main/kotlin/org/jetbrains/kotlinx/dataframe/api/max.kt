@@ -59,10 +59,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOfOrNul
 // region DataRow
 
 @Deprecated(ROW_MAX_OR_NULL, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMaxOrNull(): Any? = error(ROW_MAX_OR_NULL)
+public fun AnyRow.rowMaxOrNull(): Nothing? = error(ROW_MAX_OR_NULL)
 
 @Deprecated(ROW_MAX, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMax(): Any = error(ROW_MAX)
+public fun AnyRow.rowMax(): Nothing = error(ROW_MAX)
 
 public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOfOrNull(skipNaN: Boolean = skipNaN_default): T? =
     Aggregators.max<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
