@@ -34,12 +34,12 @@ public fun <T : Comparable<T & Any>?> DataColumn<T>.medianOrNull(): T? =
     Aggregators.median<T>().aggregateSingleColumn(this)
 
 public fun <T> DataColumn<T>.median(
-    skipNaN: Boolean = skipNaN_default,
+    skipNaN: Boolean = skipNaNDefault,
 ): Double
     where T : Comparable<T & Any>?, T : Number? = medianOrNull(skipNaN = skipNaN).suggestIfNull("median")
 
 public fun <T> DataColumn<T>.medianOrNull(
-    skipNaN: Boolean = skipNaN_default,
+    skipNaN: Boolean = skipNaNDefault,
 ): Double?
     where T : Comparable<T & Any>?, T : Number? = Aggregators.median<T>(skipNaN).aggregateSingleColumn(this)
 
@@ -52,14 +52,14 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOfOr
 ): R? = Aggregators.median<R>().aggregateOf(this, expression)
 
 public inline fun <T, reified R> DataColumn<T>.medianOf(
-    skipNaN: Boolean = skipNaN_default,
+    skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double
     where R : Comparable<R & Any>?, R : Number? =
     medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
 
 public inline fun <T, reified R> DataColumn<T>.medianOfOrNull(
-    skipNaN: Boolean = skipNaN_default,
+    skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double?
     where R : Comparable<R & Any>?, R : Number? =
@@ -82,13 +82,13 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMedianOf(): T =
     rowMedianOfOrNull<T>().suggestIfNull("rowMedianOf")
 
 public inline fun <reified T> AnyRow.rowMedianOfOrNull(
-    skipNaN: Boolean = skipNaN_default,
+    skipNaN: Boolean = skipNaNDefault,
 ): Double?
     where T : Comparable<T>, T : Number =
     Aggregators.median<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
 
 public inline fun <reified T> AnyRow.rowMedianOf(
-    skipNaN: Boolean = skipNaN_default,
+    skipNaN: Boolean = skipNaNDefault,
 ): Double
     where T : Comparable<T>, T : Number = rowMedianOfOrNull<T>(skipNaN).suggestIfNull("rowMedianOf")
 
