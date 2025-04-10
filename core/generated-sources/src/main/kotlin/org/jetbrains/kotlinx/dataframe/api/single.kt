@@ -38,10 +38,10 @@ public fun <T> DataFrame<T>.single(): DataRow<T> =
 
 public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
-public fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> =
+public inline fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> =
     rows().single { predicate(it, it) }
 
-public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
+public inline fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
     rows().singleOrNull { predicate(it, it) }
 
 // endregion
