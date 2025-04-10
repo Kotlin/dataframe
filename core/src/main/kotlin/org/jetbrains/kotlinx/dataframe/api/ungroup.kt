@@ -24,6 +24,8 @@ import kotlin.reflect.KProperty
  * See [Selecting Columns][UngroupSelectingOptions].
  *
  * For more information: {@include [DocumentationUrls.Ungroup]}
+ *
+ * Reverse operation: [group].
  */
 internal interface UngroupDocs {
     /**

@@ -61,7 +61,10 @@ internal interface GroupDocs {
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * [**`into`**][GroupClause.into]**`(`**`groupName: `[`String`][String]**`)`**
+     * **[`group`][group]****`  {  `**`columnsSelector: `[`ColumnsSelector`][ColumnsSelector]**` }`**
+     *
+     * {@include [Indent]}
+     * __`.`__[**`into`**][GroupClause.into]**`(`**`groupName: `[`String`][String]**`)`**
      *
      * {@include [Indent]}
      * __`.`__[**`into`**][GroupClause.into]**`  {  `**`groupNameExpression: `[`ColumnsSelector`][ColumnsSelector]**`  }  `**
@@ -181,12 +184,13 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  *
  * ### Examples:
  * ```kotlin
- * // Group selected columns into an existing column group:
+ * // Group selected columns into an existing column group (common for all selected columns):
  * df.group("age", "weight").into { info }
- * // Group selected columns into a nested column group using a path that may
- * // contain both existing and new segments:
+ *
+ * // Group selected columns into a nested column group using a path (common for all selected columns) that may contain both existing and new segments:
  * df.group { employee.age and employee.weight }.into { pathOf("info", "personal") }
- * // Group selected columns under their ancestor group located two levels up in the path hierarchy
+ *
+ * // For each selected column, place it under its ancestor group from two levels up in the column path hierarchy (individual for each column):
  * df.group { colsAtAnyDepth().colsOf<String>() }.into { it.path.dropLast(2) }
  * ```
  *
