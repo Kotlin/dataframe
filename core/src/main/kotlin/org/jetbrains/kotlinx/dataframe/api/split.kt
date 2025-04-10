@@ -32,7 +32,12 @@ public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumnSet() }
 
-public class Split<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C?>) {
+public class Split<T, C>(
+    @PublishedApi
+    internal val df: DataFrame<T>,
+    @PublishedApi
+    internal val columns: ColumnsSelector<T, C?>,
+) {
     public fun <P> cast(): Split<T, P> = this as Split<T, P>
 
     override fun toString(): String = "Split(df=$df, columns=$columns)"
@@ -103,9 +108,9 @@ public fun <T, C> Split<T, C>.by(
     }
 
 @PublishedApi
-internal fun <T, C, R> Split<T, C>.by(
+internal inline fun <T, C, R> Split<T, C>.by(
     type: KType,
-    splitter: DataRow<T>.(C) -> Iterable<R>,
+    crossinline splitter: DataRow<T>.(C) -> Iterable<R>,
 ): SplitWithTransform<T, C, R> =
     SplitWithTransform(df, columns, false, type) {
         if (it == null) emptyList() else splitter(it).asList()
@@ -275,8 +280,10 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
 public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it.rows() }.intoRows(dropEmpty)
 
-internal fun <T, C, R> Convert<T, C?>.splitInplace(type: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
-    withRowCellImpl(getListType(type), Infer.None) { if (it == null) emptyList() else transform(it).asList() }
+internal inline fun <T, C, R> Convert<T, C?>.splitInplace(
+    type: KType,
+    crossinline transform: DataRow<T>.(C) -> Iterable<R>,
+) = withRowCellImpl(getListType(type), Infer.None) { if (it == null) emptyList() else transform(it).asList() }
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = true): DataFrame<T> {
     val paths = df.getColumnPaths(columns).toColumnSet()
