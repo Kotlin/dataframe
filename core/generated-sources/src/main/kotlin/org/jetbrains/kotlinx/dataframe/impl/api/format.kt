@@ -48,7 +48,9 @@ internal fun linearGradient(
     }
 }
 
-internal fun <T, C> FormatClause<T, C>.formatImpl(formatter: RowColFormatter<T, C>): FormattedFrame<T> {
+internal inline fun <T, C> FormatClause<T, C>.formatImpl(
+    crossinline formatter: RowColFormatter<T, C>,
+): FormattedFrame<T> {
     val columns =
         if (columns != null) {
             df.getColumnsWithPaths(columns)
