@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
-import org.jetbrains.kotlinx.dataframe.api.skipNaN_default
+import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.ReducingAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.AnyInputHandler
@@ -153,13 +153,23 @@ internal object Aggregators {
         }
     }
 
-    fun <T> median(): Aggregator<T & Any, T?>
+    // T : primitive Number? -> Double
+    // T : Comparable<T & Any>? -> T?
+    fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
-        median.invoke(skipNaN_default).cast2()
-
-    fun <T> median(skipNaN: Boolean): Aggregator<T & Any, Double>
-        where T : Comparable<T & Any>?, T : Number? =
         median.invoke(skipNaN).cast2()
+
+    // T : Comparable<T & Any>? -> T?
+    fun <T> medianComparables(): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        medianCommon<T>(skipNaNDefault).cast2()
+
+    // T : primitive Number? -> Double
+    fun <T> medianNumbers(
+        skipNaN: Boolean,
+    ): Aggregator<T & Any, Double>
+        where T : Comparable<T & Any>?, T : Number? =
+        medianCommon<T>(skipNaN).cast2()
 
     // T: Comparable<T>? -> T
     @Suppress("UNCHECKED_CAST")

@@ -36,12 +36,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.maxOrNull(skipNaN: Boolean = skipN
 
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxBy(
     skipNaN: Boolean = skipNaNDefault,
-    noinline selector: (T) -> R,
+    crossinline selector: (T) -> R,
 ): T & Any = maxByOrNull(skipNaN, selector).suggestIfNull("maxBy")
 
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxByOrNull(
     skipNaN: Boolean = skipNaNDefault,
-    noinline selector: (T) -> R,
+    crossinline selector: (T) -> R,
 ): T? = Aggregators.max<R>(skipNaN).aggregateByOrNull(this, selector)
 
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.maxOf(
