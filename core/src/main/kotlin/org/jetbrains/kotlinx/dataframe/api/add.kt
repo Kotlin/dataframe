@@ -166,7 +166,8 @@ public class AddDsl<T>(
     ColumnSelectionDsl<T> {
 
     // TODO: support adding column into path
-    internal val columns = mutableListOf<AnyCol>()
+    @PublishedApi
+    internal val columns: MutableList<AnyCol> = mutableListOf<AnyCol>()
 
     public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
