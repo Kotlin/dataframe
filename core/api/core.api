@@ -1950,17 +1950,6 @@ public final class org/jetbrains/kotlinx/dataframe/api/DescribeKt {
 	public static final fun describe (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 }
 
-public final class org/jetbrains/kotlinx/dataframe/api/DigitizeKt {
-	public static final fun digitize (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/List;Lkotlin/reflect/KClass;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun digitize (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/List;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun digitize (Lorg/jetbrains/kotlinx/dataframe/DataColumn;[IZ)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static final fun digitize (Lorg/jetbrains/kotlinx/dataframe/DataColumn;[Ljava/lang/Comparable;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun digitize$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/List;Lkotlin/reflect/KClass;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun digitize$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Ljava/util/List;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun digitize$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;[IZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-	public static synthetic fun digitize$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;[Ljava/lang/Comparable;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
-}
-
 public abstract interface class org/jetbrains/kotlinx/dataframe/api/DistinctColumnsSelectionDsl {
 	public fun distinct (Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;)Lorg/jetbrains/kotlinx/dataframe/columns/ColumnSet;
 }
