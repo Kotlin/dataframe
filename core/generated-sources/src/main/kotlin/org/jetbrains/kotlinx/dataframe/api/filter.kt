@@ -21,7 +21,7 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
+public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
     indices
         .filter { predicate(get(it)) }
         .let { get(it) }
@@ -30,8 +30,8 @@ public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
-    indices.filter {
+public inline fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
+    indices().filter {
         val row = get(it)
         predicate(row, row)
     }.let { get(it) }
