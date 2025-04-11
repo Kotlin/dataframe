@@ -25,8 +25,8 @@ public fun extractDBTypeFromConnection(connection: Connection): DbType {
         // works only for H2 version 2
         val modeQuery = "SELECT SETTING_VALUE FROM INFORMATION_SCHEMA.SETTINGS WHERE SETTING_NAME = 'MODE'"
         var mode = ""
-        connection.createStatement().use { st ->
-            st.executeQuery(modeQuery).use { rs ->
+        connection.prepareStatement(modeQuery).use { st ->
+            st.executeQuery().use { rs ->
                 if (rs.next()) {
                     mode = rs.getString("SETTING_VALUE")
                     logger.debug { "Fetched H2 DB mode: $mode" }
