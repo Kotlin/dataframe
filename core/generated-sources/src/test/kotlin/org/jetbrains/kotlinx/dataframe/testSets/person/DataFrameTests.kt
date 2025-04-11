@@ -48,7 +48,6 @@ import org.jetbrains.kotlinx.dataframe.api.countDistinct
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.describe
-import org.jetbrains.kotlinx.dataframe.api.digitize
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.div
@@ -1531,29 +1530,6 @@ class DataFrameTests : BaseTest() {
         val weightStr = "weight".toColumnOf<String?>()
         val parsed = toStr.convert { weightStr }.toInt()
         parsed shouldBe typed
-    }
-
-    @Test
-    fun digitize() {
-        val a = 20
-        val b = 40
-        val expected = typed.age.toList().map {
-            when {
-                it < a -> 0
-                it < b -> 1
-                else -> 2
-            }
-        }
-        typed.age.digitize(a, b).toList() shouldBe expected
-
-        val expectedRight = typed.age.toList().map {
-            when {
-                it <= a -> 0
-                it <= b -> 1
-                else -> 2
-            }
-        }
-        typed.age.digitize(a, b, right = true).toList() shouldBe expectedRight
     }
 
     @Test
