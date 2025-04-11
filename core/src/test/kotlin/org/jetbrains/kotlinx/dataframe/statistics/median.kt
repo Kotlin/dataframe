@@ -8,8 +8,10 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianOf
-import org.jetbrains.kotlinx.dataframe.api.rowMedian
+import org.jetbrains.kotlinx.dataframe.api.rowMedianOf
+import org.jetbrains.kotlinx.dataframe.statistics.myFun
 import org.junit.Test
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -36,12 +38,19 @@ class MedianTests {
 
     @Test
     fun `median of two columns`() {
-        val df = dataFrameOf("a", "b")(
-            1, 4,
-            2, 6,
-            7, 7,
+        val df = dataFrameOf("a", "b", "c")(
+            1, 4, "a",
+            2, 6, "b",
+            7, 7, "c",
         )
-        df.median("a", "b") shouldBe 5
+        df.median("a", "b") shouldBe 5.0
+        df.median { "a"<Int>() and "b"<Int>() } shouldBe 5.0
+        df.median("c") shouldBe "b"
+
+        df.median { "c"<String>() } shouldBe "b"
+
+        df.median({ "c"<String>() }) shouldBe "b"
+        df.median<_, String> { "c"<String>() } shouldBe "b"
     }
 
     @Test
@@ -51,6 +60,34 @@ class MedianTests {
             2, 4,
             7, 7,
         )
-        df.mapToColumn("", Infer.Type) { it.rowMedian() } shouldBe columnOf(2, 3, 7)
+        df.mapToColumn("", Infer.Type) { it.rowMedianOf<Int>() } shouldBe columnOf(2, 3, 7)
     }
+}
+
+fun <T> List<T>.myFun(): Int where T : Comparable<T> = TODO()
+fun <T> List<T>.myFun(): Double where T : Comparable<T>, T : Number = TODO()
+
+fun <T> myFun(list: List<T>): Int where T : Comparable<T> = TODO()
+fun <T> myFun(list: List<T>): Double where T : Comparable<T>, T : Number = TODO()
+
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+//@JvmName("jnkjsdnf")
+fun <T> myFun(get : () -> T): Int where T : Comparable<T> = TODO()
+
+@JvmName("jnkjsdnf")
+@OptIn(ExperimentalTypeInference::class)
+@OverloadResolutionByLambdaReturnType
+fun <T> myFun(get : () -> T): Double where T : Comparable<T>, T : Number = TODO()
+
+fun main() {
+val res1 = listOf(1, 2, 3).myFun()
+val res2 = listOf("a", "b", "c").myFun()
+
+val res3 = myFun(listOf(1, 2, 3))
+val res4 = myFun(listOf("a", "b", "c"))
+
+val res5 = myFun { 1 }
+val res6 = myFun { "" }
+val res7 = myFun<String> { "" }
 }

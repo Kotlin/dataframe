@@ -4,13 +4,9 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 @PublishedApi
-internal inline fun <reified T : Comparable<T>> Iterable<T?>.percentile(
-    percentile: Double,
-    type: KType = typeOf<T>(),
-): T? {
+internal fun <T : Comparable<T>> Iterable<T?>.percentile(percentile: Double, type: KType): T? {
     require(percentile in 0.0..100.0) { "Percentile must be in range [0, 100]" }
 
     @Suppress("UNCHECKED_CAST")
@@ -26,7 +22,7 @@ internal inline fun <reified T : Comparable<T>> Iterable<T?>.percentile(
         val lower = list.quickSelect(index)
         val upper = list.quickSelect(index + 1)
 
-        return when (type.classifier) {
+        return when (type) {
             Double::class -> ((lower as Double + upper as Double) / 2.0) as T
             Float::class -> ((lower as Float + upper as Float) / 2.0f) as T
             Int::class -> ((lower as Int + upper as Int) / 2) as T

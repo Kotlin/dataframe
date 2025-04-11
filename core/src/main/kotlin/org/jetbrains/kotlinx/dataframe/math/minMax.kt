@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.IsBetterThan
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.preserveReturnTypeNullIfEmpty
 import org.jetbrains.kotlinx.dataframe.impl.bestByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.bestNotNaByOrNull
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.indexOfBestNotNullBy
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 
 // region min
 
@@ -23,7 +25,13 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(type: KType, skipNaN: B
     indexOfBest(type, skipNaN) { this < it }
 
 /** T: Comparable<T> -> T(?) */
-internal val minTypeConversion = preserveReturnTypeNullIfEmpty
+internal val minTypeConversion: CalculateReturnType = { type, isEmpty ->
+    val type = type.withNullability(false)
+    when {
+        type.isIntraComparable() -> type.withNullability(isEmpty)
+        else -> error("min can not be calculated for type ${renderType(type)}")
+    }
+}
 
 // endregion
 
@@ -38,7 +46,13 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(type: KType, skipNaN: B
     indexOfBest(type, skipNaN) { this > it }
 
 /** T: Comparable<T> -> T(?) */
-internal val maxTypeConversion = preserveReturnTypeNullIfEmpty
+internal val maxTypeConversion: CalculateReturnType = { type, isEmpty ->
+    val type = type.withNullability(false)
+    when {
+        type.isIntraComparable() -> type.withNullability(isEmpty)
+        else -> error("max can not be calculated for type ${renderType(type)}")
+    }
+}
 
 // endregion
 
