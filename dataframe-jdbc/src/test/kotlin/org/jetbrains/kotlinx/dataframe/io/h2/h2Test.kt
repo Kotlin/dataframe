@@ -694,10 +694,10 @@ class JdbcTest {
     fun `read from Unicode table names`() {
         val unicodeTableNames = listOf(
             "Таблица", // Russian Cyrillic
-            "表",      // Chinese character
+            "表", // Chinese character
             "テーブル", // Japanese Katakana
-            "عربي",    // Arabic
-            "Δοκιμή",  // Greek
+            "عربي", // Arabic
+            "Δοκιμή", // Greek
         )
 
         try {
