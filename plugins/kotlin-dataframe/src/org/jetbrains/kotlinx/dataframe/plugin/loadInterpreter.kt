@@ -105,6 +105,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConcatWithKeys
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf3
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameUnfold
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameXs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop1
@@ -472,6 +473,7 @@ internal inline fun <reified T> String.load(): T {
         "DataFrameXs" -> DataFrameXs()
         "GroupByXs" -> GroupByXs()
         "ConcatWithKeys" -> ConcatWithKeys()
+        "DataFrameUnfold" -> DataFrameUnfold()
         else -> error("$this")
     } as T
 }

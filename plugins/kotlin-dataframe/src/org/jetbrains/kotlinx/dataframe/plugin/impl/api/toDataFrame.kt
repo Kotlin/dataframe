@@ -197,61 +197,6 @@ internal fun KotlinTypeFacade.toDataFrame(
     arg: ConeTypeProjection,
     traverseConfiguration: TraverseConfiguration,
 ): PluginDataFrameSchema {
-
-    val anyType = session.builtinTypes.nullableAnyType.type
-
-    fun ConeKotlinType.isValueType() =
-        this.isArrayTypeOrNullableArrayType ||
-            this.classId == StandardClassIds.Unit ||
-            this.classId == StandardClassIds.Any ||
-            this.classId == StandardClassIds.Map ||
-            this.classId == StandardClassIds.MutableMap ||
-            this.classId == StandardClassIds.String ||
-            this.classId in StandardClassIds.primitiveTypes ||
-            this.classId in StandardClassIds.unsignedTypes ||
-            classId in setOf(
-            Names.DURATION_CLASS_ID,
-            Names.LOCAL_DATE_CLASS_ID,
-            Names.LOCAL_DATE_TIME_CLASS_ID,
-            Names.INSTANT_CLASS_ID,
-            Names.DATE_TIME_PERIOD_CLASS_ID,
-            Names.DATE_TIME_UNIT_CLASS_ID,
-            Names.TIME_ZONE_CLASS_ID
-        ) ||
-            this.isSubtypeOf(
-                StandardClassIds.Number.constructClassLikeType(emptyArray(), isNullable = true),
-                session
-            ) ||
-            this.toRegularClassSymbol(session)?.isEnumClass ?: false ||
-            this.isSubtypeOf(
-                Names.TEMPORAL_ACCESSOR_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
-            ) ||
-            this.isSubtypeOf(
-                Names.TEMPORAL_AMOUNT_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
-            )
-
-
-    fun FirNamedFunctionSymbol.isGetterLike(): Boolean {
-        val functionName = this.name.asString()
-        return (functionName.startsWith("get") || functionName.startsWith("is")) &&
-            this.valueParameterSymbols.isEmpty() &&
-            this.typeParameterSymbols.isEmpty()
-    }
-
-    fun ConeKotlinType.hasProperties(): Boolean {
-        val symbol = this.toRegularClassSymbol(session) as? FirClassSymbol<*> ?: return false
-        val scope = symbol.unsubstitutedScope(
-            session,
-            ScopeSession(),
-            withForcedTypeCalculator = false,
-            memberRequiredPhase = null
-        )
-
-        return scope.collectAllProperties().any { it.visibility == Visibilities.Public } ||
-            scope.collectAllFunctions().any { it.visibility == Visibilities.Public && it.isGetterLike() }
-    }
-
-
     val excludes =
         traverseConfiguration.excludeProperties.mapNotNullTo(mutableSetOf()) { it.calleeReference.toResolvedPropertySymbol() }
     val excludedClasses = traverseConfiguration.excludeClasses.mapTo(mutableSetOf()) { it.argument.resolvedType }
@@ -322,7 +267,7 @@ internal fun KotlinTypeFacade.toDataFrame(
 
                 val keepSubtree =
                     depth >= maxDepth && !fieldKind.shouldBeConvertedToColumnGroup && !fieldKind.shouldBeConvertedToFrameColumn
-                if (keepSubtree || returnType.isValueType() || returnType.classId in preserveClasses || it in preserveProperties) {
+                if (keepSubtree || returnType.isValueType(session) || returnType.classId in preserveClasses || it in preserveProperties) {
                     SimpleDataColumn(
                         name,
                         TypeApproximation(
@@ -349,7 +294,7 @@ internal fun KotlinTypeFacade.toDataFrame(
                         ConeStarProjection -> session.builtinTypes.nullableAnyType.type
                         else -> session.builtinTypes.nullableAnyType.type
                     }
-                    if (type.isValueType()) {
+                    if (type.isValueType(session)) {
                         val columnType = List.constructClassLikeType(arrayOf(type), returnType.isNullable)
                             .withNullability(ConeNullability.create(makeNullable), session.typeContext)
                             .wrap()
@@ -364,7 +309,7 @@ internal fun KotlinTypeFacade.toDataFrame(
     }
 
     arg.type?.let { type ->
-        if (type.isValueType() || !type.hasProperties()) {
+        if (!type.canBeUnfolded(session)) {
             return PluginDataFrameSchema(listOf(simpleColumnOf("value", type)))
         }
     }
@@ -381,6 +326,60 @@ internal fun KotlinTypeFacade.toDataFrame(
             PluginDataFrameSchema(columns)
         }
     }
+}
+
+fun ConeKotlinType.canBeUnfolded(session: FirSession): Boolean =
+    !isValueType(session) && hasProperties(session)
+
+private fun ConeKotlinType.isValueType(session: FirSession) =
+    this.isArrayTypeOrNullableArrayType ||
+        this.classId == StandardClassIds.Unit ||
+        this.classId == StandardClassIds.Any ||
+        this.classId == StandardClassIds.Map ||
+        this.classId == StandardClassIds.MutableMap ||
+        this.classId == StandardClassIds.String ||
+        this.classId in StandardClassIds.primitiveTypes ||
+        this.classId in StandardClassIds.unsignedTypes ||
+        classId in setOf(
+        Names.DURATION_CLASS_ID,
+        Names.LOCAL_DATE_CLASS_ID,
+        Names.LOCAL_DATE_TIME_CLASS_ID,
+        Names.INSTANT_CLASS_ID,
+        Names.DATE_TIME_PERIOD_CLASS_ID,
+        Names.DATE_TIME_UNIT_CLASS_ID,
+        Names.TIME_ZONE_CLASS_ID
+    ) ||
+        this.isSubtypeOf(
+            StandardClassIds.Number.constructClassLikeType(emptyArray(), isNullable = true),
+            session
+        ) ||
+        this.toRegularClassSymbol(session)?.isEnumClass ?: false ||
+        this.isSubtypeOf(
+            Names.TEMPORAL_ACCESSOR_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
+        ) ||
+        this.isSubtypeOf(
+            Names.TEMPORAL_AMOUNT_CLASS_ID.constructClassLikeType(emptyArray(), isNullable = true), session
+        )
+
+
+private fun ConeKotlinType.hasProperties(session: FirSession): Boolean {
+    val symbol = this.toRegularClassSymbol(session) as? FirClassSymbol<*> ?: return false
+    val scope = symbol.unsubstitutedScope(
+        session,
+        ScopeSession(),
+        withForcedTypeCalculator = false,
+        memberRequiredPhase = null
+    )
+
+    return scope.collectAllProperties().any { it.visibility == Visibilities.Public } ||
+        scope.collectAllFunctions().any { it.visibility == Visibilities.Public && it.isGetterLike() }
+}
+
+private fun FirNamedFunctionSymbol.isGetterLike(): Boolean {
+    val functionName = this.name.asString()
+    return (functionName.startsWith("get") || functionName.startsWith("is")) &&
+        this.valueParameterSymbols.isEmpty() &&
+        this.typeParameterSymbols.isEmpty()
 }
 
 // org.jetbrains.kotlinx.dataframe.codeGen.getFieldKind
