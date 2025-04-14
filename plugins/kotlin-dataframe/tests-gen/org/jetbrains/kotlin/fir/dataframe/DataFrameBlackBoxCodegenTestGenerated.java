@@ -689,6 +689,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("unfold.kt")
+  public void testUnfold() {
+    runTest("testData/box/unfold.kt");
+  }
+
+  @Test
   @TestMetadata("ungroup.kt")
   public void testUngroup() {
     runTest("testData/box/ungroup.kt");
