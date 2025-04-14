@@ -51,10 +51,25 @@ private val logger = KotlinLogging.logger {}
 private const val DEFAULT_LIMIT = Int.MIN_VALUE
 
 /**
- * Constant variable indicating the start of an SQL read query.
- * The value of this variable is "SELECT".
+ * A regular expression defining the valid pattern for SQL table names.
+ *
+ * This pattern enforces that table names must:
+ * - Contain only Unicode letters, Unicode digits, or underscores.
+ * - Optionally be segmented by dots to indicate schema and table separation.
+ *
+ * It ensures compatibility with most SQL database naming conventions, thus minimizing risks of invalid names
+ * or injection vulnerabilities.
+ *
+ * Example of valid table names:
+ * - `my_table`
+ * - `schema1.table2`
+ *
+ * Example of invalid table names:
+ * - `my-table` (contains a dash)
+ * - `table!name` (contains special characters)
+ * - `.startWithDot` (cannot start with a dot)
  */
-private const val START_OF_READ_SQL_QUERY = "SELECT"
+private const val TABLE_NAME_VALID_PATTERN = "^[\\p{L}\\p{N}_]+(\\.[\\p{L}\\p{N}_]+)*$"
 
 /**
  * Represents a column in a database table to keep all required meta-information.
@@ -449,7 +464,7 @@ private fun isValidTableName(tableName: String): Boolean {
     }
 
     // Validate the table name structure: letters, numbers, underscores, and dots are allowed
-    val tableNameRegex = Regex("^[A-Z0-9_]+(\\.[A-Z0-9_]+)*$")
+    val tableNameRegex = Regex(TABLE_NAME_VALID_PATTERN)
     if (!tableNameRegex.matches(normalizedTableName)) {
         logger.error {
             "Validation failed: The table name contains invalid characters. " +

@@ -691,6 +691,41 @@ class JdbcTest {
     }
 
     @Test
+    fun `read from Unicode table names`() {
+        val unicodeTableNames = listOf(
+            "Таблица", // Russian Cyrillic
+            "表",      // Chinese character
+            "テーブル", // Japanese Katakana
+            "عربي",    // Arabic
+            "Δοκιμή",  // Greek
+        )
+
+        try {
+            // Create tables with Unicode names
+            connection.createStatement().use { stmt ->
+                unicodeTableNames.forEach { tableName ->
+                    stmt.execute("CREATE TABLE IF NOT EXISTS `$tableName` (id INT PRIMARY KEY, name VARCHAR(255))")
+                    stmt.execute("INSERT INTO `$tableName` (id, name) VALUES (1, 'TestName')")
+                }
+            }
+
+            // Read from the tables and validate correctness
+            unicodeTableNames.forEach { tableName ->
+                val df = DataFrame.readSqlTable(connection, tableName)
+                df.rowsCount() shouldBe 1
+                df[0][1] shouldBe "TestName"
+            }
+        } finally {
+            // Drop the Unicode tables
+            connection.createStatement().use { stmt ->
+                unicodeTableNames.forEach { tableName ->
+                    stmt.execute("DROP TABLE IF EXISTS `$tableName`")
+                }
+            }
+        }
+    }
+
+    @Test
     fun `readSqlQuery should execute DROP TABLE when validation is disabled`() {
         // Query to create a temporary test table
         @Language("SQL")
