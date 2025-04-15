@@ -19,7 +19,6 @@ import kotlin.reflect.KProperty
 
 // region insert
 
-@Interpretable("Insert0")
 public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = InsertClause(this, column)
 
 @Interpretable("Insert1")
@@ -29,7 +28,6 @@ public inline fun <T, reified R> DataFrame<T>.insert(
     noinline expression: RowExpression<T, R>,
 ): InsertClause<T> = insert(mapToColumn(name, infer, expression))
 
-@Interpretable("Insert2")
 @AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
@@ -37,7 +35,6 @@ public inline fun <T, reified R> DataFrame<T>.insert(
     noinline expression: RowExpression<T, R>,
 ): InsertClause<T> = insert(column.name(), infer, expression)
 
-@Interpretable("Insert3")
 @AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: KProperty<R>,
@@ -62,12 +59,9 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> =
     df.insertImpl(columnPath + column.name, column)
 
-@Refine
-@Interpretable("Under2")
+@AccessApiOverload
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
 
-@Refine
-@Interpretable("Under3")
 @AccessApiOverload
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
