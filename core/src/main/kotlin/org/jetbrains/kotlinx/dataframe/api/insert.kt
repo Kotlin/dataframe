@@ -94,6 +94,8 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
 
 // region at
 
+@Refine
+@Interpretable("InsertAt")
 public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).move(column).to(position)
 
 // endregion
