@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianOf
 import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowMedianOf
-import org.jetbrains.kotlinx.dataframe.statistics.myFun
 import org.junit.Test
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.typeOf
@@ -39,11 +38,11 @@ class MedianTests {
         val d = personsDf.groupBy("city").medianOf("newAge") { "age"<Int>() * 10 }
         d["newAge"].type() shouldBe typeOf<Int>()
 
-        val e = personsDf.medianOf("newAge") { "age"<Int>().toString() }
+        val e = personsDf.medianOf<_, String> { "age"<Int>().toString() }
 
         val column = personsDf[column<Int>("age")]
         column.medianOf { it }
-        column.medianOf { it.toString() }
+        column.medianOf<_, String> { it.toString() }
     }
 
     @Test
@@ -58,8 +57,8 @@ class MedianTests {
         df.medianOrNull { "a"<Int>() and "b"<Int>() } shouldBe 5.0
         df.median("c") shouldBe "b"
 
-        df.median { "c"<String>() } shouldBe "b"
-        df.medianOrNull { "c"<String>() } shouldBe "b"
+        df.median<_, String> { "c"<String>() } shouldBe "b"
+        df.medianOrNull<_, String> { "c"<String>() } shouldBe "b"
 
         df.median({ "c"<String>() }) shouldBe "b"
         df.medianOrNull({ "c"<String>() }) shouldBe "b"

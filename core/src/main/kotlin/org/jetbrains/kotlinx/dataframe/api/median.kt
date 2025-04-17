@@ -32,7 +32,11 @@ import kotlin.reflect.KProperty
  * numbers -> Double
  * comparable -> itself
  *
- * medianBy is new
+ * TODO cases where the lambda dictates the return type require explicit type arguments for
+ *  non-number, comparable overloads: https://youtrack.jetbrains.com/issue/KT-76683
+ *  so, `df.median { intCol }` works, but needs `df.median<_, String> { stringCol }`
+ *
+ * medianBy is new for all overloads :)
  */
 
 // region DataColumn
@@ -65,19 +69,18 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianByOr
     crossinline selector: (T) -> R,
 ): T? = Aggregators.medianCommon<R>(skipNaN).aggregateByOrNull(this, selector)
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+// TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOf(
     crossinline expression: (T) -> R,
 ): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+// TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOfOrNull(
     crossinline expression: (T) -> R,
 ): R? = Aggregators.medianComparables<R>().aggregateOf(this, expression)
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataColumn<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -86,7 +89,6 @@ public inline fun <T, reified R> DataColumn<T>.medianOf(
     where R : Comparable<R & Any>?, R : Number? =
     medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataColumn<T>.medianOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
@@ -149,18 +151,17 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+// TODO, requires explicit type C due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(columns: ColumnsSelector<T, C>): C & Any =
     medianOrNull(columns).suggestIfNull("median")
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+// TODO, requires explicit type C due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(columns: ColumnsSelector<T, C>): C? =
     Aggregators.medianComparables<C>().aggregateAll(this, columns)
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public fun <T, C> DataFrame<T>.median(
     skipNaN: Boolean = skipNaNDefault,
@@ -168,7 +169,6 @@ public fun <T, C> DataFrame<T>.median(
 ): Double
     where C : Number?, C : Comparable<C & Any>? = medianOrNull(skipNaN, columns).suggestIfNull("median")
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
 public fun <T, C> DataFrame<T>.medianOrNull(
@@ -230,19 +230,18 @@ public fun <T, C> DataFrame<T>.medianOrNull(
 ): Double?
     where C : Comparable<C & Any>?, C : Number? = medianOrNull(skipNaN) { columns.toColumnSet() }
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+// TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.medianOf(
     crossinline expression: RowExpression<T, R>,
 ): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+// TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.medianOfOrNull(
     crossinline expression: RowExpression<T, R>,
 ): R? = Aggregators.medianComparables<R>().aggregateOf(this, expression)
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataFrame<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -251,7 +250,6 @@ public inline fun <T, reified R> DataFrame<T>.medianOf(
     where R : Comparable<R & Any>?, R : Number? =
     medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
 
-// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataFrame<T>.medianOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
@@ -259,6 +257,46 @@ public inline fun <T, reified R> DataFrame<T>.medianOfOrNull(
 ): Double?
     where R : Comparable<R & Any>?, R : Number? =
     Aggregators.medianNumbers<R>(skipNaN).aggregateOf(this, expression)
+
+public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
+    skipNaN: Boolean = skipNaNDefault,
+    crossinline expression: RowExpression<T, C>,
+): DataRow<T> = medianByOrNull(skipNaN, expression).suggestIfNull("medianBy")
+
+public fun <T> DataFrame<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
+    medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
+    column: ColumnReference<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): DataRow<T> = medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
+    column: KProperty<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): DataRow<T> = medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
+
+public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
+    skipNaN: Boolean = skipNaNDefault,
+    crossinline expression: RowExpression<T, C>,
+): DataRow<T>? = Aggregators.min<C>(skipNaN).aggregateByOrNull(this, expression)
+
+public fun <T> DataFrame<T>.medianByOrNull(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T>? =
+    medianByOrNull(column.toColumnOf<Comparable<Any>?>(), skipNaN)
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
+    column: ColumnReference<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): DataRow<T>? = Aggregators.min<C>(skipNaN).aggregateByOrNull(this, column)
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
+    column: KProperty<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): DataRow<T>? = medianByOrNull(column.toColumnAccessor(), skipNaN)
 
 // endregion
 
@@ -325,6 +363,27 @@ public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.medianOf(
     crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = Aggregators.medianCommon<R>(skipNaN).aggregateOf(this, name, expression)
 
+@Interpretable("GroupByReduceExpression") // TODO?
+public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.medianBy(
+    skipNaN: Boolean = skipNaNDefault,
+    crossinline rowExpression: RowExpression<G, R>,
+): ReducedGroupBy<T, G> = reduce { medianByOrNull(skipNaN, rowExpression) }
+
+@AccessApiOverload
+public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianBy(
+    column: ColumnReference<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): ReducedGroupBy<T, G> = reduce { medianByOrNull(column, skipNaN) }
+
+public fun <T, G> GroupBy<T, G>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedGroupBy<T, G> =
+    medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+
+@AccessApiOverload
+public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianBy(
+    column: KProperty<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): ReducedGroupBy<T, G> = medianBy(column.toColumnAccessor(), skipNaN)
+
 // endregion
 
 // region Pivot
@@ -383,6 +442,25 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianOf(
     crossinline expression: RowExpression<T, R>,
 ): DataRow<T> = delegate { medianOf(skipNaN, expression) }
 
+public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianBy(
+    skipNaN: Boolean = skipNaNDefault,
+    crossinline rowExpression: RowExpression<T, R>,
+): ReducedPivot<T> = reduce { medianByOrNull(skipNaN, rowExpression) }
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
+    column: ColumnReference<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): ReducedPivot<T> = reduce { medianByOrNull(column, skipNaN) }
+
+public fun <T> Pivot<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivot<T> =
+    medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
+    column: KProperty<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): ReducedPivot<T> = medianBy(column.toColumnAccessor(), skipNaN)
 // endregion
 
 // region PivotGroupBy
@@ -441,6 +519,28 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianOf
     crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = Aggregators.medianCommon<R>(skipNaN).aggregateOf(this, expression)
 
+public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianBy(
+    skipNaN: Boolean = skipNaNDefault,
+    crossinline rowExpression: RowExpression<T, R>,
+): ReducedPivotGroupBy<T> = reduce { medianByOrNull(skipNaN, rowExpression) }
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy(
+    column: ColumnReference<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): ReducedPivotGroupBy<T> = reduce { medianByOrNull(column, skipNaN) }
+
+public fun <T> PivotGroupBy<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivotGroupBy<T> =
+    medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+
+@AccessApiOverload
+public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy(
+    column: KProperty<C>,
+    skipNaN: Boolean = skipNaNDefault,
+): ReducedPivotGroupBy<T> = medianBy(column.toColumnAccessor(), skipNaN)
+
 // endregion
 
-// TODO more medianBy overloads
+// region binary compatibility
+// TODO
+// endregion
