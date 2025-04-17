@@ -34,7 +34,7 @@ import kotlin.reflect.KProperty
  *
  * TODO cases where the lambda dictates the return type require explicit type arguments for
  *  non-number, comparable overloads: https://youtrack.jetbrains.com/issue/KT-76683
- *  so, `df.median { intCol }` works, but needs `df.median<_, String> { stringCol }`
+ *  so, `df.median { intCol }` works, but needs `df.median<_, String> { stringCol }` or `df.median({ dateCol })`
  *  This needs to be explained by KDocs
  *
  * medianBy is new for all overloads :)
@@ -540,8 +540,4 @@ public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = medianBy(column.toColumnAccessor(), skipNaN)
 
-// endregion
-
-// region binary compatibility
-// TODO
 // endregion
