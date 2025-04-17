@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
 import kotlin.reflect.KType
 
@@ -28,7 +29,11 @@ internal interface AggregatorAggregationHandler<in Value : Any, out Return : Any
      * Aggregates the data in the given column and computes a single resulting value.
      * Calls [aggregateSequence].
      */
-    fun aggregateSingleColumn(column: DataColumn<Value?>): Return
+    fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
+        aggregateSequence(
+            values = column.asSequence(),
+            valueType = column.type().toValueType(),
+        )
 
     /**
      * Function that can give the return type of [aggregateSequence] as [KType], given the type of the input.

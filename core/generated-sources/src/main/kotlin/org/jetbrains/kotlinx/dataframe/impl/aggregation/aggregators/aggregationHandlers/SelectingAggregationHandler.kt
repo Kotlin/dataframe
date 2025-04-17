@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers
 
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
@@ -10,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Selector
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.calculateValueType
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.toValueType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -71,16 +68,6 @@ internal class SelectingAggregationHandler<in Value : Return & Any, out Return :
     }
 
     /**
-     * Aggregates the data in the given column and computes a single resulting value.
-     * Calls [aggregateSequence].
-     */
-    override fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
-        aggregateSequence(
-            values = column.asSequence(),
-            valueType = column.type().toValueType(),
-        )
-
-    /**
      * Give the return type of [selector] given some input type and whether the input is empty.
      * Calls the supplied [getReturnType].
      *
@@ -91,7 +78,7 @@ internal class SelectingAggregationHandler<in Value : Return & Any, out Return :
             require(it == valueType.withNullability(false) || it == valueType.withNullability(true)) {
                 "The return type of the selector must be either ${valueType.withNullability(false)} or ${
                     valueType.withNullability(true)
-                }"
+                } but was $it."
             }
         }
 
