@@ -36,12 +36,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.minOrNull(skipNaN: Boolean = skipN
 
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minBy(
     skipNaN: Boolean = skipNaNDefault,
-    noinline selector: (T) -> R,
+    crossinline selector: (T) -> R,
 ): T & Any = minByOrNull(skipNaN, selector).suggestIfNull("minBy")
 
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minByOrNull(
     skipNaN: Boolean = skipNaNDefault,
-    noinline selector: (T) -> R,
+    crossinline selector: (T) -> R,
 ): T? = Aggregators.min<R>(skipNaN).aggregateByOrNull(this, selector)
 
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOf(
@@ -59,10 +59,10 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.minOfOrNul
 // region DataRow
 
 @Deprecated(ROW_MIN_OR_NULL, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMinOrNull(): Any? = error(ROW_MIN_OR_NULL)
+public fun AnyRow.rowMinOrNull(): Nothing? = error(ROW_MIN_OR_NULL)
 
 @Deprecated(ROW_MIN, level = DeprecationLevel.ERROR)
-public fun AnyRow.rowMin(): Any = error(ROW_MIN)
+public fun AnyRow.rowMin(): Nothing = error(ROW_MIN)
 
 public inline fun <reified T : Comparable<T>> AnyRow.rowMinOfOrNull(skipNaN: Boolean = skipNaNDefault): T? =
     Aggregators.min<T>(skipNaN).aggregateOfRow(this) { colsOf<T?>() }
