@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.math
 import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.IsBetterThan
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.preserveReturnTypeNullIfEmpty
 import org.jetbrains.kotlinx.dataframe.impl.bestByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.bestNotNaByOrNull
 import org.jetbrains.kotlinx.dataframe.impl.canBeNaN

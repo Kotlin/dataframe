@@ -814,7 +814,7 @@ class DataFrameTreeTests : BaseTest() {
             .groupBy { expr { age > 30 } into "isOld" }.into(group)
             .aggregate {
                 group().maxBy { rowsCount() }.weight.median() into "m"
-            }["m"] shouldBe 61
+            }["m"] shouldBe 61.5
     }
 
     @Test
