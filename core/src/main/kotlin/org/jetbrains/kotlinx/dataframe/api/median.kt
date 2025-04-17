@@ -29,12 +29,13 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 /* TODO KDocs
- * numbers -> Double
- * comparable -> itself
+ * numbers -> Double or null
+ * comparable -> itself or null
  *
  * TODO cases where the lambda dictates the return type require explicit type arguments for
  *  non-number, comparable overloads: https://youtrack.jetbrains.com/issue/KT-76683
  *  so, `df.median { intCol }` works, but needs `df.median<_, String> { stringCol }`
+ *  This needs to be explained by KDocs
  *
  * medianBy is new for all overloads :)
  */
@@ -281,7 +282,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
-): DataRow<T>? = Aggregators.min<C>(skipNaN).aggregateByOrNull(this, expression)
+): DataRow<T>? = Aggregators.medianCommon<C>(skipNaN).aggregateByOrNull(this, expression)
 
 public fun <T> DataFrame<T>.medianByOrNull(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T>? =
     medianByOrNull(column.toColumnOf<Comparable<Any>?>(), skipNaN)
@@ -290,7 +291,7 @@ public fun <T> DataFrame<T>.medianByOrNull(column: String, skipNaN: Boolean = sk
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T>? = Aggregators.min<C>(skipNaN).aggregateByOrNull(this, column)
+): DataRow<T>? = Aggregators.medianCommon<C>(skipNaN).aggregateByOrNull(this, column)
 
 @AccessApiOverload
 public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(

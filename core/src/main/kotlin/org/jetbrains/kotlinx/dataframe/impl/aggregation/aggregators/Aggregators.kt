@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.HybridAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.ReducingAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.AnyInputHandler
@@ -39,12 +40,12 @@ internal object Aggregators {
         multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
     )
 
-    private fun <Value : Return & Any, Return : Any?> flattenSelectingForAny(
+    private fun <Value : Any, Return : Any?> flattenHybridForAny(
         getReturnType: CalculateReturnType,
         indexOfResult: IndexOfResult<Value>,
-        selector: Selector<Value, Return>,
+        reducer: Reducer<Value, Return>,
     ) = Aggregator(
-        aggregationHandler = SelectingAggregationHandler(selector, indexOfResult, getReturnType),
+        aggregationHandler = HybridAggregationHandler(reducer, indexOfResult, getReturnType),
         inputHandler = AnyInputHandler(),
         multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
     )
@@ -153,7 +154,7 @@ internal object Aggregators {
         }
     }
 
-    // T : primitive Number? -> Double
+    // T : primitive Number? -> Double?
     // T : Comparable<T & Any>? -> T?
     fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
@@ -164,19 +165,18 @@ internal object Aggregators {
         where T : Comparable<T & Any>? =
         medianCommon<T>(skipNaNDefault).cast2()
 
-    // T : primitive Number? -> Double
+    // T : primitive Number? -> Double?
     fun <T> medianNumbers(
         skipNaN: Boolean,
-    ): Aggregator<T & Any, Double>
+    ): Aggregator<T & Any, Double?>
         where T : Comparable<T & Any>?, T : Number? =
         medianCommon<T>(skipNaN).cast2()
 
-    // T: Comparable<T>? -> T
     @Suppress("UNCHECKED_CAST")
     private val median by withOneOption { skipNaN: Boolean ->
-        flattenSelectingForAny<Comparable<Any>, Comparable<Any>?>(
+        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
             getReturnType = medianConversion,
-            selector = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
+            reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
             indexOfResult = { type -> indexOfMedian(type, skipNaN) },
         )
     }

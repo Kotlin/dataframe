@@ -22,8 +22,7 @@ private val logger = KotlinLogging.logger { }
 
 /**
  * Returns the median of the comparable input:
- * - `null` if empty and primitive number
- * - `Double.NaN` if empty and primitive number
+ * - `null` if empty
  * - `Double` if primitive number
  * - `Double.NaN` if ![skipNaN] and contains NaN
  * - (lower) middle else
@@ -64,18 +63,18 @@ internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: 
     }.toList()
 
     val size = list.size
-    if (size == 0) return if (type.isPrimitiveNumber()) Double.NaN else null
+    if (size == 0) return null
+
+    if (size == 1) {
+        val single = list.single()
+        return if (type.isPrimitiveNumber()) (single as Number).toDouble() else single
+    }
 
     val isOdd = size % 2 != 0
 
     val middleIndex = (size - 1) / 2
     val lower = list.quickSelect(middleIndex)
     val upper = list.quickSelect(middleIndex + 1)
-
-    // check for quickSelect
-    if (isOdd && lower.compareTo(upper) != 0) {
-        error("lower and upper median are not equal while list-size is odd. This should not happen.")
-    }
 
     return when {
         isOdd && type.isPrimitiveNumber() -> (lower as Number).toDouble()
@@ -91,7 +90,7 @@ internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: 
 }
 
 /**
- * Primitive Number -> Double
+ * Primitive Number -> Double?
  * T : Comparable<T> -> T?
  */
 internal val medianConversion: CalculateReturnType = { type, isEmpty ->
@@ -101,10 +100,10 @@ internal val medianConversion: CalculateReturnType = { type, isEmpty ->
 
         // closest rank method, preferring lower middle,
         // number 3 of Hyndman and Fan "Sample quantiles in statistical packages"
-        type.isIntraComparable() -> type.withNullability(isEmpty)
+        type.isIntraComparable() -> type
 
         else -> error("Can not calculate median for type ${renderType(type)}")
-    }
+    }.withNullability(isEmpty)
 }
 
 /**
@@ -156,17 +155,10 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, s
 
     val size = list.size
     if (size == 0) return -1
-
-    val isOdd = size % 2 != 0
+    if (size == 1) return 0
 
     val middleIndex = (size - 1) / 2
     val lower = list.quickSelect(middleIndex)
-    val upper = list.quickSelect(middleIndex + 1)
-
-    // check for quickSelect
-    if (isOdd && lower.compareTo(upper) != 0) {
-        error("lower and upper median are not equal while list-size is odd. This should not happen.")
-    }
 
     return lower.index
 }
