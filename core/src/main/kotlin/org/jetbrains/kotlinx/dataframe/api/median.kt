@@ -65,14 +65,20 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianByOr
     crossinline selector: (T) -> R,
 ): T? = Aggregators.medianCommon<R>(skipNaN).aggregateByOrNull(this, selector)
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+@OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOf(
     crossinline expression: (T) -> R,
 ): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+@OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOfOrNull(
     crossinline expression: (T) -> R,
 ): R? = Aggregators.medianComparables<R>().aggregateOf(this, expression)
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+@OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataColumn<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
@@ -80,6 +86,8 @@ public inline fun <T, reified R> DataColumn<T>.medianOf(
     where R : Comparable<R & Any>?, R : Number? =
     medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
+@OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataColumn<T>.medianOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
@@ -146,6 +154,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(columns: ColumnsSelector<T, C>): C & Any =
     medianOrNull(columns).suggestIfNull("median")
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(columns: ColumnsSelector<T, C>): C? =
@@ -159,6 +168,7 @@ public fun <T, C> DataFrame<T>.median(
 ): Double
     where C : Number?, C : Comparable<C & Any>? = medianOrNull(skipNaN, columns).suggestIfNull("median")
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
 public fun <T, C> DataFrame<T>.medianOrNull(
@@ -220,16 +230,19 @@ public fun <T, C> DataFrame<T>.medianOrNull(
 ): Double?
     where C : Comparable<C & Any>?, C : Number? = medianOrNull(skipNaN) { columns.toColumnSet() }
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.medianOf(
     crossinline expression: RowExpression<T, R>,
 ): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.medianOfOrNull(
     crossinline expression: RowExpression<T, R>,
 ): R? = Aggregators.medianComparables<R>().aggregateOf(this, expression)
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataFrame<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
@@ -238,6 +251,7 @@ public inline fun <T, reified R> DataFrame<T>.medianOf(
     where R : Comparable<R & Any>?, R : Number? =
     medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
 
+// todo check overload resolution https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 public inline fun <T, reified R> DataFrame<T>.medianOfOrNull(
     skipNaN: Boolean = skipNaNDefault,

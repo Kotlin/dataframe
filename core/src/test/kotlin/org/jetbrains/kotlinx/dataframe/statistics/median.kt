@@ -1,13 +1,17 @@
+@file:OptIn(ExperimentalTypeInference::class)
+
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianOf
+import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.rowMedianOf
 import org.jetbrains.kotlinx.dataframe.statistics.myFun
 import org.junit.Test
@@ -34,6 +38,12 @@ class MedianTests {
     fun `medianOf test`() {
         val d = personsDf.groupBy("city").medianOf("newAge") { "age"<Int>() * 10 }
         d["newAge"].type() shouldBe typeOf<Int>()
+
+        val e = personsDf.medianOf("newAge") { "age"<Int>().toString() }
+
+        val column = personsDf[column<Int>("age")]
+        column.medianOf { it }
+        column.medianOf { it.toString() }
     }
 
     @Test
@@ -45,12 +55,16 @@ class MedianTests {
         )
         df.median("a", "b") shouldBe 5.0
         df.median { "a"<Int>() and "b"<Int>() } shouldBe 5.0
+        df.medianOrNull { "a"<Int>() and "b"<Int>() } shouldBe 5.0
         df.median("c") shouldBe "b"
 
         df.median { "c"<String>() } shouldBe "b"
+        df.medianOrNull { "c"<String>() } shouldBe "b"
 
         df.median({ "c"<String>() }) shouldBe "b"
+        df.medianOrNull({ "c"<String>() }) shouldBe "b"
         df.median<_, String> { "c"<String>() } shouldBe "b"
+        df.medianOrNull<_, String> { "c"<String>() } shouldBe "b"
     }
 
     @Test
@@ -62,32 +76,4 @@ class MedianTests {
         )
         df.mapToColumn("", Infer.Type) { it.rowMedianOf<Int>() } shouldBe columnOf(2, 3, 7)
     }
-}
-
-fun <T> List<T>.myFun(): Int where T : Comparable<T> = TODO()
-fun <T> List<T>.myFun(): Double where T : Comparable<T>, T : Number = TODO()
-
-fun <T> myFun(list: List<T>): Int where T : Comparable<T> = TODO()
-fun <T> myFun(list: List<T>): Double where T : Comparable<T>, T : Number = TODO()
-
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-//@JvmName("jnkjsdnf")
-fun <T> myFun(get : () -> T): Int where T : Comparable<T> = TODO()
-
-@JvmName("jnkjsdnf")
-@OptIn(ExperimentalTypeInference::class)
-@OverloadResolutionByLambdaReturnType
-fun <T> myFun(get : () -> T): Double where T : Comparable<T>, T : Number = TODO()
-
-fun main() {
-val res1 = listOf(1, 2, 3).myFun()
-val res2 = listOf("a", "b", "c").myFun()
-
-val res3 = myFun(listOf(1, 2, 3))
-val res4 = myFun(listOf("a", "b", "c"))
-
-val res5 = myFun { 1 }
-val res6 = myFun { "" }
-val res7 = myFun<String> { "" }
 }
