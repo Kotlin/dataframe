@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.typeContext
 import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.wrap
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Absent
@@ -24,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.dataFrame
-import org.jetbrains.kotlinx.dataframe.plugin.impl.enum
 import org.jetbrains.kotlinx.dataframe.plugin.impl.ignore
 import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.type
@@ -54,7 +52,7 @@ class ConvertApproximation(val schema: PluginDataFrameSchema, val columns: List<
 internal class Convert6 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.firstCol: String by arg()
     val Arguments.cols: List<String> by arg(defaultValue = Present(emptyList()))
-    val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
+    val Arguments.infer by ignore()
     val Arguments.expression: TypeApproximation by type()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     override val Arguments.startingSchema get() = receiver

@@ -181,7 +181,8 @@ public interface ValueColsColumnsSelectionDsl {
  * @param filter The filter function to apply on each value column. Must accept a ValueColumn object and return a Boolean.
  * @return A [TransformableColumnSet] containing the value columns that satisfy the filter.
  */
-internal fun ColumnsResolver<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
-    colsInternal { it.isValueColumn() && filter(it) }
+internal inline fun ColumnsResolver<*>.valueColumnsInternal(
+    crossinline filter: (ValueColumn<*>) -> Boolean,
+): TransformableColumnSet<*> = colsInternal { it.isValueColumn() && filter(it) }
 
 // endregion

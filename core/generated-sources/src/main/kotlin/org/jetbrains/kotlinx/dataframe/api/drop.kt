@@ -21,7 +21,7 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
+public inline fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
 
 public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> =
     when {
@@ -59,13 +59,13 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
 /**
  * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
  */
-public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
+public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 
 /**
  * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
  */
-public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
-    firstOrNull { !predicate(it, it) }?.let { drop(it.index) } ?: this
+public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
+    firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
 
 // endregion
 

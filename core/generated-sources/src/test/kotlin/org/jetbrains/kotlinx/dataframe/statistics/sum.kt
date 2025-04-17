@@ -161,10 +161,10 @@ class SumTests {
         (row2.rowSum() as Double).shouldBeNaN()
 
         // Test rowSumOf
-        row1.rowSumOf<Double?>(skipNaN = true) shouldBe 6.0
-        row2.rowSumOf<Double?>(skipNaN = true) shouldBe 1.0
-        row1.rowSumOf<Double?>() shouldBe 6.0
-        row2.rowSumOf<Double?>().shouldBeNaN()
+        row1.rowSumOf<Double>(skipNaN = true) shouldBe 6.0
+        row2.rowSumOf<Double>(skipNaN = true) shouldBe 1.0
+        row1.rowSumOf<Double>() shouldBe 6.0
+        row2.rowSumOf<Double>().shouldBeNaN()
     }
 
     @Test

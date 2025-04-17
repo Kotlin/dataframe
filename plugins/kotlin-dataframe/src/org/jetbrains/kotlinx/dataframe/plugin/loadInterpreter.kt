@@ -28,8 +28,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AggregateDslInto
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByToDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert1
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert2
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert3
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Into
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Into0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Join0
@@ -44,8 +42,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Select0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.To0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under1
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under2
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under3
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under4
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Ungroup0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.With0
@@ -105,6 +101,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConcatWithKeys
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf3
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameUnfold
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameXs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop1
@@ -306,12 +303,8 @@ internal inline fun <reified T> String.load(): T {
         "Explode0" -> Explode0()
         "Insert0" -> Insert0()
         "Insert1" -> Insert1()
-        "Insert2" -> Insert2()
-        "Insert3" -> Insert3()
         "Under0" -> Under0()
         "Under1" -> Under1()
-        "Under2" -> Under2()
-        "Under3" -> Under3()
         "Under4" -> Under4()
         "InsertAfter0" -> InsertAfter0()
         "Join0" -> Join0()
@@ -472,6 +465,7 @@ internal inline fun <reified T> String.load(): T {
         "DataFrameXs" -> DataFrameXs()
         "GroupByXs" -> GroupByXs()
         "ConcatWithKeys" -> ConcatWithKeys()
+        "DataFrameUnfold" -> DataFrameUnfold()
         else -> error("$this")
     } as T
 }
