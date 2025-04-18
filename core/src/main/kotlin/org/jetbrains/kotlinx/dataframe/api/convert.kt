@@ -57,7 +57,7 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 /**
- * Converts the values in the specified [columns] to a target type
+ * Converts the values in the specified [columns\] to a target type
  * or using a custom converter, keeping their original names and positions within the [DataFrame].
  *
  * This function does not immediately convert the columns but instead select columns to convert and
@@ -518,7 +518,7 @@ public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: Parse
  *
  * @param [newType] The target type to convert values to.
  * @param [parserOptions] Optional [ParserOptions] to customize parsing behavior (e.g., locale, null strings).
- * @return A new [DataColumn] with the values converted to type [C].
+ * @return A new [DataColumn] with the values converted to [type].
  */
 public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): AnyCol =
     when {
