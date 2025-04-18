@@ -32,7 +32,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
@@ -367,7 +366,6 @@ public class Convert<T, out C>(internal val df: DataFrame<T>, internal val colum
  * @return A new [DataFrame] with the values converted to [type].
  */
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
-
 
 /**
  * Converts values in the columns previously selected with [convert]
