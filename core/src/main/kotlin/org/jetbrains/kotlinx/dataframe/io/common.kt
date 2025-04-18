@@ -44,6 +44,20 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
     }
 }
 
+/**
+ * Converts a list of lists into a [DataFrame].
+ *
+ * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
+ * If [containsColumns] is `true`, interprets each inner list as a column,
+ * where the first element is used as the column name, and the remaining elements as values.
+ *
+ * @param T The type of elements contained in the nested lists.
+ * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
+ *                        Otherwise, the first list is treated as the header.
+ *                        Defaults to `false`.
+ * @return A [DataFrame] containing the data from the nested list structure.
+ *         Returns an empty [DataFrame] if the input is empty or invalid.
+ */
 public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame =
     when {
         containsColumns -> {
