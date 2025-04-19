@@ -155,6 +155,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("distinct.kt")
+  public void testDistinct() {
+        runTest("testData/box/distinct.kt");
+    }
+
+  @Test
   @TestMetadata("dropNA.kt")
   public void testDropNA() {
     runTest("testData/box/dropNA.kt");
