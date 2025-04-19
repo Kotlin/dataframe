@@ -312,6 +312,7 @@ internal inline fun <reified T> String.load(): T {
         "Rename" -> Rename()
         "RenameMapping" -> RenameMapping()
         "Select0" -> Select0()
+        "Distinct0" -> Select0()
         "Expr0" -> Expr0()
         "And0" -> And0()
         "Remove0" -> Remove0()
