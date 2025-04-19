@@ -50,7 +50,6 @@ public object MsSql : DbType("sqlserver") {
     override fun convertSqlTypeToKType(tableColumnMetadata: TableColumnMetadata): KType? = null
 
     public override fun sqlQueryLimit(sqlQuery: String, limit: Int): String {
-        sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)
-        return sqlQuery
+        return sqlQuery.replace("SELECT", "SELECT TOP $limit", ignoreCase = true)
     }
 }
