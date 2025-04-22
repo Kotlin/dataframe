@@ -2341,6 +2341,18 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `move beyond range of existing column indices`() {
+        val res = typed.move { city }.to(11)
+        res.columnNames() shouldBe listOf("name", "age", "weight", "city")
+    }
+
+    @Test
+    fun `move multiple columns beyond range of existing column indices`() {
+        val res = typed.move { city and name }.to(11)
+        res.columnNames() shouldBe listOf("age", "weight", "city", "name")
+    }
+
+    @Test
     fun splitIntoThisAndNewColumn() {
         val split = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
         split.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
