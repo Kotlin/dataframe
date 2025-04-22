@@ -73,7 +73,6 @@ import kotlin.time.Duration
  * @include [INPUT_STREAM_READ]
  * @param delimiter The field delimiter character. The default is ',' for CSV, '\t' for TSV.
  * @include [HEADER]
- * @include [COMPRESSION]
  * @include [COL_TYPES]
  * @include [SKIP_LINES]
  * @include [READ_LINES]
@@ -87,6 +86,7 @@ import kotlin.time.Duration
  * @include [IGNORE_SURROUNDING_SPACES]
  * @include [TRIM_INSIDE_QUOTED]
  * @include [PARSE_PARALLEL]
+ * @include [COMPRESSION]
  * @include [ADJUST_CSV_SPECS]
  */
 internal fun readDelimImpl(
@@ -95,7 +95,6 @@ internal fun readDelimImpl(
     header: List<String>,
     hasFixedWidthColumns: Boolean,
     fixedColumnWidths: List<Int>,
-    compression: Compression<*>,
     colTypes: Map<String, ColType>,
     skipLines: Long,
     readLines: Long?,
@@ -107,6 +106,7 @@ internal fun readDelimImpl(
     ignoreSurroundingSpaces: Boolean,
     trimInsideQuoted: Boolean,
     parseParallel: Boolean,
+    compression: Compression<*>,
     adjustCsvSpecs: AdjustCsvSpecs,
 ): DataFrame<*> {
     // set up the csv specs
