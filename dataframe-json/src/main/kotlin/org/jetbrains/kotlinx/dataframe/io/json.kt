@@ -12,8 +12,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
@@ -24,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.util.READ_JSON
 import java.io.File
 import java.io.InputStream
 import java.net.URL
@@ -35,12 +34,6 @@ public class JSON(
     private val keyValuePaths: List<JsonPath> = emptyList(),
     private val unifyNumbers: Boolean = true,
 ) : SupportedDataFrameFormat {
-
-    @Deprecated(READ_JSON, level = DeprecationLevel.HIDDEN)
-    public constructor(
-        typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-        keyValuePaths: List<JsonPath> = emptyList(),
-    ) : this(typeClashTactic, keyValuePaths, true)
 
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readJson(
@@ -424,78 +417,11 @@ public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false) {
     writer.append(toJson(prettyPrint))
 }
 
-// region deprecations
+private const val READ_JSON = "readJson"
 
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readJson(
-    file: File,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = DataFrame.readJson(file, header, keyValuePaths, typeClashTactic, true)
-
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataRow.Companion.readJson(
-    file: File,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataRow.readJson(file, header, keyValuePaths, typeClashTactic, true)
-
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readJson(
-    stream: InputStream,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = DataFrame.readJson(stream, header, keyValuePaths, typeClashTactic, true)
-
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataRow.Companion.readJson(
-    stream: InputStream,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataRow.readJson(stream, header, keyValuePaths, typeClashTactic, true)
-
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readJson(
-    url: URL,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = DataFrame.readJson(url, header, keyValuePaths, typeClashTactic, true)
-
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataRow.Companion.readJson(
-    url: URL,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataRow.readJson(url, header, keyValuePaths, typeClashTactic, true)
-
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataFrame.Companion.readJsonStr(
-    @Language("json") text: String,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = DataFrame.readJsonStr(text, header, keyValuePaths, typeClashTactic, true)
-
-/** Here for binary compatibility. */
-@Deprecated(message = READ_JSON, level = DeprecationLevel.HIDDEN)
-public fun DataRow.Companion.readJsonStr(
-    @Language("json") text: String,
-    header: List<String> = emptyList(),
-    keyValuePaths: List<JsonPath> = emptyList(),
-    typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataRow.readJsonStr(text, header, keyValuePaths, typeClashTactic, true)
-
-// endregion
+internal class DefaultReadJsonMethod(path: String?, arguments: MethodArguments) :
+    AbstractDefaultReadMethod(
+        path = path,
+        arguments = arguments,
+        methodName = READ_JSON,
+    )

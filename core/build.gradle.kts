@@ -65,8 +65,6 @@ dependencies {
 
     api(libs.commonsCsv)
     implementation(libs.commonsIo)
-    implementation(libs.serialization.core)
-    implementation(libs.serialization.json)
     implementation(libs.fastDoubleParser)
 
     api(libs.kotlin.datetimeJvm)

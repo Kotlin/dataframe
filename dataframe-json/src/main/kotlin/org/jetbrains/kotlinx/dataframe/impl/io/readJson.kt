@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -38,25 +39,16 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
-import org.jetbrains.kotlinx.dataframe.impl.api.chunkedImpl
+import org.jetbrains.kotlinx.dataframe.impl.DataCollector
 import org.jetbrains.kotlinx.dataframe.impl.asList
-import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
-import org.jetbrains.kotlinx.dataframe.impl.commonType
-import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
-import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
-import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
-import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.io.ARRAY_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.VALUE_COLUMN_NAME
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.values
@@ -179,7 +171,7 @@ internal fun fromJsonListAnyColumns(
     val columns: List<AnyCol> = when {
         // Create one column of type Any? (or guessed primitive type) from all the records
         colType == AnyColType.ANY -> {
-            val collector: DataCollectorBase<Any?> =
+            val collector: DataCollector<Any?> =
                 if (justPrimitives) {
                     createDataCollector(records.size) // guess the type
                 } else {
@@ -250,7 +242,7 @@ internal fun fromJsonListAnyColumns(
                     else -> collector.add(v)
                 }
             }
-            val column = createColumnGuessingType(VALUE_COLUMN_NAME, collector.values, unifyNumbers = unifyNumbers)
+            val column = createColumnGuessingType(VALUE_COLUMN_NAME, collector.data, unifyNumbers = unifyNumbers)
             val res = if (nanIndices.isNotEmpty()) {
                 fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                     var j = 0
@@ -313,7 +305,7 @@ internal fun fromJsonListAnyColumns(
 
                 else ->
                     parsed.unwrapUnnamedColumns()
-                        .chunkedImpl(
+                        .chunked(
                             startIndices = startIndices,
                             name = ARRAY_COLUMN_NAME, // will be erased
                         )
@@ -367,7 +359,7 @@ internal fun fromJsonListAnyColumns(
             val valueColumnSchema = when {
                 // in these cases we can safely combine the columns to get a single column schema
                 valueColumns.all { it is ColumnGroup<*> } || valueColumns.all { it is FrameColumn<*> } ->
-                    valueColumns.concat().extractSchema()
+                    valueColumns.concat().toDataFrame().schema().columns.values.single()
 
                 // to avoid listification, we create the value columns schema ourselves (https://github.com/Kotlin/dataframe/issues/184)
                 else -> ColumnSchema.Value(valueTypes.commonType())
@@ -411,7 +403,7 @@ internal fun fromJsonListAnyColumns(
                     jsonPath = jsonPath.append(colName),
                 )
                 when {
-                    parsed.ncol == 0 ->
+                    parsed.columnsCount() == 0 ->
                         DataColumn.createValueColumn(
                             name = colName,
                             values = arrayOfNulls<Any?>(values.size).toList(),
@@ -442,7 +434,7 @@ internal fun fromJsonListAnyColumns(
     }
 }
 
-private fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is UnnamedColumn
+private fun AnyFrame.isSingleUnnamedColumn() = columnsCount() == 1 && getColumn(0) is UnnamedColumn
 
 /**
  * Json to DataFrame converter that creates allows creates `value` and `array` accessors
@@ -556,7 +548,7 @@ internal fun fromJsonListArrayAndValueColumns(
                         name = VALUE_COLUMN_NAME, // will be erased unless at top-level
                         groups = dataFrames,
                         schema = lazy {
-                            dataFrames.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
+                            dataFrames.mapNotNull { it.takeIf { it.rowsCount() > 0 }?.schema() }.intersectSchemas()
                         },
                     ),
                 ),
@@ -569,7 +561,7 @@ internal fun fromJsonListArrayAndValueColumns(
                 when {
                     // Collect primitive values from records into the `value` column if needed
                     colName == valueColumn && (hasPrimitive || records.isEmpty()) -> {
-                        val collector = createDataCollector(records.size)
+                        val collector: DataCollector<Any?> = createDataCollector(records.size)
                         val nanIndices = mutableListOf<Int>()
                         records.forEachIndexed { i, v ->
                             when (v) {
@@ -605,7 +597,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                 else -> collector.add(v)
                             }
                         }
-                        val column = createColumnGuessingType(colName, collector.values, unifyNumbers = unifyNumbers)
+                        val column = createColumnGuessingType(colName, collector.data, unifyNumbers = unifyNumbers)
                         val res = if (nanIndices.isNotEmpty()) {
                             fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                                 var j = 0
@@ -663,7 +655,7 @@ internal fun fromJsonListArrayAndValueColumns(
                                 )
                             }
 
-                            else -> parsed.unwrapUnnamedColumns().chunkedImpl(startIndices, colName)
+                            else -> parsed.unwrapUnnamedColumns().chunked(startIndices, colName)
                         }
                         UnnamedColumn(res)
                     }
@@ -685,7 +677,7 @@ internal fun fromJsonListArrayAndValueColumns(
                             jsonPath = jsonPath.append(colName),
                         )
                         when {
-                            parsed.ncol == 0 ->
+                            parsed.columnsCount() == 0 ->
                                 DataColumn.createValueColumn(
                                     name = colName,
                                     values = arrayOfNulls<Any?>(values.size).toList(),
@@ -722,3 +714,82 @@ internal fun fromJsonListArrayAndValueColumns(
 // but filtered values [1, { ... }, []] -> [1, null, null]
 // or arrays: [1, { ...}, []] -> [null, null, []]
 private class UnnamedColumn(val col: DataColumn<Any?>) : DataColumn<Any?> by col
+
+// region friend module error suppression
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun createDataCollector(initCapacity: Int = 0) =
+    org.jetbrains.kotlinx.dataframe.impl.createDataCollector(initCapacity)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun <T> createDataCollector(initCapacity: Int = 0, type: KType) =
+    org.jetbrains.kotlinx.dataframe.impl.createDataCollector<T>(initCapacity, type)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun <T> createColumnGuessingType(
+    name: String,
+    values: Iterable<T>,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
+    listifyValues: Boolean = false,
+    allColsMakesColGroup: Boolean = false,
+    unifyNumbers: Boolean = false,
+) = org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType(
+    name = name,
+    values = values,
+    suggestedType = suggestedType,
+    defaultValue = defaultValue,
+    nullable = nullable,
+    listifyValues = listifyValues,
+    allColsMakesColGroup = allColsMakesColGroup,
+    unifyNumbers = unifyNumbers,
+)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun <T> createColumnGuessingType(
+    values: Iterable<T>,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
+    listifyValues: Boolean = false,
+    allColsMakesColGroup: Boolean = false,
+    unifyNumbers: Boolean = false,
+) = org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType(
+    values = values,
+    suggestedType = suggestedType,
+    defaultValue = defaultValue,
+    nullable = nullable,
+    listifyValues = listifyValues,
+    allColsMakesColGroup = allColsMakesColGroup,
+    unifyNumbers = unifyNumbers,
+)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun guessValueType(
+    values: Sequence<Any?>,
+    upperBound: KType? = null,
+    listifyValues: Boolean = false,
+    allColsMakesRow: Boolean = false,
+    unifyNumbers: Boolean = false,
+) = org.jetbrains.kotlinx.dataframe.impl.guessValueType(
+    values = values,
+    upperBound = upperBound,
+    listifyValues = listifyValues,
+    allColsMakesRow = allColsMakesRow,
+    unifyNumbers = unifyNumbers,
+)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>) =
+    org.jetbrains.kotlinx.dataframe.impl.splitByIndices(list = this, startIndices = startIndices)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun Iterable<KType?>.commonType(useStar: Boolean = true) =
+    org.jetbrains.kotlinx.dataframe.impl.commonType(types = this, useStar)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun Iterable<DataFrameSchema>.intersectSchemas() =
+    org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas(schemas = this)
+
+// endregion

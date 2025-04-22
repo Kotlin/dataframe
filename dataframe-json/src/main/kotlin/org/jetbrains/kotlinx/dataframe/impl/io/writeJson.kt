@@ -24,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.take
-import org.jetbrains.kotlinx.dataframe.columns.CellKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -43,13 +42,12 @@ import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.VALUE_COLUMN_NAME
 import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils
-import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.isDataframeConvertable
 import org.jetbrains.kotlinx.dataframe.name
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.typeClass
+import java.awt.RenderingHints
 import java.awt.image.BufferedImage
+import java.awt.image.ImageObserver
 import java.io.IOException
 
 // See docs/serialization_format.md for a description of
@@ -155,8 +153,8 @@ internal fun encodeRowWithMetadata(
                                 },
                             )
                         }
-                        put(NCOL, JsonPrimitive(col[index].ncol))
-                        put(NROW, JsonPrimitive(col[index].nrow))
+                        put(NCOL, JsonPrimitive(col[index].columnsCount()))
+                        put(NROW, JsonPrimitive(col[index].rowsCount()))
                     }
                 }
             }
@@ -415,3 +413,40 @@ internal fun encodeFrameNoDynamicNestedTables(df: AnyFrame, limit: Int): JsonObj
             encodeFrame(df.take(limit)),
         )
     }
+
+// region friend module error suppression
+
+@Suppress("INVISIBLE_REFERENCE")
+private object CellKind {
+    val DataFrameConvertable = org.jetbrains.kotlinx.dataframe.columns.CellKind.DataFrameConvertable
+}
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun isDataframeConvertable(dataframeLike: Any?) =
+    KotlinNotebookPluginUtils.isDataframeConvertable(dataframeLike = dataframeLike)
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun BufferedImage.resizeKeepingAspectRatio(
+    maxSize: Int,
+    resultImageType: Int = BufferedImage.TYPE_INT_ARGB,
+    interpolation: Any = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR,
+    renderingQuality: Any = RenderingHints.VALUE_RENDER_QUALITY,
+    antialiasing: Any = RenderingHints.VALUE_ANTIALIAS_ON,
+    observer: ImageObserver? = null,
+) = org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio(
+    image = this,
+    maxSize = maxSize,
+    resultImageType = resultImageType,
+    interpolation = interpolation,
+    renderingQuality = renderingQuality,
+    antialiasing = antialiasing,
+    observer = observer,
+)
+
+private const val DEFAULT_IMG_FORMAT: String = "png"
+
+@Suppress("INVISIBLE_REFERENCE")
+private fun BufferedImage.toByteArray(format: String = DEFAULT_IMG_FORMAT) =
+    org.jetbrains.kotlinx.dataframe.impl.io.toByteArray(image = this, format = format)
+
+// endregion

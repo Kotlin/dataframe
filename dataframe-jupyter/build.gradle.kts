@@ -4,6 +4,8 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
+        alias(kover)
+        alias(ktlint)
         alias(jupyter.api)
         alias(buildconfig)
         alias(binary.compatibility.validator)
