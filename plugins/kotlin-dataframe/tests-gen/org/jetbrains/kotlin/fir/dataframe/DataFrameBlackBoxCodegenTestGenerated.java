@@ -157,8 +157,8 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @Test
   @TestMetadata("distinct.kt")
   public void testDistinct() {
-        runTest("testData/box/distinct.kt");
-    }
+    runTest("testData/box/distinct.kt");
+  }
 
   @Test
   @TestMetadata("dropNA.kt")
@@ -380,6 +380,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("joinKinds.kt")
   public void testJoinKinds() {
     runTest("testData/box/joinKinds.kt");
+  }
+
+  @Test
+  @TestMetadata("joinWithKinds.kt")
+  public void testJoinWithKinds() {
+    runTest("testData/box/joinWithKinds.kt");
+  }
+
+  @Test
+  @TestMetadata("joinWith_duplicateColumnGroups.kt")
+  public void testJoinWith_duplicateColumnGroups() {
+    runTest("testData/box/joinWith_duplicateColumnGroups.kt");
   }
 
   @Test
