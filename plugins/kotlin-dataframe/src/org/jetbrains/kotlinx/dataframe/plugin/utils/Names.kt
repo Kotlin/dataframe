@@ -31,10 +31,17 @@ object Names {
 
     val COLUM_GROUP_CLASS_ID: ClassId
         get() = ClassId(FqName("org.jetbrains.kotlinx.dataframe.columns"), Name.identifier("ColumnGroup"))
+    val FRAME_COLUMN_CLASS_ID: ClassId
+        get() = ClassId(FqName("org.jetbrains.kotlinx.dataframe.columns"), Name.identifier("FrameColumn"))
     val DATA_COLUMN_CLASS_ID: ClassId
         get() = ClassId(
             FqName.fromSegments(listOf("org", "jetbrains", "kotlinx", "dataframe")),
             Name.identifier("DataColumn")
+        )
+    val BASE_COLUMN_CLASS_ID: ClassId
+        get() = ClassId(
+            FqName.fromSegments(listOf("org", "jetbrains", "kotlinx", "dataframe", "columns")),
+            Name.identifier("BaseColumn")
         )
     val COLUMNS_CONTAINER_CLASS_ID: ClassId
         get() = ClassId(
