@@ -21,6 +21,7 @@ dependencies {
     implementation(projects.dataframeExcel)
     implementation(projects.dataframeCsv)
     implementation(projects.dataframeJdbc)
+    implementation(projects.dataframeJson)
     // experimental
     implementation(projects.dataframeOpenapiGenerator)
 

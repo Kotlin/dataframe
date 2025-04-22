@@ -10,11 +10,9 @@ import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -31,13 +29,14 @@ import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.resetToDefault
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.stringParser
 import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.impl.javaDurationCanParse
 import org.jetbrains.kotlinx.dataframe.io.isUrl
-import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.values
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -404,24 +403,25 @@ internal object Parsers : GlobalParserOptions {
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal
         stringParser<BigDecimal> { it.toBigDecimalOrNull() },
-        // JSON array as DataFrame<*>
-        stringParser<AnyFrame>(catch = true) {
-            val trimmed = it.trim()
-            if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-                DataFrame.readJsonStr(it)
-            } else {
-                null
-            }
-        },
-        // JSON object as DataRow<*>
-        stringParser<AnyRow>(catch = true) {
-            val trimmed = it.trim()
-            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-                DataRow.readJsonStr(it)
-            } else {
-                null
-            }
-        },
+
+        // JSON array as DataFrame<*> TODO
+//        stringParser<AnyFrame>(catch = true) {
+//            val trimmed = it.trim()
+//            if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+//                DataFrame.readJsonStr(it)
+//            } else {
+//                null
+//            }
+//        },
+        // JSON object as DataRow<*> TODO
+//        stringParser<AnyRow>(catch = true) {
+//            val trimmed = it.trim()
+//            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+//                DataRow.readJsonStr(it)
+//            } else {
+//                null
+//            }
+//        },
         // Char
         stringParser<Char> { it.singleOrNull() },
         // No parser found, return as String

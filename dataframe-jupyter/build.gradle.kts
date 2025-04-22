@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     compileOnly(projects.core)
+    compileOnly(projects.dataframeJson)
 
     testImplementation(libs.junit)
     testImplementation(libs.serialization.json)
@@ -28,6 +29,7 @@ dependencies {
     testImplementation(projects.dataframeCsv)
     testImplementation(projects.dataframeExcel)
     testImplementation(projects.dataframeJdbc)
+    testImplementation(projects.dataframeJson)
     // experimental
     testImplementation(projects.dataframeOpenapiGenerator)
     testImplementation(projects.dataframeOpenapi)

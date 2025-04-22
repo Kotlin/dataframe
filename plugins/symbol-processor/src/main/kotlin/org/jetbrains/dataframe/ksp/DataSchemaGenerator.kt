@@ -160,7 +160,7 @@ class DataSchemaGenerator(
         val formats = listOfNotNull(
             CsvDeephaven(delimiter = importStatement.csvOptions.delimiter),
             JSON(
-                typeClashTactic = importStatement.jsonOptions.typeClashTactic,
+                typeClashTactic = JSON.TypeClashTactic.valueOf(importStatement.jsonOptions.typeClashTactic),
                 keyValuePaths = importStatement.jsonOptions.keyValuePaths.map(::JsonPath),
             ),
             Excel(),

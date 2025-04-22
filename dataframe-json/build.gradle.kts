@@ -10,20 +10,10 @@ plugins {
         alias(kodex)
         alias(buildconfig)
         alias(binary.compatibility.validator)
-
-        // generates keywords using the :generator module
-//        alias(keywordGenerator)
-
-        // dependence on our own plugin
-//        alias(dataframe)
-
-        // only mandatory if `kotlin.dataframe.add.ksp=false` in gradle.properties
-//        alias(ksp)
     }
 }
 
 group = "org.jetbrains.kotlinx"
-version = "1.0.0-dev"
 
 repositories {
     mavenLocal()
@@ -32,6 +22,7 @@ repositories {
 
 dependencies {
     api(projects.core)
+
     implementation(libs.kotlin.stdlib)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
@@ -62,7 +53,7 @@ kotlinPublications {
     publication {
         publicationName = "dataframeJson"
         artifactId = project.name
-        description = "Kotlin DataFrame JSON integration."
+        description = "Kotlin DataFrame JSON integration"
         packageName = artifactId
     }
 }

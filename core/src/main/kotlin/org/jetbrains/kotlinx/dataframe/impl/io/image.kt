@@ -60,6 +60,7 @@ internal fun BufferedImage.toByteArray(format: String = DEFAULT_IMG_FORMAT): Byt
     }
 
 // helper overload for friend modules
+@JvmName("resizeKeepingAspectRatioOverload")
 internal fun resizeKeepingAspectRatio(
     image: BufferedImage,
     maxSize: Int,
@@ -78,4 +79,5 @@ internal fun resizeKeepingAspectRatio(
 )
 
 // helper overload for friend modules
+@JvmName("toByteArrayOverload")
 internal fun toByteArray(image: BufferedImage, format: String = DEFAULT_IMG_FORMAT) = image.toByteArray(format)

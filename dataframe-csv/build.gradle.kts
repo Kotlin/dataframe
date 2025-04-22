@@ -34,13 +34,11 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
 
-    // for writing json in csv
-    implementation(projects.dataframeJson)
-
     testApi(projects.core)
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
+    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
