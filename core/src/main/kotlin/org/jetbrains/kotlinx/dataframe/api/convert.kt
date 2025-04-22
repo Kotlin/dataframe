@@ -60,11 +60,11 @@ import kotlin.reflect.typeOf
  * Converts the values in the specified [columns\] to a target type
  * or using a custom converter, keeping their original names and positions within the [DataFrame].
  *
- * This function does not immediately convert the columns but instead select columns to convert and
+ * This function does not immediately convert the columns but instead selects columns to convert and
  * returns a [Convert],
  * which serves as an intermediate step.
  * The [Convert] object allows you to specify how the selected
- * columns will be converted using methods such as
+ * columns will be converted using following methods:
  * [to][Convert.to],
  * [with][Convert.with],
  * [asFrame][Convert.asFrame],
@@ -201,7 +201,7 @@ private interface CommonConvertDocs
  * ```kotlin
  * df.convert { columnA and columnB }.with { it.toString().lowercase() }
  * df.convert { colsOf<String>() }.to<Double>()
- * df.convert { colsAtAnyDepth().colGroups() }.asFrame { it.add("nan") { Double.NaN }  }
+ * df.convert { colsAtAnyDepth().colGroups() }.asFrame { it.add("nan") { Double.NaN } }
  * ```
  * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to group.
  */
@@ -284,7 +284,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
 /**
  * An intermediate class used in the [convert] operation.
  *
- * This class itself does not perform any conversion—it is a transitional step
+ * This class itself does not perform any conversion — it is a transitional step
  * before specifying how to convert the selected columns.
  * It must be followed by one of the conversion methods
  * to produce a new [DataFrame] with updated column values and types.
@@ -371,9 +371,13 @@ public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(t
  * Converts values in the columns previously selected with [convert]
  * using [columnConverter] expression within the [DataFrame].
  *
- * [columnConverter] provides original `DataFrame` as a receiver.
+ * The [columnConverter] is a lambda with the current [DataFrame] as receiver and the selected column as argument.
+ * It returns a new [DataColumn] (or [ColumnGroup]) that will replace the original column.
  *
  * For more information: {@include [DocumentationUrls.Convert]}
+ *
+ * ## See Also
+ *  - {@include [SeeAlsoConvertWith]}
  *
  * ### Examples:
  * ```kotlin
@@ -392,17 +396,24 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
 @ExcludeFromSources
 private interface SeeAlsoConvertPerRowCol
 
+/** [Convert with][Convert.to] to convert using a column converter */
+@ExcludeFromSources
+private interface SeeAlsoConvertTo
+
 /**
  * Converts values in the columns previously selected with [convert]
  * using [row value][RowValueExpression] [expression] within the [DataFrame].
  *
  * A [row value expression][RowValueExpression] allows to provide a new value for every selected cell
  * given its row (as a receiver) and its previous value (as a lambda argument).
+ * 
+ * For more information: {@include [DocumentationUrls.Convert]}
  *
  * ## Note
  * @include [ExpressionsGivenRow.AddDataRowNote]
  * ## See Also
  * - {@include [SeeAlsoConvertPerRowCol]}
+ * - {@include [SeeAlsoConvertTo]}
  *
  * ### Examples:
  * ```kotlin
@@ -427,11 +438,13 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
 /**
  * Converts [column groups][ColumnGroup] previously selected with [convert]
  * as a [DataFrame] using a [dataframe expression][DataFrameExpression].
+ * 
+ * For more information: {@include [DocumentationUrls.Convert]}
  *
  * ### Example:
  * ```kotlin
  * // Add a column to selected column group "name".
- * df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
+ * df.convert { name }.asFrame { it.add("fullName") { "\$firstName \$lastName" } }
  * ```
  *
  * @param [expression] The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
@@ -450,10 +463,13 @@ private interface SeeAlsoConvertWith
  * using [row column][RowColumnExpression] [expression] within the [DataFrame].
  *
  * A [row column expression][RowColumnExpression] allows to provide a new value for every selected cell
- * given its row and column (as a lambda arguments).
+ * given its row and column (as lambda arguments).
+ * 
+ * For more information: {@include [DocumentationUrls.Convert]}
  *
  * ## See Also
  *  - {@include [SeeAlsoConvertWith]}
+ *  - {@include [SeeAlsoConvertTo]}
  *
  * ### Example:
  * ```kotlin
@@ -788,7 +804,7 @@ public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = c
 // region convert URL
 
 /**
- * Converts values in the [URL] columns previously selected with [convert] to the [IFRAME],
+ * Converts values in an [URL] columns previously selected with [convert] to an [IFRAME],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -802,7 +818,7 @@ public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = c
  * @param border Whether the iframe should have a border. Defaults to `false`.
  * @param width Optional width of the iframe in pixels.
  * @param height Optional height of the iframe in pixels.
- * @return A new [DataFrame] with the values converted to [IFRAME].
+ * @return A new [DataFrame] with the values converted to an [IFRAME].
  */
 @JvmName("toIframeFromUrlNullable")
 @Refine
@@ -815,7 +831,7 @@ public fun <T> Convert<T, URL?>.toIFrame(
 ): DataFrame<T> = to { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
 
 /**
- * Converts values in the [URL] columns previously selected with [convert] to the [IFRAME],
+ * Converts values in an [URL] columns previously selected with [convert] to an [IFRAME],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -828,7 +844,7 @@ public fun <T> Convert<T, URL?>.toIFrame(
  * @param border Whether the iframe should have a border. Defaults to `false`.
  * @param width Optional width of the iframe in pixels.
  * @param height Optional height of the iframe in pixels.
- * @return A new [DataFrame] with the values converted to [IFRAME].
+ * @return A new [DataFrame] with the values converted to an [IFRAME].
  */
 @JvmName("toIframeFromUrl")
 @Refine
@@ -841,7 +857,7 @@ public fun <T> Convert<T, URL>.toIFrame(
 ): DataFrame<T> = to { it.map { IFRAME(it.toString(), border, width, height) } }
 
 /**
- * Converts values in the [URL] columns previously selected with [convert] to the [IMG],
+ * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -854,7 +870,7 @@ public fun <T> Convert<T, URL>.toIFrame(
  *
  * @param width Optional width of the image in pixels.
  * @param height Optional height of the image in pixels.
- * @return A new [DataFrame] with the values converted to [IMG].
+ * @return A new [DataFrame] with the values converted to an [IMG].
  */
 @JvmName("toImgFromUrlNullable")
 @Refine
@@ -864,7 +880,7 @@ public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int?
     to { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
 
 /**
- * Converts values in the [URL] columns previously selected with [convert] to the [IMG],
+ * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -876,7 +892,7 @@ public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int?
  *
  * @param width Optional width of the image in pixels.
  * @param height Optional height of the image in pixels.
- * @return A new [DataFrame] with the values converted to [IMG].
+ * @return A new [DataFrame] with the values converted to an [IMG].
  */
 @JvmName("toImgFromUrl")
 @Refine
@@ -890,22 +906,22 @@ public fun <T, R : URL?> Convert<T, URL>.toImg(width: Int? = null, height: Int? 
 // region toURL
 
 /**
- * Converts values in this [String] column to [URL].
+ * Converts values in this [String] column to an [URL].
  *
- * @return A new [DataColumn] with the [URL] values.
+ * @return A new [DataColumn] with an [URL] values.
  */
 public fun DataColumn<String>.convertToURL(): DataColumn<URL> = map { URL(it) }
 
 /**
- * Converts values in this [String] column to [URL]. Preserves null values.
+ * Converts values in this [String] column to an [URL]. Preserves null values.
  *
- * @return A new [DataColumn] with the [URL] nullable values.
+ * @return A new [DataColumn] with an [URL] nullable values.
  */
 @JvmName("convertToURLFromStringNullable")
 public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let { URL(it) } }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [URL],
+ * Converts values in the [String] columns previously selected with [convert] to an [URL],
  * preserving their original names and positions within the [DataFrame].
  * Preserves null values.
  *
@@ -916,7 +932,7 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let 
  * df.convert { webAddress }.toURL()
  * ```
  *
- * @return A new [DataFrame] with the values converted to [URL].
+ * @return A new [DataFrame] with the values converted to an [URL].
  */
 @JvmName("toUrlFromStringNullable")
 @Refine
@@ -925,7 +941,7 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let 
 public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = to { it.convertToURL() }
 
 /**
- * Converts values in the [String] columns previously selected with [convert] to the [URL],
+ * Converts values in the [String] columns previously selected with [convert] to an [URL],
  * preserving their original names and positions within the [DataFrame].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
@@ -935,7 +951,7 @@ public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = to { it.convertToURL(
  * df.convert { webAddress }.toURL()
  * ```
  *
- * @return A new [DataFrame] with the values converted to [URL].
+ * @return A new [DataFrame] with the values converted to an [URL].
  */
 @JvmName("toUrlFromString")
 @Refine
