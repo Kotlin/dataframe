@@ -2873,8 +2873,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/MaxKt {
 	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun maxOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Comparable;
-	public static final fun rowMax (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun rowMaxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun rowMax (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Void;
+	public static final fun rowMaxOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Void;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
@@ -3001,63 +3001,108 @@ public final class org/jetbrains/kotlinx/dataframe/api/MeanKt {
 
 public final class org/jetbrains/kotlinx/dataframe/api/MedianKt {
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)D
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)D
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)D
 	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)D
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun median (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)D
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)D
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)D
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)D
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;Ljava/lang/String;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun median$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static final fun medianBy (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivot;
+	public static synthetic fun medianBy$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/ReducedPivotGroupBy;
+	public static final fun medianByOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianByOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
-	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun medianFor (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZ)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Grouped;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/Pivot;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataRow;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Ljava/lang/String;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lkotlin/reflect/KProperty;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static synthetic fun medianFor$default (Lorg/jetbrains/kotlinx/dataframe/api/PivotGroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Comparable;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Ljava/lang/Double;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Ljava/lang/Comparable;
-	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;)Ljava/lang/Double;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;Z)Ljava/lang/Object;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;)Ljava/lang/Comparable;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;Z)Ljava/lang/Double;
 	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;)Ljava/lang/Comparable;
-	public static final fun rowMedian (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun rowMedianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun medianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;Z)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Double;
+	public static synthetic fun medianOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Double;
+	public static final fun rowMedian (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Void;
+	public static final fun rowMedianOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Void;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/Merge {
@@ -3250,8 +3295,8 @@ public final class org/jetbrains/kotlinx/dataframe/api/MinKt {
 	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Ljava/lang/Comparable;
 	public static synthetic fun minOrNull$default (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Ljava/lang/Comparable;
-	public static final fun rowMin (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
-	public static final fun rowMinOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Object;
+	public static final fun rowMin (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Void;
+	public static final fun rowMinOrNull (Lorg/jetbrains/kotlinx/dataframe/DataRow;)Ljava/lang/Void;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/MoveClause {
@@ -5491,7 +5536,7 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 
 public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorAggregationHandler : org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorHandler {
 	public abstract fun aggregateSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)Ljava/lang/Object;
-	public abstract fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
+	public fun aggregateSingleColumn (Lorg/jetbrains/kotlinx/dataframe/DataColumn;)Ljava/lang/Object;
 	public abstract fun calculateReturnType (Lkotlin/reflect/KType;Z)Lkotlin/reflect/KType;
 	public abstract fun indexOfAggregationResultSingleSequence (Lkotlin/sequences/Sequence;Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/ValueType;)I
 }
@@ -5532,11 +5577,13 @@ public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators {
 	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators;
 	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
-	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun max (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun medianCommon (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun medianComparables ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
+	public final fun medianNumbers (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 	public final fun min (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
 }
 
@@ -6489,12 +6536,17 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Compani
 	public final fun getVALUES ()Ljava/util/List;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/math/MedianKt {
+	public static final fun medianOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Object;
+}
+
 public final class org/jetbrains/kotlinx/dataframe/math/MinMaxKt {
 	public static final fun maxOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
 	public static final fun minOrNull (Lkotlin/sequences/Sequence;Lkotlin/reflect/KType;Z)Ljava/lang/Comparable;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/PercentileKt {
+	public static final fun percentile (Ljava/lang/Iterable;DLkotlin/reflect/KType;)Ljava/lang/Comparable;
 	public static final fun quickSelect (Ljava/util/List;I)Ljava/lang/Comparable;
 }
 
