@@ -1935,6 +1935,21 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `create nested dataframe inplace`() {
+        val df = dataFrameOf(
+            "a" to columnOf("1"),
+            "b" to columnOf(
+                "c" to columnOf("2"),
+            ),
+            "d" to columnOf(dataFrameOf("a")(123)),
+            "gr" to listOf("1").toDataFrame().asColumnGroup(),
+        )
+
+        df.columnNames() shouldBe listOf("a", "b", "d", "gr")
+        df.getColumnGroup("gr")["value"].values() shouldBe listOf("1")
+    }
+
+    @Test
     fun `get typed column by name`() {
         val col = df.getColumn("name").cast<String>()
         col[0].substring(0, 3) shouldBe "Ali"
