@@ -125,7 +125,8 @@ public fun AnyRow.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): Numb
 // endregion
 
 // region DataFrame
-
+@Refine
+@Interpretable("Sum0")
 public fun <T> DataFrame<T>.sum(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sumFor(skipNaN, primitiveOrMixedNumberColumns())
 
