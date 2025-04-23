@@ -5,24 +5,107 @@ import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class StatisticsTests {
-    private val personsDf = dataFrameOf("name", "age", "city", "weight", "height", "yearsToRetirement")(
-        "Alice", 15, "London", 99.5, "1.85", 50,
-        "Bob", 20, "Paris", 140.0, "1.35", 45,
-        "Charlie", 100, "Dubai", 75.0, "1.95", 0,
-        "Rose", 1, "Moscow", 45.33, "0.79", 64,
-        "Dylan", 35, "London", 23.4, "1.83", 30,
-        "Eve", 40, "Paris", 56.72, "1.85", 25,
-        "Frank", 55, "Dubai", 78.9, "1.35", 10,
-        "Grace", 29, "Moscow", 67.8, "1.65", 36,
-        "Hank", 60, "Paris", 80.22, "1.75", 5,
-        "Isla", 22, "London", 75.1, "1.85", 43,
+    private val personsDf = dataFrameOf(
+        "name",
+        "age",
+        "city",
+        "weight",
+        "height",
+        "yearsToRetirement",
+        "workExperienceYears",
+        "dependentsCount",
+        "annualIncome"
+    )(
+        "Alice", 15, "London", 99.5, "1.85", 50, 0.toShort(), 0.toByte(), 0L,
+        "Bob", 20, "Paris", 140.0, "1.35", 45, 2.toShort(), 0.toByte(), 12000L,
+        "Charlie", 100, "Dubai", 75.0, "1.95", 0, 70.toShort(), 0.toByte(), 0L,
+        "Rose", 1, "Moscow", 45.33, "0.79", 64, 0.toShort(), 2.toByte(), 0L,
+        "Dylan", 35, "London", 23.4, "1.83", 30, 15.toShort(), 1.toByte(), 90000L,
+        "Eve", 40, "Paris", 56.72, "1.85", 25, 18.toShort(), 3.toByte(), 125000L,
+        "Frank", 55, "Dubai", 78.9, "1.35", 10, 35.toShort(), 2.toByte(), 145000L,
+        "Grace", 29, "Moscow", 67.8, "1.65", 36, 5.toShort(), 1.toByte(), 70000L,
+        "Hank", 60, "Paris", 80.22, "1.75", 5, 40.toShort(), 4.toByte(), 200000L,
+        "Isla", 22, "London", 75.1, "1.85", 43, 1.toShort(), 0.toByte(), 30000L,
     )
+
+
+    @Test
+    fun `sum on DataFrame`() {
+        // scenario #0: all numerical columns
+        val res0 = personsDf.sum()
+        res0.columnNames() shouldBe listOf(
+            "age",
+            "weight",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
+        )
+
+        val sum01 = res0["age"] as Int
+        sum01 shouldBe 377
+        val sum02 = res0["weight"] as Double
+        sum02 shouldBe 741.9699999999999
+        val sum03 = res0["yearsToRetirement"] as Int
+        sum03 shouldBe 308
+        val sum04 = res0["workExperienceYears"] as Int
+        sum04 shouldBe 186
+        val sum05 = res0["dependentsCount"] as Int
+        sum05 shouldBe 13.0
+        val sum06 = res0["annualIncome"] as Long
+        sum06 shouldBe 672000
+
+        // scenario #1: particular column
+        val res1 = personsDf.sumFor("age")
+        res1.columnNames() shouldBe listOf("age")
+
+        val sum11 = res1["age"] as Int
+        sum11 shouldBe 377
+
+        // scenario #2: sum of all values in two columns of Int hierarchy of types
+        val res2 = personsDf.sum("age", "workExperienceYears")
+        res2 shouldBe 563
+
+        // scenario #2.1: sum of all values in two columns of different types
+        val res21 = personsDf.sum("age", "annualIncome")
+        res21 shouldBe 672377L
+
+        val res211 = personsDf.sum("age", "weight")
+        res211 shouldBe 1118.9699999999998
+
+        // scenario #3: sum of values per columns separately
+        val res3 = personsDf.sumFor( "age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+        res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+
+        val sum31 = res3["age"] as Int
+        sum31 shouldBe 377
+        val sum32 = res0["weight"] as Double
+        sum32 shouldBe 741.9699999999999
+        val sum33 = res0["workExperienceYears"] as Int
+        sum33 shouldBe 186
+        val sum34 = res0["dependentsCount"] as Int
+        sum34 shouldBe 13.0
+        val sum35 = res0["annualIncome"] as Long
+        sum35 shouldBe 672000
+
+        // scenario #4: sum of expression evaluated for every row
+        val res4 = personsDf.sumOf { "weight"<Double>() * 10 + "age"<Int>() }
+        res4 shouldBe 7796.7
+    }
 
     @Test
     fun `sum on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").sum()
-        res0.columnNames() shouldBe listOf("city", "age", "weight", "yearsToRetirement")
+        res0.columnNames() shouldBe listOf(
+            "city",
+            "age",
+            "weight",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
+        )
 
         val sum01 = res0["age"][0] as Int
         sum01 shouldBe 72
@@ -83,7 +166,15 @@ class StatisticsTests {
     fun `mean on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").mean()
-        res0.columnNames() shouldBe listOf("city", "age", "weight", "yearsToRetirement")
+        res0.columnNames() shouldBe listOf(
+            "city",
+            "age",
+            "weight",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
+        )
 
         val mean01 = res0["age"][0] as Double
         mean01 shouldBe 24.0
@@ -151,6 +242,9 @@ class StatisticsTests {
             "weight",
             "height",
             "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
         )
 
         val median01 = res0["age"][0] as Double
@@ -212,7 +306,15 @@ class StatisticsTests {
     fun `std on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").std()
-        res0.columnNames() shouldBe listOf("city", "age", "weight", "yearsToRetirement")
+        res0.columnNames() shouldBe listOf(
+            "city",
+            "age",
+            "weight",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
+        )
 
         val std01 = res0["age"][0] as Double
         std01 shouldBe 10.14889156509222
@@ -280,6 +382,9 @@ class StatisticsTests {
             "weight",
             "height",
             "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
         )
 
         val min01 = res0["age"][0] as Int
@@ -345,6 +450,9 @@ class StatisticsTests {
             "weight",
             "height",
             "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
         ) // TODO: why is here weight presented? looks like inconsitency
 
         val min41 = res4["age"][0] as Int
@@ -354,7 +462,17 @@ class StatisticsTests {
 
         // scenario #5: particular column via minBy and rowExpression
         val res5 = personsDf.groupBy("city").minBy { "age"<Int>() * 10 }.values()
-        res4.columnNames() shouldBe listOf("city", "name", "age", "weight", "height", "yearsToRetirement")
+        res4.columnNames() shouldBe listOf(
+            "city",
+            "name",
+            "age",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
+        )
 
         val min51 = res5["age"][0] as Int
         min51 shouldBe 15
@@ -364,7 +482,17 @@ class StatisticsTests {
     fun `max on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").max()
-        res0.columnNames() shouldBe listOf("city", "name", "age", "weight", "height", "yearsToRetirement")
+        res0.columnNames() shouldBe listOf(
+            "city",
+            "name",
+            "age",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
+        )
 
         val max01 = res0["age"][0] as Int
         max01 shouldBe 35
@@ -429,6 +557,9 @@ class StatisticsTests {
             "weight",
             "height",
             "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
         ) // TODO: weight is here?
 
         val max41 = res4["age"][0] as Int
@@ -438,7 +569,17 @@ class StatisticsTests {
 
         // scenario #5: particular column via maxBy and rowExpression
         val res5 = personsDf.groupBy("city").maxBy { "age"<Int>() * 10 }.values()
-        res4.columnNames() shouldBe listOf("city", "name", "age", "weight", "height", "yearsToRetirement")
+        res4.columnNames() shouldBe listOf(
+            "city",
+            "name",
+            "age",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome"
+        )
 
         val max51 = res5["age"][0] as Int
         max51 shouldBe 35

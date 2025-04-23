@@ -234,6 +234,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("sum.kt")
+  public void testSum() {
+        runTest("testData/box/sum.kt");
+    }
+
+  @Test
   @TestMetadata("group.kt")
   public void testGroup() {
     runTest("testData/box/group.kt");
