@@ -44,7 +44,7 @@ fun box(): String {
 
     // scenario #1.1: particular column with converted type
     val res11 = personsDf.sumFor { dependentsCount }
-    val sum111: Int? = res1.age
+    val sum111: Int? = res11.dependentsCount
 
     // scenario #2: sum of all values in two columns of Int hierarchy of types
     val res2 = personsDf.sum { age and workExperienceYears }
