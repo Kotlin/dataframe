@@ -60,8 +60,6 @@ import kotlin.time.Duration
  *   If non-empty, the data will be read with [header] as the column titles
  *   (use [skipLines] if there's a header in the data).
  *   If empty (default), the header will be read from the data.
- * @param compression The compression of the data.
- *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param colTypes The expected [ColType] per column name. Default: empty map, a.k.a. infer every column type.
  *
  *   If supplied for a certain column name (inferred from data or given by [header]),
@@ -123,6 +121,8 @@ import kotlin.time.Duration
  *
  *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
  *   This is usually faster, but can be turned off for debugging.
+ * @param compression The compression of the data.
+ *   Default: [Compression.None], unless detected otherwise from the input file or url.
  * @param adjustCsvSpecs Optional extra [CsvSpecs] configuration. Default: `{ it }`.
  *
  *   Before instantiating the [CsvSpecs], the [CsvSpecs.Builder] will be passed to this lambda.
@@ -134,7 +134,6 @@ internal fun readDelimImpl(
     header: List<String>,
     hasFixedWidthColumns: Boolean,
     fixedColumnWidths: List<Int>,
-    compression: Compression<*>,
     colTypes: Map<String, ColType>,
     skipLines: Long,
     readLines: Long?,
@@ -146,6 +145,7 @@ internal fun readDelimImpl(
     ignoreSurroundingSpaces: Boolean,
     trimInsideQuoted: Boolean,
     parseParallel: Boolean,
+    compression: Compression<*>,
     adjustCsvSpecs: AdjustCsvSpecs,
 ): DataFrame<*> {
     // set up the csv specs
