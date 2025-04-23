@@ -174,6 +174,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Named0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NestedSelect
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairToConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PerRowCol
@@ -316,6 +317,7 @@ internal inline fun <reified T> String.load(): T {
         "RenameMapping" -> RenameMapping()
         "Select0" -> Select0()
         "Distinct0" -> Select0()
+        "NestedSelect" -> NestedSelect()
         "Expr0" -> Expr0()
         "And0" -> And0()
         "Remove0" -> Remove0()
