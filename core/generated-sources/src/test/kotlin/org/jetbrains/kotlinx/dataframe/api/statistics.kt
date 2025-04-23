@@ -153,8 +153,8 @@ class StatisticsTests {
             "yearsToRetirement",
         )
 
-        val median01 = res0["age"][0] as Int
-        median01 shouldBe 22
+        val median01 = res0["age"][0] as Double
+        median01 shouldBe 22.0
         // val median02 = res0["weight"][0] as Double
         // median02 shouldBe 66.0
 
@@ -162,43 +162,43 @@ class StatisticsTests {
         val res1 = personsDf.groupBy("city").medianFor("age")
         res1.columnNames() shouldBe listOf("city", "age")
 
-        val median11 = res1["age"][0] as Int
-        median11 shouldBe 22
+        val median11 = res1["age"][0] as Double
+        median11 shouldBe 22.0
 
         // scenario #1.1: particular column via median
         val res11 = personsDf.groupBy("city").median("age")
         res11.columnNames() shouldBe listOf("city", "age")
 
-        val median111 = res11["age"][0] as Int
-        median111 shouldBe 22
+        val median111 = res11["age"][0] as Double
+        median111 shouldBe 22.0
 
         // scenario #2: particular column with new name - schema changes
         val res2 = personsDf.groupBy("city").median("age", name = "newAge")
         res2.columnNames() shouldBe listOf("city", "newAge")
 
-        val median21 = res2["newAge"][0] as Int
-        median21 shouldBe 22
+        val median21 = res2["newAge"][0] as Double
+        median21 shouldBe 22.0
 
         // scenario #2.1: particular column with new name - schema changes but via columnSelector
         val res21 = personsDf.groupBy("city").median(name = "newAge") { "age"<Int>() }
         res21.columnNames() shouldBe listOf("city", "newAge")
 
-        val median211 = res21["newAge"][0] as Int
-        median211 shouldBe 22
+        val median211 = res21["newAge"][0] as Double
+        median211 shouldBe 22.0
 
         // scenario #2.2: two columns with new name - schema changes but via columnSelector
         val res22 = personsDf.groupBy("city").median(name = "newAge") { "age"<Int>() and "yearsToRetirement"<Int>() }
         res22.columnNames() shouldBe listOf("city", "newAge")
 
-        val median221 = res22["newAge"][0] as Int
-        median221 shouldBe 32
+        val median221 = res22["newAge"][0] as Double
+        median221 shouldBe 32.5
 
         // scenario #3: create new column via expression
         val res3 = personsDf.groupBy("city").medianOf(name = "newAge") { "age"<Int>() * 10 }
         res3.columnNames() shouldBe listOf("city", "newAge")
 
-        val median31 = res3["newAge"][0] as Int
-        median31 shouldBe 220
+        val median31 = res3["newAge"][0] as Double
+        median31 shouldBe 220.0
 
         // scenario #3.1: create new column via expression with Double
         val res31 = personsDf.groupBy("city").medianOf(name = "newAge") { "weight"<Double>() * 10 }
