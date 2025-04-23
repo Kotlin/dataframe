@@ -96,11 +96,13 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsAtAnyDepth2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnOfPairs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnRange
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConcatWithKeys
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf3
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOfPairs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameUnfold
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameXs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop0
@@ -411,6 +413,8 @@ internal inline fun <reified T> String.load(): T {
         "toDataFrameDefault" -> ToDataFrameDefault()
         "ToDataFrameDslStringInvoke" -> ToDataFrameDslStringInvoke()
         "DataFrameOf0" -> DataFrameOf0()
+        "DataFrameOfPairs" -> DataFrameOfPairs()
+        "ColumnOfPairs" -> ColumnOfPairs()
         "DataFrameBuilderInvoke0" -> DataFrameBuilderInvoke0()
         "ToDataFrameColumn" -> ToDataFrameColumn()
         "FillNulls0" -> FillNulls0()

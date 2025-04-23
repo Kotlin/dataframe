@@ -78,6 +78,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("columnOf_nested.kt")
+  public void testColumnOf_nested() {
+    runTest("testData/box/columnOf_nested.kt");
+  }
+
+  @Test
   @TestMetadata("columnWithStarProjection.kt")
   public void testColumnWithStarProjection() {
     runTest("testData/box/columnWithStarProjection.kt");
@@ -117,6 +123,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("dataFrameOf.kt")
   public void testDataFrameOf() {
     runTest("testData/box/dataFrameOf.kt");
+  }
+
+  @Test
+  @TestMetadata("dataFrameOf_nested.kt")
+  public void testDataFrameOf_nested() {
+    runTest("testData/box/dataFrameOf_nested.kt");
   }
 
   @Test
