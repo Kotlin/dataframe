@@ -148,6 +148,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStdOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InsertAt
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeId
@@ -157,6 +158,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeInto0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Move0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveAfter0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveInto0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveTo
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToStart0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToStart1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToEnd0
@@ -172,6 +174,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Named0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NestedSelect
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairToConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PerRowCol
@@ -308,11 +311,14 @@ internal inline fun <reified T> String.load(): T {
         "Under1" -> Under1()
         "Under4" -> Under4()
         "InsertAfter0" -> InsertAfter0()
+        "InsertAt" -> InsertAt()
         "Join0" -> Join0()
         "Match0" -> Match0()
         "Rename" -> Rename()
         "RenameMapping" -> RenameMapping()
         "Select0" -> Select0()
+        "Distinct0" -> Select0()
+        "NestedSelect" -> NestedSelect()
         "Expr0" -> Expr0()
         "And0" -> And0()
         "Remove0" -> Remove0()
@@ -432,6 +438,7 @@ internal inline fun <reified T> String.load(): T {
         "MoveToStart1" -> MoveToStart1()
         "MoveToEnd0" -> MoveToEnd0()
         "MoveAfter0" -> MoveAfter0()
+        "MoveTo" -> MoveTo()
         "GroupByAdd" -> GroupByAdd()
         "Merge0" -> Merge0()
         "MergeInto0" -> MergeInto0()

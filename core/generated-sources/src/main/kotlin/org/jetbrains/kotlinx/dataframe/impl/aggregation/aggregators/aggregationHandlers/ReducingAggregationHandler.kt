@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers
 
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.AggregatorAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
@@ -9,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Reducer
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.ValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregateCalculatingValueType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.calculateValueType
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.toValueType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -53,17 +50,6 @@ internal class ReducingAggregationHandler<in Value : Any, out Return : Any?>(
             valueType.withNullability(false),
         )
     }
-
-    /**
-     * Aggregates the data in the given column and computes a single resulting value.
-     * Calls [aggregateSequence].
-     */
-    @Suppress("UNCHECKED_CAST")
-    override fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
-        aggregateSequence(
-            values = column.asSequence(),
-            valueType = column.type().toValueType(),
-        )
 
     /** This function always returns `-1` because the result of a reducer is not in the input values. */
     override fun indexOfAggregationResultSingleSequence(values: Sequence<Value?>, valueType: ValueType): Int = -1

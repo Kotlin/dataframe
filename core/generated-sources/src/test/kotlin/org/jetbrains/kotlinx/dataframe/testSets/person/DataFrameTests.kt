@@ -738,7 +738,7 @@ class DataFrameTests : BaseTest() {
             this["name"].toList() shouldBe listOf("Alice", "Bob", "Charlie")
             this["n"].toList() shouldBe listOf(2, 2, 3)
             this["old count"].toList() shouldBe listOf(0, 2, 2)
-            this["median age"].toList() shouldBe listOf(17, 37, 30)
+            this["median age"].toList() shouldBe listOf(17.5, 37.5, 30.0)
             this["min age"].toList() shouldBe listOf(15, 30, 20)
             this["oldest origin"].toList() shouldBe listOf(null, "Dubai", "Milan")
             this["youngest origin"].toList() shouldBe listOf("London", "Tokyo", "Moscow")
@@ -2338,6 +2338,18 @@ class DataFrameTests : BaseTest() {
         merged.split { data }.match("""(.*)\|(.*)""".toRegex()).into("name", "city") shouldBe
             typed.update { city }.with { it ?: "null" }
                 .move { city }.to(1)
+    }
+
+    @Test
+    fun `move beyond range of existing column indices`() {
+        val res = typed.move { city }.to(11)
+        res.columnNames() shouldBe listOf("name", "age", "weight", "city")
+    }
+
+    @Test
+    fun `move multiple columns beyond range of existing column indices`() {
+        val res = typed.move { city and name }.to(11)
+        res.columnNames() shouldBe listOf("age", "weight", "city", "name")
     }
 
     @Test
