@@ -8,13 +8,13 @@ import kotlin.reflect.KType
  * It can also calculate a specific [value type][ValueType] from the input values or input types
  * if the (specific) type is not known.
  */
-internal interface AggregatorInputHandler<in Value : Any, out Return : Any?> : AggregatorHandler<Value, Return> {
+public interface AggregatorInputHandler<in Value : Any, out Return : Any?> : AggregatorHandler<Value, Return> {
 
     /**
      * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],
      * this function can be called to calculate it by combining the set of known [valueTypes].
      */
-    fun calculateValueType(valueTypes: Set<KType>): ValueType
+    public fun calculateValueType(valueTypes: Set<KType>): ValueType
 
     /**
      * WARNING: HEAVY!
@@ -23,7 +23,7 @@ internal interface AggregatorInputHandler<in Value : Any, out Return : Any?> : A
      * this function can be called to calculate it by getting the types of [values] at runtime.
      * This is heavy because it uses reflection on each value.
      */
-    fun calculateValueType(values: Sequence<Value?>): ValueType
+    public fun calculateValueType(values: Sequence<Value?>): ValueType
 
     /**
      * Preprocesses the input values before aggregation.
@@ -32,7 +32,7 @@ internal interface AggregatorInputHandler<in Value : Any, out Return : Any?> : A
      *
      * @return A pair of the preprocessed values and the (potentially new) type of the values.
      */
-    fun preprocessAggregation(
+    public fun preprocessAggregation(
         values: Sequence<Value?>,
         valueType: ValueType,
     ): Pair<Sequence<@UnsafeVariance Value?>, KType>
