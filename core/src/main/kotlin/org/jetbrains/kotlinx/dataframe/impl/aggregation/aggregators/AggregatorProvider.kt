@@ -10,9 +10,9 @@ import kotlin.reflect.KProperty
  * val myNamedValue by MyFactory
  * ```
  */
-internal fun interface Provider<out T> {
+public fun interface Provider<out T> {
 
-    fun create(name: String): T
+    public fun create(name: String): T
 }
 
 internal operator fun <T> Provider<T>.getValue(obj: Any?, property: KProperty<*>): T = create(property.name)
@@ -25,4 +25,4 @@ internal operator fun <T> Provider<T>.getValue(obj: Any?, property: KProperty<*>
  * val myAggregator by MyAggregator.Factory
  * ```
  */
-internal fun interface AggregatorProvider<in Value : Any, out Return : Any?> : Provider<Aggregator<Value, Return>>
+public fun interface AggregatorProvider<in Value : Any, out Return : Any?> : Provider<Aggregator<Value, @UnsafeVariance Return>>

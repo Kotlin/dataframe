@@ -10,14 +10,14 @@ import kotlin.reflect.KType
  * [AggregatorAggregationHandler].
  * It can also calculate the return type of the aggregation given all input column types.
  */
-internal interface AggregatorMultipleColumnsHandler<in Value : Any, out Return : Any?> :
+public interface AggregatorMultipleColumnsHandler<in Value : Any, out Return : Any?> :
     AggregatorHandler<Value, Return> {
 
     /**
      * Aggregates the data in the multiple given columns and computes a single resulting value.
      * Calls [Aggregator.aggregateSequence] or [Aggregator.aggregateSingleColumn].
      */
-    fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return
+    public fun aggregateMultipleColumns(columns: Sequence<DataColumn<Value?>>): Return
 
     /**
      * Function that can give the return type of [aggregateMultipleColumns], given types of the columns.
@@ -26,5 +26,5 @@ internal interface AggregatorMultipleColumnsHandler<in Value : Any, out Return :
      * @param colTypes The types of the input columns.
      * @param colsEmpty If `true`, all the input columns are considered empty. This often affects the return type.
      */
-    fun calculateReturnTypeMultipleColumns(colTypes: Set<KType>, colsEmpty: Boolean): KType
+    public fun calculateReturnTypeMultipleColumns(colTypes: Set<KType>, colsEmpty: Boolean): KType
 }
