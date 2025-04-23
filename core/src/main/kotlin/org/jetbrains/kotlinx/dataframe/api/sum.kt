@@ -130,6 +130,8 @@ public fun AnyRow.rowSumOf(type: KType, skipNaN: Boolean = skipNaNDefault): Numb
 public fun <T> DataFrame<T>.sum(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     sumFor(skipNaN, primitiveOrMixedNumberColumns())
 
+@Refine
+@Interpretable("Sum1")
 public fun <T, C : Number?> DataFrame<T>.sumFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
