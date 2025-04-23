@@ -693,12 +693,20 @@ internal class ValueCols2 : AbstractInterpreter<ColumnsResolver>() {
     }
 }
 
-
 internal class Named0 : AbstractInterpreter<ColumnsResolver>() {
     val Arguments.receiver: SingleColumnApproximation by arg()
     val Arguments.newName: String by arg()
 
     override fun Arguments.interpret(): ColumnsResolver {
         return columnsResolver { receiver named newName }
+    }
+}
+
+internal class NestedSelect : AbstractInterpreter<ColumnsResolver>() {
+    val Arguments.receiver: SingleColumnApproximation by arg()
+    val Arguments.selector: ColumnsResolver by arg()
+
+    override fun Arguments.interpret(): ColumnsResolver {
+        return columnsResolver { receiver.asColumnGroup().select { selector } }
     }
 }
