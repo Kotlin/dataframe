@@ -28,7 +28,7 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
     p: Double,
     type: KType,
     skipNaN: Boolean,
-    method: QuantileEstimationMethod<T>,
+    method: QuantileEstimationMethod<T, *>,
     name: String = "quantile",
 ): Any? {
     when {
@@ -97,13 +97,13 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
  * p-quantile: the k'th q-quantile, where p = k/q.
  *
  */
-internal fun <T : Comparable<T & Any>?> Sequence<Any?>.indexOfQuantile(
+internal fun <T : Comparable<T & Any>?, Index : Number> Sequence<Any?>.indexOfQuantile(
     p: Double,
     type: KType,
     skipNaN: Boolean,
-    method: QuantileEstimationMethod<T>,
+    method: QuantileEstimationMethod<T & Any, Index>,
     name: String = "quantile",
-): Double {
+): Index {
     val nonNullType = type.withNullability(false)
     when {
         p !in 0.0..1.0 -> error("Quantile must be in range [0, 1]")
@@ -122,10 +122,17 @@ internal fun <T : Comparable<T & Any>?> Sequence<Any?>.indexOfQuantile(
             )
     }
 
+    @Suppress("UNCHECKED_CAST")
+    fun Number.toIndex(): Index =
+        when (method) {
+            is ConstantEstimation -> this.toInt()
+            is LinearEstimation -> this.toDouble()
+        } as Index
+
     // propagate NaN to return if they are not to be skipped
     if (nonNullType.canBeNaN && !skipNaN) {
         for ((i, it) in this.withIndex()) {
-            if (it.isNaN) return i.toDouble()
+            if (it.isNaN) return i.toIndex()
         }
     }
 
@@ -142,13 +149,13 @@ internal fun <T : Comparable<T & Any>?> Sequence<Any?>.indexOfQuantile(
     }.toList()
 
     val size = list.size
-    if (size == 0) return -1.0
-    if (size == 1) return 0.0
+    if (size == 0) return (-1).toIndex()
+    if (size == 1) return 0.toIndex()
 
     return method.indexOfQuantile(p, size)
 }
 
-internal sealed interface QuantileEstimationMethod<T> {
+internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, Index : Number> {
 
     /**
      * Gives the (1-based) index of the [p]-quantile for a distribution of size [count].
@@ -156,16 +163,13 @@ internal sealed interface QuantileEstimationMethod<T> {
      * If not, `h` is an estimation of the index of the p-quantile. Rounding or interpolation needs to occur to get
      * the actual quantile estimate.
      */
-    fun oneBasedIndexOfQuantile(p: Double, count: Int): Double
+    fun oneBasedIndexOfQuantile(p: Double, count: Int): Index
 
-    fun quantile(p: Double, values: List<T>): T
+    fun quantile(p: Double, values: List<Value>): Value
 
-    interface ConstantEstimation : QuantileEstimationMethod<Comparable<*>> {
+    interface ConstantEstimation : QuantileEstimationMethod<Comparable<Any>, Int>
 
-        fun roundIndex(index: Double): Int
-    }
-
-    interface LinearEstimation : QuantileEstimationMethod<Double> {
+    interface LinearEstimation : QuantileEstimationMethod<Double, Double> {
 
         override fun quantile(p: Double, values: List<Double>): Double {
             val h = oneBasedIndexOfQuantile(p, values.size)
@@ -178,33 +182,28 @@ internal sealed interface QuantileEstimationMethod<T> {
     }
 
     data object R1 : ConstantEstimation {
-        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = p * count
-
-        override fun roundIndex(index: Double): Int = ceil(index).toInt()
+        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = ceil(p * count).toInt()
 
         @Suppress("UNCHECKED_CAST")
-        override fun quantile(p: Double, values: List<Comparable<*>>): Comparable<*> {
-            val h = oneBasedIndexOfQuantile(p, values.size)
-            val index = roundIndex(h) - 1
-            return (values as List<Comparable<Any>>).quickSelect(index.coerceIn(0..<values.size))
+        override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
+            val h = indexOfQuantile(p, values.size).toInt()
+            return values.quickSelect(h.coerceIn(0..<values.size))
         }
     }
 
     data object R3 : ConstantEstimation {
-        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = count * p - 0.5
-
-        override fun roundIndex(index: Double): Int = round(index).toInt()
+        // following apache commons + paper instead of wikipedia
+        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = round(count * p).toInt()
 
         @Suppress("UNCHECKED_CAST")
-        override fun quantile(p: Double, values: List<Comparable<*>>): Comparable<*> {
-            val h = oneBasedIndexOfQuantile(p, values.size)
-            val index = roundIndex(h) - 1
-            return (values as List<Comparable<Any>>).quickSelect(index.coerceIn(0..<values.size))
+        override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
+            val h = indexOfQuantile(p, values.size).toInt()
+            return values.quickSelect(h.coerceIn(0..<values.size))
         }
     }
 
     data object R7 : LinearEstimation {
-        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count - 1.0) * p + 1.0 / 3.0
+        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count - 1.0) * p + 1.0
     }
 
     data object R8 : LinearEstimation {
@@ -212,12 +211,23 @@ internal sealed interface QuantileEstimationMethod<T> {
     }
 }
 
+// overload to get the right comparable type
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER", "UNCHECKED_CAST")
 internal fun <T : Comparable<T>> ConstantEstimation.quantile(p: Double, values: List<T>): T =
     quantile(p, values as List<Comparable<Any>>) as T
 
-internal fun QuantileEstimationMethod<*>.indexOfQuantile(p: Double, count: Int): Double =
-    oneBasedIndexOfQuantile(p = p, count = count) - 1.0
+// corrects oneBasedIndexOfQuantile to zero-based index
+@Suppress("UNCHECKED_CAST")
+internal fun <IndexType : Number> QuantileEstimationMethod<*, IndexType>.indexOfQuantile(
+    p: Double,
+    count: Int,
+): IndexType {
+    val oneBased = oneBasedIndexOfQuantile(p = p, count = count)
+    return when (this) {
+        is LinearEstimation -> oneBased as Double - 1.0
+        is ConstantEstimation -> oneBased as Int - 1
+    } as IndexType
+}
 
 @PublishedApi
 internal fun <T : Comparable<T>> List<T>.quickSelect(k: Int): T {

@@ -54,7 +54,7 @@ internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double
 
     // fake Comparable types to satisfy the compiler
     values as Sequence<Comparable<Any>>
-    method as QuantileEstimationMethod<Comparable<Any>>
+    method as QuantileEstimationMethod<Comparable<Any>, *>
 
     return values.quantileOrNull(
         p = p,
@@ -112,11 +112,9 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
         p = p,
         type = type,
         skipNaN = skipNaN,
-        method = method as QuantileEstimationMethod<T>,
+        method = method as QuantileEstimationMethod<T & Any, Int>,
         name = "percentile",
-    ).let {
-        method.roundIndex(it)
-    }.toInt()
+    )
 }
 
 @PublishedApi

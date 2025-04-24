@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
+import io.kotest.matchers.doubles.plusOrMinus
 import io.kotest.matchers.shouldBe
+import org.apache.commons.statistics.descriptive.Quantile
 import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod
 import org.jetbrains.kotlinx.dataframe.math.quantileOrNull
 import org.junit.Test
@@ -16,7 +18,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 1.0
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.1)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Double - p = 0.5 (median)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -24,7 +28,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 2.5
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Double - p = 0.25 (first quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -32,7 +38,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 1.4166666666666665
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Double - p = 0.75 (third quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -40,7 +48,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 3.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Double - p = 0.9 (90th percentile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -48,7 +58,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 4.0
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.9)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Double - p = 0.1 (10th percentile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -56,7 +68,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.0
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.1)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Double - p = 0.5 (median)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -64,7 +78,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.8333333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Double - p = 0.25 (first quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -72,7 +88,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.0833333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Double - p = 0.75 (third quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -80,7 +98,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 2.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Double - p = 0.9 (90th percentile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
@@ -88,7 +108,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 3.0333333333333337
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.9)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Int - p = 0.5 (median)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
@@ -96,7 +118,9 @@ class QuantileTests {
             type = typeOf<Int>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 2.5
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Int - p = 0.25 (first quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
@@ -104,7 +128,9 @@ class QuantileTests {
             type = typeOf<Int>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 1.4166666666666665
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Int - p = 0.75 (third quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
@@ -112,7 +138,9 @@ class QuantileTests {
             type = typeOf<Int>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 3.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Int - p = 0.5 (median)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
@@ -120,7 +148,9 @@ class QuantileTests {
             type = typeOf<Int>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.8333333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Int - p = 0.25 (first quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
@@ -128,7 +158,9 @@ class QuantileTests {
             type = typeOf<Int>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.0833333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Int - p = 0.75 (third quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
@@ -136,7 +168,9 @@ class QuantileTests {
             type = typeOf<Int>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 2.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Float - p = 0.5 (median)
         sequenceOf(1f, 4f, 3f, 2f).quantileOrNull(
@@ -144,7 +178,9 @@ class QuantileTests {
             type = typeOf<Float>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 2.5
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Float - p = 0.25 (first quartile)
         sequenceOf(1f, 4f, 3f, 2f).quantileOrNull(
@@ -152,7 +188,9 @@ class QuantileTests {
             type = typeOf<Float>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 1.4166666666666665
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Float - p = 0.75 (third quartile)
         sequenceOf(1f, 4f, 3f, 2f).quantileOrNull(
@@ -160,7 +198,9 @@ class QuantileTests {
             type = typeOf<Float>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 3.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Float - p = 0.5 (median)
         sequenceOf(1f, 4f, 3f, 2f).quantileOrNull(
@@ -168,7 +208,9 @@ class QuantileTests {
             type = typeOf<Float>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.8333333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Float - p = 0.25 (first quartile)
         sequenceOf(1f, 4f, 3f, 2f).quantileOrNull(
@@ -176,7 +218,9 @@ class QuantileTests {
             type = typeOf<Float>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.0833333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Float - p = 0.75 (third quartile)
         sequenceOf(1f, 4f, 3f, 2f).quantileOrNull(
@@ -184,7 +228,9 @@ class QuantileTests {
             type = typeOf<Float>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 2.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Long - p = 0.5 (median)
         sequenceOf(1L, 4L, 3L, 2L).quantileOrNull(
@@ -192,7 +238,9 @@ class QuantileTests {
             type = typeOf<Long>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 2.5
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Long - p = 0.25 (first quartile)
         sequenceOf(1L, 4L, 3L, 2L).quantileOrNull(
@@ -200,7 +248,9 @@ class QuantileTests {
             type = typeOf<Long>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 1.4166666666666665
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R8 with Long - p = 0.75 (third quartile)
         sequenceOf(1L, 4L, 3L, 2L).quantileOrNull(
@@ -208,7 +258,9 @@ class QuantileTests {
             type = typeOf<Long>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 3.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Long - p = 0.5 (median)
         sequenceOf(1L, 4L, 3L, 2L).quantileOrNull(
@@ -216,7 +268,9 @@ class QuantileTests {
             type = typeOf<Long>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.8333333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Long - p = 0.25 (first quartile)
         sequenceOf(1L, 4L, 3L, 2L).quantileOrNull(
@@ -224,7 +278,9 @@ class QuantileTests {
             type = typeOf<Long>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 1.0833333333333333
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test R7 with Long - p = 0.75 (third quartile)
         sequenceOf(1L, 4L, 3L, 2L).quantileOrNull(
@@ -232,7 +288,9 @@ class QuantileTests {
             type = typeOf<Long>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R7,
-        ) shouldBe 2.5833333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF7)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
 
         // Test with NaN values and skipNaN = false - p = 0.5 (median)
         val nanResult = sequenceOf(1.0, Double.NaN, 3.0, 2.0).quantileOrNull(
@@ -267,7 +325,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 2.0
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 3.0, 2.0), 0.5)
+            .plusOrMinus(1e-10)
 
         // Test with NaN values and skipNaN = true - p = 0.25 (first quartile)
         sequenceOf(1.0, Double.NaN, 3.0, 2.0).quantileOrNull(
@@ -275,7 +335,9 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 1.1666666666666667
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 3.0, 2.0), 0.25)
+            .plusOrMinus(1e-10)
 
         // Test with NaN values and skipNaN = true - p = 0.75 (third quartile)
         sequenceOf(1.0, Double.NaN, 3.0, 2.0).quantileOrNull(
@@ -283,9 +345,12 @@ class QuantileTests {
             type = typeOf<Double>(),
             skipNaN = true,
             method = QuantileEstimationMethod.R8,
-        ) shouldBe 2.8333333333333335
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF8)
+            .evaluate(doubleArrayOf(1.0, 3.0, 2.0), 0.75)
+            .plusOrMinus(1e-10)
     }
 
+    @Suppress("UNCHECKED_CAST")
     @Test
     fun `constant estimation`() {
         // Test R3 with Char - p = 0.1 (10th percentile)
@@ -293,7 +358,7 @@ class QuantileTests {
             p = 0.1,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'a'
 
         // Test R3 with Char - p = 0.5 (median)
@@ -301,15 +366,15 @@ class QuantileTests {
             p = 0.5,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char>,
-        ) shouldBe 'a'
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char, *>,
+        ) shouldBe 'b'
 
         // Test R3 with Char - p = 0.25 (first quartile)
         sequenceOf('a', 'c', 'b').quantileOrNull(
             p = 0.25,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'a'
 
         // Test R3 with Char - p = 0.75 (third quartile)
@@ -317,7 +382,7 @@ class QuantileTests {
             p = 0.75,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'b'
 
         // Test R3 with Char - p = 0.9 (90th percentile)
@@ -325,15 +390,15 @@ class QuantileTests {
             p = 0.9,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char>,
-        ) shouldBe 'b'
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Char, *>,
+        ) shouldBe 'c'
 
         // Test R1 with Char - p = 0.1 (10th percentile)
         sequenceOf('a', 'c', 'b').quantileOrNull(
             p = 0.1,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'a'
 
         // Test R1 with Char - p = 0.5 (median)
@@ -341,7 +406,7 @@ class QuantileTests {
             p = 0.5,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'b'
 
         // Test R1 with Char - p = 0.25 (first quartile)
@@ -349,7 +414,7 @@ class QuantileTests {
             p = 0.25,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'a'
 
         // Test R1 with Char - p = 0.75 (third quartile)
@@ -357,7 +422,7 @@ class QuantileTests {
             p = 0.75,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'c'
 
         // Test R1 with Char - p = 0.9 (90th percentile)
@@ -365,7 +430,7 @@ class QuantileTests {
             p = 0.9,
             type = typeOf<Char>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Char, *>,
         ) shouldBe 'c'
 
         // Test R3 with String - p = 0.5 (median)
@@ -373,15 +438,15 @@ class QuantileTests {
             p = 0.5,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String>,
-        ) shouldBe "apple"
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String, *>,
+        ) shouldBe "banana"
 
         // Test R3 with String - p = 0.25 (first quartile)
         sequenceOf("apple", "cherry", "banana").quantileOrNull(
             p = 0.25,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String, *>,
         ) shouldBe "apple"
 
         // Test R3 with String - p = 0.75 (third quartile)
@@ -389,7 +454,7 @@ class QuantileTests {
             p = 0.75,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String, *>,
         ) shouldBe "banana"
 
         // Test R1 with String - p = 0.5 (median)
@@ -397,7 +462,7 @@ class QuantileTests {
             p = 0.5,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<String, *>,
         ) shouldBe "banana"
 
         // Test R1 with String - p = 0.25 (first quartile)
@@ -405,7 +470,7 @@ class QuantileTests {
             p = 0.25,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<String, *>,
         ) shouldBe "apple"
 
         // Test R1 with String - p = 0.75 (third quartile)
@@ -413,7 +478,7 @@ class QuantileTests {
             p = 0.75,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<String, *>,
         ) shouldBe "cherry"
 
         // Test R3 with Int (primitive number) - p = 0.5 (median)
@@ -421,103 +486,121 @@ class QuantileTests {
             p = 0.5,
             type = typeOf<Int>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Int>,
-        ) shouldBe 2
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Int, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .toInt()
 
         // Test R3 with Int (primitive number) - p = 0.25 (first quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
             p = 0.25,
             type = typeOf<Int>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Int>,
-        ) shouldBe 1
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Int, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .toInt()
 
         // Test R3 with Int (primitive number) - p = 0.75 (third quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
             p = 0.75,
             type = typeOf<Int>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Int>,
-        ) shouldBe 2
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Int, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .toInt()
 
         // Test R1 with Int (primitive number) - p = 0.5 (median)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
             p = 0.5,
             type = typeOf<Int>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Int>,
-        ) shouldBe 2
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Int, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF1)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
+            .toInt()
 
         // Test R1 with Int (primitive number) - p = 0.25 (first quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
             p = 0.25,
             type = typeOf<Int>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Int>,
-        ) shouldBe 1
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Int, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF1)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
+            .toInt()
 
         // Test R1 with Int (primitive number) - p = 0.75 (third quartile)
         sequenceOf(1, 4, 3, 2).quantileOrNull(
             p = 0.75,
             type = typeOf<Int>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Int>,
-        ) shouldBe 3
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Int, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF1)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
+            .toInt()
 
         // Test R3 with Double (primitive number) - p = 0.5 (median)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
             p = 0.5,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
-        ) shouldBe 2.0
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
 
         // Test R3 with Double (primitive number) - p = 0.25 (first quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
             p = 0.25,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
-        ) shouldBe 1.0
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
 
         // Test R3 with Double (primitive number) - p = 0.75 (third quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
             p = 0.75,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
-        ) shouldBe 2.0
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
 
         // Test R1 with Double (primitive number) - p = 0.5 (median)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
             p = 0.5,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Double>,
-        ) shouldBe 2.0
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF1)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.5)
 
         // Test R1 with Double (primitive number) - p = 0.25 (first quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
             p = 0.25,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Double>,
-        ) shouldBe 1.0
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF1)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.25)
 
         // Test R1 with Double (primitive number) - p = 0.75 (third quartile)
         sequenceOf(1.0, 4.0, 3.0, 2.0).quantileOrNull(
             p = 0.75,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Double>,
-        ) shouldBe 3.0
+            method = QuantileEstimationMethod.R1 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF1)
+            .evaluate(doubleArrayOf(1.0, 4.0, 3.0, 2.0), 0.75)
 
         // Test with NaN values and skipNaN = false - p = 0.5 (median)
         val nanResult = sequenceOf(1.0, Double.NaN, 3.0, 2.0).quantileOrNull(
             p = 0.5,
             type = typeOf<Double>(),
             skipNaN = false,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
         )
         (nanResult as Double).isNaN() shouldBe true
 
@@ -526,7 +609,7 @@ class QuantileTests {
             p = 0.25,
             type = typeOf<Double>(),
             skipNaN = false,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
         )
         (nanResult25 as Double).isNaN() shouldBe true
 
@@ -535,7 +618,7 @@ class QuantileTests {
             p = 0.75,
             type = typeOf<Double>(),
             skipNaN = false,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
         )
         (nanResult75 as Double).isNaN() shouldBe true
 
@@ -544,24 +627,27 @@ class QuantileTests {
             p = 0.5,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
-        ) shouldBe 1.0
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 3.0, 2.0), 0.5)
 
         // Test with NaN values and skipNaN = true - p = 0.25 (first quartile)
         sequenceOf(1.0, Double.NaN, 3.0, 2.0).quantileOrNull(
             p = 0.25,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
-        ) shouldBe 1.0
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 3.0, 2.0), 0.25)
 
         // Test with NaN values and skipNaN = true - p = 0.75 (third quartile)
         sequenceOf(1.0, Double.NaN, 3.0, 2.0).quantileOrNull(
             p = 0.75,
             type = typeOf<Double>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double>,
-        ) shouldBe 2.0
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<Double, *>,
+        ) shouldBe Quantile.withDefaults().with(Quantile.EstimationMethod.HF3)
+            .evaluate(doubleArrayOf(1.0, 3.0, 2.0), 0.75)
     }
 
     @Test
@@ -651,7 +737,7 @@ class QuantileTests {
             p = 0.5,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String, *>,
         ) shouldBe "test"
 
         // Single element sequence - constant estimation - p = 0.25 (first quartile)
@@ -659,7 +745,7 @@ class QuantileTests {
             p = 0.25,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String, *>,
         ) shouldBe "test"
 
         // Single element sequence - constant estimation - p = 0.75 (third quartile)
@@ -667,7 +753,7 @@ class QuantileTests {
             p = 0.75,
             type = typeOf<String>(),
             skipNaN = true,
-            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String>,
+            method = QuantileEstimationMethod.R3 as QuantileEstimationMethod<String, *>,
         ) shouldBe "test"
 
         // We don't test extreme low quantile values (p close to 0.0) as they can cause index calculation issues
