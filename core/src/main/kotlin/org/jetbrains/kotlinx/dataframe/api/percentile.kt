@@ -28,12 +28,12 @@ public fun <T : Comparable<T>> DataColumn<T?>.percentile(percentile: Double): T 
     percentileOrNull(percentile).suggestIfNull("percentile")
 
 public fun <T : Comparable<T>> DataColumn<T?>.percentileOrNull(percentile: Double): T? =
-    Aggregators.percentile(percentile).cast<T>().aggregateSingleColumn(this)
+    Aggregators.oldPercentile(percentile).cast<T>().aggregateSingleColumn(this)
 
 public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileOfOrNull(
     percentile: Double,
     noinline expression: (T) -> R?,
-): R? = Aggregators.percentile(percentile).cast<R?>().aggregateOf(this, expression)
+): R? = Aggregators.oldPercentile(percentile).cast<R?>().aggregateOf(this, expression)
 
 public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileOf(
     percentile: Double,
@@ -45,7 +45,7 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileOf(
 // region DataRow
 
 public fun AnyRow.rowPercentileOrNull(percentile: Double): Any? =
-    Aggregators.percentile(percentile).aggregateSingleColumn(
+    Aggregators.oldPercentile(percentile).aggregateSingleColumn(
         values().filterIsInstance<Comparable<Any?>>().toValueColumn(),
     )
 
@@ -68,7 +68,7 @@ public fun <T> DataFrame<T>.percentile(percentile: Double): DataRow<T> =
 public fun <T, C : Comparable<C>> DataFrame<T>.percentileFor(
     percentile: Double,
     columns: ColumnsForAggregateSelector<T, C?>,
-): DataRow<T> = Aggregators.percentile(percentile).aggregateFor(this, columns)
+): DataRow<T> = Aggregators.oldPercentile(percentile).aggregateFor(this, columns)
 
 public fun <T> DataFrame<T>.percentileFor(percentile: Double, vararg columns: String): DataRow<T> =
     percentileFor(percentile) { columns.toComparableColumns() }
@@ -103,7 +103,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.percentile(percentile: Double, va
 public fun <T, C : Comparable<C>> DataFrame<T>.percentileOrNull(
     percentile: Double,
     columns: ColumnsSelector<T, C?>,
-): C? = Aggregators.percentile(percentile).aggregateAll(this, columns) as C?
+): C? = Aggregators.oldPercentile(percentile).aggregateAll(this, columns) as C?
 
 public fun <T> DataFrame<T>.percentileOrNull(percentile: Double, vararg columns: String): Any? =
     percentileOrNull(percentile) { columns.toComparableColumns() }
@@ -121,7 +121,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.percentileOrNull(percentile: Doub
 public inline fun <T, reified R : Comparable<R>> DataFrame<T>.percentileOf(
     percentile: Double,
     crossinline expression: RowExpression<T, R?>,
-): R? = Aggregators.percentile(percentile).aggregateOf(this, expression) as R?
+): R? = Aggregators.oldPercentile(percentile).aggregateOf(this, expression) as R?
 
 // endregion
 
@@ -133,7 +133,7 @@ public fun <T> Grouped<T>.percentile(percentile: Double): DataFrame<T> =
 public fun <T, C : Comparable<C>> Grouped<T>.percentileFor(
     percentile: Double,
     columns: ColumnsForAggregateSelector<T, C?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateFor(this, columns)
+): DataFrame<T> = Aggregators.oldPercentile(percentile).aggregateFor(this, columns)
 
 public fun <T> Grouped<T>.percentileFor(percentile: Double, vararg columns: String): DataFrame<T> =
     percentileFor(percentile) { columns.toComparableColumns() }
@@ -154,7 +154,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.percentile(
     percentile: Double,
     name: String? = null,
     columns: ColumnsSelector<T, C?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateAll(this, name, columns)
+): DataFrame<T> = Aggregators.oldPercentile(percentile).aggregateAll(this, name, columns)
 
 public fun <T> Grouped<T>.percentile(percentile: Double, vararg columns: String, name: String? = null): DataFrame<T> =
     percentile(percentile, name) { columns.toComparableColumns() }
@@ -177,7 +177,7 @@ public inline fun <T, reified R : Comparable<R>> Grouped<T>.percentileOf(
     percentile: Double,
     name: String? = null,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.percentile(percentile).cast<R?>().aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.oldPercentile(percentile).cast<R?>().aggregateOf(this, name, expression)
 
 // endregion
 
@@ -244,7 +244,7 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.oldPercentile(percentile).aggregateFor(this, separate, columns)
 
 public fun <T> PivotGroupBy<T>.percentileFor(
     percentile: Double,
@@ -269,7 +269,7 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentileFor(
 public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentile(
     percentile: Double,
     columns: ColumnsSelector<T, C?>,
-): DataFrame<T> = Aggregators.percentile(percentile).aggregateAll(this, columns)
+): DataFrame<T> = Aggregators.oldPercentile(percentile).aggregateAll(this, columns)
 
 public fun <T> PivotGroupBy<T>.percentile(percentile: Double, vararg columns: String): DataFrame<T> =
     percentile(percentile) { columns.toComparableColumns() }
@@ -289,6 +289,6 @@ public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentile(
 public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.percentileOf(
     percentile: Double,
     crossinline expression: RowExpression<T, R?>,
-): DataFrame<T> = Aggregators.percentile(percentile).cast<R?>().aggregateOf(this, expression)
+): DataFrame<T> = Aggregators.oldPercentile(percentile).cast<R?>().aggregateOf(this, expression)
 
 // endregion
