@@ -16,6 +16,9 @@ import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger { }
 
+/**
+ * Uses [QuantileEstimationMethod.R8] for primitive numbers, else [QuantileEstimationMethod.R3]
+ */
 internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double, type: KType, skipNaN: Boolean): Any? {
     when {
         percentile !in 0.0..100.0 -> error("Percentile must be in range [0, 100]")

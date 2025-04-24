@@ -7,8 +7,8 @@ import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.ConstantEstimation
-import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.LinearEstimation
+import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.InterpolatingEstimation
+import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.SelectingEstimation
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.math.ceil
@@ -73,10 +73,10 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
     }
 
     return when (method) {
-        is ConstantEstimation ->
+        is SelectingEstimation ->
             method.quantile<T>(p, list as List<T>)
 
-        is LinearEstimation -> {
+        is InterpolatingEstimation -> {
             require(type.isPrimitiveNumber()) {
                 "Cannot calculate the $name for non-primitive numbers with estimation method $method."
             }
@@ -115,7 +115,7 @@ internal fun <T : Comparable<T & Any>?, Index : Number> Sequence<Any?>.indexOfQu
                 }. Only primitive numbers or self-comparables are supported.",
             )
 
-        method is LinearEstimation && !nonNullType.isPrimitiveNumber() ->
+        method is InterpolatingEstimation && !nonNullType.isPrimitiveNumber() ->
             error(
                 "Cannot calculate the $name for type ${renderType(type)} with estimation method $method." +
                     "For piecewise linear methods, only primitive numbers are supported",
@@ -125,8 +125,8 @@ internal fun <T : Comparable<T & Any>?, Index : Number> Sequence<Any?>.indexOfQu
     @Suppress("UNCHECKED_CAST")
     fun Number.toIndex(): Index =
         when (method) {
-            is ConstantEstimation -> this.toInt()
-            is LinearEstimation -> this.toDouble()
+            is SelectingEstimation -> this.toInt()
+            is InterpolatingEstimation -> this.toDouble()
         } as Index
 
     // propagate NaN to return if they are not to be skipped
@@ -155,6 +155,16 @@ internal fun <T : Comparable<T & Any>?, Index : Number> Sequence<Any?>.indexOfQu
     return method.indexOfQuantile(p, size)
 }
 
+/**
+ * Inspired by Hyndman and Fan (1996) Sample Quantiles in Statistical Packages. The American Statistician, 50, 361-365.
+ * DOI:10.1080/00031305.1996.10473566
+ *
+ * and https://commons.apache.org/proper/commons-statistics/commons-statistics-descriptive/javadocs/api-1.1/org/apache/commons/statistics/descriptive/Quantile.EstimationMethod.html
+ *
+ * They are split in [SelectingEstimation] (where [oneBasedIndexOfQuantile] gives an exact index of the quantile in a sorted list of type [Int])
+ * and [InterpolatingEstimation] (where [oneBasedIndexOfQuantile] gives an approximation for that index of type [Double]).
+ * For the [SelectingEstimation], the returned quantile is thus todo
+ */
 internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, Index : Number> {
 
     /**
@@ -167,9 +177,9 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
 
     fun quantile(p: Double, values: List<Value>): Value
 
-    interface ConstantEstimation : QuantileEstimationMethod<Comparable<Any>, Int>
+    interface SelectingEstimation : QuantileEstimationMethod<Comparable<Any>, Int>
 
-    interface LinearEstimation : QuantileEstimationMethod<Double, Double> {
+    interface InterpolatingEstimation : QuantileEstimationMethod<Double, Double> {
 
         override fun quantile(p: Double, values: List<Double>): Double {
             val h = oneBasedIndexOfQuantile(p, values.size)
@@ -181,7 +191,8 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
         }
     }
 
-    data object R1 : ConstantEstimation {
+    /** Inverse of the empirical distribution function. */
+    data object R1 : SelectingEstimation {
         override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = ceil(p * count).toInt()
 
         @Suppress("UNCHECKED_CAST")
@@ -191,7 +202,8 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
         }
     }
 
-    data object R3 : ConstantEstimation {
+    /** The observation closest to `count * p` */
+    data object R3 : SelectingEstimation {
         // following apache commons + paper instead of wikipedia
         override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = round(count * p).toInt()
 
@@ -202,18 +214,20 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
         }
     }
 
-    data object R7 : LinearEstimation {
+    /** Linear interpolation of the modes for the order statistics for the uniform distribution on [0, 1]. */
+    data object R7 : InterpolatingEstimation {
         override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count - 1.0) * p + 1.0
     }
 
-    data object R8 : LinearEstimation {
+    /** Linear interpolation of the approximate medians for order statistics. */
+    data object R8 : InterpolatingEstimation {
         override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count + 1.0 / 3.0) * p + 1.0 / 3.0
     }
 }
 
 // overload to get the right comparable type
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER", "UNCHECKED_CAST")
-internal fun <T : Comparable<T>> ConstantEstimation.quantile(p: Double, values: List<T>): T =
+internal fun <T : Comparable<T>> SelectingEstimation.quantile(p: Double, values: List<T>): T =
     quantile(p, values as List<Comparable<Any>>) as T
 
 // corrects oneBasedIndexOfQuantile to zero-based index
@@ -224,8 +238,8 @@ internal fun <IndexType : Number> QuantileEstimationMethod<*, IndexType>.indexOf
 ): IndexType {
     val oneBased = oneBasedIndexOfQuantile(p = p, count = count)
     return when (this) {
-        is LinearEstimation -> oneBased as Double - 1.0
-        is ConstantEstimation -> oneBased as Int - 1
+        is InterpolatingEstimation -> oneBased as Double - 1.0
+        is SelectingEstimation -> oneBased as Int - 1
     } as IndexType
 }
 

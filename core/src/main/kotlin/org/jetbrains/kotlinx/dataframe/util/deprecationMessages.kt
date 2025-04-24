@@ -83,6 +83,9 @@ internal const val ROW_MAX_OR_NULL = "`rowMaxOrNull` is deprecated in favor of `
 internal const val ROW_MEDIAN = "`rowMedian` is deprecated in favor of `rowMedianOf`. $MESSAGE_0_16"
 internal const val ROW_MEDIAN_OR_NULL = "`rowMedianOrNull` is deprecated in favor of `rowMedianOfOrNull`. $MESSAGE_0_16"
 
+internal const val ROW_PERCENTILE = "`rowPercentile` is deprecated in favor of `rowPercentileOf`. $MESSAGE_0_16"
+internal const val ROW_PERCENTILE_OR_NULL = "`rowPercentileOrNull` is deprecated in favor of `rowPercentileOfOrNull`. $MESSAGE_0_16"
+
 internal const val SUM_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
 internal const val MAX_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
 internal const val MIN_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
