@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.CSV_DELIMITER
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.WRITER_WRITE
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.QuoteMode
+import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.apache.commons.csv.QuoteMode as ApacheQuoteMode
 
 /**
@@ -57,8 +58,22 @@ internal fun writeDelimImpl(
         df.forEach {
             val values = it.values().map {
                 when (it) {
-                    is AnyRow -> it.toJson()
-                    is AnyFrame -> it.toJson()
+                    is AnyRow -> try {
+                        it.toJson()
+                    } catch (_: NoClassDefFoundError) {
+                        error(
+                            "Encountered a DataFrame when writing to csv/tsv/delim. This needs to be converted to JSON, so the dataframe-json dependency is required.",
+                        )
+                    }
+
+                    is AnyFrame -> try {
+                        it.toJson()
+                    } catch (_: NoClassDefFoundError) {
+                        error(
+                            "Encountered a DataRow when writing to csv/tsv/delim. This needs to be converted to JSON, so the dataframe-json dependency is required.",
+                        )
+                    }
+
                     else -> it
                 }
             }

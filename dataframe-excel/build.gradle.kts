@@ -17,6 +17,11 @@ repositories {
 dependencies {
     api(projects.core)
     api(libs.poi)
+
+    // for writing DataFrame/DataRow -> JSON in Excel cells
+    // can safely be excluded when writing only flat dataframes
+    api(projects.dataframeJson)
+
     implementation(libs.poi.ooxml)
 
     implementation(libs.kotlin.datetimeJvm)
