@@ -1436,10 +1436,13 @@ public final class org/jetbrains/kotlinx/dataframe/api/ConstructorsKt {
 public final class org/jetbrains/kotlinx/dataframe/api/Convert {
 	public fun <init> (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)V
 	public final fun cast ()Lorg/jetbrains/kotlinx/dataframe/api/Convert;
+	public final fun getColumns ()Lkotlin/jvm/functions/Function2;
+	public final fun getDf ()Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/ConvertKt {
+	public static final fun asColumn (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun asFrame (Lorg/jetbrains/kotlinx/dataframe/api/Convert;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun convert (Lorg/jetbrains/kotlinx/dataframe/DataFrame;Lkotlin/jvm/functions/Function2;)Lorg/jetbrains/kotlinx/dataframe/api/Convert;
 	public static final fun convert (Lorg/jetbrains/kotlinx/dataframe/DataFrame;[Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/api/Convert;

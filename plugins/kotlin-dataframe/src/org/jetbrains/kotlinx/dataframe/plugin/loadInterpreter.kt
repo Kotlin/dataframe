@@ -99,6 +99,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnOfPairs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnRange
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConcatWithKeys
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConvertAsColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf3
@@ -304,6 +305,7 @@ internal inline fun <reified T> String.load(): T {
         "ToSpecificTypeZone" -> ToSpecificTypeZone()
         "ToSpecificTypePattern" -> ToSpecificTypePattern()
         "With0" -> With0()
+        "ConvertAsColumn" -> ConvertAsColumn()
         "PerRowCol" -> PerRowCol()
         "Explode0" -> Explode0()
         "Insert0" -> Insert0()

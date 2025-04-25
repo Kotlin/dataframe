@@ -102,6 +102,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("convertAsColumn.kt")
+  public void testConvertAsColumn() {
+    runTest("testData/box/convertAsColumn.kt");
+  }
+
+  @Test
   @TestMetadata("convertToDataFrame.kt")
   public void testConvertToDataFrame() {
     runTest("testData/box/convertToDataFrame.kt");
@@ -170,8 +176,8 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @Test
   @TestMetadata("distinct.kt")
   public void testDistinct() {
-        runTest("testData/box/distinct.kt");
-    }
+    runTest("testData/box/distinct.kt");
+  }
 
   @Test
   @TestMetadata("dropNA.kt")
