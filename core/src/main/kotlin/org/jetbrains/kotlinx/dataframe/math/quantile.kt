@@ -7,8 +7,6 @@ import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.InterpolatingEstimation
-import org.jetbrains.kotlinx.dataframe.math.QuantileEstimationMethod.SelectingEstimation
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.math.ceil
@@ -73,10 +71,10 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
     }
 
     return when (method) {
-        is SelectingEstimation ->
+        is QuantileEstimationMethod.Selecting ->
             method.quantile<T>(p, list as List<T>)
 
-        is InterpolatingEstimation -> {
+        is QuantileEstimationMethod.Interpolating -> {
             require(type.isPrimitiveNumber()) {
                 "Cannot calculate the $name for non-primitive numbers with estimation method $method."
             }
@@ -115,7 +113,7 @@ internal fun <T : Comparable<T & Any>?, Index : Number> Sequence<Any?>.indexOfQu
                 }. Only primitive numbers or self-comparables are supported.",
             )
 
-        method is InterpolatingEstimation && !nonNullType.isPrimitiveNumber() ->
+        method is QuantileEstimationMethod.Interpolating && !nonNullType.isPrimitiveNumber() ->
             error(
                 "Cannot calculate the $name for type ${renderType(type)} with estimation method $method." +
                     "For piecewise linear methods, only primitive numbers are supported",
@@ -125,8 +123,8 @@ internal fun <T : Comparable<T & Any>?, Index : Number> Sequence<Any?>.indexOfQu
     @Suppress("UNCHECKED_CAST")
     fun Number.toIndex(): Index =
         when (method) {
-            is SelectingEstimation -> this.toInt()
-            is InterpolatingEstimation -> this.toDouble()
+            is QuantileEstimationMethod.Selecting -> this.toInt()
+            is QuantileEstimationMethod.Interpolating -> this.toDouble()
         } as Index
 
     // propagate NaN to return if they are not to be skipped
@@ -161,9 +159,13 @@ internal fun <T : Comparable<T & Any>?, Index : Number> Sequence<Any?>.indexOfQu
  *
  * and https://commons.apache.org/proper/commons-statistics/commons-statistics-descriptive/javadocs/api-1.1/org/apache/commons/statistics/descriptive/Quantile.EstimationMethod.html
  *
- * They are split in [SelectingEstimation] (where [oneBasedIndexOfQuantile] gives an exact index of the quantile in a sorted list of type [Int])
- * and [InterpolatingEstimation] (where [oneBasedIndexOfQuantile] gives an approximation for that index of type [Double]).
- * For the [SelectingEstimation], the returned quantile is thus todo
+ * They are split in [Selecting] (where [oneBasedIndexOfQuantile] gives an exact index of the quantile in a sorted list of type [Int])
+ * and [Interpolating] (where [oneBasedIndexOfQuantile] gives an approximation for that index of type [Double]).
+ * For the [Selecting], the [Value] type can thus be any self-comparable type, but for [Interpolating],
+ * [Value] can only be of type [Double], because it needs to perform calculations on the values.
+ *
+ * TODO add R2, R4, R5, R6, R9
+ * TODO make public if configurable for percentile function
  */
 internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, Index : Number> {
 
@@ -177,58 +179,72 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
 
     fun quantile(p: Double, values: List<Value>): Value
 
-    interface SelectingEstimation : QuantileEstimationMethod<Comparable<Any>, Int>
+    sealed interface Selecting : QuantileEstimationMethod<Comparable<Any>, Int> {
 
-    interface InterpolatingEstimation : QuantileEstimationMethod<Double, Double> {
+        /** Inverse of the empirical distribution function. */
+        data object R1 : Selecting {
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = ceil(p * count).toInt()
 
-        override fun quantile(p: Double, values: List<Double>): Double {
-            val h = oneBasedIndexOfQuantile(p, values.size)
-            return values.quickSelect((floor(h).toInt() - 1).coerceIn(0..<values.size)) +
-                (h - floor(h)) * (
-                    values.quickSelect((ceil(h).toInt() - 1).coerceIn(0..<values.size)) -
-                        values.quickSelect((floor(h).toInt() - 1).coerceIn(0..<values.size))
-                )
+            @Suppress("UNCHECKED_CAST")
+            override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
+                val h = indexOfQuantile(p, values.size).toInt()
+                return values.quickSelect(h.coerceIn(0..<values.size))
+            }
+        }
+
+        /** The observation closest to `count * p` */
+        data object R3 : Selecting {
+            // following apache commons + paper instead of wikipedia
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = round(count * p).toInt()
+
+            @Suppress("UNCHECKED_CAST")
+            override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
+                val h = indexOfQuantile(p, values.size).toInt()
+                return values.quickSelect(h.coerceIn(0..<values.size))
+            }
+        }
+
+        // overload to get the right comparable type
+        @JvmName("quantileTyped")
+        @Suppress("EXTENSION_SHADOWED_BY_MEMBER", "UNCHECKED_CAST", "INAPPLICABLE_JVM_NAME")
+        fun <T : Comparable<T>> quantile(p: Double, values: List<T>): T =
+            quantile(p, values as List<Comparable<Any>>) as T
+    }
+
+    // TODO add R2, R4, R5, R6, R9
+    sealed interface Interpolating : QuantileEstimationMethod<Double, Double> {
+
+        /** Linear interpolation of the modes for the order statistics for the uniform distribution on [0, 1]. */
+        data object R7 : Interpolating, PieceWiseLinear {
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count - 1.0) * p + 1.0
+        }
+
+        /** Linear interpolation of the approximate medians for order statistics. */
+        data object R8 : Interpolating, PieceWiseLinear {
+            override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count + 1.0 / 3.0) * p + 1.0 / 3.0
+        }
+
+        private interface PieceWiseLinear : Interpolating {
+            override fun quantile(p: Double, values: List<Double>): Double {
+                val h = oneBasedIndexOfQuantile(p, values.size)
+                return values.quickSelect((floor(h).toInt() - 1).coerceIn(0..<values.size)) +
+                    (h - floor(h)) * (
+                        values.quickSelect((ceil(h).toInt() - 1).coerceIn(0..<values.size)) -
+                            values.quickSelect((floor(h).toInt() - 1).coerceIn(0..<values.size))
+                    )
+            }
         }
     }
 
-    /** Inverse of the empirical distribution function. */
-    data object R1 : SelectingEstimation {
-        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = ceil(p * count).toInt()
-
-        @Suppress("UNCHECKED_CAST")
-        override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
-            val h = indexOfQuantile(p, values.size).toInt()
-            return values.quickSelect(h.coerceIn(0..<values.size))
-        }
-    }
-
-    /** The observation closest to `count * p` */
-    data object R3 : SelectingEstimation {
-        // following apache commons + paper instead of wikipedia
-        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Int = round(count * p).toInt()
-
-        @Suppress("UNCHECKED_CAST")
-        override fun quantile(p: Double, values: List<Comparable<Any>>): Comparable<Any> {
-            val h = indexOfQuantile(p, values.size).toInt()
-            return values.quickSelect(h.coerceIn(0..<values.size))
-        }
-    }
-
-    /** Linear interpolation of the modes for the order statistics for the uniform distribution on [0, 1]. */
-    data object R7 : InterpolatingEstimation {
-        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count - 1.0) * p + 1.0
-    }
-
-    /** Linear interpolation of the approximate medians for order statistics. */
-    data object R8 : InterpolatingEstimation {
-        override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double = (count + 1.0 / 3.0) * p + 1.0 / 3.0
+    // shortcuts to the various estimation methods
+    // TODO add R2, R4, R5, R6, R9
+    companion object {
+        val R1 = Selecting.R1
+        val R3 = Selecting.R3
+        val R7 = Interpolating.R7
+        val R8 = Interpolating.R8
     }
 }
-
-// overload to get the right comparable type
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER", "UNCHECKED_CAST")
-internal fun <T : Comparable<T>> SelectingEstimation.quantile(p: Double, values: List<T>): T =
-    quantile(p, values as List<Comparable<Any>>) as T
 
 // corrects oneBasedIndexOfQuantile to zero-based index
 @Suppress("UNCHECKED_CAST")
@@ -238,11 +254,14 @@ internal fun <IndexType : Number> QuantileEstimationMethod<*, IndexType>.indexOf
 ): IndexType {
     val oneBased = oneBasedIndexOfQuantile(p = p, count = count)
     return when (this) {
-        is InterpolatingEstimation -> oneBased as Double - 1.0
-        is SelectingEstimation -> oneBased as Int - 1
+        is QuantileEstimationMethod.Interpolating -> oneBased as Double - 1.0
+        is QuantileEstimationMethod.Selecting -> oneBased as Int - 1
     } as IndexType
 }
 
+/**
+ * Select the k't "smallest" element from list [this]
+ */
 @PublishedApi
 internal fun <T : Comparable<T>> List<T>.quickSelect(k: Int): T {
     if (k < 0 || k >= size) throw IndexOutOfBoundsException("k = $k, size = $size")

@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.math.medianConversion
 import org.jetbrains.kotlinx.dataframe.math.medianOrNull
 import org.jetbrains.kotlinx.dataframe.math.minOrNull
 import org.jetbrains.kotlinx.dataframe.math.minTypeConversion
-import org.jetbrains.kotlinx.dataframe.math.percentile
 import org.jetbrains.kotlinx.dataframe.math.percentileConversion
 import org.jetbrains.kotlinx.dataframe.math.percentileOrNull
 import org.jetbrains.kotlinx.dataframe.math.std
@@ -147,14 +146,6 @@ internal object Aggregators {
     val mean by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(meanTypeConversion) { type ->
             mean(type, skipNaN)
-        }
-    }
-
-    // T: Comparable<T>? -> T
-    @Deprecated("todo")
-    val oldPercentile by withOneOption { percentile: Double ->
-        flattenReducingForAny<Comparable<Any?>> { type ->
-            asIterable().percentile(percentile, type)
         }
     }
 
