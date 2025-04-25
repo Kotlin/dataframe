@@ -79,6 +79,9 @@ dependencies {
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
+    testImplementation(projects.dataframeJson)
+    testImplementation(libs.serialization.core)
+    testImplementation(libs.serialization.json)
 
     // for samples.api
     testImplementation(projects.dataframeCsv)

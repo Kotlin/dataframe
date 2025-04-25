@@ -426,7 +426,7 @@ private fun isDataframeConvertable(dataframeLike: Any?) =
     KotlinNotebookPluginUtils.isDataframeConvertable(dataframeLike = dataframeLike)
 
 @Suppress("INVISIBLE_REFERENCE")
-private fun BufferedImage.resizeKeepingAspectRatio(
+internal fun BufferedImage.resizeKeepingAspectRatio(
     maxSize: Int,
     resultImageType: Int = BufferedImage.TYPE_INT_ARGB,
     interpolation: Any = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR,

@@ -42,7 +42,6 @@ dependencies {
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
-    testImplementation(projects.dataframeJson)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }

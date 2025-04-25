@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -10,9 +11,11 @@ import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toKotlinLocalTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -30,7 +33,6 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.resetToDefault
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.stringParser
 import org.jetbrains.kotlinx.dataframe.impl.canParse
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
@@ -59,6 +61,8 @@ import java.time.Instant as JavaInstant
 import java.time.LocalDate as JavaLocalDate
 import java.time.LocalDateTime as JavaLocalDateTime
 import java.time.LocalTime as JavaLocalTime
+
+private val logger = KotlinLogging.logger { }
 
 internal interface StringParser<T> {
     fun toConverter(options: ParserOptions?): TypeConverter
@@ -210,7 +214,7 @@ internal object Parsers : GlobalParserOptions {
                 .parseOrNull(this)
                 ?.toInstantUsingOffset()
         }
-            // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
+        // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
             ?: toJavaInstantOrNull()?.toKotlinInstant()
 
     private fun String.toJavaInstantOrNull(): JavaInstant? =
@@ -405,23 +409,73 @@ internal object Parsers : GlobalParserOptions {
         stringParser<BigDecimal> { it.toBigDecimalOrNull() },
 
         // JSON array as DataFrame<*> TODO
-//        stringParser<AnyFrame>(catch = true) {
-//            val trimmed = it.trim()
-//            if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-//                DataFrame.readJsonStr(it)
-//            } else {
-//                null
-//            }
-//        },
+        stringParser<AnyFrame>(catch = true) {
+            val trimmed = it.trim()
+            if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+                try {
+                    val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
+                    val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
+                    val readJsonStr = klass.getMethod(
+                        "readJsonStr",
+                        /* this = */DataFrame.Companion::class.java,
+                        /* text = */ String::class.java,
+                        /* header = */ List::class.java,
+                        /* keyValuePaths = */ List::class.java,
+                        /* typeClashTactic = */ typeClashTactic,
+                        /* unifyNumbers = */ Boolean::class.java,
+                    )
+
+                    readJsonStr.invoke(
+                        null,
+                        /* this = */ DataFrame.Companion,
+                        /* text = */ trimmed,
+                        /* header = */ emptyList<Any>(),
+                        /* keyValuePaths = */ emptyList<Any>(),
+                        /* typeClashTactic = */ typeClashTactic.enumConstants[0],
+                        /* unifyNumbers = */ true,
+                    ) as AnyFrame
+                } catch (_: ClassNotFoundException) {
+                    logger.warn { "parse() encountered a string that looks like a JSON array, but the dataframe-json dependency was not detected. Skipping for now." }
+                    null
+                }
+            } else {
+                null
+            }
+        },
         // JSON object as DataRow<*> TODO
-//        stringParser<AnyRow>(catch = true) {
-//            val trimmed = it.trim()
-//            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-//                DataRow.readJsonStr(it)
-//            } else {
-//                null
-//            }
-//        },
+        stringParser<AnyRow>(catch = true) {
+            val trimmed = it.trim()
+            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+                try {
+                    val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
+                    val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
+                    val readJsonStr = klass.getMethod(
+                        "readJsonStr",
+                        /* this = */DataRow.Companion::class.java,
+                        /* text = */ String::class.java,
+                        /* header = */ List::class.java,
+                        /* keyValuePaths = */ List::class.java,
+                        /* typeClashTactic = */ typeClashTactic,
+                        /* unifyNumbers = */ Boolean::class.java,
+                    )
+
+                    readJsonStr.invoke(
+                        null,
+                        /* this = */ DataRow.Companion,
+                        /* text = */ trimmed,
+                        /* header = */ emptyList<Any>(),
+                        /* keyValuePaths = */ emptyList<Any>(),
+                        /* typeClashTactic = */ typeClashTactic.enumConstants[0],
+                        /* unifyNumbers = */ true,
+                    ) as AnyRow
+                } catch (_: ClassNotFoundException) {
+                    logger.warn { "parse() encountered a string that looks like a JSON object, but the dataframe-json dependency was not detected. Skipping for now." }
+                    null
+                }
+            } else {
+                null
+            }
+        },
         // Char
         stringParser<Char> { it.singleOrNull() },
         // No parser found, return as String
