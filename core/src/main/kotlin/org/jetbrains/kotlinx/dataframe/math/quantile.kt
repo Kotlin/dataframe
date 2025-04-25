@@ -19,8 +19,19 @@ import kotlin.reflect.typeOf
 private val logger = KotlinLogging.logger { }
 
 /**
- * p-quantile: the k'th q-quantile, where p = k/q.
+ * Returns the p-quantile: the k'th q-quantile, where p = k/q.
  *
+ * When [method] is a [QuantileEstimationMethod.Selecting] method,
+ * [this] can be a sequence with any self-comparable type.
+ * The returned value will be selected from the sequence.
+ *
+ * Otherwise, when [method] is a [QuantileEstimationMethod.Interpolating] method,
+ * [this] can only be a sequence with primitive number types.
+ * The returned value will be [Double].
+ *
+ * Nulls are not allowed. If NaN is among the values, it will be returned.
+ *
+ * @see QuantileEstimationMethod
  */
 internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
     p: Double,
@@ -55,7 +66,12 @@ internal fun <T : Comparable<T>> Sequence<Any>.quantileOrNull(
     }
 
     // propagate NaN to return if they are not to be skipped
-    if (type.canBeNaN && !skipNaN && any { it.isNaN }) return Double.NaN
+    if (type.canBeNaN && !skipNaN && any { it.isNaN }) {
+        // ensure that using a selecting quantile estimation method always returns the same type as the input
+        if (type == typeOf<Float>() && method is QuantileEstimationMethod.Selecting) return Float.NaN
+
+        return Double.NaN
+    }
 
     val list = when {
         type.canBeNaN -> filter { !it.isNaN }
@@ -201,7 +217,6 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
                 return values.quickSelect(h)
             }
         }
-
     }
 
     // TODO add R2, R4, R5, R6, R9
