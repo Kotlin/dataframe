@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.percentile
-import org.jetbrains.kotlinx.dataframe.api.rowPercentile
+import org.jetbrains.kotlinx.dataframe.api.rowPercentileOf
 import org.junit.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -19,7 +19,7 @@ class PercentileTests {
             2, 6,
             7, 7,
         )
-        df.percentile(60.0, "a", "b") shouldBe 6
+        df.percentile(60.0, "a", "b") shouldBe 6.133333333333333
     }
 
     @Test
@@ -29,6 +29,7 @@ class PercentileTests {
             2, 4, 10,
             7, 7, 1,
         )
-        df.mapToColumn("", Infer.Type) { it.rowPercentile(25.0) } shouldBe columnOf(1, 2, 1)
+        df.mapToColumn("", Infer.Type) { it.rowPercentileOf<Int>(25.0) } shouldBe
+            columnOf(1, 2, 2)
     }
 }

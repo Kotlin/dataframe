@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import org.jetbrains.kotlinx.dataframe.math.quickSelect
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
@@ -16,9 +15,6 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 private val logger = KotlinLogging.logger { }
-
-// TODO median always returns the same type, but this can be confusing for iterables of even length
-// TODO (e.g. median of [1, 2] should be 1.5, but the type is Int, so it returns 1), Issue #558
 
 /**
  * Returns the median of the comparable input:
@@ -35,6 +31,9 @@ internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: 
         type.isMarkedNullable ->
             error("Encountered nullable type ${renderType(type)} in median function. This should not occur.")
 
+        // this means the sequence is empty
+        type == nothingType -> return null
+
         !type.isIntraComparable() ->
             error(
                 "Unable to compute the median for ${
@@ -49,9 +48,6 @@ internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: 
 
         type == typeOf<Long>() ->
             logger.warn { "Converting Longs to Doubles to calculate the median, loss of precision may occur." }
-
-        // this means the sequence is empty
-        type == nothingType -> return null
     }
 
     // propagate NaN to return if they are not to be skipped
@@ -118,6 +114,9 @@ internal val medianConversion: CalculateReturnType = { type, isEmpty ->
 internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, skipNaN: Boolean): Int {
     val nonNullType = type.withNullability(false)
     when {
+        // this means the sequence is empty
+        nonNullType == nothingType -> return -1
+
         !nonNullType.isIntraComparable() ->
             error(
                 "Unable to compute the median for ${
@@ -129,9 +128,6 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, s
             throw IllegalArgumentException(
                 "Cannot calculate the median for big numbers in DataFrame. Only primitive numbers are supported.",
             )
-
-        // this means the sequence is empty
-        nonNullType == nothingType -> return -1
     }
 
     // propagate NaN to return if they are not to be skipped
@@ -161,9 +157,4 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, s
     val lower = list.quickSelect(middleIndex)
 
     return lower.index
-}
-
-private data class IndexedComparable<T : Comparable<T>>(val index: Int, val value: T) :
-    Comparable<IndexedComparable<T>> {
-    override fun compareTo(other: IndexedComparable<T>): Int = value.compareTo(other.value)
 }
