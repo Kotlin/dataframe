@@ -64,6 +64,7 @@ dependencies {
     kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
 
     api(libs.commonsCsv)
+
     implementation(libs.commonsIo)
     implementation(libs.serialization.core)
     implementation(libs.serialization.json)
@@ -81,6 +82,9 @@ dependencies {
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
+
+    // for checking results
+    testImplementation(libs.commonsStatisticsDescriptive)
 
     // for samples.api
     testImplementation(projects.dataframeCsv)
