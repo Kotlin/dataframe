@@ -1,14 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import org.jetbrains.kotlinx.dataframe.math.quantileOrNull
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.math.round
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -83,6 +84,11 @@ internal val percentileConversion: CalculateReturnType = { type, isEmpty ->
     }.withNullability(isEmpty)
 }
 
+/**
+ * Returns the index of the [percentile] in the unsorted sequence [this].
+ * If `!`[skipNaN] and the sequence [this] contains NaN, the index of the first NaN will be returned.
+ * Returns -1 if the sequence is empty.
+ */
 internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
     percentile: Double,
     type: KType,
@@ -108,16 +114,36 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
             )
     }
 
+    val indexList = this.mapIndexedNotNull { i, it ->
+        if (it == null) {
+            null
+        } else {
+            IndexedComparable(i, it)
+        }
+    }
+
     // TODO make configurable
     val method = QuantileEstimationMethod.R3
 
     // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25
     val p = percentile / 100.0
-    return this.indexOfQuantile(
+
+    // get the index where the percentile can be found in the sorted sequence
+    val indexEstimation = indexList.quantileIndexEstimation(
         p = p,
-        type = type,
+        type = typeOf<IndexedComparable<Nothing>>(),
         skipNaN = skipNaN,
-        method = method as QuantileEstimationMethod<T & Any, Int>,
+        method = method,
         name = "percentile",
     )
+    if (indexEstimation.isNaN()) return this.indexOfFirst { it.isNaN }
+    if (indexEstimation < 0.0) return -1
+    require(indexEstimation == round(indexEstimation)) {
+        "percentile expected a whole number index from quantileIndexEstimation but was $indexEstimation"
+    }
+
+    val percentileResult = indexList.toList().quickSelect(k = indexEstimation.toInt())
+
+    // return the original unsorted index of the found result
+    return percentileResult.index
 }
