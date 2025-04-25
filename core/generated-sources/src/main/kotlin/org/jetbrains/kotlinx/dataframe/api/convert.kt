@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Converter
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -96,7 +97,10 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
     }
 
 @HasSchema(schemaArg = 0)
-public class Convert<T, out C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
+public class Convert<T, out C>(
+    @PublishedApi internal val df: DataFrame<T>,
+    @PublishedApi internal val columns: ColumnsSelector<T, C>,
+) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
     @Refine
@@ -127,6 +131,21 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
 public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
     body: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
 ): DataFrame<T> = to { body(this, it.asColumnGroup()).asColumnGroup(it.name()) }
+
+/**
+ * Compiler plugin-friendly variant of [ReplaceClause.with]
+ * [ReplaceClause.with] allows to change both column types and names.
+ * Tracking of column name changes in arbitrary lambda expression is unreliable and generally impossible
+ * to do statically.
+ * This function ensures that all column names remain as is and only their type changes to [R]
+ * Example:
+ * `df.convert { colsOf<String>() }.asColumn { it.asList().parallelStream().map { heavyIO(it) }.toList().toColumn() }`
+ */
+@Refine
+@Interpretable("ConvertAsColumn")
+public inline fun <T, C, R> Convert<T, C>.asColumn(
+    crossinline columnConverter: DataFrame<T>.(DataColumn<C>) -> BaseColumn<R>,
+): DataFrame<T> = df.replace(columns).with { columnConverter(df, it).rename(it.name()) }
 
 @Refine
 @Interpretable("PerRowCol")
