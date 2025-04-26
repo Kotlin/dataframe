@@ -7,7 +7,6 @@ plugins {
         alias(serialization)
         alias(kover)
         alias(ktlint)
-        alias(kodex)
         alias(binary.compatibility.validator)
     }
 }
@@ -27,12 +26,11 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.sl4j)
 
+    testImplementation(kotlin("test"))
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
-    testImplementation(libs.kotlin.scriptingJvm)
-    testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
 }
 

@@ -49,13 +49,10 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.values
-import org.junit.Test
 import java.net.URL
-import kotlin.Double
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+import kotlin.test.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class JsonTests {
@@ -242,9 +239,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Double?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(2, null)
-            it["c"].values.toList() shouldBe listOf(null, 3)
-            it["d"].values.toList() shouldBe listOf(null, null)
+            it["b"].values().toList() shouldBe listOf(2, null)
+            it["c"].values().toList() shouldBe listOf(null, 3)
+            it["d"].values().toList() shouldBe listOf(null, null)
         }
 
         group[1].alsoDebug().let {
@@ -253,9 +250,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Double?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(4, null)
-            it["c"].values.toList() shouldBe listOf(null, null)
-            it["d"].values.toList() shouldBe listOf(null, 5)
+            it["b"].values().toList() shouldBe listOf(4, null)
+            it["c"].values().toList() shouldBe listOf(null, null)
+            it["d"].values().toList() shouldBe listOf(null, 5)
         }
     }
 
@@ -279,9 +276,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Int?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(2, null)
-            it["c"].values.toList() shouldBe listOf(null, 3)
-            it["d"].values.toList() shouldBe listOf(null, null)
+            it["b"].values().toList() shouldBe listOf(2, null)
+            it["c"].values().toList() shouldBe listOf(null, 3)
+            it["d"].values().toList() shouldBe listOf(null, null)
         }
 
         group[1].alsoDebug().let {
@@ -290,9 +287,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Int?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(4, null)
-            it["c"].values.toList() shouldBe listOf(null, null)
-            it["d"].values.toList() shouldBe listOf(null, 5)
+            it["b"].values().toList() shouldBe listOf(4, null)
+            it["c"].values().toList() shouldBe listOf(null, null)
+            it["d"].values().toList() shouldBe listOf(null, 5)
         }
     }
 
@@ -312,13 +309,13 @@ class JsonTests {
         df1.columnsCount() shouldBe 1
         df1.rowsCount() shouldBe 4
         df1["a"].type() shouldBe typeOf<Double>()
-        df1["a"].values.toList() shouldBe listOf(1.0, 2.0, 3.0, 4.5)
+        df1["a"].values().toList() shouldBe listOf(1.0, 2.0, 3.0, 4.5)
 
         val df2 = DataFrame.readJsonStr(json, unifyNumbers = false).alsoDebug()
         df2.columnsCount() shouldBe 1
         df2.rowsCount() shouldBe 4
         df2["a"].type() shouldBe typeOf<Number>()
-        df2["a"].values.toList() shouldBe listOf(1, 2.0f, 3, 4.5f)
+        df2["a"].values().toList() shouldBe listOf(1, 2.0f, 3, 4.5f)
     }
 
     @Test
@@ -349,7 +346,7 @@ class JsonTests {
             it.columnsCount() shouldBe 3
             it.rowsCount() shouldBe 3
             it["a"].type() shouldBe typeOf<String>()
-            it["a"].values.toList() shouldBe listOf("b", "c", "d")
+            it["a"].values().toList() shouldBe listOf("b", "c", "d")
         }
     }
 
@@ -396,7 +393,7 @@ class JsonTests {
                 it.columnsCount() shouldBe 1
                 it.rowsCount() shouldBe 3
                 it["a"].type() shouldBe typeOf<String>()
-                it["a"].values.toList() shouldBe listOf("b", "c", "d")
+                it["a"].values().toList() shouldBe listOf("b", "c", "d")
             }
     }
 
@@ -696,7 +693,7 @@ class JsonTests {
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
         val a = df["a"] as ValueColumn<*>
-        a.type shouldBe typeOf<List<Int?>>()
+        a.type() shouldBe typeOf<List<Int?>>()
         a[0] shouldBe listOf(1, 2, 3)
         a[1] shouldBe listOf(null)
         a[2..5].forEach {
@@ -1135,6 +1132,7 @@ class JsonTests {
     @Test
     fun `parse invalid literal`() {
         // https://github.com/Kotlin/kotlinx.serialization/issues/2511
+        @Suppress("JsonStandardCompliance")
         val json = Json.decodeFromString<JsonElement>("""[jetbrains, jetbrains-youtrack, youtrack, youtrack-api]""")
         shouldThrow<IllegalStateException> {
             readJsonImpl(json, true, emptyList())

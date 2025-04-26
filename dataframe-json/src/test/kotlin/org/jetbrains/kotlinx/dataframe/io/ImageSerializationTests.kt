@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.ALL_OFF
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import java.awt.image.BufferedImage
@@ -24,6 +23,7 @@ import java.util.Base64
 import java.util.zip.GZIPInputStream
 import javax.imageio.ImageIO
 import kotlin.math.abs
+import kotlin.test.Test
 
 @RunWith(Parameterized::class)
 class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOptions?) {
