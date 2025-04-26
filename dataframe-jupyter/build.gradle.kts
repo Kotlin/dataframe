@@ -7,7 +7,6 @@ plugins {
         alias(kover)
         alias(ktlint)
         alias(jupyter.api)
-        alias(buildconfig)
         alias(binary.compatibility.validator)
     }
 }

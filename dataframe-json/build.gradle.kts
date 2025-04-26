@@ -8,7 +8,6 @@ plugins {
         alias(kover)
         alias(ktlint)
         alias(kodex)
-        alias(buildconfig)
         alias(binary.compatibility.validator)
     }
 }
