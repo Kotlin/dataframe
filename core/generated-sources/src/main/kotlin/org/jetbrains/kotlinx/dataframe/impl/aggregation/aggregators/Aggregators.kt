@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColu
 import org.jetbrains.kotlinx.dataframe.math.indexOfMax
 import org.jetbrains.kotlinx.dataframe.math.indexOfMedian
 import org.jetbrains.kotlinx.dataframe.math.indexOfMin
+import org.jetbrains.kotlinx.dataframe.math.indexOfPercentile
 import org.jetbrains.kotlinx.dataframe.math.maxOrNull
 import org.jetbrains.kotlinx.dataframe.math.maxTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.mean
@@ -19,7 +20,8 @@ import org.jetbrains.kotlinx.dataframe.math.medianConversion
 import org.jetbrains.kotlinx.dataframe.math.medianOrNull
 import org.jetbrains.kotlinx.dataframe.math.minOrNull
 import org.jetbrains.kotlinx.dataframe.math.minTypeConversion
-import org.jetbrains.kotlinx.dataframe.math.percentile
+import org.jetbrains.kotlinx.dataframe.math.percentileConversion
+import org.jetbrains.kotlinx.dataframe.math.percentileOrNull
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.sum
@@ -153,11 +155,35 @@ internal object Aggregators {
         }
     }
 
-    // T: Comparable<T>? -> T
-    val percentile by withOneOption { percentile: Double ->
-        flattenReducingForAny<Comparable<Any?>> { type ->
-            asIterable().percentile(percentile, type)
-        }
+    // T : primitive Number? -> Double?
+    // T : Comparable<T & Any>? -> T?
+    fun <T> percentileCommon(
+        percentile: Double,
+        skipNaN: Boolean,
+    ): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        this.percentile.invoke(percentile, skipNaN).cast2()
+
+    // T : Comparable<T & Any>? -> T?
+    fun <T> percentileComparables(percentile: Double): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        percentileCommon<T>(percentile, skipNaNDefault).cast2()
+
+    // T : primitive Number? -> Double?
+    fun <T> percentileNumbers(
+        percentile: Double,
+        skipNaN: Boolean,
+    ): Aggregator<T & Any, Double?>
+        where T : Comparable<T & Any>?, T : Number? =
+        percentileCommon<T>(percentile, skipNaN).cast2()
+
+    @Suppress("UNCHECKED_CAST")
+    private val percentile by withTwoOptions { percentile: Double, skipNaN: Boolean ->
+        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = percentileConversion,
+            reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
+            indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
+        )
     }
 
     // T : primitive Number? -> Double?
