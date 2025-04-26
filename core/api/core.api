@@ -1740,6 +1740,18 @@ public final class org/jetbrains/kotlinx/dataframe/api/CumSumKt {
 	public static synthetic fun cumSum$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;[Ljava/lang/String;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static synthetic fun cumSum$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;[Lkotlin/reflect/KProperty;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
 	public static synthetic fun cumSum$default (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;[Lorg/jetbrains/kotlinx/dataframe/columns/ColumnReference;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;
+	public static final fun cumSumByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun cumSumByte$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun cumSumDouble (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun cumSumDouble$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun cumSumFloat (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun cumSumFloat$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun cumSumNullableByte (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun cumSumNullableByte$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun cumSumNullableShort (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun cumSumNullableShort$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static final fun cumSumShort (Lorg/jetbrains/kotlinx/dataframe/DataColumn;Z)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
+	public static synthetic fun cumSumShort$default (Lorg/jetbrains/kotlinx/dataframe/DataColumn;ZILjava/lang/Object;)Lorg/jetbrains/kotlinx/dataframe/DataColumn;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/api/DataColumnArithmeticsKt {
@@ -1943,6 +1955,7 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/api/DataSchemaEn
 
 public final class org/jetbrains/kotlinx/dataframe/api/DefaultsKt {
 	public static final fun getDdofDefault ()I
+	public static final fun getDefaultCumSumSkipNA ()Z
 	public static final fun getSkipNaNDefault ()Z
 }
 
@@ -6539,6 +6552,10 @@ public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords : java/
 
 public final class org/jetbrains/kotlinx/dataframe/keywords/SoftKeywords$Companion {
 	public final fun getVALUES ()Ljava/util/List;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/math/CumsumKt {
+	public static final fun getCumSumTypeConversion ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class org/jetbrains/kotlinx/dataframe/math/MedianKt {
