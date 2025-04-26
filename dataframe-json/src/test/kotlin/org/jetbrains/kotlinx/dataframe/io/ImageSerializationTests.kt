@@ -13,8 +13,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.ALL_OFF
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -23,12 +23,11 @@ import java.util.Base64
 import java.util.zip.GZIPInputStream
 import javax.imageio.ImageIO
 import kotlin.math.abs
-import kotlin.test.Test
 
-@RunWith(Parameterized::class)
-class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOptions?) {
-    @Test
-    fun `serialize images as base64`() {
+class ImageSerializationTests {
+    @ParameterizedTest
+    @MethodSource("imageEncodingOptionsToTest")
+    fun `serialize images as base64`(encodingOptions: Base64ImageEncodingOptions?) {
         val images = readImagesFromResources()
         val json = encodeImagesAsJson(images, encodingOptions)
 
@@ -166,8 +165,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         private val DISABLED = null
 
         @JvmStatic
-        @Parameterized.Parameters
-        fun imageEncodingOptionsToTest(): Collection<Base64ImageEncodingOptions?> =
+        fun imageEncodingOptionsToTest(): List<Base64ImageEncodingOptions?> =
             listOf(
                 DEFAULT,
                 GZIP_ON_RESIZE_OFF,

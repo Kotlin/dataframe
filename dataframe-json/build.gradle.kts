@@ -26,8 +26,10 @@ dependencies {
     implementation(libs.serialization.json)
     implementation(libs.sl4j)
 
-    testImplementation(kotlin("test"))
-    testImplementation(libs.junit)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.jupiter.params)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
