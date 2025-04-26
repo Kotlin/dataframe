@@ -14,7 +14,7 @@ class StatisticsTests {
         "yearsToRetirement",
         "workExperienceYears",
         "dependentsCount",
-        "annualIncome"
+        "annualIncome",
     )(
         "Alice", 15, "London", 99.5, "1.85", 50, 0.toShort(), 0.toByte(), 0L,
         "Bob", 20, "Paris", 140.0, "1.35", 45, 2.toShort(), 0.toByte(), 12000L,
@@ -28,7 +28,6 @@ class StatisticsTests {
         "Isla", 22, "London", 75.1, "1.85", 43, 1.toShort(), 0.toByte(), 30000L,
     )
 
-
     @Test
     fun `sum on DataFrame`() {
         // scenario #0: all numerical columns
@@ -39,7 +38,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val sum01 = res0["age"] as Int
@@ -70,7 +69,7 @@ class StatisticsTests {
         sum111 shouldBe 13
 
         // scenario #2: sum of values per columns separately
-        val res3 = personsDf.sumFor( "age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+        val res3 = personsDf.sumFor("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
         res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
 
         val sum31 = res3["age"] as Int
@@ -96,7 +95,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val sum01 = res0["age"][0] as Int
@@ -165,7 +164,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val mean01 = res0["age"][0] as Double
@@ -236,7 +235,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val median01 = res0["age"][0] as Double
@@ -305,7 +304,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val std01 = res0["age"][0] as Double
@@ -376,7 +375,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val min01 = res0["age"][0] as Int
@@ -444,7 +443,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         ) // TODO: why is here weight presented? looks like inconsitency
 
         val min41 = res4["age"][0] as Int
@@ -463,7 +462,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val min51 = res5["age"][0] as Int
@@ -483,7 +482,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val max01 = res0["age"][0] as Int
@@ -551,7 +550,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         ) // TODO: weight is here?
 
         val max41 = res4["age"][0] as Int
@@ -570,7 +569,7 @@ class StatisticsTests {
             "yearsToRetirement",
             "workExperienceYears",
             "dependentsCount",
-            "annualIncome"
+            "annualIncome",
         )
 
         val max51 = res5["age"][0] as Int

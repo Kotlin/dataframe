@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColu
 import org.jetbrains.kotlinx.dataframe.math.indexOfMax
 import org.jetbrains.kotlinx.dataframe.math.indexOfMedian
 import org.jetbrains.kotlinx.dataframe.math.indexOfMin
+import org.jetbrains.kotlinx.dataframe.math.indexOfPercentile
 import org.jetbrains.kotlinx.dataframe.math.maxOrNull
 import org.jetbrains.kotlinx.dataframe.math.maxTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.mean
@@ -21,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.math.minOrNull
 import org.jetbrains.kotlinx.dataframe.math.minTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.percentileConversion
 import org.jetbrains.kotlinx.dataframe.math.percentileOrNull
-import org.jetbrains.kotlinx.dataframe.math.indexOfPercentile
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.sum
@@ -134,7 +134,10 @@ public object Aggregators {
     }
 
     // T: Number? -> Double
-    public val std: AggregatorOptionSwitch2<Boolean, Int, Number, Double> by withTwoOptions { skipNaN: Boolean, ddof: Int ->
+    public val std: AggregatorOptionSwitch2<Boolean, Int, Number, Double> by withTwoOptions {
+        skipNaN: Boolean,
+        ddof: Int,
+        ->
         flattenReducingForNumbers(stdTypeConversion) { type ->
             std(type, skipNaN, ddof)
         }
@@ -158,7 +161,9 @@ public object Aggregators {
         this.percentile.invoke(percentile, skipNaN).cast2()
 
     // T : Comparable<T & Any>? -> T?
-    public fun <T> percentileComparables(percentile: Double): Aggregator<T & Any, T?>
+    public fun <T> percentileComparables(
+        percentile: Double,
+    ): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         percentileCommon<T>(percentile, skipNaNDefault).cast2()
 
