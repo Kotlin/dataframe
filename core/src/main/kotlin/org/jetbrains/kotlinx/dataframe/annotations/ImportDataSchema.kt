@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
-import org.jetbrains.kotlinx.dataframe.io.JSON
 
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
@@ -73,8 +72,11 @@ public annotation class JdbcOptions(
 )
 
 public annotation class JsonOptions(
-    /** Allows the choice of how to handle type clashes when reading a JSON file. */
-    public val typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
+    /**
+     * Allows the choice of how to handle type clashes when reading a JSON file.
+     * Must be either [JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS] or [JsonOptions.TypeClashTactics.ANY_COLUMNS]
+     * */
+    public val typeClashTactic: String = TypeClashTactics.ARRAY_AND_VALUE_COLUMNS,
     /**
      * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
      *     will be created.
@@ -85,4 +87,9 @@ public annotation class JsonOptions(
     public val keyValuePaths: Array<String> = [],
     /** Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default. */
     public val unifyNumbers: Boolean = true,
-)
+) {
+    public object TypeClashTactics {
+        public const val ARRAY_AND_VALUE_COLUMNS: String = "ARRAY_AND_VALUE_COLUMNS"
+        public const val ANY_COLUMNS: String = "ANY_COLUMNS"
+    }
+}

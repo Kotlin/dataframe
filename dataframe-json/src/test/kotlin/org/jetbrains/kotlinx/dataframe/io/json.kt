@@ -10,6 +10,7 @@ import io.kotest.matchers.types.instanceOf
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
@@ -19,7 +20,6 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.colsOf
@@ -29,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toMap
@@ -46,16 +47,14 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
-import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.parseJsonStr
-import org.jetbrains.kotlinx.dataframe.testJson
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
+import java.net.URL
 import kotlin.Double
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 @Suppress("ktlint:standard:argument-list-wrapping")
@@ -1121,7 +1120,7 @@ class JsonTests {
     @Test
     fun `serialize column with list of objects`() {
         val df = dataFrameOf("col")(Regex(".+").findAll("abc").toList())
-        val json = shouldNotThrowAny { df.toJson() }!!
+        val json = shouldNotThrowAny { df.toJson() }
         val list = DataFrame.readJsonStr(json)["col"][0].shouldBeInstanceOf<List<*>>()
         list[0].shouldBeInstanceOf<String>()
     }
@@ -1142,3 +1141,24 @@ class JsonTests {
         }
     }
 }
+
+fun testResource(resourcePath: String): URL = JsonTests::class.java.classLoader.getResource(resourcePath)!!
+
+fun parseJsonStr(jsonStr: String): JsonObject = Json.parseToJsonElement(jsonStr).jsonObject
+
+fun testJson(jsonName: String) = testResource("$jsonName.json")
+
+/**
+ * Prints dataframe to console with borders, title, column types and schema
+ */
+fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T =
+    apply {
+        println?.let { println(it) }
+        print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
+        schema().print()
+    }
+
+internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
+internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
+
+internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType

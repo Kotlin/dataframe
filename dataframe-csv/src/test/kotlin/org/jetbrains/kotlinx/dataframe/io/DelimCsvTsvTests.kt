@@ -796,6 +796,22 @@ class DelimCsvTsvTests {
         }
     }
 
+    @Test
+    fun `json dependency test`() {
+        val df = dataFrameOf("firstName", "lastName")(
+            "John", "Doe",
+            "Jane", "Doe",
+        ).group { "firstName" and "lastName" }.into { "name" }
+
+        df.toCsvStr(quote = '\'') shouldBe
+            """
+            name
+            '{"firstName":"John","lastName":"Doe"}'
+            '{"firstName":"Jane","lastName":"Doe"}'
+            
+            """.trimIndent()
+    }
+
     companion object {
         private val irisDataset = testCsv("irisDataset")
         private val simpleCsv = testCsv("testCSV")

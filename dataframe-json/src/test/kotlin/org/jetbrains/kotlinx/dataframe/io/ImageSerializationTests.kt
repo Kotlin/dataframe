@@ -13,8 +13,6 @@ import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.ALL_OFF
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
-import org.jetbrains.kotlinx.dataframe.parseJsonStr
-import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -25,6 +23,7 @@ import java.io.File
 import java.util.Base64
 import java.util.zip.GZIPInputStream
 import javax.imageio.ImageIO
+import kotlin.math.abs
 
 @RunWith(Parameterized::class)
 class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOptions?) {
@@ -145,7 +144,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
                 val g2 = (rgb2 shr 8) and 0xFF
                 val b2 = rgb2 and 0xFF
 
-                val diff = kotlin.math.abs(r1 - r2) + kotlin.math.abs(g1 - g2) + kotlin.math.abs(b1 - b2)
+                val diff = abs(r1 - r2) + abs(g1 - g2) + abs(b1 - b2)
 
                 // If the difference in color components exceed our allowance return false
                 if (diff > allowedDelta) {

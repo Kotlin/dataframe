@@ -14,7 +14,7 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
-internal interface DataCollector<T> {
+public interface DataCollector<T> {
 
     public val data: List<T?>
     public val hasNulls: Boolean

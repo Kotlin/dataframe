@@ -24,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  *
  * At the bottom of the graph is [Nothing]. This can be interpreted as `null`.
  */
-internal interface UnifyingNumbers {
+public interface UnifyingNumbers {
 
     /**
      * ```
@@ -47,5 +47,6 @@ internal interface UnifyingNumbers {
      *       Nothing?
      * ```
      */
-    interface Graph
+    @ExcludeFromSources
+    private interface Graph
 }

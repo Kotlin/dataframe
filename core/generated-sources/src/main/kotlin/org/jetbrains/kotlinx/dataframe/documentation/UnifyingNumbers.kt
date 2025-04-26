@@ -42,28 +42,4 @@ import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
  *
  * At the bottom of the graph is [Nothing]. This can be interpreted as `null`.
  */
-internal interface UnifyingNumbers {
-
-    /**
-     * ```
-     *           (BigDecimal)
-     *            /      \
-     *     (BigInteger)   \
-     *        /   \        \
-     * <~ ULong   Long ~> Double ..
-     * ..   |    /   |   /   |  \..
-     *   \  |   /    |  /    |
-     *     UInt     Int    Float
-     * ..   |    /   |   /      \..
-     *   \  |   /    |  /
-     *    UShort   Short
-     *      |    /   |
-     *      |   /    |
-     *    UByte     Byte
-     *        \     /
-     *        \    /
-     *       Nothing?
-     * ```
-     */
-    interface Graph
-}
+public interface UnifyingNumbers

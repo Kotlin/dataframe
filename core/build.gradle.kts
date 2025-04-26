@@ -65,8 +65,6 @@ dependencies {
 
     api(libs.commonsCsv)
     implementation(libs.commonsIo)
-    implementation(libs.serialization.core)
-    implementation(libs.serialization.json)
     implementation(libs.fastDoubleParser)
 
     api(libs.kotlin.datetimeJvm)
@@ -81,6 +79,9 @@ dependencies {
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
+    testImplementation(projects.dataframeJson)
+    testImplementation(libs.serialization.core)
+    testImplementation(libs.serialization.json)
 
     // for samples.api
     testImplementation(projects.dataframeCsv)
