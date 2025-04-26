@@ -200,6 +200,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCols2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Take0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Take1
@@ -453,6 +455,8 @@ internal inline fun <reified T> String.load(): T {
         "ReorderColumnsByName" -> ReorderColumnsByName()
         "Reorder" -> Reorder()
         "ByName" -> ByName()
+        "Sum0" -> Sum0()
+        "Sum1" -> Sum1()
         "GroupByCount0" -> GroupByCount0()
         "GroupByMean0" -> GroupByMean0()
         "GroupByMean1" -> GroupByMean1()

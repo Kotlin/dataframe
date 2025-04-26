@@ -31,7 +31,7 @@ import kotlin.reflect.KType
  *   If not supplied, the handler of the first step is reused.
  * @see [FlatteningMultipleColumnsHandler]
  */
-internal class TwoStepMultipleColumnsHandler<in Value : Any, out Return : Any?>(
+internal class TwoStepMultipleColumnsHandler<in Value : Any, Return : Any?>(
     stepTwoAggregationHandler: AggregatorAggregationHandler<Return & Any, Return>? = null,
     stepTwoInputHandler: AggregatorInputHandler<Return & Any, Return>? = null,
 ) : AggregatorMultipleColumnsHandler<Value, Return> {
