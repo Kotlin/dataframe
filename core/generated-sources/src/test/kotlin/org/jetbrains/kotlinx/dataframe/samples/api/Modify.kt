@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
@@ -87,6 +88,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toStart
 import org.jetbrains.kotlinx.dataframe.api.toMap
@@ -114,6 +116,7 @@ import org.junit.Test
 import java.net.URL
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.stream.Collectors
 
 @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
 class Modify : TestBase() {
@@ -232,6 +235,16 @@ class Modify : TestBase() {
     fun convertAsFrame() {
         // SampleStart
         df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun convertAsColumn() {
+        // SampleStart
+        df.convert { name }.asColumn { col ->
+            col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
+        }
         // SampleEnd
     }
 

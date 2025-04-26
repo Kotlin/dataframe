@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -269,6 +270,15 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
         allColsMakesColGroup = true,
     ).forceResolve()
 
+@Refine
+@Interpretable("ColumnOfPairs")
+public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
+    dataFrameOf(
+        columns.map { (name, col) ->
+            col.rename(name)
+        },
+    ).asColumnGroup()
+
 // endregion
 
 // region create DataFrame
@@ -289,6 +299,12 @@ public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
     val nrow = if (cols.isEmpty()) 0 else cols[0].size
     return DataFrameImpl<Unit>(cols, nrow)
 }
+
+@Refine
+@JvmName("dataFrameOfColumns")
+@Interpretable("DataFrameOfPairs")
+public fun dataFrameOf(vararg columns: Pair<String, AnyBaseCol>): DataFrame<*> =
+    dataFrameOf(columns.map { (name, col) -> col.rename(name) })
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 

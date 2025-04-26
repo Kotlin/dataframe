@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.addId
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.append
+import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asFrame
@@ -82,7 +83,9 @@ import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
+import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
@@ -100,7 +103,9 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
+import java.util.stream.Collectors
 import kotlin.reflect.typeOf
+import kotlin.streams.toList
 
 class DataFrameTreeTests : BaseTest() {
 
@@ -483,6 +488,15 @@ class DataFrameTreeTests : BaseTest() {
                 .select { age and weight }
                 .columnNames()
                 .sorted()
+    }
+
+    @Test
+    fun `convert column expression ignoring name changes`() {
+        val res = df.convert { colsOf<Double?>() }.asColumn {
+            it.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn("123")
+        }
+
+        res shouldBe df.convert { colsOf<Double?>() }.toStr()
     }
 
     @Test

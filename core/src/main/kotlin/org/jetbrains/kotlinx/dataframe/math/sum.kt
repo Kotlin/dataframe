@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.math
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -29,6 +31,11 @@ internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
 
         typeOf<Long>() -> (this as Sequence<Long>).sum()
 
+        typeOf<BigInteger>(), typeOf<BigDecimal>() ->
+            throw IllegalArgumentException(
+                "Cannot calculate the sum for big numbers in DataFrame. Only primitive numbers are supported.",
+            )
+
         typeOf<Number>() ->
             error("Encountered non-specific Number type in sum function. This should not occur.")
 
@@ -40,7 +47,12 @@ internal fun Sequence<Number?>.sum(type: KType, skipNaN: Boolean): Number {
     }
 }
 
-/** T: Number? -> T */
+/**
+ * T: Number -> T
+ * Byte -> Int
+ * Short -> Int
+ * Nothing -> Double
+ */
 internal val sumTypeConversion: CalculateReturnType = { type, _ ->
     when (val type = type.withNullability(false)) {
         // type changes to Int
