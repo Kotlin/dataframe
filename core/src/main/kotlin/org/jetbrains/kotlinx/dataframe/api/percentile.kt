@@ -38,6 +38,9 @@ import kotlin.reflect.KProperty
  *  This needs to be explained by KDocs
  *
  * percentileBy is new for all overloads :)
+ *
+ * Uses [QuantileEstimationMethod.R8] for primitive numbers, else [QuantileEstimationMethod.R3].
+ * PercentileBy also uses [QuantileEstimationMethod.R3].
  */
 
 // region DataColumn

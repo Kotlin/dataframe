@@ -58,10 +58,6 @@ internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double
                 this to QuantileEstimationMethod.Selecting.R3
         }
 
-    // fake Comparable types to satisfy the compiler
-    values as Sequence<Comparable<Any>>
-    method as QuantileEstimationMethod<Comparable<Any>, *>
-
     return values.quantileOrNull(
         p = p,
         type = type,
@@ -77,7 +73,7 @@ internal val percentileConversion: CalculateReturnType = { type, isEmpty ->
         type.isPrimitiveNumber() -> typeOf<Double>()
 
         // closest rank method, preferring lower middle,
-        // number R3 of Hyndman and Fan "Sample quantiles in statistical packages"
+        // R3 of Hyndman and Fan "Sample quantiles in statistical packages"
         type.isIntraComparable() -> type
 
         else -> error("Can not calculate percentile for type ${renderType(type)}")
@@ -114,7 +110,7 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
             )
     }
 
-    val indexList = this.mapIndexedNotNull { i, it ->
+    val indexedSequence = this.mapIndexedNotNull { i, it ->
         if (it == null) {
             null
         } else {
@@ -129,7 +125,7 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
     val p = percentile / 100.0
 
     // get the index where the percentile can be found in the sorted sequence
-    val indexEstimation = indexList.quantileIndexEstimation(
+    val indexEstimation = indexedSequence.quantileIndexEstimation(
         p = p,
         type = typeOf<IndexedComparable<Nothing>>(),
         skipNaN = skipNaN,
@@ -142,7 +138,7 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
         "percentile expected a whole number index from quantileIndexEstimation but was $indexEstimation"
     }
 
-    val percentileResult = indexList.toList().quickSelect(k = indexEstimation.toInt())
+    val percentileResult = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
 
     // return the original unsorted index of the found result
     return percentileResult.index

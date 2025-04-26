@@ -229,7 +229,7 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
                     .coerceIn(1.0..count.toDouble())
         }
 
-        /** Linear interpolation of the approximate medians for order statistics. */
+        /** Linear interpolation of the approximate medians for order statistics. Recommended by H & F. */
         data object R8 : Interpolating, PieceWiseLinear {
             override fun oneBasedIndexOfQuantile(p: Double, count: Int): Double =
                 ((count + 1.0 / 3.0) * p + 1.0 / 3.0)
