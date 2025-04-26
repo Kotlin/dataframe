@@ -6,7 +6,6 @@ import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -158,8 +157,8 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @Test
   @TestMetadata("distinct.kt")
   public void testDistinct() {
-        runTest("testData/box/distinct.kt");
-    }
+    runTest("testData/box/distinct.kt");
+  }
 
   @Test
   @TestMetadata("dropNA.kt")
@@ -234,12 +233,6 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
-  @TestMetadata("sum.kt")
-  public void testSum() {
-        runTest("testData/box/sum.kt");
-    }
-
-  @Test
   @TestMetadata("group.kt")
   public void testGroup() {
     runTest("testData/box/group.kt");
@@ -296,8 +289,7 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @Test
   @TestMetadata("groupBy_median.kt")
   public void testGroupBy_median() {
-     Assumptions.assumeTrue(false, "ignoring median test while compiler plugin support is pending.");
-     runTest("testData/box/groupBy_median.kt");
+    runTest("testData/box/groupBy_median.kt");
   }
 
   @Test
@@ -598,6 +590,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("selectionDsl.kt")
   public void testSelectionDsl() {
     runTest("testData/box/selectionDsl.kt");
+  }
+
+  @Test
+  @TestMetadata("sum.kt")
+  public void testSum() {
+    runTest("testData/box/sum.kt");
   }
 
   @Test

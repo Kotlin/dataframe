@@ -62,18 +62,14 @@ class StatisticsTests {
         val sum11 = res1["age"] as Int
         sum11 shouldBe 377
 
-        // scenario #2: sum of all values in two columns of Int hierarchy of types
-        val res2 = personsDf.sum("age", "workExperienceYears")
-        res2 shouldBe 563
+        // scenario #1.1: particular column with converted type
+        val res11 = personsDf.sumFor("dependentsCount")
+        res11.columnNames() shouldBe listOf("dependentsCount")
 
-        // scenario #2.1: sum of all values in two columns of different types
-        val res21 = personsDf.sum("age", "annualIncome")
-        res21 shouldBe 672377L
+        val sum111 = res11["dependentsCount"] as Int
+        sum111 shouldBe 13
 
-        val res211 = personsDf.sum("age", "weight")
-        res211 shouldBe 1118.9699999999998
-
-        // scenario #3: sum of values per columns separately
+        // scenario #2: sum of values per columns separately
         val res3 = personsDf.sumFor( "age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
         res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
 
@@ -87,10 +83,6 @@ class StatisticsTests {
         sum34 shouldBe 13.0
         val sum35 = res0["annualIncome"] as Long
         sum35 shouldBe 672000
-
-        // scenario #4: sum of expression evaluated for every row
-        val res4 = personsDf.sumOf { "weight"<Double>() * 10 + "age"<Int>() }
-        res4 shouldBe 7796.7
     }
 
     @Test

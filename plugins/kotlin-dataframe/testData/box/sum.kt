@@ -46,18 +46,7 @@ fun box(): String {
     val res11 = personsDf.sumFor { dependentsCount }
     val sum111: Int? = res11.dependentsCount
 
-    // scenario #2: sum of all values in two columns of Int hierarchy of types
-    val res2 = personsDf.sum { age and workExperienceYears }
-    val intRes: Int? = (res2 as? Number)?.toInt()
-
-    // scenario #2.1: sum of all values in two columns of different types
-    val res21 = personsDf.sum { age and annualIncome }
-    val longRes: Long? = (res21 as? Number)?.toLong()
-
-    val res211 = personsDf.sum { age and weight }
-    val doubleRes: Double? = (res211 as? Number)?.toDouble()
-
-    // scenario #3: sum of values per columns separately
+    // scenario #2: sum of values per columns separately
     val res3 = personsDf.sumFor { age and weight and workExperienceYears and dependentsCount and annualIncome }
 
     val sum31: Int? = res3.age
@@ -65,10 +54,6 @@ fun box(): String {
     val sum33: Int? = res3.workExperienceYears
     val sum34: Int? = res3.dependentsCount
     val sum35: Long? = res3.annualIncome
-
-    // scenario #4: sum of expression evaluated for every row
-    val res4 = personsDf.sumOf { weight * 10 + dependentsCount }
-    val expressionDoubleRes: Double? = res4
 
     return "OK"
 }

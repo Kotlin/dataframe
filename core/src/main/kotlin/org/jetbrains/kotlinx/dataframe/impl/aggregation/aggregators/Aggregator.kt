@@ -37,7 +37,7 @@ import kotlin.reflect.full.withNullability
  * @param Return The type of the resulting value. Can optionally be nullable.
  * @see [invoke]
  */
-public class Aggregator<in Value : Any, Return : Any?>(
+public class Aggregator<in Value : Any, out Return : Any?>(
     public val aggregationHandler: AggregatorAggregationHandler<Value, Return>,
     public val inputHandler: AggregatorInputHandler<Value, Return>,
     public val multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,

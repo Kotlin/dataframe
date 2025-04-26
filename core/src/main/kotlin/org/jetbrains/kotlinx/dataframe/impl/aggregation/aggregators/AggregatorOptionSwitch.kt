@@ -30,9 +30,9 @@ public class AggregatorOptionSwitch1<in Param1, in Value : Any, out Return : Any
          *   MyAggregator.Factory(param1)
          * }
          */
-        internal fun <Param1, Value : Any, Return : Any?> Factory(
+        public fun <Param1, Value : Any, Return : Any?> Factory(
             getAggregator: (param1: Param1) -> AggregatorProvider<Value, Return>,
-        ) = Provider { name -> AggregatorOptionSwitch1(name, getAggregator) }
+        ): Provider<AggregatorOptionSwitch1<Param1, Value, Return>> = Provider { name -> AggregatorOptionSwitch1(name, getAggregator) }
     }
 }
 

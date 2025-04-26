@@ -14,6 +14,7 @@ import kotlin.reflect.full.createType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeNullability
+import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
@@ -60,8 +61,7 @@ fun KType.toConeKotlinType(): ConeKotlinType? {
     val kClass = this.classifier as? KClass<*> ?: return null
     val classId = kClass.toClassId() ?: return null
 
-    return ConeClassLikeTypeImpl(
-        lookupTag = ConeClassLikeErrorLookupTag(classId),
+    return classId.constructClassLikeType(
         typeArguments = emptyArray(),
         isNullable = this.isMarkedNullable
     )
@@ -80,7 +80,7 @@ private fun Arguments.createUpdatedColumn(
 ): SimpleCol {
     val originalType = column.type.type
     val inputKType = originalType.toKType()
-    val resultKType = inputKType?.let { statisticAggregator.calculateReturnType(it, emptyInput = false) }
+    val resultKType = inputKType?.let { statisticAggregator.calculateReturnType(it, emptyInput = true) }
     val updatedType = resultKType?.toConeKotlinType() ?: originalType
     return simpleColumnOf(column.name, updatedType)
 }
