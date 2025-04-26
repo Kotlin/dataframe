@@ -27,8 +27,7 @@ import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.sum
 import org.jetbrains.kotlinx.dataframe.math.sumTypeConversion
 
-@PublishedApi
-internal object Aggregators {
+public object Aggregators {
 
     // TODO these might need some small refactoring
 
@@ -118,7 +117,7 @@ internal object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
 
     private val min by withOneOption { skipNaN: Boolean ->
         twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
@@ -130,7 +129,7 @@ internal object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
     private val max by withOneOption { skipNaN: Boolean ->
         twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
@@ -141,7 +140,10 @@ internal object Aggregators {
     }
 
     // T: Number? -> Double
-    val std by withTwoOptions { skipNaN: Boolean, ddof: Int ->
+    public val std: AggregatorOptionSwitch2<Boolean, Int, Number, Double> by withTwoOptions {
+        skipNaN: Boolean,
+        ddof: Int,
+        ->
         flattenReducingForNumbers(stdTypeConversion) { type ->
             std(type, skipNaN, ddof)
         }
@@ -149,7 +151,7 @@ internal object Aggregators {
 
     // step one: T: Number? -> Double
     // step two: Double -> Double
-    val mean by withOneOption { skipNaN: Boolean ->
+    public val mean: AggregatorOptionSwitch1<Boolean, Number, Double> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(meanTypeConversion) { type ->
             mean(type, skipNaN)
         }
@@ -157,7 +159,7 @@ internal object Aggregators {
 
     // T : primitive Number? -> Double?
     // T : Comparable<T & Any>? -> T?
-    fun <T> percentileCommon(
+    public fun <T> percentileCommon(
         percentile: Double,
         skipNaN: Boolean,
     ): Aggregator<T & Any, T?>
@@ -165,12 +167,14 @@ internal object Aggregators {
         this.percentile.invoke(percentile, skipNaN).cast2()
 
     // T : Comparable<T & Any>? -> T?
-    fun <T> percentileComparables(percentile: Double): Aggregator<T & Any, T?>
+    public fun <T> percentileComparables(
+        percentile: Double,
+    ): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         percentileCommon<T>(percentile, skipNaNDefault).cast2()
 
     // T : primitive Number? -> Double?
-    fun <T> percentileNumbers(
+    public fun <T> percentileNumbers(
         percentile: Double,
         skipNaN: Boolean,
     ): Aggregator<T & Any, Double?>
@@ -188,17 +192,17 @@ internal object Aggregators {
 
     // T : primitive Number? -> Double?
     // T : Comparable<T & Any>? -> T?
-    fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
+    public fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         median.invoke(skipNaN).cast2()
 
     // T : Comparable<T & Any>? -> T?
-    fun <T> medianComparables(): Aggregator<T & Any, T?>
+    public fun <T> medianComparables(): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         medianCommon<T>(skipNaNDefault).cast2()
 
     // T : primitive Number? -> Double?
-    fun <T> medianNumbers(
+    public fun <T> medianNumbers(
         skipNaN: Boolean,
     ): Aggregator<T & Any, Double?>
         where T : Comparable<T & Any>?, T : Number? =
@@ -217,7 +221,7 @@ internal object Aggregators {
     // Byte -> Int
     // Short -> Int
     // Nothing -> Double
-    val sum by withOneOption { skipNaN: Boolean ->
+    public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(sumTypeConversion) { type ->
             sum(type, skipNaN)
         }

@@ -46,12 +46,11 @@ import kotlin.reflect.full.withNullability
  * @param Return The type of the resulting value. Can optionally be nullable.
  * @see [invoke]
  */
-@PublishedApi
-internal class Aggregator<in Value : Any, out Return : Any?>(
-    val aggregationHandler: AggregatorAggregationHandler<Value, Return>,
-    val inputHandler: AggregatorInputHandler<Value, Return>,
-    val multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
-    val name: String,
+public class Aggregator<in Value : Any, out Return : Any?>(
+    public val aggregationHandler: AggregatorAggregationHandler<Value, Return>,
+    public val inputHandler: AggregatorInputHandler<Value, Return>,
+    public val multipleColumnsHandler: AggregatorMultipleColumnsHandler<Value, Return>,
+    public val name: String,
 ) : AggregatorInputHandler<Value, Return> by inputHandler,
     AggregatorMultipleColumnsHandler<Value, Return> by multipleColumnsHandler,
     AggregatorAggregationHandler<Value, Return> by aggregationHandler {
@@ -105,7 +104,7 @@ internal class Aggregator<in Value : Any, out Return : Any?>(
 internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
     values: Sequence<Value?>,
     valueType: ValueType,
-) = aggregateSequence(values, valueType)
+): Return = aggregateSequence(values, valueType)
 
 /**
  * Performs aggregation on the given [values], taking [valueType] into account.
@@ -115,7 +114,7 @@ internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
 internal fun <Value : Any, Return : Any?> Aggregator<Value, Return>.aggregate(
     values: Sequence<Value?>,
     valueType: KType,
-) = aggregate(values, valueType.toValueType(needsFullConversion = false))
+): Return = aggregate(values, valueType.toValueType(needsFullConversion = false))
 
 /**
  * If the specific [ValueType] of the input is not known, but you still want to call [aggregate],

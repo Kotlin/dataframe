@@ -11,8 +11,7 @@ import kotlin.reflect.KType
  * It also provides information on which return type will be given, as [KType], given a [value type][ValueType].
  * It can also provide the index of the result in the input values if it is a selecting aggregator.
  */
-@PublishedApi
-internal interface AggregatorAggregationHandler<in Value : Any, out Return : Any?> : AggregatorHandler<Value, Return> {
+public interface AggregatorAggregationHandler<in Value : Any, out Return : Any?> : AggregatorHandler<Value, Return> {
 
     /**
      * Base function of [Aggregator].
@@ -23,13 +22,13 @@ internal interface AggregatorAggregationHandler<in Value : Any, out Return : Any
      *
      * When the exact [valueType] is unknown, use [calculateValueType] or [aggregateCalculatingValueType].
      */
-    fun aggregateSequence(values: Sequence<Value?>, valueType: ValueType): Return
+    public fun aggregateSequence(values: Sequence<Value?>, valueType: ValueType): Return
 
     /**
      * Aggregates the data in the given column and computes a single resulting value.
      * Calls [aggregateSequence].
      */
-    fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
+    public fun aggregateSingleColumn(column: DataColumn<Value?>): Return =
         aggregateSequence(
             values = column.asSequence(),
             valueType = column.type().toValueType(),
@@ -43,7 +42,7 @@ internal interface AggregatorAggregationHandler<in Value : Any, out Return : Any
      * @param emptyInput If `true`, the input values are considered empty. This often affects the return type.
      * @return The return type of [aggregateSequence] as [KType].
      */
-    fun calculateReturnType(valueType: KType, emptyInput: Boolean): KType
+    public fun calculateReturnType(valueType: KType, emptyInput: Boolean): KType
 
     /**
      * Function that can give the index of the aggregation result in the input [values], if it applies.
@@ -54,5 +53,5 @@ internal interface AggregatorAggregationHandler<in Value : Any, out Return : Any
      *
      * Defaults to `-1`.
      */
-    fun indexOfAggregationResultSingleSequence(values: Sequence<Value?>, valueType: ValueType): Int
+    public fun indexOfAggregationResultSingleSequence(values: Sequence<Value?>, valueType: ValueType): Int
 }
