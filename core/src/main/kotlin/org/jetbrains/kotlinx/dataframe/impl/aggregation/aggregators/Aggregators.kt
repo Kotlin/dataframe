@@ -19,6 +19,9 @@ import org.jetbrains.kotlinx.dataframe.math.medianConversion
 import org.jetbrains.kotlinx.dataframe.math.medianOrNull
 import org.jetbrains.kotlinx.dataframe.math.minOrNull
 import org.jetbrains.kotlinx.dataframe.math.minTypeConversion
+import org.jetbrains.kotlinx.dataframe.math.percentileConversion
+import org.jetbrains.kotlinx.dataframe.math.percentileOrNull
+import org.jetbrains.kotlinx.dataframe.math.indexOfPercentile
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.sum
@@ -108,7 +111,7 @@ public object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
 
     private val min by withOneOption { skipNaN: Boolean ->
         twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
@@ -147,7 +150,7 @@ public object Aggregators {
 
     // T : primitive Number? -> Double?
     // T : Comparable<T & Any>? -> T?
-    fun <T> percentileCommon(
+    public fun <T> percentileCommon(
         percentile: Double,
         skipNaN: Boolean,
     ): Aggregator<T & Any, T?>
@@ -155,12 +158,12 @@ public object Aggregators {
         this.percentile.invoke(percentile, skipNaN).cast2()
 
     // T : Comparable<T & Any>? -> T?
-    fun <T> percentileComparables(percentile: Double): Aggregator<T & Any, T?>
+    public fun <T> percentileComparables(percentile: Double): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         percentileCommon<T>(percentile, skipNaNDefault).cast2()
 
     // T : primitive Number? -> Double?
-    fun <T> percentileNumbers(
+    public fun <T> percentileNumbers(
         percentile: Double,
         skipNaN: Boolean,
     ): Aggregator<T & Any, Double?>
