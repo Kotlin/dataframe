@@ -1160,4 +1160,5 @@ fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20)
 
 internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
 internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
+
 internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType

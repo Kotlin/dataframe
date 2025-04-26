@@ -26,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -214,7 +213,7 @@ internal object Parsers : GlobalParserOptions {
                 .parseOrNull(this)
                 ?.toInstantUsingOffset()
         }
-        // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
+            // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
             ?: toJavaInstantOrNull()?.toKotlinInstant()
 
     private fun String.toJavaInstantOrNull(): JavaInstant? =
@@ -338,6 +337,94 @@ internal object Parsers : GlobalParserOptions {
         parser
     }
 
+    // TODO rewrite using parser service later https://github.com/Kotlin/dataframe/issues/962
+    // null when dataframe-json is not present
+    private val readJsonStrAnyFrame: ((text: String) -> AnyFrame)? by lazy {
+        try {
+            val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
+            val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
+            val readJsonStr = klass.getMethod(
+                "readJsonStr",
+                // this =
+                DataFrame.Companion::class.java,
+                // text =
+                String::class.java,
+                // header =
+                List::class.java,
+                // keyValuePaths =
+                List::class.java,
+                // typeClashTactic =
+                typeClashTactic,
+                // unifyNumbers =
+                Boolean::class.java,
+            )
+
+            return@lazy { text: String ->
+                readJsonStr.invoke(
+                    null,
+                    // this =
+                    DataFrame.Companion,
+                    // text =
+                    text,
+                    // header =
+                    emptyList<Any>(),
+                    // keyValuePaths =
+                    emptyList<Any>(),
+                    // typeClashTactic =
+                    typeClashTactic.enumConstants[0],
+                    // unifyNumbers =
+                    true,
+                ) as AnyFrame
+            }
+        } catch (_: ClassNotFoundException) {
+            return@lazy null
+        }
+    }
+
+    // TODO rewrite using parser service later https://github.com/Kotlin/dataframe/issues/962
+    // null when dataframe-json is not present
+    private val readJsonStrAnyRow: ((text: String) -> AnyRow)? by lazy {
+        try {
+            val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
+            val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
+            val readJsonStr = klass.getMethod(
+                "readJsonStr",
+                // this =
+                DataRow.Companion::class.java,
+                // text =
+                String::class.java,
+                // header =
+                List::class.java,
+                // keyValuePaths =
+                List::class.java,
+                // typeClashTactic =
+                typeClashTactic,
+                // unifyNumbers =
+                Boolean::class.java,
+            )
+
+            return@lazy { text: String ->
+                readJsonStr.invoke(
+                    null,
+                    // this =
+                    DataRow.Companion,
+                    // text =
+                    text,
+                    // header =
+                    emptyList<Any>(),
+                    // keyValuePaths =
+                    emptyList<Any>(),
+                    // typeClashTactic =
+                    typeClashTactic.enumConstants[0],
+                    // unifyNumbers =
+                    true,
+                ) as AnyRow
+            }
+        } catch (_: ClassNotFoundException) {
+            return@lazy null
+        }
+    }
+
     internal val parsersOrder = listOf(
         // Int
         stringParser<Int> { it.toIntOrNull() },
@@ -407,70 +494,33 @@ internal object Parsers : GlobalParserOptions {
         stringParser<BigInteger> { it.toBigIntegerOrNull() },
         // BigDecimal
         stringParser<BigDecimal> { it.toBigDecimalOrNull() },
-
-        // JSON array as DataFrame<*> TODO
+        // JSON array as DataFrame<*>
         stringParser<AnyFrame>(catch = true) {
             val trimmed = it.trim()
             if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-                try {
-                    val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
-                    val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
-                    val readJsonStr = klass.getMethod(
-                        "readJsonStr",
-                        /* this = */DataFrame.Companion::class.java,
-                        /* text = */ String::class.java,
-                        /* header = */ List::class.java,
-                        /* keyValuePaths = */ List::class.java,
-                        /* typeClashTactic = */ typeClashTactic,
-                        /* unifyNumbers = */ Boolean::class.java,
-                    )
-
-                    readJsonStr.invoke(
-                        null,
-                        /* this = */ DataFrame.Companion,
-                        /* text = */ trimmed,
-                        /* header = */ emptyList<Any>(),
-                        /* keyValuePaths = */ emptyList<Any>(),
-                        /* typeClashTactic = */ typeClashTactic.enumConstants[0],
-                        /* unifyNumbers = */ true,
-                    ) as AnyFrame
-                } catch (_: ClassNotFoundException) {
-                    logger.warn { "parse() encountered a string that looks like a JSON array, but the dataframe-json dependency was not detected. Skipping for now." }
+                if (readJsonStrAnyFrame == null) {
+                    logger.warn {
+                        "parse() encountered a string that looks like a JSON array, but the dataframe-json dependency was not detected. Skipping for now."
+                    }
                     null
+                } else {
+                    readJsonStrAnyFrame!!(trimmed)
                 }
             } else {
                 null
             }
         },
-        // JSON object as DataRow<*> TODO
+        // JSON object as DataRow<*>
         stringParser<AnyRow>(catch = true) {
             val trimmed = it.trim()
             if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-                try {
-                    val klass = Class.forName("org.jetbrains.kotlinx.dataframe.io.JsonKt")
-                    val typeClashTactic = Class.forName("org.jetbrains.kotlinx.dataframe.io.JSON\$TypeClashTactic")
-                    val readJsonStr = klass.getMethod(
-                        "readJsonStr",
-                        /* this = */DataRow.Companion::class.java,
-                        /* text = */ String::class.java,
-                        /* header = */ List::class.java,
-                        /* keyValuePaths = */ List::class.java,
-                        /* typeClashTactic = */ typeClashTactic,
-                        /* unifyNumbers = */ Boolean::class.java,
-                    )
-
-                    readJsonStr.invoke(
-                        null,
-                        /* this = */ DataRow.Companion,
-                        /* text = */ trimmed,
-                        /* header = */ emptyList<Any>(),
-                        /* keyValuePaths = */ emptyList<Any>(),
-                        /* typeClashTactic = */ typeClashTactic.enumConstants[0],
-                        /* unifyNumbers = */ true,
-                    ) as AnyRow
-                } catch (_: ClassNotFoundException) {
-                    logger.warn { "parse() encountered a string that looks like a JSON object, but the dataframe-json dependency was not detected. Skipping for now." }
+                if (readJsonStrAnyRow == null) {
+                    logger.warn {
+                        "parse() encountered a string that looks like a JSON object, but the dataframe-json dependency was not detected. Skipping for now."
+                    }
                     null
+                } else {
+                    readJsonStrAnyRow!!(trimmed)
                 }
             } else {
                 null

@@ -9,8 +9,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
-import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KProperty
 
 /**

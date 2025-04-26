@@ -152,8 +152,7 @@ internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType
 
 // helper overload for friend modules
 @JvmName("commonTypeOverload")
-internal fun commonType(types: Iterable<KType?>, useStar: Boolean = true) =
-    types.commonType(useStar)
+internal fun commonType(types: Iterable<KType?>, useStar: Boolean = true) = types.commonType(useStar)
 
 /**
  * Returns the common supertype of the given types.

@@ -50,4 +50,3 @@ include("dataframe-openapi-generator")
 include("dataframe-geo")
 include("plugins:public-api-modifier")
 include("dataframe-compiler-plugin-core")
-
