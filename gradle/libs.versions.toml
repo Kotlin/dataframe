@@ -23,6 +23,7 @@ fastDoubleParser = "2.0.1"
 commonsCsv = "1.12.0"
 commonsCompress = "1.27.1"
 commonsIo = "2.18.0"
+commonsStatistics = "1.1"
 serialization = "1.7.1"
 poi = "5.3.0"
 mariadb = "3.5.1"
@@ -74,6 +75,8 @@ fastDoubleParser = { group = "ch.randelshofer", name = "fastdoubleparser", versi
 commonsCsv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commonsCsv" }
 commonsCompress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commonsCompress" }
 commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
+commonsStatisticsDescriptive = { group = "org.apache.commons", name = "commons-statistics-descriptive", version.ref = "commonsStatistics" }
+
 # Serialization
 serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
