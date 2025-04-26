@@ -53,6 +53,8 @@ internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: 
     }
 
     val p = 0.5
+
+    // TODO make configurable? https://github.com/Kotlin/dataframe/issues/1121
     val (values, method) =
         when {
             type.isPrimitiveNumber() ->
@@ -131,7 +133,7 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, s
         }
     }
 
-    // TODO make configurable?
+    // TODO make configurable? https://github.com/Kotlin/dataframe/issues/1121
     val method = QuantileEstimationMethod.R3
     val p = 0.5
 

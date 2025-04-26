@@ -48,7 +48,7 @@ internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double
     // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25
     val p = percentile / 100.0
 
-    // TODO make configurable
+    // TODO make configurable https://github.com/Kotlin/dataframe/issues/1121
     val (values, method) =
         when {
             type.isPrimitiveNumber() ->
@@ -118,7 +118,7 @@ internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfPercentile(
         }
     }
 
-    // TODO make configurable
+    // TODO make configurable https://github.com/Kotlin/dataframe/issues/1121
     val method = QuantileEstimationMethod.R3
 
     // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25

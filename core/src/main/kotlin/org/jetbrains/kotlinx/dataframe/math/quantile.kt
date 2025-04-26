@@ -174,8 +174,9 @@ internal fun <T : Comparable<T>> Sequence<Any?>.quantileIndexEstimation(
  * For the [Selecting], the [Value] type can thus be any self-comparable type, but for [Interpolating],
  * [Value] can only be of type [Double], because it needs to perform calculations on the values.
  *
- * TODO add R2, R4, R5, R6, R9
- * TODO make public if configurable for percentile function
+ * TODO https://github.com/Kotlin/dataframe/issues/1121
+ *   - add R2, R4, R5, R6, R9
+ *   - make public if configurable for percentile function
  */
 internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, Index : Number> {
 
@@ -219,7 +220,7 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
         }
     }
 
-    // TODO add R2, R4, R5, R6, R9
+    // TODO add R2, R4, R5, R6, R9 https://github.com/Kotlin/dataframe/issues/1121
     sealed interface Interpolating : QuantileEstimationMethod<Double, Double> {
 
         /** Linear interpolation of the modes for the order statistics for the uniform distribution on [0, 1]. */
@@ -248,7 +249,7 @@ internal sealed interface QuantileEstimationMethod<Value : Comparable<Value>, In
     }
 
     // shortcuts to the various estimation methods
-    // TODO add R2, R4, R5, R6, R9
+    // TODO add R2, R4, R5, R6, R9 https://github.com/Kotlin/dataframe/issues/1121
     companion object {
         val R1 = Selecting.R1
         val R3 = Selecting.R3
