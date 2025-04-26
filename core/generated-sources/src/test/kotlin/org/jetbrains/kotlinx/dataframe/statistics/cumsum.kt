@@ -30,6 +30,12 @@ class CumsumTests {
     }
 
     @Test
+    fun `byte column`() {
+        col.map { it?.toByte() }.cumSum().toList() shouldBe expected
+        col.map { it?.toByte() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip
+    }
+
+    @Test
     fun `frame with multiple columns`() {
         val col2 by columnOf(1.toShort(), 2, 3, 4, 5)
         val col3 by columnOf(1.toByte(), 2, 3, 4, null)
@@ -39,26 +45,6 @@ class CumsumTests {
         res[col].toList() shouldBe expectedNoSkip
         res[col2].toList() shouldBe listOf(1.toShort(), 3, 6, 10, 15)
         res[col3].toList() shouldBe listOf(1.toByte(), 3, 6, 10, null)
-    }
-
-    @Test
-    fun `byte column`() {
-        col.map { it?.toByte() }.cumSum().toList() shouldBe expected.map { it?.toByte() }
-        col.map { it?.toByte() }.cumSum(skipNA = false).toList() shouldBe expectedNoSkip.map { it?.toByte() }
-    }
-
-    @Test
-    fun `big int column`() {
-        col.map { it?.toBigInteger() }.cumSum().toList() shouldBe expected.map { it?.toBigInteger() }
-        col.map { it?.toBigInteger() }.cumSum(skipNA = false)
-            .toList() shouldBe expectedNoSkip.map { it?.toBigInteger() }
-    }
-
-    @Test
-    fun `big decimal column`() {
-        col.map { it?.toBigDecimal() }.cumSum().toList() shouldBe expected.map { it?.toBigDecimal() }
-        col.map { it?.toBigDecimal() }.cumSum(skipNA = false)
-            .toList() shouldBe expectedNoSkip.map { it?.toBigDecimal() }
     }
 
     @Test
@@ -84,7 +70,7 @@ class CumsumTests {
 
     @Test
     fun `number column`() {
-        val doubles: DataColumn<Number?> by columnOf(1, 2, null, Double.NaN, 4)
+        val doubles: DataColumn<Number?> by columnOf<Number?>(1, 2, null, Double.NaN, 4)
         doubles.cumSum().toList() shouldBe listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
     }
 

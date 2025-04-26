@@ -214,6 +214,9 @@ internal object Aggregators {
     }
 
     // T: Number -> T
+    // Byte -> Int
+    // Short -> Int
+    // Nothing -> Double
     val sum by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(sumTypeConversion) { type ->
             sum(type, skipNaN)
