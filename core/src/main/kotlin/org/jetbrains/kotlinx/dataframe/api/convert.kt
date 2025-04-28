@@ -439,7 +439,7 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  *
  * The [columnConverter] is a lambda with the current [DataFrame] as receiver and the selected column as argument.
  * It returns a new column that will replace the original column.
- * Preserves original column name (even it was explicitly changed in [columnConverter] expression).
+ * Preserves original column name for each column (even it was explicitly changed in [columnConverter] expression).
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
