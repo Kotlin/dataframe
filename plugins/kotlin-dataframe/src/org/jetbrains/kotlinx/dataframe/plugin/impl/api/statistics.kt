@@ -85,9 +85,15 @@ private fun Arguments.createUpdatedColumn(
 
 val skipNaN = true
 val ddofDefault: Int = 1
+val percentile: Double = 30.0
 val sum = Aggregators.sum(skipNaN)
 val mean = Aggregators.mean(skipNaN)
 val std = Aggregators.std(skipNaN, ddofDefault)
+val median = Aggregators.median(skipNaN)
+val min = Aggregators.min(skipNaN)
+val max = Aggregators.max(skipNaN)
+val percentile = Aggregators.percentile(percentile)
+
 
 /** Adds to the schema only numerical columns. */
 abstract class Aggregator0(val aggregator: Aggregator<Number, Number>) : AbstractSchemaModificationInterpreter() {

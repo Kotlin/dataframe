@@ -249,7 +249,7 @@ class StatisticsTests {
         val mean21 = res2["newAge"][0] as Double
         mean21 shouldBe 24.0
 
-        // scenario #2.1: particular column with new name - schema changes but via columnSelector
+        // scenario #2.1: particular column with a new name-schema changes but via columnSelector
         val res21 = personsDf.groupBy("city").mean(name = "newAge") { "age"<Int>() }
         res21.columnNames() shouldBe listOf("city", "newAge")
 
@@ -270,12 +270,77 @@ class StatisticsTests {
         val mean31 = res3["newAge"][0] as Double
         mean31 shouldBe 240
 
-        // scenario #3.1: create new column via expression with Double
+        // scenario #3.1: create a new column via expression with Double
         val res31 = personsDf.groupBy("city").meanOf(name = "newAge") { "weight"<Double>() * 10 }
         res31.columnNames() shouldBe listOf("city", "newAge")
 
         val mean311 = res31["newAge"][0] as Double
         mean311 shouldBe 660.0
+    }
+
+    @Test
+    fun `median on DataFrame`() {
+        // scenario #0: all intraComparableColumns columns
+        val res0 = personsDf.median()
+        res0.columnNames() shouldBe listOf(
+            "name",
+            "age",
+            "city",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+        )
+
+        val median01 = res0["age"] as Double
+        median01 shouldBe 32.0
+        val median02 = res0["weight"] as Double
+        median02 shouldBe 75.05
+        val median03 = res0["yearsToRetirement"] as Double
+        median03 shouldBe 33.0
+        val median04 = res0["workExperienceYears"] as Double
+        median04 shouldBe 10.0
+        val median05 = res0["dependentsCount"] as Double
+        median05 shouldBe 1.0
+        val median06 = res0["annualIncome"] as Double
+        median06 shouldBe 50000.0
+        val median07 = res0["name"] as String
+        median07 shouldBe "Eve"
+        val median08 = res0["city"] as String
+        median08 shouldBe "London"
+        val median09 = res0["height"] as String
+        median09 shouldBe "1.75"
+
+        // scenario #1: particular column
+        val res1 = personsDf.medianFor("age")
+        res1.columnNames() shouldBe listOf("age")
+
+        val median11 = res1["age"] as Double
+        median11 shouldBe 32.0
+
+        // scenario #1.1: particular column with a converted type
+        val res11 = personsDf.medianFor("dependentsCount")
+        res11.columnNames() shouldBe listOf("dependentsCount")
+
+        val median111 = res11["dependentsCount"] as Double
+        median111 shouldBe 1.0
+
+        // scenario #2: median of values per columns separately
+        val res3 = personsDf.medianFor("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+
+        val median31 = res3["weight"] as Double
+        median31 shouldBe 75.05
+        val median32 = res3["workExperienceYears"] as Double
+        median32 shouldBe 10.0
+        val median33 = res3["dependentsCount"] as Double
+        median33 shouldBe 1.0
+        val median34 = res3["annualIncome"] as Double
+        median34 shouldBe 50000.0
+        val median35 = res3["name"] as String
+        median35 shouldBe "Eve"
     }
 
     @Test
@@ -475,6 +540,71 @@ class StatisticsTests {
     }
 
     @Test
+    fun `min on DataFrame`() {
+        // scenario #0: all intraComparableColumns columns
+        val res0 = personsDf.min()
+        res0.columnNames() shouldBe listOf(
+            "name",
+            "age",
+            "city",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+        )
+
+        val min01 = res0["age"] as Int
+        min01 shouldBe 1
+        val min02 = res0["weight"] as Double
+        min02 shouldBe 23.4
+        val min03 = res0["yearsToRetirement"] as Int
+        min03 shouldBe 0
+        val min04 = res0["workExperienceYears"] as Short
+        min04 shouldBe 0
+        val min05 = res0["dependentsCount"] as Byte
+        min05 shouldBe 0
+        val min06 = res0["annualIncome"] as Long
+        min06 shouldBe 0L
+        val min07 = res0["name"] as String
+        min07 shouldBe "Alice"
+        val min08 = res0["city"] as String
+        min08 shouldBe "Dubai"
+        val min09 = res0["height"] as String
+        min09 shouldBe "0.79"
+
+        // scenario #1: particular column
+        val res1 = personsDf.minFor("age")
+        res1.columnNames() shouldBe listOf("age")
+
+        val min11 = res1["age"] as Int
+        min11 shouldBe 1.0
+
+        // scenario #1.1: particular column with a converted type
+        val res11 = personsDf.minFor("dependentsCount")
+        res11.columnNames() shouldBe listOf("dependentsCount")
+
+        val min111 = res11["dependentsCount"] as Byte
+        min111 shouldBe 0
+
+        // scenario #2: min of values per columns separately
+        val res3 = personsDf.minFor("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+
+        val min31 = res3["weight"] as Double
+        min31 shouldBe 23.4
+        val min32 = res3["workExperienceYears"] as Short
+        min32 shouldBe 0
+        val min33 = res3["dependentsCount"] as Byte
+        min33 shouldBe 0
+        val min34 = res3["annualIncome"] as Long
+        min34 shouldBe 0L
+        val min35 = res3["name"] as String
+        min35 shouldBe "Alice"
+    }
+
+    @Test
     fun `min on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").min()
@@ -582,6 +712,71 @@ class StatisticsTests {
     }
 
     @Test
+    fun `max on DataFrame`() {
+        // scenario #0: all intraComparableColumns columns
+        val res0 = personsDf.max()
+        res0.columnNames() shouldBe listOf(
+            "name",
+            "age",
+            "city",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+        )
+
+        val max01 = res0["age"] as Int
+        max01 shouldBe 100
+        val max02 = res0["weight"] as Double
+        max02 shouldBe 140.0
+        val max03 = res0["yearsToRetirement"] as Int
+        max03 shouldBe 64
+        val max04 = res0["workExperienceYears"] as Short
+        max04 shouldBe 70
+        val max05 = res0["dependentsCount"] as Byte
+        max05 shouldBe 4
+        val max06 = res0["annualIncome"] as Long
+        max06 shouldBe 200000L
+        val max07 = res0["name"] as String
+        max07 shouldBe "Rose"
+        val max08 = res0["city"] as String
+        max08 shouldBe "Paris"
+        val max09 = res0["height"] as String
+        max09 shouldBe "1.95"
+
+        // scenario #1: particular column
+        val res1 = personsDf.maxFor("age")
+        res1.columnNames() shouldBe listOf("age")
+
+        val max11 = res1["age"] as Int
+        max11 shouldBe 100
+
+        // scenario #1.1: particular column with a converted type
+        val res11 = personsDf.maxFor("dependentsCount")
+        res11.columnNames() shouldBe listOf("dependentsCount")
+
+        val max111 = res11["dependentsCount"] as Byte
+        max111 shouldBe 4
+
+        // scenario #2: max of values per columns separately
+        val res3 = personsDf.maxFor("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+
+        val max31 = res3["weight"] as Double
+        max31 shouldBe 140.0
+        val max32 = res3["workExperienceYears"] as Short
+        max32 shouldBe 70
+        val max33 = res3["dependentsCount"] as Byte
+        max33 shouldBe 4
+        val max34 = res3["annualIncome"] as Long
+        max34 shouldBe 200000L
+        val max35 = res3["name"] as String
+        max35 shouldBe "Rose"
+    }
+
+    @Test
     fun `max on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").max()
@@ -686,5 +881,71 @@ class StatisticsTests {
 
         val max51 = res5["age"][0] as Int
         max51 shouldBe 35
+    }
+
+    @Test
+    fun `percentile on DataFrame`() {
+        // scenario #0: all intraComparableColumns columns
+        val percentile = 30.0
+        val res0 = personsDf.percentile(percentile)
+        res0.columnNames() shouldBe listOf(
+            "name",
+            "age",
+            "city",
+            "weight",
+            "height",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+        )
+
+        val percentile01 = res0["age"] as Double
+        percentile01 shouldBe 20.866666666666667
+        val percentile02 = res0["weight"] as Double
+        percentile02 shouldBe 61.52133333333333
+        val percentile03 = res0["yearsToRetirement"] as Double
+        percentile03 shouldBe 16.500000000000004
+        val percentile04 = res0["workExperienceYears"] as Double
+        percentile04 shouldBe 1.4333333333333336
+        val percentile05 = res0["dependentsCount"] as Double
+        percentile05 shouldBe 0.0
+        val percentile06 = res0["annualIncome"] as Double
+        percentile06 shouldBe 5200.000000000003
+        val percentile07 = res0["name"] as String
+        percentile07 shouldBe "Charlie"
+        val percentile08 = res0["city"] as String
+        percentile08 shouldBe "London"
+        val percentile09 = res0["height"] as String
+        percentile09 shouldBe "1.35"
+
+        // scenario #1: particular column
+        val res1 = personsDf.percentileFor(percentile, "age")
+        res1.columnNames() shouldBe listOf("age")
+
+        val percentile11 = res1["age"] as Double
+        percentile11 shouldBe 20.866666666666667
+
+        // scenario #1.1: particular column with a converted type
+        val res11 = personsDf.percentileFor(percentile, "dependentsCount")
+        res11.columnNames() shouldBe listOf("dependentsCount")
+
+        val percentile111 = res11["dependentsCount"] as Double
+        percentile111 shouldBe 0.0
+
+        // scenario #2: percentile of values per columns separately
+        val res3 = personsDf.percentileFor(percentile, "weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+
+        val percentile31 = res3["weight"] as Double
+        percentile31 shouldBe 61.52133333333333
+        val percentile32 = res3["workExperienceYears"] as Double
+        percentile32 shouldBe 1.4333333333333336
+        val percentile33 = res3["dependentsCount"] as Double
+        percentile33 shouldBe 0.0
+        val percentile34 = res3["annualIncome"] as Double
+        percentile34 shouldBe 5200.000000000003
+        val percentile35 = res3["name"] as String
+        percentile35 shouldBe "Charlie"
     }
 }
