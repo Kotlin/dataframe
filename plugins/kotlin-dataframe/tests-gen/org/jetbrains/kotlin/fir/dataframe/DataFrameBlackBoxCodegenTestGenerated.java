@@ -455,9 +455,33 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("max.kt")
+  public void testMax() {
+    runTest("testData/box/max.kt");
+  }
+
+  @Test
+  @TestMetadata("mean.kt")
+  public void testMean() {
+    runTest("testData/box/mean.kt");
+  }
+
+  @Test
+  @TestMetadata("median.kt")
+  public void testMedian() {
+    runTest("testData/box/median.kt");
+  }
+
+  @Test
   @TestMetadata("merge.kt")
   public void testMerge() {
     runTest("testData/box/merge.kt");
+  }
+
+  @Test
+  @TestMetadata("min.kt")
+  public void testMin() {
+    runTest("testData/box/min.kt");
   }
 
   @Test
@@ -536,6 +560,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("perRowCol.kt")
   public void testPerRowCol() {
     runTest("testData/box/perRowCol.kt");
+  }
+
+  @Test
+  @TestMetadata("percentile.kt")
+  public void testPercentile() {
+    runTest("testData/box/percentile.kt");
   }
 
   @Test
@@ -638,6 +668,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("selectionDsl.kt")
   public void testSelectionDsl() {
     runTest("testData/box/selectionDsl.kt");
+  }
+
+  @Test
+  @TestMetadata("std.kt")
+  public void testStd() {
+    runTest("testData/box/std.kt");
   }
 
   @Test
