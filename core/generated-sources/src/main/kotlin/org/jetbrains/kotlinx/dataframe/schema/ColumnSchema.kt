@@ -56,6 +56,9 @@ public abstract class ColumnSchema {
         override val type: KType get() = typeOf<AnyRow>()
 
         public fun compare(other: Group): CompareResult = schema.compare(other.schema)
+
+        internal fun compareStrictlyEqualLeafs(other: Group): CompareResult =
+            schema.compare(other.schema, strictlyEqualLeafs = true)
     }
 
     public class Frame(
@@ -68,6 +71,12 @@ public abstract class ColumnSchema {
 
         public fun compare(other: Frame): CompareResult =
             schema.compare(other.schema).combine(CompareResult.compareNullability(nullable, other.nullable))
+
+        internal fun compareStrictlyEqualLeafs(other: Frame): CompareResult =
+            schema.compare(
+                other.schema,
+                strictlyEqualLeafs = true,
+            ).combine(CompareResult.compareNullability(nullable, other.nullable))
     }
 
     /** Checks equality just on kind, type, or schema. */
@@ -83,13 +92,17 @@ public abstract class ColumnSchema {
         }
     }
 
-    public fun compare(other: ColumnSchema): CompareResult {
+    public fun compare(other: ColumnSchema): CompareResult = compare(other, false)
+
+    internal fun compareStrictlyEqualLeafs(other: ColumnSchema): CompareResult = compare(other, true)
+
+    private fun compare(other: ColumnSchema, strictlyEqualLeafs: Boolean): CompareResult {
         if (kind != other.kind) return CompareResult.None
         if (this === other) return CompareResult.Equals
         return when (this) {
             is Value -> compare(other as Value)
-            is Group -> compare(other as Group)
-            is Frame -> compare(other as Frame)
+            is Group -> if (strictlyEqualLeafs) compareStrictlyEqualLeafs(other as Group) else compare(other as Group)
+            is Frame -> if (strictlyEqualLeafs) compareStrictlyEqualLeafs(other as Frame) else compare(other as Frame)
             else -> throw NotImplementedError()
         }
     }
