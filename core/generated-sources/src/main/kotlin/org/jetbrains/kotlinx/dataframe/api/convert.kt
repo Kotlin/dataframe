@@ -6,7 +6,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -48,12 +47,314 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
+/**
+ * See also [parse] — a specialized form of the [convert] operation that parses [String] columns
+ * into other types without requiring explicit type specification.
+ */
+internal interface SeeAlsoParse
+
+/**
+ * Converts the values in the specified [columns] either to a supported target type
+ * or using a custom converter, keeping their original names and positions within the [DataFrame].
+ *
+ * This function does not immediately convert the columns but instead selects columns to convert and
+ * returns a [Convert],
+ * which serves as an intermediate step.
+ * The [Convert] object provides methods to transform selected columns using:
+ * - [to][Convert.to]
+ * - [with][Convert.with]
+ * - [asFrame][Convert.asFrame]
+ * - [perRowCol][Convert.perRowCol]
+ * - [notNull][Convert.notNull]
+ * - [toDataFrames][Convert.toDataFrames]
+ *
+ * Additionally, it offers a wide range of methods for converting to specific types,
+ * such as [toStr][Convert.toStr], [toDouble][Convert.toDouble], and many others.
+ *
+ * For the full list of supported types,
+ * refer to the [documentation website](https://kotlin.github.io/dataframe/convert.html).
+ *
+ * Each method returns a new [DataFrame] with the updated columns.
+ *
+ * Check out [Grammar].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][ConvertSelectingOptions].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * See also [parse][org.jetbrains.kotlinx.dataframe.api.parse] — a specialized form of the [convert][org.jetbrains.kotlinx.dataframe.api.convert] operation that parses [String] columns
+ * into other types without requiring explicit type specification.
+ */
+internal interface ConvertDocs {
+
+    /**
+     *
+     * ## Selecting Columns
+     * Selecting columns for various operations (including but not limited to
+     * [DataFrame.select][org.jetbrains.kotlinx.dataframe.DataFrame.select], [DataFrame.update][org.jetbrains.kotlinx.dataframe.DataFrame.update], [DataFrame.gather][org.jetbrains.kotlinx.dataframe.DataFrame.gather], and [DataFrame.fillNulls][org.jetbrains.kotlinx.dataframe.DataFrame.fillNulls])
+     * can be done in the following ways:
+     * ### 1. [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample]
+     * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+     * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+     *
+     * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+     * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+     * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+     * This is an entity formed by calling any (combination) of the functions
+     * in the DSL that is or can be resolved into one or more columns.
+     *
+     * #### NOTE:
+     * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+     * in this DSL directly with any function, they are NOT valid return types for the
+     * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+     * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+     *
+     * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+     *
+     * #### For example:
+     *
+     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]` { length `[and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and]` age }`
+     *
+     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+     *
+     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`  {  `[colsOf][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[Double][Double]`>() }`
+     *
+     *
+     * #### NOTE: There's also a 'single column' variant used sometimes: [Column Selection DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.DslSingle.WithExample].
+     * ### 2. [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample]
+     * Select columns using their [column names][String]
+     * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+     *
+     * #### For example:
+     *
+     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`("length", "age")`
+     *
+     * ### 3. [Column references][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnAccessors.WithExample]
+     * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+     * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
+     *
+     * #### For example:
+     *
+     * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+     *
+     * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+     *
+     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`(length, age)`
+     *
+     * ### 4. [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample]
+     * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
+     *
+     * #### For example:
+     * ```kotlin
+     * data class Person(val length: Double, val age: Double)
+     * ```
+     *
+     * `df.`[convert][org.jetbrains.kotlinx.dataframe.api.convert]`(Person::length, Person::age)`
+     *
+     */
+    interface ConvertSelectingOptions
+
+    /**
+     * ## Convert Operation Grammar
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     *
+     *
+     * **[`convert`][convert]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * __`.`__[**`with`**][Convert.with]`(infer: `[`Infer`][Infer]`, rowExpression: `[`RowValueExpression`][RowValueExpression]`)`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`notNull`**][Convert.notNull]`  { rowExpression: `[`RowValueExpression`][RowValueExpression]`  }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`to`**][Convert.to]`<T>()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`to`**][Convert.to]`(type: `[`KType`][KType]`)`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`to`**][Convert.to]`  { columnConverter: `[`DataFrame`](DataFrame)`.(`[`DataColumn`](DataColumn)`) -> `[`AnyBaseColumn`](AnyBaseColumn)`  }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`perRowCol`**][Convert.perRowCol]`  { expression: `[`RowColumnExpression`][RowColumnExpression]`  }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`asFrame`**][Convert.asFrame]`  { builder: `[`ColumnsContainer`](ColumnsContainer)`.(`[`ColumnConvert`](ColumnConvert)`) -> `[`DataFrame`](DataFrame)`  }`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toStr`**][Convert.toStr]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toInt`**][Convert.toInt]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toLong`**][Convert.toLong]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toDouble`**][Convert.toDouble]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toFloat`**][Convert.toFloat]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toBigDecimal`**][Convert.toBigDecimal]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toBigInteger`**][Convert.toBigInteger]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toBoolean`**][Convert.toBoolean]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toLocalDateTime`**][Convert.toLocalDateTime]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toLocalDate`**][Convert.toLocalDate]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toLocalTime`**][Convert.toLocalTime]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toInstant`**][Convert.toInstant]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toURL`**][Convert.toURL]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toIFrame`**][Convert.toIFrame]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toImg`**][Convert.toImg]`()`
+     *
+     * &nbsp;&nbsp;&nbsp;&nbsp;
+     * `| `__`.`__[**`toDataFrames`**][Convert.toDataFrames]`()`
+     */
+    interface Grammar
+}
+
+/**
+ * Converts the values in the specified [columns] either to a supported target type
+ * or using a custom converter, keeping their original names and positions within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * This function does not immediately convert the columns but instead selects columns to convert and
+ * returns a [Convert][org.jetbrains.kotlinx.dataframe.api.Convert],
+ * which serves as an intermediate step.
+ * The [Convert][org.jetbrains.kotlinx.dataframe.api.Convert] object provides methods to transform selected columns using:
+ * - [to][org.jetbrains.kotlinx.dataframe.api.Convert.to]
+ * - [with][org.jetbrains.kotlinx.dataframe.api.Convert.with]
+ * - [asFrame][org.jetbrains.kotlinx.dataframe.api.Convert.asFrame]
+ * - [perRowCol][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol]
+ * - [notNull][org.jetbrains.kotlinx.dataframe.api.Convert.notNull]
+ * - [toDataFrames][org.jetbrains.kotlinx.dataframe.api.Convert.toDataFrames]
+ *
+ * Additionally, it offers a wide range of methods for converting to specific types,
+ * such as [toStr][org.jetbrains.kotlinx.dataframe.api.Convert.toStr], [toDouble][org.jetbrains.kotlinx.dataframe.api.Convert.toDouble], and many others.
+ *
+ * For the full list of supported types,
+ * refer to the [documentation website](https://kotlin.github.io/dataframe/convert.html).
+ *
+ * Each method returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the updated columns.
+ *
+ * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.Grammar].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.ConvertSelectingOptions].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * See also [parse][org.jetbrains.kotlinx.dataframe.api.parse] — a specialized form of the [convert][org.jetbrains.kotlinx.dataframe.api.convert] operation that parses [String] columns
+ * into other types without requiring explicit type specification.
+ * ### This Convert Overload
+ * Select or express columns using the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl].
+ * (Any (combination of) [Access API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL is initiated by a [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operates in the context of the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expects you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] (so, a [ColumnsResolver][org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver]).
+ * This is an entity formed by calling any (combination) of the functions
+ * in the DSL that is or can be resolved into one or more columns.
+ *
+ * #### NOTE:
+ * While you can use the [String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi] and [KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]
+ * in this DSL directly with any function, they are NOT valid return types for the
+ * [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda. You'd need to turn them into a [ColumnReference][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] first, for instance
+ * with a function like [`col("name")`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.col].
+ *
+ * ### Check out: [Columns Selection DSL Grammar][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar]
+ *
+ * &nbsp;&nbsp;&nbsp;&nbsp;
+ *
+ * [See Column Selectors on the documentation website.](https://kotlin.github.io/dataframe/columnselectors.html)
+ * ### Examples:
+ * ```kotlin
+ * df.convert { columnA and columnB }.with { it.toString().lowercase() }
+ * df.convert { colsOf<String>() }.to<Double>()
+ * df.convert { colsAtAnyDepth().colGroups() }.asFrame { it.add("nan") { Double.NaN } }
+ * ```
+ * @param [columns] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to group.
+ */
 @Interpretable("Convert0")
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> = Convert(this, columns)
 
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> = convert { columns.toColumnSet() }
 
+/**
+ * Converts the values in the specified [columns] either to a supported target type
+ * or using a custom converter, keeping their original names and positions within the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ *
+ * This function does not immediately convert the columns but instead selects columns to convert and
+ * returns a [Convert][org.jetbrains.kotlinx.dataframe.api.Convert],
+ * which serves as an intermediate step.
+ * The [Convert][org.jetbrains.kotlinx.dataframe.api.Convert] object provides methods to transform selected columns using:
+ * - [to][org.jetbrains.kotlinx.dataframe.api.Convert.to]
+ * - [with][org.jetbrains.kotlinx.dataframe.api.Convert.with]
+ * - [asFrame][org.jetbrains.kotlinx.dataframe.api.Convert.asFrame]
+ * - [perRowCol][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol]
+ * - [notNull][org.jetbrains.kotlinx.dataframe.api.Convert.notNull]
+ * - [toDataFrames][org.jetbrains.kotlinx.dataframe.api.Convert.toDataFrames]
+ *
+ * Additionally, it offers a wide range of methods for converting to specific types,
+ * such as [toStr][org.jetbrains.kotlinx.dataframe.api.Convert.toStr], [toDouble][org.jetbrains.kotlinx.dataframe.api.Convert.toDouble], and many others.
+ *
+ * For the full list of supported types,
+ * refer to the [documentation website](https://kotlin.github.io/dataframe/convert.html).
+ *
+ * Each method returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with the updated columns.
+ *
+ * Check out [Grammar][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.Grammar].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
+ *
+ * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.ConvertDocs.ConvertSelectingOptions].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * See also [parse][org.jetbrains.kotlinx.dataframe.api.parse] — a specialized form of the [convert][org.jetbrains.kotlinx.dataframe.api.convert] operation that parses [String] columns
+ * into other types without requiring explicit type specification.
+ * ### This Convert Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ * ### Example:
+ * ```kotlin
+ * df.convert("person", "position").toStr()
+ * df.convert("value").with { (it as Number).toDouble() }
+ * ```
+ * @param [columns] The [Column Names][String] used to select the columns of this [DataFrame] to group.
+ */
 @Interpretable("Convert2")
 public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumnSet() }
 
@@ -77,6 +378,30 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
     noinline expression: RowValueExpression<T, C, R>,
 ): DataFrame<T> = convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+/**
+ * Converts specified columns
+ * using row converter [expression] within the [DataFrame].
+ * Provide a new value for every selected cell given its row and its previous value using a
+ * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
+ *
+ * ## Note
+ * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
+ * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
+ * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
+ * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
+ * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
+ * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
+ * ## See Also
+ * - [Convert per row col][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol] to provide a new value for every selected cell giving its column.
+ *
+ * ### Example:
+ * ```kotlin
+ * // Convert values in selected column to a trimmed `String`.
+ * df.convert("valueA", "valueB") { it.toString().trim() }
+ * ```
+ * @param [expression] The [Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample] to update the rows with.
+ * @return A new [DataFrame] with the converted values.
+ */
 @Interpretable("Convert6")
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
@@ -96,13 +421,67 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
         }
     }
 
+/**
+ * An intermediate class used in the [convert] operation.
+ *
+ * This class itself does not perform any conversion — it is a transitional step
+ * before specifying how to convert the selected columns.
+ * It must be followed by one of the conversion methods
+ * to produce a new [DataFrame] with updated column values and types.
+ *
+ * The resulting columns will keep their original names and positions
+ * in the [DataFrame], but their values will be transformed.
+ *
+ * Use the following methods to perform the conversion:
+ * - [to(kType)][to]/[to`<Type`>()][to] – converts columns to a specific type.
+ * - [to { columnConverter }][to] - converts columns using column converter expression.
+ * - [with][Convert.with] – applies a custom row-wise conversion expression.
+ * - [notNull][Convert.notNull] – like [with], but only for non-null values.
+ * - [perRowCol][Convert.perRowCol] – applies a conversion that uses both column and row information.
+ * - [asFrame][Convert.asFrame] – converts [column groups][ColumnGroup] as a [DataFrame] with the given expression.
+ * - [toStr], [toInt], [toLong], [toDouble], [toFloat], [toBigDecimal],
+ *   [toBigInteger], [toBoolean] – convert to standard types.
+ * - [toLocalDateTime], [toLocalDate], [toLocalTime], [toInstant] – convert to kotlinx.datetime types.
+ * - [toURL], [toIFrame], [toImg] – convert to special types.
+ * - [toDataFrames] – converts a column of lists into separate DataFrames.
+ *
+ * See [Grammar][ConvertDocs.Grammar] for more details.
+ */
 @HasSchema(schemaArg = 0)
 public class Convert<T, out C>(
     @PublishedApi internal val df: DataFrame<T>,
     @PublishedApi internal val columns: ColumnsSelector<T, C>,
 ) {
+    /**
+     * Casts the type parameter of the columns previously selected with [convert][convert] to a new type [R],
+     * without performing any actual data transformation.
+     *
+     * This operation updates the static type of the selected columns for further type-safe conversions.
+     */
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
+    /**
+     * Converts values in the columns previously selected with [convert] to the specified type [D],
+     * preserving their original names and positions within the [DataFrame].
+     *
+     * The target type is provided as a reified type argument.
+     * For the full list of supported types,
+     * refer to the [documentation website](https://kotlin.github.io/dataframe/convert.html).
+     *
+     * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+     *
+     * ### Examples:
+     * ```kotlin
+     * // Convert selected columns to Int:
+     * df.convert("year", "count").to<Int>()
+     *
+     * // Convert all String columns to LocalDate:
+     * df.convert { colsOf<String>() }.to<LocalDate>()
+     * ```
+     *
+     * @param D The target type, provided as a reified type argument, to convert values to.
+     * @return A new [DataFrame] with the values converted to type [D].
+     */
     @Refine
     @Interpretable("To0")
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
@@ -110,36 +489,121 @@ public class Convert<T, out C>(
     override fun toString(): String = "Convert(df=$df, columns=$columns)"
 }
 
-public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
+/**
+ * Converts values in the columns previously selected with [convert] to the specified [type],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * The target type is provided as a [KType].
+ * For the full list of supported types,
+ * refer to the [documentation website](https://kotlin.github.io/dataframe/convert.html).
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Convert selected columns to String:
+ * df.convert("year", "count").to(typeOf<String>())
+ * df.convert { year and count }.to(typeOf<String>())
+ * // Convert all `Int` columns to `Double`
+ * df.convert { colsOf<Int>() }.to(typeOf<Double>())
+ * ```
+ *
+ * @param type The target type, provided as a [KType], to convert values to.
+ * @return A new [DataFrame] with the values converted to [type].
+ */
+public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = asColumn { it.convertTo(type) }
 
-public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
-    df.replace(columns).with { columnConverter(df, it) }
-
+/**
+ * Converts values in the columns previously selected with [convert]
+ * using [row value][RowValueExpression] [expression] within the [DataFrame].
+ *
+ * A [row value expression][RowValueExpression] allows to provide a new value for every selected cell
+ * given its row (as a receiver) and its previous value (as a lambda argument).
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ## Note
+ * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
+ * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
+ * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
+ * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
+ * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
+ * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
+ * ## See Also
+ * - [Convert per row col][org.jetbrains.kotlinx.dataframe.api.Convert.perRowCol] to provide a new value for every selected cell giving its column.
+ * - [Convert as column][org.jetbrains.kotlinx.dataframe.api.Convert.asColumn] to convert using a column converter
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Select columns with json values and convert it to decoded `String`.
+ * df.convert { valueJson }.with { Json.decode(it) }
+ * // Convert all `Int` columns to `Duration`, multiplying each value by the corresponding value from the "coeff" `Double` column before conversion
+ * df.convert { colsOf<Int>() }.with { baseValue -> (baseValue * coeff).toDuration(DurationUnit.MICROSECONDS) }
+ * ```
+ *
+ * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
+ * Defaults to [Infer.Nulls].
+ * @param [expression] The [RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
+ * @return A new [DataFrame] with the converted values.
+ */
 @Refine
 @Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
-    noinline rowConverter: RowValueExpression<T, C, R>,
-): DataFrame<T> = withRowCellImpl(typeOf<R>(), infer, rowConverter)
-
-@Refine
-@Interpretable("With0")
-public inline fun <T, C, reified R> Convert<T, C>.with(
-    noinline rowConverter: RowValueExpression<T, C, R>,
-): DataFrame<T> = with(Infer.Nulls, rowConverter)
-
-public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
-    body: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
-): DataFrame<T> = to { body(this, it.asColumnGroup()).asColumnGroup(it.name()) }
+    noinline expression: RowValueExpression<T, C, R>,
+): DataFrame<T> = withRowCellImpl(typeOf<R>(), infer, expression)
 
 /**
- * Compiler plugin-friendly variant of [ReplaceClause.with]
+ * Converts [column groups][ColumnGroup] previously selected with [convert]
+ * as a [DataFrame] using a [dataframe expression][DataFrameExpression].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Example:
+ * ```kotlin
+ * // Add a column to selected column group "name".
+ * df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
+ * ```
+ *
+ * @param [expression] The [Data Frame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
+ */
+public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
+    expression: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
+): DataFrame<T> = asColumn { expression(this, it.asColumnGroup()).asColumnGroup(it.name()) }
+
+/**
+ * Converts values in the columns previously selected with [convert]
+ * using [columnConverter] expression within the [DataFrame].
+ *
+ * The [columnConverter] is a lambda with the current [DataFrame] as receiver and the selected column as argument.
+ * It returns a new column that will replace the original column.
+ * **Preserves original column name for each column (even it was explicitly changed in [columnConverter] expression).**
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * It's a compiler plugin-friendly variant of [ReplaceClause.with].
  * [ReplaceClause.with] allows to change both column types and names.
  * Tracking of column name changes in arbitrary lambda expression is unreliable and generally impossible
  * to do statically.
  * This function ensures that all column names remain as is and only their type changes to [R]
- * Example:
- * `df.convert { colsOf<String>() }.asColumn { it.asList().parallelStream().map { heavyIO(it) }.toList().toColumn() }`
+ *
+ * ## See Also
+ *  - [Convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with] to provide a new value for every selected cell
+ * giving its row and its previous value.
+ *  - [Replace with][ReplaceClause.with] to replace columns using a column converter,
+ * allowing both column names and types to be changed.
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Select `Int` columns ("valueA", "valueB") and multiply them with `Double` column ("coeff").
+ * df.convert { valueA and valueB }.asColumn { it * coeff }
+ * // Convert all columns into column groups, each containing the original column
+ * df.convert { all() }.asColumn { listOf(it).toColumnGroup(it.name) }
+ * // Converts all `String` columns by applying heavyIO to each element in parallel and assembling results back into columns.
+ * df.convert { colsOf<String>() }.asColumn { it.asList().parallelStream().map { heavyIO(it) }.toList().toColumn() }`
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [type].
  */
 @Refine
 @Interpretable("ConvertAsColumn")
@@ -147,6 +611,32 @@ public inline fun <T, C, R> Convert<T, C>.asColumn(
     crossinline columnConverter: DataFrame<T>.(DataColumn<C>) -> BaseColumn<R>,
 ): DataFrame<T> = df.replace(columns).with { columnConverter(df, it).rename(it.name()) }
 
+/**
+ * Converts values in the columns previously selected with [convert]
+ * using [row column][RowColumnExpression] [expression] within the [DataFrame].
+ *
+ * A [row column expression][RowColumnExpression] allows to provide a new value for every selected cell
+ * given its row and column (as lambda arguments).
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ## See Also
+ *  - [Convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with] to provide a new value for every selected cell
+ * giving its row and its previous value.
+ *  - [Convert as column][org.jetbrains.kotlinx.dataframe.api.Convert.asColumn] to convert using a column converter
+ *
+ * ### Example:
+ * ```kotlin
+ * // Convert values in all columns to `String` and add their column name to the end
+ * df.convert { all() }.perRowCol { row, col ->
+ *    row[col].toString() + col.name()
+ * }
+ * ```
+ *
+ * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
+ * Defaults to [Infer.Nulls].
+ * @param [expression] The [RowColumnExpression] to provide a new value for every selected cell giving its row and column.
+ */
 @Refine
 @Interpretable("PerRowCol")
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
@@ -154,8 +644,28 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     noinline expression: RowColumnExpression<T, C, R>,
 ): DataFrame<T> = convertRowColumnImpl(typeOf<R>(), infer, expression)
 
+/**
+ * Converts values in this column to the specified type [C].
+ *
+ * The target type is provided as a reified type argument.
+ *
+ * For the full list of supported types,
+ * refer to the [documentation website](https://kotlin.github.io/dataframe/convert.html).
+ *
+ * @param [C] The target type to convert values to.
+ * @return A new [DataColumn] with the values converted to type [C].
+ */
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 
+/**
+ * Converts values in this column to the specified [type].
+ *
+ * For the full list of supported types,
+ * refer to the [documentation website](https://kotlin.github.io/dataframe/convert.html).
+ *
+ * @param type The target type, provided as a [KType], to convert values to.
+ * @return A new [DataColumn] with the values converted to [type].
+ */
 @Suppress("UNCHECKED_CAST")
 public fun AnyCol.convertTo(newType: KType): AnyCol =
     when {
@@ -165,9 +675,33 @@ public fun AnyCol.convertTo(newType: KType): AnyCol =
         else -> convertToTypeImpl(newType, null)
     }
 
+/**
+ * Converts values in this `String` column to the specified type [C].
+ *
+ * The target type is provided as a reified type argument.
+ *
+ * See also [parse][org.jetbrains.kotlinx.dataframe.api.parse] — a specialized form of the [convert][org.jetbrains.kotlinx.dataframe.api.convert] operation that parses [String] columns
+ * into other types without requiring explicit type specification.
+ *
+ * @param [C] The target type to convert values to.
+ * @param [parserOptions] Optional [ParserOptions] to customize parsing behavior (e.g., locale, null strings).
+ * @return A new [DataColumn] with the values converted to type [C].
+ */
 public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: ParserOptions? = null): DataColumn<C> =
     convertTo(typeOf<C>(), parserOptions) as DataColumn<C>
 
+/**
+ * Converts values in this `String` column to the specified [type][newType].
+ *
+ * The target type is provided as a [KType].
+ *
+ * See also [parse][org.jetbrains.kotlinx.dataframe.api.parse] — a specialized form of the [convert][org.jetbrains.kotlinx.dataframe.api.convert] operation that parses [String] columns
+ * into other types without requiring explicit type specification.
+ *
+ * @param [newType] The target type to convert values to.
+ * @param [parserOptions] Optional [ParserOptions] to customize parsing behavior (e.g., locale, null strings).
+ * @return A new [DataColumn] with the values converted to [type].
+ */
 public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOptions? = null): AnyCol =
     when {
         newType.isSubtypeOf(typeOf<Double?>()) ->
@@ -180,70 +714,164 @@ public fun DataColumn<String?>.convertTo(newType: KType, parserOptions: ParserOp
         else -> convertToTypeImpl(newType, parserOptions)
     }
 
+/**
+ * Converts values in this column to [LocalDateTime].
+ *
+ * @return A new [DataColumn] with the [LocalDateTime] values.
+ */
 @JvmName("convertToLocalDateTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
 
+/**
+ * Converts values in this column to [LocalDateTime]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [LocalDateTime] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToLocalDateTime(): DataColumn<LocalDateTime?> = convertTo()
 
+/**
+ * Converts values in this column to [LocalDate].
+ *
+ * @return A new [DataColumn] with the [LocalDate] values.
+ */
 @JvmName("convertToLocalDateFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalDate(): DataColumn<LocalDate> = convertTo()
 
+/**
+ * Converts values in this column to [LocalDate]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [LocalDate] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToLocalDate(): DataColumn<LocalDate?> = convertTo()
 
+/**
+ * Converts values in this column to [LocalTime].
+ *
+ * @return A new [DataColumn] with the [LocalTime] values.
+ */
 @JvmName("convertToLocalTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalTime(): DataColumn<LocalTime> = convertTo()
 
+/**
+ * Converts values in this column to [LocalTime]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [LocalTime] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToLocalTime(): DataColumn<LocalTime?> = convertTo()
 
+/**
+ * Converts values in this column to [Byte].
+ *
+ * @return A new [DataColumn] with the [Byte] values.
+ */
 @JvmName("convertToByteFromT")
 public fun <T : Any> DataColumn<T>.convertToByte(): DataColumn<Byte> = convertTo()
 
+/**
+ * Converts values in this column to [Byte]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Byte] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToByte(): DataColumn<Byte?> = convertTo()
 
+/**
+ * Converts values in this column to [Short].
+ *
+ * @return A new [DataColumn] with the [Short] values.
+ */
 @JvmName("convertToShortFromT")
 public fun <T : Any> DataColumn<T>.convertToShort(): DataColumn<Short> = convertTo()
 
+/**
+ * Converts values in this column to [Short]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Short] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToShort(): DataColumn<Short?> = convertTo()
 
+/**
+ * Converts values in this column to [Int].
+ *
+ * @return A new [DataColumn] with the [Int] values.
+ */
 @JvmName("convertToIntFromT")
 public fun <T : Any> DataColumn<T>.convertToInt(): DataColumn<Int> = convertTo()
 
+/**
+ * Converts values in this column to [Int]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Int] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToInt(): DataColumn<Int?> = convertTo()
 
+/**
+ * Converts values in this column to [Long].
+ *
+ * @return A new [DataColumn] with the [Long] values.
+ */
 @JvmName("convertToLongFromT")
 public fun <T : Any> DataColumn<T>.convertToLong(): DataColumn<Long> = convertTo()
 
+/**
+ * Converts values in this column to [Long]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Long] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToLong(): DataColumn<Long?> = convertTo()
 
+/**
+ * Converts values in this column to [String].
+ *
+ * @return A new [DataColumn] with the [String] values.
+ */
 @JvmName("convertToStringFromT")
 public fun <T : Any> DataColumn<T>.convertToString(): DataColumn<String> = convertTo()
 
+/**
+ * Converts values in this column to [String]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [String] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToString(): DataColumn<String?> = convertTo()
 
+/**
+ * Converts values in this column to [Double].
+ *
+ * @return A new [DataColumn] with the [Double] values.
+ */
 @JvmName("convertToDoubleFromT")
 public fun <T : Any> DataColumn<T>.convertToDouble(): DataColumn<Double> = convertTo()
 
+/**
+ * Converts values in this column to [Double]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Double] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = convertTo()
 
-/** Parses a String column to Double considering locale (number format).
- *
- * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
- *
- * @param locale If defined, its number format is used for parsing.
- *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
- * If the column cannot be parsed, the POSIX format is used. */
-@JvmName("convertToDoubleFromString")
-public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> =
-    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
-
-/**
- * Parses a String column to Double considering locale (number format).
+/** Converts values in this [String] column to [Double] considering locale (number format).
  *
  * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
  *
  * @param locale If defined, its number format is used for parsing.
  *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
  *   If the column cannot be parsed, the POSIX format is used.
+ *
+ * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values. */
+@JvmName("convertToDoubleFromString")
+public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> =
+    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
+
+/**
+ * Converts values in this [String] column to [Double] considering locale (number format).
+ *
+ * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
+ *
+ * @param locale If defined, its number format is used for parsing.
+ *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
+ *   If the column cannot be parsed, the POSIX format is used.
+ *
+ * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values.
  * @param nullStrings a set of strings that should be treated as `null` values.
  *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
  * @param useFastDoubleParser whether to use [FastDoubleParser].
@@ -257,25 +885,29 @@ public fun DataColumn<String>.convertToDouble(
 ): DataColumn<Double> =
     this.castToNullable().convertToDouble(locale, nullStrings, useFastDoubleParser).castToNotNullable()
 
-/** Parses a String column to Double considering locale (number format).
- *
- * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
- *
- * @param locale If defined, its number format is used for parsing.
- *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
- * If the column cannot be parsed, the POSIX format is used. */
-@JvmName("convertToDoubleFromStringNullable")
-public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> =
-    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
-
-/**
- * Parses a String column to Double considering locale (number format).
+/** Converts values in this [String] column to [Double] considering locale (number format).
  *
  * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
  *
  * @param locale If defined, its number format is used for parsing.
  *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
  *   If the column cannot be parsed, the POSIX format is used.
+ *
+ * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values. */
+@JvmName("convertToDoubleFromStringNullable")
+public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> =
+    convertToDouble(locale = locale, nullStrings = null, useFastDoubleParser = null)
+
+/**
+ * Converts values in this [String] column to [Double] considering locale (number format).
+ *
+ * If any of the parameters is `null`, the global default (in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser]) is used.
+ *
+ * @param locale If defined, its number format is used for parsing.
+ *   The default in [DataFrame.parser][org.jetbrains.kotlinx.dataframe.DataFrame.Companion.parser] is the system locale.
+ *   If the column cannot be parsed, the POSIX format is used.
+ *
+ * @return A new [DataColumn][org.jetbrains.kotlinx.dataframe.DataColumn] with the [Double] values.
  * @param nullStrings a set of strings that should be treated as `null` values.
  *   The default in [DataFrame.parser][DataFrame.Companion.parser] is ["null", "NULL", "NA", "N/A"].
  * @param useFastDoubleParser whether to use [FastDoubleParser].
@@ -293,28 +925,85 @@ public fun DataColumn<String?>.convertToDouble(
         useFastDoubleParser = useFastDoubleParser,
     )
 
+/**
+ * Converts values in this column to [Float].
+ *
+ * @return A new [DataColumn] with the [Float] values.
+ */
 @JvmName("convertToFloatFromT")
 public fun <T : Any> DataColumn<T>.convertToFloat(): DataColumn<Float> = convertTo()
 
+/**
+ * Converts values in this column to [Float]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Float] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToFloat(): DataColumn<Float?> = convertTo()
 
+/**
+ * Converts values in this column to [BigDecimal].
+ *
+ * @return A new [DataColumn] with the [BigDecimal] values.
+ */
 @JvmName("convertToBigDecimalFromT")
 public fun <T : Any> DataColumn<T>.convertToBigDecimal(): DataColumn<BigDecimal> = convertTo()
 
+/**
+ * Converts values in this column to [BigDecimal]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [BigDecimal] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToBigDecimal(): DataColumn<BigDecimal?> = convertTo()
 
+/**
+ * Converts values in this column to [BigInteger].
+ *
+ * @return A new [DataColumn] with the [BigInteger] values.
+ */
 @JvmName("convertToBigIntegerFromT")
 public fun <T : Any> DataColumn<T>.convertToBigInteger(): DataColumn<BigInteger> = convertTo()
 
+/**
+ * Converts values in this column to [BigInteger]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [BigInteger] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToBigInteger(): DataColumn<BigInteger?> = convertTo()
 
+/**
+ * Converts values in this column to [Boolean].
+ *
+ * @return A new [DataColumn] with the [Boolean] values.
+ */
 @JvmName("convertToBooleanFromT")
 public fun <T : Any> DataColumn<T>.convertToBoolean(): DataColumn<Boolean> = convertTo()
 
+/**
+ * Converts values in this column to [Boolean]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Boolean] nullable values.
+ */
 public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = convertTo()
 
 // region convert URL
 
+/**
+ * Converts values in an [URL] columns previously selected with [convert] to an [IFRAME],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { imgUrl }.toIFrame()
+ * ```
+ *
+ * @param border Whether the iframe should have a border. Defaults to `false`.
+ * @param width Optional width of the iframe in pixels.
+ * @param height Optional height of the iframe in pixels.
+ * @return A new [DataFrame] with the values converted to an [IFRAME].
+ */
 @JvmName("toIframeFromUrlNullable")
 @Refine
 @Converter(IFRAME::class, nullable = true)
@@ -323,8 +1012,24 @@ public fun <T> Convert<T, URL?>.toIFrame(
     border: Boolean = false,
     width: Int? = null,
     height: Int? = null,
-): DataFrame<T> = to { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
+): DataFrame<T> = asColumn { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
 
+/**
+ * Converts values in an [URL] columns previously selected with [convert] to an [IFRAME],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { imgUrl }.toIFrame()
+ * ```
+ *
+ * @param border Whether the iframe should have a border. Defaults to `false`.
+ * @param width Optional width of the iframe in pixels.
+ * @param height Optional height of the iframe in pixels.
+ * @return A new [DataFrame] with the values converted to an [IFRAME].
+ */
 @JvmName("toIframeFromUrl")
 @Refine
 @Converter(IFRAME::class, nullable = false)
@@ -333,83 +1038,222 @@ public fun <T> Convert<T, URL>.toIFrame(
     border: Boolean = false,
     width: Int? = null,
     height: Int? = null,
-): DataFrame<T> = to { it.map { IFRAME(it.toString(), border, width, height) } }
+): DataFrame<T> = asColumn { it.map { IFRAME(it.toString(), border, width, height) } }
 
+/**
+ * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { avatarUrl }.toImg()
+ * ```
+ *
+ * @param width Optional width of the image in pixels.
+ * @param height Optional height of the image in pixels.
+ * @return A new [DataFrame] with the values converted to an [IMG].
+ */
 @JvmName("toImgFromUrlNullable")
 @Refine
 @Converter(IMG::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
-    to { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
+    asColumn { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
 
+/**
+ * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { avatarUrl }.toImg()
+ * ```
+ *
+ * @param width Optional width of the image in pixels.
+ * @param height Optional height of the image in pixels.
+ * @return A new [DataFrame] with the values converted to an [IMG].
+ */
 @JvmName("toImgFromUrl")
 @Refine
 @Converter(IMG::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T, R : URL?> Convert<T, URL>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
-    to { it.map { IMG(it.toString(), width, height) } }
+    asColumn { it.map { IMG(it.toString(), width, height) } }
 
 // endregion
 
 // region toURL
 
+/**
+ * Converts values in this [String] column to an [URL].
+ *
+ * @return A new [DataColumn] with an [URL] values.
+ */
 public fun DataColumn<String>.convertToURL(): DataColumn<URL> = map { URL(it) }
 
+/**
+ * Converts values in this [String] column to an [URL]. Preserves null values.
+ *
+ * @return A new [DataColumn] with an [URL] nullable values.
+ */
 @JvmName("convertToURLFromStringNullable")
 public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let { URL(it) } }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to an [URL],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { webAddress }.toURL()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to an [URL].
+ */
 @JvmName("toUrlFromStringNullable")
 @Refine
 @Converter(URL::class, nullable = true)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = to { it.convertToURL() }
+public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convertToURL() }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to an [URL],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { webAddress }.toURL()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to an [URL].
+ */
 @JvmName("toUrlFromString")
 @Refine
 @Converter(URL::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toURL(): DataFrame<T> = to { it.convertToURL() }
+public fun <T> Convert<T, String>.toURL(): DataFrame<T> = asColumn { it.convertToURL() }
 
 // endregion
 
 // region toInstant
 
+/**
+ * Converts values in this [String] column to [Instant].
+ *
+ * @return A new [DataColumn] with the [Instant] values.
+ */
 public fun DataColumn<String>.convertToInstant(): DataColumn<Instant> = map { Instant.parse(it) }
 
+/**
+ * Converts values in this [String] column to [Instant]. Preserves null values.
+ *
+ * @return A new [DataColumn] with the [Instant] nullable values.
+ */
 @JvmName("convertToInstantFromStringNullable")
 public fun DataColumn<String?>.convertToInstant(): DataColumn<Instant?> = map { it?.let { Instant.parse(it) } }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [Instant],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toInstant()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [Instant].
+ */
 @JvmName("toInstantFromStringNullable")
 @Refine
 @Converter(Instant::class, nullable = true)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
+public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = asColumn { it.convertToInstant() }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [Instant],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toInstant()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [Instant].
+ */
 @JvmName("toInstantFromString")
 @Refine
 @Converter(Instant::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
+public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = asColumn { it.convertToInstant() }
 
 // endregion
 
 // region toLocalDate
 
+/**
+ * Converts values in this [Long] column to [LocalDate].
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDate] values.
+ */
 @JvmName("convertToLocalDateFromLong")
 public fun DataColumn<Long>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> =
     map { it.toLocalDate(zone) }
 
+/**
+ * Converts values in this [Long] column to [LocalDate]. Preserves null values.
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDate] nullable values.
+ */
 public fun DataColumn<Long?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> =
     map { it?.toLocalDate(zone) }
 
+/**
+ * Converts values in this [Int] column to [LocalDate].
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDate] values.
+ */
 @JvmName("convertToLocalDateFromInt")
 public fun DataColumn<Int>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> =
     map { it.toLong().toLocalDate(zone) }
 
+/**
+ * Converts values in this [Int] column to [LocalDate]. Preserves null values.
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDate] nullable values.
+ */
 @JvmName("convertToLocalDateFromIntNullable")
 public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> =
     map { it?.toLong()?.toLocalDate(zone) }
 
+/**
+ * Converts values in this [String] column to [LocalDate].
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataColumn] with the [LocalDate] values.
+ */
 @JvmName("convertToLocalDateFromString")
 public fun DataColumn<String>.convertToLocalDate(
     pattern: String? = null,
@@ -419,6 +1263,17 @@ public fun DataColumn<String>.convertToLocalDate(
     return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") }
 }
 
+/**
+ * Converts values in this [String] column to [LocalDate].
+ * Preserves null values.
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataColumn] with the [LocalDate] nullable values.
+ */
 @JvmName("convertToLocalDateFromStringNullable")
 public fun DataColumn<String?>.convertToLocalDate(
     pattern: String? = null,
@@ -428,72 +1283,214 @@ public fun DataColumn<String?>.convertToLocalDate(
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") } }
 }
 
+/**
+ * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDate()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDate].
+ */
 @JvmName("toLocalDateFromTLongNullable")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
+/**
+ * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDate()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDate].
+ */
 @JvmName("toLocalDateFromTLong")
 @Refine
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
+/**
+ * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDate()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDate].
+ */
 @JvmName("toLocalDateFromTInt")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
+/**
+ * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDate()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a date. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDate].
+ */
 @JvmName("toLocalDateFromTIntNullable")
 @Refine
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDate()
+ * ```
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataFrame] with the values converted to [LocalDate].
+ */
 @JvmName("toLocalDateFromStringNullable")
 @Refine
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDate(pattern, locale) }
+    asColumn { it.convertToLocalDate(pattern, locale) }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDate()
+ * ```
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataFrame] with the values converted to [LocalDate].
+ */
 @JvmName("toLocalDateFromString")
 @Refine
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDate(pattern, locale) }
+    asColumn { it.convertToLocalDate(pattern, locale) }
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDate()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [LocalDate].
+ */
 @Refine
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = to { it.convertTo<LocalDate>() }
+public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = asColumn { it.convertTo<LocalDate>() }
 
 // endregion
 
 // region toLocalTime
 
+/**
+ * Converts values in this [Long] column to [LocalTime].
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalTime] values.
+ */
 @JvmName("convertToLocalTimeFromLong")
 public fun DataColumn<Long>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> =
     map { it.toLocalTime(zone) }
 
+/**
+ * Converts values in this [Long] column to [LocalTime]. Preserves null values.
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalTime] nullable values.
+ */
 public fun DataColumn<Long?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> =
     map { it?.toLocalTime(zone) }
 
+/**
+ * Converts values in this [Int] column to [LocalTime].
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalTime] values.
+ */
 @JvmName("convertToLocalTimeFromInt")
 public fun DataColumn<Int>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> =
     map { it.toLong().toLocalTime(zone) }
 
+/**
+ * Converts values in this [Int] column to [LocalTime]. Preserves null values.
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalTime] nullable values.
+ */
 @JvmName("convertToLocalTimeIntNullable")
 public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> =
     map { it?.toLong()?.toLocalTime(zone) }
 
+/**
+ * Converts values in this [String] column to [LocalTime].
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataColumn] with the [LocalTime] values.
+ */
 @JvmName("convertToLocalTimeFromString")
 public fun DataColumn<String>.convertToLocalTime(
     pattern: String? = null,
@@ -503,6 +1500,17 @@ public fun DataColumn<String>.convertToLocalTime(
     return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") }
 }
 
+/**
+ * Converts values in this [String] column to [LocalTime].
+ * Preserves null values.
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataColumn] with the [LocalTime] nullable values.
+ */
 @JvmName("convertToLocalTimeFromStringNullable")
 public fun DataColumn<String?>.convertToLocalTime(
     pattern: String? = null,
@@ -512,80 +1520,240 @@ public fun DataColumn<String?>.convertToLocalTime(
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") } }
 }
 
+/**
+ * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalTime].
+ */
 @JvmName("toLocalTimeFromTLongNullable")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
+/**
+ * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalTime].
+ */
 @JvmName("toLocalTimeFromTLong")
 @Refine
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
+/**
+ * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalTime].
+ */
 @JvmName("toLocalTimeFromTIntNullable")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
+/**
+ * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalTime].
+ */
 @JvmName("toLocalTimeFromTInt")
 @Refine
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [LocalTime],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataFrame] with the values converted to [LocalTime].
+ */
 @JvmName("toLocalTimeFromStringNullable")
 @Refine
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalTime(pattern, locale) }
+    asColumn { it.convertToLocalTime(pattern, locale) }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [LocalTime],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataFrame] with the values converted to [LocalTime].
+ */
 @JvmName("toLocalTimeFromString")
 @Refine
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalTime(pattern, locale) }
+    asColumn { it.convertToLocalTime(pattern, locale) }
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [LocalTime],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [LocalTime].
+ */
 @Refine
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = to { it.convertTo<LocalTime>() }
+public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = asColumn { it.convertTo<LocalTime>() }
 
 // endregion
 
 // region toLocalDateTime
 
+/**
+ * Converts values in this [Long] column to [LocalDateTime].
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a date-time.
+ * Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDate] values.
+ */
 @JvmName("convertToLocalDateTimeFromLong")
 public fun DataColumn<Long>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> =
     map { it.toLocalDateTime(zone) }
 
+/**
+ * Converts values in this [Long] column to [LocalDateTime]. Preserves null values.
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a date-time.
+ * Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDateTime] nullable values.
+ */
 public fun DataColumn<Long?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> =
     map { it?.toLocalDateTime(zone) }
 
+/**
+ * Converts values in this [Instant] column to [LocalDateTime].
+ *
+ * @param zone The [TimeZone] used to interpret the [Instant] timestamp as a date-time.
+ * Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDateTime] values.
+ */
 @JvmName("convertToLocalDateTimeFromInstant")
 public fun DataColumn<Instant>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> =
     map { it.toLocalDateTime(zone) }
 
+/**
+ * Converts values in this [Instant] column to [LocalDateTime]. Preserves null values.
+ *
+ * @param zone The [TimeZone] used to interpret the [Instant] timestamp as a date-time.
+ * Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDateTime] nullable values.
+ */
 @JvmName("convertToLocalDateTimeFromInstantNullable")
 public fun DataColumn<Instant?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> =
     map { it?.toLocalDateTime(zone) }
 
+/**
+ * Converts values in this [Int] column to [LocalDateTime].
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a date-time.
+ * Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDateTime] values.
+ */
 @JvmName("convertToLocalDateTimeFromInt")
 public fun DataColumn<Int>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> =
     map { it.toLong().toLocalDateTime(zone) }
 
+/**
+ * Converts values in this [Int] column to [LocalDateTime]. Preserves null values.
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a date-time.
+ * Defaults to the system current time zone.
+ * @return A new [DataColumn] with the [LocalDateTime] nullable values.
+ */
 @JvmName("convertToLocalDateTimeFromIntNullable")
 public fun DataColumn<Int?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> =
     map { it?.toLong()?.toLocalDateTime(zone) }
 
+/**
+ * Converts values in this [String] column to [LocalDateTime].
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataColumn] with the [LocalDateTime] values.
+ */
 @JvmName("convertToLocalDateTimeFromString")
 public fun DataColumn<String>.convertToLocalDateTime(
     pattern: String? = null,
@@ -595,6 +1763,17 @@ public fun DataColumn<String>.convertToLocalDateTime(
     return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") }
 }
 
+/**
+ * Converts values in this [String] column to [LocalDateTime].
+ * Preserves null values.
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date pattern. If `null`, the system locale is used.
+ * @return A new [DataColumn] with the [LocalDateTime] nullable values.
+ */
 @JvmName("convertToLocalDateTimeFromStringNullable")
 public fun DataColumn<String?>.convertToLocalDateTime(
     pattern: String? = null,
@@ -604,159 +1783,561 @@ public fun DataColumn<String?>.convertToLocalDateTime(
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") } }
 }
 
+/**
+ * Converts values in the [Long] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDateTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromTLongNullable")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
+/**
+ * Converts values in the [Long] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDateTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Long] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromTLong")
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
+/**
+ * Converts values in the [Instant] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDateTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromTInstantNullable")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Instant?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
+/**
+ * Converts values in the [Instant] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDateTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Instant] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromTInstant")
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Instant>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
+/**
+ * Converts values in the [Int] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDateTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromTIntNullable")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
+/**
+ * Converts values in the [Int] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalDateTime()
+ * ```
+ *
+ * @param zone The [TimeZone] used to interpret the [Int] timestamp as a time. Defaults to the system current time zone.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromTInt")
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date-time pattern. If `null`, the system locale is used.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromStringNullable")
 @Refine
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDateTime(pattern, locale) }
+    asColumn { it.convertToLocalDateTime(pattern, locale) }
 
+/**
+ * Converts values in the [String] columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * Trims each string and attempts to parse it using the specified [pattern] and [locale].
+ * Fails with an exception if a value cannot be parsed.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ * @param pattern An optional date pattern to use for parsing. If `null`, a default parser is used.
+ * @param locale An optional [Locale] to interpret the date-time pattern. If `null`, the system locale is used.
+ * @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @JvmName("toLocalDateTimeFromString")
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDateTime(pattern, locale) }
+    asColumn { it.convertToLocalDateTime(pattern, locale) }
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [LocalDateTime],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { timestamp }.toLocalTime()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [LocalDateTime].
+ */
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = to { it.convertTo<LocalDateTime>() }
+public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = asColumn { it.convertTo<LocalDateTime>() }
 
 // endregion
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Int],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toInt()
+ * df.convert { colsOf<Double>() }.toInt()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Int].
+ */
 @JvmName("toIntTAny")
 @Refine
 @Converter(Int::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toInt(): DataFrame<T> = to<Int>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Int],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toInt()
+ * df.convert { colsOf<Double>() }.toInt()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Int].
+ */
 @Refine
 @Converter(Int::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toInt(): DataFrame<T> = to<Int?>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Long],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toLong()
+ * df.convert { colsOf<Double>() }.toLong()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Long].
+ */
 @JvmName("toLongTAny")
 @Refine
 @Converter(Long::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toLong(): DataFrame<T> = to<Long>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Long],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toLong()
+ * df.convert { colsOf<Double>() }.toLong()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Long].
+ */
 @Refine
 @Converter(Long::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toLong(): DataFrame<T> = to<Long?>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [String],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toStr()
+ * df.convert { colsOf<Double>() }.toStr()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [String].
+ */
 @JvmName("toStrTAny")
 @Refine
 @Converter(String::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toStr(): DataFrame<T> = to<String>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [String],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toStr()
+ * df.convert { colsOf<Double>() }.toStr()
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [String].
+ */
 @Refine
 @Converter(String::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toStr(): DataFrame<T> = to<String?>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Double],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toDouble()
+ * df.convert { colsOf<Int>() }.toDouble()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Double].
+ */
 @JvmName("toDoubleTAny")
 @Refine
 @Converter(Double::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toDouble(): DataFrame<T> = to<Double>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Double],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toDouble()
+ * df.convert { colsOf<Number?>() }.toDouble()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Double].
+ */
 @Refine
 @Converter(Double::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toDouble(): DataFrame<T> = to<Double?>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Float],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toFloat()
+ * df.convert { colsOf<Double>() }.toFloat()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Float].
+ */
 @JvmName("toFloatTAny")
 @Refine
 @Converter(Float::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toFloat(): DataFrame<T> = to<Float>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Float],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toFloat()
+ * df.convert { colsOf<Double>() }.toFloat()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Float].
+ */
 @Refine
 @Converter(Float::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [BigDecimal],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toBigDecimal()
+ * df.convert { colsOf<Double>() }.toBigDecimal()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [BigDecimal].
+ */
 @JvmName("toBigDecimalTAny")
 @Refine
 @Converter(BigDecimal::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [BigDecimal],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toBigDecimal()
+ * df.convert { colsOf<Double>() }.toBigDecimal()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [BigDecimal].
+ */
 @Refine
 @Converter(BigDecimal::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [BigInteger],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toBigInteger()
+ * df.convert { colsOf<Double>() }.toBigInteger()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [BigInteger].
+ */
 @JvmName("toBigIntegerTAny")
 @Refine
 @Converter(BigInteger::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toBigInteger(): DataFrame<T> = to<BigInteger>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [BigInteger],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { age and year }.toBigInteger()
+ * df.convert { colsOf<Double?>() }.toBigInteger()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [BigInteger].
+ */
 @Refine
 @Converter(BigInteger::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toBigInteger(): DataFrame<T> = to<BigInteger?>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Boolean],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { isMarked and isFinished }.toBoolean()
+ * df.convert { colsOf<String> { it.name.startsWith("it") } }.toBoolean()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Boolean].
+ */
 @JvmName("toBooleanTAny")
 @Refine
 @Converter(Boolean::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any>.toBoolean(): DataFrame<T> = to<Boolean>()
 
+/**
+ * Converts values in the columns previously selected with [convert] to the [Boolean],
+ * preserving their original names and positions within the [DataFrame].
+ * Preserves null values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { isMarked and isFinished }.toBoolean()
+ * df.convert { colsOf<String?> { it.name.startsWith("it") } }.toBoolean()
+ * ```
+ *
+ *  @return A new [DataFrame] with the values converted to [Boolean].
+ */
 @Refine
 @Converter(Boolean::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, Any?>.toBoolean(): DataFrame<T> = to<Boolean?>()
 
+/**
+ * Converts a list of lists values in the columns previously selected with [convert] to the [DataFrame],
+ * preserving their original names and positions within the [DataFrame].
+ *
+ * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
+ * If [containsColumns] is `true`, interprets each inner list as a column,
+ * where the first element is used as the column name, and the remaining elements as values.
+ *
+ * For more information: [See `convert` on the documentation website.](https://kotlin.github.io/dataframe/convert.html)
+ *
+ * ### Examples:
+ * ```kotlin
+ * df.convert { userData }.toDataFrames()
+ * df.convert { colsOf<List<List<*>>>() }.toDataFrames(containsColumns = true)
+ * ```
+ *
+ * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
+ *                        Otherwise, the first list is treated as the header.
+ *                        Defaults to `false`.
+ *  @return A new [DataFrame] with the values converted to [DataFrame].
+ */
 public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
-    to { it.toDataFrames(containsColumns) }
+    asColumn { it.toDataFrames(containsColumns) }
 
+/**
+ * Converts a list of lists values in this [DataColumn] to the [DataFrame].
+ *
+ * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
+ * If [containsColumns] is `true`, interprets each inner list as a column,
+ * where the first element is used as the column name, and the remaining elements as values.
+ *
+ * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
+ *                        Otherwise, the first list is treated as the header.
+ *                        Defaults to `false`.
+ *  @return A new [DataColumn] with the values converted to [DataFrame].
+ */
 public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
     map { it.toDataFrame(containsColumns) }
