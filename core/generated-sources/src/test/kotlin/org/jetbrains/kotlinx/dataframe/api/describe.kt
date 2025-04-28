@@ -65,8 +65,8 @@ class DescribeTests {
             mean.shouldBeNaN()
             std.shouldBeNaN()
             min.isNaN shouldBe true
-            p25 shouldBe 1.75
-            median shouldBe 3.0
+            p25.isNaN shouldBe true
+            median.isNaN shouldBe true
             p75.isNaN shouldBe true
             max.isNaN shouldBe true
         }

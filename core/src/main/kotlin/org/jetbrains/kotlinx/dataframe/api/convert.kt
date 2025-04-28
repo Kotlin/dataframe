@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
@@ -22,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Converter
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -308,14 +308,10 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
  * See [Grammar][ConvertDocs.Grammar] for more details.
  */
 @HasSchema(schemaArg = 0)
-public class Convert<T, out C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>) {
-
-    /**
-     * Casts the type parameter of the columns previously selected with [convert][convert] to a new type [R],
-     * without performing any actual data transformation.
-     *
-     * This operation updates the static type of the selected columns for further type-safe conversions.
-     */
+public class Convert<T, out C>(
+    @PublishedApi internal val df: DataFrame<T>,
+    @PublishedApi internal val columns: ColumnsSelector<T, C>,
+) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
     /**
@@ -406,7 +402,7 @@ private interface SeeAlsoConvertTo
  *
  * A [row value expression][RowValueExpression] allows to provide a new value for every selected cell
  * given its row (as a receiver) and its previous value (as a lambda argument).
- * 
+ *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
  * ## Note
@@ -438,7 +434,7 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
 /**
  * Converts [column groups][ColumnGroup] previously selected with [convert]
  * as a [DataFrame] using a [dataframe expression][DataFrameExpression].
- * 
+ *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
  * ### Example:
@@ -453,6 +449,21 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
     expression: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
 ): DataFrame<T> = to { expression(this, it.asColumnGroup()).asColumnGroup(it.name()) }
 
+/**
+ * Compiler plugin-friendly variant of [ReplaceClause.with]
+ * [ReplaceClause.with] allows to change both column types and names.
+ * Tracking of column name changes in arbitrary lambda expression is unreliable and generally impossible
+ * to do statically.
+ * This function ensures that all column names remain as is and only their type changes to [R]
+ * Example:
+ * `df.convert { colsOf<String>() }.asColumn { it.asList().parallelStream().map { heavyIO(it) }.toList().toColumn() }`
+ */
+@Refine
+@Interpretable("ConvertAsColumn")
+public inline fun <T, C, R> Convert<T, C>.asColumn(
+    crossinline columnConverter: DataFrame<T>.(DataColumn<C>) -> BaseColumn<R>,
+): DataFrame<T> = df.replace(columns).with { columnConverter(df, it).rename(it.name()) }
+
 /** [Convert with][Convert.with] to provide a new value for every selected cell
  * giving its row and its previous value. */
 @ExcludeFromSources
@@ -464,7 +475,7 @@ private interface SeeAlsoConvertWith
  *
  * A [row column expression][RowColumnExpression] allows to provide a new value for every selected cell
  * given its row and column (as lambda arguments).
- * 
+ *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
  * ## See Also

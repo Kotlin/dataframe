@@ -24,6 +24,9 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.ignore
 import org.jetbrains.kotlinx.dataframe.plugin.impl.type
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
 
+/**
+ * NOTE: Serves both, select and distinct operations.
+ */
 internal class Select0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     val Arguments.columns: ColumnsResolver by arg()
@@ -690,12 +693,20 @@ internal class ValueCols2 : AbstractInterpreter<ColumnsResolver>() {
     }
 }
 
-
 internal class Named0 : AbstractInterpreter<ColumnsResolver>() {
     val Arguments.receiver: SingleColumnApproximation by arg()
     val Arguments.newName: String by arg()
 
     override fun Arguments.interpret(): ColumnsResolver {
         return columnsResolver { receiver named newName }
+    }
+}
+
+internal class NestedSelect : AbstractInterpreter<ColumnsResolver>() {
+    val Arguments.receiver: SingleColumnApproximation by arg()
+    val Arguments.selector: ColumnsResolver by arg()
+
+    override fun Arguments.interpret(): ColumnsResolver {
+        return columnsResolver { receiver.asColumnGroup().select { selector } }
     }
 }

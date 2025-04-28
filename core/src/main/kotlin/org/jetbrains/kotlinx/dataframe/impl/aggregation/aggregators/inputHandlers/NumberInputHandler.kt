@@ -105,7 +105,7 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
      *   If no valid unification can be found or the input is solely [Number]`(?)`, the type [Number]`(?)` is returned.
      */
     override fun calculateValueType(valueTypes: Set<KType>): ValueType {
-        val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.Companion.PRIMITIVES_ONLY)
+        val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
             ?: typeOf<Number>().withNullability(valueTypes.any { it.isMarkedNullable })
 
         if (unifiedType.isSubtypeOf(typeOf<Double?>()) &&

@@ -28,8 +28,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.AggregateDslInto
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByToDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert1
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert2
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Insert3
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Into
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Into0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Join0
@@ -44,8 +42,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Select0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.To0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under1
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under2
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under3
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Under4
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Ungroup0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.With0
@@ -100,11 +96,15 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsAtAnyDepth2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColsOf2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnOfPairs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ColumnRange
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConcatWithKeys
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ConvertAsColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameBuilderInvoke0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOf3
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameOfPairs
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameUnfold
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DataFrameXs
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Drop1
@@ -151,6 +151,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStdOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InsertAt
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeId
@@ -160,6 +161,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeInto0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Move0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveAfter0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveInto0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveTo
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToStart0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToStart1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveToEnd0
@@ -175,6 +177,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NameStartsWith2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Named0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NestedSelect
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairToConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PerRowCol
@@ -197,6 +200,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCols2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Take0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Take1
@@ -302,23 +307,23 @@ internal inline fun <reified T> String.load(): T {
         "ToSpecificTypeZone" -> ToSpecificTypeZone()
         "ToSpecificTypePattern" -> ToSpecificTypePattern()
         "With0" -> With0()
+        "ConvertAsColumn" -> ConvertAsColumn()
         "PerRowCol" -> PerRowCol()
         "Explode0" -> Explode0()
         "Insert0" -> Insert0()
         "Insert1" -> Insert1()
-        "Insert2" -> Insert2()
-        "Insert3" -> Insert3()
         "Under0" -> Under0()
         "Under1" -> Under1()
-        "Under2" -> Under2()
-        "Under3" -> Under3()
         "Under4" -> Under4()
         "InsertAfter0" -> InsertAfter0()
+        "InsertAt" -> InsertAt()
         "Join0" -> Join0()
         "Match0" -> Match0()
         "Rename" -> Rename()
         "RenameMapping" -> RenameMapping()
         "Select0" -> Select0()
+        "Distinct0" -> Select0()
+        "NestedSelect" -> NestedSelect()
         "Expr0" -> Expr0()
         "And0" -> And0()
         "Remove0" -> Remove0()
@@ -412,6 +417,8 @@ internal inline fun <reified T> String.load(): T {
         "toDataFrameDefault" -> ToDataFrameDefault()
         "ToDataFrameDslStringInvoke" -> ToDataFrameDslStringInvoke()
         "DataFrameOf0" -> DataFrameOf0()
+        "DataFrameOfPairs" -> DataFrameOfPairs()
+        "ColumnOfPairs" -> ColumnOfPairs()
         "DataFrameBuilderInvoke0" -> DataFrameBuilderInvoke0()
         "ToDataFrameColumn" -> ToDataFrameColumn()
         "FillNulls0" -> FillNulls0()
@@ -438,6 +445,7 @@ internal inline fun <reified T> String.load(): T {
         "MoveToStart1" -> MoveToStart1()
         "MoveToEnd0" -> MoveToEnd0()
         "MoveAfter0" -> MoveAfter0()
+        "MoveTo" -> MoveTo()
         "GroupByAdd" -> GroupByAdd()
         "Merge0" -> Merge0()
         "MergeInto0" -> MergeInto0()
@@ -447,6 +455,8 @@ internal inline fun <reified T> String.load(): T {
         "ReorderColumnsByName" -> ReorderColumnsByName()
         "Reorder" -> Reorder()
         "ByName" -> ByName()
+        "Sum0" -> Sum0()
+        "Sum1" -> Sum1()
         "GroupByCount0" -> GroupByCount0()
         "GroupByMean0" -> GroupByMean0()
         "GroupByMean1" -> GroupByMean1()
@@ -472,6 +482,7 @@ internal inline fun <reified T> String.load(): T {
         "DataFrameXs" -> DataFrameXs()
         "GroupByXs" -> GroupByXs()
         "ConcatWithKeys" -> ConcatWithKeys()
+        "DataFrameUnfold" -> DataFrameUnfold()
         else -> error("$this")
     } as T
 }

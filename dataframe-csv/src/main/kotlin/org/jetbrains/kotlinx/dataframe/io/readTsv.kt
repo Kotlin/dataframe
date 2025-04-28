@@ -50,7 +50,6 @@ public fun DataFrame.Companion.readTsv(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(path),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -62,6 +61,7 @@ public fun DataFrame.Companion.readTsv(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(path),
 ): DataFrame<*> =
     path.inputStream().use {
         readDelimImpl(
@@ -70,7 +70,6 @@ public fun DataFrame.Companion.readTsv(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -82,6 +81,7 @@ public fun DataFrame.Companion.readTsv(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
@@ -101,7 +101,6 @@ public fun DataFrame.Companion.readTsv(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(file),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -113,6 +112,7 @@ public fun DataFrame.Companion.readTsv(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(file),
 ): DataFrame<*> =
     FileInputStream(file).use {
         readDelimImpl(
@@ -121,7 +121,6 @@ public fun DataFrame.Companion.readTsv(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -133,6 +132,7 @@ public fun DataFrame.Companion.readTsv(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
@@ -152,7 +152,6 @@ public fun DataFrame.Companion.readTsv(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(url),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -164,6 +163,7 @@ public fun DataFrame.Companion.readTsv(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(url),
 ): DataFrame<*> =
     catchHttpResponse(url) {
         readDelimImpl(
@@ -172,7 +172,6 @@ public fun DataFrame.Companion.readTsv(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -184,6 +183,7 @@ public fun DataFrame.Companion.readTsv(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
@@ -203,7 +203,6 @@ public fun DataFrame.Companion.readTsv(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(fileOrUrl),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -215,6 +214,7 @@ public fun DataFrame.Companion.readTsv(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(fileOrUrl),
 ): DataFrame<*> =
     catchHttpResponse(asUrl(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
@@ -223,7 +223,6 @@ public fun DataFrame.Companion.readTsv(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -235,6 +234,7 @@ public fun DataFrame.Companion.readTsv(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
@@ -256,7 +256,6 @@ public fun DataFrame.Companion.readTsv(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = COMPRESSION,
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -268,6 +267,7 @@ public fun DataFrame.Companion.readTsv(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = COMPRESSION,
     adjustCsvSpecs: AdjustCsvSpecs = ADJUST_CSV_SPECS,
 ): DataFrame<*> =
     readDelimImpl(
@@ -276,7 +276,6 @@ public fun DataFrame.Companion.readTsv(
         header = header,
         hasFixedWidthColumns = hasFixedWidthColumns,
         fixedColumnWidths = fixedColumnWidths,
-        compression = compression,
         colTypes = colTypes,
         skipLines = skipLines,
         readLines = readLines,
@@ -288,5 +287,6 @@ public fun DataFrame.Companion.readTsv(
         ignoreSurroundingSpaces = ignoreSurroundingSpaces,
         trimInsideQuoted = trimInsideQuoted,
         parseParallel = parseParallel,
+        compression = compression,
         adjustCsvSpecs = adjustCsvSpecs,
     )

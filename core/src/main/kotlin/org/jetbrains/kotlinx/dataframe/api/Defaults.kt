@@ -16,3 +16,9 @@ internal val skipNaNDefault: Boolean = false
  */
 @PublishedApi
 internal val ddofDefault: Int = 1
+
+/**
+ * whether to skip nulls and NaNs in the cumSum operation.
+ */
+@PublishedApi
+internal val defaultCumSumSkipNA: Boolean = true

@@ -9,7 +9,10 @@ import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.typeContext
 import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.toPath
+import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.wrap
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Absent
@@ -23,10 +26,12 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
+import org.jetbrains.kotlinx.dataframe.plugin.impl.asDataColumn
+import org.jetbrains.kotlinx.dataframe.plugin.impl.asDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.dataFrame
-import org.jetbrains.kotlinx.dataframe.plugin.impl.enum
 import org.jetbrains.kotlinx.dataframe.plugin.impl.ignore
 import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.toPluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.impl.type
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
 
@@ -54,7 +59,7 @@ class ConvertApproximation(val schema: PluginDataFrameSchema, val columns: List<
 internal class Convert6 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.firstCol: String by arg()
     val Arguments.cols: List<String> by arg(defaultValue = Present(emptyList()))
-    val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
+    val Arguments.infer by ignore()
     val Arguments.expression: TypeApproximation by type()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     override val Arguments.startingSchema get() = receiver
@@ -150,6 +155,19 @@ internal class To0 : AbstractInterpreter<PluginDataFrameSchema>() {
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return convertImpl(receiver.schema, receiver.columns, typeArg0)
+    }
+}
+
+internal class ConvertAsColumn : AbstractSchemaModificationInterpreter() {
+    val Arguments.receiver: ConvertApproximation by arg()
+    val Arguments.typeArg2: TypeApproximation by arg()
+    val Arguments.type: TypeApproximation by type(name("columnConverter"))
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        return receiver.schema.asDataFrame()
+            .convert { receiver.columns.map { it.toPath() }.toColumnSet() }
+            .asColumn { simpleColumnOf("", typeArg2.type).asDataColumn() }
+            .toPluginDataFrameSchema()
     }
 }
 

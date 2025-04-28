@@ -5,6 +5,9 @@
 Returns [`DataFrame`](DataFrame.md) which contains all columns from original [`DataFrame`](DataFrame.md) followed by newly added columns. 
 Original [`DataFrame`](DataFrame.md) is not modified.
 
+`add` appends columns to the end of the dataframe by default.
+If you want to add a single column to a specific position in the dataframe, use [insert](insert.md).
+
 ## Create a new column and add it to [`DataFrame`](DataFrame.md)
 
 ```text

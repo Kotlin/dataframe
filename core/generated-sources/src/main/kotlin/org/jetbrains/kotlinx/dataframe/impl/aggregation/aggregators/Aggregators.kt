@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
+import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.HybridAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.ReducingAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.aggregationHandlers.SelectingAggregationHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers.AnyInputHandler
@@ -7,33 +9,46 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.FlatteningMultipleColumnsHandler
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.multipleColumnsHandlers.TwoStepMultipleColumnsHandler
 import org.jetbrains.kotlinx.dataframe.math.indexOfMax
+import org.jetbrains.kotlinx.dataframe.math.indexOfMedian
 import org.jetbrains.kotlinx.dataframe.math.indexOfMin
+import org.jetbrains.kotlinx.dataframe.math.indexOfPercentile
 import org.jetbrains.kotlinx.dataframe.math.maxOrNull
 import org.jetbrains.kotlinx.dataframe.math.maxTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.math.meanTypeConversion
-import org.jetbrains.kotlinx.dataframe.math.median
+import org.jetbrains.kotlinx.dataframe.math.medianConversion
+import org.jetbrains.kotlinx.dataframe.math.medianOrNull
 import org.jetbrains.kotlinx.dataframe.math.minOrNull
 import org.jetbrains.kotlinx.dataframe.math.minTypeConversion
-import org.jetbrains.kotlinx.dataframe.math.percentile
+import org.jetbrains.kotlinx.dataframe.math.percentileConversion
+import org.jetbrains.kotlinx.dataframe.math.percentileOrNull
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.stdTypeConversion
 import org.jetbrains.kotlinx.dataframe.math.sum
 import org.jetbrains.kotlinx.dataframe.math.sumTypeConversion
 
-@PublishedApi
-internal object Aggregators {
+public object Aggregators {
 
     // TODO these might need some small refactoring
 
     private fun <Value : Return & Any, Return : Any?> twoStepSelectingForAny(
         getReturnType: CalculateReturnType,
         indexOfResult: IndexOfResult<Value>,
-        stepOneReducer: Reducer<Value, Return>,
+        stepOneSelector: Selector<Value, Return>,
     ) = Aggregator(
-        aggregationHandler = SelectingAggregationHandler(stepOneReducer, indexOfResult, getReturnType),
+        aggregationHandler = SelectingAggregationHandler(stepOneSelector, indexOfResult, getReturnType),
         inputHandler = AnyInputHandler(),
         multipleColumnsHandler = TwoStepMultipleColumnsHandler(),
+    )
+
+    private fun <Value : Any, Return : Any?> flattenHybridForAny(
+        getReturnType: CalculateReturnType,
+        indexOfResult: IndexOfResult<Value>,
+        reducer: Reducer<Value, Return>,
+    ) = Aggregator(
+        aggregationHandler = HybridAggregationHandler(reducer, indexOfResult, getReturnType),
+        inputHandler = AnyInputHandler(),
+        multipleColumnsHandler = FlatteningMultipleColumnsHandler(),
     )
 
     private fun <Value : Any, Return : Any?> twoStepReducingForAny(
@@ -102,57 +117,111 @@ internal object Aggregators {
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
 
     private val min by withOneOption { skipNaN: Boolean ->
         twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
             getReturnType = minTypeConversion,
-            stepOneReducer = { type -> minOrNull(type, skipNaN) },
+            stepOneSelector = { type -> minOrNull(type, skipNaN) },
             indexOfResult = { type -> indexOfMin(type, skipNaN) },
         )
     }
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
-    fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
+    public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
     private val max by withOneOption { skipNaN: Boolean ->
         twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
             getReturnType = maxTypeConversion,
-            stepOneReducer = { type -> maxOrNull(type, skipNaN) },
+            stepOneSelector = { type -> maxOrNull(type, skipNaN) },
             indexOfResult = { type -> indexOfMax(type, skipNaN) },
         )
     }
 
     // T: Number? -> Double
-    val std by withTwoOptions { skipNA: Boolean, ddof: Int ->
+    public val std: AggregatorOptionSwitch2<Boolean, Int, Number, Double> by withTwoOptions {
+        skipNaN: Boolean,
+        ddof: Int,
+        ->
         flattenReducingForNumbers(stdTypeConversion) { type ->
-            std(type, skipNA, ddof)
+            std(type, skipNaN, ddof)
         }
     }
 
     // step one: T: Number? -> Double
     // step two: Double -> Double
-    val mean by withOneOption { skipNaN: Boolean ->
+    public val mean: AggregatorOptionSwitch1<Boolean, Number, Double> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(meanTypeConversion) { type ->
             mean(type, skipNaN)
         }
     }
 
-    // T: Comparable<T>? -> T
-    val percentile by withOneOption { percentile: Double ->
-        flattenReducingForAny<Comparable<Any?>> { type ->
-            asIterable().percentile(percentile, type)
-        }
+    // T : primitive Number? -> Double?
+    // T : Comparable<T & Any>? -> T?
+    public fun <T> percentileCommon(
+        percentile: Double,
+        skipNaN: Boolean,
+    ): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        this.percentile.invoke(percentile, skipNaN).cast2()
+
+    // T : Comparable<T & Any>? -> T?
+    public fun <T> percentileComparables(
+        percentile: Double,
+    ): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        percentileCommon<T>(percentile, skipNaNDefault).cast2()
+
+    // T : primitive Number? -> Double?
+    public fun <T> percentileNumbers(
+        percentile: Double,
+        skipNaN: Boolean,
+    ): Aggregator<T & Any, Double?>
+        where T : Comparable<T & Any>?, T : Number? =
+        percentileCommon<T>(percentile, skipNaN).cast2()
+
+    @Suppress("UNCHECKED_CAST")
+    private val percentile by withTwoOptions { percentile: Double, skipNaN: Boolean ->
+        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = percentileConversion,
+            reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
+            indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
+        )
     }
 
-    // T: Comparable<T>? -> T
-    val median by flattenReducingForAny<Comparable<Any?>> { type ->
-        asIterable().median(type)
+    // T : primitive Number? -> Double?
+    // T : Comparable<T & Any>? -> T?
+    public fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        median.invoke(skipNaN).cast2()
+
+    // T : Comparable<T & Any>? -> T?
+    public fun <T> medianComparables(): Aggregator<T & Any, T?>
+        where T : Comparable<T & Any>? =
+        medianCommon<T>(skipNaNDefault).cast2()
+
+    // T : primitive Number? -> Double?
+    public fun <T> medianNumbers(
+        skipNaN: Boolean,
+    ): Aggregator<T & Any, Double?>
+        where T : Comparable<T & Any>?, T : Number? =
+        medianCommon<T>(skipNaN).cast2()
+
+    @Suppress("UNCHECKED_CAST")
+    private val median by withOneOption { skipNaN: Boolean ->
+        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+            getReturnType = medianConversion,
+            reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
+            indexOfResult = { type -> indexOfMedian(type, skipNaN) },
+        )
     }
 
     // T: Number -> T
-    val sum by withOneOption { skipNaN: Boolean ->
+    // Byte -> Int
+    // Short -> Int
+    // Nothing -> Double
+    public val sum: AggregatorOptionSwitch1<Boolean, Number, Number> by withOneOption { skipNaN: Boolean ->
         twoStepReducingForNumbers(sumTypeConversion) { type ->
             sum(type, skipNaN)
         }
