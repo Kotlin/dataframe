@@ -1,25 +1,23 @@
 package org.jetbrains.kotlinx.dataframe.plugin.impl.api
 
-import org.jetbrains.kotlin.fir.types.ConeClassLikeErrorLookupTag
+import org.jetbrains.kotlin.fir.types.ConeClassLikeType
+import org.jetbrains.kotlin.fir.types.ConeKotlinType
+import org.jetbrains.kotlin.fir.types.ConeNullability
+import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.isSubtypeOf
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractSchemaModificationInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Arguments
 import org.jetbrains.kotlinx.dataframe.plugin.impl.PluginDataFrameSchema
+import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.dataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import org.jetbrains.kotlin.fir.types.ConeKotlinType
-import org.jetbrains.kotlin.fir.types.ConeClassLikeType
-import org.jetbrains.kotlin.fir.types.ConeNullability
-import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
-import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
-import kotlin.reflect.KClass
 
 private object PrimitiveClassIds {
     const val INT = "kotlin/Int"
@@ -86,10 +84,19 @@ private fun Arguments.createUpdatedColumn(
 }
 
 val skipNaN = true
+val ddofDefault: Int = 1
+val percentile: Double = 30.0
 val sum = Aggregators.sum(skipNaN)
+val mean = Aggregators.mean(skipNaN)
+val std = Aggregators.std(skipNaN, ddofDefault)
+val median = Aggregators.median(skipNaN)
+val min = Aggregators.min(skipNaN)
+val max = Aggregators.max(skipNaN)
+val percentile = Aggregators.percentile(percentile)
+
 
 /** Adds to the schema only numerical columns. */
-abstract class Aggregator0 : AbstractSchemaModificationInterpreter() {
+abstract class Aggregator0(val aggregator: Aggregator<Number, Number>) : AbstractSchemaModificationInterpreter() {
     private val Arguments.receiver: PluginDataFrameSchema by dataFrame()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
@@ -97,28 +104,36 @@ abstract class Aggregator0 : AbstractSchemaModificationInterpreter() {
             .filterIsInstance<SimpleDataColumn>()
             .filter { it.type.type.isSubtypeOf(session.builtinTypes.numberType.type, session) }
 
-        val newColumns = generateStatisticResultColumns(sum, resolvedColumns)
+        val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
 
         return PluginDataFrameSchema(receiver.columns() + newColumns)
     }
 }
 
-/** Implementation for `sum`. */
-class Sum0 : Aggregator0()
+class Sum0 : Aggregator0(sum)
 
-/** Adds to the schema only numerical columns. */
-abstract class Aggregator1 : AbstractSchemaModificationInterpreter() {
+class Mean0 : Aggregator0(mean)
+
+class Std0 : Aggregator0(std)
+
+/** Adds to the schema all resolved columns. */
+abstract class Aggregator1 (val aggregator: Aggregator<Number, Number>) : AbstractSchemaModificationInterpreter() {
     private val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     private val Arguments.columns: ColumnsResolver by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val resolvedColumns = columns.resolve(receiver).map { it.column }.filterIsInstance<SimpleDataColumn>().toList()
 
-        val newColumns = generateStatisticResultColumns(sum, resolvedColumns)
+        val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
 
         return PluginDataFrameSchema(receiver.columns() + newColumns)
     }
 }
 
-/** Implementation for `sum`. */
-class Sum1 : Aggregator1()
+class Sum1 : Aggregator1(sum)
+
+class Mean1 : Aggregator1(mean)
+
+class Std1 : Aggregator1(std)
+
+
