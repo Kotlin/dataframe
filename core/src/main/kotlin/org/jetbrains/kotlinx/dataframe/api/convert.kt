@@ -456,8 +456,6 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  *
  * ### Examples:
  * ```kotlin
- * // Select `Int` columns ("valueA", "valueB") and multiply them with `Double` column ("coeff").
- * df.convert { valueA and valueB }.asColumn { it * coeff }
  * // Convert all columns into column groups, each containing the original column
  * df.convert { all() }.asColumn { listOf(it).toColumnGroup(it.name) }
  * // Converts all `String` columns by applying heavyIO to each element in parallel and assembling results back into columns.
