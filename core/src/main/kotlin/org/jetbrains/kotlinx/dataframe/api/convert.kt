@@ -376,7 +376,7 @@ public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = asColumn { it.conve
 @ExcludeFromSources
 private interface SeeAlsoConvertPerRowCol
 
-/** [Convert with][Convert.asColumn] to convert using a column converter */
+/** [Convert as column][Convert.asColumn] to convert using a column converter */
 @ExcludeFromSources
 private interface SeeAlsoConvertAsColumn
 
@@ -439,7 +439,7 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  *
  * The [columnConverter] is a lambda with the current [DataFrame] as receiver and the selected column as argument.
  * It returns a new column that will replace the original column.
- * Preserves original column name for each column (even it was explicitly changed in [columnConverter] expression).
+ * **Preserves original column name for each column (even it was explicitly changed in [columnConverter] expression).**
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -451,7 +451,8 @@ public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
  *
  * ## See Also
  *  - {@include [SeeAlsoConvertWith]}
- *  - [Replace with][ReplaceClause.with] to replace columns
+ *  - [Replace with][ReplaceClause.with] to replace columns using a column converter,
+ * allowing both column names and types to be changed.
  *
  * ### Examples:
  * ```kotlin
