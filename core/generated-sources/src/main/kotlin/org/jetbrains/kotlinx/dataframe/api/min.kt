@@ -73,10 +73,13 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMinOf(skipNaN: Boolean =
 // endregion
 
 // region DataFrame
-
+@Refine
+@Interpretable("Min0")
 public fun <T> DataFrame<T>.min(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     minFor(skipNaN, intraComparableColumns())
 
+@Refine
+@Interpretable("Min1")
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.minFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,

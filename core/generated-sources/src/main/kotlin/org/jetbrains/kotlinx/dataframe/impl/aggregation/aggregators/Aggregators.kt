@@ -119,7 +119,9 @@ public object Aggregators {
     // T : Comparable<T & Any>? -> T?
     public fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
 
-    private val min by withOneOption { skipNaN: Boolean ->
+    public val min: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption {
+        skipNaN: Boolean,
+        ->
         twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
             getReturnType = minTypeConversion,
             stepOneSelector = { type -> minOrNull(type, skipNaN) },
@@ -131,7 +133,9 @@ public object Aggregators {
     // T : Comparable<T & Any>? -> T?
     public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
-    private val max by withOneOption { skipNaN: Boolean ->
+    public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption {
+        skipNaN: Boolean,
+        ->
         twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
             getReturnType = maxTypeConversion,
             stepOneSelector = { type -> maxOrNull(type, skipNaN) },
@@ -157,8 +161,8 @@ public object Aggregators {
         }
     }
 
-    // T : primitive Number? -> Double?
-    // T : Comparable<T & Any>? -> T?
+    // T: primitive Number? -> Double?
+    // T: Comparable<T & Any>? -> T?
     public fun <T> percentileCommon(
         percentile: Double,
         skipNaN: Boolean,
@@ -166,14 +170,14 @@ public object Aggregators {
         where T : Comparable<T & Any>? =
         this.percentile.invoke(percentile, skipNaN).cast2()
 
-    // T : Comparable<T & Any>? -> T?
+    // T: Comparable<T & Any>? -> T?
     public fun <T> percentileComparables(
         percentile: Double,
     ): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         percentileCommon<T>(percentile, skipNaNDefault).cast2()
 
-    // T : primitive Number? -> Double?
+    // T: primitive Number? -> Double?
     public fun <T> percentileNumbers(
         percentile: Double,
         skipNaN: Boolean,
@@ -182,7 +186,10 @@ public object Aggregators {
         percentileCommon<T>(percentile, skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")
-    private val percentile by withTwoOptions { percentile: Double, skipNaN: Boolean ->
+    public val percentile: AggregatorOptionSwitch2<Double, Boolean, Comparable<Any>, Comparable<Any>?> by withTwoOptions {
+        percentile: Double,
+        skipNaN: Boolean,
+        ->
         flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
             getReturnType = percentileConversion,
             reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
@@ -190,18 +197,18 @@ public object Aggregators {
         )
     }
 
-    // T : primitive Number? -> Double?
-    // T : Comparable<T & Any>? -> T?
+    // T: primitive Number? -> Double?
+    // T: Comparable<T & Any>? -> T?
     public fun <T> medianCommon(skipNaN: Boolean): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         median.invoke(skipNaN).cast2()
 
-    // T : Comparable<T & Any>? -> T?
+    // T: Comparable<T & Any>? -> T?
     public fun <T> medianComparables(): Aggregator<T & Any, T?>
         where T : Comparable<T & Any>? =
         medianCommon<T>(skipNaNDefault).cast2()
 
-    // T : primitive Number? -> Double?
+    // T: primitive Number? -> Double?
     public fun <T> medianNumbers(
         skipNaN: Boolean,
     ): Aggregator<T & Any, Double?>
@@ -209,7 +216,7 @@ public object Aggregators {
         medianCommon<T>(skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")
-    private val median by withOneOption { skipNaN: Boolean ->
+    public val median: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption { skipNaN: Boolean ->
         flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
             getReturnType = medianConversion,
             reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
