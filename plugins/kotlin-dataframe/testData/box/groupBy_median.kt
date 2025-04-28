@@ -41,7 +41,7 @@ fun box(): String {
 
     // scenario #2.1: particular column with new name - schema changes but via columnSelector
     val res21 = personsDf.groupBy { city }.median("newAge") { age }
-    val median211: Int?= res21.newAge[0]
+    val median211: Int? = res21.newAge[0]
     res21.compareSchemas()
 
     // scenario #2.2: two columns with new name - schema changes but via columnSelector

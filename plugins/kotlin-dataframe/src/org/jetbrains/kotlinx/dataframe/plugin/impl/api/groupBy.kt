@@ -443,7 +443,7 @@ class GroupByMin1 : GroupByAggregatorComparable()
 /** Implementation for `median`. */
 class GroupByMedian1 : GroupByAggregatorComparable()
 
-private fun isIntraComparable(col: SimpleDataColumn, session: FirSession): Boolean {
+internal fun isIntraComparable(col: SimpleDataColumn, session: FirSession): Boolean {
     val comparable = StandardClassIds.Comparable.constructClassLikeType(
         typeArguments = arrayOf(col.type.type.withNullability(ConeNullability.NOT_NULL, session.typeContext)),
         isNullable = col.type.type.isNullable,

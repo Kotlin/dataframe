@@ -153,11 +153,19 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InsertAt
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Max0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Max1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Mean0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Mean1
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Median0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Median1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeId
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeBy0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeBy1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeInto0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Min0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Min1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Move0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveAfter0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MoveInto0
@@ -181,6 +189,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.NestedSelect
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PairToConstructor
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.PerRowCol
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Percentile0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Percentile1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameMapping
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ToDataFrameColumn
@@ -200,6 +210,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Std0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Std1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCols2
@@ -457,6 +469,18 @@ internal inline fun <reified T> String.load(): T {
         "ByName" -> ByName()
         "Sum0" -> Sum0()
         "Sum1" -> Sum1()
+        "Mean0" -> Mean0()
+        "Mean1" -> Mean1()
+        "Std0" -> Std0()
+        "Std1" -> Std1()
+        "Median0" -> Median0()
+        "Median1" -> Median1()
+        "Min0" -> Min0()
+        "Min1" -> Min1()
+        "Max0" -> Max0()
+        "Max1" -> Max1()
+        "Percentile0" -> Percentile0()
+        "Percentile1" -> Percentile1()
         "GroupByCount0" -> GroupByCount0()
         "GroupByMean0" -> GroupByMean0()
         "GroupByMean1" -> GroupByMean1()
