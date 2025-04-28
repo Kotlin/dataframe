@@ -65,10 +65,13 @@ public inline fun <reified T : Number?> AnyRow.rowStdOf(
 // endregion
 
 // region DataFrame
-
+@Refine
+@Interpretable("Std0")
 public fun <T> DataFrame<T>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): DataRow<T> =
     stdFor(skipNaN, ddof, primitiveOrMixedNumberColumns())
 
+@Refine
+@Interpretable("Std1")
 public fun <T, C : Number?> DataFrame<T>.stdFor(
     skipNaN: Boolean = skipNaNDefault,
     ddof: Int = ddofDefault,

@@ -73,10 +73,13 @@ public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(skipNaN: Boolean =
 // endregion
 
 // region DataFrame
-
+@Refine
+@Interpretable("Max0")
 public fun <T> DataFrame<T>.max(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     maxFor(skipNaN, intraComparableColumns())
 
+@Refine
+@Interpretable("Max1")
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.maxFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
