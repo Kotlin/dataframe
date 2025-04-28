@@ -130,10 +130,13 @@ public inline fun <reified T> AnyRow.rowMedianOf(
 // endregion
 
 // region DataFrame
-
+@Refine
+@Interpretable("Median0")
 public fun <T> DataFrame<T>.median(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(skipNaN, intraComparableColumns())
 
+@Refine
+@Interpretable("Median1")
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
