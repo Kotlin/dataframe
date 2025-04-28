@@ -6,7 +6,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -57,35 +56,33 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 /**
- * Converts the values in the specified [columns\] to a target type
+ * See also [parse] — a specialized form of the [convert] operation that parses [String] columns
+ * into other types without requiring explicit type specification.
+ */
+internal interface SeeAlsoParse
+
+/**
+ * Converts the values in the specified [columns\] either to a supported target type
  * or using a custom converter, keeping their original names and positions within the [DataFrame].
  *
  * This function does not immediately convert the columns but instead selects columns to convert and
  * returns a [Convert],
  * which serves as an intermediate step.
- * The [Convert] object allows you to specify how the selected
- * columns will be converted using following methods:
- * [to][Convert.to],
- * [with][Convert.with],
- * [asFrame][Convert.asFrame],
- * [perRowCol][Convert.perRowCol],
- * [notNull][Convert.notNull],
- * [toStr][Convert.toStr],
- * [toInt][Convert.toInt],
- * [toLong][Convert.toLong],
- * [toDouble][Convert.toDouble],
- * [toFloat][Convert.toFloat],
- * [toBigDecimal][Convert.toBigDecimal],
- * [toBigInteger][Convert.toBigInteger],
- * [toBoolean][Convert.toBoolean],
- * [toLocalDateTime][Convert.toLocalDateTime],
- * [toLocalDate][Convert.toLocalDate],
- * [toLocalTime][Convert.toLocalTime],
- * [toInstant][Convert.toInstant],
- * [toURL][Convert.toURL],
- * [toIFrame][Convert.toIFrame],
- * [toImg][Convert.toImg], and [toDataFrames][Convert.toDataFrames]
- * that return a new [DataFrame] with updated columns.
+ * The [Convert] object provides methods to transform selected columns using:
+ * - [to][Convert.to]
+ * - [with][Convert.with]
+ * - [asFrame][Convert.asFrame]
+ * - [perRowCol][Convert.perRowCol]
+ * - [notNull][Convert.notNull]
+ * - [toDataFrames][Convert.toDataFrames]
+ *
+ * Additionally, it offers a wide range of methods for converting to specific types,
+ * such as [toStr][Convert.toStr], [toDouble][Convert.toDouble], and many others.
+ *
+ * For the full list of supported types,
+ * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
+ *
+ * Each method returns a new [DataFrame] with the updated columns.
  *
  * Check out [Grammar].
  *
@@ -94,6 +91,8 @@ import kotlin.reflect.typeOf
  * See [Selecting Columns][ConvertSelectingOptions].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
+ *
+ * @include [SeeAlsoParse]
  */
 internal interface ConvertDocs {
 
@@ -109,13 +108,13 @@ internal interface ConvertDocs {
      * {@include [DslGrammarLink]}
      * {@include [LineBreak]}
      *
-     * **[`convert`][convert]**` { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]` }`
+     * **[`convert`][convert]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
      *
      * {@include [Indent]}
      * __`.`__[**`with`**][Convert.with]`(infer: `[`Infer`][Infer]`, rowExpression: `[`RowValueExpression`][RowValueExpression]`)`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`notNull`**][Convert.notNull]` { rowExpression: `[`RowValueExpression`][RowValueExpression]` }`
+     * `| `__`.`__[**`notNull`**][Convert.notNull]`  { rowExpression: `[`RowValueExpression`][RowValueExpression]`  }`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`to`**][Convert.to]`<T>()`
@@ -124,13 +123,13 @@ internal interface ConvertDocs {
      * `| `__`.`__[**`to`**][Convert.to]`(type: `[`KType`][KType]`)`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`to`**][Convert.to]` { columnConverter: `[`DataFrame`](DataFrame)`.(`[`DataColumn`](DataColumn)`) -> `[`AnyBaseColumn`](AnyBaseColumn)` }`
+     * `| `__`.`__[**`to`**][Convert.to]`  { columnConverter: `[`DataFrame`](DataFrame)`.(`[`DataColumn`](DataColumn)`) -> `[`AnyBaseColumn`](AnyBaseColumn)`  }`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`perRowCol`**][Convert.perRowCol]` { expression: `[`RowColumnExpression`][RowColumnExpression]` }`
+     * `| `__`.`__[**`perRowCol`**][Convert.perRowCol]`  { expression: `[`RowColumnExpression`][RowColumnExpression]`  }`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`asFrame`**][Convert.asFrame]` { builder: `[`ColumnsContainer`](ColumnsContainer)`.(`[`ColumnConvert`](ColumnConvert)`) -> `[`DataFrame`](DataFrame)` }`
+     * `| `__`.`__[**`asFrame`**][Convert.asFrame]`  { builder: `[`ColumnsContainer`](ColumnsContainer)`.(`[`ColumnConvert`](ColumnConvert)`) -> `[`DataFrame`](DataFrame)`  }`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`toStr`**][Convert.toStr]`()`
@@ -293,7 +292,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
  * in the [DataFrame], but their values will be transformed.
  *
  * Use the following methods to perform the conversion:
- * - [to(type)][to]/[to`<Type`>()][to] – converts columns to a specific type.
+ * - [to(kType)][to]/[to`<Type`>()][to] – converts columns to a specific type.
  * - [to { columnConverter }][to] - converts columns using column converter expression.
  * - [with][Convert.with] – applies a custom row-wise conversion expression.
  * - [notNull][Convert.notNull] – like [with], but only for non-null values.
@@ -312,6 +311,12 @@ public class Convert<T, out C>(
     @PublishedApi internal val df: DataFrame<T>,
     @PublishedApi internal val columns: ColumnsSelector<T, C>,
 ) {
+    /**
+     * Casts the type parameter of the columns previously selected with [convert][convert] to a new type [R],
+     * without performing any actual data transformation.
+     *
+     * This operation updates the static type of the selected columns for further type-safe conversions.
+     */
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
     /**
@@ -319,6 +324,8 @@ public class Convert<T, out C>(
      * preserving their original names and positions within the [DataFrame].
      *
      * The target type is provided as a reified type argument.
+     * For the full list of supported types,
+     * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
      *
      * For more information: {@include [DocumentationUrls.Convert]}
      *
@@ -346,6 +353,8 @@ public class Convert<T, out C>(
  * preserving their original names and positions within the [DataFrame].
  *
  * The target type is provided as a [KType].
+ * For the full list of supported types,
+ * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -361,40 +370,15 @@ public class Convert<T, out C>(
  * @param type The target type, provided as a [KType], to convert values to.
  * @return A new [DataFrame] with the values converted to [type].
  */
-public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
-
-/**
- * Converts values in the columns previously selected with [convert]
- * using [columnConverter] expression within the [DataFrame].
- *
- * The [columnConverter] is a lambda with the current [DataFrame] as receiver and the selected column as argument.
- * It returns a new [DataColumn] (or [ColumnGroup]) that will replace the original column.
- *
- * For more information: {@include [DocumentationUrls.Convert]}
- *
- * ## See Also
- *  - {@include [SeeAlsoConvertWith]}
- *
- * ### Examples:
- * ```kotlin
- * // Select `Int` columns ("valueA", "valueB") and multiply them with `Double` column ("coeff").
- * df.convert { valueA and valueB }.to { it * coeff }
- * // Convert all columns into column groups, each containing the original column
- * df.convert { all() }.to { listOf(it).toColumnGroup(it.name + "Group") }
- * ```
- *
- * @return A new [DataFrame] with the values converted to [type].
- */
-public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
-    df.replace(columns).with { columnConverter(df, it) }
+public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = asColumn { it.convertTo(type) }
 
 /** [Convert per row col][Convert.perRowCol] to provide a new value for every selected cell giving its column. */
 @ExcludeFromSources
 private interface SeeAlsoConvertPerRowCol
 
-/** [Convert with][Convert.to] to convert using a column converter */
+/** [Convert with][Convert.asColumn] to convert using a column converter */
 @ExcludeFromSources
-private interface SeeAlsoConvertTo
+private interface SeeAlsoConvertAsColumn
 
 /**
  * Converts values in the columns previously selected with [convert]
@@ -409,7 +393,7 @@ private interface SeeAlsoConvertTo
  * @include [ExpressionsGivenRow.AddDataRowNote]
  * ## See Also
  * - {@include [SeeAlsoConvertPerRowCol]}
- * - {@include [SeeAlsoConvertTo]}
+ * - {@include [SeeAlsoConvertAsColumn]}
  *
  * ### Examples:
  * ```kotlin
@@ -447,16 +431,39 @@ public inline fun <T, C, reified R> Convert<T, C>.with(
  */
 public fun <T, C, R> Convert<T, DataRow<C>>.asFrame(
     expression: ColumnsContainer<T>.(ColumnGroup<C>) -> DataFrame<R>,
-): DataFrame<T> = to { expression(this, it.asColumnGroup()).asColumnGroup(it.name()) }
+): DataFrame<T> = asColumn { expression(this, it.asColumnGroup()).asColumnGroup(it.name()) }
 
 /**
- * Compiler plugin-friendly variant of [ReplaceClause.with]
+ * Converts values in the columns previously selected with [convert]
+ * using [columnConverter] expression within the [DataFrame].
+ *
+ * The [columnConverter] is a lambda with the current [DataFrame] as receiver and the selected column as argument.
+ * It returns a new column that will replace the original column.
+ * Preserves original column name (even it was explicitly changed in [columnConverter] expression).
+ *
+ * For more information: {@include [DocumentationUrls.Convert]}
+ *
+ * It's a compiler plugin-friendly variant of [ReplaceClause.with].
  * [ReplaceClause.with] allows to change both column types and names.
  * Tracking of column name changes in arbitrary lambda expression is unreliable and generally impossible
  * to do statically.
  * This function ensures that all column names remain as is and only their type changes to [R]
- * Example:
- * `df.convert { colsOf<String>() }.asColumn { it.asList().parallelStream().map { heavyIO(it) }.toList().toColumn() }`
+ *
+ * ## See Also
+ *  - {@include [SeeAlsoConvertWith]}
+ *  - [Replace with][ReplaceClause.with] to replace columns
+ *
+ * ### Examples:
+ * ```kotlin
+ * // Select `Int` columns ("valueA", "valueB") and multiply them with `Double` column ("coeff").
+ * df.convert { valueA and valueB }.asColumn { it * coeff }
+ * // Convert all columns into column groups, each containing the original column
+ * df.convert { all() }.asColumn { listOf(it).toColumnGroup(it.name) }
+ * // Converts all `String` columns by applying heavyIO to each element in parallel and assembling results back into columns.
+ * df.convert { colsOf<String>() }.asColumn { it.asList().parallelStream().map { heavyIO(it) }.toList().toColumn() }`
+ * ```
+ *
+ * @return A new [DataFrame] with the values converted to [type].
  */
 @Refine
 @Interpretable("ConvertAsColumn")
@@ -480,7 +487,7 @@ private interface SeeAlsoConvertWith
  *
  * ## See Also
  *  - {@include [SeeAlsoConvertWith]}
- *  - {@include [SeeAlsoConvertTo]}
+ *  - {@include [SeeAlsoConvertAsColumn]}
  *
  * ### Example:
  * ```kotlin
@@ -506,6 +513,9 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
  *
  * The target type is provided as a reified type argument.
  *
+ * For the full list of supported types,
+ * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
+ *
  * @param [C] The target type to convert values to.
  * @return A new [DataColumn] with the values converted to type [C].
  */
@@ -513,6 +523,9 @@ public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(type
 
 /**
  * Converts values in this column to the specified [type].
+ *
+ * For the full list of supported types,
+ * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
  *
  * @param type The target type, provided as a [KType], to convert values to.
  * @return A new [DataColumn] with the values converted to [type].
@@ -531,6 +544,8 @@ public fun AnyCol.convertTo(newType: KType): AnyCol =
  *
  * The target type is provided as a reified type argument.
  *
+ * @include [SeeAlsoParse]
+ *
  * @param [C] The target type to convert values to.
  * @param [parserOptions] Optional [ParserOptions] to customize parsing behavior (e.g., locale, null strings).
  * @return A new [DataColumn] with the values converted to type [C].
@@ -542,6 +557,8 @@ public inline fun <reified C> DataColumn<String?>.convertTo(parserOptions: Parse
  * Converts values in this `String` column to the specified [type][newType].
  *
  * The target type is provided as a [KType].
+ *
+ * @include [SeeAlsoParse]
  *
  * @param [newType] The target type to convert values to.
  * @param [parserOptions] Optional [ParserOptions] to customize parsing behavior (e.g., locale, null strings).
@@ -839,7 +856,7 @@ public fun <T> Convert<T, URL?>.toIFrame(
     border: Boolean = false,
     width: Int? = null,
     height: Int? = null,
-): DataFrame<T> = to { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
+): DataFrame<T> = asColumn { it.map { url -> url?.let { IFRAME(url.toString(), border, width, height) } } }
 
 /**
  * Converts values in an [URL] columns previously selected with [convert] to an [IFRAME],
@@ -865,7 +882,7 @@ public fun <T> Convert<T, URL>.toIFrame(
     border: Boolean = false,
     width: Int? = null,
     height: Int? = null,
-): DataFrame<T> = to { it.map { IFRAME(it.toString(), border, width, height) } }
+): DataFrame<T> = asColumn { it.map { IFRAME(it.toString(), border, width, height) } }
 
 /**
  * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
@@ -888,7 +905,7 @@ public fun <T> Convert<T, URL>.toIFrame(
 @Converter(IMG::class, nullable = true)
 @Interpretable("ToSpecificType")
 public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
-    to { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
+    asColumn { it.map { url -> url?.let { IMG(url.toString(), width, height) } } }
 
 /**
  * Converts values in an [URL] columns previously selected with [convert] to an [IMG],
@@ -910,7 +927,7 @@ public fun <T, R : URL?> Convert<T, URL?>.toImg(width: Int? = null, height: Int?
 @Converter(IMG::class, nullable = false)
 @Interpretable("ToSpecificType")
 public fun <T, R : URL?> Convert<T, URL>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> =
-    to { it.map { IMG(it.toString(), width, height) } }
+    asColumn { it.map { IMG(it.toString(), width, height) } }
 
 // endregion
 
@@ -949,7 +966,7 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let 
 @Refine
 @Converter(URL::class, nullable = true)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = to { it.convertToURL() }
+public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convertToURL() }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to an [URL],
@@ -968,7 +985,7 @@ public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = to { it.convertToURL(
 @Refine
 @Converter(URL::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toURL(): DataFrame<T> = to { it.convertToURL() }
+public fun <T> Convert<T, String>.toURL(): DataFrame<T> = asColumn { it.convertToURL() }
 
 // endregion
 
@@ -1007,7 +1024,7 @@ public fun DataColumn<String?>.convertToInstant(): DataColumn<Instant?> = map { 
 @Refine
 @Converter(Instant::class, nullable = true)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
+public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = asColumn { it.convertToInstant() }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to the [Instant],
@@ -1026,7 +1043,7 @@ public fun <T> Convert<T, String?>.toInstant(): DataFrame<T> = to { it.convertTo
 @Refine
 @Converter(Instant::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
+public fun <T> Convert<T, String>.toInstant(): DataFrame<T> = asColumn { it.convertToInstant() }
 
 // endregion
 
@@ -1130,7 +1147,7 @@ public fun DataColumn<String?>.convertToLocalDate(
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
 /**
  * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
@@ -1151,7 +1168,7 @@ public fun <T> Convert<T, Long?>.toLocalDate(zone: TimeZone = defaultTimeZone): 
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
 /**
  * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
@@ -1173,7 +1190,7 @@ public fun <T> Convert<T, Long>.toLocalDate(zone: TimeZone = defaultTimeZone): D
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int?>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
 /**
  * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
@@ -1194,7 +1211,7 @@ public fun <T> Convert<T, Int?>.toLocalDate(zone: TimeZone = defaultTimeZone): D
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDate(zone) }
+    asColumn { it.convertToLocalDate(zone) }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to the [LocalDate],
@@ -1220,7 +1237,7 @@ public fun <T> Convert<T, Int>.toLocalDate(zone: TimeZone = defaultTimeZone): Da
 @Converter(LocalDate::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDate(pattern, locale) }
+    asColumn { it.convertToLocalDate(pattern, locale) }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to the [LocalDate],
@@ -1245,7 +1262,7 @@ public fun <T> Convert<T, String?>.toLocalDate(pattern: String? = null, locale: 
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDate(pattern, locale) }
+    asColumn { it.convertToLocalDate(pattern, locale) }
 
 /**
  * Converts values in the columns previously selected with [convert] to the [LocalDate],
@@ -1263,7 +1280,7 @@ public fun <T> Convert<T, String>.toLocalDate(pattern: String? = null, locale: L
 @Refine
 @Converter(LocalDate::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = to { it.convertTo<LocalDate>() }
+public fun <T> Convert<T, *>.toLocalDate(): DataFrame<T> = asColumn { it.convertTo<LocalDate>() }
 
 // endregion
 
@@ -1367,7 +1384,7 @@ public fun DataColumn<String?>.convertToLocalTime(
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
 /**
  * Converts values in the [Long] columns previously selected with [convert] to the [LocalDate],
@@ -1388,7 +1405,7 @@ public fun <T> Convert<T, Long?>.toLocalTime(zone: TimeZone = defaultTimeZone): 
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
 /**
  * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
@@ -1410,7 +1427,7 @@ public fun <T> Convert<T, Long>.toLocalTime(zone: TimeZone = defaultTimeZone): D
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int?>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
 /**
  * Converts values in the [Int] columns previously selected with [convert] to the [LocalDate],
@@ -1431,7 +1448,7 @@ public fun <T> Convert<T, Int?>.toLocalTime(zone: TimeZone = defaultTimeZone): D
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalTime(zone) }
+    asColumn { it.convertToLocalTime(zone) }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to the [LocalTime],
@@ -1457,7 +1474,7 @@ public fun <T> Convert<T, Int>.toLocalTime(zone: TimeZone = defaultTimeZone): Da
 @Converter(LocalTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalTime(pattern, locale) }
+    asColumn { it.convertToLocalTime(pattern, locale) }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to the [LocalTime],
@@ -1482,7 +1499,7 @@ public fun <T> Convert<T, String?>.toLocalTime(pattern: String? = null, locale: 
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalTime(pattern, locale) }
+    asColumn { it.convertToLocalTime(pattern, locale) }
 
 /**
  * Converts values in the columns previously selected with [convert] to the [LocalTime],
@@ -1500,7 +1517,7 @@ public fun <T> Convert<T, String>.toLocalTime(pattern: String? = null, locale: L
 @Refine
 @Converter(LocalTime::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = to { it.convertTo<LocalTime>() }
+public fun <T> Convert<T, *>.toLocalTime(): DataFrame<T> = asColumn { it.convertTo<LocalTime>() }
 
 // endregion
 
@@ -1630,7 +1647,7 @@ public fun DataColumn<String?>.convertToLocalDateTime(
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
 /**
  * Converts values in the [Long] columns previously selected with [convert] to the [LocalDateTime],
@@ -1651,7 +1668,7 @@ public fun <T> Convert<T, Long?>.toLocalDateTime(zone: TimeZone = defaultTimeZon
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Long>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
 /**
  * Converts values in the [Instant] columns previously selected with [convert] to the [LocalDateTime],
@@ -1673,7 +1690,7 @@ public fun <T> Convert<T, Long>.toLocalDateTime(zone: TimeZone = defaultTimeZone
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Instant?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
 /**
  * Converts values in the [Instant] columns previously selected with [convert] to the [LocalDateTime],
@@ -1694,7 +1711,7 @@ public fun <T> Convert<T, Instant?>.toLocalDateTime(zone: TimeZone = defaultTime
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Instant>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
 /**
  * Converts values in the [Int] columns previously selected with [convert] to the [LocalDateTime],
@@ -1716,7 +1733,7 @@ public fun <T> Convert<T, Instant>.toLocalDateTime(zone: TimeZone = defaultTimeZ
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int?>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
 /**
  * Converts values in the [Int] columns previously selected with [convert] to the [LocalDateTime],
@@ -1737,7 +1754,7 @@ public fun <T> Convert<T, Int?>.toLocalDateTime(zone: TimeZone = defaultTimeZone
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypeZone")
 public fun <T> Convert<T, Int>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> =
-    to { it.convertToLocalDateTime(zone) }
+    asColumn { it.convertToLocalDateTime(zone) }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to the [LocalDateTime],
@@ -1763,7 +1780,7 @@ public fun <T> Convert<T, Int>.toLocalDateTime(zone: TimeZone = defaultTimeZone)
 @Converter(LocalDateTime::class, nullable = true)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDateTime(pattern, locale) }
+    asColumn { it.convertToLocalDateTime(pattern, locale) }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to the [LocalDateTime],
@@ -1788,7 +1805,7 @@ public fun <T> Convert<T, String?>.toLocalDateTime(pattern: String? = null, loca
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificTypePattern")
 public fun <T> Convert<T, String>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> =
-    to { it.convertToLocalDateTime(pattern, locale) }
+    asColumn { it.convertToLocalDateTime(pattern, locale) }
 
 /**
  * Converts values in the columns previously selected with [convert] to the [LocalDateTime],
@@ -1806,7 +1823,7 @@ public fun <T> Convert<T, String>.toLocalDateTime(pattern: String? = null, local
 @Refine
 @Converter(LocalDateTime::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = to { it.convertTo<LocalDateTime>() }
+public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = asColumn { it.convertTo<LocalDateTime>() }
 
 // endregion
 
@@ -2152,7 +2169,7 @@ public fun <T> Convert<T, Any?>.toBoolean(): DataFrame<T> = to<Boolean?>()
  *  @return A new [DataFrame] with the values converted to [DataFrame].
  */
 public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
-    to { it.toDataFrames(containsColumns) }
+    asColumn { it.toDataFrames(containsColumns) }
 
 /**
  * Converts a list of lists values in this [DataColumn] to the [DataFrame].

@@ -141,7 +141,7 @@ class AtAnyDepth : TestBase() {
 
         val dfWithFrames = df
             .add { expr { df } into frameCol }
-            .convert { name }.to {
+            .convert { name }.asColumn {
                 val firstName by it.asColumnGroup().firstName
                 val lastName by it.asColumnGroup().lastName
 
