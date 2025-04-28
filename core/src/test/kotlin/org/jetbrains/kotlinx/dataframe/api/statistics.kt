@@ -154,6 +154,62 @@ class StatisticsTests {
     }
 
     @Test
+    fun `mean on DataFrame`() {
+        // scenario #0: all numerical columns
+        val res0 = personsDf.mean()
+        res0.columnNames() shouldBe listOf(
+            "age",
+            "weight",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+        )
+
+        val mean01 = res0["age"] as Double
+        mean01 shouldBe 37.7
+        val mean02 = res0["weight"] as Double
+        mean02 shouldBe 74.19699999999999
+        val mean03 = res0["yearsToRetirement"] as Double
+        mean03 shouldBe 30.8
+        val mean04 = res0["workExperienceYears"] as Double
+        mean04 shouldBe 18.6
+        val mean05 = res0["dependentsCount"] as Double
+        mean05 shouldBe 1.30
+        val mean06 = res0["annualIncome"] as Double
+        mean06 shouldBe 67200.0
+
+        // scenario #1: particular column
+        val res1 = personsDf.meanFor("age")
+        res1.columnNames() shouldBe listOf("age")
+
+        val mean11 = res1["age"] as Double
+        mean11 shouldBe 37.7
+
+        // scenario #1.1: particular column with a converted type
+        val res11 = personsDf.meanFor("dependentsCount")
+        res11.columnNames() shouldBe listOf("dependentsCount")
+
+        val mean111 = res11["dependentsCount"] as Double
+        mean111 shouldBe 1.3
+
+        // scenario #2: mean of values per columns separately
+        val res3 = personsDf.meanFor("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+        res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+
+        val mean31 = res3["age"] as Double
+        mean31 shouldBe 37.7
+        val mean32 = res0["weight"] as Double
+        mean32 shouldBe 74.19699999999999
+        val mean33 = res0["workExperienceYears"] as Double
+        mean33 shouldBe 18.6
+        val mean34 = res0["dependentsCount"] as Double
+        mean34 shouldBe 1.3
+        val mean35 = res0["annualIncome"] as Double
+        mean35 shouldBe 67200.0
+    }
+
+    @Test
     fun `mean on GroupBy`() {
         // scenario #0: all numerical columns
         val res0 = personsDf.groupBy("city").mean()
@@ -291,6 +347,62 @@ class StatisticsTests {
 
         val median311 = res31["newAge"][0] as Double
         median311 shouldBe 751.0
+    }
+
+    @Test
+    fun `std on DataFrame`() {
+        // scenario #0: all numerical columns
+        val res0 = personsDf.std()
+        res0.columnNames() shouldBe listOf(
+            "age",
+            "weight",
+            "yearsToRetirement",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+        )
+
+        val std01 = res0["age"] as Double
+        std01 shouldBe 28.26088777405582
+        val std02 = res0["weight"] as Double
+        std02 shouldBe 31.25191124822075
+        val std03 = res0["yearsToRetirement"] as Double
+        std03 shouldBe 20.89550722577038
+        val std04 = res0["workExperienceYears"] as Double
+        std04 shouldBe 23.200574705525437
+        val std05 = res0["dependentsCount"] as Double
+        std05 shouldBe 1.4181364924121764
+        val std06 = res0["annualIncome"] as Double
+        std06 shouldBe 71130.24048259018
+
+        // scenario #1: particular column
+        val res1 = personsDf.stdFor("age")
+        res1.columnNames() shouldBe listOf("age")
+
+        val std11 = res1["age"] as Double
+        std11 shouldBe 28.26088777405582
+
+        // scenario #1.1: particular column with a converted type
+        val res11 = personsDf.stdFor("dependentsCount")
+        res11.columnNames() shouldBe listOf("dependentsCount")
+
+        val std111 = res11["dependentsCount"] as Double
+        std111 shouldBe 1.4181364924121764
+
+        // scenario #2: std of values per columns separately
+        val res3 = personsDf.stdFor("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+        res3.columnNames() shouldBe listOf("age", "weight", "workExperienceYears", "dependentsCount", "annualIncome")
+
+        val std31 = res3["age"] as Double
+        std31 shouldBe 28.26088777405582
+        val std32 = res0["weight"] as Double
+        std32 shouldBe 31.25191124822075
+        val std33 = res0["workExperienceYears"] as Double
+        std33 shouldBe 23.200574705525437
+        val std34 = res0["dependentsCount"] as Double
+        std34 shouldBe 1.4181364924121764
+        val std35 = res0["annualIncome"] as Double
+        std35 shouldBe 71130.24048259018
     }
 
     @Test

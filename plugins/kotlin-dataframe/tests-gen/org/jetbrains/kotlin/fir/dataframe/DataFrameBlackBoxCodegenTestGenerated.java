@@ -425,6 +425,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("mean.kt")
+  public void testMean() {
+    runTest("testData/box/mean.kt");
+  }
+
+  @Test
   @TestMetadata("merge.kt")
   public void testMerge() {
     runTest("testData/box/merge.kt");
@@ -608,6 +614,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("selectionDsl.kt")
   public void testSelectionDsl() {
     runTest("testData/box/selectionDsl.kt");
+  }
+
+  @Test
+  @TestMetadata("std.kt")
+  public void testStd() {
+    runTest("testData/box/std.kt");
   }
 
   @Test

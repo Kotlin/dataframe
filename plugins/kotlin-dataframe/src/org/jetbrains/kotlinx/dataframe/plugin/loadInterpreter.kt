@@ -153,6 +153,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InsertAt
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Mean0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Mean1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeId
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeBy0
@@ -200,6 +202,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Std0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Std1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Sum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ValueCols2
@@ -457,6 +461,10 @@ internal inline fun <reified T> String.load(): T {
         "ByName" -> ByName()
         "Sum0" -> Sum0()
         "Sum1" -> Sum1()
+        "Mean0" -> Mean0()
+        "Mean1" -> Mean1()
+        "Std0" -> Std0()
+        "Std1" -> Std1()
         "GroupByCount0" -> GroupByCount0()
         "GroupByMean0" -> GroupByMean0()
         "GroupByMean1" -> GroupByMean1()
