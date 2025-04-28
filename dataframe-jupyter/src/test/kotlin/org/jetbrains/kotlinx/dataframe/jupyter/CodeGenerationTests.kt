@@ -61,4 +61,13 @@ class CodeGenerationTests : DataFrameJupyterTest() {
             ab.a
         """.checkCompilation()
     }
+
+    @Test
+    fun `nested schema with isOpen = false is ignored in marker generation`() {
+        """
+        val df = dataFrameOf("col" to listOf("a"), "leaf" to listOf(dataFrameOf("a", "b")(1, 2).first()))
+        val df1 = df.convert { leaf }.asFrame { it.add("c") { 3 } }
+        df1.leaf.c
+        """.checkCompilation()
+    }
 }
