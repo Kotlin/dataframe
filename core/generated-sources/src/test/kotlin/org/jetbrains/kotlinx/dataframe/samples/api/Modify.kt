@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
@@ -87,7 +88,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toStart
@@ -197,7 +197,7 @@ class Modify : TestBase() {
         // SampleStart
         df.convert { age }.to<Double>()
         df.convert { colsOf<Number>() }.to<String>()
-        df.convert { name.firstName and name.lastName }.to { it.length() }
+        df.convert { name.firstName and name.lastName }.asColumn { it.length() }
         df.convert { weight }.toFloat()
         // SampleEnd
     }
