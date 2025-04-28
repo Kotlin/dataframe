@@ -60,10 +60,13 @@ public inline fun <reified T : Number> AnyRow.rowMeanOf(skipNaN: Boolean = skipN
 // endregion
 
 // region DataFrame
-
+@Refine
+@Interpretable("Mean0")
 public fun <T> DataFrame<T>.mean(skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     meanFor(skipNaN, primitiveOrMixedNumberColumns())
 
+@Refine
+@Interpretable("Mean1")
 public fun <T, C : Number?> DataFrame<T>.meanFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
