@@ -29,37 +29,40 @@ fun box(): String {
     )
 
     // scenario #0: all numerical columns
-    val res0 = personsDf.sum()
+    val res0 = personsDf.median()
     res0.df().compareSchemas()
 
-    val sum01: Int? = res0.age
-    val sum02: Double? = res0.weight
-    val sum03: Int? = res0.yearsToRetirement
-    val sum04: Int? = res0.workExperienceYears
-    val sum05: Int? = res0.dependentsCount
-    val sum06: Long? = res0.annualIncome
+    val median01: Double? = res0.age
+    val median02: Double? = res0.weight
+    val median03: Double? = res0.yearsToRetirement
+    val median04: Double? = res0.workExperienceYears
+    val median05: Double? = res0.dependentsCount
+    val median06: Double? = res0.annualIncome
+    val median07: String? = res0.name
+    val median08: String? = res0.city
+    val median09: String? = res0.height
 
     // scenario #1: particular column
-    val res1 = personsDf.sumFor { age }
+    val res1 = personsDf.medianFor { age }
     res1.df().compareSchemas()
 
-    val sum11: Int? = res1.age
+    val median11: Double? = res1.age
 
     // scenario #1.1: particular column with converted type
-    val res11 = personsDf.sumFor { dependentsCount }
+    val res11 = personsDf.medianFor { dependentsCount }
     res11.df().compareSchemas()
 
-    val sum111: Int? = res11.dependentsCount
+    val median111: Double? = res11.dependentsCount
 
-    // scenario #2: sum of values per columns separately
-    val res3 = personsDf.sumFor { age and weight and workExperienceYears and dependentsCount and annualIncome }
+    // scenario #2: median of values per columns separately
+    val res3 = personsDf.medianFor<_, String> { name and weight and workExperienceYears and dependentsCount and annualIncome }
     res3.df().compareSchemas()
 
-    val sum31: Int? = res3.age
-    val sum32: Double? = res3.weight
-    val sum33: Int? = res3.workExperienceYears
-    val sum34: Int? = res3.dependentsCount
-    val sum35: Long? = res3.annualIncome
+    val median31: String? = res3.name
+    val median32: Double? = res3.weight
+    val median33: Double? = res3.workExperienceYears
+    val median34: Double? = res3.dependentsCount
+    val median35: Double? = res3.annualIncome
 
     return "OK"
 }

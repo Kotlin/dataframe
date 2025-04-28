@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.fir.types.typeContext
 import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.StandardClassIds
 import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.plugin.InterpretationErrorReporter
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractInterpreter
@@ -242,44 +243,34 @@ class GroupByAdd : AbstractInterpreter<GroupBy>() {
     }
 }
 
-/** Produces type of aggregated column based on the expression type. */
-abstract class GroupByAggregatorOf(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+/** Produces a type of aggregated column based on the expression type. */
+abstract class GroupByAggregatorOf(val defaultName: String, val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
     val Arguments.name: String? by arg(defaultValue = Present(null))
     val Arguments.expression by type()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val aggregated = makeNullable(simpleColumnOf(name ?: defaultName, expression.type))
-        return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+
+        val newColumns = generateStatisticResultColumns(aggregator, listOf(aggregated as SimpleDataColumn))
+        return PluginDataFrameSchema(receiver.keys.columns() + newColumns)
     }
 }
 
 /** Implementation for `maxOf`. */
-class GroupByMaxOf : GroupByAggregatorOf(defaultName = "max")
+class GroupByMaxOf : GroupByAggregatorOf(defaultName = "max", max)
 
 /** Implementation for `minOf`. */
-class GroupByMinOf : GroupByAggregatorOf(defaultName = "min")
+class GroupByMinOf : GroupByAggregatorOf(defaultName = "min", min)
 
 /** Implementation for `medianOf`. */
-class GroupByMedianOf : GroupByAggregatorOf(defaultName = "median")
-
-/** Returns Double type as the type of the aggregated column. */
-abstract class GroupByAggregatorMeanOf(val defaultName: String) : AbstractSchemaModificationInterpreter() {
-    val Arguments.receiver by groupBy()
-    val Arguments.name: String? by arg(defaultValue = Present(null))
-    val Arguments.expression by type()
-
-    override fun Arguments.interpret(): PluginDataFrameSchema {
-        val aggregated = makeNullable(simpleColumnOf(name ?: defaultName, session.builtinTypes.doubleType.type))
-        return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
-    }
-}
+class GroupByMedianOf : GroupByAggregatorOf(defaultName = "median", median)
 
 /** Implementation for `meanOf`. */
-class GroupByMeanOf : GroupByAggregatorMeanOf(defaultName = "mean")
+class GroupByMeanOf : GroupByAggregatorOf(defaultName = "mean", mean)
 
 /** Implementation for `stdOf`. */
-class GroupByStdOf : GroupByAggregatorMeanOf(defaultName = "std")
+class GroupByStdOf : GroupByAggregatorOf(defaultName = "std", std)
 
 /**
  * Provides a base implementation for a custom schema modification interpreter
@@ -301,7 +292,8 @@ abstract class GroupByAggregatorSumOf(val defaultName: String) : AbstractSchemaM
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val aggregated = makeNullable(simpleColumnOf(resultName ?: defaultName, expression.type))
-        return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+        val newColumns = generateStatisticResultColumns(sum, listOf(aggregated as SimpleDataColumn))
+        return PluginDataFrameSchema(receiver.keys.columns() + newColumns)
     }
 }
 
@@ -321,72 +313,49 @@ class GroupBySumOf : GroupByAggregatorSumOf(defaultName = "sum")
  * - [name] Optional name for the resulting aggregated column. Defaults to `defaultName`.
  * - [columns] ColumnsResolver to define which columns to include in the grouping operation.
  */
-abstract class GroupByAggregator0(val defaultName: String) : AbstractSchemaModificationInterpreter() {
+abstract class GroupByAggregator0(val defaultName: String, val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
     val Arguments.name: String? by arg(defaultValue = Present(null))
     val Arguments.columns: ColumnsResolver? by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         if (name == null) {
-            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
-            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+            val resolvedColumns = columns?.resolve(receiver.keys)?.map { (it.column as SimpleDataColumn) }!!.toList()
+            val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
+
+            return PluginDataFrameSchema(receiver.keys.columns() + newColumns)
         } else {
             val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
             // TODO: handle multiple columns https://github.com/Kotlin/dataframe/issues/1090
             val aggregated =
                 makeNullable(simpleColumnOf(name ?: defaultName, (resolvedColumns[0] as SimpleDataColumn).type.type))
-            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
+            // case with the multiple columns will be removed for GroupBy
+            val newColumns = generateStatisticResultColumns(aggregator, listOf(aggregated as SimpleDataColumn))
+            return PluginDataFrameSchema(receiver.keys.columns() + newColumns)
         }
     }
 }
 
 /** Implementation for `sum`. */
-class GroupBySum0 : GroupByAggregator0(defaultName = "sum")
+class GroupBySum0 : GroupByAggregator0(defaultName = "sum", sum)
 
 /** Implementation for `median`. */
-class GroupByMedian0 : GroupByAggregator0(defaultName = "median")
+class GroupByMedian0 : GroupByAggregator0(defaultName = "median", median)
 
 /** Implementation for `median`. */
-class GroupByMin0 : GroupByAggregator0(defaultName = "min")
+class GroupByMin0 : GroupByAggregator0(defaultName = "min", min)
 
 /** Implementation for `median`. */
-class GroupByMax0 : GroupByAggregator0(defaultName = "max")
-
-/** Returns Double type as the type of the aggregated column. */
-abstract class GroupByAggregatorMean0(val defaultName: String) : AbstractSchemaModificationInterpreter() {
-    val Arguments.receiver by groupBy()
-    val Arguments.name: String? by arg(defaultValue = Present(null))
-    val Arguments.columns: ColumnsResolver? by arg()
-
-    override fun Arguments.interpret(): PluginDataFrameSchema {
-        if (name == null) {
-            val resolvedColumns = columns
-                ?.resolve(receiver.keys)
-                ?.map { col ->
-                    simpleColumnOf(col.column.name, session.builtinTypes.doubleType.type)
-                }
-                ?.toList()
-                ?: emptyList()
-
-            return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
-        } else {
-            val aggregated = makeNullable(
-                simpleColumnOf(name ?: defaultName, session.builtinTypes.doubleType.type)
-            )
-
-            return PluginDataFrameSchema(receiver.keys.columns() + aggregated)
-        }
-    }
-}
+class GroupByMax0 : GroupByAggregator0(defaultName = "max", max)
 
 /** Implementation for `mean`. */
-class GroupByMean0 : GroupByAggregatorMean0(defaultName = "mean")
+class GroupByMean0 : GroupByAggregator0(defaultName = "mean", mean)
 
 /** Implementation for `std`. */
-class GroupByStd0 : GroupByAggregatorMean0(defaultName = "std")
+class GroupByStd0 : GroupByAggregator0(defaultName = "std", std)
 
 /** Adds to the schema only numerical columns. */
-abstract class GroupByAggregator1 : AbstractSchemaModificationInterpreter() {
+abstract class GroupByAggregator1(val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
@@ -394,35 +363,23 @@ abstract class GroupByAggregator1 : AbstractSchemaModificationInterpreter() {
             .filterIsInstance<SimpleDataColumn>()
             .filter { it.type.type.isSubtypeOf(session.builtinTypes.numberType.type, session) }
 
-        return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
+        val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
+
+        return PluginDataFrameSchema(receiver.keys.columns() + newColumns)
     }
 }
 
 /** Implementation for `sum`. */
-class GroupBySum1 : GroupByAggregator1()
-
-/** Returns a Double aggregated column for all numerical columns. */
-abstract class GroupByAggregatorMean1 : AbstractSchemaModificationInterpreter() {
-    val Arguments.receiver by groupBy()
-
-    override fun Arguments.interpret(): PluginDataFrameSchema {
-        val resolvedColumns = receiver.groups.columns()
-            .filterIsInstance<SimpleDataColumn>()
-            .filter { it.type.type.isSubtypeOf(session.builtinTypes.numberType.type, session) }
-            .map { simpleColumnOf(it.name, session.builtinTypes.doubleType.type) }
-
-        return PluginDataFrameSchema(receiver.keys.columns() + resolvedColumns)
-    }
-}
+class GroupBySum1 : GroupByAggregator1(sum)
 
 /** Implementation for `mean`. */
-class GroupByMean1 : GroupByAggregatorMean1()
+class GroupByMean1 : GroupByAggregator1(mean)
 
 /** Implementation for `std`. */
-class GroupByStd1 : GroupByAggregatorMean1()
+class GroupByStd1 : GroupByAggregator1(std)
 
 /** Keeps in schema only columns with intraComparable values. */
-abstract class GroupByAggregatorComparable : AbstractSchemaModificationInterpreter() {
+abstract class GroupByAggregatorComparable(val aggregator: Aggregator<*, *>)  : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
@@ -430,20 +387,22 @@ abstract class GroupByAggregatorComparable : AbstractSchemaModificationInterpret
             .filterIsInstance<SimpleDataColumn>()
             .filter { isIntraComparable(it, session) }
 
-        return PluginDataFrameSchema(receiver.keys.columns() + comparableColumns)
+        val newColumns = generateStatisticResultColumns(aggregator, comparableColumns)
+
+        return PluginDataFrameSchema(receiver.keys.columns() + newColumns)
     }
 }
 
 /** Implementation for `max`. */
-class GroupByMax1 : GroupByAggregatorComparable()
+class GroupByMax1 : GroupByAggregatorComparable(max)
 
 /** Implementation for `min`. */
-class GroupByMin1 : GroupByAggregatorComparable()
+class GroupByMin1 : GroupByAggregatorComparable(min)
 
 /** Implementation for `median`. */
-class GroupByMedian1 : GroupByAggregatorComparable()
+class GroupByMedian1 : GroupByAggregatorComparable(median)
 
-private fun isIntraComparable(col: SimpleDataColumn, session: FirSession): Boolean {
+internal fun isIntraComparable(col: SimpleDataColumn, session: FirSession): Boolean {
     val comparable = StandardClassIds.Comparable.constructClassLikeType(
         typeArguments = arrayOf(col.type.type.withNullability(ConeNullability.NOT_NULL, session.typeContext)),
         isNullable = col.type.type.isNullable,

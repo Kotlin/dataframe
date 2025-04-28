@@ -29,37 +29,40 @@ fun box(): String {
     )
 
     // scenario #0: all numerical columns
-    val res0 = personsDf.sum()
+    val res0 = personsDf.min()
     res0.df().compareSchemas()
 
-    val sum01: Int? = res0.age
-    val sum02: Double? = res0.weight
-    val sum03: Int? = res0.yearsToRetirement
-    val sum04: Int? = res0.workExperienceYears
-    val sum05: Int? = res0.dependentsCount
-    val sum06: Long? = res0.annualIncome
+    val min01: Int? = res0.age
+    val min02: Double? = res0.weight
+    val min03: Int? = res0.yearsToRetirement
+    val min04: Short? = res0.workExperienceYears
+    val min05: Byte? = res0.dependentsCount
+    val min06: Long? = res0.annualIncome
+    val min07: String? = res0.name
+    val min08: String? = res0.city
+    val min09: String? = res0.height
 
     // scenario #1: particular column
-    val res1 = personsDf.sumFor { age }
+    val res1 = personsDf.minFor { age }
     res1.df().compareSchemas()
 
-    val sum11: Int? = res1.age
+    val min11: Int? = res1.age
 
     // scenario #1.1: particular column with converted type
-    val res11 = personsDf.sumFor { dependentsCount }
+    val res11 = personsDf.minFor { dependentsCount }
     res11.df().compareSchemas()
 
-    val sum111: Int? = res11.dependentsCount
+    val min111: Byte? = res11.dependentsCount
 
-    // scenario #2: sum of values per columns separately
-    val res3 = personsDf.sumFor { age and weight and workExperienceYears and dependentsCount and annualIncome }
+    // scenario #2: min of values per columns separately
+    val res3 = personsDf.minFor<_, String> { name and weight and workExperienceYears and dependentsCount and annualIncome }
     res3.df().compareSchemas()
 
-    val sum31: Int? = res3.age
-    val sum32: Double? = res3.weight
-    val sum33: Int? = res3.workExperienceYears
-    val sum34: Int? = res3.dependentsCount
-    val sum35: Long? = res3.annualIncome
+    val min31: String? = res3.name
+    val min32: Double? = res3.weight
+    val min33: Short? = res3.workExperienceYears
+    val min34: Byte? = res3.dependentsCount
+    val min35: Long? = res3.annualIncome
 
     return "OK"
 }
