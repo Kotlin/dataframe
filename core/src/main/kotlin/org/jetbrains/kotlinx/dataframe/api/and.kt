@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -114,7 +114,7 @@ public interface AndColumnsSelectionDsl {
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
     @Interpretable("And0")
-    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
+    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnListImpl(this, other)
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> ColumnsResolver<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this and other()
