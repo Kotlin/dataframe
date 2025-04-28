@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.explainer.PluginCallbackProxy
@@ -54,7 +55,7 @@ public open class TestBase {
         "Charlie", "Byrd", 30, "Moscow", 90, true,
     ).group("firstName", "lastName").into("name").cast<Person>()
 
-    val dfGroup = df.convert { name.firstName }.to {
+    val dfGroup = df.convert { name.firstName }.asColumn {
         val firstName by it
         val secondName by it.map<_, String?> { null }.asValueColumn()
         val thirdName by it.map<_, String?> { null }.asValueColumn()
