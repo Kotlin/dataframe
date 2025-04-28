@@ -106,7 +106,7 @@ abstract class Aggregator0(val aggregator: Aggregator<*, *>) : AbstractSchemaMod
 
         val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
 
-        return PluginDataFrameSchema(receiver.columns() + newColumns)
+        return PluginDataFrameSchema(newColumns)
     }
 }
 
@@ -127,7 +127,7 @@ abstract class AggregatorIntraComparable0(val aggregator: Aggregator<*, *>) : Ab
 
         val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
 
-        return PluginDataFrameSchema(receiver.columns() + newColumns)
+        return PluginDataFrameSchema(newColumns)
     }
 }
 
@@ -151,7 +151,7 @@ abstract class Aggregator1 (val aggregator: Aggregator<*, *>) : AbstractSchemaMo
 
         val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
 
-        return PluginDataFrameSchema(receiver.columns() + newColumns)
+        return PluginDataFrameSchema(newColumns)
     }
 }
 

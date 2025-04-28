@@ -30,6 +30,7 @@ fun box(): String {
 
     // scenario #0: all numerical columns
     val res0 = personsDf.std()
+    res0.df().compareSchemas()
 
     val std01: Double? = res0.age
     val std02: Double? = res0.weight
@@ -40,14 +41,19 @@ fun box(): String {
 
     // scenario #1: particular column
     val res1 = personsDf.stdFor { age }
+    res1.df().compareSchemas()
+
     val std11: Double? = res1.age
 
     // scenario #1.1: particular column with converted type
     val res11 = personsDf.stdFor { dependentsCount }
+    res11.df().compareSchemas()
+
     val std111: Double? = res11.dependentsCount
 
     // scenario #2: std of values per columns separately
     val res3 = personsDf.stdFor { age and weight and workExperienceYears and dependentsCount and annualIncome }
+    res3.df().compareSchemas()
 
     val std31: Double? = res3.age
     val std32: Double? = res3.weight

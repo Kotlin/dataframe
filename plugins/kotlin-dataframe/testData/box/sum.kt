@@ -30,6 +30,7 @@ fun box(): String {
 
     // scenario #0: all numerical columns
     val res0 = personsDf.sum()
+    res0.df().compareSchemas()
 
     val sum01: Int? = res0.age
     val sum02: Double? = res0.weight
@@ -40,14 +41,19 @@ fun box(): String {
 
     // scenario #1: particular column
     val res1 = personsDf.sumFor { age }
+    res1.df().compareSchemas()
+
     val sum11: Int? = res1.age
 
     // scenario #1.1: particular column with converted type
     val res11 = personsDf.sumFor { dependentsCount }
+    res11.df().compareSchemas()
+
     val sum111: Int? = res11.dependentsCount
 
     // scenario #2: sum of values per columns separately
     val res3 = personsDf.sumFor { age and weight and workExperienceYears and dependentsCount and annualIncome }
+    res3.df().compareSchemas()
 
     val sum31: Int? = res3.age
     val sum32: Double? = res3.weight

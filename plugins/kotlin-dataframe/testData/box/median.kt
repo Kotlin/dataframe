@@ -30,6 +30,7 @@ fun box(): String {
 
     // scenario #0: all numerical columns
     val res0 = personsDf.median()
+    res0.df().compareSchemas()
 
     val median01: Double? = res0.age
     val median02: Double? = res0.weight
@@ -43,14 +44,19 @@ fun box(): String {
 
     // scenario #1: particular column
     val res1 = personsDf.medianFor { age }
+    res1.df().compareSchemas()
+
     val median11: Double? = res1.age
 
     // scenario #1.1: particular column with converted type
     val res11 = personsDf.medianFor { dependentsCount }
+    res11.df().compareSchemas()
+
     val median111: Double? = res11.dependentsCount
 
     // scenario #2: median of values per columns separately
     val res3 = personsDf.medianFor<_, String> { name and weight and workExperienceYears and dependentsCount and annualIncome }
+    res3.df().compareSchemas()
 
     val median31: String? = res3.name
     val median32: Double? = res3.weight

@@ -30,6 +30,7 @@ fun box(): String {
 
     // scenario #0: all numerical columns
     val res0 = personsDf.mean()
+    res0.df().compareSchemas()
 
     val mean01: Double? = res0.age
     val mean02: Double? = res0.weight
@@ -40,14 +41,19 @@ fun box(): String {
 
     // scenario #1: particular column
     val res1 = personsDf.meanFor { age }
+    res1.df().compareSchemas()
+
     val mean11: Double? = res1.age
 
     // scenario #1.1: particular column with converted type
     val res11 = personsDf.meanFor { dependentsCount }
+    res11.df().compareSchemas()
+
     val mean111: Double? = res11.dependentsCount
 
     // scenario #2: mean of values per columns separately
     val res3 = personsDf.meanFor { age and weight and workExperienceYears and dependentsCount and annualIncome }
+    res3.df().compareSchemas()
 
     val mean31: Double? = res3.age
     val mean32: Double? = res3.weight

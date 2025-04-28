@@ -30,6 +30,7 @@ fun box(): String {
 
     // scenario #0: all numerical columns
     val res0 = personsDf.max()
+    res0.df().compareSchemas()
 
     val max01: Int? = res0.age
     val max02: Double? = res0.weight
@@ -43,14 +44,19 @@ fun box(): String {
 
     // scenario #1: particular column
     val res1 = personsDf.maxFor { age }
+    res1.df().compareSchemas()
+
     val max11: Int? = res1.age
 
     // scenario #1.1: particular column with converted type
     val res11 = personsDf.maxFor { dependentsCount }
+    res11.df().compareSchemas()
+
     val max111: Byte? = res11.dependentsCount
 
     // scenario #2: max of values per columns separately
     val res3 = personsDf.maxFor<_, String> { name and weight and workExperienceYears and dependentsCount and annualIncome }
+    res3.df().compareSchemas()
 
     val max31: String? = res3.name
     val max32: Double? = res3.weight

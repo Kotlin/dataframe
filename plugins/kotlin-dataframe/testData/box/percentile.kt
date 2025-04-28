@@ -30,6 +30,7 @@ fun box(): String {
 
     // scenario #0: all numerical columns
     val res0 = personsDf.percentile(percentile = 30.0)
+    res0.df().compareSchemas()
 
     val percentile01: Double? = res0.age
     val percentile02: Double? = res0.weight
@@ -43,14 +44,19 @@ fun box(): String {
 
     // scenario #1: particular column
     val res1 = personsDf.percentileFor(percentile = 30.0) { age }
+    res1.df().compareSchemas()
+
     val percentile11: Double? = res1.age
 
     // scenario #1.1: particular column with converted type
     val res11 = personsDf.percentileFor(percentile = 30.0) { dependentsCount }
+    res11.df().compareSchemas()
+
     val percentile111: Double? = res11.dependentsCount
 
     // scenario #2: percentile of values per columns separately
     val res3 = personsDf.percentileFor<_, String>(percentile = 30.0){ name and weight and workExperienceYears and dependentsCount and annualIncome }
+    res3.df().compareSchemas()
 
     val percentile31: String? = res3.name
     val percentile32: Double? = res3.weight
