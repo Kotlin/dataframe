@@ -66,7 +66,7 @@ fun KType.toConeKotlinType(): ConeKotlinType? {
 }
 
 private fun Arguments.generateStatisticResultColumns(
-    statisticAggregator: Aggregator<Number, Number>,
+    statisticAggregator: Aggregator<*, *>,
     inputColumns: List<SimpleDataColumn>
 ): List<SimpleCol> {
     return inputColumns.map { col -> createUpdatedColumn(col, statisticAggregator) }
@@ -74,7 +74,7 @@ private fun Arguments.generateStatisticResultColumns(
 
 private fun Arguments.createUpdatedColumn(
     column: SimpleDataColumn,
-    statisticAggregator: Aggregator<Number, Number>
+    statisticAggregator: Aggregator<*, *>
 ): SimpleCol {
     val originalType = column.type.type
     val inputKType = originalType.toKType()
@@ -85,18 +85,18 @@ private fun Arguments.createUpdatedColumn(
 
 val skipNaN = true
 val ddofDefault: Int = 1
-val percentile: Double = 30.0
+val percentileArg: Double = 30.0
 val sum = Aggregators.sum(skipNaN)
 val mean = Aggregators.mean(skipNaN)
 val std = Aggregators.std(skipNaN, ddofDefault)
 val median = Aggregators.median(skipNaN)
-val min = Aggregators.min(skipNaN)
-val max = Aggregators.max(skipNaN)
-val percentile = Aggregators.percentile(percentile)
+val min = Aggregators.min<Double>(skipNaN)
+val max = Aggregators.max<Double>(skipNaN)
+val percentile = Aggregators.percentile(percentileArg, skipNaN)
 
 
 /** Adds to the schema only numerical columns. */
-abstract class Aggregator0(val aggregator: Aggregator<Number, Number>) : AbstractSchemaModificationInterpreter() {
+abstract class Aggregator0(val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
     private val Arguments.receiver: PluginDataFrameSchema by dataFrame()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
@@ -116,8 +116,31 @@ class Mean0 : Aggregator0(mean)
 
 class Std0 : Aggregator0(std)
 
+/** Adds to the schema only numerical columns. */
+abstract class AggregatorIntraComparable0(val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
+    private val Arguments.receiver: PluginDataFrameSchema by dataFrame()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val resolvedColumns = receiver.columns()
+            .filterIsInstance<SimpleDataColumn>()
+            .filter { isIntraComparable(it, session) }
+
+        val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
+
+        return PluginDataFrameSchema(receiver.columns() + newColumns)
+    }
+}
+
+class Median0 : AggregatorIntraComparable0(median)
+
+class Max0 : AggregatorIntraComparable0(max)
+
+class Min0 : AggregatorIntraComparable0(min)
+
+class Percentile0 : AggregatorIntraComparable0(percentile)
+
 /** Adds to the schema all resolved columns. */
-abstract class Aggregator1 (val aggregator: Aggregator<Number, Number>) : AbstractSchemaModificationInterpreter() {
+abstract class Aggregator1 (val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
     private val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     private val Arguments.columns: ColumnsResolver by arg()
 
@@ -135,5 +158,13 @@ class Sum1 : Aggregator1(sum)
 class Mean1 : Aggregator1(mean)
 
 class Std1 : Aggregator1(std)
+
+class Median1 : Aggregator1(median)
+
+class Max1 : Aggregator1(max)
+
+class Min1 : Aggregator1(min)
+
+class Percentile1 : Aggregator1(percentile)
 
 

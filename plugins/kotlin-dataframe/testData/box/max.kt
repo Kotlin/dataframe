@@ -50,7 +50,7 @@ fun box(): String {
     val max111: Byte? = res11.dependentsCount
 
     // scenario #2: max of values per columns separately
-    val res3 = personsDf.maxFor { name and weight and workExperienceYears and dependentsCount and annualIncome }
+    val res3 = personsDf.maxFor<_, String> { name and weight and workExperienceYears and dependentsCount and annualIncome }
 
     val max31: String? = res3.name
     val max32: Double? = res3.weight
