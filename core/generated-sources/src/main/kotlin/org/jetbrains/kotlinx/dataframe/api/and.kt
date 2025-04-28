@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -211,7 +211,7 @@ public interface AndColumnsSelectionDsl {
      *   and right side of the [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator.
      */
     @Interpretable("And0")
-    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
+    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnListImpl(this, other)
 
     /** ## And Operator
      * The [and][org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.and] operator allows you to combine selections of columns or simply select multiple columns at once.

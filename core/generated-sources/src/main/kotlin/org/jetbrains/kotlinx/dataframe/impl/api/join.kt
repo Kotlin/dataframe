@@ -18,22 +18,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
-
-internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
-    {
-        left.columnNames().intersect(right.columnNames().toSet())
-            .map { it.toColumnAccessor() }
-            .let { ColumnsList(it) }
-    }
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnsSelector<T, T> =
     {
@@ -42,7 +34,7 @@ internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinCol
                 set?.intersect(names.toSet()) ?: names.toSet()
             }.orEmpty()
             .map { it.toColumnAccessor() }
-            .let { ColumnsList(it) }
+            .let { ColumnListImpl(it) }
     }
 
 internal fun <C> ColumnsResolver<C>.extractJoinColumns(): List<ColumnMatch<C>> =
@@ -53,24 +45,13 @@ internal fun <C> ColumnsResolver<C>.extractJoinColumns(): List<ColumnMatch<C>> =
         else -> throw Exception()
     }
 
-internal fun <A, B> DataFrame<A>.getColumns(
-    other: DataFrame<B>,
-    selector: JoinColumnsSelector<A, B>,
-): List<ColumnMatch<Any?>> {
-    val receiver = object : DataFrameReceiver<A>(this, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
-        override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
-    }
-    val columns = selector(receiver, this)
-    return columns.extractJoinColumns()
-}
-
 internal fun <A, B> DataFrame<A>.joinImpl(
     other: DataFrame<B>,
     joinType: JoinType = JoinType.Inner,
     addNewColumns: Boolean = true,
     selector: JoinColumnsSelector<A, B>?,
 ): DataFrame<A> {
-    val joinColumns = getColumns(other, selector ?: defaultJoinColumns(this, other))
+    val joinColumns = JoinDsl.getColumns(this, other, selector ?: JoinDsl.defaultJoinColumns<A, B>(this, other))
 
     val leftJoinColumns = getColumnsWithPaths { joinColumns.map { it.left }.toColumnSet() }
     val rightJoinColumns = other.getColumnsWithPaths { joinColumns.map { it.right }.toColumnSet() }
