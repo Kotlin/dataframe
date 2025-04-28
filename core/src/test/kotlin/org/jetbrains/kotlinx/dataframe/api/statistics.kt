@@ -934,7 +934,14 @@ class StatisticsTests {
         percentile111 shouldBe 0.0
 
         // scenario #2: percentile of values per columns separately
-        val res3 = personsDf.percentileFor(percentile, "weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
+        val res3 = personsDf.percentileFor(
+            percentile,
+            "weight",
+            "workExperienceYears",
+            "dependentsCount",
+            "annualIncome",
+            "name",
+        )
         res3.columnNames() shouldBe listOf("weight", "workExperienceYears", "dependentsCount", "annualIncome", "name")
 
         val percentile31 = res3["weight"] as Double

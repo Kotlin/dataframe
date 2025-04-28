@@ -66,7 +66,7 @@ fun KType.toConeKotlinType(): ConeKotlinType? {
     )
 }
 
-private fun Arguments.generateStatisticResultColumns(
+internal fun Arguments.generateStatisticResultColumns(
     statisticAggregator: Aggregator<*, *>,
     inputColumns: List<SimpleDataColumn>
 ): List<SimpleCol> {
@@ -84,16 +84,16 @@ private fun Arguments.createUpdatedColumn(
     return simpleColumnOf(column.name, updatedType)
 }
 
-val skipNaN = true
-val ddofDefault: Int = 1
-val percentileArg: Double = 30.0
-val sum = Aggregators.sum(skipNaN)
-val mean = Aggregators.mean(skipNaN)
-val std = Aggregators.std(skipNaN, ddofDefault)
-val median = Aggregators.median(skipNaN)
-val min = Aggregators.min<Double>(skipNaN)
-val max = Aggregators.max<Double>(skipNaN)
-val percentile = Aggregators.percentile(percentileArg, skipNaN)
+internal val skipNaN = true
+internal val ddofDefault: Int = 1
+internal val percentileArg: Double = 30.0
+internal val sum = Aggregators.sum(skipNaN)
+internal val mean = Aggregators.mean(skipNaN)
+internal val std = Aggregators.std(skipNaN, ddofDefault)
+internal val median = Aggregators.median(skipNaN)
+internal val min = Aggregators.min<Double>(skipNaN)
+internal val max = Aggregators.max<Double>(skipNaN)
+internal val percentile = Aggregators.percentile(percentileArg, skipNaN)
 
 /** Adds to the schema only numerical columns. */
 abstract class Aggregator0(val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {

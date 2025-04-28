@@ -113,25 +113,27 @@ public object Aggregators {
     // T : Comparable<T & Any>? -> T?
     public fun <T : Comparable<T & Any>?> min(skipNaN: Boolean): Aggregator<T & Any, T?> = min.invoke(skipNaN).cast2()
 
-    public val min: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption { skipNaN: Boolean ->
-        twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
-            getReturnType = minTypeConversion,
-            stepOneSelector = { type -> minOrNull(type, skipNaN) },
-            indexOfResult = { type -> indexOfMin(type, skipNaN) },
-        )
-    }
+    public val min: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
+        by withOneOption { skipNaN: Boolean ->
+            twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
+                getReturnType = minTypeConversion,
+                stepOneSelector = { type -> minOrNull(type, skipNaN) },
+                indexOfResult = { type -> indexOfMin(type, skipNaN) },
+            )
+        }
 
     // T: Comparable<T> -> T?
     // T : Comparable<T & Any>? -> T?
     public fun <T : Comparable<T & Any>?> max(skipNaN: Boolean): Aggregator<T & Any, T?> = max.invoke(skipNaN).cast2()
 
-    public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption { skipNaN: Boolean ->
-        twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
-            getReturnType = maxTypeConversion,
-            stepOneSelector = { type -> maxOrNull(type, skipNaN) },
-            indexOfResult = { type -> indexOfMax(type, skipNaN) },
-        )
-    }
+    public val max: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
+        by withOneOption { skipNaN: Boolean ->
+            twoStepSelectingForAny<Comparable<Any>, Comparable<Any>?>(
+                getReturnType = maxTypeConversion,
+                stepOneSelector = { type -> maxOrNull(type, skipNaN) },
+                indexOfResult = { type -> indexOfMax(type, skipNaN) },
+            )
+        }
 
     // T: Number? -> Double
     public val std: AggregatorOptionSwitch2<Boolean, Int, Number, Double> by withTwoOptions {
@@ -176,13 +178,17 @@ public object Aggregators {
         percentileCommon<T>(percentile, skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")
-    public val percentile: AggregatorOptionSwitch2<Double, Boolean, Comparable<Any>, Comparable<Any>?> by withTwoOptions { percentile: Double, skipNaN: Boolean ->
-        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
-            getReturnType = percentileConversion,
-            reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
-            indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
-        )
-    }
+    public val percentile: AggregatorOptionSwitch2<Double, Boolean, Comparable<Any>, Comparable<Any>?>
+        by withTwoOptions {
+            percentile: Double,
+            skipNaN: Boolean,
+            ->
+            flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+                getReturnType = percentileConversion,
+                reducer = { type -> percentileOrNull(percentile, type, skipNaN) as Comparable<Any>? },
+                indexOfResult = { type -> indexOfPercentile(percentile, type, skipNaN) },
+            )
+        }
 
     // T: primitive Number? -> Double?
     // T: Comparable<T & Any>? -> T?
@@ -203,13 +209,14 @@ public object Aggregators {
         medianCommon<T>(skipNaN).cast2()
 
     @Suppress("UNCHECKED_CAST")
-    public val median: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?> by withOneOption { skipNaN: Boolean ->
-        flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
-            getReturnType = medianConversion,
-            reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
-            indexOfResult = { type -> indexOfMedian(type, skipNaN) },
-        )
-    }
+    public val median: AggregatorOptionSwitch1<Boolean, Comparable<Any>, Comparable<Any>?>
+        by withOneOption { skipNaN: Boolean ->
+            flattenHybridForAny<Comparable<Any>, Comparable<Any>?>(
+                getReturnType = medianConversion,
+                reducer = { type -> medianOrNull(type, skipNaN) as Comparable<Any>? },
+                indexOfResult = { type -> indexOfMedian(type, skipNaN) },
+            )
+        }
 
     // T: Number -> T
     // Byte -> Int
