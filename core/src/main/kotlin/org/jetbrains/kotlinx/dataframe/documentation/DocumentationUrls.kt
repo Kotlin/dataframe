@@ -98,4 +98,7 @@ internal interface DocumentationUrls {
 
     /** [See `group` on the documentation website.]({@include [Url]}/ungroup.html) */
     interface Ungroup
+
+    /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
+    interface Convert
 }

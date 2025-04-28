@@ -17,6 +17,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -26,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.parser
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
@@ -569,7 +570,7 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
 }
 
 internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: ColumnsSelector<T, Any?>): DataFrame<T> =
-    convert(columns).to { col ->
+    convert(columns).asColumn { col ->
         when {
             // when a frame column is requested to be parsed,
             // parse each value/frame column at any depth inside each DataFrame in the frame column

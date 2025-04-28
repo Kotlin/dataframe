@@ -255,8 +255,8 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  * {@set [ExpressionsGivenRowAndColumn.OPERATION] [update][update]` { age \}.`[perRowCol][perRowCol]}
  *
  * ## See Also
- *  - {@include [SeeAlsoWith]}
- *  - {@include [SeeAlsoPerCol]}
+ *  - {@include [SeeAlsoUpdateWith]}
+ *  - {@include [SeeAlsoUpdatePerCol]}
  * @param [expression] The {@include [ExpressionsGivenRowAndColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
  */
 public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColumnExpression<T, C, C>): DataFrame<T> =
@@ -264,7 +264,7 @@ public inline fun <T, C> Update<T, C>.perRowCol(crossinline expression: RowColum
 
 /** [Update per row col][Update.perRowCol] to provide a new value for every selected cell giving its row and column. */
 @ExcludeFromSources
-private interface SeeAlsoPerRowCol
+private interface SeeAlsoUpdatePerRowCol
 
 /**
  * ## Update Expression
@@ -280,8 +280,8 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * ## Note
  * @include [ExpressionsGivenRow.AddDataRowNote]
  * ## See Also
- * - {@include [SeeAlsoPerCol]}
- * - {@include [SeeAlsoPerRowCol]}
+ * - {@include [SeeAlsoUpdatePerCol]}
+ * - {@include [SeeAlsoUpdatePerRowCol]}
  * @param [expression] The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
 @Refine
@@ -291,9 +291,10 @@ public inline fun <T, C, R : C?> Update<T, C>.with(crossinline expression: Updat
         expression(row, value)
     }
 
-/** [Update with][Update.with] to provide a new value for every selected cell giving its row. */
+/** [Update with][Update.with] to provide a new value for every selected cell giving its row
+ * and its previous value. */
 @ExcludeFromSources
-private interface SeeAlsoWith
+private interface SeeAlsoUpdateWith
 
 /** ## As Frame
  *
@@ -313,8 +314,8 @@ public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpressi
  *  - {@include [UpdatePerColMap]}
  *
  * ### See Also
- *  - {@include [SeeAlsoWith]}
- *  - {@include [SeeAlsoPerRowCol]}
+ *  - {@include [SeeAlsoUpdateWith]}
+ *  - {@include [SeeAlsoUpdatePerRowCol]}
  * ### This Per Col Overload
  */
 @ExcludeFromSources
@@ -378,7 +379,7 @@ public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): Da
 
 /** [Update per col][Update.perCol] to provide a new value for every selected cell giving its column. */
 @ExcludeFromSources
-private interface SeeAlsoPerCol
+private interface SeeAlsoUpdatePerCol
 
 /** Chains up two row value filters together. */
 internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>): RowValueFilter<T, C> {
