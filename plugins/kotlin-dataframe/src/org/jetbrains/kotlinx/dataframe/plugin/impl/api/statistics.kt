@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.dataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.impl.ignore
 import org.jetbrains.kotlinx.dataframe.plugin.impl.simpleColumnOf
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -94,7 +95,6 @@ val min = Aggregators.min<Double>(skipNaN)
 val max = Aggregators.max<Double>(skipNaN)
 val percentile = Aggregators.percentile(percentileArg, skipNaN)
 
-
 /** Adds to the schema only numerical columns. */
 abstract class Aggregator0(val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
     private val Arguments.receiver: PluginDataFrameSchema by dataFrame()
@@ -137,7 +137,9 @@ class Max0 : AggregatorIntraComparable0(max)
 
 class Min0 : AggregatorIntraComparable0(min)
 
-class Percentile0 : AggregatorIntraComparable0(percentile)
+class Percentile0 : AggregatorIntraComparable0(percentile) {
+    val Arguments.percentile by ignore()
+}
 
 /** Adds to the schema all resolved columns. */
 abstract class Aggregator1 (val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
@@ -165,6 +167,6 @@ class Max1 : Aggregator1(max)
 
 class Min1 : Aggregator1(min)
 
-class Percentile1 : Aggregator1(percentile)
-
-
+class Percentile1 : Aggregator1(percentile) {
+    val Arguments.percentile by ignore()
+}

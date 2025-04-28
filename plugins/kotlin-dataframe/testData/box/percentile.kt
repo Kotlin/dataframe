@@ -42,15 +42,15 @@ fun box(): String {
     val percentile09: String? = res0.height
 
     // scenario #1: particular column
-    val res1 = personsDf.percentileFor(percentile = percentileArg) { age }
+    val res1 = personsDf.percentileFor(percentile = 30.0) { age }
     val percentile11: Double? = res1.age
 
     // scenario #1.1: particular column with converted type
-    val res11 = personsDf.percentileFor(percentile = percentileArg) { dependentsCount }
+    val res11 = personsDf.percentileFor(percentile = 30.0) { dependentsCount }
     val percentile111: Double? = res11.dependentsCount
 
     // scenario #2: percentile of values per columns separately
-    val res3 = personsDf.percentileFor(percentile = percentileArg){ name and weight and workExperienceYears and dependentsCount and annualIncome }
+    val res3 = personsDf.percentileFor<_, String>(percentile = 30.0){ name and weight and workExperienceYears and dependentsCount and annualIncome }
 
     val percentile31: String? = res3.name
     val percentile32: Double? = res3.weight
