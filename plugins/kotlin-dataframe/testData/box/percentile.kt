@@ -29,37 +29,40 @@ fun box(): String {
     )
 
     // scenario #0: all numerical columns
-    val res0 = personsDf.sum()
+    val res0 = personsDf.percentile(percentile = 30.0)
     res0.df().compareSchemas()
 
-    val sum01: Int? = res0.age
-    val sum02: Double? = res0.weight
-    val sum03: Int? = res0.yearsToRetirement
-    val sum04: Int? = res0.workExperienceYears
-    val sum05: Int? = res0.dependentsCount
-    val sum06: Long? = res0.annualIncome
+    val percentile01: Double? = res0.age
+    val percentile02: Double? = res0.weight
+    val percentile03: Double? = res0.yearsToRetirement
+    val percentile04: Double? = res0.workExperienceYears
+    val percentile05: Double? = res0.dependentsCount
+    val percentile06: Double? = res0.annualIncome
+    val percentile07: String? = res0.name
+    val percentile08: String? = res0.city
+    val percentile09: String? = res0.height
 
     // scenario #1: particular column
-    val res1 = personsDf.sumFor { age }
+    val res1 = personsDf.percentileFor(percentile = 30.0) { age }
     res1.df().compareSchemas()
 
-    val sum11: Int? = res1.age
+    val percentile11: Double? = res1.age
 
     // scenario #1.1: particular column with converted type
-    val res11 = personsDf.sumFor { dependentsCount }
+    val res11 = personsDf.percentileFor(percentile = 30.0) { dependentsCount }
     res11.df().compareSchemas()
 
-    val sum111: Int? = res11.dependentsCount
+    val percentile111: Double? = res11.dependentsCount
 
-    // scenario #2: sum of values per columns separately
-    val res3 = personsDf.sumFor { age and weight and workExperienceYears and dependentsCount and annualIncome }
+    // scenario #2: percentile of values per columns separately
+    val res3 = personsDf.percentileFor<_, String>(percentile = 30.0){ name and weight and workExperienceYears and dependentsCount and annualIncome }
     res3.df().compareSchemas()
 
-    val sum31: Int? = res3.age
-    val sum32: Double? = res3.weight
-    val sum33: Int? = res3.workExperienceYears
-    val sum34: Int? = res3.dependentsCount
-    val sum35: Long? = res3.annualIncome
+    val percentile31: String? = res3.name
+    val percentile32: Double? = res3.weight
+    val percentile33: Double? = res3.workExperienceYears
+    val percentile34: Double? = res3.dependentsCount
+    val percentile35: Double? = res3.annualIncome
 
     return "OK"
 }
