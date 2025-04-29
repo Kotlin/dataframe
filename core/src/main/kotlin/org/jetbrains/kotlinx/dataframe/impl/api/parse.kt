@@ -214,7 +214,7 @@ internal object Parsers : GlobalParserOptions {
                 .parseOrNull(this)
                 ?.toInstantUsingOffset()
         }
-            // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
+        // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
             ?: toJavaInstantOrNull()?.toKotlinInstant()
 
     private fun String.toJavaInstantOrNull(): JavaInstant? =
