@@ -170,12 +170,6 @@ internal class Integration(private val notebook: Notebook, private val options: 
                     "org.jetbrains.kotlinx:dataframe-openapi-generator:$version",
                 )
             }
-            dependencies(
-                "org.jetbrains.kotlinx:dataframe-csv:$version",
-                "org.jetbrains.kotlinx:dataframe-excel:$version",
-                "org.jetbrains.kotlinx:dataframe-jdbc:$version",
-                "org.jetbrains.kotlinx:dataframe-arrow:$version",
-            )
         }
 
         try {
