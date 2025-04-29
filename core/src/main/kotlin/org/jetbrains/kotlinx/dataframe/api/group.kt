@@ -185,7 +185,7 @@ public fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnW
  *
  * For more information: {@include [DocumentationUrls.Group]}
  *
- * @include [SelectingColumns.ColumnNames]
+ * @include [SelectingColumns.Dsl]
  *
  * ### Examples:
  * ```kotlin

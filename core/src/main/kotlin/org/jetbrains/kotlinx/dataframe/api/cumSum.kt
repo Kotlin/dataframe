@@ -116,7 +116,7 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
 public fun <T, C : Number?> DataFrame<T>.cumSum(
     skipNA: Boolean = defaultCumSumSkipNA,
     columns: ColumnsSelector<T, C>,
-): DataFrame<T> = convert(columns).to { it.cumSum(skipNA) }
+): DataFrame<T> = convert(columns).asColumn { it.cumSum(skipNA) }
 
 /**
  * {@include [CumSumDocs]}
