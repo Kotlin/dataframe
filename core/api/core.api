@@ -2548,6 +2548,7 @@ public final class org/jetbrains/kotlinx/dataframe/api/IntoKt {
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
+	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/GroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnPath;Lkotlin/jvm/functions/Function2;Lkotlin/reflect/KType;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;Ljava/lang/String;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;Lkotlin/reflect/KProperty;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
 	public static final fun into (Lorg/jetbrains/kotlinx/dataframe/api/ReducedGroupBy;Lorg/jetbrains/kotlinx/dataframe/columns/ColumnAccessor;)Lorg/jetbrains/kotlinx/dataframe/DataFrame;
