@@ -144,10 +144,13 @@ public inline fun <reified T> AnyRow.rowPercentileOf(
 // endregion
 
 // region DataFrame
-
+@Refine
+@Interpretable("Percentile0")
 public fun <T> DataFrame<T>.percentile(percentile: Double, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     percentileFor(percentile, skipNaN, intraComparableColumns())
 
+@Refine
+@Interpretable("Percentile1")
 public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
