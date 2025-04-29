@@ -1177,8 +1177,9 @@ class DataFrameTests : BaseTest() {
             .split { others }.intoRows()
             .add(sum) { name.length + other().length }
 
-        val matrix = src.pivot { other }.groupBy { name }.with { sum }
+        val matrix = src.pivot { other }.groupBy { name }.with { sum() }
         matrix.getColumnGroup(other.name()).ncol shouldBe names.size
+        matrix.getColumnGroup(other.name())["Alice"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
