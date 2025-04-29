@@ -414,7 +414,7 @@ private interface SeeAlsoConvertAsColumn
  * // Select columns with json values and convert it to decoded `String`.
  * df.convert { valueJson }.with { Json.decode(it) }
  * // Convert all `Int` columns to `Duration`, multiplying each value by the corresponding value from the "coeff" `Double` column before conversion
- * df.convert { colsOf<Int>() }.with { baseValue -> (baseValue * coeff).toDuration(DurationUnit.MICROSECONDS) }
+ * df.convert { colsOf<Int>() }.with { baseValue -> (baseValue * coeff).seconds }
  * ```
  *
  * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
