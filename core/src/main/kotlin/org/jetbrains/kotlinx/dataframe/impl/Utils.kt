@@ -150,6 +150,10 @@ internal fun <T> catchSilent(body: () -> T): T? =
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
     commonParents(this).createType(nullable, upperBound)
 
+// helper overload for friend modules
+@JvmName("commonTypeOverload")
+internal fun commonType(types: Iterable<KType?>, useStar: Boolean = true) = types.commonType(useStar)
+
 /**
  * Returns the common supertype of the given types.
  *
@@ -275,6 +279,10 @@ internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Seque
             get(start until endExclusive)
         }
     }
+
+// helper overload for friend modules
+@JvmName("splitByIndicesOverload")
+internal fun <T> splitByIndices(list: List<T>, startIndices: Sequence<Int>) = list.splitByIndices(startIndices)
 
 internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> =
     (startIndices + size).zipWithNext { start, endExclusive ->

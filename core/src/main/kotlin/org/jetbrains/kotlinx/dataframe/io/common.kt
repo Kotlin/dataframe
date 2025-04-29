@@ -17,7 +17,7 @@ import java.net.URL
  * Opens a stream to [url] to create a [DataFrame] from it.
  * If the URL is a file URL, the file is read directly.
  * If the URL is an HTTP URL, it's also read directly, but if the server returns an error code,
- * the error response is read as JSON and parsed as [DataFrame] too.
+ * the error response is read and parsed as [DataFrame] too.
  *
  * Public so it may be used in other modules.
  */
@@ -32,8 +32,8 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
         if (code != 200) {
             val response = connection.responseMessage
             try {
-                // attempt to read error response as JSON
-                return DataFrame.readJson(connection.errorStream)
+                // attempt to read error response as dataframe
+                return DataFrame.read(connection.errorStream).df
             } catch (_: Exception) {
                 throw RuntimeException("Server returned HTTP response code: $code. Response: $response")
             }

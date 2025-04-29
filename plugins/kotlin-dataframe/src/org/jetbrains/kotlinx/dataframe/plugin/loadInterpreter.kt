@@ -113,7 +113,11 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DropLast0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DropLast1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DropLast2
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.DropNa0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ExcludeJoin
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ExcludeJoinWith
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FillNulls0
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FilterJoin
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FilterJoinWith
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.First0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.First1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.First2
@@ -122,6 +126,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FlattenDefault
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FrameCols0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FrameCols1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FrameCols2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FullJoin
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.FullJoinWith
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByAdd
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByCount0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByInto
@@ -141,17 +147,22 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceExpression
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReduceInto
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByReducePredicate
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByXs
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InnerJoin
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InsertAfter0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Last2
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.LeftJoin
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStd0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStd1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupByStdOf
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySum1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBySumOf
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InnerJoinWith
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.InsertAt
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.JoinWith
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.LeftJoinWith
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MapToFrame
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Merge0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.MergeId
@@ -197,6 +208,8 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameToCamelCase
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RenameToCamelCaseClause
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Reorder
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.ReorderColumnsByName
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RightJoin
+import org.jetbrains.kotlinx.dataframe.plugin.impl.api.RightJoinWith
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.Single2
@@ -218,7 +231,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.api.WithoutNulls0
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.WithoutNulls1
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.WithoutNulls2
 import org.jetbrains.kotlinx.dataframe.plugin.utils.Names
-
 
 internal fun FirFunctionCall.loadInterpreter(session: FirSession): Interpreter<*>? {
     val interpreter = Stdlib.interpreter(this)
@@ -318,6 +330,19 @@ internal inline fun <reified T> String.load(): T {
         "InsertAfter0" -> InsertAfter0()
         "InsertAt" -> InsertAt()
         "Join0" -> Join0()
+        "LeftJoin" -> LeftJoin()
+        "RightJoin" -> RightJoin()
+        "FullJoin" -> FullJoin()
+        "InnerJoin" -> InnerJoin()
+        "ExcludeJoin" -> ExcludeJoin()
+        "FilterJoin" -> FilterJoin()
+        "JoinWith" -> JoinWith()
+        "LeftJoinWith" -> LeftJoinWith()
+        "RightJoinWith" -> RightJoinWith()
+        "FullJoinWith" -> FullJoinWith()
+        "InnerJoinWith" -> InnerJoinWith()
+        "ExcludeJoinWith" -> ExcludeJoinWith()
+        "FilterJoinWith" -> FilterJoinWith()
         "Match0" -> Match0()
         "Rename" -> Rename()
         "RenameMapping" -> RenameMapping()

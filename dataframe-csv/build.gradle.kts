@@ -25,6 +25,10 @@ repositories {
 dependencies {
     api(projects.core)
 
+    // for reading/writing JSON <-> DataFrame/DataRow in CSV/TSV/Delim
+    // can safely be excluded when working without JSON and only writing flat dataframes
+    api(projects.dataframeJson)
+
     // for csv reading
     api(libs.deephavenCsv)
     // for csv writing

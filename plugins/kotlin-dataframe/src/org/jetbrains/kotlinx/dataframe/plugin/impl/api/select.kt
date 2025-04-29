@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
 import org.jetbrains.kotlin.fir.types.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.plugin.impl.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Arguments
 import org.jetbrains.kotlinx.dataframe.plugin.impl.Interpreter
@@ -57,7 +58,9 @@ internal class And0 : AbstractInterpreter<ColumnsResolver>() {
     val Arguments.other: ColumnsResolver by arg()
 
     override fun Arguments.interpret(): ColumnsResolver {
-        return object : ColumnsResolver {
+        return object : ColumnsResolver, ColumnsList<Any?> {
+            override val columns = listOf(receiver, other)
+
             override fun resolve(df: PluginDataFrameSchema): List<ColumnWithPathApproximation> {
                 return receiver.resolve(df) + other.resolve(df)
             }
