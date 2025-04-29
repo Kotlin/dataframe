@@ -673,7 +673,7 @@ private fun Cell.setCellValueByGuessedType(any: Any) =
                 any.toJson()
             } catch (_: NoClassDefFoundError) {
                 error(
-                    "Encountered a DataRow when writing to an Excel cell. This needs to be converted to JSON, so the dataframe-json dependency is required.",
+                    "Encountered a DataRow value when writing to an Excel cell. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
                 )
             },
         )
@@ -683,7 +683,7 @@ private fun Cell.setCellValueByGuessedType(any: Any) =
                 any.toJson()
             } catch (_: NoClassDefFoundError) {
                 error(
-                    "Encountered a DataFrame when writing to an Excel cell. This needs to be converted to JSON, so the dataframe-json dependency is required.",
+                    "Encountered a DataFrame value when writing to an Excel cell. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
                 )
             },
         )
