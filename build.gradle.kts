@@ -50,6 +50,8 @@ configurations {
 
 dependencies {
     api(projects.core)
+
+    // expose all optional IO dependencies by default
     api(projects.dataframeArrow)
     api(projects.dataframeExcel)
     api(projects.dataframeJdbc)

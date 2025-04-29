@@ -24,7 +24,6 @@ dependencies {
     implementation(libs.kotlin.reflect)
     implementation(libs.kotlin.datetimeJvm)
 
-    testApi(projects.core)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

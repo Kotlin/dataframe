@@ -38,7 +38,6 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
 
-    testApi(projects.core)
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
