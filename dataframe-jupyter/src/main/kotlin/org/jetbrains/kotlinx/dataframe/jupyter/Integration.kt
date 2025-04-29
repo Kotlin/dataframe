@@ -171,7 +171,6 @@ internal class Integration(private val notebook: Notebook, private val options: 
                 )
             }
             dependencies(
-                "org.jetbrains.kotlinx:dataframe-core:$version",
                 "org.jetbrains.kotlinx:dataframe-csv:$version",
                 "org.jetbrains.kotlinx:dataframe-excel:$version",
                 "org.jetbrains.kotlinx:dataframe-jdbc:$version",

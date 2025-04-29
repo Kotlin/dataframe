@@ -668,9 +668,25 @@ public fun <T> DataFrame<T>.writeExcel(
 
 private fun Cell.setCellValueByGuessedType(any: Any) =
     when (any) {
-        is AnyRow -> this.setCellValue(any.toJson())
+        is AnyRow -> this.setCellValue(
+            try {
+                any.toJson()
+            } catch (_: NoClassDefFoundError) {
+                error(
+                    "Encountered a DataRow value when writing to an Excel cell. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
+                )
+            },
+        )
 
-        is AnyFrame -> this.setCellValue(any.toJson())
+        is AnyFrame -> this.setCellValue(
+            try {
+                any.toJson()
+            } catch (_: NoClassDefFoundError) {
+                error(
+                    "Encountered a DataFrame value when writing to an Excel cell. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
+                )
+            },
+        )
 
         is Number -> this.setCellValue(any.toDouble())
 

@@ -1,8 +1,5 @@
 package org.jetbrains.kotlinx.dataframe
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.renderToString
@@ -31,5 +28,3 @@ fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20)
         print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
         schema().print()
     }
-
-fun parseJsonStr(jsonStr: String): JsonObject = Json.parseToJsonElement(jsonStr).jsonObject

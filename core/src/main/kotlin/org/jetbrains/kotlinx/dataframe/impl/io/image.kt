@@ -58,3 +58,26 @@ internal fun BufferedImage.toByteArray(format: String = DEFAULT_IMG_FORMAT): Byt
         ImageIO.write(this, format, bos)
         bos.toByteArray()
     }
+
+// helper overload for friend modules
+@JvmName("resizeKeepingAspectRatioOverload")
+internal fun resizeKeepingAspectRatio(
+    image: BufferedImage,
+    maxSize: Int,
+    resultImageType: Int = BufferedImage.TYPE_INT_ARGB,
+    interpolation: Any = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR,
+    renderingQuality: Any = RenderingHints.VALUE_RENDER_QUALITY,
+    antialiasing: Any = RenderingHints.VALUE_ANTIALIAS_ON,
+    observer: ImageObserver? = null,
+) = image.resizeKeepingAspectRatio(
+    maxSize = maxSize,
+    resultImageType = resultImageType,
+    interpolation = interpolation,
+    renderingQuality = renderingQuality,
+    antialiasing = antialiasing,
+    observer = observer,
+)
+
+// helper overload for friend modules
+@JvmName("toByteArrayOverload")
+internal fun toByteArray(image: BufferedImage, format: String = DEFAULT_IMG_FORMAT) = image.toByteArray(format)

@@ -34,7 +34,6 @@ dependencies {
         exclude("jakarta.validation")
     }
 
-    testApi(projects.core)
     testApi(projects.dataframeJupyter)
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
