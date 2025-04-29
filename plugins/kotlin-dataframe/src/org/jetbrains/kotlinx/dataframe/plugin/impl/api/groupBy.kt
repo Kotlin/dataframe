@@ -316,16 +316,16 @@ class GroupBySumOf : GroupByAggregatorSumOf(defaultName = "sum")
 abstract class GroupByAggregator0(val defaultName: String, val aggregator: Aggregator<*, *>) : AbstractSchemaModificationInterpreter() {
     val Arguments.receiver by groupBy()
     val Arguments.name: String? by arg(defaultValue = Present(null))
-    val Arguments.columns: ColumnsResolver? by arg()
+    val Arguments.columns: ColumnsResolver by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         if (name == null) {
-            val resolvedColumns = columns?.resolve(receiver.keys)?.map { (it.column as SimpleDataColumn) }!!.toList()
+            val resolvedColumns = columns.resolve(receiver.keys).map { (it.column as SimpleDataColumn) }.toList()
             val newColumns = generateStatisticResultColumns(aggregator, resolvedColumns)
 
             return PluginDataFrameSchema(receiver.keys.columns() + newColumns)
         } else {
-            val resolvedColumns = columns?.resolve(receiver.keys)?.map { it.column }!!.toList()
+            val resolvedColumns = columns.resolve(receiver.keys).map { it.column }.toList()
             // TODO: handle multiple columns https://github.com/Kotlin/dataframe/issues/1090
             val aggregated =
                 makeNullable(simpleColumnOf(name ?: defaultName, (resolvedColumns[0] as SimpleDataColumn).type.type))

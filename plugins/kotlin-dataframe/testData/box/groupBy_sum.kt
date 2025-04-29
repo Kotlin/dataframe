@@ -73,5 +73,11 @@ fun box(): String {
     val sum31: Double? = res31.newAge[0]
     res31.compareSchemas()
 
+    val df = dataFrameOf("a")(1, 2, 3)
+    val res41 = df.groupBy { a named "b" }.sum { a }
+    res41.compareSchemas()
+
+    val sum41: Int = res41.a[0]
+
     return "OK"
 }
