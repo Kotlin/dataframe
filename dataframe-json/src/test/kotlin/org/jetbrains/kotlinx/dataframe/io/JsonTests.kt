@@ -10,6 +10,7 @@ import io.kotest.matchers.types.instanceOf
 import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
@@ -19,7 +20,6 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.colsOf
@@ -29,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toMap
@@ -46,17 +47,12 @@ import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NCOL
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.NROW
 import org.jetbrains.kotlinx.dataframe.impl.io.SerializationKeys.VERSION
 import org.jetbrains.kotlinx.dataframe.impl.io.readJsonImpl
-import org.jetbrains.kotlinx.dataframe.impl.nothingType
-import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
-import org.jetbrains.kotlinx.dataframe.parseJsonStr
-import org.jetbrains.kotlinx.dataframe.testJson
-import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.values
-import org.junit.Test
-import kotlin.Double
+import java.net.URL
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+import kotlin.test.Test
 
 @Suppress("ktlint:standard:argument-list-wrapping")
 class JsonTests {
@@ -243,9 +239,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Double?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(2, null)
-            it["c"].values.toList() shouldBe listOf(null, 3)
-            it["d"].values.toList() shouldBe listOf(null, null)
+            it["b"].values().toList() shouldBe listOf(2, null)
+            it["c"].values().toList() shouldBe listOf(null, 3)
+            it["d"].values().toList() shouldBe listOf(null, null)
         }
 
         group[1].alsoDebug().let {
@@ -254,9 +250,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Double?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(4, null)
-            it["c"].values.toList() shouldBe listOf(null, null)
-            it["d"].values.toList() shouldBe listOf(null, 5)
+            it["b"].values().toList() shouldBe listOf(4, null)
+            it["c"].values().toList() shouldBe listOf(null, null)
+            it["d"].values().toList() shouldBe listOf(null, 5)
         }
     }
 
@@ -280,9 +276,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Int?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(2, null)
-            it["c"].values.toList() shouldBe listOf(null, 3)
-            it["d"].values.toList() shouldBe listOf(null, null)
+            it["b"].values().toList() shouldBe listOf(2, null)
+            it["c"].values().toList() shouldBe listOf(null, 3)
+            it["d"].values().toList() shouldBe listOf(null, null)
         }
 
         group[1].alsoDebug().let {
@@ -291,9 +287,9 @@ class JsonTests {
             it["b"].type() shouldBe typeOf<Int?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Int?>()
-            it["b"].values.toList() shouldBe listOf(4, null)
-            it["c"].values.toList() shouldBe listOf(null, null)
-            it["d"].values.toList() shouldBe listOf(null, 5)
+            it["b"].values().toList() shouldBe listOf(4, null)
+            it["c"].values().toList() shouldBe listOf(null, null)
+            it["d"].values().toList() shouldBe listOf(null, 5)
         }
     }
 
@@ -313,13 +309,13 @@ class JsonTests {
         df1.columnsCount() shouldBe 1
         df1.rowsCount() shouldBe 4
         df1["a"].type() shouldBe typeOf<Double>()
-        df1["a"].values.toList() shouldBe listOf(1.0, 2.0, 3.0, 4.5)
+        df1["a"].values().toList() shouldBe listOf(1.0, 2.0, 3.0, 4.5)
 
         val df2 = DataFrame.readJsonStr(json, unifyNumbers = false).alsoDebug()
         df2.columnsCount() shouldBe 1
         df2.rowsCount() shouldBe 4
         df2["a"].type() shouldBe typeOf<Number>()
-        df2["a"].values.toList() shouldBe listOf(1, 2.0f, 3, 4.5f)
+        df2["a"].values().toList() shouldBe listOf(1, 2.0f, 3, 4.5f)
     }
 
     @Test
@@ -350,7 +346,7 @@ class JsonTests {
             it.columnsCount() shouldBe 3
             it.rowsCount() shouldBe 3
             it["a"].type() shouldBe typeOf<String>()
-            it["a"].values.toList() shouldBe listOf("b", "c", "d")
+            it["a"].values().toList() shouldBe listOf("b", "c", "d")
         }
     }
 
@@ -397,7 +393,7 @@ class JsonTests {
                 it.columnsCount() shouldBe 1
                 it.rowsCount() shouldBe 3
                 it["a"].type() shouldBe typeOf<String>()
-                it["a"].values.toList() shouldBe listOf("b", "c", "d")
+                it["a"].values().toList() shouldBe listOf("b", "c", "d")
             }
     }
 
@@ -697,7 +693,7 @@ class JsonTests {
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
         val a = df["a"] as ValueColumn<*>
-        a.type shouldBe typeOf<List<Int?>>()
+        a.type() shouldBe typeOf<List<Int?>>()
         a[0] shouldBe listOf(1, 2, 3)
         a[1] shouldBe listOf(null)
         a[2..5].forEach {
@@ -1121,7 +1117,7 @@ class JsonTests {
     @Test
     fun `serialize column with list of objects`() {
         val df = dataFrameOf("col")(Regex(".+").findAll("abc").toList())
-        val json = shouldNotThrowAny { df.toJson() }!!
+        val json = shouldNotThrowAny { df.toJson() }
         val list = DataFrame.readJsonStr(json)["col"][0].shouldBeInstanceOf<List<*>>()
         list[0].shouldBeInstanceOf<String>()
     }
@@ -1136,9 +1132,31 @@ class JsonTests {
     @Test
     fun `parse invalid literal`() {
         // https://github.com/Kotlin/kotlinx.serialization/issues/2511
+        @Suppress("JsonStandardCompliance")
         val json = Json.decodeFromString<JsonElement>("""[jetbrains, jetbrains-youtrack, youtrack, youtrack-api]""")
         shouldThrow<IllegalStateException> {
             readJsonImpl(json, true, emptyList())
         }
     }
 }
+
+fun testResource(resourcePath: String): URL = JsonTests::class.java.classLoader.getResource(resourcePath)!!
+
+fun parseJsonStr(jsonStr: String): JsonObject = Json.parseToJsonElement(jsonStr).jsonObject
+
+fun testJson(jsonName: String) = testResource("$jsonName.json")
+
+/**
+ * Prints dataframe to console with borders, title, column types and schema
+ */
+fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T =
+    apply {
+        println?.let { println(it) }
+        print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
+        schema().print()
+    }
+
+internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
+internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
+
+internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
