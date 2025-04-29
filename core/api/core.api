@@ -5681,7 +5681,11 @@ public abstract interface class org/jetbrains/kotlinx/dataframe/impl/aggregation
 
 public final class org/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators {
 	public static final field INSTANCE Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregators;
+	public final fun getMax ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun getMean ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
+	public final fun getMedian ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
+	public final fun getMin ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
+	public final fun getPercentile ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getStd ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch2;
 	public final fun getSum ()Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/AggregatorOptionSwitch1;
 	public final fun max (Z)Lorg/jetbrains/kotlinx/dataframe/impl/aggregation/aggregators/Aggregator;
