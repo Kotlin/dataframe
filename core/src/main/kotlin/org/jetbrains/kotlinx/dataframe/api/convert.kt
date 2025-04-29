@@ -395,8 +395,8 @@ private interface SeeAlsoConvertPerRowCol
 private interface SeeAlsoConvertAsColumn
 
 /**
- * Converts values in the columns previously selected with [convert]
- * using [row value][RowValueExpression] [expression] within the [DataFrame].
+ * Converts values in columns previously selected by [convert] using the specified [rowConverter],
+ * a [row value expression][RowValueExpression] applied to each row in the [DataFrame].
  *
  * A [row value expression][RowValueExpression] allows to provide a new value for every selected cell
  * given its row (as a receiver) and its previous value (as a lambda argument).
@@ -419,15 +419,15 @@ private interface SeeAlsoConvertAsColumn
  *
  * @param infer [Infer] strategy that defines how the [type][DataColumn.type] of the resulting column should be determined.
  * Defaults to [Infer.Nulls].
- * @param [expression] The [RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
+ * @param [rowConverter] The [RowValueExpression] to provide a new value for every selected cell giving its row and previous value.
  * @return A new [DataFrame] with the converted values.
  */
 @Refine
 @Interpretable("With0")
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
-    noinline expression: RowValueExpression<T, C, R>,
-): DataFrame<T> = withRowCellImpl(typeOf<R>(), infer, expression)
+    noinline rowConverter: RowValueExpression<T, C, R>,
+): DataFrame<T> = withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
 /**
  * Converts [column groups][ColumnGroup] previously selected with [convert]
