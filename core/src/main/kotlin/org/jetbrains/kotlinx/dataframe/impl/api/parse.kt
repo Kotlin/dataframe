@@ -27,7 +27,6 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
@@ -214,7 +213,7 @@ internal object Parsers : GlobalParserOptions {
                 .parseOrNull(this)
                 ?.toInstantUsingOffset()
         }
-        // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
+            // fallback on the java instant to catch things like "2022-01-23T04:29:60", a.k.a. leap seconds
             ?: toJavaInstantOrNull()?.toKotlinInstant()
 
     private fun String.toJavaInstantOrNull(): JavaInstant? =

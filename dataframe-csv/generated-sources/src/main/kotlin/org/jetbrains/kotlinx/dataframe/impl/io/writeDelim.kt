@@ -78,7 +78,7 @@ internal fun writeDelimImpl(
                         it.toJson()
                     } catch (_: NoClassDefFoundError) {
                         error(
-                            "Encountered a DataFrame when writing to csv/tsv/delim. This needs to be converted to JSON, so the dataframe-json dependency is required.",
+                            "Encountered a DataRow value when writing to csv/tsv/delim. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
                         )
                     }
 
@@ -86,7 +86,7 @@ internal fun writeDelimImpl(
                         it.toJson()
                     } catch (_: NoClassDefFoundError) {
                         error(
-                            "Encountered a DataRow when writing to csv/tsv/delim. This needs to be converted to JSON, so the dataframe-json dependency is required.",
+                            "Encountered a DataFrame value when writing to csv/tsv/delim. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
                         )
                     }
 
