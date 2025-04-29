@@ -6,12 +6,14 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
@@ -46,6 +48,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
+import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO
+import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_REPLACE
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
@@ -79,8 +83,7 @@ internal interface SeeAlsoParse
  * Additionally, it offers a wide range of methods for converting to specific types,
  * such as [toStr][Convert.toStr], [toDouble][Convert.toDouble], and many others.
  *
- * For the full list of supported types,
- * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
+ * For the full list of supported types, see [SupportedTypes].
  *
  * Each method returns a new [DataFrame] with the updated columns.
  *
@@ -103,6 +106,18 @@ internal interface ConvertDocs {
     interface ConvertSelectingOptions
 
     /**
+     * List of types, supported in [convert to][Convert.to] operation:
+     * * [String] (uses parse to convert from String to other types);
+     * * [Boolean];
+     * * [Byte], [Short], [Char];
+     * * [Int], [Long], [Float], [Double];
+     * * [BigDecimal], [BigInteger];
+     * * [LocalDateTime], [LocalDate], [LocalTime], [Instant] ( (kotlinx.datetime and [java.time]),
+     * * [URL], [IMG], [IFRAME].
+     */
+    interface SupportedTypes
+
+    /**
      * ## Convert Operation Grammar
      * {@include [LineBreak]}
      * {@include [DslGrammarLink]}
@@ -121,9 +136,6 @@ internal interface ConvertDocs {
      *
      * {@include [Indent]}
      * `| `__`.`__[**`to`**][Convert.to]`(type: `[`KType`][KType]`)`
-     *
-     * {@include [Indent]}
-     * `| `__`.`__[**`to`**][Convert.to]`  { columnConverter: `[`DataFrame`](DataFrame)`.(`[`DataColumn`](DataColumn)`) -> `[`AnyBaseColumn`](AnyBaseColumn)`  }`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`perRowCol`**][Convert.perRowCol]`  { expression: `[`RowColumnExpression`][RowColumnExpression]`  }`
@@ -293,7 +305,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
  *
  * Use the following methods to perform the conversion:
  * - [to(kType)][to]/[to`<Type`>()][to] – converts columns to a specific type.
- * - [to { columnConverter }][to] - converts columns using column converter expression.
+ * - [asColumn { columnConverter }][asColumn] - converts columns using column converter expression.
  * - [with][Convert.with] – applies a custom row-wise conversion expression.
  * - [notNull][Convert.notNull] – like [with], but only for non-null values.
  * - [perRowCol][Convert.perRowCol] – applies a conversion that uses both column and row information.
@@ -324,8 +336,7 @@ public class Convert<T, out C>(
      * preserving their original names and positions within the [DataFrame].
      *
      * The target type is provided as a reified type argument.
-     * For the full list of supported types,
-     * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
+     * For the full list of supported types, see [ConvertDocs.SupportedTypes].
      *
      * For more information: {@include [DocumentationUrls.Convert]}
      *
@@ -353,8 +364,7 @@ public class Convert<T, out C>(
  * preserving their original names and positions within the [DataFrame].
  *
  * The target type is provided as a [KType].
- * For the full list of supported types,
- * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
+ * For the full list of supported types, see [ConvertDocs.SupportedTypes].
  *
  * For more information: {@include [DocumentationUrls.Convert]}
  *
@@ -371,6 +381,10 @@ public class Convert<T, out C>(
  * @return A new [DataFrame] with the values converted to [type].
  */
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = asColumn { it.convertTo(type) }
+
+@Deprecated(CONVERT_TO, ReplaceWith(CONVERT_TO_REPLACE), DeprecationLevel.ERROR)
+public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
+    df.replace(columns).with { columnConverter(df, it) }
 
 /** [Convert per row col][Convert.perRowCol] to provide a new value for every selected cell giving its column. */
 @ExcludeFromSources
@@ -512,8 +526,7 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
  *
  * The target type is provided as a reified type argument.
  *
- * For the full list of supported types,
- * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
+ * For the full list of supported types, see [ConvertDocs.SupportedTypes].
  *
  * @param [C] The target type to convert values to.
  * @return A new [DataColumn] with the values converted to type [C].
@@ -523,8 +536,7 @@ public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(type
 /**
  * Converts values in this column to the specified [type].
  *
- * For the full list of supported types,
- * refer to the [documentation website]({@include [DocumentationUrls.Url]}/convert.html).
+ * For the full list of supported types, see [ConvertDocs.SupportedTypes].
  *
  * @param type The target type, provided as a [KType], to convert values to.
  * @return A new [DataColumn] with the values converted to [type].
