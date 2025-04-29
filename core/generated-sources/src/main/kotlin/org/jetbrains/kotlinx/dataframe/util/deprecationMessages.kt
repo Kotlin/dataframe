@@ -92,6 +92,9 @@ internal const val MAX_NO_SKIPNAN = "This function is just here for binary compa
 internal const val MIN_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
 internal const val MEAN_NO_SKIPNAN = "This function is just here for binary compatibility. $MESSAGE_0_16"
 
+internal const val CONVERT_TO = "This to overload will be removed in favor of `asColumn`. $MESSAGE_0_16"
+internal const val CONVERT_TO_REPLACE = "this.asColumn(columnConverter)"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17

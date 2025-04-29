@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -70,7 +71,7 @@ internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
     infer: Infer,
     rowConverter: RowValueExpression<T, C, R>,
 ): DataFrame<T> =
-    to { col ->
+    asColumn { col ->
         try {
             df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) }
         } catch (e: ClassCastException) {
@@ -85,7 +86,7 @@ internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     type: KType,
     infer: Infer,
     rowConverter: RowColumnExpression<T, C, R>,
-): DataFrame<T> = to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
+): DataFrame<T> = asColumn { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
 
 /**
  * Specific implementation for [convertToTypeImpl] for [String] -> [Double] conversion
