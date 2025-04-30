@@ -8,10 +8,12 @@ import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 // region GroupBy
@@ -29,7 +31,7 @@ public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = t
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     columnName: String? = null,
     noinline expression: RowExpression<G, V>,
-): DataFrame<G> = into(pathOf(columnName ?: groups.name()).cast(), expression)
+): DataFrame<G> = into(pathOf(columnName ?: groups.name()), expression, typeOf<V>())
 
 // @Hide
 @AccessApiOverload
@@ -43,6 +45,16 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
         internal().withExpr(type, path, expression)
     }
 }
+
+@PublishedApi
+internal fun <T, G, V> GroupBy<T, G>.into(
+    path: ColumnPath,
+    expression: RowExpression<G, V>,
+    type: KType,
+): DataFrame<G> =
+    aggregate {
+        internal().withExpr(type, path, expression)
+    }
 
 @AccessApiOverload
 public inline fun <T, G, reified V> GroupBy<T, G>.into(

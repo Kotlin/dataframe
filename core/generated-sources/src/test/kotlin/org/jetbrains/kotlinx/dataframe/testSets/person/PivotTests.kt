@@ -165,6 +165,13 @@ class PivotTests {
             .pivot { key }
             .groupBy { name }
             .default("-")
+            .with { value() } shouldBe res
+
+        // special case that looks very odd, but kept it for compatibility
+        typed
+            .pivot { key }
+            .groupBy { name }
+            .default("-")
             .with { value } shouldBe res
         df
             .pivot { key }
@@ -180,7 +187,7 @@ class PivotTests {
             .pivot(key)
             .groupBy(name)
             .default("-")
-            .with { value } shouldBe res
+            .with { value() } shouldBe res
         typed
             .groupBy { name }
             .pivot { key }

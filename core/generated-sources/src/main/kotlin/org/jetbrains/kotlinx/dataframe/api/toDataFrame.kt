@@ -31,7 +31,7 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
         // or has no properties
         if (!T::class.canBeUnfolded) {
             // create a single `value` column
-            ValueProperty<T>::value from { it }
+            ValueProperty<T>::value.name from { it }
         } else {
             // otherwise creates columns based on properties
             properties()
