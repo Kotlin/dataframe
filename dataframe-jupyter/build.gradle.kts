@@ -18,15 +18,10 @@ repositories {
 }
 
 dependencies {
-    api(projects.core)
-    api(projects.dataframeJson)
+    api(projects.dataframe)
 
     testImplementation(libs.junit)
     testImplementation(libs.serialization.json)
-    testImplementation(projects.dataframeArrow)
-    testImplementation(projects.dataframeCsv)
-    testImplementation(projects.dataframeExcel)
-    testImplementation(projects.dataframeJdbc)
     // experimental
     testImplementation(projects.dataframeOpenapiGenerator)
     testImplementation(projects.dataframeOpenapi)

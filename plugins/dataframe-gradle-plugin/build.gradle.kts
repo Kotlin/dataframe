@@ -16,12 +16,7 @@ group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     api(libs.kotlin.reflect)
-    implementation(projects.core)
-    implementation(projects.dataframeArrow)
-    implementation(projects.dataframeExcel)
-    implementation(projects.dataframeCsv)
-    implementation(projects.dataframeJdbc)
-    implementation(projects.dataframeJson)
+    implementation(projects.dataframe)
     // experimental
     implementation(projects.dataframeOpenapiGenerator)
 
