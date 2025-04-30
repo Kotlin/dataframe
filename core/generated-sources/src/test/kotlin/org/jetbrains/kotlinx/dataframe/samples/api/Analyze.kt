@@ -179,7 +179,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.sum() // sum of values per every numeric column
         df.sum { age and weight } // sum of all values in `age` and `weight`
-        df.sumFor { age and weight } // sum of values per `age` and `weight` separately
+        df.sumFor(skipNaN = true) { age and weight } // sum of values per `age` and `weight` separately
         df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
         // SampleEnd
     }
@@ -190,7 +190,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.min() // min of values per every comparable column
         df.min { age and weight } // min of all values in `age` and `weight`
-        df.minFor { age and weight } // min of values per `age` and `weight` separately
+        df.minFor(skipNaN = true) { age and weight } // min of values per `age` and `weight` separately
         df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
         df.minBy { age } // DataRow with minimal `age`
         // SampleEnd
@@ -214,7 +214,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.median() // median of values per every comparable column
         df.median { age and weight } // median of all values in `age` and `weight`
-        df.medianFor { age and weight } // median of values per `age` and `weight` separately
+        df.medianFor(skipNaN = true) { age and weight } // median of values per `age` and `weight` separately
         df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
         // SampleEnd
     }
@@ -237,7 +237,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.percentile(25.0) // percentile of values per every comparable column
         df.percentile(25.0) { age and weight } // percentile of all values in `age` and `weight`
-        df.percentileFor(25.0) { age and weight } // percentile of values per `age` and `weight` separately
+        df.percentileFor(25.0, skipNaN = true) { age and weight } // percentile of values per `age` and `weight` separately
         df.percentileOf(25.0) { (weight ?: 0) / age } // percentile of expression evaluated for every row
         // SampleEnd
     }
@@ -259,8 +259,8 @@ class Analyze : TestBase() {
     fun meanModes() {
         // SampleStart
         df.mean() // mean of values per every numeric column
-        df.mean(skipNaN = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
-        df.meanFor(skipNaN = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
+        df.mean { age and weight } // mean of all values in `age` and `weight`
+        df.meanFor(skipNaN = true) { age and weight } // mean of values per `age` and `weight` separately, skips NaN
         df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
         // SampleEnd
     }
@@ -283,7 +283,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.std() // std of values per every numeric column
         df.std { age and weight } // std of all values in `age` and `weight`
-        df.stdFor { age and weight } // std of values per `age` and `weight` separately, skips NA
+        df.stdFor(skipNaN = true) { age and weight } // std of values per `age` and `weight` separately, skips NA
         df.stdOf { (weight ?: 0) / age } // std of expression evaluated for every row
         // SampleEnd
     }
