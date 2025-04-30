@@ -11,7 +11,7 @@ Is available for `Comparable` columns. [`NA` values](nanAndNa.md#na) (`null` and
 ```kotlin
 df.median() // median of values per every comparable column
 df.median { age and weight } // median of all values in `age` and `weight`
-df.medianFor { age and weight } // median of values per `age` and `weight` separately
+df.medianFor(skipNaN = true) { age and weight } // median of values per `age` and `weight` separately
 df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
 ```
 

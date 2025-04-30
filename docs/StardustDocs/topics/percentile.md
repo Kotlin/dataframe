@@ -11,7 +11,7 @@ Is available for `Comparable` columns. [`NA` values](nanAndNa.md#na) (`null` and
 ```kotlin
 df.percentile(25.0) // percentile of values per every comparable column
 df.percentile(25.0) { age and weight } // percentile of all values in `age` and `weight`
-df.percentileFor(25.0) { age and weight } // percentile of values per `age` and `weight` separately
+df.percentileFor(25.0, skipNaN = true) { age and weight } // percentile of values per `age` and `weight` separately
 df.percentileOf(25.0) { (weight ?: 0) / age } // percentile of expression evaluated for every row
 ```
 
