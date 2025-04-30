@@ -171,7 +171,7 @@ dependencies {
 
 </tabs>
 
-<warning>
+<note>
 `dataframe-json` is included with `dataframe-csv` and `dataframe-excel` by default. This is to interact with
 JSON structures inside CSV and Excel files. If you don't need this functionality, you can exclude it like:
 ```kts
@@ -179,7 +179,7 @@ implementation("org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%") {
     exclude("org.jetbrains.kotlinx", "dataframe-json")
 }
 ```
-</warning>
+</note>
 
 #### Linter configuration
 
