@@ -5,6 +5,8 @@ import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.floats.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
@@ -14,7 +16,9 @@ import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.impl.nullableNothingType
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class SumTests {
 
@@ -44,6 +48,28 @@ class SumTests {
         df.sum { value } shouldBe expected
         df.sum()[value] shouldBe expected
         df.sumOf { value() } shouldBe expected
+    }
+
+    @Test
+    fun `empty column with types`() {
+        val emptyIntCol by columnOf<Int?>(null, null)
+        emptyIntCol.sum() shouldBe 0
+
+        // empty column with Number type
+        val emptyNumberColumn = DataColumn.createValueColumn<Number?>(
+            "emptyNumberColumn",
+            listOf(null, null),
+            typeOf<Number?>(),
+        )
+        emptyNumberColumn.sum() shouldBe 0.0
+
+        // empty column with nullable Nothing type
+        val emptyNothingColumn = DataColumn.createValueColumn(
+            "emptyNothingColumn",
+            listOf(null, null),
+            nullableNothingType,
+        )
+        emptyNothingColumn.cast<Number?>().sum() shouldBe 0.0
     }
 
     @Test
