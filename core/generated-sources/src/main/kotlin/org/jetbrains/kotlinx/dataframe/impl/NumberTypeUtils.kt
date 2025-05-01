@@ -6,6 +6,7 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -307,10 +308,24 @@ internal fun Sequence<Number?>.convertToUnifiedNumberType(
                 "Cannot find unified number type of types: ${types.joinToString { renderType(it) }}",
             )
     }
-    val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
-    return map {
-        if (it == null) return@map null
-        converter(it) ?: error("Can not convert $it to $commonNumberType")
+    require(commonNumberType.isSubtypeOf(typeOf<Number?>())) {
+        "Cannot convert numbers to $commonNumberType; it is not a subtype of Number?"
+    }
+    return when (commonNumberType) {
+        nothingType -> {
+            require(null !in this) { "Cannot unify numbers to Nothing; it contains nulls" }
+            this
+        }
+
+        nullableNothingType -> this
+
+        else -> {
+            val converter = createConverter(typeOf<Number>(), commonNumberType)!! as (Number) -> Number?
+            this.map {
+                if (it == null) return@map null
+                converter(it) ?: error("Can not convert $it to $commonNumberType")
+            }
+        }
     }
 }
 
