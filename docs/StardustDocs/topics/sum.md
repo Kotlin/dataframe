@@ -46,13 +46,13 @@ See [statistics](summaryStatistics.md#groupby-statistics) for details on complex
 
 The following automatic type conversions are performed for the `sum` operation:
 
-| Conversion                                                                 | skipNaN option |
-|----------------------------------------------------------------------------|----------------|
-| Int -> Int                                                                 |                |
-| Byte -> Int                                                                |                |
-| Short -> Int                                                               |                |
-| Long -> Long                                                               |                |
-| Double -> Double                                                           | yes            |
-| Float -> Float                                                             | yes            |
-| Number -> Conversion([Common number type](numberUnification.md)) -> Number | yes            |
-| Nothing / no values -> Double (0.0)                                        |                |
+| Conversion                                                                 | Result for Empty Input |
+|----------------------------------------------------------------------------|------------------------|
+| Int -> Int                                                                 | 0                      |
+| Byte -> Int                                                                | 0                      |
+| Short -> Int                                                               | 0                      |
+| Long -> Long                                                               | 0L                     |
+| Double -> Double                                                           | 0.0                    |
+| Float -> Float                                                             | 0.0f                   |
+| Number -> Conversion([Common number type](numberUnification.md)) -> Number | 0.0                    |
+| Nothing -> Double                                                          | 0.0                    |

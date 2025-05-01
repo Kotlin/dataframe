@@ -47,13 +47,13 @@ See [statistics](summaryStatistics.md#groupby-statistics) for details on complex
 The following automatic type conversions are performed for the `min` and `max` operations.
 (Note that `null` only appears in the return type when using `-orNull` overloads).
 
-| Conversion                               | skipNaN option |
-|------------------------------------------|----------------|
-| T -> T? where T : Comparable<T>          |                |
-| Int -> Int?                              |                |
-| Byte -> Byte?                            |                |
-| Short -> Short?                          |                |
-| Long -> Long?                            |                |
-| Double -> Double?                        | yes            |
-| Float -> Float?                          | yes            |
-| Nothing / no values -> Nothing? (`null`) |                |
+| Conversion                     | Result for Empty Input |
+|--------------------------------|------------------------|
+| T -> T where T : Comparable<T> | null                   |
+| Int -> Int                     | null                   |
+| Byte -> Byte                   | null                   |
+| Short -> Short                 | null                   |
+| Long -> Long                   | null                   |
+| Double -> Double               | null                   |
+| Float -> Float                 | null                   |
+| Nothing -> Nothing             | null                   |

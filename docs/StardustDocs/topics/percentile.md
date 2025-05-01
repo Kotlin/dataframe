@@ -32,9 +32,11 @@ When it's set to `true`, `NaN` values are ignored.
 
 ### Quantile Estimation Methods
 
-DataFrame follows [Hyndman, Rob & Fan, Yanan. (1996). Sample Quantiles in Statistical Packages. The American Statistician. 50. 361-365. 10.1080/00031305.1996.10473566.](https://www.researchgate.net/publication/222105754_Sample_Quantiles_in_Statistical_Packages)
+DataFrame
+follows [Hyndman, Rob & Fan, Yanan. (1996). Sample Quantiles in Statistical Packages. The American Statistician. 50. 361-365. 10.1080/00031305.1996.10473566.](https://www.researchgate.net/publication/222105754_Sample_Quantiles_in_Statistical_Packages)
 and [Apache Commons Statistics](https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-statistics/commons-statistics-docs/apidocs/org/apache/commons/statistics/descriptive/Quantile.EstimationMethod.html)
-for the [9 commonly used quantile estimation methods](https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample).
+for
+the [9 commonly used quantile estimation methods](https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample).
 
 For the `percentile` operation, DataFrame uses estimation method R3 when the given percentile needs
 to be selected from the values (like for self-comparable columns), and R8 when the given percentile can be
@@ -73,15 +75,16 @@ See [statistics](summaryStatistics.md#groupby-statistics) for details on complex
 
 ### Type Conversion
 
-The following automatic type conversions are performed for the `percentile` operation:
+The following automatic type conversions are performed for the `percentile` operation.
+(Note that `null` only appears in the return type when using `-orNull` overloads).
 
-| Conversion                               | skipNaN option |
-|------------------------------------------|----------------|
-| T -> T? where T : Comparable<T>          |                |
-| Int -> Double?                           |                |
-| Byte -> Double?                          |                |
-| Short -> Double?                         |                |
-| Long -> Double?                          |                |
-| Double -> Double?                        | yes            |
-| Float -> Double?                         | yes            |
-| Nothing / no values -> Nothing? (`null`) |                |
+| Conversion                     | Result for Empty Input |
+|--------------------------------|------------------------|
+| T -> T where T : Comparable<T> | null                   |
+| Int -> Double                  | null                   |
+| Byte -> Double                 | null                   |
+| Short -> Double                | null                   |
+| Long -> Double                 | null                   |
+| Double -> Double               | null                   |
+| Float -> Double                | null                   |
+| Nothing -> Nothing             | null                   |

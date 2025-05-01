@@ -47,13 +47,13 @@ See [statistics](summaryStatistics.md#groupby-statistics) for details on complex
 
 The following automatic type conversions are performed for the `mean` operation:
 
-| Conversion                                                                 | skipNaN option |
-|----------------------------------------------------------------------------|----------------|
-| Int -> Double                                                              |                |
-| Byte -> Double                                                             |                |
-| Short -> Double                                                            |                |
-| Long -> Double                                                             |                |
-| Double -> Double                                                           | yes            |
-| Float -> Double                                                            | yes            |
-| Number -> Conversion([Common number type](numberUnification.md)) -> Double | yes            |
-| Nothing / no values -> Double (NaN)                                        |                |
+| Conversion                                                                 | Result for Empty Input |
+|----------------------------------------------------------------------------|------------------------|
+| Int -> Double                                                              | Double.NaN             |
+| Byte -> Double                                                             | Double.NaN             |
+| Short -> Double                                                            | Double.NaN             |
+| Long -> Double                                                             | Double.NaN             |
+| Double -> Double                                                           | Double.NaN             |
+| Float -> Double                                                            | Double.NaN             |
+| Number -> Conversion([Common number type](numberUnification.md)) -> Double | Double.NaN             |
+| Nothing -> Double                                                          | Double.NaN             |

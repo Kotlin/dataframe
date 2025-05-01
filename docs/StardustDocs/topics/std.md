@@ -19,10 +19,11 @@ set to `false` by default. This means that if a `NaN` is present in the input, i
 When it's set to `true`, `NaN` values are ignored.
 
 ### Delta Degrees of Freedom: DDoF
+
 All `std` operations also have the `ddof`
 ([Delta Degrees of Freedom](https://en.wikipedia.org/wiki/Degrees_of_freedom_%28statistics%29)) argument.
 
-The default is set to `1`, meaning DataFrame uses 
+The default is set to `1`, meaning DataFrame uses
 [Bessel’s correction](https://en.wikipedia.org/wiki/Bessel%27s_correction)
 to calculate the "unbiased sample standard deviation" by default.
 This is also the standard in languages like [R](https://www.r-project.org/).
@@ -58,13 +59,13 @@ See [statistics](summaryStatistics.md#groupby-statistics) for details on complex
 
 The following automatic type conversions are performed for the `mean` operation:
 
-| Conversion                                                                 | skipNaN option |
-|----------------------------------------------------------------------------|----------------|
-| Int -> Double                                                              |                |
-| Byte -> Double                                                             |                |
-| Short -> Double                                                            |                |
-| Long -> Double                                                             |                |
-| Double -> Double                                                           | yes            |
-| Float -> Double                                                            | yes            |
-| Number -> Conversion([Common number type](numberUnification.md)) -> Double | yes            |
-| Nothing / no values -> Double (NaN)                                        |                |
+| Conversion                                                                 | Result for Empty Input |
+|----------------------------------------------------------------------------|------------------------|
+| Int -> Double                                                              | Double.NaN             |
+| Byte -> Double                                                             | Double.NaN             |
+| Short -> Double                                                            | Double.NaN             |
+| Long -> Double                                                             | Double.NaN             |
+| Double -> Double                                                           | Double.NaN             |
+| Float -> Double                                                            | Double.NaN             |
+| Number -> Conversion([Common number type](numberUnification.md)) -> Double | Double.NaN             |
+| Nothing -> Double                                                          | Double.NaN             |
