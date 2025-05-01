@@ -37,6 +37,7 @@
         <toc-element topic="DataRow.md"/>
     </toc-element>
     <toc-element topic="nanAndNa.md"/>
+    <toc-element topic="numberUnification.md"/>
     <toc-element topic="operations.md"/>
     <toc-element toc-title="Operations">
         <toc-element topic="create.md">
