@@ -13,25 +13,20 @@
         </description>
 
         <spotlight>
-            <a href="Quickstart.md" type="start">Quickstart</a>
-            <a href="Examples.topic" type="experiment">Examples</a>
+            <a href="quickstart.md" type="start">Quickstart Guide</a>
+            <a href="Guides.md" type="library">User guides</a>
         </spotlight>
 
         <primary>
             <title>First steps</title>
-            <a href="Getting-Started.md" type="install">Getting started</a>
-            <a href="Overview.md" type="academy">Overview</a>
-            <a href="User-Guide.topic" type="library">User guide</a>
-            <a href="Examples.topic" type="experiment">Examples</a>
+            <a href="gettingStarted.md"/>
+            <a href="overview.md"/>
+            <a href="operations.md"/>
         </primary>
 
         <secondary>
             <title>Featured topics</title>
-            <a href="API.md" type="development">API reference</a>
-            <a href="Quick-Start-Guide.md" type="check-list">Quick start guide</a>
-            <a href="Kandy-in-Kotlin-Notebook.md" type="computer"/>
-            <a href="Statistics-Guide.md" type="network"/>
-            <a href="FAQ.md" type="support"/>
+            <a href="Usage-with-Kotlin-Notebook-Plugin.md"/>
         </secondary>
 
 
