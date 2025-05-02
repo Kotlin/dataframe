@@ -37,60 +37,60 @@ class CodeGenerationTests : BaseTest() {
     fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false) =
         buildString {
             appendLine(
-                """val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>""",
+                """@get:JvmName("${shortTypeName}_age") val $dfName<$fullTypeName>.age: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("age")""",
             )
             appendLine(
-                """val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName""",
-            )
-            if (addNullable) {
-                appendLine(
-                    """val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>""",
-                )
-                appendLine(
-                    """val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?""",
-                )
-            }
-            appendLine(
-                """val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
-            )
-            appendLine(
-                """val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?""",
+                """@get:JvmName("${shortTypeName}_age") val $dfRowName<$fullTypeName>.age: $intName by DataRowGeneratedPropertyDelegate("age")""",
             )
             if (addNullable) {
                 appendLine(
-                    """val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>""",
+                    """@get:JvmName("Nullable${shortTypeName}_age") val $dfName<$fullTypeName?>.age: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("age")""",
                 )
                 appendLine(
-                    """val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?""",
+                    """@get:JvmName("Nullable${shortTypeName}_age") val $dfRowName<$fullTypeName?>.age: $intName? by DataRowGeneratedPropertyDelegate("age")""",
                 )
             }
             appendLine(
-                """val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>""",
+                """@get:JvmName("${shortTypeName}_city") val $dfName<$fullTypeName>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")""",
             )
             appendLine(
-                """val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName""",
+                """@get:JvmName("${shortTypeName}_city") val $dfRowName<$fullTypeName>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")""",
             )
             if (addNullable) {
                 appendLine(
-                    """val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>""",
+                    """@get:JvmName("Nullable${shortTypeName}_city") val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")""",
                 )
                 appendLine(
-                    """val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?""",
+                    """@get:JvmName("Nullable${shortTypeName}_city") val $dfRowName<$fullTypeName?>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")""",
                 )
             }
             appendLine(
-                """val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+                """@get:JvmName("${shortTypeName}_name") val $dfName<$fullTypeName>.name: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("name")""",
+            )
+            appendLine(
+                """@get:JvmName("${shortTypeName}_name") val $dfRowName<$fullTypeName>.name: $stringName by DataRowGeneratedPropertyDelegate("name")""",
+            )
+            if (addNullable) {
+                appendLine(
+                    """@get:JvmName("Nullable${shortTypeName}_name") val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("name")""",
+                )
+                appendLine(
+                    """@get:JvmName("Nullable${shortTypeName}_name") val $dfRowName<$fullTypeName?>.name: $stringName? by DataRowGeneratedPropertyDelegate("name")""",
+                )
+            }
+            appendLine(
+                """@get:JvmName("${shortTypeName}_weight") val $dfName<$fullTypeName>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")""",
             )
             append(
-                """val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+                """@get:JvmName("${shortTypeName}_weight") val $dfRowName<$fullTypeName>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")""",
             )
             if (addNullable) {
                 appendLine("")
                 appendLine(
-                    """val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>""",
+                    """@get:JvmName("Nullable${shortTypeName}_weight") val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")""",
                 )
                 append(
-                    """val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?""",
+                    """@get:JvmName("Nullable${shortTypeName}_weight") val $dfRowName<$fullTypeName?>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")""",
                 )
             }
         }
@@ -151,10 +151,10 @@ class CodeGenerationTests : BaseTest() {
             @DataSchema(isOpen = false)
             interface $type1 { }
             
-            val $dfName<$type1>.city: $dataCol<$stringName?> @JvmName("${type1}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$type1>.city: $stringName? @JvmName("${type1}_city") get() = this["city"] as $stringName?
-            val $dfName<$type1>.name: $dataCol<$stringName> @JvmName("${type1}_name") get() = this["name"] as $dataCol<$stringName>
-            val $dfRowName<$type1>.name: $stringName @JvmName("${type1}_name") get() = this["name"] as $stringName
+            @get:JvmName("${type1}_city") val $dfName<$type1>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")
+            @get:JvmName("${type1}_city") val $dfRowName<$type1>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")
+            @get:JvmName("${type1}_name") val $dfName<$type1>.name: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("name")
+            @get:JvmName("${type1}_name") val $dfRowName<$type1>.name: $stringName by DataRowGeneratedPropertyDelegate("name")
             
             """.trimIndent()
 
@@ -163,12 +163,12 @@ class CodeGenerationTests : BaseTest() {
             @DataSchema
             interface $type2 { }
             
-            val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
-            val $dfRowName<$type2>.age: $intName @JvmName("${type2}_age") get() = this["age"] as $intName
-            val $dfName<$type2>.nameAndCity: $colGroup<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$type1>
-            val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$type1>
-            val $dfName<$type2>.weight: $dataCol<$intName?> @JvmName("${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
-            val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
+            @get:JvmName("${type2}_age") val $dfName<$type2>.age: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("age")
+            @get:JvmName("${type2}_age") val $dfRowName<$type2>.age: $intName by DataRowGeneratedPropertyDelegate("age")
+            @get:JvmName("${type2}_nameAndCity") val $dfName<$type2>.nameAndCity: $colGroup<$type1> by ColumnsScopeGeneratedPropertyDelegate("nameAndCity")
+            @get:JvmName("${type2}_nameAndCity") val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> by DataRowGeneratedPropertyDelegate("nameAndCity")
+            @get:JvmName("${type2}_weight") val $dfName<$type2>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")
+            @get:JvmName("${type2}_weight") val $dfRowName<$type2>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
 
         val expectedConverter = "it.cast<$type2>()"
@@ -223,10 +223,10 @@ class CodeGenerationTests : BaseTest() {
                 override val weight: kotlin.Int
             }
             
-            val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> @JvmName("ValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String>
-            val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
-            val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
-            val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
+            @get:JvmName("ValidPerson_city") val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("city")
+            @get:JvmName("ValidPerson_city") val $packageName.DataRow<ValidPerson>.city: kotlin.String by DataRowGeneratedPropertyDelegate("city")
+            @get:JvmName("ValidPerson_weight") val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            @get:JvmName("ValidPerson_weight") val $packageName.DataRow<ValidPerson>.weight: kotlin.Int by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
         code shouldBe expected
     }
@@ -276,14 +276,14 @@ class CodeGenerationTests : BaseTest() {
                 val weight: kotlin.Int?
             }
             
-            internal val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            internal val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
-            internal val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            internal val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
-            internal val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            internal val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
-            internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
+            @get:JvmName("DataType_age") internal val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
+            @get:JvmName("DataType_age") internal val $packageName.DataRow<DataType>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
+            @get:JvmName("DataType_city") internal val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> by ColumnsContainerGeneratedPropertyDelegate("city")
+            @get:JvmName("DataType_city") internal val $packageName.DataRow<DataType>.city: kotlin.String? by DataRowGeneratedPropertyDelegate("city")
+            @get:JvmName("DataType_name") internal val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("name")
+            @get:JvmName("DataType_name") internal val $packageName.DataRow<DataType>.name: kotlin.String by DataRowGeneratedPropertyDelegate("name")
+            @get:JvmName("DataType_weight") internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            @get:JvmName("DataType_weight") internal val $packageName.DataRow<DataType>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
     }
 
@@ -309,14 +309,14 @@ class CodeGenerationTests : BaseTest() {
                 public val weight: kotlin.Int?
             }
             
-            public val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            public val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
-            public val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            public val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
-            public val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            public val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
-            public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            public val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
+            @get:JvmName("DataType_age") public val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
+            @get:JvmName("DataType_age") public val $packageName.DataRow<DataType>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
+            @get:JvmName("DataType_city") public val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> by ColumnsContainerGeneratedPropertyDelegate("city")
+            @get:JvmName("DataType_city") public val $packageName.DataRow<DataType>.city: kotlin.String? by DataRowGeneratedPropertyDelegate("city")
+            @get:JvmName("DataType_name") public val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("name")
+            @get:JvmName("DataType_name") public val $packageName.DataRow<DataType>.name: kotlin.String by DataRowGeneratedPropertyDelegate("name")
+            @get:JvmName("DataType_weight") public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            @get:JvmName("DataType_weight") public val $packageName.DataRow<DataType>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
     }
 

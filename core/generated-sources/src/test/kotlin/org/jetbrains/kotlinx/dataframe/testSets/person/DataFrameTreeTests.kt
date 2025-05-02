@@ -517,18 +517,18 @@ class DataFrameTreeTests : BaseTest() {
         val columnData = DataColumn::class.qualifiedName
         val expected =
             """
-            val $columnsContainer<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
-            val $dataFrameRowBase<$className>.age: kotlin.Int @JvmName("${shortName}_age") get() = this["age"] as kotlin.Int
-            val $columnsContainer<$className?>.age: $columnData<kotlin.Int?> @JvmName("Nullable${shortName}_age") get() = this["age"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className?>.age: kotlin.Int? @JvmName("Nullable${shortName}_age") get() = this["age"] as kotlin.Int?
-            val $columnsContainer<$className>.nameAndCity: $groupedColumn<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
-            val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
-            val $columnsContainer<$className?>.nameAndCity: $groupedColumn<$nameAndCity?> @JvmName("Nullable${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity?>
-            val $dataFrameRowBase<$className?>.nameAndCity: $dataFrameRow<$nameAndCity?> @JvmName("Nullable${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity?>
-            val $columnsContainer<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className>.weight: kotlin.Int? @JvmName("${shortName}_weight") get() = this["weight"] as kotlin.Int?
-            val $columnsContainer<$className?>.weight: $columnData<kotlin.Int?> @JvmName("Nullable${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className?>.weight: kotlin.Int? @JvmName("Nullable${shortName}_weight") get() = this["weight"] as kotlin.Int?
+            @get:JvmName("${shortName}_age") val $columnsContainer<$className>.age: $columnData<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
+            @get:JvmName("${shortName}_age") val $dataFrameRowBase<$className>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
+            @get:JvmName("Nullable${shortName}_age") val $columnsContainer<$className?>.age: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("age")
+            @get:JvmName("Nullable${shortName}_age") val $dataFrameRowBase<$className?>.age: kotlin.Int? by DataRowGeneratedPropertyDelegate("age")
+            @get:JvmName("${shortName}_nameAndCity") val $columnsContainer<$className>.nameAndCity: $groupedColumn<$nameAndCity> by ColumnsContainerGeneratedPropertyDelegate("nameAndCity")
+            @get:JvmName("${shortName}_nameAndCity") val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> by DataRowGeneratedPropertyDelegate("nameAndCity")
+            @get:JvmName("Nullable${shortName}_nameAndCity") val $columnsContainer<$className?>.nameAndCity: $groupedColumn<$nameAndCity?> by ColumnsContainerGeneratedPropertyDelegate("nameAndCity")
+            @get:JvmName("Nullable${shortName}_nameAndCity") val $dataFrameRowBase<$className?>.nameAndCity: $dataFrameRow<$nameAndCity?> by DataRowGeneratedPropertyDelegate("nameAndCity")
+            @get:JvmName("${shortName}_weight") val $columnsContainer<$className>.weight: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            @get:JvmName("${shortName}_weight") val $dataFrameRowBase<$className>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
+            @get:JvmName("Nullable${shortName}_weight") val $columnsContainer<$className?>.weight: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            @get:JvmName("Nullable${shortName}_weight") val $dataFrameRowBase<$className?>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
         code shouldBe expected
     }

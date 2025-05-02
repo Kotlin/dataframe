@@ -249,13 +249,22 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         typeName: String,
         name: String,
         propertyType: String,
-        getter: String,
+        columnName: String,
         visibility: String,
     ): String {
         // jvm name is required to prevent signature clash like this:
         // val DataRow<Type>.name: String
         // val DataRow<Repo>.name: String
         val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
+
+        // Note, changes here might also require changes to the default imports in
+        // `org.jetbrains.kotlinx.dataframe.jupyter.Integration`
+        val propertyDelegateClassName = when {
+            typeName.contains("ColumnsContainer<") -> ColumnsContainerGeneratedPropertyDelegate::class.simpleName!!
+            typeName.contains("ColumnsScope<") -> ColumnsScopeGeneratedPropertyDelegate::class.simpleName!!
+            typeName.contains("DataRow<") -> DataRowGeneratedPropertyDelegate::class.simpleName!!
+            else -> error("Unsupported type: $typeName")
+        }
         val typeParameters = marker.typeParameters.let {
             if (it.isNotEmpty() && !it.startsWith(" ")) {
                 " $it"
@@ -263,9 +272,11 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                 it
             }
         }
-        return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${
+        return "@get:JvmName(\"${
             renderStringLiteral(jvmName)
-        }\") get() = $getter as $propertyType"
+        }\") ${visibility}val$typeParameters $typeName.$name: $propertyType by $propertyDelegateClassName(\"${
+            columnName
+        }\")"
     }
 
     /**
@@ -307,7 +318,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         }.associateBy { it.columnName }
 
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
-            val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
+            val columnName = renderStringLiteral(it.columnName)
             val name = it.fieldName
             val fieldType = it.renderAccessorFieldType()
             val nullableFieldType = nullableFields[it.columnName]!!.renderAccessorFieldType()
@@ -322,7 +333,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                         typeName = dfTypename,
                         name = name.quotedIfNeeded,
                         propertyType = columnType,
-                        getter = getter,
+                        columnName = columnName,
                         visibility = visibility,
                     ),
                     generatePropertyCode(
@@ -331,7 +342,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                         typeName = rowTypename,
                         name = name.quotedIfNeeded,
                         propertyType = fieldType,
-                        getter = getter,
+                        columnName = columnName,
                         visibility = visibility,
                     ),
                 ),
@@ -345,7 +356,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                             typeName = nullableDfTypename,
                             name = name.quotedIfNeeded,
                             propertyType = nullableColumnType,
-                            getter = getter,
+                            columnName = columnName,
                             visibility = visibility,
                         ),
                         generatePropertyCode(
@@ -354,7 +365,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                             typeName = nullableRowTypename,
                             name = name.quotedIfNeeded,
                             propertyType = nullableFieldType,
-                            getter = getter,
+                            columnName = columnName,
                             visibility = visibility,
                         ),
                     ),

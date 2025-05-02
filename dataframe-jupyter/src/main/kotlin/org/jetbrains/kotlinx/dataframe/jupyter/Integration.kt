@@ -279,6 +279,9 @@ internal class Integration(private val notebook: Notebook, private val options: 
         import("kotlinx.datetime.LocalDate")
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
         import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
+        import("org.jetbrains.kotlinx.dataframe.impl.codeGen.ColumnsContainerGeneratedPropertyDelegate")
+        import("org.jetbrains.kotlinx.dataframe.impl.codeGen.ColumnsScopeGeneratedPropertyDelegate")
+        import("org.jetbrains.kotlinx.dataframe.impl.codeGen.DataRowGeneratedPropertyDelegate")
 
         addTypeConverter(object : FieldHandler {
             override val execution = FieldHandlerFactory.createUpdateExecution<Any> { instance, property ->

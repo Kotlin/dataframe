@@ -5819,6 +5819,21 @@ public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/CodeGeneratorImp
 	public static final fun toStandaloneSnippet (Lorg/jetbrains/kotlinx/dataframe/codeGen/CodeWithConverter;Ljava/lang/String;Ljava/util/List;)Ljava/lang/String;
 }
 
+public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/ColumnsContainerGeneratedPropertyDelegate {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getValue (Lorg/jetbrains/kotlinx/dataframe/ColumnsContainer;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/ColumnsScopeGeneratedPropertyDelegate {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getValue (Lorg/jetbrains/kotlinx/dataframe/ColumnsScope;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+}
+
+public final class org/jetbrains/kotlinx/dataframe/impl/codeGen/DataRowGeneratedPropertyDelegate {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getValue (Lorg/jetbrains/kotlinx/dataframe/DataRow;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+}
+
 public abstract interface class org/jetbrains/kotlinx/dataframe/impl/codeGen/DfReadResult {
 }
 

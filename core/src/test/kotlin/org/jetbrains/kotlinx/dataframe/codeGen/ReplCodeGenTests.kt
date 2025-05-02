@@ -83,14 +83,14 @@ class ReplCodeGenTests : BaseTest() {
             @DataSchema
             interface $marker { }
             
-            val $dfName<$marker>.age: $dataCol<$intName> @JvmName("${marker}_age") get() = this["age"] as $dataCol<$intName>
-            val $dfRowName<$marker>.age: $intName @JvmName("${marker}_age") get() = this["age"] as $intName
-            val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
-            val $dfName<$marker>.name: $dataCol<$stringName> @JvmName("${marker}_name") get() = this["name"] as $dataCol<$stringName>
-            val $dfRowName<$marker>.name: $stringName @JvmName("${marker}_name") get() = this["name"] as $stringName
-            val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
-            val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
+            @get:JvmName("${marker}_age") val $dfName<$marker>.age: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("age")
+            @get:JvmName("${marker}_age") val $dfRowName<$marker>.age: $intName by DataRowGeneratedPropertyDelegate("age")
+            @get:JvmName("${marker}_city") val $dfName<$marker>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")
+            @get:JvmName("${marker}_city") val $dfRowName<$marker>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")
+            @get:JvmName("${marker}_name") val $dfName<$marker>.name: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("name")
+            @get:JvmName("${marker}_name") val $dfRowName<$marker>.name: $stringName by DataRowGeneratedPropertyDelegate("name")
+            @get:JvmName("${marker}_weight") val $dfName<$marker>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")
+            @get:JvmName("${marker}_weight") val $dfRowName<$marker>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
         code shouldBe expected
 
@@ -105,8 +105,8 @@ class ReplCodeGenTests : BaseTest() {
             @DataSchema
             interface $marker3 : $markerFull { }
             
-            val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
-            val $dfRowName<$marker3>.city: $stringName @JvmName("${marker3}_city") get() = this["city"] as $stringName
+            @get:JvmName("${marker3}_city") val $dfName<$marker3>.city: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("city")
+            @get:JvmName("${marker3}_city") val $dfRowName<$marker3>.city: $stringName by DataRowGeneratedPropertyDelegate("city")
             """.trimIndent()
 
         code3 shouldBe expected3
@@ -122,8 +122,8 @@ class ReplCodeGenTests : BaseTest() {
             @DataSchema
             interface $marker5 : $markerFull { }
             
-            val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
-            val $dfRowName<$marker5>.weight: $intName @JvmName("${marker5}_weight") get() = this["weight"] as $intName
+            @get:JvmName("${marker5}_weight") val $dfName<$marker5>.weight: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("weight")
+            @get:JvmName("${marker5}_weight") val $dfRowName<$marker5>.weight: $intName by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
         code5 shouldBe expected5
 
@@ -165,10 +165,10 @@ class ReplCodeGenTests : BaseTest() {
             @DataSchema
             interface $marker : ${Test2._DataFrameType::class.qualifiedName} { }
             
-            val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
-            val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
-            val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
-            val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
+            @get:JvmName("${marker}_city") val $dfName<$marker>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")
+            @get:JvmName("${marker}_city") val $dfRowName<$marker>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")
+            @get:JvmName("${marker}_weight") val $dfName<$marker>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")
+            @get:JvmName("${marker}_weight") val $dfRowName<$marker>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
 
         val code = repl.process(typed).declarations.trimIndent()
