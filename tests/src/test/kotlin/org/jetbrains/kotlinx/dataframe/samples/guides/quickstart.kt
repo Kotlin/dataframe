@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName", "UNUSED_VARIABLE", "UNUSED_EXPRESSION", "UNCHECKED_CAST")
+
 package org.jetbrains.kotlinx.dataframe.samples.guides
 
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -30,7 +32,6 @@ import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
 import org.junit.Ignore
 import org.junit.Test
 
-@Suppress("UNUSED_VARIABLE", "UNUSED_EXPRESSION", "UNCHECKED_CAST")
 class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     private val df = DataFrame.readCsv(
         "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
