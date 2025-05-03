@@ -1,76 +1,67 @@
-window.addEventListener('load', function () {
-    function sendTheme(theme, iframe) {
-        const maxAttempts = 10;
-        const interval = 200; // 200ms
-        let attempts = 0;
+window.addEventListener('load', () => {
+    function updateIframeThemes(theme) {
+        const iframes = document.querySelectorAll('iframe');
 
-        function attemptSend() {
-            if (attempts >= maxAttempts) return;
-            iframe.contentWindow.postMessage({ type: 'setTheme', theme }, '*');
-            attempts++;
-        }
-
-        attemptSend();
-        const intervalId = setInterval(() => {
-            attemptSend();
-            if (attempts >= maxAttempts) clearInterval(intervalId);
-        }, interval);
+        iframes.forEach((iframe) => {
+            if (iframe.contentWindow && iframe.contentWindow.document) {
+                iframe.contentWindow.document.documentElement.setAttribute('theme', theme);
+            }
+        });
     }
 
-    function setIframeHeight(iframe, height) {
-        iframe.style.height = height + 'px';
-    }
+    function observeHtmlClassChanges() {
+        const htmlElement = document.documentElement;
 
-    const htmlElement = document.documentElement;
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const theme = htmlElement.classList.contains('theme-light') ? 'light' : 'dark';
+                    updateIframeThemes(theme);
+                }
+            });
+        });
 
-    function getCurrentTheme() {
-        return htmlElement.classList.contains('theme-light') ? 'light' : 'dark';
+        observer.observe(htmlElement, { attributes: true });
     }
 
     window.addEventListener('message', (event) => {
         if (event.data.type === 'iframeHeight') {
             document.querySelectorAll('iframe').forEach((iframe) => {
                 if (iframe.contentWindow === event.source) {
-                    setIframeHeight(iframe, event.data.height);
+                    iframe.style.height = event.data.height + 'px';
                 }
             });
         }
     });
 
-    function updateAllIframeThemes() {
-        const theme = getCurrentTheme();
-        document.querySelectorAll('iframe').forEach((iframe) => {
-            if (iframe.contentWindow) {
-                sendTheme(theme, iframe);
-            }
-        });
-    }
+    function observeIframe(iframe) {
+        const theme = document.documentElement.classList.contains('theme-light') ? 'light' : 'dark';
 
-    const observer = new MutationObserver(() => {
-        updateAllIframeThemes();
-    });
-
-    observer.observe(htmlElement, { attributes: true });
-
-    function observeIframeLoad(iframe) {
-        iframe.addEventListener('load', () => sendTheme(getCurrentTheme(), iframe));
-        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-            sendTheme(getCurrentTheme(), iframe);
+        function sendTheme() {
+            iframe.contentDocument.documentElement.setAttribute('theme', theme);
         }
+
+        iframe.addEventListener('load', sendTheme);
+        if (iframe.contentDocument.readyState === 'complete') sendTheme();
     }
 
-    document.querySelectorAll('iframe').forEach(observeIframeLoad);
+    document.querySelectorAll('iframe').forEach(observeIframe);
 
     const bodyObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
-                if (node.tagName === 'IFRAME') observeIframeLoad(node);
-                else if (node.querySelectorAll) node.querySelectorAll('iframe').forEach(observeIframeLoad);
+                if (node.tagName === 'IFRAME') observeIframe(node);
+                else if (node.querySelectorAll) {
+                    node.querySelectorAll('iframe').forEach(observeIframe);
+                }
             });
         });
     });
 
     bodyObserver.observe(document.body, { childList: true, subtree: true });
 
-    updateAllIframeThemes();
+    observeHtmlClassChanges();
+
+    const initialTheme = document.documentElement.classList.contains('theme-light') ? 'light' : 'dark';
+    updateIframeThemes(initialTheme);
 });

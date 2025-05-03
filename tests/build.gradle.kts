@@ -16,7 +16,6 @@ import org.gradle.kotlin.dsl.runKtlintFormatOverTestSourceSet
 import org.gradle.kotlin.dsl.sourceSets
 import org.gradle.kotlin.dsl.test
 import org.gradle.kotlin.dsl.testImplementation
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     java
@@ -53,7 +52,6 @@ dependencies {
     testImplementation(libs.poi)
     testImplementation(libs.arrow.vector)
 }
-
 
 kotlin.sourceSets {
     main {

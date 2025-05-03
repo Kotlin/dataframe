@@ -177,7 +177,7 @@ summary {
 </style>
 </head>
 <body>
-<table class="dataframe" id="df_-1677721589"></table>
+<table class="dataframe" id="df_-1006632949"></table>
 
 <p class="dataframe_description"></p>
 </body>
@@ -460,10 +460,10 @@ summary {
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"isIntellij: Boolean\">isIntellij</span>", children: [], rightAlign: false, values: ["true","false"] }, 
 { name: "<span title=\"sumStars: Int\">sumStars</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">25221</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">85392</span></span>"] }, 
 { name: "<span title=\"maxStars: Int\">maxStars</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">12926</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">39402</span></span>"] }, 
-], id: -1677721589, rootId: -1677721589, totalRows: 2 } ) });
+], id: -1006632949, rootId: -1006632949, totalRows: 2 } ) });
 /*-->*/
 
-call_DataFrame(function() { DataFrame.renderTable(-1677721589) });
+call_DataFrame(function() { DataFrame.renderTable(-1006632949) });
 
         function sendHeight() {
     const table = document.querySelector('table.dataframe');
@@ -504,15 +504,6 @@ observer.observe(document.querySelector('.dataframe'), {
     subtree: true,
     characterData: true
 });
-
-
-window.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'setTheme') {
-        document.documentElement.setAttribute('theme', event.data.theme);
-   
-        event.source.postMessage({ type: 'themeSet', theme: event.data.theme }, '*');
-    }
-}, false);
 
 </script>
 </html>

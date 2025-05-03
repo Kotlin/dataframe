@@ -21,6 +21,9 @@ including interactivity and rich DataFrame and plots rendering.
 You can instantly see the results of each operation: view the contents of your DataFrames after every transformation,
 inspect individual rows and columns, and explore data step-by-step in a live and interactive way.
 
+You can view this guide as a 
+[notebook on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/quickstart/quickstart.ipynb) 
+or download <resource src="quickstart.ipynb"></resource>.
 
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.guides.QuickStartGuide-->
@@ -89,6 +92,8 @@ After executing the cell where a `DataFrame` variable is declared, an extension 
 automatically generated.
 These properties can then be used in the Columns Selection DSL expression for typesafe and convenient column access.
 
+
+
 Select some columns:
 
 <!---FUN notebook_test_quickstart_5-->
@@ -100,6 +105,9 @@ dfSelected
 ```
 
 <!---END-->
+
+> With a [Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md) enabled,
+> you can use auto-generated properties in your IntelliJ IDEA projects.
 
 <inline-frame src="./resources/notebook_test_quickstart_5.html" width="705px" height="500px"></inline-frame>
 
@@ -337,3 +345,20 @@ dfWithIsIntellij.writeExcel("jb_repos.xlsx")
 
 <!---END-->
 
+## What's Next?
+
+In this quickstart, we covered the basics — reading data, transforming it, and building a simple visualization.  
+Ready to go deeper? Check out what’s next:
+
+- 📘 **[Explore in-depth guides](Guides.md)** with cool real-world examples with various 
+of datasets and different use cases.
+
+- 🛠️ **[Browse the operations overview](operations.md)** to learn what Kotlin DataFrame can do.
+
+- 🧠 **Understand the design** and core concepts in the [library overview](overview.md).
+
+- 💡 **[Use Kotlin DataFrame Compiler Plugin](Compiler-Plugin.md)**  
+  for auto-generated column access in your IntelliJ IDEA projects.
+
+- 📊 **Master Kandy** for stunning and expressive DataFrame visualizations learning
+[Kandy Documentation](https://kotlin.github.io/kandy).

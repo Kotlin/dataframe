@@ -199,4 +199,5 @@
     </toc-element>
     <toc-element href="https://github.com/Kotlin/dataframe/tree/master/examples" toc-title="Examples"/>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
+    <toc-element topic="Compiler-Plugin.md"/>
 </instance-profile>

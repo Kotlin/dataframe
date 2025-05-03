@@ -33,7 +33,7 @@ import org.junit.Test
 @Suppress("UNUSED_VARIABLE", "UNUSED_EXPRESSION", "UNCHECKED_CAST")
 class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     private val df = DataFrame.readCsv(
-        "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
     )
 
     private val full_name by column<String>()
@@ -55,7 +55,6 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
         get() = get("isIntellij") as DataColumn<Boolean>
     val DataRow<DFUpdatedSchema>.starsCount: Int
         get() = get("starsCount") as Int
-
 
     private val dfSelected = df.select { full_name and stargazers_count and topics }
     private val dfFiltered = dfSelected.filter { stargazers_count >= 1000 }
@@ -79,7 +78,7 @@ class QuickStartGuide : DataFrameSampleHelper("quickstart", "guides") {
     fun notebook_test_quickstart_2() {
         // SampleStart
         val df = DataFrame.readCsv(
-            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+            "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
         )
         // SampleEnd
     }
