@@ -350,8 +350,8 @@ dfWithIsIntellij.writeExcel("jb_repos.xlsx")
 In this quickstart, we covered the basics — reading data, transforming it, and building a simple visualization.  
 Ready to go deeper? Check out what’s next:
 
-- 📘 **[Explore in-depth guides](Guides.md)** with cool real-world examples with various 
-of datasets and different use cases.
+- 📘 **[Explore in-depth guides and various examples](Guides-And-Examples.md)** with different datasets, 
+API usage examples, and practical scenarios that help you understand the main features of Kotlin DataFrame.
 
 - 🛠️ **[Browse the operations overview](operations.md)** to learn what Kotlin DataFrame can do.
 

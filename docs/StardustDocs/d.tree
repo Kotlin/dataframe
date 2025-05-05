@@ -7,7 +7,7 @@
                  status="release"
                  start-page="Home.topic">
     <toc-element topic="Home.topic"/>
-    <toc-element topic="Guides.md">
+    <toc-element topic="Guides-And-Examples.md">
         <toc-element topic="quickstart.md"/>
     </toc-element>
 
