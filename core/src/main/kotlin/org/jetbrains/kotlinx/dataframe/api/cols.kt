@@ -342,11 +342,17 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface KPropertyColsPredicateDocs
 
     /** @include [KPropertyColsPredicateDocs] */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).cols(predicate)
 
     /** @include [KPropertyColsPredicateDocs] */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         cols(predicate)

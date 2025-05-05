@@ -26,9 +26,15 @@ public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, 
 
 public fun <T> DataFrame<T>.split(vararg columns: String): Split<T, Any> = split { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split<T, C> = split { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumnSet() }
 
@@ -147,12 +153,18 @@ internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> =
 
 // region into
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
 ): DataFrame<T> = into(listOf(firstName.name()) + otherNames.map { it.name() })
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: KProperty<*>,
@@ -190,6 +202,9 @@ public fun <T, C> Split<T, DataFrame<C>>.into(
 public fun <T, A, B> Split<T, Pair<A, B>>.into(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.into(
     firstCol: ColumnAccessor<A>,
@@ -216,12 +231,18 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = inward(names.toList(), extraNamesGenerator)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
 ): DataFrame<T> = inward(listOf(firstName.name()) + otherNames.map { it.name() })
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: KProperty<*>,
@@ -242,6 +263,9 @@ public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
 public fun <T, A, B> Split<T, Pair<A, B>>.inward(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.inward(
     firstCol: ColumnAccessor<A>,
