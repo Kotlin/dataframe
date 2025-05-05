@@ -13,15 +13,6 @@ df.countDistinct { age and name }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-df.countDistinct { age and name }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

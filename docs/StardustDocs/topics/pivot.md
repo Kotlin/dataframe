@@ -32,15 +32,6 @@ df.pivot { city }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-
-df.pivot { city }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -65,18 +56,6 @@ df.pivot { city then name.firstName }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.pivot { city and firstName }
-df.pivot { city then firstName }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -98,18 +77,6 @@ Reversed order of `pivot` and [`groupBy`](groupBy.md) will produce the same resu
 <tab title="Properties">
 
 ```kotlin
-df.pivot { city }.groupBy { name }
-// same as
-df.groupBy { name }.pivot { city }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val name by columnGroup()
-
 df.pivot { city }.groupBy { name }
 // same as
 df.groupBy { name }.pivot { city }
@@ -152,19 +119,6 @@ df.pivot { city }.aggregate { minBy { age }.name }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-val age by column<Int>()
-val weight by column<Int?>()
-
-df.pivot { city }.aggregate { minBy(age).name }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -184,23 +138,6 @@ df.pivot { city }.groupBy { name.firstName }.aggregate {
     meanFor { age and weight } into "means"
     stdFor { age and weight } into "stds"
     maxByOrNull { weight }?.name?.lastName into "biggest"
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-val age by column<Int>()
-val weight by column<Int?>()
-
-df.pivot { city }.groupBy { firstName }.aggregate {
-    meanFor { age and weight } into "means"
-    stdFor { age and weight } into "stds"
-    maxByOrNull(weight)?.name?.lastName into "biggest"
 }
 ```
 
@@ -226,19 +163,6 @@ Shortcuts for common aggregation functions are also available:
 <tab title="Properties">
 
 ```kotlin
-df.pivot { city }.maxFor { age and weight }
-df.groupBy { name }.pivot { city }.median { age }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val name by columnGroup()
-val age by column<Int>()
-val weight by column<Int?>()
-
 df.pivot { city }.maxFor { age and weight }
 df.groupBy { name }.pivot { city }.median { age }
 ```
@@ -274,21 +198,6 @@ df.pivot { city }.aggregate(separate = true) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val weight by column<Int?>()
-
-df.pivot { city }.maxFor(separate = true) { age and weight }
-df.pivot { city }.aggregate(separate = true) {
-    min { age } into "min age"
-    maxOrNull { weight } into "max weight"
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -316,19 +225,6 @@ df.pivot { city }.groupBy { name }.default(0).min()
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val weight by column<Int?>()
-val name by columnGroup()
-
-df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
-df.pivot { city }.groupBy { name }.default(0).min()
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -345,21 +241,6 @@ df.pivot("city").groupBy("name").default(0).min()
 <tab title="Properties">
 
 ```kotlin
-df.pivot { city }.groupBy { name }.aggregate {
-    median { age } into "median age" default 0
-    minOrNull { weight } into "min weight" default 100
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val weight by column<Int?>()
-val name by columnGroup()
-
 df.pivot { city }.groupBy { name }.aggregate {
     median { age } into "median age" default 0
     minOrNull { weight } into "min weight" default 100
@@ -391,24 +272,6 @@ This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggreg
 
 ```kotlin
 df.groupBy { name.firstName }.aggregate {
-    pivot { city }.aggregate(separate = true) {
-        mean { age } into "mean age"
-        count() into "count"
-    }
-    count() into "total"
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-val age by column<Int>()
-
-df.groupBy { firstName }.aggregate {
     pivot { city }.aggregate(separate = true) {
         mean { age } into "mean age"
         count() into "count"
