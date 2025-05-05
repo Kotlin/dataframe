@@ -21,8 +21,8 @@ including interactivity and rich DataFrame and plots rendering.
 You can instantly see the results of each operation: view the contents of your DataFrames after every transformation,
 inspect individual rows and columns, and explore data step-by-step in a live and interactive way.
 
-You can view this guide as a 
-[notebook on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/quickstart/quickstart.ipynb) 
+You can view this guide as a
+[notebook on GitHub](https://github.com/Kotlin/dataframe/tree/master/examples/notebooks/quickstart/quickstart.ipynb)
 or download <resource src="quickstart.ipynb"></resource>.
 
 
@@ -91,8 +91,6 @@ DataFrame with only the columns chosen in Columns Selection expression.
 After executing the cell where a `DataFrame` variable is declared, an extension with properties for its columns is
 automatically generated.
 These properties can then be used in the Columns Selection DSL expression for typesafe and convenient column access.
-
-
 
 Select some columns:
 
@@ -303,13 +301,9 @@ convenient and typesafe way to build data visualizations.
 
 Kandy can be loaded into notebook using `%use kandy`:
 
-<!---FUN notebook_test_quickstart_15-->
-
 ```kotlin
-//%use kandy
+%use kandy
 ```
-
-<!---END-->
 
 Build a simple bar chart with `.plot { }` extension for DataFrame, that allows to use extension properties inside Kandy
 plotting DSL (plot will be rendered as an output after cell execution):
@@ -350,8 +344,8 @@ dfWithIsIntellij.writeExcel("jb_repos.xlsx")
 In this quickstart, we covered the basics — reading data, transforming it, and building a simple visualization.  
 Ready to go deeper? Check out what’s next:
 
-- 📘 **[Explore in-depth guides and various examples](Guides-And-Examples.md)** with different datasets, 
-API usage examples, and practical scenarios that help you understand the main features of Kotlin DataFrame.
+- 📘 **[Explore in-depth guides and various examples](Guides-And-Examples.md)** with different datasets,
+  API usage examples, and practical scenarios that help you understand the main features of Kotlin DataFrame.
 
 - 🛠️ **[Browse the operations overview](operations.md)** to learn what Kotlin DataFrame can do.
 
@@ -361,4 +355,4 @@ API usage examples, and practical scenarios that help you understand the main fe
   for auto-generated column access in your IntelliJ IDEA projects.
 
 - 📊 **Master Kandy** for stunning and expressive DataFrame visualizations learning
-[Kandy Documentation](https://kotlin.github.io/kandy).
+  [Kandy Documentation](https://kotlin.github.io/kandy).
