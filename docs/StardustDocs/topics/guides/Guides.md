@@ -12,6 +12,7 @@ Explore practical Kotlin DataFrame guides — real use cases, hands-on examples,
 A curated list of Kotlin DataFrame guides that walk you through common operations and data analysis patterns step by step.
 </link-summary>
 
-[Quickstart Guide—](quickstart.md) first steps.
+[Quickstart Guide](quickstart.md) — get started with Kotlin DataFrame in a few simple steps: 
+load data, transform it, and visualize it.
 
-TODO more guides.
+<!--- TODO: add more guides. --->
