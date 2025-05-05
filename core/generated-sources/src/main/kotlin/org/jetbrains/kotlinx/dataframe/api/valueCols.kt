@@ -324,6 +324,9 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)

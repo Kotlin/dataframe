@@ -16,6 +16,9 @@ public fun AnyCol.addId(columnName: String = "id"): AnyFrame = toDataFrame().add
 
 // region DataFrame
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.addId(column: ColumnAccessor<Int>): DataFrame<T> = insert(column) { index() }.at(0)
 

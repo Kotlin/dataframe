@@ -271,6 +271,9 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: ColumnReference<Number?>,
@@ -299,6 +302,9 @@ public fun <T> DataFrame<T>.cumSum(
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.cumSum(
     vararg columns: KProperty<Number?>,
@@ -411,6 +417,9 @@ public fun <T, G> GroupBy<T, G>.cumSum(vararg columns: String, skipNA: Boolean =
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: ColumnReference<Number?>,
@@ -439,6 +448,9 @@ public fun <T, G> GroupBy<T, G>.cumSum(
  * @see <a href="https://kotlin.github.io/dataframe/cumsum.html">See `cumSum` on the documentation website.</a>
  *
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, G> GroupBy<T, G>.cumSum(
     vararg columns: KProperty<Number?>,
