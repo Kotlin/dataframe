@@ -21,6 +21,9 @@ import kotlin.reflect.typeOf
 
 // region ColumnReference
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <C, reified R> ColumnReference<C>.map(
     infer: Infer = Infer.Nulls,
@@ -74,6 +77,9 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
@@ -81,6 +87,9 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
@@ -95,6 +104,9 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = newColumn(type, name, infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
@@ -103,6 +115,9 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.name(), type, infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,

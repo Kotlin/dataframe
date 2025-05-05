@@ -413,6 +413,9 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @param [predicate] An optional predicate to filter the cols by.
      * @return A [TransformableColumnSet][org.jetbrains.kotlinx.dataframe.impl.columns.TransformableColumnSet] containing the (filtered) cols.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)

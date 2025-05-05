@@ -22,9 +22,15 @@ import kotlin.reflect.typeOf
 @Interpretable("GroupByInto")
 public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
 
@@ -34,6 +40,9 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
 ): DataFrame<G> = into(pathOf(columnName ?: groups.name()), expression, typeOf<V>())
 
 // @Hide
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: ColumnAccessor<V>,
@@ -56,6 +65,9 @@ internal fun <T, G, V> GroupBy<T, G>.into(
         internal().withExpr(type, path, expression)
     }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: KProperty<V>,
@@ -80,12 +92,18 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     }
 }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: ColumnAccessor<V>,
     noinline expression: RowExpression<G, V>,
 ): DataFrame<G> = into(column.name(), expression)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     column: KProperty<V>,
@@ -96,9 +114,15 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
 @Interpretable("GroupByReduceInto")
 public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> = into(column) { this }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
 
