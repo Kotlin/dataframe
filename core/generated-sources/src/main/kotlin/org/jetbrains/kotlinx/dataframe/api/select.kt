@@ -174,6 +174,9 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
 
@@ -223,6 +226,9 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
  *
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
 
@@ -425,6 +431,9 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun <C, R> KProperty<C>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)

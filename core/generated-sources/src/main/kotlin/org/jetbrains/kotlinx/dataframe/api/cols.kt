@@ -1011,6 +1011,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).cols(predicate)
@@ -1059,6 +1062,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         cols(predicate)

@@ -299,6 +299,9 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
  * @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumnSet() }
 
@@ -333,6 +336,9 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
  * @param [columns] The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumnSet() }
@@ -675,6 +681,9 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * @param [columns] The [Column References][org.jetbrains.kotlinx.dataframe.columns.ColumnReference] of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  * @param [expression] The [Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample] to update the rows with.
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
@@ -715,6 +724,9 @@ public fun <T, C> DataFrame<T>.update(
  * @param [columns] The [KProperties][KProperty] corresponding to columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  * @param [expression] The [Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample] to update the rows with.
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,

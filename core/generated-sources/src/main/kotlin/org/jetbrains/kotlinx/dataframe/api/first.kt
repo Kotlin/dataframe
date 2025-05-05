@@ -371,6 +371,9 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).firstCol(condition)

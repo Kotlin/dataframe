@@ -377,6 +377,9 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
@@ -612,6 +615,9 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
@@ -841,6 +847,9 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
@@ -1073,6 +1082,9 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)

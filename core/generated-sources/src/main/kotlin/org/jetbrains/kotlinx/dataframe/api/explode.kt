@@ -26,10 +26,16 @@ public fun <T> DataFrame<T>.explode(
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
@@ -46,10 +52,16 @@ public fun <T> DataRow<T>.explode(
 public fun <T> DataRow<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataRow<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> =
     explode(dropEmpty) { columns.toColumnSet() }

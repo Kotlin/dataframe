@@ -316,6 +316,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.colsNameContains(
         text: CharSequence,
@@ -575,6 +578,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      *
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.colsNameContains(regex: Regex): TransformableColumnSet<*> =
         columnGroup(this).colsNameContains(regex)
@@ -808,6 +814,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameEndsWith]
      * @see [nameContains]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.colsNameStartsWith(
         prefix: CharSequence,
@@ -1043,6 +1052,9 @@ public interface ColumnNameFiltersColumnsSelectionDsl {
      * @see [nameStartsWith]
      * @see [nameContains]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun KProperty<*>.colsNameEndsWith(
         suffix: CharSequence,

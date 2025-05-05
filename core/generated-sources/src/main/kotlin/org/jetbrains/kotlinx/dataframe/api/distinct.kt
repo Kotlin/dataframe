@@ -71,6 +71,9 @@ public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFra
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> =
     distinct {
@@ -112,6 +115,9 @@ public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = dis
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFrame<T> =
     distinct { columns.toColumnSet() }
@@ -132,6 +138,9 @@ public fun <T> DataFrame<T>.distinct(vararg columns: AnyColumnReference): DataFr
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
@@ -170,6 +179,9 @@ public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = d
  * @see <a href="https://kotlin.github.io/dataframe/distinct.html">See `distinct` on the documentation website.</a>
  * .
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.distinctBy(vararg columns: AnyColumnReference): DataFrame<T> =
     distinctBy { columns.toColumnSet() }
