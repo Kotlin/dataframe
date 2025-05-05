@@ -19,20 +19,6 @@ df.sortBy { weight.nullsLast() }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.sortBy { age }
-df.sortBy { age and firstName }
-df.sortBy { weight.nullsLast() }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -54,16 +40,6 @@ Returns [`DataFrame`](DataFrame.md) sorted by one or several columns in descendi
 <tab title="Properties">
 
 ```kotlin
-df.sortByDesc { age and weight }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-
 df.sortByDesc { age and weight }
 ```
 

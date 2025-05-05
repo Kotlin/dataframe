@@ -455,42 +455,6 @@ df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-// by column name
-val name by columnGroup()
-df.select { it[name] }
-df.select { name }
-
-// by column path
-val firstName by name.column<String>()
-df.select { firstName }
-
-// with a new name
-df.select { name named "Full Name" }
-
-// converted
-df.select { firstName.map { it.lowercase() } }
-
-// column arithmetics
-val age by column<Int>()
-df.select { 2021 - age }
-
-// two columns
-df.select { name and age }
-
-// range of columns
-df.select { name..age }
-
-// all columns of ColumnGroup
-df.select { name.allCols() }
-
-// traversal of columns at any depth from here excluding ColumnGroups
-df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

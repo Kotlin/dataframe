@@ -25,16 +25,6 @@ df.insert("year of birth") { 2021 - age }.after { age }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val year = column<Int>("year of birth")
-val age by column<Int>()
-
-df.insert(year) { 2021 - age }.after { age }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

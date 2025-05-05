@@ -130,19 +130,6 @@ df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2.0 }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val name by columnGroup()
-val lastName by name.column<String>()
-
-df.groupBy { city }.pivot { lastName }.mean { age }
-df.groupBy { city }.pivot { lastName }.meanOf { age() / 2.0 }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
