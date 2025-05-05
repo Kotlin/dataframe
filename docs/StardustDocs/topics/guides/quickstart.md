@@ -47,7 +47,7 @@ databases. Read a CSV with the "Jetbrains Repositories" dataset into `df` variab
 
 ```kotlin
 val df = DataFrame.readCsv(
-    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
 )
 ```
 
@@ -146,8 +146,7 @@ Rename "full_name" and "stargazers_count" columns:
 
 ```kotlin
 // Rename "full_name" column into "name"
-val dfRenamed = dfFiltered
-    .rename { full_name }.into("name")
+val dfRenamed = dfFiltered.rename { full_name }.into("name")
     // And "stargazers_count" into "starsCount"
     .rename { stargazers_count }.into("starsCount")
 dfRenamed
@@ -287,8 +286,7 @@ Combine them to get Top-10 repositories by number of stars:
 ```kotlin
 val dfTop10 = dfWithIsIntellij
     // Sort by "starsCount" value descending
-    .sortByDesc { starsCount }
-    .take(10)
+    .sortByDesc { starsCount }.take(10)
 dfTop10
 ```
 
