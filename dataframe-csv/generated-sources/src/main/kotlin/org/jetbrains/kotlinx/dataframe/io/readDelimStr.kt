@@ -70,7 +70,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  *
  *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
  *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
- *   Columns widths are determined by the header in the data (if present), or manually by setting
+ *   Column widths are determined by the header in the data (if present), or manually by setting
  *   [fixedColumnWidths].
  * @param fixedColumnWidths The fixed column widths. Default: empty list.
  *
@@ -107,7 +107,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
  *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
- * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+ * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
  *
  *   If `true`, rows that are too short will be interpreted as _empty_ values.
  * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default: `true`.
@@ -125,7 +125,7 @@ import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
  * @param parseParallel Whether to parse the data in parallel. Default: `true`.
  *
  *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
- *   This is usually faster, but can be turned off for debugging.
+ *   This is usually faster but can be turned off for debugging.
  */
 public fun DataFrame.Companion.readDelimStr(
     text: String,
