@@ -24,5 +24,3 @@ load data, transform it, and visualize it.
 ## Examples
 
 * [Titanic](titanic.md) —  
-
-!--- TODO: add guides --->
