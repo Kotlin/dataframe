@@ -28,15 +28,27 @@ public interface DataRow<out T> {
 
     public operator fun <R> get(expression: RowExpression<T, R>): R = expression(this, this)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<R>): R
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public operator fun <R> get(property: KProperty<R>): R = get(property.columnName) as R
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public operator fun get(first: AnyColumnReference, vararg other: AnyColumnReference): DataRow<T> =
         owner.get(first, *other)[index]
@@ -71,6 +83,9 @@ public interface DataRow<out T> {
 
     public fun getOrNull(name: String): Any?
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public fun <R> getValueOrNull(column: ColumnReference<R>): R?
 
@@ -80,6 +95,9 @@ public interface DataRow<out T> {
 
     public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public operator fun <R> ColumnReference<R>.invoke(): R = get(this)
 
