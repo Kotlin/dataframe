@@ -154,6 +154,7 @@ val modulesUsingJava11 = with(projects) {
         dataframeJupyter,
         dataframeGeo,
         examples.ideaExamples.titanic,
+        tests,
     )
 }.map { it.path }
 
