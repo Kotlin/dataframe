@@ -21,16 +21,6 @@ df.reorder { age..isHappy }.byName()
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val isHappy by column<Boolean>()
-
-df.reorder { age..isHappy }.byName()
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

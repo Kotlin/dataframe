@@ -15,16 +15,6 @@ df[df.age, df.weight]
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-
-df[age, weight]
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -45,17 +35,6 @@ See [DataFrame indexing](indexing.md)
 
 ```kotlin
 df.select { age and weight }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-
-df.select { age and weight }
-df.select(age, weight)
 ```
 
 </tab>

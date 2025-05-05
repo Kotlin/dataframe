@@ -23,25 +23,6 @@ df.rows().forEach {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-
-for (row in df) {
-    println(row[age])
-}
-
-df.forEach {
-    println(it[age])
-}
-
-df.rows().forEach {
-    println(it[age])
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

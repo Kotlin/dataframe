@@ -122,19 +122,6 @@ df[fullName]
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-val lastName by name.column<String>()
-
-val fullName by column { firstName() + " " + lastName() }
-
-df[fullName]
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

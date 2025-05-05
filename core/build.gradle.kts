@@ -316,9 +316,6 @@ korro {
         funSuffix("_properties") {
             replaceText("NAME", "Properties")
         }
-        funSuffix("_accessors") {
-            replaceText("NAME", "Accessors")
-        }
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
         }

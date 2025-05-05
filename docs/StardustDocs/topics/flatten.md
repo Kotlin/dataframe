@@ -21,18 +21,6 @@ df.flatten { name }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-val lastName by name.column<String>()
-// name.firstName -> firstName
-// name.lastName -> lastName
-df.flatten(name)
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
