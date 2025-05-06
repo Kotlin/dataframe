@@ -149,8 +149,8 @@ class AllExceptTests : ColumnsSelectionDslTests() {
 
         listOf(
             df.select { name.firstName },
-            df.select { name.allCols() except { colsAtAnyDepth { "last" in it.name } } },
-            df.select { name.allCols() except colsAtAnyDepth { "last" in it.name } },
+            df.select { name.allCols() except { colsAtAnyDepth().filter { "last" in it.name } } },
+            df.select { name.allCols() except colsAtAnyDepth().filter { "last" in it.name } },
             df.select { name.allCols() except { name.lastName } },
             df.select { name.allCols() except name.lastName },
             df.select { name.allCols() except { colGroup("name").col("lastName") } },

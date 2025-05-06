@@ -336,7 +336,7 @@ public fun <T> DataFrame<T>.cumSum(
 public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> =
     cumSum(skipNA) {
         // TODO keep at any depth?
-        colsAtAnyDepth { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isNumber() }.cast()
     }
 
 // endregion
@@ -482,7 +482,7 @@ public fun <T, G> GroupBy<T, G>.cumSum(
 public fun <T, G> GroupBy<T, G>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): GroupBy<T, G> =
     cumSum(skipNA) {
         // TODO keep at any depth?
-        colsAtAnyDepth { it.isNumber() }.cast()
+        colsAtAnyDepth().filter { it.isNumber() }.cast()
     }
 
 // endregion
