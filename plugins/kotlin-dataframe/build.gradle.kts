@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 
 plugins {
     id("java")
@@ -39,11 +40,9 @@ dependencies {
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-annotations-jvm:$kotlinVersion")
 
-    implementation(project(":core"))
-    implementation(project(":dataframe-excel"))
-    api(libs.kotlinLogging)
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-
+    implementation(project(projects.dataframeCompilerPluginCore.path, "shadow"))
+    testRuntimeOnly(projects.core)
+    testRuntimeOnly(projects.dataframeCsv)
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-compiler-internal-test-framework:$kotlinVersion")
 
@@ -61,7 +60,6 @@ tasks.test {
     environment("TEST_RESOURCES", project.layout.projectDirectory)
     doFirst {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib", "kotlin-stdlib")
-        setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib-jdk8", "kotlin-stdlib-jdk8")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-reflect", "kotlin-reflect")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-test", "kotlin-test")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-script-runtime", "kotlin-script-runtime")
@@ -70,9 +68,9 @@ tasks.test {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    friendPaths.from(project(projects.core.path).projectDir)
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xfriend-paths=${project(":core").projectDir}",
             "-Xcontext-receivers",
         )
         optIn.addAll(

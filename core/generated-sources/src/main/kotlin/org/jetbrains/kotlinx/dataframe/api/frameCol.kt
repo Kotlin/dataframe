@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -34,6 +35,8 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -55,6 +58,9 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      *  `T: Column type`
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -63,6 +69,9 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -75,6 +84,9 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]**`(`**[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -85,11 +97,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`frameCol`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.frameCol]`[`**`<`**[`T`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnTypeDef]**`>`**`]`**`(`**[`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]`  |  `[`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`)`**
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -155,12 +162,11 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      */
     private interface CommonFrameColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface ExampleArg
+        interface EXAMPLE
 
         /**
          * `df.`[select][DataFrame.select]` { `[frameCol][frameCol]`() }`
@@ -175,13 +181,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
         interface DoubleExample
 
         // Receiver argument for the example(s)
-        interface ReceiverArg
+        interface RECEIVER
 
         // Argument for the example(s)
-        interface Arg
+        interface ARG
 
         // Optional note
-        interface Note
+        interface NOTE
 
         /** @param [C] The type of the frame column. */
         interface FrameColumnTypeParam
@@ -235,7 +241,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
@@ -287,10 +292,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         frameCol.ensureIsFrameColumn()
 
@@ -340,10 +348,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
     ): SingleColumn<DataFrame<C>> =
@@ -402,10 +413,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.frameCol(
         frameCol: ColumnAccessor<DataFrame<C>>,
     ): ColumnAccessor<DataFrame<C>> = this.ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
@@ -456,10 +470,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> String.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -509,10 +526,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -562,10 +582,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [col] The [ColumnAccessor][org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor] pointing to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnPath.frameCol(frameCol: ColumnAccessor<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn<C>(frameCol.path()).ensureIsFrameColumn()
 
@@ -621,7 +644,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     private interface FrameColNameDocs
@@ -672,7 +694,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -729,7 +750,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      * @param [C] The type of the frame column.
      */
@@ -781,7 +801,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -836,7 +855,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -898,7 +916,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -951,7 +968,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1008,7 +1024,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1061,7 +1076,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1118,7 +1132,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1171,7 +1184,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1228,7 +1240,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [name] The name of the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1281,7 +1292,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [name] The name of the value column.
@@ -1342,7 +1352,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     private interface FrameColPathDocs
@@ -1393,7 +1402,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1450,7 +1458,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      * @param [C] The type of the frame column.
      */
@@ -1502,7 +1509,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1557,7 +1563,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1619,7 +1624,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1672,7 +1676,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1729,7 +1732,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1782,7 +1784,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1839,7 +1840,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -1892,7 +1892,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -1949,7 +1948,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [path] The path to the value column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
@@ -2002,7 +2000,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [path] The path to the value column.
@@ -2061,7 +2058,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
@@ -2113,12 +2109,15 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> frameCol(property: KProperty<DataFrame<C>>): SingleColumn<DataFrame<C>> =
         frameColumn(property).ensureIsFrameColumn()
 
@@ -2168,10 +2167,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> frameCol(property: KProperty<List<C>>): SingleColumn<DataFrame<C>> =
         frameColumn(property).ensureIsFrameColumn()
 
@@ -2221,12 +2223,15 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(property: KProperty<DataFrame<C>>): SingleColumn<DataFrame<C>> =
         frameCol<C>(property.name)
 
@@ -2276,10 +2281,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.frameCol(property: KProperty<List<C>>): SingleColumn<DataFrame<C>> =
         frameCol<C>(property.name)
 
@@ -2329,10 +2337,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
     public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
@@ -2384,10 +2395,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         this.ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2437,12 +2451,15 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> String.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2492,10 +2509,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> String.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2545,12 +2565,15 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2600,10 +2623,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2653,12 +2679,15 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColDataFrameKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnPath.frameCol(property: KProperty<DataFrame<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2708,10 +2737,13 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [property] The [KProperty] reference to the value column.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnPath.frameCol(property: KProperty<List<C>>): ColumnAccessor<DataFrame<C>> =
         columnGroup(this).ensureIsColumnGroup().frameColumn(property).ensureIsFrameColumn()
 
@@ -2767,7 +2799,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
@@ -2817,7 +2848,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -2876,7 +2906,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
@@ -2931,7 +2960,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -2989,7 +3017,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
@@ -3045,7 +3072,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
@@ -3099,7 +3125,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -3162,7 +3187,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
@@ -3216,7 +3240,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -3273,12 +3296,15 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("frameColUnTyped")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.frameCol(index: Int): SingleColumn<DataFrame<*>> = frameCol<Any?>(index)
 
     /**
@@ -3329,11 +3355,14 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.col]
      *
      *
-     *
      * @param [index] The index of the value column.
      * @throws [IndexOutOfBoundsException] if the index is out of bounds.
      * @param [C] The type of the frame column.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.frameCol(index: Int): SingleColumn<DataFrame<C>> = columnGroup(this).frameCol<C>(index)
 
     /**
@@ -3382,7 +3411,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.
@@ -3438,7 +3466,6 @@ public interface FrameColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup]
      * @see [ColumnsSelectionDsl.valueCol]
      * @see [ColumnsSelectionDsl.col]
-     *
      *
      *
      * @param [index] The index of the value column.

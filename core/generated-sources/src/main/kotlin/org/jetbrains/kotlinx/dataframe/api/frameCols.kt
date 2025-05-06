@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -31,6 +32,8 @@ public interface FrameColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -44,6 +47,9 @@ public interface FrameColsColumnsSelectionDsl {
      *
      *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -52,6 +58,9 @@ public interface FrameColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -64,6 +73,9 @@ public interface FrameColsColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -74,11 +86,6 @@ public interface FrameColsColumnsSelectionDsl {
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`frameCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -133,7 +140,7 @@ public interface FrameColsColumnsSelectionDsl {
     private interface CommonFrameColsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
@@ -207,6 +214,7 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("FrameCols1")
     public fun ColumnsSelectionDsl<*>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
     ): TransformableColumnSet<DataFrame<*>> = asSingleColumn().frameColumnsInternal(filter)
@@ -243,6 +251,7 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("FrameCols2")
     public fun SingleColumn<DataRow<*>>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
     ): TransformableColumnSet<DataFrame<*>> = this.ensureIsColumnGroup().frameColumnsInternal(filter)
@@ -316,6 +325,10 @@ public interface FrameColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.frameCols(
         filter: Predicate<FrameColumn<*>> = { true },
     ): TransformableColumnSet<DataFrame<*>> = columnGroup(this).frameCols(filter)
@@ -362,8 +375,8 @@ public interface FrameColsColumnsSelectionDsl {
  * @return A [TransformableColumnSet] containing the frame columns that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun ColumnsResolver<*>.frameColumnsInternal(
-    filter: (FrameColumn<*>) -> Boolean,
+internal inline fun ColumnsResolver<*>.frameColumnsInternal(
+    crossinline filter: (FrameColumn<*>) -> Boolean,
 ): TransformableColumnSet<AnyFrame> =
     colsInternal { it.isFrameColumn() && filter(it.asFrameColumn()) } as TransformableColumnSet<AnyFrame>
 

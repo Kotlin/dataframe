@@ -7,21 +7,18 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.isNothing
-import org.jetbrains.kotlinx.dataframe.impl.projectTo
+import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
+import org.jetbrains.kotlinx.dataframe.impl.isMixedNumber
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveOrMixedNumber
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE
 import org.jetbrains.kotlinx.dataframe.util.IS_COMPARABLE_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.IS_INTER_COMPARABLE_IMPORT
-import java.math.BigDecimal
-import java.math.BigInteger
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.KTypeProjection
-import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
@@ -47,50 +44,50 @@ public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(typeOf
 
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 
+/** Returns `true` when this column's type is a subtype of `Number?` */
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 
-public fun AnyCol.isBigNumber(): Boolean = isSubtypeOf<BigInteger?>() || isSubtypeOf<BigDecimal?>()
+/** Returns `true` only when this column's type is exactly `Number` or `Number?`. */
+public fun AnyCol.isMixedNumber(): Boolean = type().isMixedNumber()
+
+/**
+ * Returns `true` when this column has the (nullable) type of either:
+ * [Byte], [Short], [Int], [Long], [Float], or [Double].
+ */
+public fun AnyCol.isPrimitiveNumber(): Boolean = type().isPrimitiveNumber()
+
+/**
+ * Returns `true` when this column has the (nullable) type of either:
+ * [Byte], [Short], [Int], [Long], [Float], [Double], or [Number].
+ *
+ * Careful: Will return `true` if the column contains multiple number types that
+ * might NOT be primitive.
+ */
+public fun AnyCol.isPrimitiveOrMixedNumber(): Boolean = type().isPrimitiveOrMixedNumber()
 
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 
-/** Returns `true` if [this] column is inter-comparable, i.e.
+/** Returns `true` if [this] column is intra-comparable, i.e.
  * its values can be compared with each other and thus ordered.
  *
  * If true, operations like [`min()`][AnyCol.min], [`max()`][AnyCol.max], [`median()`][AnyCol.median], etc.
  * will work.
  *
- * Technically, this means the values' common type is a subtype of [Comparable] with
- * the type argument not being [Nothing]. */
+ * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)` */
 @Deprecated(
     message = IS_COMPARABLE,
     replaceWith = ReplaceWith(IS_COMPARABLE_REPLACE, IS_INTER_COMPARABLE_IMPORT),
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
 )
 public fun AnyCol.isComparable(): Boolean = valuesAreComparable()
 
 /**
- * Returns `true` if [this] column is inter-comparable, i.e.
+ * Returns `true` if [this] column is intra-comparable, i.e.
  * its values can be compared with each other and thus ordered.
  *
  * If true, operations like [`min()`][AnyCol.min], [`max()`][AnyCol.max], [`median()`][AnyCol.median], etc.
  * will work.
  *
- * Technically, this means the values' common type is a subtype of [Comparable] with
- * the type argument not being [Nothing].
+ * Technically, this means the values' common type `T(?)` is a subtype of [Comparable]`<in T>(?)`
  */
-public fun AnyCol.valuesAreComparable(): Boolean =
-    isSubtypeOf<Comparable<*>?>() &&
-        type().projectTo(Comparable::class).arguments[0].let {
-            it != KTypeProjection.STAR &&
-                it.type?.isNothing != true
-        }
-
-@PublishedApi
-internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()
-
-internal fun KClass<*>.isPrimitive(): Boolean =
-    isSubclassOf(Number::class) ||
-        this == String::class ||
-        this == Char::class ||
-        this == Array::class ||
-        isSubclassOf(Collection::class)
+public fun AnyCol.valuesAreComparable(): Boolean = isValueColumn() && type().isIntraComparable()

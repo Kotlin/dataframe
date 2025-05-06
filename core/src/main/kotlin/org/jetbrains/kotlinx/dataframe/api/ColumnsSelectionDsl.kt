@@ -3,10 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar
-import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -39,7 +36,7 @@ public annotation class ColumnsSelectionDslMarker
 /**
  * ## Columns Selection DSL
  * {@include [SelectingColumns.Dsl.WithExample]}
- * {@set [SelectingColumns.OperationArg] [select][DataFrame.select]}
+ * {@set [SelectingColumns.OPERATION] [select][DataFrame.select]}
  *
  * @comment This interface be safely cast to [SingleColumn] across the library because it's always
  * implemented in combination with [DataFrameReceiver] which is a [SingleColumn] itself.
@@ -114,10 +111,10 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
      *
      * @include [DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate]
      *
-     * @set [DslGrammarTemplate.DefinitionsArg] {@include [DefinitionsPartOfGrammar]}
-     * @set [DslGrammarTemplate.PlainDslFunctionsArg] {@include [PlainDslPartOfGrammar]}
-     * @set [DslGrammarTemplate.ColumnSetFunctionsArg] {@include [ColumnSetPartOfGrammar]}
-     * @set [DslGrammarTemplate.ColumnGroupFunctionsArg] {@include [ColumnGroupPartOfGrammar]}
+     * @set [DslGrammarTemplate.DEFINITIONS] {@include [DefinitionsPartOfGrammar]}
+     * @set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS] {@include [PlainDslPartOfGrammar]}
+     * @set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS] {@include [ColumnSetPartOfGrammar]}
+     * @set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS] {@include [ColumnGroupPartOfGrammar]}
      */
     public interface DslGrammar {
 
@@ -337,9 +334,9 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
          *
          * {@include [Indent]}`| `{@include [DropColumnsSelectionDsl.Grammar.ColumnGroupWhileName]}**`  {  `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**
          *
-         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExperimentalName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \} EXPERIMENTAL!`**
+         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExceptName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**`  \}  `**
          *
-         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExperimentalName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
+         * {@include [Indent]}`| `{@include [AllExceptColumnsSelectionDsl.Grammar.ColumnGroupExceptName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
          *
          * {@include [Indent]}`| (`{@include [FirstColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [LastColumnsSelectionDsl.Grammar.ColumnGroupName]}`| `{@include [SingleColumnsSelectionDsl.Grammar.ColumnGroupName]}`) [ `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
          *
@@ -385,7 +382,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[`select`][SingleColumn.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
@@ -396,18 +393,22 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColGroup.`[`select`][KProperty.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
      * `df.`[select][DataFrame.select]`  { DataSchemaType::myColGroup  `[`{`][KProperty.select]`  colA  `[`and`][ColumnsSelectionDsl.and]`  colB  `[`}`][KProperty.select]` }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <C, R> KProperty<C>.invoke(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[`select`][String.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *
@@ -417,7 +418,7 @@ public interface ColumnsSelectionDsl<out T> : // SingleColumn<DataRow<T>>
 
     /**
      * @include [SelectColumnsSelectionDsl.CommonSelectDocs]
-     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.ExampleArg]
+     * @set [SelectColumnsSelectionDsl.CommonSelectDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[`select`][ColumnPath.select]`  { someCol  `[`and`][ColumnsSelectionDsl.and]` `[`colsOf`][SingleColumn.colsOf]`<`[`String`][String]`>() } }`
      *

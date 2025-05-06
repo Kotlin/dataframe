@@ -60,7 +60,7 @@ class DataRowTests : BaseTest() {
 
     @Test
     fun std() {
-        typed.mapToColumn("std") { rowStd(skipNA = true, ddof = 0) }.values() shouldBe typed.age
+        typed.mapToColumn("std") { rowStd(skipNaN = true, ddof = 0) }.values() shouldBe typed.age
             .values()
             .zip(typed.weight.values()) { a, b ->
                 if (b == null) {

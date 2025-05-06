@@ -1,3 +1,5 @@
+@file:Suppress("ClassName")
+
 package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.RowFilter
@@ -31,13 +33,13 @@ internal interface SelectingRows {
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface FirstOperationArg
+    interface FIRST_OPERATION
 
     /*
      * The key for a @set that will define the operation name for the examples below.
      * Make sure to [alias][your examples].
      */
-    interface SecondOperationArg
+    interface SECOND_OPERATION
 
     interface SetDefaultOperationArg
 

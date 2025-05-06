@@ -14,18 +14,6 @@ df.name.lastName
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-val lastName by name.column<String>()
-
-df[age]
-df[lastName]
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

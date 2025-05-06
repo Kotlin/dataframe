@@ -2,10 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.InfixName
-import org.jetbrains.kotlinx.dataframe.api.AndColumnsSelectionDsl.Grammar.Name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -16,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.documentation.DoubleIndent
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -32,7 +30,7 @@ public interface AndColumnsSelectionDsl {
      * ## And Operator Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -42,17 +40,17 @@ public interface AndColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnOrColumnSetDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [DslGrammarTemplate.ColumnOrColumnSetRef]}` `{@include [InfixName]}`  [  `**`{`**`  ]  `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}`  [  `**`\}`**` ]`
      *
      *  `| `{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}{@include [Name]}**` (`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [Name]}**` (`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [Name]}**` (`**`|`**`{ `**{@include [DslGrammarTemplate.ColumnOrColumnSetRef]}**` \}`**`|`**`)`**
      * }
      */
@@ -91,21 +89,21 @@ public interface AndColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * {@get [CommonAndDocs.ExampleArg]}
+     * {@get [CommonAndDocs.EXAMPLE]}
      *
      * @return A [ColumnSet] that contains all the columns from the [ColumnsResolvers][ColumnsResolver] on the left
      *   and right side of the [and] operator.
      */
     private interface CommonAndDocs {
 
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     // region ColumnsResolver
 
     /**
      * @include [CommonAndDocs]
-     * @set [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[`cols`][ColumnsSelectionDsl.cols]`  { ... }  `[`and`][ColumnsResolver.and]` `<code>{@get [ColumnsResolverAndDocs.Argument]}</code>` }`
      */
@@ -116,7 +114,7 @@ public interface AndColumnsSelectionDsl {
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
     @Interpretable("And0")
-    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnsList(this, other)
+    public infix fun <C> ColumnsResolver<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = ColumnListImpl(this, other)
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `{ colA `[`/`][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
     public infix fun <C> ColumnsResolver<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> = this and other()
@@ -125,6 +123,10 @@ public interface AndColumnsSelectionDsl {
     public infix fun <C> ColumnsResolver<C>.and(other: String): ColumnSet<*> = this and other.toColumnAccessor()
 
     /** @include [ColumnsResolverAndDocs] {@set [ColumnsResolverAndDocs.Argument] `Type::colB`} */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> ColumnsResolver<C>.and(other: KProperty<C>): ColumnSet<C> = this and other.toColumnAccessor()
 
     // endregion
@@ -133,7 +135,7 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * @include [CommonAndDocs]
-     * @set [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  { "colA"  `[`and`][String.and]` `<code>{@get [StringAndDocs.Argument]}</code>` }`
      */
@@ -152,6 +154,10 @@ public interface AndColumnsSelectionDsl {
     public infix fun String.and(other: String): ColumnSet<*> = toColumnAccessor() and other.toColumnAccessor()
 
     /** @include [StringAndDocs] {@set [StringAndDocs.Argument] `Type::colB`} */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> String.and(other: KProperty<C>): ColumnSet<*> = toColumnAccessor() and other
 
     // endregion
@@ -160,7 +166,7 @@ public interface AndColumnsSelectionDsl {
 
     /**
      * @include [CommonAndDocs]
-     * @set [CommonAndDocs.ExampleArg]
+     * @set [CommonAndDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  { Type::colA  `[`and`][KProperty.and]` `<code>{@get [KPropertyAndDocs.Argument]}</code>` }`
      */
@@ -170,16 +176,32 @@ public interface AndColumnsSelectionDsl {
     }
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] [`colsOf`][SingleColumn.colsOf]`<`[`Int`][Int]`>()`} */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: ColumnsResolver<C>): ColumnSet<C> = toColumnAccessor() and other
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `{ colA `[/][DataColumn.div]`  2.0  `[`named`][ColumnReference.named]` "half colA" \}`} */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: () -> ColumnsResolver<C>): ColumnSet<C> =
         toColumnAccessor() and other()
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `"colB"`} */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: String): ColumnSet<*> = toColumnAccessor() and other
 
     /** @include [KPropertyAndDocs] {@set [KPropertyAndDocs.Argument] `Type::colB`} */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): ColumnSet<C> =
         toColumnAccessor() and other.toColumnAccessor()
 

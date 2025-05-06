@@ -20,7 +20,7 @@ dependencies {
     testImplementation(libs.kotlin.compiler)
     testImplementation(libs.kotlin.compiler.internal.test.framework)
 
-    testRuntimeOnly(project(":core"))
+    testRuntimeOnly(projects.core)
 
     testRuntimeOnly(libs.kotlin.test)
     testRuntimeOnly(libs.kotlin.script.runtime)
@@ -40,7 +40,6 @@ tasks.test {
     useJUnitPlatform()
     doFirst {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib", "kotlin-stdlib")
-        setLibraryProperty("org.jetbrains.kotlin.test.kotlin-stdlib-jdk8", "kotlin-stdlib-jdk8")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-reflect", "kotlin-reflect")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-test", "kotlin-test")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-script-runtime", "kotlin-script-runtime")

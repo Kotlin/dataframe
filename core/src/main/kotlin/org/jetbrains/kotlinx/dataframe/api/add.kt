@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -131,12 +132,20 @@ public inline fun <reified R, T> DataFrame<T>.add(
     noinline expression: AddExpression<T, R>,
 ): DataFrame<T> = (this + mapToColumn(name, infer, expression))
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <reified R, T> DataFrame<T>.add(
     property: KProperty<R>,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>,
 ): DataFrame<T> = (this + mapToColumn(property, infer, expression))
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <reified R, T> DataFrame<T>.add(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
@@ -163,7 +172,8 @@ public class AddDsl<T>(
     ColumnSelectionDsl<T> {
 
     // TODO: support adding column into path
-    internal val columns = mutableListOf<AnyCol>()
+    @PublishedApi
+    internal val columns: MutableList<AnyCol> = mutableListOf<AnyCol>()
 
     public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
@@ -188,32 +198,65 @@ public class AddDsl<T>(
         add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean =
         name().from(expression)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean =
         add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     @Interpretable("Into")
     public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
 
     @Interpretable("AddDslStringInvoke")
     public operator fun String.invoke(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
 
+    @Interpretable("AddDslNamedGroup")
     public fun group(name: String, body: AddDsl<T>.() -> Unit) {
         val dsl = AddDsl(df)
         body(dsl)
@@ -224,6 +267,10 @@ public class AddDsl<T>(
 
     public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
@@ -235,12 +282,18 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     return dataFrameOf(this@add.columns() + dsl.columns).cast()
 }
 
+@Refine
+@Interpretable("GroupByAdd")
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     name: String,
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<G, R>,
 ): GroupBy<T, G> = updateGroups { add(name, infer, expression) }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     column: ColumnAccessor<G>,
     infer: Infer = Infer.Nulls,

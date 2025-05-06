@@ -15,10 +15,14 @@ import org.jetbrains.kotlinx.dataframe.type
  * Creates a [FrameColumn] from [this] by splitting the dataframe into
  * smaller ones, with their number of rows at most [size].
  */
-public fun <T> DataFrame<T>.chunked(size: Int, name: String = "groups"): FrameColumn<T> {
-    val startIndices = (0 until nrow step size)
-    return this.chunkedImpl(startIndices, name)
-}
+public fun <T> DataFrame<T>.chunked(size: Int, name: String = "groups"): FrameColumn<T> =
+    chunked(
+        startIndices = 0 until nrow step size,
+        name = name,
+    )
+
+public fun <T> DataFrame<T>.chunked(startIndices: Iterable<Int>, name: String = "groups"): FrameColumn<T> =
+    chunkedImpl(startIndices, name)
 
 public fun <T> DataColumn<T>.chunked(size: Int): ValueColumn<List<T>> {
     val values = toList().chunked(size)

@@ -215,21 +215,21 @@ Check it out on [**Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j
 
 Explore [**more examples here**](examples).
 
-## Kotlin, Kotlin Jupyter, OpenAPI, Arrow and JDK versions
+## Kotlin, Kotlin Jupyter, Arrow, and JDK versions
 
 This table shows the mapping between main library component versions and minimum supported Java versions.
 
-| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | OpenAPI version | Apache Arrow version |
-|--------------------------|----------------------|----------------|------------------------|-----------------|----------------------|
-| 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 3.0.0           | 11.0.0               |
-| 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 3.0.0           | 15.0.0               |
-| 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 3.0.0           | 17.0.0               |
-| 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 3.0.0           | 18.1.0               |
+| Kotlin DataFrame Version | Minimum Java Version | Kotlin Version | Kotlin Jupyter Version | Apache Arrow version |
+|--------------------------|----------------------|----------------|------------------------|----------------------|
+| 0.10.0                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
+| 0.10.1                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
+| 0.11.0                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
+| 0.11.1                   | 8                    | 1.8.20         | 0.11.0-358             | 11.0.0               |
+| 0.12.0                   | 8                    | 1.9.0          | 0.11.0-358             | 11.0.0               |
+| 0.12.1                   | 8                    | 1.9.0          | 0.11.0-358             | 11.0.0               |
+| 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |
+| 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |
+| 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |
 
 ## Code of Conduct
 

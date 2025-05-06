@@ -1,11 +1,10 @@
-@file:Suppress("INVISIBLE_REFERENCE", "CANNOT_OVERRIDE_INVISIBLE_MEMBER")
-
 package org.jetbrains.kotlinx.dataframe.plugin.impl
 
 import org.jetbrains.kotlin.fir.analysis.checkers.fullyExpandedClassId
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.isNullable
+import org.jetbrains.kotlin.fir.types.renderReadable
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.wrap
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.TypeApproximation
@@ -18,6 +17,7 @@ data class PluginDataFrameSchema(
     companion object {
         val EMPTY = PluginDataFrameSchema(emptyList())
     }
+
     fun columns(): List<SimpleCol> {
         return columns
     }
@@ -27,17 +27,24 @@ data class PluginDataFrameSchema(
     }
 }
 
+fun PluginDataFrameSchema.add(name: String, type: ConeKotlinType, context: KotlinTypeFacade): PluginDataFrameSchema {
+    return PluginDataFrameSchema(columns() + context.simpleColumnOf(name, type))
+}
+
 private fun List<SimpleCol>.asString(indent: String = ""): String {
+    if (isEmpty()) return "$indent<empty compile time schema>"
     return joinToString("\n") {
         val col = when (it) {
             is SimpleFrameColumn -> {
-                "${it.name}*\n" + it.columns().asString("$indent   ")
+                "${it.name}: *\n" + it.columns().asString("$indent ")
             }
+
             is SimpleColumnGroup -> {
-                "${it.name}\n" + it.columns().asString("$indent   ")
+                "${it.name}:\n" + it.columns().asString("$indent ")
             }
+
             is SimpleDataColumn -> {
-                "${it.name}: ${it.type}"
+                "${it.name}: ${it.type.type.renderReadable()}"
             }
         }
         "$indent$col"
@@ -118,11 +125,12 @@ fun KotlinTypeFacade.simpleColumnOf(name: String, type: ConeKotlinType): SimpleC
     }
 }
 
-private fun KotlinTypeFacade.makeNullable(column: SimpleCol): SimpleCol {
+internal fun KotlinTypeFacade.makeNullable(column: SimpleCol): SimpleCol {
     return when (column) {
         is SimpleColumnGroup -> {
             SimpleColumnGroup(column.name, column.columns().map { makeNullable(it) })
         }
+
         is SimpleFrameColumn -> column
         is SimpleDataColumn -> SimpleDataColumn(column.name, column.type.changeNullability { true })
     }

@@ -32,6 +32,20 @@ class RenameTests : ColumnsSelectionDslTests() {
     }
 
     @Test
+    fun `test rename with String to String pairs`() {
+        val renamedDf = dataFrameOf("a_renamed", "b_renamed", "c_renamed")(
+            1, 2, 3,
+            4, 5, 6,
+        )
+
+        simpleDf.rename(
+            "c" to "c_renamed",
+            "a" to "a_renamed",
+            "b" to "b_renamed",
+        ) shouldBe renamedDf
+    }
+
+    @Test
     fun `partial grouped rename`() {
         val renamedDf = dataFrameOf("a_renamed", "b", "c")(
             1, 2, 3,
@@ -177,6 +191,13 @@ class RenameToCamelCaseTests {
         val df = nestedColumnGroup.renameToCamelCase()
         df.columnNames() shouldBe listOf("testName")
         df.getColumnGroup("testName").columnNames() shouldBe listOf("anotherName")
+    }
+
+    @Test
+    fun `uppercase names`() {
+        val originalDf = dataFrameOf("ID", "ITEM", "ORDER_DATE")(1, "TOY", "02.03.2009")
+        val renamedDf = originalDf.renameToCamelCase()
+        renamedDf.columnNames() shouldBe listOf("id", "item", "orderDate")
     }
 
     @Test

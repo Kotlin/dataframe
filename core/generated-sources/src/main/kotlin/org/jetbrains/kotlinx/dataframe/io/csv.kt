@@ -10,27 +10,41 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.OptInRefine
-import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
+import org.jetbrains.kotlinx.dataframe.util.APACHE_CSV
 import org.jetbrains.kotlinx.dataframe.util.AS_URL
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_IMPORT
 import org.jetbrains.kotlinx.dataframe.util.AS_URL_REPLACE
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV
 import org.jetbrains.kotlinx.dataframe.util.DF_READ_NO_CSV_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.READ_CSV
+import org.jetbrains.kotlinx.dataframe.util.READ_CSV_FILE_OR_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.READ_CSV_FILE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.READ_CSV_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.READ_CSV_STREAM_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.READ_CSV_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.READ_DELIM
+import org.jetbrains.kotlinx.dataframe.util.READ_DELIM_READER_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.READ_DELIM_STREAM_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.TO_CSV
+import org.jetbrains.kotlinx.dataframe.util.TO_CSV_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.TO_CSV_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV
+import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV_FILE_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV_IMPORT
+import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV_PATH_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.WRITE_CSV_WRITER_REPLACE
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
-import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.Reader
@@ -46,6 +60,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Duration
 
+@Deprecated(message = APACHE_CSV, level = DeprecationLevel.WARNING)
 public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readCSV(stream = stream, delimiter = delimiter, header = header)
@@ -57,7 +72,7 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
 
     override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
-    override val testOrder: Int = 20000
+    override val testOrder: Int = 20_001
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
         val arguments = MethodArguments().add("delimiter", typeOf<Char>(), "'%L'", delimiter)
@@ -65,6 +80,10 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     }
 }
 
+@Deprecated(
+    message = APACHE_CSV,
+    level = DeprecationLevel.WARNING,
+)
 public enum class CSVType(public val format: CSVFormat) {
     DEFAULT(
         CSVFormat.DEFAULT.builder()
@@ -81,14 +100,19 @@ public enum class CSVType(public val format: CSVFormat) {
 
 private val defaultCharset = Charsets.UTF_8
 
+@Deprecated("", level = DeprecationLevel.WARNING)
 internal fun isCompressed(fileOrUrl: String) = listOf("gz", "zip").contains(fileOrUrl.split(".").last())
 
+@Deprecated("", level = DeprecationLevel.WARNING)
 internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extension)
 
+@Deprecated("", level = DeprecationLevel.WARNING)
 internal fun isCompressed(url: URL) = isCompressed(url.path)
 
-@Refine
-@Interpretable("ReadDelimStr")
+@Deprecated(
+    message = APACHE_CSV,
+    level = DeprecationLevel.HIDDEN, // clashes with the new readDelim
+)
 public fun DataFrame.Companion.readDelimStr(
     text: String,
     delimiter: Char = ',',
@@ -106,8 +130,8 @@ public fun DataFrame.Companion.readDelimStr(
 
 @Deprecated(
     message = DF_READ_NO_CSV,
-    replaceWith = ReplaceWith(DF_READ_NO_CSV_REPLACE),
-    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith(DF_READ_NO_CSV_REPLACE, READ_CSV_IMPORT),
+    level = DeprecationLevel.ERROR,
 )
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
@@ -118,24 +142,13 @@ public fun DataFrame.Companion.read(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-): DataFrame<*> =
-    catchHttpResponse(asUrl(fileOrUrl)) {
-        readDelim(
-            it,
-            delimiter,
-            header,
-            isCompressed(fileOrUrl),
-            getCSVType(fileOrUrl),
-            colTypes,
-            skipLines,
-            readLines,
-            duplicate,
-            charset,
-        )
-    }
+): DataFrame<*> = error(DF_READ_NO_CSV)
 
-@OptInRefine
-@Interpretable("ReadCSV0")
+@Deprecated(
+    message = READ_CSV,
+    replaceWith = ReplaceWith(READ_CSV_FILE_OR_URL_REPLACE, READ_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
     delimiter: Char = ',',
@@ -163,6 +176,11 @@ public fun DataFrame.Companion.readCSV(
         )
     }
 
+@Deprecated(
+    message = READ_CSV,
+    replaceWith = ReplaceWith(READ_CSV_FILE_REPLACE, READ_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.readCSV(
     file: File,
     delimiter: Char = ',',
@@ -188,6 +206,11 @@ public fun DataFrame.Companion.readCSV(
         parserOptions,
     )
 
+@Deprecated(
+    message = READ_CSV,
+    replaceWith = ReplaceWith(READ_CSV_URL_REPLACE, READ_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.readCSV(
     url: URL,
     delimiter: Char = ',',
@@ -212,6 +235,11 @@ public fun DataFrame.Companion.readCSV(
         parserOptions,
     )
 
+@Deprecated(
+    message = READ_CSV,
+    replaceWith = ReplaceWith(READ_CSV_STREAM_REPLACE, READ_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.readCSV(
     stream: InputStream,
     delimiter: Char = ',',
@@ -238,17 +266,10 @@ public fun DataFrame.Companion.readCSV(
         parserOptions,
     )
 
-private fun getCSVType(path: String): CSVType =
-    when (path.substringAfterLast('.').lowercase()) {
-        "csv" -> CSVType.DEFAULT
-        "tdf" -> CSVType.TDF
-        else -> throw IOException("Unknown file format")
-    }
-
 @Deprecated(
     message = AS_URL,
     replaceWith = ReplaceWith(AS_URL_REPLACE, AS_URL_IMPORT),
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
 )
 public fun asURL(fileOrUrl: String): URL = asUrl(fileOrUrl)
 
@@ -264,6 +285,11 @@ private fun getFormat(
         .setAllowMissingColumnNames(duplicate)
         .build()
 
+@Deprecated(
+    message = READ_DELIM,
+    replaceWith = ReplaceWith(READ_DELIM_STREAM_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.readDelim(
     inStream: InputStream,
     delimiter: Char = ',',
@@ -343,6 +369,11 @@ public fun ColType.toKType(): KType =
         ColType.Char -> typeOf<Char>()
     }
 
+@Deprecated(
+    message = READ_DELIM,
+    replaceWith = ReplaceWith(READ_DELIM_READER_REPLACE),
+    level = DeprecationLevel.WARNING,
+)
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
     format: CSVFormat = CSVFormat.DEFAULT.builder()
@@ -371,12 +402,27 @@ public fun DataFrame.Companion.readDelim(
         )
     }
 
+@Deprecated(
+    message = WRITE_CSV,
+    replaceWith = ReplaceWith(WRITE_CSV_FILE_REPLACE, WRITE_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT): Unit =
     writeCSV(FileWriter(file), format)
 
+@Deprecated(
+    message = WRITE_CSV,
+    replaceWith = ReplaceWith(WRITE_CSV_PATH_REPLACE, WRITE_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun AnyFrame.writeCSV(path: String, format: CSVFormat = CSVFormat.DEFAULT): Unit =
     writeCSV(FileWriter(path), format)
 
+@Deprecated(
+    message = WRITE_CSV,
+    replaceWith = ReplaceWith(WRITE_CSV_WRITER_REPLACE, WRITE_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.DEFAULT) {
     format.print(writer).use { printer ->
         if (!format.skipHeaderRecord) {
@@ -384,9 +430,17 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
         }
         forEach {
             val values = it.values.map {
-                when (it) {
-                    is AnyRow -> it.toJson()
-                    is AnyFrame -> it.toJson()
+                when (it) { // todo use compileOnly?
+                    is AnyRow ->
+                        error(
+                            "Encountered a DataRow when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead.",
+                        )
+
+                    is AnyFrame ->
+                        error(
+                            "Encountered a DataFrame when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead.",
+                        )
+
                     else -> it
                 }
             }
@@ -395,6 +449,11 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
     }
 }
 
+@Deprecated(
+    message = TO_CSV,
+    replaceWith = ReplaceWith(TO_CSV_REPLACE, TO_CSV_IMPORT),
+    level = DeprecationLevel.WARNING,
+)
 public fun AnyFrame.toCsv(format: CSVFormat = CSVFormat.DEFAULT): String =
     StringWriter().use {
         this.writeCSV(it, format)

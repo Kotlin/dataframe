@@ -5,10 +5,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.Grammar
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -25,6 +24,8 @@ import kotlin.reflect.KProperty
  * ## The Select Operation
  *
  * Returns a new [DataFrame] with only the columns selected by [columns].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][SelectSelectingOptions].
  *
@@ -107,7 +108,9 @@ internal interface Select {
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -152,7 +155,9 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -169,12 +174,18 @@ public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T>
  *
  * @param [columns] The [KProperties][KProperty] used to select the columns of this [DataFrame].
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select { columns.toColumnSet() }
 
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -194,7 +205,9 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
 /**
  * ## The Select Operation
  *
- * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns][org.jetbrains.kotlinx.dataframe.columns].
+ * Returns a new [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] with only the columns selected by [columns].
+ *
+ * This can include [column groups][org.jetbrains.kotlinx.dataframe.columns.ColumnGroup] and nested columns.
  *
  * See [Selecting Columns][org.jetbrains.kotlinx.dataframe.api.Select.SelectSelectingOptions].
  *
@@ -213,6 +226,10 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = selec
  *
  * @param [columns] The [Column Accessors][ColumnReference] used to select the columns of this [DataFrame].
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> = select { columns.toColumnSet() }
 
 // endregion
@@ -233,6 +250,8 @@ public interface SelectColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -250,6 +269,9 @@ public interface SelectColumnsSelectionDsl {
      *
      *
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -262,11 +284,6 @@ public interface SelectColumnsSelectionDsl {
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`select`**][org.jetbrains.kotlinx.dataframe.api.SelectColumnsSelectionDsl.select]**`  {  `**[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]**` }`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`{`**][ColumnsSelectionDsl.select]` `[`colsSelector`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnsSelectorDef]` `[**`}`**][ColumnsSelectionDsl.select]
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -323,7 +340,7 @@ public interface SelectColumnsSelectionDsl {
      */
     private interface CommonSelectDocs {
 
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
@@ -368,6 +385,7 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
+    @Interpretable("NestedSelect")
     public fun <C, R> SingleColumn<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         selectInternal(selector)
 
@@ -413,6 +431,10 @@ public interface SelectColumnsSelectionDsl {
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns selected by [selector].
      * @see [SingleColumn.except]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C, R> KProperty<C>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> =
         columnGroup(this).select(selector)
 

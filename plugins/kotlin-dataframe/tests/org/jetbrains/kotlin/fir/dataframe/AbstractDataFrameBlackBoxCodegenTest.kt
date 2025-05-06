@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.fir.dataframe
 
+import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.fir.dataframe.services.DataFramePluginAnnotationsProvider
 import org.jetbrains.kotlin.fir.dataframe.services.ExperimentalExtensionRegistrarConfigurator
 import org.jetbrains.kotlin.fir.dataframe.services.TemporaryDirectoryManagerImplFixed
@@ -41,8 +42,12 @@ open class AbstractDataFrameBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCo
         super.configure(builder)
         builder.defaultDirectives {
             JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
+            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_1_8
             +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
             +IGNORE_DEXING
+        }
+        builder.forTestsMatching("*/csDsl/*") {
+            builder.useAdditionalSourceProviders(::SelectionDslUtilsSourceProvider)
         }
         builder.useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
         builder.useConfigurators(::DataFramePluginAnnotationsProvider)
@@ -74,6 +79,16 @@ open class AbstractDataFrameBlackBoxCodegenTest : AbstractFirLightTreeBlackBoxCo
 
         override fun produceAdditionalFiles(globalDirectives: RegisteredDirectives, module: TestModule): List<TestFile> {
             return listOf(File(COMMON_SOURCE_PATH).toTestFile())
+        }
+    }
+
+    class SelectionDslUtilsSourceProvider(testServices: TestServices) : AdditionalSourceProvider(testServices) {
+        companion object {
+            const val SELECTION_DSL_UTILS = "testData/selectionDslTestUtils.kt"
+        }
+
+        override fun produceAdditionalFiles(globalDirectives: RegisteredDirectives, module: TestModule): List<TestFile> {
+            return listOf(File(SELECTION_DSL_UTILS).toTestFile())
         }
     }
 }

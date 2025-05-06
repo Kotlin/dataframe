@@ -127,8 +127,8 @@ class Schemas {
     @TransformDataFrameExpressions
     fun useInferredSchema() {
         // SampleStart
-        // Repository.readCSV() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
-        val df = Repository.readCSV()
+        // Repository.readCsv() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
+        val df = Repository.readCsv()
         // Use generated properties to access data in rows
         df.maxBy { stargazersCount }.print()
         // Or to access columns in dataframe.

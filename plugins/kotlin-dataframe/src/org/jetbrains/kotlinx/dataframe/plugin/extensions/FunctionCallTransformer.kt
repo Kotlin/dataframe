@@ -11,7 +11,6 @@ import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirFunctionTarget
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.fullyExpandedClassId
-import org.jetbrains.kotlin.fir.caches.FirCache
 import org.jetbrains.kotlinx.dataframe.plugin.InterpretationErrorReporter
 import org.jetbrains.kotlinx.dataframe.plugin.extensions.impl.SchemaProperty
 import org.jetbrains.kotlinx.dataframe.plugin.analyzeRefinedCallShape
@@ -81,15 +80,11 @@ import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleDataColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleColumnGroup
 import org.jetbrains.kotlinx.dataframe.plugin.impl.SimpleFrameColumn
 import org.jetbrains.kotlinx.dataframe.plugin.impl.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.plugin.impl.api.createPluginDataFrameSchema
 import kotlin.math.abs
 
 @OptIn(FirExtensionApiInternals::class)
 class FunctionCallTransformer(
-    override val resolutionPath: String?,
     session: FirSession,
-    override val cache: FirCache<String, PluginDataFrameSchema, KotlinTypeFacade>,
-    override val schemasDirectory: String?,
     override val isTest: Boolean,
 ) : FirFunctionCallRefinementExtension(session), KotlinTypeFacade {
     companion object {
@@ -106,7 +101,13 @@ class FunctionCallTransformer(
         fun transformOrNull(call: FirFunctionCall, originalSymbol: FirNamedFunctionSymbol): FirFunctionCall?
     }
 
-    private val transformers = listOf(GroupByCallTransformer(), DataFrameCallTransformer(), DataRowCallTransformer())
+    // also update [ReturnTypeBasedReceiverInjector.SCHEMA_TYPES]
+    private val transformers = listOf(
+        GroupByCallTransformer(),
+        DataFrameCallTransformer(),
+        DataRowCallTransformer(),
+        ColumnGroupCallTransformer(),
+    )
 
     override fun intercept(callInfo: CallInfo, symbol: FirNamedFunctionSymbol): CallReturnType? {
         val callSiteAnnotations = (callInfo.callSite as? FirAnnotationContainer)?.annotations ?: emptyList()
@@ -199,6 +200,8 @@ class FunctionCallTransformer(
 
     inner class DataRowCallTransformer : CallTransformer by DataSchemaLikeCallTransformer(Names.DATA_ROW_CLASS_ID)
 
+    inner class ColumnGroupCallTransformer : CallTransformer by DataSchemaLikeCallTransformer(Names.COLUM_GROUP_CLASS_ID)
+
     inner class GroupByCallTransformer : CallTransformer {
         override fun interceptOrNull(
             callInfo: CallInfo,
@@ -239,8 +242,8 @@ class FunctionCallTransformer(
             val groupMarker = rootMarkers[1]
 
             val (keySchema, groupSchema) = if (groupBy != null) {
-                val keySchema = createPluginDataFrameSchema(groupBy.keys, groupBy.moveToTop)
-                val groupSchema = PluginDataFrameSchema(groupBy.df.columns())
+                val keySchema = groupBy.keys
+                val groupSchema = groupBy.groups
                 keySchema to groupSchema
             } else {
                 PluginDataFrameSchema.EMPTY to PluginDataFrameSchema.EMPTY
@@ -321,6 +324,7 @@ class FunctionCallTransformer(
         val receiverType = explicitReceiver?.resolvedType
         val returnType = call.resolvedType
         val scopeFunction = if (explicitReceiver != null) findLet() else findRun()
+        val originalSource = call.calleeReference.source
 
         // original call is inserted later
         call.transformCalleeReference(object : FirTransformer<Nothing?>() {
@@ -429,7 +433,8 @@ class FunctionCallTransformer(
         }
 
         val newCall1 = buildFunctionCall {
-            source = call.source
+            // source = call.source makes IDE navigate to `let` declaration
+            source = null
             this.coneTypeOrNull = returnType
             if (receiverType != null) {
                 typeArguments += buildTypeProjectionWithVariance {
@@ -454,7 +459,7 @@ class FunctionCallTransformer(
                 linkedMapOf(argument to scopeFunction.valueParameterSymbols[0].fir)
             )
             calleeReference = buildResolvedNamedReference {
-                source = call.calleeReference.source
+                source = originalSource
                 this.name = scopeFunction.name
                 resolvedSymbol = scopeFunction
             }
@@ -555,7 +560,7 @@ class FunctionCallTransformer(
                 }
             }
             schema.callShapeData = CallShapeData.Schema(properties)
-            scope.callShapeData = CallShapeData.Scope(properties)
+            scope.callShapeData = CallShapeData.Scope(properties, call.calleeReference.source)
             val schemaApi = DataSchemaApi(schema, scope)
             dataSchemaApis.add(schemaApi)
             return schemaApi

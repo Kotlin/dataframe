@@ -6,7 +6,6 @@ import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
@@ -14,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.JdbcOptions
 import org.jetbrains.kotlinx.dataframe.annotations.JsonOptions
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
@@ -23,11 +23,11 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.CsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
-import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.TsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.databaseCodeGenReader
 import org.jetbrains.kotlinx.dataframe.io.db.driverClassNameFromUrl
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
@@ -61,6 +61,7 @@ class DataSchemaGenerator(
         val jsonOptions: JsonOptions,
         val jdbcOptions: JdbcOptions,
         val isJdbc: Boolean = false,
+        val enableExperimentalOpenApi: Boolean = false,
     )
 
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
@@ -95,6 +96,7 @@ class DataSchemaGenerator(
                     jsonOptions = jsonOptions,
                     jdbcOptions = jdbcOptions,
                     isJdbc = true,
+                    enableExperimentalOpenApi = enableExperimentalOpenApi,
                 )
             }
 
@@ -127,6 +129,7 @@ class DataSchemaGenerator(
             csvOptions = csvOptions,
             jsonOptions = jsonOptions,
             jdbcOptions = jdbcOptions,
+            enableExperimentalOpenApi = enableExperimentalOpenApi,
         )
     }
 
@@ -154,17 +157,16 @@ class DataSchemaGenerator(
         val schemaFile =
             codeGenerator.createNewFile(Dependencies(true, importStatement.origin), packageName, "$name.Generated")
 
-        val formats = listOf(
-            // TODO new Csv() and Tsv()
-            CSV(delimiter = importStatement.csvOptions.delimiter),
+        val formats = listOfNotNull(
+            CsvDeephaven(delimiter = importStatement.csvOptions.delimiter),
             JSON(
-                typeClashTactic = importStatement.jsonOptions.typeClashTactic,
+                typeClashTactic = JSON.TypeClashTactic.valueOf(importStatement.jsonOptions.typeClashTactic),
                 keyValuePaths = importStatement.jsonOptions.keyValuePaths.map(::JsonPath),
             ),
             Excel(),
-            TSV(),
+            TsvDeephaven(),
             ArrowFeather(),
-            OpenApi(),
+            if (importStatement.enableExperimentalOpenApi) OpenApi() else null,
         )
 
         // revisit architecture for an addition of the new data source https://github.com/Kotlin/dataframe/issues/450

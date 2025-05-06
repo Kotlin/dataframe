@@ -5,6 +5,9 @@
 Returns [`DataFrame`](DataFrame.md) which contains all columns from original [`DataFrame`](DataFrame.md) followed by newly added columns. 
 Original [`DataFrame`](DataFrame.md) is not modified.
 
+`add` appends columns to the end of the dataframe by default.
+If you want to add a single column to a specific position in the dataframe, use [insert](insert.md).
+
 ## Create a new column and add it to [`DataFrame`](DataFrame.md)
 
 ```text
@@ -19,16 +22,6 @@ rowExpression: DataRow.(DataRow) -> Value
 
 ```kotlin
 df.add("year of birth") { 2021 - age }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val yearOfBirth by column<Int>("year of birth")
-
-df.add(yearOfBirth) { 2021 - age }
 ```
 
 </tab>
@@ -94,30 +87,6 @@ df.add {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val yob = column<Int>("year of birth")
-val lastNameLength = column<Int>("last name length")
-val age by column<Int>()
-val isAdult = column<Boolean>("is adult")
-val fullName = column<String>("full name")
-val name by columnGroup()
-val details by columnGroup()
-val firstName by name.column<String>()
-val lastName by name.column<String>()
-
-df.add {
-    yob from 2021 - age
-    age gt 18 into isAdult
-    details from {
-        lastName.length() into lastNameLength
-        fullName from { firstName() + " " + lastName() }
-    }
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -158,20 +127,6 @@ Use the following approach to add multiple columns by calling the given API only
 ```kotlin
 val personWithCityInfo = df.add {
     val cityInfo = city.map { queryCityInfo(it) }
-    "cityInfo" {
-        cityInfo.map { it.location } into CityInfo::location
-        cityInfo.map { it.population } into "population"
-    }
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val personWithCityInfo = df.add {
-    val cityInfo = city().map { queryCityInfo(it) }
     "cityInfo" {
         cityInfo.map { it.location } into CityInfo::location
         cityInfo.map { it.population } into "population"

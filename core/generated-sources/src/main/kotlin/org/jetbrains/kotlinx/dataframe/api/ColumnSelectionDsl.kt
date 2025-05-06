@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -85,6 +86,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] this [KProperty Accessor][KProperty] points to.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T> KProperty<T>.invoke(): DataColumn<T> = this@ColumnSelectionDsl[this]
 
     /**
@@ -94,6 +99,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [ColumnGroup] this [KProperty Accessor][KProperty] points to.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T> KProperty<DataRow<T>>.invoke(): ColumnGroup<T> = this@ColumnSelectionDsl[this]
 
     /**
@@ -103,6 +112,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [FrameColumn] this [KProperty Accessor][KProperty] points to.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T> KProperty<DataFrame<T>>.invoke(): FrameColumn<T> = this@ColumnSelectionDsl[this]
 
     /**
@@ -136,6 +149,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowGet")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<R>): DataColumn<R> = invoke()[column]
 
     /**
@@ -154,6 +171,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowGet")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
         invoke()[column]
 
@@ -173,6 +194,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("KPropertyDataRowGet")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T, R> KProperty<DataRow<T>>.get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
         invoke()[column]
 
@@ -190,6 +215,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [DataColumn] these [KProperty Accessors][KProperty] point to.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T, R> KProperty<T>.get(column: KProperty<R>): DataColumn<R> = invoke().asColumnGroup()[column]
 
     /**
@@ -206,6 +235,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [ColumnGroup] these [KProperty Accessors][KProperty] point to.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T, R> KProperty<T>.get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
         invoke().asColumnGroup()[column]
 
@@ -223,6 +256,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
      * @throws [IllegalArgumentException] if the column is not found.
      * @return The [FrameColumn] these [KProperty Accessors][KProperty] point to.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <T, R> KProperty<T>.get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
         invoke().asColumnGroup()[column]
 

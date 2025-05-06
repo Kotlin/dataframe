@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
@@ -34,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.meanOf
 import org.jetbrains.kotlinx.dataframe.api.median
+import org.jetbrains.kotlinx.dataframe.api.medianBy
 import org.jetbrains.kotlinx.dataframe.api.medianFor
 import org.jetbrains.kotlinx.dataframe.api.medianOf
 import org.jetbrains.kotlinx.dataframe.api.min
@@ -41,6 +43,10 @@ import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
+import org.jetbrains.kotlinx.dataframe.api.percentile
+import org.jetbrains.kotlinx.dataframe.api.percentileBy
+import org.jetbrains.kotlinx.dataframe.api.percentileFor
+import org.jetbrains.kotlinx.dataframe.api.percentileOf
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCounts
 import org.jetbrains.kotlinx.dataframe.api.pivotMatches
@@ -51,7 +57,6 @@ import org.jetbrains.kotlinx.dataframe.api.stdOf
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
@@ -176,7 +181,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.sum() // sum of values per every numeric column
         df.sum { age and weight } // sum of all values in `age` and `weight`
-        df.sumFor { age and weight } // sum of values per `age` and `weight` separately
+        df.sumFor(skipNaN = true) { age and weight } // sum of values per `age` and `weight` separately
         df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
         // SampleEnd
     }
@@ -187,7 +192,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.min() // min of values per every comparable column
         df.min { age and weight } // min of all values in `age` and `weight`
-        df.minFor { age and weight } // min of values per `age` and `weight` separately
+        df.minFor(skipNaN = true) { age and weight } // min of values per `age` and `weight` separately
         df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
         df.minBy { age } // DataRow with minimal `age`
         // SampleEnd
@@ -211,8 +216,9 @@ class Analyze : TestBase() {
         // SampleStart
         df.median() // median of values per every comparable column
         df.median { age and weight } // median of all values in `age` and `weight`
-        df.medianFor { age and weight } // median of values per `age` and `weight` separately
+        df.medianFor(skipNaN = true) { age and weight } // median of values per `age` and `weight` separately
         df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
+        df.medianBy { age } // DataRow where the median age lies (lower-median for an even number of values)
         // SampleEnd
     }
 
@@ -230,11 +236,35 @@ class Analyze : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
+    fun percentileModes() {
+        // SampleStart
+        df.percentile(25.0) // 25th percentile of values per every comparable column
+        df.percentile(75.0) { age and weight } // 75th percentile of all values in `age` and `weight`
+        df.percentileFor(50.0, skipNaN = true) { age and weight } // 50th percentile of values per `age` and `weight` separately
+        df.percentileOf(75.0) { (weight ?: 0) / age } // 75th percentile of expression evaluated for every row
+        df.percentileBy(25.0) { age } // DataRow where the 25th percentile of `age` lies (index rounded using R3)
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun percentileAggregations() {
+        // SampleStart
+        df.percentile(25.0)
+        df.age.percentile(75.0)
+        df.groupBy { city }.percentile(50.0)
+        df.pivot { city }.percentile(75.0)
+        df.pivot { city }.groupBy { name.lastName }.percentile(25.0)
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
     fun meanModes() {
         // SampleStart
         df.mean() // mean of values per every numeric column
-        df.mean(skipNA = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
-        df.meanFor(skipNA = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
+        df.mean { age and weight } // mean of all values in `age` and `weight`
+        df.meanFor(skipNaN = true) { age and weight } // mean of values per `age` and `weight` separately, skips NaN
         df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
         // SampleEnd
     }
@@ -257,7 +287,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.std() // std of values per every numeric column
         df.std { age and weight } // std of all values in `age` and `weight`
-        df.stdFor { age and weight } // std of values per `age` and `weight` separately, skips NA
+        df.stdFor(skipNaN = true) { age and weight } // std of values per `age` and `weight` separately, skips NA
         df.stdOf { (weight ?: 0) / age } // std of expression evaluated for every row
         // SampleEnd
     }
@@ -278,7 +308,7 @@ class Analyze : TestBase() {
     @TransformDataFrameExpressions
     fun meanAggregationsSkipNA() {
         // SampleStart
-        df.mean(skipNA = true)
+        df.mean(skipNaN = true)
         // SampleEnd
     }
 
@@ -430,7 +460,7 @@ class Analyze : TestBase() {
         df.max { name.firstName and name.lastName }
         df.sum { age and weight }
         df.mean { cols(1, 3).asNumbers() }
-        df.median { name.cols().asComparable() }
+        df.median<_, String> { name.cols().cast() }
         // SampleEnd
     }
 
@@ -455,7 +485,7 @@ class Analyze : TestBase() {
         df.sum(age, weight)
 
         df.mean { cols(1, 3).asNumbers() }
-        df.median { name.cols().asComparable() }
+        df.median<_, String> { name.cols().cast<String>() }
         // SampleEnd
     }
 
@@ -473,7 +503,7 @@ class Analyze : TestBase() {
         df.sum { "age"<Int>() and "weight"<Int?>() }
 
         df.mean { cols(1, 3).asNumbers() }
-        df.median { name.cols().asComparable() }
+        df.median<_, String> { name.cols().cast() }
         // SampleEnd
     }
 
@@ -510,7 +540,7 @@ class Analyze : TestBase() {
         df.sum(age, weight)
 
         df.mean { cols(1, 3).asNumbers() }
-        df.median { name.cols().asComparable() }
+        df.median<_, String> { name.cols().cast() }
         // SampleEnd
     }
 

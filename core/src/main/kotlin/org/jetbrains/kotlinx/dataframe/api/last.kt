@@ -5,11 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.CommonLastDocs.Examples
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.LastColumnsSelectionDsl.Grammar.PlainDslName
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -34,18 +31,21 @@ public fun <T> DataColumn<T>.last(): T = get(size - 1)
 
 public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
 
-public fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.last(predicate)
+public inline fun <T> DataColumn<T>.last(predicate: (T) -> Boolean): T = values.last(predicate)
 
-public fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = values.lastOrNull(predicate)
+public inline fun <T> DataColumn<T>.lastOrNull(predicate: (T) -> Boolean): T? = values.lastOrNull(predicate)
 
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
+public inline fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rowsReversed().firstOrNull { predicate(it, it) }
 
-public fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
+public inline fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> =
+    rowsReversed().first {
+        predicate(it, it)
+    }
 
 public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow - 1) else null
 
@@ -60,8 +60,10 @@ public fun <T> DataFrame<T>.last(): DataRow<T> {
 
 // region GroupBy
 
+@Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNull() }
 
+@Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { lastOrNull(predicate) }
 
 // endregion
@@ -95,7 +97,7 @@ public interface LastColumnsSelectionDsl {
      * ## Last (Col) Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -103,15 +105,15 @@ public interface LastColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
@@ -168,6 +170,7 @@ public interface LastColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[last][ColumnSet.last]`() }`
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("Last0")
     public fun <C> ColumnSet<C>.last(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.last(condition)) }
@@ -179,6 +182,7 @@ public interface LastColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[last][ColumnsSelectionDsl.last]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
+    @Interpretable("Last1")
     public fun ColumnsSelectionDsl<*>.last(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().lastCol(condition)
 
@@ -188,6 +192,7 @@ public interface LastColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[lastCol][SingleColumn.lastCol]`() }`
      */
+    @Interpretable("Last2")
     public fun SingleColumn<DataRow<*>>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().last(condition)
 
@@ -206,6 +211,10 @@ public interface LastColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[lastCol][KProperty.lastCol]`() }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.lastCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).lastCol(condition)
 

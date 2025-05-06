@@ -30,8 +30,20 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("aggregateDataFrame.kt")
+  public void testAggregateDataFrame() {
+    runTest("testData/box/aggregateDataFrame.kt");
+  }
+
+  @Test
   public void testAllFilesPresentInBox() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+  }
+
+  @Test
+  @TestMetadata("asGroupBy.kt")
+  public void testAsGroupBy() {
+    runTest("testData/box/asGroupBy.kt");
   }
 
   @Test
@@ -65,9 +77,21 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("columnOf_nested.kt")
+  public void testColumnOf_nested() {
+    runTest("testData/box/columnOf_nested.kt");
+  }
+
+  @Test
   @TestMetadata("columnWithStarProjection.kt")
   public void testColumnWithStarProjection() {
     runTest("testData/box/columnWithStarProjection.kt");
+  }
+
+  @Test
+  @TestMetadata("concatWithKeys.kt")
+  public void testConcatWithKeys() {
+    runTest("testData/box/concatWithKeys.kt");
   }
 
   @Test
@@ -77,9 +101,21 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("convertAsColumn.kt")
+  public void testConvertAsColumn() {
+    runTest("testData/box/convertAsColumn.kt");
+  }
+
+  @Test
   @TestMetadata("convertToDataFrame.kt")
   public void testConvertToDataFrame() {
     runTest("testData/box/convertToDataFrame.kt");
+  }
+
+  @Test
+  @TestMetadata("convertToShortcuts.kt")
+  public void testConvertToShortcuts() {
+    runTest("testData/box/convertToShortcuts.kt");
   }
 
   @Test
@@ -92,6 +128,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("dataFrameOf.kt")
   public void testDataFrameOf() {
     runTest("testData/box/dataFrameOf.kt");
+  }
+
+  @Test
+  @TestMetadata("dataFrameOf_nested.kt")
+  public void testDataFrameOf_nested() {
+    runTest("testData/box/dataFrameOf_nested.kt");
   }
 
   @Test
@@ -128,6 +170,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("diff.kt")
   public void testDiff() {
     runTest("testData/box/diff.kt");
+  }
+
+  @Test
+  @TestMetadata("distinct.kt")
+  public void testDistinct() {
+    runTest("testData/box/distinct.kt");
+  }
+
+  @Test
+  @TestMetadata("dropNA.kt")
+  public void testDropNA() {
+    runTest("testData/box/dropNA.kt");
   }
 
   @Test
@@ -209,9 +263,57 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("groupByAdd.kt")
+  public void testGroupByAdd() {
+    runTest("testData/box/groupByAdd.kt");
+  }
+
+  @Test
   @TestMetadata("groupBy_DataRow.kt")
   public void testGroupBy_DataRow() {
     runTest("testData/box/groupBy_DataRow.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_count.kt")
+  public void testGroupBy_count() {
+    runTest("testData/box/groupBy_count.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_extractSchema.kt")
+  public void testGroupBy_extractSchema() {
+    runTest("testData/box/groupBy_extractSchema.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_max.kt")
+  public void testGroupBy_max() {
+    runTest("testData/box/groupBy_max.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_maxOfMinOf.kt")
+  public void testGroupBy_maxOfMinOf() {
+    runTest("testData/box/groupBy_maxOfMinOf.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_mean.kt")
+  public void testGroupBy_mean() {
+    runTest("testData/box/groupBy_mean.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_median.kt")
+  public void testGroupBy_median() {
+    runTest("testData/box/groupBy_median.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_min.kt")
+  public void testGroupBy_min() {
+    runTest("testData/box/groupBy_min.kt");
   }
 
   @Test
@@ -221,9 +323,27 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("groupBy_std.kt")
+  public void testGroupBy_std() {
+    runTest("testData/box/groupBy_std.kt");
+  }
+
+  @Test
+  @TestMetadata("groupBy_sum.kt")
+  public void testGroupBy_sum() {
+    runTest("testData/box/groupBy_sum.kt");
+  }
+
+  @Test
   @TestMetadata("groupBy_toDataFrame.kt")
   public void testGroupBy_toDataFrame() {
     runTest("testData/box/groupBy_toDataFrame.kt");
+  }
+
+  @Test
+  @TestMetadata("infer.kt")
+  public void testInfer() {
+    runTest("testData/box/infer.kt");
   }
 
   @Test
@@ -245,6 +365,24 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("insertAfter.kt")
+  public void testInsertAfter() {
+    runTest("testData/box/insertAfter.kt");
+  }
+
+  @Test
+  @TestMetadata("insertAfterNested.kt")
+  public void testInsertAfterNested() {
+    runTest("testData/box/insertAfterNested.kt");
+  }
+
+  @Test
+  @TestMetadata("insertAt.kt")
+  public void testInsertAt() {
+    runTest("testData/box/insertAt.kt");
+  }
+
+  @Test
   @TestMetadata("inventNamesForLocalClasses.kt")
   public void testInventNamesForLocalClasses() {
     runTest("testData/box/inventNamesForLocalClasses.kt");
@@ -257,9 +395,39 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("joinKinds.kt")
+  public void testJoinKinds() {
+    runTest("testData/box/joinKinds.kt");
+  }
+
+  @Test
+  @TestMetadata("joinWithKinds.kt")
+  public void testJoinWithKinds() {
+    runTest("testData/box/joinWithKinds.kt");
+  }
+
+  @Test
+  @TestMetadata("joinWith_duplicateColumnGroups.kt")
+  public void testJoinWith_duplicateColumnGroups() {
+    runTest("testData/box/joinWith_duplicateColumnGroups.kt");
+  }
+
+  @Test
   @TestMetadata("join_1.kt")
   public void testJoin_1() {
     runTest("testData/box/join_1.kt");
+  }
+
+  @Test
+  @TestMetadata("join_matchColumnGroups.kt")
+  public void testJoin_matchColumnGroups() {
+    runTest("testData/box/join_matchColumnGroups.kt");
+  }
+
+  @Test
+  @TestMetadata("join_mergeColumnGroups.kt")
+  public void testJoin_mergeColumnGroups() {
+    runTest("testData/box/join_mergeColumnGroups.kt");
   }
 
   @Test
@@ -287,9 +455,87 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("max.kt")
+  public void testMax() {
+    runTest("testData/box/max.kt");
+  }
+
+  @Test
+  @TestMetadata("mean.kt")
+  public void testMean() {
+    runTest("testData/box/mean.kt");
+  }
+
+  @Test
+  @TestMetadata("median.kt")
+  public void testMedian() {
+    runTest("testData/box/median.kt");
+  }
+
+  @Test
+  @TestMetadata("merge.kt")
+  public void testMerge() {
+    runTest("testData/box/merge.kt");
+  }
+
+  @Test
+  @TestMetadata("min.kt")
+  public void testMin() {
+    runTest("testData/box/min.kt");
+  }
+
+  @Test
+  @TestMetadata("modifySchemaInAggregate.kt")
+  public void testModifySchemaInAggregate() {
+    runTest("testData/box/modifySchemaInAggregate.kt");
+  }
+
+  @Test
+  @TestMetadata("moveAfter.kt")
+  public void testMoveAfter() {
+    runTest("testData/box/moveAfter.kt");
+  }
+
+  @Test
+  @TestMetadata("moveAfterNested.kt")
+  public void testMoveAfterNested() {
+    runTest("testData/box/moveAfterNested.kt");
+  }
+
+  @Test
+  @TestMetadata("moveInto.kt")
+  public void testMoveInto() {
+    runTest("testData/box/moveInto.kt");
+  }
+
+  @Test
+  @TestMetadata("moveTo.kt")
+  public void testMoveTo() {
+    runTest("testData/box/moveTo.kt");
+  }
+
+  @Test
+  @TestMetadata("moveToEnd.kt")
+  public void testMoveToEnd() {
+    runTest("testData/box/moveToEnd.kt");
+  }
+
+  @Test
+  @TestMetadata("moveToStart.kt")
+  public void testMoveToStart() {
+    runTest("testData/box/moveToStart.kt");
+  }
+
+  @Test
   @TestMetadata("moveToTop.kt")
   public void testMoveToTop() {
     runTest("testData/box/moveToTop.kt");
+  }
+
+  @Test
+  @TestMetadata("moveUnder.kt")
+  public void testMoveUnder() {
+    runTest("testData/box/moveUnder.kt");
   }
 
   @Test
@@ -311,6 +557,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("perRowCol.kt")
+  public void testPerRowCol() {
+    runTest("testData/box/perRowCol.kt");
+  }
+
+  @Test
+  @TestMetadata("percentile.kt")
+  public void testPercentile() {
+    runTest("testData/box/percentile.kt");
+  }
+
+  @Test
   @TestMetadata("platformType.kt")
   public void testPlatformType() {
     runTest("testData/box/platformType.kt");
@@ -329,69 +587,9 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
-  @TestMetadata("read.kt")
-  public void testRead() {
-    runTest("testData/box/read.kt");
-  }
-
-  @Test
-  @TestMetadata("readCSV.kt")
-  public void testReadCSV() {
-    runTest("testData/box/readCSV.kt");
-  }
-
-  @Test
-  @TestMetadata("readDelimStr_delimiter.kt")
-  public void testReadDelimStr_delimiter() {
-    runTest("testData/box/readDelimStr_delimiter.kt");
-  }
-
-  @Test
-  @TestMetadata("readExcel.kt")
-  public void testReadExcel() {
-    runTest("testData/box/readExcel.kt");
-  }
-
-  @Test
-  @TestMetadata("readExcel_stringColumns.kt")
-  public void testReadExcel_stringColumns() {
-    runTest("testData/box/readExcel_stringColumns.kt");
-  }
-
-  @Test
-  @TestMetadata("readJson.kt")
-  public void testReadJson() {
-    runTest("testData/box/readJson.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_const.kt")
-  public void testReadJsonStr_const() {
-    runTest("testData/box/readJsonStr_const.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_datarow.kt")
-  public void testReadJsonStr_datarow() {
-    runTest("testData/box/readJsonStr_datarow.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_localProperty.kt")
-  public void testReadJsonStr_localProperty() {
-    runTest("testData/box/readJsonStr_localProperty.kt");
-  }
-
-  @Test
-  @TestMetadata("readJsonStr_memberProperty.kt")
-  public void testReadJsonStr_memberProperty() {
-    runTest("testData/box/readJsonStr_memberProperty.kt");
-  }
-
-  @Test
-  @TestMetadata("read_localFile.kt")
-  public void testRead_localFile() {
-    runTest("testData/box/read_localFile.kt");
+  @TestMetadata("reducedGroupBy.kt")
+  public void testReducedGroupBy() {
+    runTest("testData/box/reducedGroupBy.kt");
   }
 
   @Test
@@ -407,15 +605,51 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("renameMapping.kt")
+  public void testRenameMapping() {
+    runTest("testData/box/renameMapping.kt");
+  }
+
+  @Test
+  @TestMetadata("renameToCamelCase.kt")
+  public void testRenameToCamelCase() {
+    runTest("testData/box/renameToCamelCase.kt");
+  }
+
+  @Test
+  @TestMetadata("reorder.kt")
+  public void testReorder() {
+    runTest("testData/box/reorder.kt");
+  }
+
+  @Test
+  @TestMetadata("reorderRange.kt")
+  public void testReorderRange() {
+    runTest("testData/box/reorderRange.kt");
+  }
+
+  @Test
   @TestMetadata("Schema.kt")
   public void testSchema() {
     runTest("testData/box/Schema.kt");
   }
 
   @Test
+  @TestMetadata("schemaFromImplicitReceiver.kt")
+  public void testSchemaFromImplicitReceiver() {
+    runTest("testData/box/schemaFromImplicitReceiver.kt");
+  }
+
+  @Test
   @TestMetadata("select.kt")
   public void testSelect() {
     runTest("testData/box/select.kt");
+  }
+
+  @Test
+  @TestMetadata("selectColsOf.kt")
+  public void testSelectColsOf() {
+    runTest("testData/box/selectColsOf.kt");
   }
 
   @Test
@@ -437,9 +671,39 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("std.kt")
+  public void testStd() {
+    runTest("testData/box/std.kt");
+  }
+
+  @Test
+  @TestMetadata("sum.kt")
+  public void testSum() {
+    runTest("testData/box/sum.kt");
+  }
+
+  @Test
   @TestMetadata("toDataFrame.kt")
   public void testToDataFrame() {
     runTest("testData/box/toDataFrame.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameNoPropertiesType.kt")
+  public void testToDataFrameNoPropertiesType() {
+    runTest("testData/box/toDataFrameNoPropertiesType.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameNoPublicPropertiesType.kt")
+  public void testToDataFrameNoPublicPropertiesType() {
+    runTest("testData/box/toDataFrameNoPublicPropertiesType.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrameValueTypes.kt")
+  public void testToDataFrameValueTypes() {
+    runTest("testData/box/toDataFrameValueTypes.kt");
   }
 
   @Test
@@ -473,6 +737,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
+  @TestMetadata("toDataFrame_local_class.kt")
+  public void testToDataFrame_local_class() {
+    runTest("testData/box/toDataFrame_local_class.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrame_nested.kt")
+  public void testToDataFrame_nested() {
+    runTest("testData/box/toDataFrame_nested.kt");
+  }
+
+  @Test
   @TestMetadata("toDataFrame_nullableList.kt")
   public void testToDataFrame_nullableList() {
     runTest("testData/box/toDataFrame_nullableList.kt");
@@ -488,6 +764,18 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   @TestMetadata("toDataFrame_nullableSubtree.kt")
   public void testToDataFrame_nullableSubtree() {
     runTest("testData/box/toDataFrame_nullableSubtree.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrame_private_class.kt")
+  public void testToDataFrame_private_class() {
+    runTest("testData/box/toDataFrame_private_class.kt");
+  }
+
+  @Test
+  @TestMetadata("toDataFrame_private_properties.kt")
+  public void testToDataFrame_private_properties() {
+    runTest("testData/box/toDataFrame_private_properties.kt");
   }
 
   @Test
@@ -509,15 +797,9 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
   }
 
   @Test
-  @TestMetadata("trimIndent.kt")
-  public void testTrimIndent() {
-    runTest("testData/box/trimIndent.kt");
-  }
-
-  @Test
-  @TestMetadata("trimMargin.kt")
-  public void testTrimMargin() {
-    runTest("testData/box/trimMargin.kt");
+  @TestMetadata("unfold.kt")
+  public void testUnfold() {
+    runTest("testData/box/unfold.kt");
   }
 
   @Test
@@ -544,6 +826,12 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
     runTest("testData/box/wrongReceiver.kt");
   }
 
+  @Test
+  @TestMetadata("xs.kt")
+  public void testXs() {
+    runTest("testData/box/xs.kt");
+  }
+
   @Nested
   @TestMetadata("testData/box/colKinds")
   @TestDataPath("$PROJECT_ROOT")
@@ -563,6 +851,118 @@ public class DataFrameBlackBoxCodegenTestGenerated extends AbstractDataFrameBlac
     @TestMetadata("toDataFrame.kt")
     public void testToDataFrame() {
       runTest("testData/box/colKinds/toDataFrame.kt");
+    }
+  }
+
+  @Nested
+  @TestMetadata("testData/box/csDsl")
+  @TestDataPath("$PROJECT_ROOT")
+  public class CsDsl {
+    @Test
+    @TestMetadata("all.kt")
+    public void testAll() {
+      runTest("testData/box/csDsl/all.kt");
+    }
+
+    @Test
+    public void testAllFilesPresentInCsDsl() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/csDsl"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
+
+    @Test
+    @TestMetadata("colGroups.kt")
+    public void testColGroups() {
+      runTest("testData/box/csDsl/colGroups.kt");
+    }
+
+    @Test
+    @TestMetadata("cols.kt")
+    public void testCols() {
+      runTest("testData/box/csDsl/cols.kt");
+    }
+
+    @Test
+    @TestMetadata("colsAtAnyDepth.kt")
+    public void testColsAtAnyDepth() {
+      runTest("testData/box/csDsl/colsAtAnyDepth.kt");
+    }
+
+    @Test
+    @TestMetadata("colsOf.kt")
+    public void testColsOf() {
+      runTest("testData/box/csDsl/colsOf.kt");
+    }
+
+    @Test
+    @TestMetadata("columnNameFIlters.kt")
+    public void testColumnNameFIlters() {
+      runTest("testData/box/csDsl/columnNameFIlters.kt");
+    }
+
+    @Test
+    @TestMetadata("columnRange.kt")
+    public void testColumnRange() {
+      runTest("testData/box/csDsl/columnRange.kt");
+    }
+
+    @Test
+    @TestMetadata("drop.kt")
+    public void testDrop() {
+      runTest("testData/box/csDsl/drop.kt");
+    }
+
+    @Test
+    @TestMetadata("first.kt")
+    public void testFirst() {
+      runTest("testData/box/csDsl/first.kt");
+    }
+
+    @Test
+    @TestMetadata("frameCols.kt")
+    public void testFrameCols() {
+      runTest("testData/box/csDsl/frameCols.kt");
+    }
+
+    @Test
+    @TestMetadata("last.kt")
+    public void testLast() {
+      runTest("testData/box/csDsl/last.kt");
+    }
+
+    @Test
+    @TestMetadata("rename.kt")
+    public void testRename() {
+      runTest("testData/box/csDsl/rename.kt");
+    }
+
+    @Test
+    @TestMetadata("select.kt")
+    public void testSelect() {
+      runTest("testData/box/csDsl/select.kt");
+    }
+
+    @Test
+    @TestMetadata("single.kt")
+    public void testSingle() {
+      runTest("testData/box/csDsl/single.kt");
+    }
+
+    @Test
+    @TestMetadata("take.kt")
+    public void testTake() {
+      runTest("testData/box/csDsl/take.kt");
+    }
+
+    @Test
+    @TestMetadata("valueCols.kt")
+    public void testValueCols() {
+      runTest("testData/box/csDsl/valueCols.kt");
+    }
+
+    @Test
+    @TestMetadata("withoutNulls.kt")
+    public void testWithoutNulls() {
+      runTest("testData/box/csDsl/withoutNulls.kt");
     }
   }
 }

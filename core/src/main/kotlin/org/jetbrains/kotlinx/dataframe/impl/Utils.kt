@@ -150,6 +150,10 @@ internal fun <T> catchSilent(body: () -> T): T? =
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
     commonParents(this).createType(nullable, upperBound)
 
+// helper overload for friend modules
+@JvmName("commonTypeOverload")
+internal fun commonType(types: Iterable<KType?>, useStar: Boolean = true) = types.commonType(useStar)
+
 /**
  * Returns the common supertype of the given types.
  *
@@ -222,60 +226,15 @@ internal fun <T, C> DataFrame<T>.getColumnPaths(
     selector: ColumnsSelector<T, C>,
 ): List<ColumnPath> = getColumnsWithPaths(unresolvedColumnsPolicy, selector).map { it.path }
 
-internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(): Int {
-    val iterator = iterator()
-    if (!iterator.hasNext()) return -1
-    var value = iterator.next()
-    var index = 0
-    while (value == null) {
-        if (!iterator.hasNext()) return -1
-        value = iterator.next()
-        index++
-    }
-    var min: C = value
-    var minIndex = index
-    if (!iterator.hasNext()) return minIndex
-    do {
-        val v = iterator.next()
-        index++
-        if (v != null && min > v) {
-            min = v
-            minIndex = index
-        }
-    } while (iterator.hasNext())
-    return minIndex
-}
-
-internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
-    val iterator = iterator()
-    if (!iterator.hasNext()) return -1
-    var value = iterator.next()
-    var index = 0
-    while (value == null) {
-        if (!iterator.hasNext()) return -1
-        value = iterator.next()
-        index++
-    }
-    var max: C = value
-    var maxIndex = index
-    if (!iterator.hasNext()) return maxIndex
-    do {
-        val v = iterator.next()
-        index++
-        if (v != null && max < v) {
-            max = v
-            maxIndex = index
-        }
-    } while (iterator.hasNext())
-    return maxIndex
-}
-
-internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
-    if (this == Nothing::class) {
+internal fun createStarProjectedType(klass: KClass<*>, nullable: Boolean): KType =
+    if (klass == Nothing::class) {
         nothingType(nullable) // would be Void otherwise
     } else {
-        this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+        klass.starProjectedType.let { if (nullable) it.withNullability(true) else it }
     }
+
+@JvmName("createStarProjectedTypeExt")
+internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType = createStarProjectedType(this, nullable)
 
 internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
     this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
@@ -321,6 +280,10 @@ internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Seque
         }
     }
 
+// helper overload for friend modules
+@JvmName("splitByIndicesOverload")
+internal fun <T> splitByIndices(list: List<T>, startIndices: Sequence<Int>) = list.splitByIndices(startIndices)
+
 internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> =
     (startIndices + size).zipWithNext { start, endExclusive ->
         subList(start, endExclusive)
@@ -337,27 +300,117 @@ internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries:
         this > left && this < right
     }
 
-private const val DELIMITERS = "[_\\s]"
-public val DELIMITERS_REGEX: Regex = DELIMITERS.toRegex()
-public val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
+// Single regex to split words by non-alphanumeric characters, camelCase, and numbers
+internal val CAMEL_DEFAULT_DELIMITERS_REGEX =
+    (
+        "[^\\p{L}0-9]+|(?<=[\\p{Ll}])(?=[\\p{Lu}])|(?<=[\\p{Lu}])" +
+            "(?=[\\p{Lu}][\\p{Ll}])|(?<=\\d)(?=[\\p{L}])|(?<=[\\p{L}])(?=\\d)"
+    )
+        .toRegex()
 
-internal val CAMEL_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
+/**
+ * Converts a string into lowerCamelCase using [delimiters].
+ *
+ * - Splits this string matching given [delimiters] regular expression
+ * (by default, via [CAMEL_DEFAULT_DELIMITERS_REGEX] - any characters that are not letters or digits).
+ * - If the string does not contain any letters or numbers, it remains unchanged.
+ * - Places underscore ("_") between consecutive numbers (that were split before).
+ * - The first word remains in lowercase, and subsequent words are capitalized.
+ *
+ * Default behavior (with [CAMEL_DEFAULT_DELIMITERS_REGEX]):
+ *
+ * ```
+ * "hello_world" -> "helloWorld"
+ * "HelloWorld" -> "helloWorld"
+ * "json.parser.Config" -> "jsonParserConfig"
+ * "my.var_name test" -> "myVarNameTest"
+ * "thirdColumn" -> "thirdColumn"
+ * "someHTMLParser" -> "someHtmlParser"
+ * "RESTApi" -> "restApi"
+ * "OAuth2Token" -> "oAuth2Token"
+ * "GraphQLQuery" -> "graphQlQuery"
+ * "TCP_3_PROTOCOL" -> "tcp3Protocol"
+ * "123hello_world456" -> "123HelloWorld456"
+ * "API_Response_2023" -> "apiResponse2023"
+ * "UPPER_case-LOWER" -> "upperCaseLower"
+ * "12parse34CamelCase" -> "12Parse34CamelCase"
+ * "snake_case_example" -> "snakeCaseExample"
+ * "dot.separated.words" -> "dotSeparatedWords"
+ * "kebab-case-example" -> "kebabCaseExample"
+ * "MIXED_Case_with_123Numbers" -> "mixedCaseWith123Numbers"
+ * "___!!!___" -> "___!!!___"
+ * "1000.2000.3000" -> "1000_2000_3000"
+ * "UPPERCASE" -> "uppercase"
+ * "alreadyCamelCased" -> "alreadyCamelCased"
+ * "justNumbers123" -> "justNumbers123"
+ * "Just_Special\$Chars!!" -> "justSpecialChars"
+ * "singleword" -> "singleword"
+ * "word_with_underscores_and-dashes" -> "wordWithUnderscoresAndDashes"
+ * "10-20-aa" -> "10_20Aa"
+ * ```
+ *
+ * @return the formatted string in lowerCamelCase.
+ */
+public fun String.toCamelCaseByDelimiters(
+    delimiters: Regex = CAMEL_DEFAULT_DELIMITERS_REGEX,
+    numberSeparator: String = "_",
+): String =
+    if (!this.any { it.isLetter() || it.isDigit() }) {
+        this // If the string has no letters, return it unchanged
+    } else {
+        split(delimiters)
+            .filter { it.isNotBlank() }
+            .map { it.lowercase() }
+            .joinNumbers(numberSeparator)
+            .joinToCamelCaseString()
+    }
 
-public fun String.toCamelCaseByDelimiters(delimiters: Regex): String = split(delimiters).joinToCamelCaseString()
+/**
+ * Joins consecutive numbers in a list with the given [separator].
+ * Assumes that all numbers and strings are separated (after splitting via [CAMEL_DEFAULT_DELIMITERS_REGEX]).
+ */
+private fun List<String>.joinNumbers(separator: CharSequence): List<String> {
+    val result = mutableListOf<String>()
+    var i = 0
+
+    while (i < this.size) {
+        val current = this[i]
+        if (current.all { it.isDigit() }) { // Check if the current element is a number
+            val numberGroup = mutableListOf(current)
+            while (i + 1 < this.size && this[i + 1].all { it.isDigit() }) {
+                numberGroup.add(this[i + 1])
+                i++
+            }
+            result.add(numberGroup.joinToString(separator)) // Join consecutive numbers with "_"
+        } else {
+            result.add(current)
+        }
+        i++
+    }
+    return result
+}
+
+/**
+ * Joins a list of words into lowerCamelCase format.
+ * - The first word is converted to lowercase.
+ * - Subsequent words start with an uppercase letter.
+ */
+private fun List<String>.joinToCamelCaseString(): String =
+    mapIndexed { index, word ->
+        if (index == 0) word.lowercase() else word.replaceFirstChar { it.uppercaseChar() }
+    }.joinToString("")
+
+internal val CAMEL_LETTERS_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
 
 internal fun String.toSnakeCase(): String =
     if ("[A-Z_]+".toRegex().matches(this)) {
         this
     } else {
-        CAMEL_REGEX
+        CAMEL_LETTERS_REGEX
             .replace(this) { "_${it.value}" }
             .replace(" ", "_")
             .lowercase()
     }
-
-internal fun List<String>.joinToCamelCaseString(): String =
-    joinToString(separator = "") { it.replaceFirstChar { it.uppercaseChar() } }
-        .replaceFirstChar { it.lowercaseChar() }
 
 /** @include [KCallable.isGetterLike] */
 internal fun KFunction<*>.isGetterLike(): Boolean =
@@ -381,19 +434,37 @@ internal fun KCallable<*>.isGetterLike(): Boolean =
         else -> false
     }
 
+/** @include [KCallable.getterName] */
+internal val KFunction<*>.getterName: String
+    get() = name
+        .removePrefix("get")
+        .removePrefix("is")
+        .replaceFirstChar { it.lowercase() }
+
+/** @include [KCallable.getterName] */
+internal val KProperty<*>.getterName: String
+    get() = name
+
+/**
+ * Returns the getter name for this callable.
+ * The name of the callable is returned with proper getter-trimming if it's a [KFunction].
+ */
+internal val KCallable<*>.getterName: String
+    get() = when (this) {
+        is KFunction<*> -> getterName
+        is KProperty<*> -> getterName
+        else -> name
+    }
+
 /** @include [KCallable.columnName] */
 @PublishedApi
 internal val KFunction<*>.columnName: String
-    get() = findAnnotation<ColumnName>()?.name
-        ?: name
-            .removePrefix("get")
-            .removePrefix("is")
-            .replaceFirstChar { it.lowercase() }
+    get() = findAnnotation<ColumnName>()?.name ?: getterName
 
 /** @include [KCallable.columnName] */
 @PublishedApi
 internal val KProperty<*>.columnName: String
-    get() = findAnnotation<ColumnName>()?.name ?: name
+    get() = findAnnotation<ColumnName>()?.name ?: getterName
 
 /**
  * Returns the column name for this callable.
@@ -405,5 +476,5 @@ internal val KCallable<*>.columnName: String
     get() = when (this) {
         is KFunction<*> -> columnName
         is KProperty<*> -> columnName
-        else -> findAnnotation<ColumnName>()?.name ?: name
+        else -> findAnnotation<ColumnName>()?.name ?: getterName
     }

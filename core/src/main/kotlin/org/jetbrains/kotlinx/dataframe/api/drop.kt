@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -22,7 +24,7 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
+public inline fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
 
 public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> =
     when {
@@ -60,13 +62,13 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
 /**
  * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
  */
-public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
+public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 
 /**
  * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
  */
-public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
-    firstOrNull { !predicate(it, it) }?.let { drop(it.index) } ?: this
+public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
+    firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
 
 // endregion
 
@@ -81,8 +83,8 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [TakeAndDropColumnsSelectionDslGrammar]
-     * @set [TakeAndDropColumnsSelectionDslGrammar.TitleArg] Drop
-     * @set [TakeAndDropColumnsSelectionDslGrammar.OperationArg] drop
+     * @set [TakeAndDropColumnsSelectionDslGrammar.TITLE] Drop
+     * @set [TakeAndDropColumnsSelectionDslGrammar.OPERATION] drop
      */
     public interface Grammar {
 
@@ -109,43 +111,46 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
-     * @set [CommonTakeAndDropDocs.TitleArg] Drop
-     * @set [CommonTakeAndDropDocs.OperationArg] drop
-     * @set [CommonTakeAndDropDocs.NounArg] drop
-     * @set [CommonTakeAndDropDocs.FirstOrLastArg] first
+     * @set [CommonTakeAndDropDocs.TITLE] Drop
+     * @set [CommonTakeAndDropDocs.OPERATION] drop
+     * @set [CommonTakeAndDropDocs.NOUN] drop
+     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] first
      */
     private interface CommonDropFirstDocs
 
     /**
      * @include [CommonDropFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[drop][ColumnSet.drop]`(2) }`
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[drop][ColumnSet.drop]`(2) }`
      */
+    @Interpretable("Drop0")
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
 
     /**
      * @include [CommonDropFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[drop][ColumnsSelectionDsl.drop]`(5) }`
      */
+    @Interpretable("Drop1")
     public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
 
     /**
      * @include [CommonDropFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropCols][SingleColumn.dropCols]`(1) }`
      */
+    @Interpretable("Drop2")
     public fun SingleColumn<DataRow<*>>.dropCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().drop(n) }
 
     /**
      * @include [CommonDropFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropCols][String.dropCols]`(1) }`
      */
@@ -153,15 +158,19 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropCols][KProperty.dropCols]`(1) }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     /**
      * @include [CommonDropFirstDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropCols][ColumnPath.dropCols]`(1) }`
      */
@@ -173,43 +182,46 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropDocs]
-     * @set [CommonTakeAndDropDocs.TitleArg] Drop Last
-     * @set [CommonTakeAndDropDocs.OperationArg] dropLast
-     * @set [CommonTakeAndDropDocs.NounArg] drop
-     * @set [CommonTakeAndDropDocs.FirstOrLastArg] last
+     * @set [CommonTakeAndDropDocs.TITLE] Drop Last
+     * @set [CommonTakeAndDropDocs.OPERATION] dropLast
+     * @set [CommonTakeAndDropDocs.NOUN] drop
+     * @set [CommonTakeAndDropDocs.FIRST_OR_LAST] last
      */
     private interface CommonDropLastDocs
 
     /**
      * @include [CommonDropLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLast][ColumnSet.dropLast]`(2) }`
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[dropLast][ColumnSet.dropLast]`() }`
      */
+    @Interpretable("DropLast0")
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
 
     /**
      * @include [CommonDropLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[dropLast][ColumnsSelectionDsl.dropLast]`(5) }`
      */
+    @Interpretable("DropLast1")
     public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastCols][SingleColumn.dropLastCols]`() }`
      */
+    @Interpretable("DropLast2")
     public fun SingleColumn<DataRow<*>>.dropLastCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLast(n) }
 
     /**
      * @include [CommonDropLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastCols][String.dropLastCols]`(1) }`
      */
@@ -217,15 +229,19 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastCols][KProperty.dropLastCols]`(1) }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     /**
      * @include [CommonDropLastDocs]
-     * @set [CommonTakeAndDropDocs.ExampleArg]
+     * @set [CommonTakeAndDropDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastCols][ColumnPath.dropLastCols]`(1) }`
      */
@@ -237,16 +253,16 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.TitleArg] Drop
-     * @set [CommonTakeAndDropWhileDocs.OperationArg] drop
-     * @set [CommonTakeAndDropWhileDocs.NounArg] drop
-     * @set [CommonTakeAndDropWhileDocs.FirstOrLastArg] first
+     * @set [CommonTakeAndDropWhileDocs.TITLE] Drop
+     * @set [CommonTakeAndDropWhileDocs.OPERATION] drop
+     * @set [CommonTakeAndDropWhileDocs.NOUN] drop
+     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] first
      */
     private interface CommonDropWhileDocs
 
     /**
      * @include [CommonDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropWhile][ColumnSet.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -257,7 +273,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[dropWhile][ColumnsSelectionDsl.dropWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -266,7 +282,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropColsWhile][SingleColumn.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -275,7 +291,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropColsWhile][String.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -284,16 +300,20 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropColsWhile][KProperty.dropColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
     /**
      * @include [CommonDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropColsWhile][ColumnPath.dropColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -306,16 +326,16 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonTakeAndDropWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.TitleArg] Drop Last
-     * @set [CommonTakeAndDropWhileDocs.OperationArg] dropLast
-     * @set [CommonTakeAndDropWhileDocs.NounArg] drop
-     * @set [CommonTakeAndDropWhileDocs.FirstOrLastArg] last
+     * @set [CommonTakeAndDropWhileDocs.TITLE] Drop Last
+     * @set [CommonTakeAndDropWhileDocs.OPERATION] dropLast
+     * @set [CommonTakeAndDropWhileDocs.NOUN] drop
+     * @set [CommonTakeAndDropWhileDocs.FIRST_OR_LAST] last
      */
     private interface CommonDropLastWhileDocs
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().`[dropLastWhile][ColumnSet.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -326,7 +346,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[dropLastWhile][ColumnsSelectionDsl.dropLastWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
@@ -335,7 +355,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -344,7 +364,7 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[dropLastColsWhile][String.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -353,18 +373,22 @@ public interface DropColumnsSelectionDsl {
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[dropLastColsWhile][SingleColumn.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[dropLastColsWhile][KProperty.dropLastColsWhile]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
     /**
      * @include [CommonDropLastWhileDocs]
-     * @set [CommonTakeAndDropWhileDocs.ExampleArg]
+     * @set [CommonTakeAndDropWhileDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[dropLastColsWhile][ColumnPath.dropLastColsWhile]` { it.`[name][ColumnWithPath.name]`.`[startsWith][String.startsWith]`("my") } }`
      */

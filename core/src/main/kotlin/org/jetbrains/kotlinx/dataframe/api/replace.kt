@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.get
@@ -19,9 +20,17 @@ public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceC
 
 public fun <T> DataFrame<T>.replace(vararg columns: String): ReplaceClause<T, Any?> = replace { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceClause<T, C> =
     replace { columns.toColumnSet() }
 
@@ -50,6 +59,10 @@ public fun <T, C> ReplaceClause<T, C>.with(newColumns: List<AnyCol>): DataFrame<
 }
 
 // TODO: Issue #418: breaks if running on ColumnGroup and its child
+
+/**
+ * For an alternative supported in the compiler plugin use [Convert.asColumn]
+ */
 public fun <T, C> ReplaceClause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> {
     val removeResult = df.removeImpl(columns = columns)
     val toInsert = removeResult.removedColumns.map {

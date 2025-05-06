@@ -5,6 +5,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.reorderImpl
@@ -20,11 +23,20 @@ public data class Reorder<T, C>(
     public fun <R> cast(): Reorder<T, R> = this as Reorder<T, R>
 }
 
+@Interpretable("Reorder")
 public fun <T, C> DataFrame<T>.reorder(selector: ColumnsSelector<T, C>): Reorder<T, C> = Reorder(this, selector, false)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.reorder(vararg columns: ColumnReference<C>): Reorder<T, C> =
     reorder { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.reorder(vararg columns: KProperty<C>): Reorder<T, C> = reorder { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reorder { columns.toColumnSet() }
@@ -32,6 +44,8 @@ public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reo
 public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: ColumnExpression<C, V>): DataFrame<T> =
     reorderImpl(false, expression)
 
+@Refine
+@Interpretable("ByName")
 public fun <T, C> Reorder<T, C>.byName(desc: Boolean = false): DataFrame<T> =
     if (desc) byDesc { it.name } else by { it.name }
 
@@ -49,6 +63,8 @@ public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
         inFrameColumns = atAnyDepth,
     ).reorderImpl(desc, expression)
 
+@Refine
+@Interpretable("ReorderColumnsByName")
 public fun <T> DataFrame<T>.reorderColumnsByName(atAnyDepth: Boolean = true, desc: Boolean = false): DataFrame<T> =
     reorderColumnsBy(atAnyDepth, desc) { name() }
 

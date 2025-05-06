@@ -1,6 +1,10 @@
-[//]: # (title: Import OpenAPI Schemas in Gradle project)
+[//]: # (title: Import OpenAPI Schemas in Gradle project (Experimental))
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
+
+<warning>
+OpenAPI 3.0.0 schema support is marked as experimental. It might change or be removed in the future.
+</warning>
 
 JSON schema inference is great, but it's not perfect. However, more and more APIs offer
 [OpenAPI (Swagger)](https://swagger.io/) specifications. 
@@ -27,6 +31,7 @@ OpenAPI type schemas can be generated using both methods described above:
 @file:ImportDataSchema(
     path = "https://petstore3.swagger.io/api/v3/openapi.json",
     name = "PetStore",
+    enableExperimentalOpenApi = true,
 )
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
@@ -38,6 +43,7 @@ dataframes {
         data = "https://petstore3.swagger.io/api/v3/openapi.json"
         name = "PetStore"
     }
+    enableExperimentalOpenApi = true
 }
 ```
 

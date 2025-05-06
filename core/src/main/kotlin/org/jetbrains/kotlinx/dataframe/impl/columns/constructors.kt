@@ -31,10 +31,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.TypeSuggestion
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnsSetOf
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.createConverter
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
+import org.jetbrains.kotlinx.dataframe.impl.isNothing
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -42,7 +45,9 @@ import org.jetbrains.kotlinx.dataframe.util.CREATE_COLUMN
 import org.jetbrains.kotlinx.dataframe.util.GUESS_COLUMN_TYPE
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 // region create DataColumn
 
@@ -110,8 +115,8 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
 
 // region create Columns
 
-internal fun <C> createColumnSet(
-    resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
+internal inline fun <C> createColumnSet(
+    crossinline resolver: (context: ColumnResolutionContext) -> List<ColumnWithPath<C>>,
 ): ColumnSet<C> =
     object : ColumnSet<C> {
         override fun resolve(context: ColumnResolutionContext) = resolver(context)
@@ -137,8 +142,8 @@ internal fun <C> createTransformableColumnSet(
 
 // region DSL
 
-internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.toColumnSet(
-    createReceiver: (ColumnResolutionContext) -> T,
+internal inline fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnsResolver<C>>.toColumnSet(
+    crossinline createReceiver: (ColumnResolutionContext) -> T,
 ): ColumnSet<C> =
     createColumnSet {
         val receiver = createReceiver(it)
@@ -193,6 +198,9 @@ internal fun Array<out String>.toNumberColumns() = toColumnsSetOf<Number>()
  *   Note: this parameter is ignored if another [Collection] is present in the values.
  * @param allColsMakesColGroup if `true`, then, if all values are non-null same-sized columns,
  *   a column group will be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`.
+ * @param unifyNumbers if `true`, then all numbers encountered in [values] will be converted to the smallest possible
+ *   number-type that can hold all the values lossless. Unsigned numbers are not supported. See [UnifyingNumbers].
+ *   For example, if the values are `[1, 2f, 3.0]`, then all values will be converted to [Double].
  */
 @PublishedApi
 internal fun <T> createColumnGuessingType(
@@ -202,6 +210,7 @@ internal fun <T> createColumnGuessingType(
     nullable: Boolean? = null,
     listifyValues: Boolean = false,
     allColsMakesColGroup: Boolean = false,
+    unifyNumbers: Boolean = false,
 ): DataColumn<T> =
     createColumnGuessingType(
         name = "",
@@ -211,6 +220,7 @@ internal fun <T> createColumnGuessingType(
         nullable = nullable,
         listifyValues = listifyValues,
         allColsMakesColGroup = allColsMakesColGroup,
+        unifyNumbers = unifyNumbers,
     )
 
 /**
@@ -226,6 +236,7 @@ internal fun <T> createColumnGuessingType(
     nullable: Boolean? = null,
     listifyValues: Boolean = false,
     allColsMakesColGroup: Boolean = false,
+    unifyNumbers: Boolean = false,
 ): DataColumn<T> {
     val type = when (suggestedType) {
         is TypeSuggestion.Infer, is TypeSuggestion.InferWithUpperbound ->
@@ -234,9 +245,21 @@ internal fun <T> createColumnGuessingType(
                 upperBound = (suggestedType as? TypeSuggestion.InferWithUpperbound)?.upperbound,
                 listifyValues = listifyValues,
                 allColsMakesRow = allColsMakesColGroup,
+                unifyNumbers = unifyNumbers,
             )
 
         is TypeSuggestion.Use -> suggestedType.type
+    }
+
+    // only needs to be used when unifyNumbers == true
+    @Suppress("UNCHECKED_CAST")
+    fun getSafeNumberConverter(targetType: KType): (Any?) -> Any? {
+        val converter = createConverter(
+            from = typeOf<Number>(),
+            to = targetType,
+        ) as (Number) -> Number?
+
+        return { value -> if (value != null && value is Number) converter(value) else value }
     }
 
     return when (type.classifier!! as KClass<*>) {
@@ -269,18 +292,29 @@ internal fun <T> createColumnGuessingType(
         List::class -> {
             val nullable = type.isMarkedNullable
             var isListOfRows: Boolean? = null
-            val lists = values.map {
-                when (it) {
+            val subType = type.arguments.first().type!! // List<T> -> T
+
+            val needsNumberConversion = unifyNumbers &&
+                subType.isSubtypeOf(typeOf<Number?>()) &&
+                !subType.isNothing
+            val numberConverter: (Any?) -> Any? by lazy { getSafeNumberConverter(subType) }
+
+            val lists = values.map { value ->
+                when (value) {
                     null -> if (nullable) null else emptyList()
 
                     is List<*> -> {
-                        if (isListOfRows != false && it.isNotEmpty()) isListOfRows = it.all { it is AnyRow }
-                        it
+                        if (isListOfRows != false && value.isNotEmpty()) isListOfRows = value.all { it is AnyRow }
+
+                        if (needsNumberConversion) value.map(numberConverter) else value
                     }
 
                     else -> { // if !detectType and suggestedType is a list, we wrap the values in lists
-                        if (isListOfRows != false) isListOfRows = it is AnyRow
-                        listOf(it)
+                        if (isListOfRows != false) isListOfRows = value is AnyRow
+
+                        listOf(
+                            if (needsNumberConversion) numberConverter(value) else value,
+                        )
                     }
                 }
             }
@@ -303,10 +337,15 @@ internal fun <T> createColumnGuessingType(
             }
         }
 
-        else ->
+        else -> {
+            val needsNumberConversion = unifyNumbers &&
+                type.isSubtypeOf(typeOf<Number?>()) &&
+                !type.isNothing
+            val numberConverter by lazy { getSafeNumberConverter(type) }
+
             DataColumn.createValueColumn(
                 name = name,
-                values = values.asList(),
+                values = if (needsNumberConversion) values.map(numberConverter) as List<T> else values.asList(),
                 type = if (nullable != null) type.withNullability(nullable) else type,
                 infer = when {
                     // even though an exact type is suggested,
@@ -318,6 +357,7 @@ internal fun <T> createColumnGuessingType(
                 },
                 defaultValue = defaultValue,
             )
+        }
     }
 }
 
@@ -332,6 +372,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
         values = values,
         suggestedType = TypeSuggestion.create(suggestedType, guessType),
         allColsMakesColGroup = true,
+        unifyNumbers = false,
     )
 
 /** Just for binary compatibility, since it's @PublishedApi. */
@@ -353,6 +394,50 @@ internal fun <T> guessColumnType(
         nullable = nullable,
         listifyValues = false,
         allColsMakesColGroup = false,
+    )
+
+/** Just for binary compatibility, since it's @PublishedApi. */
+@Deprecated(GUESS_COLUMN_TYPE, level = DeprecationLevel.HIDDEN)
+@PublishedApi
+internal fun <T> createColumnGuessingType(
+    values: Iterable<T>,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
+    listifyValues: Boolean = false,
+    allColsMakesColGroup: Boolean = false,
+): DataColumn<T> =
+    createColumnGuessingType(
+        values = values,
+        suggestedType = suggestedType,
+        defaultValue = defaultValue,
+        nullable = nullable,
+        listifyValues = listifyValues,
+        allColsMakesColGroup = allColsMakesColGroup,
+        unifyNumbers = false,
+    )
+
+/** Just for binary compatibility, since it's @PublishedApi. */
+@Deprecated(GUESS_COLUMN_TYPE, level = DeprecationLevel.HIDDEN)
+@PublishedApi
+internal fun <T> createColumnGuessingType(
+    name: String,
+    values: Iterable<T>,
+    suggestedType: TypeSuggestion = TypeSuggestion.Infer,
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
+    listifyValues: Boolean = false,
+    allColsMakesColGroup: Boolean = false,
+): DataColumn<T> =
+    createColumnGuessingType(
+        name = name,
+        values = values,
+        suggestedType = suggestedType,
+        defaultValue = defaultValue,
+        nullable = nullable,
+        listifyValues = listifyValues,
+        allColsMakesColGroup = allColsMakesColGroup,
+        unifyNumbers = false,
     )
 
 // endregion

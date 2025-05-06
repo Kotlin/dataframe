@@ -2,10 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.WithoutNullsColumnsSelectionDsl.Grammar.PlainDslName
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -29,21 +27,21 @@ public interface WithoutNullsColumnsSelectionDsl {
      * ## (Cols) Without Nulls Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`()`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`()`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`()`**
      * }
      */
@@ -79,45 +77,48 @@ public interface WithoutNullsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonWithoutNullsDocs.ExampleArg]]}
+     * {@get [CommonWithoutNullsDocs.EXAMPLE]]}
      *
      * @return A [ColumnSet] containing only columns that do not contain `null`s and are thus non-nullable.
      */
     private interface CommonWithoutNullsDocs {
 
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @set [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { .. }.`[withoutNulls][ColumnSet.withoutNulls]`() }`
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("WithoutNulls0")
     public fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C & Any> =
         transform { cols -> cols.filter { !it.hasNulls() } } as ColumnSet<C & Any>
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @set [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[withoutNulls][ColumnsSelectionDsl.colsWithoutNulls]`() }`
      */
+    @Interpretable("WithoutNulls1")
     public fun ColumnsSelectionDsl<*>.withoutNulls(): ColumnSet<Any> = asSingleColumn().colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @set [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsWithoutNulls][SingleColumn.colsWithoutNulls]`() }`
      */
+    @Interpretable("WithoutNulls2")
     public fun SingleColumn<DataRow<*>>.colsWithoutNulls(): ColumnSet<Any> =
         ensureIsColumnGroup().allColumnsInternal().withoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @set [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsWithoutNulls][String.colsWithoutNulls]`() }`
      */
@@ -125,15 +126,19 @@ public interface WithoutNullsColumnsSelectionDsl {
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @set [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[colsWithoutNulls][KProperty.colsWithoutNulls]`() }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.colsWithoutNulls(): ColumnSet<Any> = columnGroup(this).colsWithoutNulls()
 
     /**
      * @include [CommonWithoutNullsDocs]
-     * @set [CommonWithoutNullsDocs.ExampleArg]
+     * @set [CommonWithoutNullsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColGroup"].`[colsWithoutNulls][ColumnPath.colsWithoutNulls]`() }`
      */

@@ -1,55 +1,84 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.ddof_default
-import org.jetbrains.kotlinx.dataframe.api.skipNA_default
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.jetbrains.kotlinx.dataframe.api.ddofDefault
+import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.math.sqrt
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
+private val logger = KotlinLogging.logger { }
+
+/**
+ * Calculates the standard deviation from [this] with optional delta degrees of freedom.
+ *
+ * @param ddof delta degrees of freedom, the bias-correction of std.
+ *   Default is [ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
+ *   the "population standard deviation", so `ddof = 0`, can be used.
+ */
+@Suppress("UNCHECKED_CAST")
 @PublishedApi
-internal fun <T : Number> Iterable<T?>.std(
-    type: KType,
-    skipNA: Boolean = skipNA_default,
-    ddof: Int = ddof_default,
-): Double {
+internal fun <T : Number> Sequence<T?>.std(type: KType, skipNaN: Boolean, ddof: Int): Double {
     if (type.isMarkedNullable) {
-        return when {
-            skipNA -> filterNotNull().std(type = type.withNullability(false), skipNA = true, ddof = ddof)
-            contains(null) -> Double.NaN
-            else -> std(type = type.withNullability(false), skipNA = false, ddof = ddof)
-        }
+        error("Encountered nullable type ${renderType(type)} in std function. This should not occur.")
     }
-    return when (type.classifier) {
-        Double::class -> (this as Iterable<Double>).std(skipNA, ddof)
-        Float::class -> (this as Iterable<Float>).std(skipNA, ddof)
-        Int::class, Short::class, Byte::class -> (this as Iterable<Int>).std(ddof)
-        Long::class -> (this as Iterable<Long>).std(ddof)
-        BigDecimal::class -> (this as Iterable<BigDecimal>).std(ddof)
-        BigInteger::class -> (this as Iterable<BigInteger>).std(ddof)
-        Number::class -> (this as Iterable<Number>).map { it.toDouble() }.std(skipNA, ddof)
-        Nothing::class -> Double.NaN
-        else -> throw IllegalArgumentException("Unable to compute the std for type ${renderType(type)}")
+    return when (type) {
+        typeOf<Double>() -> (this as Sequence<Double>).std(skipNaN, ddof)
+
+        typeOf<Float>() -> (this as Sequence<Float>).map { it.toDouble() }.std(skipNaN, ddof)
+
+        typeOf<Int>() -> (this as Sequence<Int>).map { it.toDouble() }.std(false, ddof)
+
+        typeOf<Short>() -> (this as Sequence<Short>).map { it.toDouble() }.std(false, ddof)
+
+        typeOf<Byte>() -> (this as Sequence<Byte>).map { it.toDouble() }.std(false, ddof)
+
+        typeOf<Long>() -> {
+            logger.warn { "Converting Longs to Doubles to calculate the std, loss of precision may occur." }
+            (this as Sequence<Long>).map { it.toDouble() }.std(false, ddof)
+        }
+
+        typeOf<BigInteger>(), typeOf<BigDecimal>() ->
+            throw IllegalArgumentException(
+                "Cannot calculate the std for big numbers in DataFrame. Only primitive numbers are supported.",
+            )
+
+        typeOf<Number>() ->
+            error("Encountered non-specific Number type in std function. This should not occur.")
+
+        // this means the sequence is empty
+        nothingType -> Double.NaN
+
+        else -> throw IllegalArgumentException(
+            "Unable to compute the std for type ${renderType(type)}. Only primitive numbers are supported",
+        )
     }
 }
 
+/** T: Number? -> Double */
+internal val stdTypeConversion: CalculateReturnType = { _, _ ->
+    typeOf<Double>()
+}
+
 @JvmName("doubleStd")
-public fun Iterable<Double>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
+internal fun Sequence<Double>.std(skipNaN: Boolean = skipNaNDefault, ddof: Int = ddofDefault): Double =
+    calculateBasicStatsOrNull(skipNaN)?.std(ddof) ?: Double.NaN
 
-@JvmName("floatStd")
-public fun Iterable<Float>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double =
-    varianceAndMean(skipNA)?.std(ddof) ?: Double.NaN
-
-@JvmName("intStd")
-public fun Iterable<Int>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
-
-@JvmName("longStd")
-public fun Iterable<Long>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
-
-@JvmName("bigDecimalStd")
-public fun Iterable<BigDecimal>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
-
-@JvmName("bigIntegerStd")
-public fun Iterable<BigInteger>.std(ddof: Int = ddof_default): Double = varianceAndMean().std(ddof)
+/**
+ * Calculates the standard deviation from a [BasicStats] with optional delta degrees of freedom.
+ *
+ * @param ddof delta degrees of freedom, the bias-correction of std.
+ *   Default is [ddofDefault], so `ddof = 1`, the "unbiased sample standard deviation", but alternatively,
+ *   the "population standard deviation", so `ddof = 0`, can be used.
+ */
+internal fun BasicStats.std(ddof: Int): Double =
+    if (count <= ddof) {
+        Double.NaN
+    } else {
+        sqrt(variance / (count - ddof))
+    }

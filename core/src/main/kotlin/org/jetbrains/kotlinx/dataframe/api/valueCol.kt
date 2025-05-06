@@ -4,10 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ValueColColumnsSelectionDsl.Grammar.PlainDslName
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -40,7 +37,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * ## Value Col Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -52,15 +49,15 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *  {@include [DslGrammarTemplate.ColumnTypeDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      */
@@ -89,7 +86,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a value column inside a [ColumnGroup].
      * {@include [LineBreak]}
-     * {@get [CommonValueColDocs.Note]}
+     * {@get [CommonValueColDocs.NOTE]}
      *
      * ### Check out: [Grammar]
      *
@@ -103,7 +100,7 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonValueColDocs.ExampleArg]}
+     * {@get [CommonValueColDocs.EXAMPLE]}
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
      * [col][ColumnsSelectionDsl.col],
@@ -118,33 +115,32 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.colGroup\]
      * @see [ColumnsSelectionDsl.frameCol\]
      * @see [ColumnsSelectionDsl.col\]
-     * {@set [CommonValueColDocs.Note]}
      */
     private interface CommonValueColDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface ExampleArg
+        interface EXAMPLE
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@get [CommonValueColDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`({@get [CommonValueColDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`({@get [CommonValueColDocs.ARG]}) \}`
          *
-         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.ReceiverArg]}`[valueCol][valueCol]`<`[String][String]`>({@get [CommonValueColDocs.Arg]}) \}`
+         * `df.`[select][DataFrame.select]` { {@get [CommonValueColDocs.RECEIVER]}`[valueCol][valueCol]`<`[String][String]`>({@get [CommonValueColDocs.ARG]}) \}`
          */
         interface DoubleExample
 
         // Receiver argument for the example(s)
-        interface ReceiverArg
+        interface RECEIVER
 
         // Argument for the example(s)
-        interface Arg
+        interface ARG
 
         // Optional note
-        interface Note
+        interface NOTE
 
         /** @param [C\] The type of the value column. */
         interface ValueColumnTypeParam
@@ -154,20 +150,24 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonValueColDocs]
-     * {@set [CommonValueColDocs.Arg] valueColumnA}
-     * {@set [CommonValueColDocs.ExampleArg] {@include [CommonValueColDocs.SingleExample]}}
+     * {@set [CommonValueColDocs.ARG] valueColumnA}
+     * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.SingleExample]}}
      * @param [col\] The [ColumnAccessor] pointing to the value column.
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     private interface ValueColReferenceDocs
 
     /**
-     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER]}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> = valueCol.ensureIsValueColumn()
 
     /**
-     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(valueCol: ColumnAccessor<C>): SingleColumn<C> =
         this.ensureIsColumnGroup().transformSingle {
@@ -180,25 +180,29 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
         }.singleImpl()
 
     /**
-     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
-     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      */
     public fun <C> String.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
-     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
 
     /**
-     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColReferenceDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     public fun <C> ColumnPath.valueCol(valueCol: ColumnAccessor<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(valueCol.path()).ensureIsValueColumn()
@@ -209,34 +213,34 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonValueColDocs]
-     * {@set [CommonValueColDocs.Arg] "valueColumnName"}
-     * {@set [CommonValueColDocs.ExampleArg] {@include [CommonValueColDocs.DoubleExample]}}
+     * {@set [CommonValueColDocs.ARG] "valueColumnName"}
+     * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
     private interface ValueColNameDocs
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun valueCol(name: String): ColumnAccessor<*> = valueColumn<Any?>(name).ensureIsValueColumn()
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER]}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> valueCol(name: String): ColumnAccessor<C> = valueColumn<C>(name).ensureIsValueColumn()
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<*> = valueCol<Any?>(name)
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(name: String): SingleColumn<C> =
@@ -248,56 +252,64 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
         }.singleImpl()
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(name: String): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun String.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> String.valueCol(name: String): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(name: String): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(name).ensureIsValueColumn()
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun ColumnPath.valueCol(name: String): ColumnAccessor<*> = valueCol<Any?>(name)
 
     /**
-     * @include [ValueColNameDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColNameDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> ColumnPath.valueCol(name: String): ColumnAccessor<C> =
@@ -309,34 +321,34 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonValueColDocs]
-     * {@set [CommonValueColDocs.Arg] "pathTo"["valueColumnName"\] }
-     * {@set [CommonValueColDocs.ExampleArg] {@include [CommonValueColDocs.DoubleExample]}}
+     * {@set [CommonValueColDocs.ARG] "pathTo"["valueColumnName"\] }
+     * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
     private interface ValueColPathDocs
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun valueCol(path: ColumnPath): ColumnAccessor<*> = valueColumn<Any?>(path).ensureIsValueColumn()
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER]}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> valueCol(path: ColumnPath): ColumnAccessor<C> = valueColumn<C>(path).ensureIsValueColumn()
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<*> = valueCol<Any?>(path)
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(path: ColumnPath): SingleColumn<C> =
@@ -348,56 +360,64 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
         }.singleImpl()
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.valueCol(path: ColumnPath): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun String.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> String.valueCol(path: ColumnPath): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(path: ColumnPath): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn<C>(path).ensureIsValueColumn()
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<*> = valueCol<Any?>(path)
 
     /**
-     * @include [ValueColPathDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColPathDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> ColumnPath.valueCol(path: ColumnPath): ColumnAccessor<C> =
@@ -409,45 +429,69 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonValueColDocs]
-     * {@set [CommonValueColDocs.Arg] Type::valueColumnA}
-     * {@set [CommonValueColDocs.ExampleArg] {@include [CommonValueColDocs.SingleExample]}}
+     * {@set [CommonValueColDocs.ARG] Type::valueColumnA}
+     * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.SingleExample]}}
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     private interface ValueColKPropertyDocs
 
     /**
-     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER]}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> valueCol(property: KProperty<C>): SingleColumn<C> = valueColumn(property).ensureIsValueColumn()
 
     /**
-     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.valueCol(property: KProperty<C>): SingleColumn<C> =
         valueCol<C>(property.name)
 
     /**
-     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         this.ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
-     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> String.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
-     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
     /**
-     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColKPropertyDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnPath.valueCol(property: KProperty<C>): ColumnAccessor<C> =
         columnGroup(this).ensureIsColumnGroup().valueColumn(property).ensureIsValueColumn()
 
@@ -457,42 +501,42 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonValueColDocs]
-     * {@set [CommonValueColDocs.Arg] 0}
-     * {@set [CommonValueColDocs.ExampleArg] {@include [CommonValueColDocs.DoubleExample]}}
+     * {@set [CommonValueColDocs.ARG] 0}
+     * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.DoubleExample]}}
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
     private interface ValueColIndexDocs
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
-     * {@set [CommonValueColDocs.ExampleArg] {@include [CommonValueColDocs.SingleExample]}}
+     * {@set [CommonValueColDocs.EXAMPLE] {@include [CommonValueColDocs.SingleExample]}}
      */
     public fun <C> ColumnSet<C>.valueCol(index: Int): SingleColumn<C> = getAt(index).ensureIsValueColumn()
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg]}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER]}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> ColumnsSelectionDsl<*>.valueCol(index: Int): SingleColumn<C> = asSingleColumn().valueCol<C>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] myColumnGroup.}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.valueCol(index: Int): SingleColumn<C> =
@@ -503,40 +547,48 @@ public interface ValueColColumnsSelectionDsl<out _UNUSED> {
             .cast()
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun String.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] "myColumnGroup".}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> String.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueColUnTyped")
     public fun ColumnPath.valueCol(index: Int): SingleColumn<*> = valueCol<Any?>(index)
 
     /**
-     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ValueColIndexDocs] {@set [CommonValueColDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      * @include [CommonValueColDocs.ValueColumnTypeParam]
      */
     public fun <C> ColumnPath.valueCol(index: Int): SingleColumn<C> = columnGroup(this).valueCol<C>(index)

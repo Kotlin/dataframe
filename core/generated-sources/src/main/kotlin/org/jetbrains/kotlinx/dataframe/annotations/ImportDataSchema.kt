@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.io.JSON
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.io.JSON
  * @param csvOptions options to parse CSV data. Not used when data is not Csv
  * @param jsonOptions options to parse JSON data. Not used when data is not Json
  * @param jdbcOptions options to parse data from a database via JDBC. Not used when data is not stored in the database
+ * @param enableExperimentalOpenApi Can be set to `true` to enable experimental OpenAPI 3.0.0 types support
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE)
@@ -39,6 +40,7 @@ public annotation class ImportDataSchema(
     val csvOptions: CsvOptions = CsvOptions(','),
     val jsonOptions: JsonOptions = JsonOptions(),
     val jdbcOptions: JdbcOptions = JdbcOptions(),
+    val enableExperimentalOpenApi: Boolean = false,
 )
 
 public enum class DataSchemaVisibility {
@@ -70,8 +72,11 @@ public annotation class JdbcOptions(
 )
 
 public annotation class JsonOptions(
-    /** Allows the choice of how to handle type clashes when reading a JSON file. */
-    public val typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
+    /**
+     * Allows the choice of how to handle type clashes when reading a JSON file.
+     * Must be either [JsonOptions.TypeClashTactics.ARRAY_AND_VALUE_COLUMNS] or [JsonOptions.TypeClashTactics.ANY_COLUMNS]
+     * */
+    public val typeClashTactic: String = TypeClashTactics.ARRAY_AND_VALUE_COLUMNS,
     /**
      * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
      *     will be created.
@@ -80,4 +85,11 @@ public annotation class JsonOptions(
      * `["""$["store"]["book"][*]["author"]"""]`
      */
     public val keyValuePaths: Array<String> = [],
-)
+    /** Whether to [unify the numbers that are read][UnifyingNumbers]. `true` by default. */
+    public val unifyNumbers: Boolean = true,
+) {
+    public object TypeClashTactics {
+        public const val ARRAY_AND_VALUE_COLUMNS: String = "ARRAY_AND_VALUE_COLUMNS"
+        public const val ANY_COLUMNS: String = "ANY_COLUMNS"
+    }
+}

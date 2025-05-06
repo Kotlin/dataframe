@@ -74,4 +74,31 @@ internal interface DocumentationUrls {
 
     /** [See `update` on the documentation website.]({@include [Url]}/update.html) */
     interface Update
+
+    /** [See `remove` on the documentation website.]({@include [Url]}/remove.html) */
+    interface Remove
+
+    /** <a href="{@include [Url]}/distinct.html">See `distinct` on the documentation website.</a> */
+    interface Distinct
+
+    /** <a href="{@include [Url]}/flatten.html">See `flatten` on the documentation website.</a> */
+    interface Flatten
+
+    /** <a href="{@include [Url]}/cumsum.html">See `cumSum` on the documentation website.</a> */
+    interface CumSum
+
+    /** [See `describe` on the documentation website.]({@include [Url]}/describe.html) */
+    interface Describe
+
+    /** [See `move` on the documentation website.]({@include [Url]}/move.html) */
+    interface Move
+
+    /** [See `group` on the documentation website.]({@include [Url]}/group.html) */
+    interface Group
+
+    /** [See `group` on the documentation website.]({@include [Url]}/ungroup.html) */
+    interface Ungroup
+
+    /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
+    interface Convert
 }

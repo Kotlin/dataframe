@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -18,7 +19,6 @@ import kotlin.reflect.KProperty
 
 // region insert
 
-@Interpretable("Insert0")
 public fun <T, C> DataFrame<T>.insert(column: DataColumn<C>): InsertClause<T> = InsertClause(this, column)
 
 @Interpretable("Insert1")
@@ -28,14 +28,20 @@ public inline fun <T, reified R> DataFrame<T>.insert(
     noinline expression: RowExpression<T, R>,
 ): InsertClause<T> = insert(mapToColumn(name, infer, expression))
 
-@Interpretable("Insert2")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<T, R>,
 ): InsertClause<T> = insert(column.name(), infer, expression)
 
-@Interpretable("Insert3")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
@@ -59,12 +65,16 @@ public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T>
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> =
     df.insertImpl(columnPath + column.name, column)
 
-@Refine
-@Interpretable("Under2")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
 
-@Refine
-@Interpretable("Under3")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
 
 @Refine
@@ -75,12 +85,22 @@ public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathO
 
 // region after
 
+@Refine
+@Interpretable("InsertAfter0")
 public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = after(df.getColumnPath(column))
 
 public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this.column).move(this.column).after(column)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> InsertClause<T>.after(column: ColumnAccessor<*>): DataFrame<T> = after(column.path())
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> InsertClause<T>.after(column: KProperty<*>): DataFrame<T> = after(column.columnName)
 
 public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
@@ -92,6 +112,8 @@ public fun <T> InsertClause<T>.after(columnPath: ColumnPath): DataFrame<T> {
 
 // region at
 
+@Refine
+@Interpretable("InsertAt")
 public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).move(column).to(position)
 
 // endregion

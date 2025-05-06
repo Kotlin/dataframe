@@ -263,6 +263,21 @@ class Create : TestBase() {
 
     @Test
     @TransformDataFrameExpressions
+    fun createNestedDataFrameInplace() {
+        // SampleStart
+        // DataFrame with 2 columns and 3 rows
+        val df = dataFrameOf(
+            "name" to columnOf(
+                "firstName" to columnOf("Alice", "Bob", "Charlie"),
+                "lastName" to columnOf("Cooper", "Dylan", "Daniels"),
+            ),
+            "age" to columnOf(15, 20, 100),
+        )
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
     fun createDataFrameWithFill() {
         // SampleStart
         // Multiplication table
@@ -355,7 +370,8 @@ class Create : TestBase() {
     fun readDataFrameFromValues() {
         // SampleStart
         val names = listOf("Alice", "Bob", "Charlie")
-        val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
+        // TODO fix with plugin???
+        val df = names.toDataFrame() as DataFrame<ValueProperty<String>>
         df.add("length") { value.length }
         // SampleEnd
         df.value.toList() shouldBe names

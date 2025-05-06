@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -25,11 +26,24 @@ public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, 
 
 public fun <T> DataFrame<T>.split(vararg columns: String): Split<T, Any> = split { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split<T, C> = split { columns.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumnSet() }
 
-public class Split<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C?>) {
+public class Split<T, C>(
+    @PublishedApi
+    internal val df: DataFrame<T>,
+    @PublishedApi
+    internal val columns: ColumnsSelector<T, C?>,
+) {
     public fun <P> cast(): Split<T, P> = this as Split<T, P>
 
     override fun toString(): String = "Split(df=$df, columns=$columns)"
@@ -100,9 +114,9 @@ public fun <T, C> Split<T, C>.by(
     }
 
 @PublishedApi
-internal fun <T, C, R> Split<T, C>.by(
+internal inline fun <T, C, R> Split<T, C>.by(
     type: KType,
-    splitter: DataRow<T>.(C) -> Iterable<R>,
+    crossinline splitter: DataRow<T>.(C) -> Iterable<R>,
 ): SplitWithTransform<T, C, R> =
     SplitWithTransform(df, columns, false, type) {
         if (it == null) emptyList() else splitter(it).asList()
@@ -139,11 +153,19 @@ internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> =
 
 // region into
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
 ): DataFrame<T> = into(listOf(firstName.name()) + otherNames.map { it.name() })
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: KProperty<*>,
     vararg otherNames: KProperty<*>,
@@ -180,6 +202,10 @@ public fun <T, C> Split<T, DataFrame<C>>.into(
 public fun <T, A, B> Split<T, Pair<A, B>>.into(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.into(
     firstCol: ColumnAccessor<A>,
     secondCol: ColumnAccessor<B>,
@@ -205,11 +231,19 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     extraNamesGenerator: ColumnNamesGenerator<C>? = null,
 ): DataFrame<T> = inward(names.toList(), extraNamesGenerator)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: ColumnAccessor<*>,
     vararg otherNames: ColumnAccessor<*>,
 ): DataFrame<T> = inward(listOf(firstName.name()) + otherNames.map { it.name() })
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     firstName: KProperty<*>,
     vararg otherNames: KProperty<*>,
@@ -229,6 +263,10 @@ public fun <T, C : DataFrame<R>, R> Split<T, C>.inward(
 public fun <T, A, B> Split<T, Pair<A, B>>.inward(firstCol: String, secondCol: String): DataFrame<T> =
     by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.inward(
     firstCol: ColumnAccessor<A>,
     secondCol: ColumnAccessor<B>,
@@ -266,8 +304,10 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
 public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it.rows() }.intoRows(dropEmpty)
 
-internal fun <T, C, R> Convert<T, C?>.splitInplace(type: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
-    withRowCellImpl(getListType(type), Infer.None) { if (it == null) emptyList() else transform(it).asList() }
+internal inline fun <T, C, R> Convert<T, C?>.splitInplace(
+    type: KType,
+    crossinline transform: DataRow<T>.(C) -> Iterable<R>,
+) = withRowCellImpl(getListType(type), Infer.None) { if (it == null) emptyList() else transform(it).asList() }
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = true): DataFrame<T> {
     val paths = df.getColumnPaths(columns).toColumnSet()

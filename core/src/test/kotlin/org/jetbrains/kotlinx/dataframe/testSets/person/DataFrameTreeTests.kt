@@ -4,9 +4,6 @@ import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
-import org.jetbrains.dataframe.impl.codeGen.generate
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -22,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.addId
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.append
+import org.jetbrains.kotlinx.dataframe.api.asColumn
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asFrame
@@ -70,11 +68,10 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.median
-import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
-import org.jetbrains.kotlinx.dataframe.api.moveToLeft
-import org.jetbrains.kotlinx.dataframe.api.moveToRight
+import org.jetbrains.kotlinx.dataframe.api.moveToEnd
+import org.jetbrains.kotlinx.dataframe.api.moveToStart
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.pivot
@@ -86,8 +83,10 @@ import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
@@ -96,13 +95,18 @@ import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.xs
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode
+import org.jetbrains.kotlinx.dataframe.codeGen.generate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
+import java.util.stream.Collectors
 import kotlin.reflect.typeOf
+import kotlin.streams.toList
 
 class DataFrameTreeTests : BaseTest() {
 
@@ -138,6 +142,28 @@ class DataFrameTreeTests : BaseTest() {
         val df = dataFrameOf(rowsColumn).asGroupBy { rowsColumn }
         val res = df.concat()
         res shouldBe typed
+    }
+
+    @Test
+    fun asGroupByOverloads() {
+        val rowsColumn by columnOf(typed[0..3], typed[4..5], typed[6..6])
+        val df = dataFrameOf(rowsColumn)
+        val res = df.asGroupBy { rowsColumn }.max()
+        df.asGroupBy("rowsColumn").max() shouldBe res
+        df.asGroupBy(rowsColumn).max() shouldBe res
+    }
+
+    @Test
+    fun moveGroupedColumn() {
+        val df = dataFrameOf(
+            "group" to listOf(typed[0..3], typed[4..5], typed[6..6]),
+            "col" to listOf(1, 2, 3),
+        )
+
+        // We need to match the order of columns in the runtime and in compiler plugin
+        // GroupBy with the same schema should give the same result after aggregation, no matter how it was created
+        // We cannot track position of group in original df, so we align `asGroupBy` with `groupBy` and move `group` column to end
+        df.asGroupBy("group").toDataFrame().columnNames() shouldBe listOf("col", "group")
     }
 
     @Test
@@ -466,6 +492,15 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `convert column expression ignoring name changes`() {
+        val res = df.convert { colsOf<Double?>() }.asColumn {
+            it.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn("123")
+        }
+
+        res shouldBe df.convert { colsOf<Double?>() }.toStr()
+    }
+
+    @Test
     fun extensionPropertiesTest() {
         val code = CodeGenerator.create()
             .generate<GroupedPerson>(
@@ -547,6 +582,17 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `move nested column after nested column`() {
+        val moved = typed2.move { nameAndCity.name }.after { nameAndCity.city }
+        moved.columnsCount() shouldBe 3
+        moved.nameAndCity.columnsCount() shouldBe 2
+        moved.nameAndCity.select { all() } shouldBe dataFrameOf(
+            typed2.nameAndCity.city,
+            typed2.nameAndCity.name,
+        )
+    }
+
+    @Test
     fun splitFrameColumnsIntoRows() {
         val grouped = typed.groupBy { city }
         val groupCol = grouped.groups.name()
@@ -556,7 +602,7 @@ class DataFrameTreeTests : BaseTest() {
             .remove { it[groupCol]["city"] }
             .ungroup(groupCol)
             .sortBy { name and age }
-        res shouldBe typed.sortBy { name and age }.moveToLeft { city }
+        res shouldBe typed.sortBy { name and age }.moveToStart { city }
     }
 
     @Test
@@ -569,7 +615,7 @@ class DataFrameTreeTests : BaseTest() {
             .remove { it[groupCol]["city"] }
             .ungroup(groupCol)
             .sortBy { name and age }
-        res shouldBe typed.sortBy { name and age }.moveToLeft { city }
+        res shouldBe typed.sortBy { name and age }.moveToStart { city }
     }
 
     @Test
@@ -587,14 +633,14 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `join with left path`() {
-        val joined = (typed2 - { weight }).join(typed - { city }) { nameAndCity.name.match(right.name) and age }
+        val joined = typed2.remove { weight }.join(typed.remove { city }) { nameAndCity.name.match(right.name) and age }
         joined shouldBe typed2
     }
 
     @Test
     fun `join with right path`() {
-        val joined = (typed - { city }).join(typed2 - { weight }) { name.match(right.nameAndCity.name) and age }
-        val expected = typed.moveToRight { city }.move { city }.under("nameAndCity")
+        val joined = typed.remove { city }.join(typed2.remove { weight }) { name.match(right.nameAndCity.name) and age }
+        val expected = typed.moveToEnd { city }.move { city }.under("nameAndCity")
         joined shouldBe expected
     }
 
@@ -605,8 +651,8 @@ class DataFrameTreeTests : BaseTest() {
         val grouped = typed.group { name and age }.into(nameAndAge).add(cityFirst) { city?.get(0) }
         grouped[nameAndAge].columnsCount() shouldBe 3
 
-        val left = grouped - { weight }
-        val right = grouped - { city }
+        val left = grouped.remove { weight }
+        val right = grouped.remove { city }
         val joined = left.join(right) { nameAndAge }
         joined shouldBe grouped
     }
@@ -783,7 +829,7 @@ class DataFrameTreeTests : BaseTest() {
             .groupBy { expr { age > 30 } into "isOld" }.into(group)
             .aggregate {
                 group().maxBy { rowsCount() }.weight.median() into "m"
-            }["m"] shouldBe 61
+            }["m"] shouldBe 61.5
     }
 
     @Test
@@ -796,5 +842,11 @@ class DataFrameTreeTests : BaseTest() {
     fun `convert ColumnGroup as Frame`() {
         val df = typed2.convert { nameAndCity }.asFrame { it.remove { city } }
         df.nameAndCity.columns() shouldBe typed2.nameAndCity.remove { city }.columns()
+    }
+
+    @Test
+    fun `move under existing group`() {
+        val df = typed2.move { age }.under { nameAndCity }
+        df.nameAndCity.columnNames() shouldBe listOf("name", "city", "age")
     }
 }

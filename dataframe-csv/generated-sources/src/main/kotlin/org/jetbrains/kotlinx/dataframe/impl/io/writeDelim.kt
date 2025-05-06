@@ -74,8 +74,22 @@ internal fun writeDelimImpl(
         df.forEach {
             val values = it.values().map {
                 when (it) {
-                    is AnyRow -> it.toJson()
-                    is AnyFrame -> it.toJson()
+                    is AnyRow -> try {
+                        it.toJson()
+                    } catch (_: NoClassDefFoundError) {
+                        error(
+                            "Encountered a DataRow value when writing to csv/tsv/delim. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
+                        )
+                    }
+
+                    is AnyFrame -> try {
+                        it.toJson()
+                    } catch (_: NoClassDefFoundError) {
+                        error(
+                            "Encountered a DataFrame value when writing to csv/tsv/delim. It must be serialized to JSON, requiring the 'dataframe-json' dependency.",
+                        )
+                    }
+
                     else -> it
                 }
             }

@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
@@ -18,11 +19,10 @@ repositories {
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":dataframe-arrow"))
-    implementation(project(":dataframe-openapi-generator"))
-    implementation(project(":dataframe-excel"))
-    implementation(project(":dataframe-jdbc"))
+    implementation(projects.dataframe)
+    // experimental
+    implementation(projects.dataframeOpenapiGenerator)
+
     implementation(libs.ksp.api)
     implementation(libs.kotlin.reflect)
     implementation(libs.h2db)
@@ -53,4 +53,17 @@ kotlinPublications {
         description = "Annotation preprocessor for DataFrame"
         packageName = artifactId
     }
+}
+
+// uses java 11 for testing
+tasks.compileTestKotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        freeCompilerArgs.add("-Xjdk-release=11")
+    }
+}
+tasks.compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
+    options.release.set(11)
 }

@@ -9,9 +9,11 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -46,6 +48,10 @@ public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name
 
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> column(property: KProperty<T>): ColumnAccessor<T> = ColumnAccessorImpl(property.name)
 
 public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate(this)
@@ -54,6 +60,10 @@ public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = Co
 
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnGroupReference.column(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
 
@@ -90,6 +100,10 @@ public fun valueColumn(path: ColumnPath): ColumnAccessor<Any?> = column(path)
 @JvmName("valueColumnTyped")
 public fun <T> valueColumn(path: ColumnPath): ColumnAccessor<T> = column(path)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> valueColumn(property: KProperty<T>): ColumnAccessor<T> = column(property.name)
 
 public fun ColumnGroupReference.valueColumn(): ColumnDelegate<Any?> = ColumnDelegate(this)
@@ -109,6 +123,10 @@ public fun ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<An
 public fun <T> ColumnGroupReference.valueColumn(path: ColumnPath): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + path)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnGroupReference.valueColumn(property: KProperty<T>): ColumnAccessor<T> =
     ColumnAccessorImpl(this.path() + property.name)
 
@@ -132,8 +150,16 @@ public fun columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = column(path)
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
 @JvmName("columnGroupDataRowKProperty")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> = column(property)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> = column(property.name)
 
 public fun ColumnGroupReference.columnGroup(): ColumnDelegate<AnyRow> = ColumnDelegate(this)
@@ -155,9 +181,17 @@ public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccesso
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("columnGroupDataRowKProperty")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnGroupReference.columnGroup(property: KProperty<DataRow<T>>): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnGroupReference.columnGroup(property: KProperty<T>): ColumnAccessor<DataRow<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
@@ -181,8 +215,16 @@ public fun frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = column(path
 public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
 
 @JvmName("frameColumnDataFrameKProperty")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> = column(property)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> = column(property.name)
 
 public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
@@ -204,9 +246,17 @@ public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccesso
     ColumnAccessorImpl(this.path() + path)
 
 @JvmName("frameColumnDataFrameKProperty")
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnGroupReference.frameColumn(property: KProperty<DataFrame<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnGroupReference.frameColumn(property: KProperty<List<T>>): ColumnAccessor<DataFrame<T>> =
     ColumnAccessorImpl(this.path() + property.name)
 
@@ -256,6 +306,15 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
         allColsMakesColGroup = true,
     ).forceResolve()
 
+@Refine
+@Interpretable("ColumnOfPairs")
+public fun columnOf(vararg columns: Pair<String, AnyBaseCol>): ColumnGroup<*> =
+    dataFrameOf(
+        columns.map { (name, col) ->
+            col.rename(name)
+        },
+    ).asColumnGroup()
+
 // endregion
 
 // region create DataFrame
@@ -276,6 +335,12 @@ public fun dataFrameOf(columns: Iterable<AnyBaseCol>): DataFrame<*> {
     val nrow = if (cols.isEmpty()) 0 else cols[0].size
     return DataFrameImpl<Unit>(cols, nrow)
 }
+
+@Refine
+@JvmName("dataFrameOfColumns")
+@Interpretable("DataFrameOfPairs")
+public fun dataFrameOf(vararg columns: Pair<String, AnyBaseCol>): DataFrame<*> =
+    dataFrameOf(columns.map { (name, col) -> col.rename(name) })
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 
@@ -413,29 +478,79 @@ public class DataFrameBuilder(private val header: List<String>) {
 }
 
 /**
- * Helper class for implementing operations when column names can be potentially duplicated.
- * For example, operations involving multiple dataframes, computed columns or parsing some third-party data
+ * A builder class for dynamically constructing a DataFrame with provided columns.
+ * Allows adding columns manually while automatically handling duplicate column names by assigning unique names.
+ *
+ * @property checkDuplicateValues Whether to check for duplicate column (with identical names and values). If `true`,
+ * doesn't add a new column if the identical one is already in the builder.
+ * when adding new columns. `true` by default.
  */
-public class DynamicDataFrameBuilder {
-    private var cols: MutableList<AnyCol> = mutableListOf()
+public class DynamicDataFrameBuilder(private val checkDuplicateValues: Boolean = true) {
+    private var cols: MutableMap<String, AnyCol> = mutableMapOf()
     private val generator = ColumnNameGenerator()
 
+    /**
+     * Adds a column to the builder, ensuring its name is unique.
+     *
+     * - If a column with the same name already exists, the new column is renamed to a unique name.
+     * - If [checkDuplicateValues] is `true`, the method checks whether the new column has identical values
+     *   to an existing column with the same name. If the values match, the column is not added.
+     *
+     * @param col The column to add to the DataFrame builder.
+     * @return The final unique name assigned to the column.
+     */
     public fun add(col: AnyCol): String {
-        val uniqueName = if (col.name().isEmpty()) {
+        val originalName = col.name()
+        if (checkDuplicateValues && generator.contains(originalName)) {
+            if (cols[originalName] == col) return originalName
+        }
+        val uniqueName = if (originalName.isEmpty()) {
             generator.addUnique(UNNAMED_COLUMN_PREFIX)
         } else {
-            generator.addUnique(col.name())
+            generator.addUnique(originalName)
         }
-        val renamed = if (uniqueName != col.name()) {
+        val renamed = if (uniqueName != originalName) {
             col.rename(uniqueName)
         } else {
             col
         }
-        cols.add(renamed)
+        cols.put(uniqueName, renamed)
         return uniqueName
     }
 
-    public fun toDataFrame(): DataFrame<*> = dataFrameOf(cols)
+    /**
+     * Adds a column to the builder from the given iterable of values, ensuring the column's name is unique.
+     *
+     * The method automatically converts the given iterable into a column using the specified or default name
+     * and infers the type of the column's elements.
+     *
+     * - If a column with the same name already exists, the new column is renamed to a unique name.
+     * - If the [checkDuplicateValues] property of the builder is `true`, the method checks whether the new column
+     *   has identical values to an existing column with the same name. If the values match, the column is not added.
+     *
+     * @param T The inferred type of the elements in the column.
+     * @param values The iterable collection of values to be added as a new column.
+     * @param name The name of the new column. If empty, a unique name will be generated automatically.
+     * @return The final unique name assigned to the column.
+     */
+    public inline fun <reified T> add(values: Iterable<T>, name: String = ""): String =
+        add(values.toColumn(name, Infer.Type))
+
+    /**
+     * Retrieves a column from the builder by its name.
+     *
+     * @param column The name of the column to retrieve.
+     * @return The column corresponding to the specified name, or `null` if no such column exists.
+     */
+    public fun get(column: String): AnyCol? = cols[column]
+
+    /**
+     * Converts the current [DynamicDataFrameBuilder] instance into a [DataFrame].
+     * The resulting [DataFrame] is constructed from the columns stored in the builder.
+     *
+     * @return A [DataFrame] containing the columns defined in the [DynamicDataFrameBuilder].
+     */
+    public fun toDataFrame(): DataFrame<*> = cols.values.toDataFrame()
 }
 
 /**

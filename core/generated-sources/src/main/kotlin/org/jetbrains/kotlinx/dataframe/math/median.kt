@@ -1,89 +1,158 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.impl.asList
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.jetbrains.kotlinx.dataframe.api.isNaN
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
+import org.jetbrains.kotlinx.dataframe.impl.canBeNaN
+import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import java.math.BigDecimal
 import java.math.BigInteger
+import kotlin.math.round
 import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-public inline fun <reified T : Comparable<T>> Iterable<T>.medianOrNull(): T? = median(typeOf<T>())
+private val logger = KotlinLogging.logger { }
 
-public inline fun <reified T : Comparable<T>> Iterable<T>.median(): T = medianOrNull()!!
-
-// TODO median always returns the same type, but this can be confusing for iterables of even length
-// TODO (e.g. median of [1, 2] should be 1.5, but the type is Int, so it returns 1), Issue #558
+/**
+ * Returns the median of the comparable input:
+ * - `null` if empty
+ * - `Double` if primitive number
+ * - `Double.NaN` if ![skipNaN] and contains NaN
+ * - (lower) middle else
+ *
+ * Based on quantile implementation;
+ * uses [QuantileEstimationMethod.R8] for primitive numbers, else [QuantileEstimationMethod.R3].
+ */
 @PublishedApi
-internal inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType): T? {
-    val list = if (type.isMarkedNullable) filterNotNull() else (this as Iterable<T>).asList()
-    val size = list.size
-    if (size == 0) return null
-    val index = size / 2
-    if (index == 0 || size % 2 == 1) return list.quickSelect(index)
-    return when (type.classifier) {
-        Double::class -> ((list.quickSelect(index - 1) as Double + list.quickSelect(index) as Double) / 2.0) as T
+internal fun <T : Comparable<T>> Sequence<T>.medianOrNull(type: KType, skipNaN: Boolean): Any? {
+    when {
+        type.isMarkedNullable ->
+            error("Encountered nullable type ${renderType(type)} in median function. This should not occur.")
 
-        Float::class -> ((list.quickSelect(index - 1) as Float + list.quickSelect(index) as Float) / 2.0f) as T
+        // this means the sequence is empty
+        type == nothingType -> return null
 
-        Int::class -> ((list.quickSelect(index - 1) as Int + list.quickSelect(index) as Int) / 2) as T
+        !type.isIntraComparable() ->
+            error(
+                "Unable to compute the median for ${
+                    renderType(type)
+                }. Only primitive numbers or self-comparables are supported.",
+            )
 
-        Short::class -> ((list.quickSelect(index - 1) as Short + list.quickSelect(index) as Short) / 2) as T
+        type == typeOf<BigDecimal>() || type == typeOf<BigInteger>() ->
+            throw IllegalArgumentException(
+                "Cannot calculate the median for big numbers in DataFrame. Only primitive numbers are supported.",
+            )
 
-        Long::class -> ((list.quickSelect(index - 1) as Long + list.quickSelect(index) as Long) / 2L) as T
-
-        Byte::class -> ((list.quickSelect(index - 1) as Byte + list.quickSelect(index) as Byte) / 2).toByte() as T
-
-        BigDecimal::class -> (
-            (list.quickSelect(index - 1) as BigDecimal + list.quickSelect(index) as BigDecimal) / 2.toBigDecimal()
-        ) as T
-
-        BigInteger::class -> (
-            (list.quickSelect(index - 1) as BigInteger + list.quickSelect(index) as BigInteger) / 2.toBigInteger()
-        ) as T
-
-        else -> list.quickSelect(index - 1)
+        type == typeOf<Long>() ->
+            logger.warn { "Converting Longs to Doubles to calculate the median, loss of precision may occur." }
     }
+
+    val p = 0.5
+
+    // TODO make configurable? https://github.com/Kotlin/dataframe/issues/1121
+    val (values, method) =
+        when {
+            type.isPrimitiveNumber() ->
+                this.map { (it as Number).toDouble() } to QuantileEstimationMethod.Interpolating.R8
+
+            else ->
+                this to QuantileEstimationMethod.Selecting.R3
+        }
+
+    return values.quantileOrNull(
+        p = p,
+        type = type,
+        skipNaN = skipNaN,
+        method = method,
+        name = "median",
+    )
 }
 
-@PublishedApi
-internal fun <T : Comparable<T>> List<T>.quickSelect(k: Int): T {
-    if (k < 0 || k >= size) throw IndexOutOfBoundsException("k = $k, size = $size")
+/**
+ * Primitive Number -> Double?
+ * T : Comparable<T> -> T?
+ */
+internal val medianConversion: CalculateReturnType = { type, isEmpty ->
+    when {
+        // uses linear interpolation, R8 of Hyndman and Fan "Sample quantiles in statistical packages"
+        type.isPrimitiveNumber() -> typeOf<Double>()
 
-    var list = this
-    var temp = mutableListOf<T>()
-    var less = mutableListOf<T>()
-    var k = k
-    var greater = mutableListOf<T>()
-    while (list.size > 1) {
-        var equal = 0
-        val x = list.random()
-        greater.clear()
-        less.clear()
-        for (v in list) {
-            val comp = v.compareTo(x)
-            when {
-                comp < 0 -> less.add(v)
-                comp > 0 -> greater.add(v)
-                else -> equal++
-            }
-        }
-        when {
-            k < less.size -> {
-                list = less
-                less = temp
-                temp = list
-            }
+        // closest rank method, preferring lower middle,
+        // R3 of Hyndman and Fan "Sample quantiles in statistical packages"
+        type.isIntraComparable() -> type
 
-            k < less.size + equal -> {
-                return x
-            }
+        else -> error("Can not calculate median for type ${renderType(type)}")
+    }.withNullability(isEmpty)
+}
 
-            else -> {
-                list = greater
-                greater = temp
-                temp = list
-                k -= less.size + equal
-            }
+/**
+ * Returns the index of the median in the comparable input:
+ * - `-1` if empty or all `null`
+ * - index of first NaN if ![skipNaN] and contains NaN
+ * - index (lower) middle else
+ * NOTE: For primitive numbers the `seq.elementAt(seq.indexOfMedian())` might be different from `seq.medianOrNull()`
+ *
+ * Based on quantile implementation; uses [QuantileEstimationMethod.R3].
+ */
+internal fun <T : Comparable<T & Any>?> Sequence<T>.indexOfMedian(type: KType, skipNaN: Boolean): Int {
+    val nonNullType = type.withNullability(false)
+    when {
+        // this means the sequence is empty
+        nonNullType == nothingType -> return -1
+
+        !nonNullType.isIntraComparable() ->
+            error(
+                "Unable to compute the median for ${
+                    renderType(type)
+                }. Only primitive numbers or self-comparables are supported.",
+            )
+
+        nonNullType == typeOf<BigDecimal>() || nonNullType == typeOf<BigInteger>() ->
+            throw IllegalArgumentException(
+                "Cannot calculate the median for big numbers in DataFrame. Only primitive numbers are supported.",
+            )
+    }
+
+    // propagate NaN to return if they are not to be skipped
+    if (nonNullType.canBeNaN && !skipNaN) {
+        for ((i, it) in this.withIndex()) {
+            if (it.isNaN) return i
         }
     }
-    return list[0]
+
+    val indexedSequence = this.mapIndexedNotNull { i, it ->
+        if (it == null) {
+            null
+        } else {
+            IndexedComparable(i, it)
+        }
+    }
+
+    // TODO make configurable? https://github.com/Kotlin/dataframe/issues/1121
+    val method = QuantileEstimationMethod.R3
+    val p = 0.5
+
+    // get the index where the median can be found in the sorted sequence
+    val indexEstimation = indexedSequence.quantileIndexEstimation(
+        p = p,
+        type = typeOf<IndexedComparable<Nothing>>(),
+        skipNaN = skipNaN,
+        method = method,
+        name = "median",
+    )
+    if (indexEstimation.isNaN()) return this.indexOfFirst { it.isNaN }
+    if (indexEstimation < 0.0) return -1
+    require(indexEstimation == round(indexEstimation)) {
+        "median expected a whole number index from quantileIndexEstimation but was $indexEstimation"
+    }
+
+    val medianResult = indexedSequence.toList().quickSelect(k = indexEstimation.toInt())
+
+    // return the original unsorted index of the found result
+    return medianResult.index
 }

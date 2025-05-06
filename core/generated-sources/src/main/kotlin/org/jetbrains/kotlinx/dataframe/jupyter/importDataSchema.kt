@@ -20,9 +20,14 @@ internal val importDataSchema =
     """
     /** Import the type-only data schema from [url]. */
     fun importDataSchema(url: URL, name: String) {
-        val formats = listOf(
-            OpenApi(),
+        val formats = listOfNotNull(
+            if (dataFrameConfig.enableExperimentalOpenApi) OpenApi() else null,
         )
+        
+        require(formats.isNotEmpty()) { 
+            "importDataSchema() did not find any supported type-only data schema generation providers (`SupportedCodeGenerationFormat`). If you were looking for OpenAPI 3.0.0 types, set `%use dataframe(..., enableExperimentalOpenApi=true)`." 
+        }   
+        
         val codeGenResult = org.jetbrains.dataframe.impl.codeGen.CodeGenerator.urlCodeGenReader(url, formats)
         when (codeGenResult) {
             is org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult.Success -> {

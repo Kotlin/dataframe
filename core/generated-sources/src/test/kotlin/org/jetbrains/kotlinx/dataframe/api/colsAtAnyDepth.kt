@@ -13,10 +13,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.flattenRecursively
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
+import org.jetbrains.kotlinx.dataframe.samples.api.age
 import org.jetbrains.kotlinx.dataframe.samples.api.city
 import org.jetbrains.kotlinx.dataframe.samples.api.firstName
 import org.jetbrains.kotlinx.dataframe.samples.api.lastName
 import org.jetbrains.kotlinx.dataframe.samples.api.name
+import org.jetbrains.kotlinx.dataframe.samples.api.weight
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -139,7 +141,7 @@ class AtAnyDepth : TestBase() {
 
         val dfWithFrames = df
             .add { expr { df } into frameCol }
-            .convert { name }.to {
+            .convert { name }.asColumn {
                 val firstName by it.asColumnGroup().firstName
                 val lastName by it.asColumnGroup().lastName
 
@@ -153,17 +155,15 @@ class AtAnyDepth : TestBase() {
             dfWithFrames.getColumnsWithPaths { name[frameCol] and frameCol }
     }
 
-    //    @Test
+    @Test
     fun `cols of kind atAnyDepth`() {
         listOf(
             dfGroup.getColumnsWithPaths {
                 colsAtAnyDepth().colsOfKind(Frame, Value) { "e" in it.name }
             },
             dfGroup.getColumnsWithPaths {
-                asSingleColumn().ensureIsColumnGroup().asColumnSet().dfsInternal { "e" in it.name }
+                name { firstName.allCols() and lastName } and cols(age, weight)
             },
-        ).map {
-            it.sortedBy { it.name }.map { it.name to it.path }
-        }.shouldAllBeEqual()
+        ).map { it.map { it.path.joinToString() } }.shouldAllBeEqual()
     }
 }

@@ -5,7 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -44,16 +45,24 @@ public fun <T> DataFrame<T>.first(): DataRow<T> {
 
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 
-public fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> = rows().first { predicate(it, it) }
+public inline fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> =
+    rows().first {
+        predicate(it, it)
+    }
 
-public fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? = rows().firstOrNull { predicate(it, it) }
+public inline fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? =
+    rows().firstOrNull {
+        predicate(it, it)
+    }
 
 // endregion
 
 // region GroupBy
 
+@Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOrNull() }
 
+@Interpretable("GroupByReducePredicate")
 public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { firstOrNull(predicate) }
 
 // endregion
@@ -91,6 +100,8 @@ public interface FirstColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -104,6 +115,9 @@ public interface FirstColumnsSelectionDsl {
      *
      *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -112,6 +126,9 @@ public interface FirstColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -124,6 +141,9 @@ public interface FirstColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`first`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.first]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -134,11 +154,6 @@ public interface FirstColumnsSelectionDsl {
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`firstCol`**][org.jetbrains.kotlinx.dataframe.api.FirstColumnsSelectionDsl.firstCol]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -225,6 +240,7 @@ public interface FirstColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.last]
      */
     @Suppress("UNCHECKED_CAST")
+    @Interpretable("First0")
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         (allColumnsInternal() as TransformableColumnSet<C>)
             .transform { listOf(it.first(condition)) }
@@ -258,6 +274,7 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
+    @Interpretable("First1")
     public fun ColumnsSelectionDsl<*>.first(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().firstCol(condition)
 
@@ -289,6 +306,7 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
+    @Interpretable("First2")
     public fun SingleColumn<DataRow<*>>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().first(condition)
 
@@ -353,6 +371,10 @@ public interface FirstColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @see [ColumnsSelectionDsl.last]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.firstCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).firstCol(condition)
 

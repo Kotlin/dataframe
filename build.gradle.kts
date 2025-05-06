@@ -19,12 +19,11 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization) apply false
-        alias(jupyter.api) apply false
         alias(dokka)
         alias(kover)
         alias(ktlint)
         alias(korro) apply false
-        alias(docProcessor) apply false
+        alias(kodex) apply false
         alias(simpleGit) apply false
         alias(dependencyVersions)
         alias(buildconfig) apply false
@@ -50,21 +49,27 @@ configurations {
 }
 
 dependencies {
-    api(project(":core"))
-    api(project(":dataframe-arrow"))
-    api(project(":dataframe-excel"))
-    api(project(":dataframe-openapi"))
-    api(project(":dataframe-jdbc"))
-    // TODO enable when it leaves the experimental phase
-    //  api(project(":dataframe-csv"))
+    api(projects.core)
 
-    kover(project(":core"))
-    kover(project(":dataframe-arrow"))
-    kover(project(":dataframe-excel"))
-    kover(project(":dataframe-openapi"))
-    kover(project(":dataframe-jdbc"))
-    kover(project(":dataframe-csv"))
-    kover(project(":plugins:kotlin-dataframe"))
+    // expose all optional IO dependencies by default
+    api(projects.dataframeArrow)
+    api(projects.dataframeExcel)
+    api(projects.dataframeJdbc)
+    api(projects.dataframeCsv)
+    api(projects.dataframeJson)
+
+    // experimental, so not included by default:
+    // api(projects.dataframeOpenapi)
+
+    kover(projects.core)
+    kover(projects.dataframeArrow)
+    kover(projects.dataframeExcel)
+    kover(projects.dataframeOpenapi)
+    kover(projects.dataframeJdbc)
+    kover(projects.dataframeCsv)
+    kover(projects.dataframeJson)
+    kover(projects.plugins.kotlinDataframe)
+    kover(projects.dataframeJupyter)
 }
 
 enum class Version : Comparable<Version> {
@@ -90,16 +95,10 @@ fun String.findVersion(): Version {
 
 // these names of outdated dependencies will not show up in the table output
 val dependencyUpdateExclusions = listOf(
-    // TODO Requires more work to be updated to 1.7.0+, https://github.com/Kotlin/dataframe/issues/594
-    libs.plugins.kover.get().pluginId,
-    // TODO 5.8.0 is not possible due to https://github.com/Kotlin/dataframe/issues/595
-    libs.kotestAssertions.get().name,
-    // Can't be updated to 7.4.0+ due to Java 8 compatibility
-    libs.android.gradle.api.get().group,
     // Directly dependent on the Gradle version
     "org.gradle.kotlin.kotlin-dsl",
-    // Can't be updated to 2.1.0+ due to Java 8 compatibility
-    libs.plugins.simpleGit.get().pluginId,
+    // need to revise our tests to update
+    libs.android.gradle.api.get().group,
 )
 
 // run `./gradlew dependencyUpdates` to check for updates
@@ -140,18 +139,49 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
-kotlin.jvmToolchain(11)
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
+    }
+}
+
+// DataFrame targets Java 8 for maximum compatibility.
+// This is, however, not always possible thanks to external dependencies.
+// In those cases, we default to Java 11.
+val modulesUsingJava11 = with(projects) {
+    setOf(
+        dataframeJupyter,
+        dataframeGeo,
+        examples.ideaExamples.titanic,
+    )
+}.map { it.path }
 
 allprojects {
-    tasks.withType<KotlinCompile> {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_1_8
+    if (path in modulesUsingJava11) {
+        tasks.withType<KotlinCompile> {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_11
+                freeCompilerArgs.add("-Xjdk-release=11")
+            }
         }
-    }
-
-    tasks.withType<JavaCompile> {
-        sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-        targetCompatibility = JavaVersion.VERSION_1_8.toString()
+        tasks.withType<JavaCompile> {
+            sourceCompatibility = JavaVersion.VERSION_11.toString()
+            targetCompatibility = JavaVersion.VERSION_11.toString()
+            options.release.set(11)
+        }
+    } else {
+        tasks.withType<KotlinCompile> {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_1_8
+                freeCompilerArgs.add("-Xjdk-release=8")
+            }
+        }
+        tasks.withType<JavaCompile> {
+            sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+            targetCompatibility = JavaVersion.VERSION_1_8.toString()
+            options.release.set(8)
+        }
     }
 
     // Attempts to configure ktlint for each sub-project that uses the plugin
@@ -166,7 +196,7 @@ allprojects {
         }
 
         // set the java toolchain version to 11 for all subprojects for CI stability
-        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(11)
+        extensions.findByType<KotlinJvmProjectExtension>()?.jvmToolchain(21)
 
         // Attempts to configure buildConfig for each sub-project that uses it
         try {

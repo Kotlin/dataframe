@@ -10,6 +10,8 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.asColumn
+import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.asFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
@@ -86,9 +88,9 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
-import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toFloat
-import org.jetbrains.kotlinx.dataframe.api.toLeft
+import org.jetbrains.kotlinx.dataframe.api.toStart
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.toTop
@@ -114,7 +116,7 @@ import org.junit.Test
 import java.net.URL
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.streams.toList
+import java.util.stream.Collectors
 
 @Suppress("ktlint:standard:chain-method-continuation", "ktlint:standard:argument-list-wrapping")
 class Modify : TestBase() {
@@ -161,12 +163,12 @@ class Modify : TestBase() {
     fun updatePerColumn() {
         val updated =
             // SampleStart
-            df.update { colsOf<Number?>() }.perCol { mean(skipNA = true) }
+            df.update { colsOf<Number?>() }.perCol { mean(skipNaN = true) }
         // SampleEnd
         updated.age.countDistinct() shouldBe 1
         updated.weight.countDistinct() shouldBe 1
 
-        val means = df.meanFor(skipNA = true) { colsOf() }
+        val means = df.meanFor(skipNaN = true) { colsOf() }
         df.update { colsOf<Number?>() }.perCol(means) shouldBe updated
         df.update { colsOf<Number?>() }.perCol(means.toMap() as Map<String, Double>) shouldBe updated
     }
@@ -195,7 +197,7 @@ class Modify : TestBase() {
         // SampleStart
         df.convert { age }.to<Double>()
         df.convert { colsOf<Number>() }.to<String>()
-        df.convert { name.firstName and name.lastName }.to { it.length() }
+        df.convert { name.firstName and name.lastName }.asColumn { it.length() }
         df.convert { weight }.toFloat()
         // SampleEnd
     }
@@ -233,6 +235,16 @@ class Modify : TestBase() {
     fun convertAsFrame() {
         // SampleStart
         df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
+        // SampleEnd
+    }
+
+    @Test
+    @TransformDataFrameExpressions
+    fun convertAsColumn() {
+        // SampleStart
+        df.convert { name }.asColumn { col ->
+            col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
+        }
         // SampleEnd
     }
 
@@ -340,7 +352,7 @@ class Modify : TestBase() {
     @TransformDataFrameExpressions
     fun move() {
         // SampleStart
-        df.move { age }.toLeft()
+        df.move { age }.toStart()
 
         df.move { weight }.to(1)
 
@@ -365,7 +377,7 @@ class Modify : TestBase() {
 
         // a.b.e -> be
         // c.d.e -> de
-        df.move { colsAtAnyDepth { it.name() == "e" } }.toTop { it.parentName + it.name() }
+        df.move { colsAtAnyDepth().nameContains("e") }.toTop { it.parentName + it.name() }
         // SampleEnd
     }
 

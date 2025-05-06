@@ -4,10 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColGroupColumnsSelectionDsl.Grammar.PlainDslName
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -39,7 +36,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * ## Col Group Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -51,15 +48,15 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *  {@include [DslGrammarTemplate.ColumnTypeDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`[`**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`]`**`(`**{@include [DslGrammarTemplate.ColumnRef]}`  |  `{@include [DslGrammarTemplate.IndexRef]}**`)`**
      * }
      */
@@ -88,7 +85,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * The function can also be called on [ColumnGroups][ColumnGroupReference] to create
      * an accessor for a column group inside a [ColumnGroup].
      * {@include [LineBreak]}
-     * $[CommonColGroupDocs.Note]
+     * $[CommonColGroupDocs.NOTE]
      *
      * ### Check out: [Grammar]
      *
@@ -102,7 +99,7 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      *
      * #### Examples for this overload:
      *
-     * $[CommonColGroupDocs.ExampleArg]
+     * $[CommonColGroupDocs.EXAMPLE]
      *
      * To create a [ColumnAccessor] for another kind of column, take a look at the functions
      * [col][ColumnsSelectionDsl.col],
@@ -117,33 +114,33 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCol\]
      * @see [ColumnsSelectionDsl.valueCol\]
      * @see [ColumnsSelectionDsl.col\]
-     * {@set [CommonColGroupDocs.Note]}
+     * {@set [CommonColGroupDocs.NOTE]}
      */
     private interface CommonColGroupDocs {
 
         // Example argument, can be either {@include [SingleExample]} or {@include [DoubleExample]}
-        interface ExampleArg
+        interface EXAMPLE
 
         /**
-         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`($[CommonColGroupDocs.Arg]) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`($[CommonColGroupDocs.ARG]) \}`
          */
         interface SingleExample
 
         /**
-         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`($[CommonColGroupDocs.Arg]) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`($[CommonColGroupDocs.ARG]) \}`
          *
-         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.ReceiverArg]`[colGroup][colGroup]`<`[String][String]`>($[CommonColGroupDocs.Arg]) \}`
+         * `df.`[select][DataFrame.select]` { $[CommonColGroupDocs.RECEIVER]`[colGroup][colGroup]`<`[String][String]`>($[CommonColGroupDocs.ARG]) \}`
          */
         interface DoubleExample
 
         // Receiver argument for the example(s)
-        interface ReceiverArg
+        interface RECEIVER
 
         // Argument for the example(s)
-        interface Arg
+        interface ARG
 
         // Optional note
-        interface Note
+        interface NOTE
 
         /** @param [C\] The type of the column group. */
         interface ColumnGroupTypeParam
@@ -153,22 +150,30 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@set [CommonColGroupDocs.Arg] columnGroupA}
-     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.ARG] columnGroupA}
+     * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
      * @param [col\] The [ColumnAccessor] pointing to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     private interface ColGroupReferenceDocs
 
     /**
-     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         colGroup.ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): SingleColumn<DataRow<C>> =
         this.ensureIsColumnGroup().transformSingle {
             val child = it.getCol(colGroup)
@@ -180,26 +185,42 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
         }.singleImpl()
 
     /**
-     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> String.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupReferenceDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnPath.colGroup(colGroup: ColumnAccessor<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(colGroup.path()).ensureIsColumnGroup()
 
@@ -209,34 +230,34 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@set [CommonColGroupDocs.Arg] "columnGroupName"}
-     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
+     * {@set [CommonColGroupDocs.ARG] "columnGroupName"}
+     * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [name\] The name of the value column.
      */
     private interface ColGroupNameDocs
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun colGroup(name: String): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER]}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> colGroup(name: String): ColumnAccessor<DataRow<C>> = columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<*>> = colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(name: String): SingleColumn<DataRow<C>> =
@@ -248,56 +269,64 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
         }.singleImpl()
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun String.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> String.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(name: String): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(name).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun ColumnPath.colGroup(name: String): ColumnAccessor<DataRow<*>> = colGroup<Any?>(name)
 
     /**
-     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupNameDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnPath.colGroup(name: String): ColumnAccessor<DataRow<C>> =
@@ -309,34 +338,34 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@set [CommonColGroupDocs.Arg] "pathTo"["columnGroupName"\] }
-     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
+     * {@set [CommonColGroupDocs.ARG] "pathTo"["columnGroupName"\] }
+     * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [path\] The path to the value column.
      */
     private interface ColGroupPathDocs
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = columnGroup<Any?>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER]}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> = columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<*>> = colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(path: ColumnPath): SingleColumn<DataRow<C>> =
@@ -349,56 +378,64 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
             }.singleImpl()
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> AnyColumnGroupAccessor.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun String.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> String.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup<C>(path).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun ColumnPath.colGroup(path: ColumnPath): ColumnAccessor<DataRow<*>> = colGroup<Any?>(path)
 
     /**
-     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupPathDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnPath.colGroup(path: ColumnPath): ColumnAccessor<DataRow<C>> =
@@ -410,94 +447,142 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@set [CommonColGroupDocs.Arg] Type::columnGroupA}
-     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.ARG] Type::columnGroupA}
+     * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
      * @param [property\] The [KProperty] reference to the value column.
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     private interface ColGroupKPropertyDocs
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> colGroup(property: KProperty<DataRow<C>>): SingleColumn<DataRow<C>> =
         columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> colGroup(property: KProperty<C>): SingleColumn<DataRow<C>> =
         columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.colGroup(property: KProperty<DataRow<C>>): SingleColumn<DataRow<C>> =
         colGroup<C>(property.name)
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> SingleColumn<DataRow<*>>.colGroup(property: KProperty<C>): SingleColumn<DataRow<C>> =
         colGroup<C>(property.name)
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> AnyColumnGroupAccessor.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         this.ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> String.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> String.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupDataRowKProperty")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnPath.colGroup(property: KProperty<DataRow<C>>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupKPropertyDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnPath.colGroup(property: KProperty<C>): ColumnAccessor<DataRow<C>> =
         columnGroup(this).ensureIsColumnGroup().columnGroup(property).ensureIsColumnGroup()
 
@@ -507,17 +592,17 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
 
     /**
      * @include [CommonColGroupDocs]
-     * {@set [CommonColGroupDocs.Arg] 0}
-     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.DoubleExample]}}
+     * {@set [CommonColGroupDocs.ARG] 0}
+     * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.DoubleExample]}}
      * @param [index\] The index of the value column.
      * @throws [IndexOutOfBoundsException\] if the index is out of bounds.
      */
     private interface ColGroupIndexDocs
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
-     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("ColumnSetDataRowColGroupIndex")
@@ -525,36 +610,36 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
         getAt(index).ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Int][Int]`>().}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
-     * {@set [CommonColGroupDocs.ExampleArg] {@include [CommonColGroupDocs.SingleExample]}}
+     * {@set [CommonColGroupDocs.EXAMPLE] {@include [CommonColGroupDocs.SingleExample]}}
      */
     public fun ColumnSet<*>.colGroup(index: Int): SingleColumn<DataRow<*>> =
         getAt(index).cast<DataRow<*>>().ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER]}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun ColumnsSelectionDsl<*>.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg]}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER]}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnsSelectionDsl<*>.colGroup(index: Int): SingleColumn<DataRow<C>> =
         asSingleColumn().colGroup<C>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> SingleColumn<DataRow<*>>.colGroup(index: Int): SingleColumn<DataRow<C>> =
@@ -565,40 +650,48 @@ public interface ColGroupColumnsSelectionDsl<out _UNUSED> {
             .ensureIsColumnGroup()
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun String.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "myColumnGroup".}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] "myColumnGroup".}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> String.colGroup(index: Int): SingleColumn<DataRow<C>> = columnGroup(this).colGroup<C>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] Type::myColumnGroup.}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] Type::myColumnGroup.}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.colGroup(index: Int): SingleColumn<DataRow<C>> = columnGroup(this).colGroup<C>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      */
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("colGroupUnTyped")
     public fun ColumnPath.colGroup(index: Int): SingleColumn<DataRow<*>> = colGroup<Any?>(index)
 
     /**
-     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.ReceiverArg] "pathTo"["myColumnGroup"].}
+     * @include [ColGroupIndexDocs] {@set [CommonColGroupDocs.RECEIVER] "pathTo"["myColumnGroup"].}
      * @include [CommonColGroupDocs.ColumnGroupTypeParam]
      */
     public fun <C> ColumnPath.colGroup(index: Int): SingleColumn<DataRow<C>> = columnGroup(this).colGroup<C>(index)

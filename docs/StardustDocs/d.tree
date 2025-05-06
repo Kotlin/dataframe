@@ -15,8 +15,6 @@
     <toc-element topic="overview.md">
         <toc-element topic="apiLevels.md">
             <toc-element topic="stringApi.md"/>
-            <toc-element toc-title="Column Accessors API" topic="columnAccessorsApi.md"/>
-            <toc-element topic="KPropertiesApi.md"/>
             <toc-element topic="extensionPropertiesApi.md"/>
         </toc-element>
         <toc-element topic="hierarchical.md"/>
@@ -37,6 +35,7 @@
         <toc-element topic="DataRow.md"/>
     </toc-element>
     <toc-element topic="nanAndNa.md"/>
+    <toc-element topic="numberUnification.md"/>
     <toc-element topic="operations.md"/>
     <toc-element toc-title="Operations">
         <toc-element topic="create.md">
@@ -153,6 +152,7 @@
                 <toc-element topic="minmax.md"/>
                 <toc-element topic="sum.md"/>
                 <toc-element topic="median.md"/>
+                <toc-element topic="percentile.md"/>
                 <toc-element topic="mean.md"/>
                 <toc-element topic="std.md"/>
                 <toc-element topic="valueCounts.md"/>

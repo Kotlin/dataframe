@@ -189,8 +189,9 @@ internal fun <A, B> SingleColumn<A>.transformSingle(
  * or it can be used as a [TransformableColumnSet]<[B]>, where a [ColumnsResolverTransformer] can be injected before
  * the [converter] is applied.
  */
-internal fun <A, B> ColumnsResolver<A>.transform(
-    converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
+@PublishedApi
+internal inline fun <A, B> ColumnsResolver<A>.transform(
+    crossinline converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>,
 ): TransformableColumnSet<B> =
     object : TransformableColumnSet<B> {
         override fun resolve(context: ColumnResolutionContext) =
@@ -416,59 +417,66 @@ internal fun List<ColumnWithPath<*>>.allColumnsExceptAndUnpack(
  * Empty groups will be removed if [removeEmptyGroups]` == true`
  */
 internal fun List<ColumnWithPath<*>>.allColumnsExceptKeepingStructure(
-    columns: Iterable<ColumnWithPath<*>>,
+    columns: Set<ColumnWithPath<*>>,
     removeEmptyGroups: Boolean = true,
 ): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
-    val fullTree = collectTree()
-    for (columnToExcept in columns) {
-        // grab the node representing the column from the tree
-        val nodeToExcept = fullTree.getOrPut(columnToExcept.path).asNullable()
-        if (nodeToExcept != null) {
-            // remove the children from the node (if it's a column group) and remove its data (the column itself)
-            nodeToExcept.allChildren().forEach { it.data = null }
-            nodeToExcept.data = null
+    return flatMap {
+        val fullTree = listOf(it).collectTree()
+        for (columnToExcept in columns.sortedByDescending { it.path.size }) {
+            // grab the node representing the column from the tree
+            val nodeToExcept = fullTree.getOrPut(columnToExcept.path).asNullable()
+            if (nodeToExcept != null) {
+                // remove the children from the node (if it's a column group) and remove its data (the column itself)
+                nodeToExcept.allChildren().forEach { it.data = null }
+                nodeToExcept.data = null
 
-            // we need to update the data of the parent node(s) to reflect the removal of the column
-            if (nodeToExcept.parent != null) {
-                // we grab the data of the parent node, which should be a column group
-                // treat it as a DF to remove the column to except from it and
-                // convert it back to a column group
-                val current = nodeToExcept.parent.data as ColumnGroup<*>? ?: continue
-                val adjustedCurrent = current
-                    .remove(nodeToExcept.name)
-                    .asColumnGroup(current.name)
-                    .addPath(current.path())
+                // we need to update the data of the parent node(s) to reflect the removal of the column
+                if (nodeToExcept.parent != null) {
+                    // we grab the data of the parent node, which should be a column group
+                    // treat it as a DF to remove the column to except from it and
+                    // convert it back to a column group
+                    val current = nodeToExcept.parent.data as ColumnGroup<*>? ?: continue
+                    val adjustedCurrent = current
+                        .remove(nodeToExcept.name)
+                        .asColumnGroup(current.name)
+                        .addPath(current.path())
 
-                // remove the group if it's empty and removeEmptyGroups is true
-                // else, simply update the parent's data with the adjusted column group
-                nodeToExcept.parent.data =
-                    if (adjustedCurrent.cols().isEmpty() && removeEmptyGroups) {
-                        null
-                    } else {
-                        adjustedCurrent
+                    // remove the group if it's empty and removeEmptyGroups is true
+                    // else, simply update the parent's data with the adjusted column group
+                    nodeToExcept.parent.data =
+                        if (removeEmptyGroups && adjustedCurrent.cols().isEmpty()) {
+                            null
+                        } else {
+                            adjustedCurrent
+                        }
+
+                    // now we update the parent's parents recursively with new column group instances
+                    var parent = nodeToExcept.parent.parent
+
+                    @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
+                    var currentNode = nodeToExcept.parent!!
+                    while (parent != null) {
+                        val parentData = parent.data as ColumnGroup<*>? ?: break
+                        val currentData = currentNode.data
+                        val modifiedParentData =
+                            if (currentData == null) {
+                                parentData.remove(currentNode.name)
+                            } else {
+                                parentData.replace(currentNode.name).with { currentData }
+                            }
+                        parent.data = modifiedParentData
+                            .asColumnGroup(parentData.name)
+                            .addPath(parentData.path())
+                        currentNode = parent
+                        parent = parent.parent
                     }
-
-                // now we update the parent's parents recursively with new column group instances
-                var parent = nodeToExcept.parent.parent
-
-                @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
-                var currentNode = nodeToExcept.parent!!
-                while (parent != null) {
-                    val parentData = parent.data as ColumnGroup<*>? ?: break
-                    parent.data = parentData
-                        .replace(currentNode.name).with { currentNode.data!! }
-                        .asColumnGroup(parentData.name)
-                        .addPath(parentData.path())
-
-                    currentNode = parent
-                    parent = parent.parent
                 }
             }
         }
+        val subtrees = fullTree.topmostChildren { it.data != null }
+        subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
     }
-    val subtrees = fullTree.topmostChildren { it.data != null }
-    return subtrees.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
 /**

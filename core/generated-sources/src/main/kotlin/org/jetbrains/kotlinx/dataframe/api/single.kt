@@ -5,7 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -37,10 +38,10 @@ public fun <T> DataFrame<T>.single(): DataRow<T> =
 
 public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
-public fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> =
+public inline fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> =
     rows().single { predicate(it, it) }
 
-public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
+public inline fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
     rows().singleOrNull { predicate(it, it) }
 
 // endregion
@@ -61,6 +62,8 @@ public interface SingleColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -74,6 +77,9 @@ public interface SingleColumnsSelectionDsl {
      *
      *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -82,6 +88,9 @@ public interface SingleColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -94,6 +103,9 @@ public interface SingleColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`single`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.single]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -104,11 +116,6 @@ public interface SingleColumnsSelectionDsl {
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`singleCol`**][org.jetbrains.kotlinx.dataframe.api.SingleColumnsSelectionDsl.singleCol]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -192,6 +199,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
+    @Interpretable("Single0")
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         singleInternal(condition)
 
@@ -222,6 +230,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
+    @Interpretable("Single1")
     public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().singleCol(condition)
 
@@ -252,6 +261,7 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
+    @Interpretable("Single2")
     public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().single(condition)
 
@@ -314,6 +324,10 @@ public interface SingleColumnsSelectionDsl {
      * @throws [NoSuchElementException] if no column adheres to the given [condition].
      * @throws [IllegalArgumentException] if more than one column adheres to the given [condition].
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).singleCol(condition)
 

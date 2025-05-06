@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -31,6 +33,8 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -63,6 +67,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -77,6 +84,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *  `| `**`this`**`/`**`it `**[**`[`**][cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
      *  `| `**`this`**`/`**`it `**[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**`  ..  `[**`]`**][cols]
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -95,6 +105,9 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`index`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexDef]**`,`**`  .. |  `[`indexRange`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.IndexRangeDef][**`]`**][cols]`
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -111,11 +124,6 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols]**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**[**`]`**][cols]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `[**`[`**][cols][`column`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnDef]**`,`**` ..`[**`]`**][cols]
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -275,7 +283,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsIndicesDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
@@ -306,7 +314,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
     private interface CommonColsRangeDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     // region predicate
@@ -388,7 +396,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>().`[`cols`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
      * `// identity call, same as `[`all`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
      *
@@ -439,7 +447,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>().`[`cols`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`colsOf`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colsOf]`<`[`String`][String]`>()`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnSet.cols]` }`
      *
      * `// identity call, same as `[`all`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
      *
@@ -539,7 +547,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// same as `[`all`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
      *
@@ -590,7 +598,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]`  {  `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { this`[`[`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` }`
      *
      * `// same as `[`all`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.all]`()`
      *
@@ -842,7 +850,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[`cols`][kotlin.String.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol"`[`[`][kotlin.String.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][kotlin.String.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol"`[`[`][kotlin.String.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][kotlin.String.cols]` }`
      *
      * `// same as `[`allCols`][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
@@ -889,7 +897,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol".`[`cols`][kotlin.String.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol"`[`[`][kotlin.String.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][kotlin.String.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myGroupCol"`[`[`][kotlin.String.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][kotlin.String.cols]` }`
      *
      * `// same as `[`allCols`][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
@@ -983,7 +991,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[`cols`][kotlin.reflect.KProperty.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      * `// same as `[`allCols`][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
@@ -1003,6 +1011,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.cols(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).cols(predicate)
 
@@ -1030,7 +1042,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup.`[`cols`][kotlin.reflect.KProperty.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { Type::columnGroup`[`[`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.SingleColumn.cols]` }`
      *
      * `// same as `[`allCols`][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]`()`
      *
@@ -1050,6 +1062,10 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.allCols] */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun KProperty<*>.get(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         cols(predicate)
 
@@ -1122,7 +1138,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`() } // identity call, same as `[`allCols`][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]
      *
@@ -1167,7 +1183,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`  { "e"  `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.name]`() } }`
      *
-     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`{ it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
+     * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"]`[`[`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`{ it.`[`any`][ColumnWithPath.any]` { it == "Alice" } }`[`]`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]` }`
      *
      * `df.`[`select`][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "pathTo"["myGroupCol"].`[`cols`][org.jetbrains.kotlinx.dataframe.columns.ColumnPath.cols]`() } // identity call, same as `[`allCols`][org.jetbrains.kotlinx.dataframe.api.AllColumnsSelectionDsl.allCols]
      *
@@ -1261,6 +1277,7 @@ public interface ColsColumnsSelectionDsl<out _UNUSED> {
      *   exist.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the columns that [firstCol] and [otherCols] point to.
      */
+    @Interpretable("Cols0")
     public fun <C> ColumnsSelectionDsl<*>.cols(
         firstCol: ColumnReference<C>,
         vararg otherCols: ColumnReference<C>,
@@ -4909,7 +4926,8 @@ internal fun SingleColumn<DataRow<*>>.colsInternal(refs: Iterable<ColumnReferenc
  * Else, it returns a new [ColumnSet] containing all columns in this [ColumnsResolver] that
  * match the given [predicate].
  */
-internal fun ColumnsResolver<*>.colsInternal(predicate: ColumnFilter<*>): TransformableColumnSet<*> =
+@PublishedApi
+internal inline fun ColumnsResolver<*>.colsInternal(crossinline predicate: ColumnFilter<*>): TransformableColumnSet<*> =
     allColumnsInternal().transform { it.filter(predicate) }
 
 internal fun ColumnsResolver<*>.colsInternal(indices: IntArray): TransformableColumnSet<*> =

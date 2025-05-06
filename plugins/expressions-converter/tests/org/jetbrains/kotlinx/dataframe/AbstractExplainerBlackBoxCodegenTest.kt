@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.test.TargetBackend
 import org.jetbrains.kotlin.test.TestJdkKind
@@ -22,22 +23,25 @@ import org.jetbrains.kotlin.test.model.DependencyKind
 import org.jetbrains.kotlin.test.model.FrontendKinds
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.services.RuntimeClasspathProvider
+import org.jetbrains.kotlin.test.services.TemporaryDirectoryManager
 import org.jetbrains.kotlin.test.services.TestServices
 import org.jetbrains.kotlin.test.services.configuration.CommonEnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.configuration.JvmEnvironmentConfigurator
+import org.jetbrains.kotlinx.dataframe.services.TemporaryDirectoryManagerImplFixed
 import java.io.File
 
 open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
 
     override fun TestConfigurationBuilder.configuration() {
         globalDefaults {
-            frontend = FrontendKinds.ClassicFrontend
-            targetPlatform = JvmPlatforms.defaultJvmPlatform
+            frontend = FrontendKinds.ClassicAndFIR
+            targetPlatform = JvmPlatforms.jvm8
             dependencyKind = DependencyKind.Binary
             targetBackend = TargetBackend.JVM_IR
         }
         defaultDirectives {
             JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
+            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_1_8
             +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
         }
         facadeStep(::ClassicFrontendFacade)
@@ -63,6 +67,7 @@ open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
         useConfigurators(::JvmEnvironmentConfigurator, ::CommonEnvironmentConfigurator, ::PluginAnnotationsProvider)
         useCustomRuntimeClasspathProviders(::MyClasspathProvider)
         useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+        useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
     }
 
     class MyClasspathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.testSets.animals
 
+import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -24,7 +25,7 @@ class AnimalsTests {
 
     @Test
     fun `ignore nans`() {
-        df.mean("age", skipNA = true) shouldBe 3.4375
+        df.mean("age", skipNaN = true) shouldBe 3.4375
     }
 
     @Test
@@ -42,7 +43,7 @@ class AnimalsTests {
             .update { age }.with { Double.NaN }
             .update { visits }.withNull()
         val mean = cleared.mean()
-        mean[age] shouldBe Double.NaN
-        (mean[visits.name()] as Double).isNaN() shouldBe true
+        mean[age].shouldBeNaN()
+        (mean[visits.name()] as Double).shouldBeNaN()
     }
 }

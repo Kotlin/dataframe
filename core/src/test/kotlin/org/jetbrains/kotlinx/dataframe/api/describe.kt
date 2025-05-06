@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.matchers.doubles.shouldBeNaN
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.junit.Test
@@ -15,15 +16,13 @@ class DescribeTests {
 
     @Test
     fun `describe nullable Number column`() {
-        val a by columnOf(
+        val a by columnOf<Number?>(
             1,
             2.0,
             3f,
             4L,
             5.toShort(),
             6.toByte(),
-            7.toBigInteger(),
-            8.toBigDecimal(),
             null,
         )
         val df = dataFrameOf(a)
@@ -33,16 +32,18 @@ class DescribeTests {
         with(describe) {
             name shouldBe "a"
             type shouldBe "Number?"
-            count shouldBe 9
-            unique shouldBe 9
+            count shouldBe 7
+            unique shouldBe 7
             nulls shouldBe 1
             top shouldBe 1
             freq shouldBe 1
-            mean shouldBe 4.5
-            std shouldBe 2.449489742783178
-            min shouldBe 1.toBigDecimal()
-            median shouldBe 4.toBigDecimal()
-            max shouldBe 8.toBigDecimal()
+            mean shouldBe 3.5
+            std shouldBe 1.8708286933869707
+            min shouldBe 1.0
+            p25 shouldBe 2.0
+            median shouldBe 3.0
+            p75 shouldBe 4.0
+            max shouldBe 6.0
         }
     }
 
@@ -61,10 +62,12 @@ class DescribeTests {
             nulls shouldBe 0
             top shouldBe 1
             freq shouldBe 1
-            mean.isNaN() shouldBe true
-            std.isNaN() shouldBe true
-            min shouldBe 1.0 // TODO should be NaN too?
-            median shouldBe 3.0
+            mean.shouldBeNaN()
+            std.shouldBeNaN()
+            min.isNaN shouldBe true
+            p25.isNaN shouldBe true
+            median.isNaN shouldBe true
+            p75.isNaN shouldBe true
             max.isNaN shouldBe true
         }
     }

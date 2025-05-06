@@ -36,6 +36,23 @@ df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 <dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsFrame.html"/>
 <!---END-->
 
+Similar to `replace with` operation, 
+columns can be converted in a compiler plugin-friendly fashion
+whenever you need to perform an operation on the entire column without changing its name.
+For example, parallel reading.
+
+<!---FUN convertAsColumn-->
+
+```kotlin
+df.convert { name }.asColumn { col ->
+    col.toList().parallelStream().map { it.toString() }.collect(Collectors.toList()).toColumn()
+}
+```
+
+<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.convertAsColumn.html"/>
+<!---END-->
+
+
 `convert` supports automatic type conversions between the following types:
 * `String` (uses [`parse`](parse.md) to convert from `String` to other types)
 * `Boolean`
@@ -44,7 +61,7 @@ df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 * `Int` (and `Char`)
 * `Long`
 * `Float`
-* `Double`
+* `Double` (See [parsing doubles](parse.md#parsing-doubles) for `String` to `Double` conversion)
 * `BigDecimal`
 * `BigInteger`
 * `LocalDateTime` (kotlinx.datetime and java.time)
@@ -57,7 +74,7 @@ df.convert { name }.asFrame { it.add("fullName") { "$firstName $lastName" } }
 ```kotlin
 df.convert { age }.to<Double>()
 df.convert { colsOf<Number>() }.to<String>()
-df.convert { name.firstName and name.lastName }.to { it.length() }
+df.convert { name.firstName and name.lastName }.asColumn { it.length() }
 df.convert { weight }.toFloat()
 ```
 

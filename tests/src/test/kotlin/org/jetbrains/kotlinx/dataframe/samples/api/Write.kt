@@ -4,7 +4,6 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.string.shouldStartWith
 import org.apache.arrow.vector.types.pojo.Schema
-import org.apache.commons.csv.CSVFormat
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -13,11 +12,11 @@ import org.jetbrains.kotlinx.dataframe.io.ArrowWriter
 import org.jetbrains.kotlinx.dataframe.io.arrowWriter
 import org.jetbrains.kotlinx.dataframe.io.saveArrowFeatherToByteArray
 import org.jetbrains.kotlinx.dataframe.io.saveArrowIPCToByteArray
-import org.jetbrains.kotlinx.dataframe.io.toCsv
+import org.jetbrains.kotlinx.dataframe.io.toCsvStr
 import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.jetbrains.kotlinx.dataframe.io.writeArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.writeArrowIPC
-import org.jetbrains.kotlinx.dataframe.io.writeCSV
+import org.jetbrains.kotlinx.dataframe.io.writeCsv
 import org.jetbrains.kotlinx.dataframe.io.writeExcel
 import org.jetbrains.kotlinx.dataframe.io.writeJson
 import org.jetbrains.kotlinx.dataframe.io.writeMismatchMessage
@@ -31,7 +30,7 @@ class Write : TestBase() {
     fun writeCsv() {
         useTempFile { file ->
             // SampleStart
-            df.writeCSV(file)
+            df.writeCsv(file)
             // SampleEnd
         }
     }
@@ -48,8 +47,7 @@ class Write : TestBase() {
     @Test
     fun writeCsvStr() {
         // SampleStart
-        val format = CSVFormat.DEFAULT.builder().setDelimiter(';').setRecordSeparator(System.lineSeparator()).build()
-        val csvStr = df.toCsv(format)
+        val csvStr = df.toCsvStr(delimiter = ';', recordSeparator = System.lineSeparator())
         // SampleEnd
         csvStr shouldStartWith """
             name;age;city;weight;isHappy

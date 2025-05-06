@@ -9,6 +9,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -82,9 +85,15 @@ public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
     return this as ValueColumn<Number>
 }
 
-public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
+public fun <T : Any> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
     require(valuesAreComparable())
     return this as DataColumn<Comparable<T>>
+}
+
+@JvmName("asComparableNullable")
+public fun <T : Any?> DataColumn<T?>.asComparable(): DataColumn<Comparable<T>?> {
+    require(valuesAreComparable())
+    return this as DataColumn<Comparable<T>?>
 }
 
 public fun <T> ColumnReference<T?>.castToNotNullable(): ColumnReference<T> = cast()
@@ -222,6 +231,10 @@ public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): Valu
 public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T>): ValueColumn<T> =
     toValueColumn(column.name())
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): ValueColumn<T> =
     toValueColumn(column.columnName)
 
@@ -325,6 +338,10 @@ public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataCol
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.createByType(ref.name(), asList()).forceResolve()
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
     DataColumn.createByType(property.columnName, asList()).forceResolve()
 
@@ -353,20 +370,32 @@ public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor<T>): Colum
 
 // region as GroupedDataFrame
 
-public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> =
-    GroupByImpl(this, getFrameColumn(groupedColumnName).castFrameColumn()) { none() }
+public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> {
+    val groups = getFrameColumn(groupedColumnName)
+    return asGroupBy { groups.cast() }
+}
 
-public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> =
-    GroupByImpl(this, getFrameColumn(groupedColumn.name()).castFrameColumn()) { none() }
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
+public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> {
+    val groups = getFrameColumn(groupedColumn.name()).castFrameColumn<G>()
+    return asGroupBy { groups }
+}
 
+@Refine
+@Interpretable("AsGroupByDefault")
 public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
     val groupCol = columns().single { it.isFrameColumn() }.asAnyFrameColumn().castFrameColumn<T>()
     return asGroupBy { groupCol }
 }
 
+@Refine
+@Interpretable("AsGroupBy")
 public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G>>): GroupBy<T, G> {
     val column = getColumn(selector).asFrameColumn()
-    return GroupByImpl(this, column) { none() }
+    return GroupByImpl(this.move { column }.toEnd(), column) { none() }
 }
 
 // endregion

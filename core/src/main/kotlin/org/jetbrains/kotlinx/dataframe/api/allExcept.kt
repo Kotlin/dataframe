@@ -4,6 +4,12 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_1
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.ARGUMENT_2
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_1
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_2
+import org.jetbrains.kotlinx.dataframe.api.AllExceptColumnsSelectionDsl.ColumnGroupDocs.RECEIVER_TYPE
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -12,8 +18,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ExtensionPropertiesApiLink
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
 import org.jetbrains.kotlinx.dataframe.documentation.Indent
 import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.toColumns
@@ -22,8 +28,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT
-import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE
-import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_REPLACE_VARARG
+import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.ALL_COLS_EXCEPT_REPLACE_VARARG
+import org.jetbrains.kotlinx.dataframe.util.EXCEPT_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.EXCEPT_REPLACE_VARARG
 import kotlin.reflect.KProperty
 
 // region ColumnsSelectionDsl
@@ -33,13 +41,14 @@ import kotlin.reflect.KProperty
  *
  * See [Grammar] for all functions in this interface.
  */
+@Suppress("ClassName")
 public interface AllExceptColumnsSelectionDsl {
 
     /**
      * ## (All) (Cols) Except Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -53,26 +62,26 @@ public interface AllExceptColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnsResolverDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`   {   `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \}`**
      *
      *  `| `{@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}` [`**`  {  `**`] `{@include [DslGrammarTemplate.ColumnsResolverRef]}` [`**`  \}  `**`]`
      *
      *  {@include [Indent]}`| `{@include [ColumnSetName]}` `{@include [DslGrammarTemplate.ColumnRef]}
      *
      *  {@include [Indent]}`| `**`.`**{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`,`**` ..`**`)`**
      * }
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**`  \}  `**
      *
      *  {@include [Indent]}`| `{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
      *
-     *  {@include [Indent]}`| `{@include [ColumnGroupExperimentalName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**` \} EXPERIMENTAL!`**
+     *  {@include [Indent]}`| `{@include [ColumnGroupExceptName]}**`  {  `**{@include [DslGrammarTemplate.ColumnsSelectorRef]}**`  \}  `**
      *
-     *  {@include [Indent]}`| `{@include [ColumnGroupExperimentalName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`) EXPERIMENTAL!`**
+     *  {@include [Indent]}`| `{@include [ColumnGroupExceptName]}**`(`**{@include [DslGrammarTemplate.ColumnNoAccessorRef]}**`,`**` ..`**`)`**
      * }
      */
     public interface Grammar {
@@ -86,21 +95,20 @@ public interface AllExceptColumnsSelectionDsl {
         /** __`.`__[**`allColsExcept`**][ColumnsSelectionDsl.allColsExcept] */
         public interface ColumnGroupName
 
-        /** [**`exceptNew`**][ColumnsSelectionDsl.exceptNew] */
-        public interface ColumnGroupExperimentalName
+        /** __`.`__[**`except`**][ColumnsSelectionDsl.except] */
+        public interface ColumnGroupExceptName
     }
 
     /**
      * ## (All) (Cols) Except
      *
-     * Perform a selection of columns using the {@include [ColumnsSelectionDslLink]} to
-     * exclude from the current selection.
+     * Exclude a selection of columns from the current selection using the {@include [ColumnsSelectionDslLink]}.
      *
      * ### Check out: [Grammar]
      *
      * ### On [ColumnSets][ColumnSet]
      * This function can be explained the easiest with [ColumnSets][ColumnSet]. Let's say we want all
-     * [Int] columns apart from `age`  and  `height`.
+     * [Int] columns apart from `age` and `height`.
      *
      * We can do:
      *
@@ -135,7 +143,7 @@ public interface AllExceptColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]`  { userData.age  `[and][ColumnsSelectionDsl.and]` height } }`
      *
-     * ### On [ColumnGroups][ColumnGroup]
+     * ### On [ColumnGroups][ColumnGroup]: All Cols Except
      * The variant of this function on [ColumnGroups][ColumnGroup] is a bit different as it changes the scope relative to
      * the column group.
      * {@include [LineBreak]}
@@ -154,10 +162,23 @@ public interface AllExceptColumnsSelectionDsl {
      * Also note the name change, similar to [allCols][ColumnsSelectionDsl.allCols], this makes it clearer that you're selecting
      * columns inside the group, 'lifting' them out.
      *
-     * ### Examples for this overload
-     * {@get [ExampleArg]}
+     * ### On [ColumnGroups][ColumnGroup]: Except
+     * This variant can be used to exclude some nested columns from a [ColumnGroup] in the selection.
+     * In contrast to [allColsExcept][ColumnsSelectionDsl.allColsExcept],
+     * this function does not 'lift' the columns out of the group, preserving the structure.
      *
-     * {@get [ParamArg]}
+     * So:
+     *
+     * `df.`[select][DataFrame.select]` { colGroup.`[except][SingleColumn.except]` { col } }`
+     *
+     * is shorthand for:
+     *
+     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
+     *
+     * ### Examples for this overload
+     * {@get [EXAMPLE]}
+     *
+     * {@get [PARAM]}
      * @return A [ColumnSet] containing all columns in [this\] except the specified ones.
      * @see ColumnsSelectionDsl.select
      * @see ColumnsSelectionDsl.all
@@ -166,129 +187,140 @@ public interface AllExceptColumnsSelectionDsl {
      * @see ColumnsSelectionDsl.allUpTo
      * @see ColumnsSelectionDsl.allFrom
      */
+    @ExcludeFromSources
     private interface CommonExceptDocs {
 
         // Example argument
-        interface ExampleArg
+        interface EXAMPLE
 
         // Parameter argument
-        interface ParamArg
+        interface PARAM
     }
 
     // region ColumnSet
 
     /**
      * @include [CommonExceptDocs]
-     * {@set [CommonExceptDocs.ExampleArg]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]` `{@get [ArgumentArg1]}` \}`
+     * {@set [CommonExceptDocs.EXAMPLE]
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>() `[except][ColumnSet.except]` {@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` `{@get [ArgumentArg2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age) `[except][ColumnSet.except]` {@get [ARGUMENT_2]} \}`
      * }
      */
+    @ExcludeFromSources
     private interface ColumnSetInfixDocs {
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
     }
 
     /**
      * @include [CommonExceptDocs]
-     * {@set [CommonExceptDocs.ExampleArg]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]{@get [ArgumentArg1]}` \}`
+     * {@set [CommonExceptDocs.EXAMPLE]
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[Number][Number]`>().`[except][ColumnSet.except]`{@get [ARGUMENT_1]} \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]{@get [ArgumentArg2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(name, age).`[except][ColumnSet.except]`{@get [ARGUMENT_2]} \}`
      * }
      */
+    @ExcludeFromSources
     private interface ColumnSetVarargDocs {
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
     }
 
     /**
      * @include [ColumnSetInfixDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [selector\] A lambda in which you specify the columns that need to be
+     * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
      *   excluded from the [ColumnSet]. The scope of the selector is the same as the outer scope.
-     * @set [ColumnSetInfixDocs.ArgumentArg1] `{ "age" `[and][ColumnsSelectionDsl.and]` height }`
-     * @set [ColumnSetInfixDocs.ArgumentArg2] `{ name.firstName }`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] { "age" `[and][ColumnsSelectionDsl.and]` height }
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] { name.firstName }
      */
     public infix fun <C> ColumnSet<C>.except(selector: () -> ColumnsResolver<*>): ColumnSet<C> = except(selector())
 
     /**
      * @include [ColumnSetInfixDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [other\] A [ColumnsResolver] containing the columns that need to be
+     * @set [CommonExceptDocs.PARAM] @param [other\] A [ColumnsResolver] containing the columns that need to be
      *   excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ArgumentArg1] `"age" `[and][ColumnsSelectionDsl.and]` height`
-     * @set [ColumnSetInfixDocs.ArgumentArg2] `name.firstName`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age" `[and][ColumnsSelectionDsl.and]` height
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] name.firstName
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnsResolver<*>): ColumnSet<C> = exceptInternal(other)
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnsResolvers][ColumnsResolver] containing
+     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnsResolvers][ColumnsResolver] containing
      *  the columns that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ArgumentArg1] `(age, userData.height)`
-     * @set [ColumnSetVarargDocs.ArgumentArg2] `(name.firstName, name.middleName)`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (age, userData.height)
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] (name.firstName, name.middleName)
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnsResolver<*>): ColumnSet<C> = except(others.toColumnSet())
 
     /**
      * @include [ColumnSetInfixDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [other\] A [String] referring to
+     * @set [CommonExceptDocs.PARAM] @param [other\] A [String] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ArgumentArg1] `"age"`
-     * @set [ColumnSetInfixDocs.ArgumentArg2] `"name"`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "age"
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] "name"
      */
     public infix fun <C> ColumnSet<C>.except(other: String): ColumnSet<C> = except(column<Any?>(other))
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [Strings][String] referring to
+     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ArgumentArg1] `("age", "height")`
-     * @set [ColumnSetVarargDocs.ArgumentArg2] `("name")`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] ("age", "height")
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] ("name")
      */
     public fun <C> ColumnSet<C>.except(vararg others: String): ColumnSet<C> = except(others.toColumnSet())
 
     /**
      * @include [ColumnSetInfixDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [other\] A [KProperty] referring to
+     * @set [CommonExceptDocs.PARAM] @param [other\] A [KProperty] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ArgumentArg1] `Person::age`
-     * @set [ColumnSetInfixDocs.ArgumentArg2] `Person::name`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] Person::age
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] Person::name
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> ColumnSet<C>.except(other: KProperty<C>): ColumnSet<C> = except(column(other))
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [KProperties][KProperty] referring to
+     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ArgumentArg1] `(Person::age, Person::height)`
-     * @set [ColumnSetVarargDocs.ArgumentArg2] `(Person::name)`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (Person::age, Person::height)
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] (Person::name)
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> ColumnSet<C>.except(vararg others: KProperty<C>): ColumnSet<C> = except(others.toColumnSet())
 
     /**
      * @include [ColumnSetInfixDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [other\] A [ColumnPath] referring to
+     * @set [CommonExceptDocs.PARAM] @param [other\] A [ColumnPath] referring to
      *  the column (relative to the current scope) that needs to be excluded from the [ColumnSet].
-     * @set [ColumnSetInfixDocs.ArgumentArg1] `"userdata"["age"]`
-     * @set [ColumnSetInfixDocs.ArgumentArg2] `pathOf("name", "firstName")`
+     * @set [ColumnSetInfixDocs.ARGUMENT_1] "userdata"["age"]
+     * @set [ColumnSetInfixDocs.ARGUMENT_2] pathOf("name", "firstName")
      */
     public infix fun <C> ColumnSet<C>.except(other: ColumnPath): ColumnSet<C> = except(column<Any?>(other))
 
     /**
      * @include [ColumnSetVarargDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
+     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
      *  the columns (relative to the current scope) that need to be excluded from the [ColumnSet].
-     * @set [ColumnSetVarargDocs.ArgumentArg1] `(pathOf("age"), "userdata"["height"])`
-     * @set [ColumnSetVarargDocs.ArgumentArg2] `("name"["firstName"], "name"["middleName"])`
+     * @set [ColumnSetVarargDocs.ARGUMENT_1] (pathOf("age"), "userdata"["height"])
+     * @set [ColumnSetVarargDocs.ARGUMENT_2] ("name"["firstName"], "name"["middleName"])
      */
     public fun <C> ColumnSet<C>.except(vararg others: ColumnPath): ColumnSet<C> = except(others.toColumnSet())
 
@@ -298,26 +330,27 @@ public interface AllExceptColumnsSelectionDsl {
 
     /**
      * @include [CommonExceptDocs]
-     * @set [CommonExceptDocs.ExampleArg]
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ArgumentArg1]}` \}`
+     * @set [CommonExceptDocs.EXAMPLE]
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_1]}` \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ArgumentArg2]}` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `[allExcept][ColumnsSelectionDsl.allExcept]{@get [ARGUMENT_2]}` \}`
      */
+    @ExcludeFromSources
     private interface ColumnsSelectionDslDocs {
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
     }
 
     /**
      * @include [ColumnsSelectionDslDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [selector\] A lambda in which you specify the columns that need to be
+     * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
      *  excluded from the current selection. The scope of the selector is the same as the outer scope.
-     * @set [ColumnsSelectionDslDocs.ArgumentArg1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
-     * @set [ColumnsSelectionDslDocs.ArgumentArg2] ` { name.firstName }`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] ` { name.firstName }`
      */
     public fun <C> ColumnsSelectionDsl<C>.allExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         this.asSingleColumn().allColsExcept(selector)
@@ -325,40 +358,44 @@ public interface AllExceptColumnsSelectionDsl {
     /**
      * {@comment No scoping issues, this function can exist for legacy purposes}
      * @include [ColumnsSelectionDslDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] A [ColumnsResolver] containing the columns that need to be
+     * @set [CommonExceptDocs.PARAM] @param [others\] A [ColumnsResolver] containing the columns that need to be
      *  excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ArgumentArg1] `(age, height)`
-     * @set [ColumnsSelectionDslDocs.ArgumentArg2] `(name.firstName, name.middleName)`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(age, height)`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `(name.firstName, name.middleName)`
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
     /**
      * @include [ColumnsSelectionDslDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [Strings][String] referring to
+     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [Strings][String] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ArgumentArg1] `("age", "height")`
-     * @set [ColumnsSelectionDslDocs.ArgumentArg2] `("name")`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `("age", "height")`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `("name")`
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: String): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
     /**
      * @include [ColumnsSelectionDslDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [KProperties][KProperty] referring to
+     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [KProperties][KProperty] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ArgumentArg1] `(Person::age, Person::height)`
-     * @set [ColumnsSelectionDslDocs.ArgumentArg2] `(Person::name)`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(Person::age, Person::height)`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `(Person::name)`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: KProperty<*>): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
 
     /**
      * @include [ColumnsSelectionDslDocs]
-     * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
+     * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
      *  the columns (relative to the current scope) that need to be excluded from the current selection.
-     * @set [ColumnsSelectionDslDocs.ArgumentArg1] `(pathOf("age"), "userdata"["height"])`
-     * @set [ColumnsSelectionDslDocs.ArgumentArg2] `("name"["firstName"], "name"["middleName"])`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_1] `(pathOf("age"), "userdata"["height"])`
+     * @set [ColumnsSelectionDslDocs.ARGUMENT_2] `("name"["firstName"], "name"["middleName"])`
      */
     public fun ColumnsSelectionDsl<*>.allExcept(vararg others: ColumnPath): ColumnSet<*> =
         asSingleColumn().allColsExceptInternal(others.toColumnSet())
@@ -366,92 +403,95 @@ public interface AllExceptColumnsSelectionDsl {
     // endregion
 
     // region SingleColumn
+    // region allColsExcept
 
     /**
      * @include [CommonExceptDocs]
-     * @set [CommonExceptDocs.ExampleArg] {@comment <code> blocks are there to prevent double ``}
-     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `<code>{@get [ReceiverArg1]}</code>[allColsExcept][{@get [ReceiverType]}.allColsExcept]<code>{@get [ArgumentArg1]}</code>` \}`
+     * @set [CommonExceptDocs.EXAMPLE] {@comment <code> blocks are there to prevent double ``}
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[allColsExcept][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_1]}</code>` \}`
      *
-     *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [ReceiverArg2]}</code>[allColsExcept][{@get [ReceiverType]}.allColsExcept]<code>{@get [ArgumentArg2]}</code>` \}`
+     *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[allColsExcept][{@get [RECEIVER_TYPE]}.allColsExcept]<code>{@get [ARGUMENT_2]}</code>` \}`
      */
+    @Suppress("ClassName")
+    @ExcludeFromSources
     private interface ColumnGroupDocs {
 
         // receiver
-        interface ReceiverArg1
+        interface RECEIVER_1
 
         // receiver
-        interface ReceiverArg2
+        interface RECEIVER_2
 
         // type
-        interface ReceiverType
+        interface RECEIVER_TYPE
 
         // argument
-        interface ArgumentArg1
+        interface ARGUMENT_1
 
         // argument
-        interface ArgumentArg2
+        interface ARGUMENT_2
 
         /**
-         * @set [ColumnGroupDocs.ReceiverArg1] `userData.`
-         * @set [ColumnGroupDocs.ReceiverArg2] `name.`
-         * @set [ColumnGroupDocs.ReceiverType] SingleColumn
+         * @set [ColumnGroupDocs.RECEIVER_1] `userData.`
+         * @set [ColumnGroupDocs.RECEIVER_2] `name.`
+         * @set [ColumnGroupDocs.RECEIVER_TYPE] SingleColumn
          */
         interface SingleColumnReceiverArgs
 
         /**
-         * @set [ColumnGroupDocs.ReceiverArg1] `"userData".`
-         * @set [ColumnGroupDocs.ReceiverArg2] `"name".`
-         * @set [ColumnGroupDocs.ReceiverType] String
+         * @set [ColumnGroupDocs.RECEIVER_1] `"userData".`
+         * @set [ColumnGroupDocs.RECEIVER_2] `"name".`
+         * @set [ColumnGroupDocs.RECEIVER_TYPE] String
          */
         interface StringReceiverArgs
 
         /**
-         * @set [ColumnGroupDocs.ReceiverArg1] `DataSchemaPerson::userData.`
-         * @set [ColumnGroupDocs.ReceiverArg2] `Person::name.`
-         * @set [ColumnGroupDocs.ReceiverType] KProperty
+         * @set [ColumnGroupDocs.RECEIVER_1] `DataSchemaPerson::userData.`
+         * @set [ColumnGroupDocs.RECEIVER_2] `Person::name.`
+         * @set [ColumnGroupDocs.RECEIVER_TYPE] KProperty
          */
         interface KPropertyReceiverArgs
 
         /**
-         * @set [ColumnGroupDocs.ReceiverArg1] `pathOf("userData").`
-         * @set [ColumnGroupDocs.ReceiverArg2] `"pathTo"["myColGroup"].`
-         * @set [ColumnGroupDocs.ReceiverType] ColumnPath
+         * @set [ColumnGroupDocs.RECEIVER_1] `pathOf("userData").`
+         * @set [ColumnGroupDocs.RECEIVER_2] `"pathTo"["myColGroup"].`
+         * @set [ColumnGroupDocs.RECEIVER_TYPE] ColumnPath
          */
         interface ColumnPathReceiverArgs
 
         /**
-         * @set [CommonExceptDocs.ParamArg] @param [selector\] A lambda in which you specify the columns that need to be
+         * @set [CommonExceptDocs.PARAM] @param [selector\] A lambda in which you specify the columns that need to be
          *  excluded from the current selection in [this\] column group. The other columns will be included in the selection
          *  by default. The scope of the selector is relative to the column group.
-         * @set [ColumnGroupDocs.ArgumentArg1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
-         * @set [ColumnGroupDocs.ArgumentArg2] ` { firstName }`
+         * @set [ColumnGroupDocs.ARGUMENT_1] `  { "age"  `[and][ColumnsSelectionDsl.and]` height }`
+         * @set [ColumnGroupDocs.ARGUMENT_2] ` { firstName }`
          */
         interface SelectorArgs
 
         /**
-         * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [Strings][String] referring to
+         * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [Strings][String] referring to
          *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
          *  column group. The other columns will be included in the selection by default.
-         * @set [ColumnGroupDocs.ArgumentArg1] `("age", "height")`
-         * @set [ColumnGroupDocs.ArgumentArg2] `("firstName", "middleName")`
+         * @set [ColumnGroupDocs.ARGUMENT_1] `("age", "height")`
+         * @set [ColumnGroupDocs.ARGUMENT_2] `("firstName", "middleName")`
          */
         interface StringArgs
 
         /**
-         * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [KProperties][KProperty] referring to
+         * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [KProperties][KProperty] referring to
          *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
          *  column group. The other columns will be included in the selection by default.
-         * @set [ColumnGroupDocs.ArgumentArg1] `(Person::age, Person::height)`
-         * @set [ColumnGroupDocs.ArgumentArg2] `(Person::firstName, Person::middleName)`
+         * @set [ColumnGroupDocs.ARGUMENT_1] `(Person::age, Person::height)`
+         * @set [ColumnGroupDocs.ARGUMENT_2] `(Person::firstName, Person::middleName)`
          */
         interface KPropertyArgs
 
         /**
-         * @set [CommonExceptDocs.ParamArg] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
+         * @set [CommonExceptDocs.PARAM] @param [others\] Any number of [ColumnPaths][ColumnPath] referring to
          *  the columns (relative to the column group) that need to be excluded from the current selection in [this\]
          *  column group. The other columns will be included in the selection by default.
-         * @set [ColumnGroupDocs.ArgumentArg1] `(pathOf("age"), "extraData"["item1"])`
-         * @set [ColumnGroupDocs.ArgumentArg2] `(pathOf("firstName"), "middleNames"["first"])`
+         * @set [ColumnGroupDocs.ARGUMENT_1] `(pathOf("age"), "extraData"["item1"])`
+         * @set [ColumnGroupDocs.ARGUMENT_2] `(pathOf("firstName"), "middleNames"["first"])`
          */
         interface ColumnPathArgs
     }
@@ -466,7 +506,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
     public fun SingleColumn<DataRow<*>>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
@@ -474,7 +514,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE_VARARG),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
@@ -493,6 +533,10 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.SingleColumnReceiverArgs]
      * @include [ColumnGroupDocs.KPropertyArgs]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         allColsExceptInternal(others.toColumnSet())
 
@@ -504,6 +548,277 @@ public interface AllExceptColumnsSelectionDsl {
     public fun SingleColumn<DataRow<*>>.allColsExcept(vararg other: ColumnPath): ColumnSet<*> =
         allColsExceptInternal(other.toColumnSet())
 
+    // endregion
+
+    // region except
+
+    /**
+     * @include [CommonExceptDocs]
+     * @set [CommonExceptDocs.EXAMPLE] {@comment <code> blocks are there to prevent double ``}
+     *  `df.`[select][ColumnsSelectionDsl.select]`  {  `<code>{@get [RECEIVER_1]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_1]}</code>` \}`
+     *
+     *  `df.`[select][ColumnsSelectionDsl.select]`  { city  `[and][ColumnsSelectionDsl.and]` `<code>{@get [RECEIVER_2]}</code>[except][{@get [RECEIVER_TYPE]}.except]<code>{@get [ARGUMENT_2]}</code>` \}`
+     */
+    @ExcludeFromSources
+    private interface ColumnGroupExceptDocs : ColumnGroupDocs
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
+     */
+    public fun <C> SingleColumn<DataRow<C>>.except(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
+        exceptInternal(selector.toColumns())
+
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(EXCEPT_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    ) // present solely to redirect users to the right function
+    public fun <C> SingleColumn<DataRow<C>>.except(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
+        except { others.toColumnSet() }
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
+     */
+    public fun <C> SingleColumn<DataRow<C>>.except(vararg others: String): SingleColumn<DataRow<C>> =
+        exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
+     */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> SingleColumn<DataRow<C>>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
+        exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.SingleColumnReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
+     */
+    public fun <C> SingleColumn<DataRow<C>>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
+        exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
+     */
+    public fun String.except(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
+        columnGroup(this).except(selector)
+
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(EXCEPT_REPLACE),
+        level = DeprecationLevel.ERROR,
+    ) // present solely to redirect users to the right function
+    public fun String.except(other: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
+        except { other }
+
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(EXCEPT_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    ) // present solely to redirect users to the right function
+    public fun String.except(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
+        except { others.toColumnSet() }
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
+     */
+    public fun String.except(vararg others: String): SingleColumn<DataRow<*>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
+     */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun String.except(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.StringReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
+     */
+    public fun String.except(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
+     */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> KProperty<C>.except(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
+        columnGroup(this).exceptInternal(selector.toColumns())
+
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(EXCEPT_REPLACE),
+        level = DeprecationLevel.ERROR,
+    ) // present solely to redirect users to the right function
+    @AccessApiOverload
+    public fun KProperty<*>.except(other: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
+        except { other }
+
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(EXCEPT_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    ) // present solely to redirect users to the right function
+    @AccessApiOverload
+    public fun KProperty<*>.except(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
+        except { others.toColumnSet() }
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
+     */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> KProperty<C>.except(vararg others: String): SingleColumn<DataRow<C>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowExceptNew")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> KProperty<DataRow<C>>.except(vararg others: String): SingleColumn<DataRow<C>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
+     */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> KProperty<C>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowExceptNew")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> KProperty<DataRow<C>>.except(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
+     */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> KProperty<C>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.KPropertyReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
+     */
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("KPropertyDataRowExceptNew")
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun <C> KProperty<DataRow<C>>.except(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.SelectorArgs]
+     */
+    public fun ColumnPath.except(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
+        columnGroup(this).exceptInternal(selector.toColumns<Any?, Any?>())
+
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(EXCEPT_REPLACE),
+        level = DeprecationLevel.ERROR,
+    ) // present solely to redirect users to the right function
+    public fun ColumnPath.except(other: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
+        except { other }
+
+    @Deprecated(
+        message = ALL_COLS_EXCEPT,
+        replaceWith = ReplaceWith(EXCEPT_REPLACE_VARARG),
+        level = DeprecationLevel.ERROR,
+    ) // present solely to redirect users to the right function
+    public fun ColumnPath.except(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
+        except { others.toColumnSet() }
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.StringArgs]
+     */
+    public fun ColumnPath.except(vararg others: String): SingleColumn<DataRow<*>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.KPropertyArgs]
+     */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
+    public fun ColumnPath.except(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    /**
+     * @include [ColumnGroupExceptDocs]
+     * @include [ColumnGroupExceptDocs.ColumnPathReceiverArgs]
+     * @include [ColumnGroupExceptDocs.ColumnPathArgs]
+     */
+    public fun ColumnPath.except(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
+        columnGroup(this).exceptInternal(others.toColumnSet())
+
+    // endregion
     // endregion
 
     // region String
@@ -518,7 +833,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
     public fun String.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
@@ -526,7 +841,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE_VARARG),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
     public fun String.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
@@ -545,6 +860,10 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.StringReceiverArgs]
      * @include [ColumnGroupDocs.KPropertyArgs]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun String.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -565,22 +884,28 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.SelectorArgs]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<C>.allColsExcept(selector: ColumnsSelector<C, *>): ColumnSet<*> =
         columnGroup(this).allColsExcept(selector)
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
+    @AccessApiOverload
     public fun KProperty<*>.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { other }
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE_VARARG),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
+    @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
         allColsExcept { others.toColumnSet() }
 
@@ -589,6 +914,10 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.StringArgs]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: String): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -597,6 +926,10 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.KPropertyArgs]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: KProperty<*>): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -605,6 +938,10 @@ public interface AllExceptColumnsSelectionDsl {
      * @include [ColumnGroupDocs.KPropertyReceiverArgs]
      * @include [ColumnGroupDocs.ColumnPathArgs]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.allColsExcept(vararg others: ColumnPath): ColumnSet<*> =
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
@@ -622,7 +959,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
     public fun ColumnPath.allColsExcept(other: ColumnsResolver<*>): ColumnSet<*> =
@@ -630,7 +967,7 @@ public interface AllExceptColumnsSelectionDsl {
 
     @Deprecated(
         message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith(ALL_COLS_REPLACE_VARARG),
+        replaceWith = ReplaceWith(ALL_COLS_EXCEPT_REPLACE_VARARG),
         level = DeprecationLevel.ERROR,
     ) // present solely to redirect users to the right function
     public fun ColumnPath.allColsExcept(vararg others: ColumnsResolver<*>): ColumnSet<*> =
@@ -661,353 +998,6 @@ public interface AllExceptColumnsSelectionDsl {
         columnGroup(this).allColsExceptInternal(others.toColumnSet())
 
     // endregion
-
-    // region experiments
-
-    /**
-     * ## EXPERIMENTAL: Except on Column Group
-     *
-     * Selects the current column group itself, except for the specified columns. This is different from
-     * [allColsExcept] in that it does not 'lift' the columns out of the group, but instead selects the group itself.
-     *
-     * As usual, all overloads for each {@include [AccessApiLink]} are available.
-     *
-     * These produce the same result:
-     *
-     * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]`(colGroup) `[except][ColumnSet.except]` colGroup.col }`
-     *
-     * `df.`[select][DataFrame.select]`  { colGroup  `[exceptNew][SingleColumn.except]` { col } }`
-     *
-     * These functions are experimental and may be removed or changed in the future.
-     *
-     * Trying these functions requires you to `@`[`OptIn`][OptIn]`(`[ExperimentalExceptCsDsl][ExperimentalExceptCsDsl]`::class)` first.
-     *
-     * ## NOTE:
-     * `exceptNew` will likely be renamed to `except` when the deprecated [SingleColumn.except] functions
-     * are deleted.
-     */
-    private interface ExperimentalExceptDocs
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
-        exceptExperimentalInternal(selector.toColumns())
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { other }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
-        exceptNew { other }
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { others.toColumnSet() }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
-        exceptNew { others.toColumnSet() }
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: String): SingleColumn<DataRow<C>> =
-        exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: String): SingleColumn<DataRow<C>> =
-        exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: KProperty<C>): SingleColumn<DataRow<C>> =
-        exceptExperimentalInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
-        exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> SingleColumn<DataRow<C>>.exceptNew(other: ColumnPath): SingleColumn<DataRow<C>> =
-        exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun <C> SingleColumn<DataRow<C>>.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
-        exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun String.exceptNew(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptNew(selector)
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { other }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public infix fun String.exceptNew(other: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
-        exceptNew { other }
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { others.toColumnSet() }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public fun String.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
-        exceptNew { others.toColumnSet() }
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun String.exceptNew(other: String): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun String.exceptNew(vararg others: String): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun String.exceptNew(other: KProperty<*>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun String.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun String.exceptNew(other: ColumnPath): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun String.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> KProperty<C>.exceptNew(selector: ColumnsSelector<C, *>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(selector.toColumns())
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { other }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public infix fun KProperty<*>.exceptNew(other: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
-        exceptNew { other }
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { others.toColumnSet() }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public fun KProperty<*>.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
-        exceptNew { others.toColumnSet() }
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> KProperty<C>.exceptNew(other: String): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun <C> KProperty<C>.exceptNew(vararg others: String): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public infix fun <C> KProperty<DataRow<C>>.exceptNew(other: String): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public fun <C> KProperty<DataRow<C>>.exceptNew(vararg others: String): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> KProperty<C>.exceptNew(other: KProperty<*>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun <C> KProperty<C>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public infix fun <C> KProperty<DataRow<C>>.exceptNew(other: KProperty<*>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(column(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public fun <C> KProperty<DataRow<C>>.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun <C> KProperty<C>.exceptNew(other: ColumnPath): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun <C> KProperty<C>.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public infix fun <C> KProperty<DataRow<C>>.exceptNew(other: ColumnPath): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("KPropertyDataRowExceptNew")
-    public fun <C> KProperty<DataRow<C>>.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<C>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun ColumnPath.exceptNew(selector: ColumnsSelector<*, *>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(selector.toColumns<Any?, Any?>())
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { other }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public infix fun ColumnPath.exceptNew(other: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
-        exceptNew { other }
-
-    @ExperimentalExceptCsDsl
-    @Deprecated(
-        message = ALL_COLS_EXCEPT,
-        replaceWith = ReplaceWith("exceptNew { others.toColumnSet() }"),
-        level = DeprecationLevel.ERROR,
-    ) // present solely to redirect users to the right function
-    public fun ColumnPath.exceptNew(vararg others: ColumnsResolver<*>): SingleColumn<DataRow<*>> =
-        exceptNew { others.toColumnSet() }
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun ColumnPath.exceptNew(other: String): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun ColumnPath.exceptNew(vararg others: String): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun ColumnPath.exceptNew(other: KProperty<*>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(column(other))
-
-    @ExperimentalExceptCsDsl
-    public fun ColumnPath.exceptNew(vararg others: KProperty<*>): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public infix fun ColumnPath.exceptNew(other: ColumnPath): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(column<Any?>(other))
-
-    /**
-     * @include [ExperimentalExceptDocs]
-     */
-    @ExperimentalExceptCsDsl
-    public fun ColumnPath.exceptNew(vararg others: ColumnPath): SingleColumn<DataRow<*>> =
-        columnGroup(this).exceptExperimentalInternal(others.toColumnSet())
-
-    // endregion
 }
 
 /**
@@ -1021,7 +1011,7 @@ public interface AllExceptColumnsSelectionDsl {
 internal fun <C> ColumnSet<C>.exceptInternal(other: ColumnsResolver<*>): ColumnSet<C> =
     createColumnSet { context ->
         val resolvedCols = this.resolve(context)
-        val resolvedColsToExcept = other.resolve(context)
+        val resolvedColsToExcept = other.resolve(context).toSet()
         resolvedCols.allColumnsExceptKeepingStructure(resolvedColsToExcept)
     } as ColumnSet<C>
 
@@ -1043,25 +1033,18 @@ internal fun SingleColumn<DataRow<*>>.allColsExceptInternal(other: ColumnsResolv
  * @return A new [SingleColumn] with the filtered columns excluded.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> SingleColumn<DataRow<C>>.exceptExperimentalInternal(
-    other: ColumnsResolver<*>,
-): SingleColumn<DataRow<C>> =
+@JvmName("exceptInternalSingleColumn")
+internal fun <C> SingleColumn<DataRow<C>>.exceptInternal(other: ColumnsResolver<*>): SingleColumn<DataRow<C>> =
     ensureIsColumnGroup().transformSingle { singleCol ->
         val columnsToExcept = singleCol
             .asColumnGroup()
             .getColumnsWithPaths { other }
             .map { it.changePath(singleCol.path + it.path) }
+            .toSet()
 
         val newCols = listOf(singleCol).allColumnsExceptKeepingStructure(columnsToExcept)
 
         newCols as List<ColumnWithPath<DataRow<*>>>
     }.singleInternal() as SingleColumn<DataRow<C>>
-
-/**
- * Functions annotated with this annotation are experimental and will be removed or renamed in the future.
- */
-@RequiresOptIn(level = RequiresOptIn.Level.ERROR)
-@Target(AnnotationTarget.FUNCTION)
-public annotation class ExperimentalExceptCsDsl
 
 // endregion

@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -20,6 +21,10 @@ import kotlin.reflect.typeOf
 
 // region ColumnReference
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <C, reified R> ColumnReference<C>.map(
     infer: Infer = Infer.Nulls,
     noinline transform: (C) -> R,
@@ -29,28 +34,29 @@ public inline fun <C, reified R> ColumnReference<C>.map(
 
 // region DataColumn
 
-public inline fun <T, reified R> DataColumn<T>.map(
-    infer: Infer = Infer.Nulls,
-    crossinline transform: (T) -> R,
-): DataColumn<R> {
+public inline fun <T, reified R> DataColumn<T>.map(infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }
 
-public fun <T, R> DataColumn<T>.map(type: KType, infer: Infer = Infer.Nulls, transform: (T) -> R): DataColumn<R> {
+public inline fun <T, R> DataColumn<T>.map(
+    type: KType,
+    infer: Infer = Infer.Nulls,
+    transform: (T) -> R,
+): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
     return DataColumn.createByType(name(), values, type, infer).cast()
 }
 
 public inline fun <T, reified R> DataColumn<T>.mapIndexed(
     infer: Infer = Infer.Nulls,
-    crossinline transform: (Int, T) -> R,
+    transform: (Int, T) -> R,
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(it, get(it)) }.asList()
     return DataColumn.createByType(name(), newValues, typeOf<R>(), infer)
 }
 
-public fun <T, R> DataColumn<T>.mapIndexed(
+public inline fun <T, R> DataColumn<T>.mapIndexed(
     type: KType,
     infer: Infer = Infer.Nulls,
     transform: (Int, T) -> R,
@@ -63,7 +69,7 @@ public fun <T, R> DataColumn<T>.mapIndexed(
 
 // region DataFrame
 
-public fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
+public inline fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
 
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
@@ -71,12 +77,20 @@ public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
     infer: Infer = Infer.Nulls,
     noinline body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     infer: Infer = Infer.Nulls,
@@ -90,6 +104,10 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = newColumn(type, name, infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: ColumnReference<R>,
     type: KType,
@@ -97,6 +115,10 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
     body: AddExpression<T, R>,
 ): DataColumn<R> = mapToColumn(column.name(), type, infer, body)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.mapToColumn(
     column: KProperty<R>,
     type: KType,
@@ -106,7 +128,7 @@ public fun <T, R> ColumnsContainer<T>.mapToColumn(
 
 @Refine
 @Interpretable("MapToFrame")
-public fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
+public inline fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(dsl.columns)
@@ -116,7 +138,7 @@ public fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
 
 // region GroupBy
 
-public fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
+public inline fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> =
     keys.rows().mapIndexedNotNull { index, row ->
         val group = groups[index]
         val g = GroupWithKey(row, group)

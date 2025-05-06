@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     `kotlin-dsl`
     `java-gradle-plugin`
@@ -18,11 +16,9 @@ group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     api(libs.kotlin.reflect)
-    implementation(project(":core"))
-    implementation(project(":dataframe-arrow"))
-    implementation(project(":dataframe-openapi-generator"))
-    implementation(project(":dataframe-excel"))
-    implementation(project(":dataframe-jdbc"))
+    implementation(projects.dataframe)
+    // experimental
+    implementation(projects.dataframeOpenapiGenerator)
 
     implementation(libs.kotlin.gradle.plugin.api)
     implementation(libs.kotlin.gradle.plugin)
@@ -53,11 +49,13 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":core").configurations
-                    .getByName("instrumentedJars")
-                    .artifacts.single()
-                    .file.absolutePath
-                    .replace(File.separatorChar, '/'),
+                listOf(":core", ":dataframe-csv", ":dataframe-json").joinToString("\", \"") {
+                    project(it).configurations
+                        .getByName("instrumentedJars")
+                        .artifacts.single()
+                        .file.absolutePath
+                        .replace(File.separatorChar, '/')
+                },
             )
         }
     }
@@ -87,15 +85,6 @@ gradlePlugin {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    compilerOptions.jvmTarget = JvmTarget.JVM_1_8
-}
-
-tasks.withType<JavaCompile>().all {
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
-}
-
 sourceSets {
     val main by getting
     val test by getting
@@ -115,12 +104,15 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
+    dependsOn(":dataframe-csv:publishToMavenLocal")
     dependsOn(":dataframe-jdbc:publishToMavenLocal")
+    dependsOn(":dataframe-json:publishToMavenLocal")
     dependsOn(":dataframe-openapi-generator:publishToMavenLocal")
     dependsOn(":dataframe-openapi:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":dataframe-csv:publishDataframeCsvPublicationToMavenLocal")
     dependsOn(":dataframe-jdbc:publishDataframeJDBCPublicationToMavenLocal")
     dependsOn(":dataframe-openapi-generator:publishDataframeOpenApiPublicationToMavenLocal")
     dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")

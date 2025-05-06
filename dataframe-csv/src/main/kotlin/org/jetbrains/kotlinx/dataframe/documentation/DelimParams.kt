@@ -4,7 +4,6 @@ import io.deephaven.csv.CsvSpecs
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.impl.io.typesDeephavenAlreadyParses
 import org.jetbrains.kotlinx.dataframe.io.AdjustCSVFormat
 import org.jetbrains.kotlinx.dataframe.io.AdjustCsvSpecs
@@ -19,16 +18,28 @@ import org.jetbrains.kotlinx.dataframe.io.QuoteMode
 @Suppress("ktlint:standard:class-naming", "ClassName", "KDocUnresolvedReference")
 internal object DelimParams {
 
-    /** @param path The file path to read. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param path The file path to read.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface PATH_READ
 
-    /** @param file The file to read. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param file The file to read.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface FILE_READ
 
-    /** @param url The URL from which to fetch the data. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param url The URL from which to fetch the data.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface URL_READ
 
-    /** @param fileOrUrl The file path or URL to read the data from. Can also be compressed as `.gz` or `.zip`, see [Compression]. */
+    /**
+     * @param fileOrUrl The file path or URL to read the data from.
+     *   Can also be compressed as `.gz` or `.zip`, see [Compression][org.jetbrains.kotlinx.dataframe.io.Compression].
+     */
     interface FILE_OR_URL_READ
 
     /** @param inputStream Represents the file to read. */
@@ -82,10 +93,10 @@ internal object DelimParams {
      *
      *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
      *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
-     *   Columns widths are determined by the header in the data (if present), or manually by setting
+     *   Column widths are determined by the header in the data (if present), or manually by setting
      *   \[fixedColumnWidths\].
      */
-    val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
+    const val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
 
     /**
      * @param fixedColumnWidths The fixed column widths. Default: empty list.
@@ -138,8 +149,6 @@ internal object DelimParams {
      *   ([DataFrame.parser][DataFrame.Companion.parser]) will be queried.
      *
      *   The only exceptions are:
-     *   - [useFastDoubleParser][ParserOptions.useFastDoubleParser], which will default to `true`,
-     *   regardless of the global setting.
      *   - [nullStrings][ParserOptions.nullStrings], which, if `null`,
      *   will take the global setting + {@include [DefaultNullStringsContentLink]}.
      *   - [skipTypes][ParserOptions.skipTypes], which will always add [typesDeephavenAlreadyParses] to
@@ -155,7 +164,7 @@ internal object DelimParams {
     const val IGNORE_EMPTY_LINES: Boolean = false
 
     /**
-     * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+     * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
      *
      *   If `true`, rows that are too short will be interpreted as _empty_ values.
      */
@@ -193,7 +202,7 @@ internal object DelimParams {
      * @param parseParallel Whether to parse the data in parallel. Default: `true`.
      *
      *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
-     *   This is usually faster, but can be turned off for debugging.
+     *   This is usually faster but can be turned off for debugging.
      */
     const val PARSE_PARALLEL: Boolean = true
 

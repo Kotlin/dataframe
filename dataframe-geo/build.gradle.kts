@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.BaseKotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -18,6 +17,7 @@ repositories {
     // geo repository should come before Maven Central
     maven("https://repo.osgeo.org/repository/release")
     mavenCentral()
+    mavenLocal()
 }
 
 // https://stackoverflow.com/questions/26993105/i-get-an-error-downloading-javax-media-jai-core1-1-3-from-maven-central
@@ -25,7 +25,8 @@ repositories {
 fun ExternalModuleDependency.excludeJaiCore() = exclude("javax.media", "jai_core")
 
 dependencies {
-    api(project(":core"))
+    api(projects.core)
+    implementation(projects.dataframeJupyter)
 
     implementation(libs.geotools.main) { excludeJaiCore() }
     implementation(libs.geotools.shapefile) { excludeJaiCore() }
@@ -47,10 +48,7 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    val friendModule = project(":core")
-    val jarTask = friendModule.tasks.getByName("jar") as Jar
-    val jarPath = jarTask.archiveFile.get().asFile.absolutePath
-    (this as BaseKotlinCompile).friendPaths.from(jarPath)
+    friendPaths.from(project(projects.core.path).projectDir)
 }
 
 kotlinPublications {

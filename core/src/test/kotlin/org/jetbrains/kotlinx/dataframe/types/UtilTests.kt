@@ -4,12 +4,14 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.asArrayAsListOrNull
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
 import org.jetbrains.kotlinx.dataframe.impl.commonParents
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.commonTypeListifyValues
 import org.jetbrains.kotlinx.dataframe.impl.createType
+import org.jetbrains.kotlinx.dataframe.impl.getUnifiedNumberClassOrNull
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.impl.isArray
 import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveArray
@@ -17,6 +19,8 @@ import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.replaceGenericTypeParametersWithUpperbound
 import org.junit.Test
 import java.io.Serializable
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -413,5 +417,49 @@ class UtilTests {
             typeOf<List<Nothing?>>(),
             typeOf<Set<Nothing>?>(),
         ).commonTypeListifyValues() shouldBe typeOf<Collection<out Nothing?>?>()
+    }
+
+    /**
+     * See [UnifyingNumbers] for more information.
+     * {@include [UnifyingNumbers.Graph]}
+     */
+    @Test
+    fun `common number types`() {
+        // Same type
+        getUnifiedNumberClassOrNull(Int::class, Int::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(Double::class, Double::class) shouldBe Double::class
+
+        // Direct parent-child relationships
+        getUnifiedNumberClassOrNull(Int::class, UShort::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(Long::class, UInt::class) shouldBe Long::class
+        getUnifiedNumberClassOrNull(Double::class, Float::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(UShort::class, Short::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(UByte::class, Byte::class) shouldBe Short::class
+
+        getUnifiedNumberClassOrNull(UByte::class, UShort::class) shouldBe UShort::class
+
+        // Multi-level relationships
+        getUnifiedNumberClassOrNull(Byte::class, Int::class) shouldBe Int::class
+        getUnifiedNumberClassOrNull(UByte::class, Long::class) shouldBe Long::class
+        getUnifiedNumberClassOrNull(Short::class, Double::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(UInt::class, Int::class) shouldBe Long::class
+
+        // Top-level types
+        getUnifiedNumberClassOrNull(BigDecimal::class, Double::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(BigInteger::class, Long::class) shouldBe BigInteger::class
+        getUnifiedNumberClassOrNull(BigDecimal::class, BigInteger::class) shouldBe BigDecimal::class
+
+        // Distant relationships
+        getUnifiedNumberClassOrNull(Byte::class, BigDecimal::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(UByte::class, Double::class) shouldBe Double::class
+
+        // Complex type promotions
+        getUnifiedNumberClassOrNull(Int::class, Float::class) shouldBe Double::class
+        getUnifiedNumberClassOrNull(Long::class, Double::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(ULong::class, Double::class) shouldBe BigDecimal::class
+        getUnifiedNumberClassOrNull(BigInteger::class, Double::class) shouldBe BigDecimal::class
+
+        // Edge case with null
+        getUnifiedNumberClassOrNull(null, Int::class) shouldBe Int::class
     }
 }

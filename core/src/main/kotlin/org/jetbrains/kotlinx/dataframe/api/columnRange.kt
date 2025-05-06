@@ -2,7 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ColumnRangeColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
@@ -25,15 +26,15 @@ public interface ColumnRangeColumnsSelectionDsl {
      * ## Range of Columns Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [DslGrammarTemplate.ColumnRef]}` `{@include [Grammar.PlainDslName]}` `{@include [DslGrammarTemplate.ColumnRef]}
      * }
-     * {@set [DslGrammarTemplate.ColumnSetPart]}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 
@@ -82,6 +83,10 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `"fromColumn"`[`..`][String.rangeTo]`Type::toColumn`}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun String.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -96,6 +101,10 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`"toColumn"`}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun KProperty<*>.rangeTo(endInclusive: String): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -103,6 +112,10 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`Type::toColumn`}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun KProperty<*>.rangeTo(endInclusive: KProperty<*>): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
@@ -110,6 +123,10 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `Type::fromColumn`[`..`][KProperty.rangeTo]`toColumn`}
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun KProperty<*>.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         toColumnAccessor().rangeTo(endInclusive)
 
@@ -131,6 +148,7 @@ public interface ColumnRangeColumnsSelectionDsl {
      * @include [CommonRangeOfColumnsDocs]
      * {@set [CommonRangeOfColumnsDocs.Example] `fromColumn`[`..`][ColumnReference.rangeTo]`toColumn`}
      */
+    @Interpretable("ColumnRange")
     public operator fun AnyColumnReference.rangeTo(endInclusive: AnyColumnReference): ColumnSet<*> =
         createColumnSet { context ->
             val startPath = this@rangeTo.resolveSingle(context)!!.path

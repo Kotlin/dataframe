@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -18,9 +19,9 @@ import kotlin.reflect.KProperty
  *
  * Base interface for [DataFrame] and [ColumnSelectionDsl]
  *
- * @param T Schema marker. Used to generate extension properties for typed column access.
+ * @param T Schema marker. Used to resolve generated extension properties for typed column access.
  */
-public interface ColumnsContainer<out T> {
+public interface ColumnsContainer<out T> : ColumnsScope<T> {
 
     // region columns
 
@@ -42,8 +43,16 @@ public interface ColumnsContainer<out T> {
 
     public fun getColumnOrNull(index: Int): AnyCol?
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>?
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <R> getColumnOrNull(column: KProperty<R>): DataColumn<R>?
 
     public fun getColumnOrNull(path: ColumnPath): AnyCol?
@@ -54,27 +63,63 @@ public interface ColumnsContainer<out T> {
 
     // region get
 
-    public operator fun get(columnName: String): AnyCol = getColumn(columnName)
+    public override operator fun get(columnName: String): AnyCol = getColumn(columnName)
 
     public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: DataColumn<R>): DataColumn<R> = getColumn(column.name()).cast()
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: DataColumn<DataRow<R>>): ColumnGroup<R> = getColumn(column)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: DataColumn<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumn(column)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.columnName).cast()
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> =
         get(column.columnName).asColumnGroup().cast()
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> =
         get(column.columnName).asAnyFrameColumn().castFrameColumn()
 

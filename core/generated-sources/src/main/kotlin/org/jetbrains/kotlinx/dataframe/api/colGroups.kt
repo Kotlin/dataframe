@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.api.ColGroupsColumnsSelectionDsl.Grammar
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -31,6 +31,8 @@ public interface ColGroupsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -44,6 +46,9 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -52,6 +57,9 @@ public interface ColGroupsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -64,6 +72,9 @@ public interface ColGroupsColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -74,11 +85,6 @@ public interface ColGroupsColumnsSelectionDsl {
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`colGroups`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.colGroups]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -133,7 +139,7 @@ public interface ColGroupsColumnsSelectionDsl {
     private interface CommonColGroupsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
@@ -170,6 +176,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
+    @Interpretable("ColGroups0")
     public fun ColumnSet<*>.colGroups(filter: Predicate<ColumnGroup<*>> = { true }): TransformableColumnSet<AnyRow> =
         columnGroupsInternal(filter)
 
@@ -205,6 +212,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
+    @Interpretable("ColGroups1")
     public fun ColumnsSelectionDsl<*>.colGroups(
         filter: Predicate<ColumnGroup<*>> = { true },
     ): TransformableColumnSet<AnyRow> = asSingleColumn().columnGroupsInternal(filter)
@@ -241,6 +249,7 @@ public interface ColGroupsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.frameCols]
      * @see [ColumnsSelectionDsl.valueCols]
      */
+    @Interpretable("ColGroups2")
     public fun SingleColumn<DataRow<*>>.colGroups(
         filter: Predicate<ColumnGroup<*>> = { true },
     ): TransformableColumnSet<AnyRow> = this.ensureIsColumnGroup().columnGroupsInternal(filter)
@@ -356,8 +365,8 @@ public interface ColGroupsColumnsSelectionDsl {
  * @return A [TransformableColumnSet] containing the column groups that satisfy the filter.
  */
 @Suppress("UNCHECKED_CAST")
-internal fun ColumnsResolver<*>.columnGroupsInternal(
-    filter: (ColumnGroup<*>) -> Boolean,
+internal inline fun ColumnsResolver<*>.columnGroupsInternal(
+    crossinline filter: (ColumnGroup<*>) -> Boolean,
 ): TransformableColumnSet<AnyRow> = colsInternal { it.isColumnGroup() && filter(it) } as TransformableColumnSet<AnyRow>
 
 // endregion

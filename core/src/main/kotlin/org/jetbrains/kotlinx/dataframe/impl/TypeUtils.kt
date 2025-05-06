@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.util.GUESS_VALUE_TYPE
 import java.math.BigDecimal
@@ -166,35 +167,6 @@ internal fun resolve(actualType: KType, declaredType: KType): Map<KTypeParameter
     resolveRec(actualType, declaredType)
     return map
 }
-
-internal val numberTypeExtensions: Map<Pair<KClass<*>, KClass<*>>, KClass<*>> by lazy {
-    val map = mutableMapOf<Pair<KClass<*>, KClass<*>>, KClass<*>>()
-
-    fun add(from: KClass<*>, to: KClass<*>) {
-        map[from to to] = to
-        map[to to from] = to
-    }
-
-    val intTypes = listOf(Byte::class, Short::class, Int::class, Long::class)
-    for (i in intTypes.indices) {
-        for (j in i + 1 until intTypes.size) {
-            add(intTypes[i], intTypes[j])
-        }
-        add(intTypes[i], Double::class)
-    }
-    add(Float::class, Double::class)
-    map
-}
-
-internal fun getCommonNumberType(first: KClass<*>?, second: KClass<*>): KClass<*> =
-    when {
-        first == null -> second
-        first == second -> first
-        else -> numberTypeExtensions[first to second] ?: error("Can not find common number type for $first and $second")
-    }
-
-internal fun Iterable<KClass<*>>.commonNumberClass(): KClass<*> =
-    fold(null as KClass<*>?, ::getCommonNumberType) ?: Number::class
 
 internal fun commonParent(classes: Iterable<KClass<*>>): KClass<*>? = commonParents(classes).withMostSuperclasses()
 
@@ -392,7 +364,30 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
 @Deprecated(GUESS_VALUE_TYPE, level = DeprecationLevel.HIDDEN)
 @PublishedApi
 internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, listifyValues: Boolean = false): KType =
-    guessValueType(values = values, upperBound = upperBound, listifyValues = listifyValues, allColsMakesRow = false)
+    guessValueType(
+        values = values,
+        upperBound = upperBound,
+        listifyValues = listifyValues,
+        allColsMakesRow = false,
+        unifyNumbers = false,
+    )
+
+/** Just for binary compatibility, as it's @PublishedApi. */
+@Deprecated(GUESS_VALUE_TYPE, level = DeprecationLevel.HIDDEN)
+@PublishedApi
+internal fun guessValueType(
+    values: Sequence<Any?>,
+    upperBound: KType? = null,
+    listifyValues: Boolean = false,
+    allColsMakesRow: Boolean = false,
+): KType =
+    guessValueType(
+        values = values,
+        upperBound = upperBound,
+        listifyValues = listifyValues,
+        allColsMakesRow = allColsMakesRow,
+        unifyNumbers = false,
+    )
 
 /**
  * Returns the guessed value type of the given [values] sequence.
@@ -410,6 +405,10 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
  * @param allColsMakesRow if true, then, if all values are non-null columns, we assume
  *   that a column group should be created instead of a [DataColumn][DataColumn]`<`[AnyCol][AnyCol]`>`,
  *   so the function will return [DataRow].
+ * @param unifyNumbers if true, then all number types encountered will be unified to the smallest possible
+ *   number-type that can hold all number values lossless in [values]. See [commonNumberClass].
+ *   Unsigned numbers are not supported.
+ *   If false, the result of encountering multiple number types would be [Number].
  */
 @PublishedApi
 internal fun guessValueType(
@@ -417,6 +416,7 @@ internal fun guessValueType(
     upperBound: KType? = null,
     listifyValues: Boolean = false,
     allColsMakesRow: Boolean = false,
+    unifyNumbers: Boolean = false,
 ): KType {
     val classes = mutableSetOf<KClass<*>>()
     val collectionClasses = mutableSetOf<KClass<out Collection<*>>>()
@@ -471,6 +471,18 @@ internal fun guessValueType(
     val allListsWithRows = classesInCollection.isNotEmpty() &&
         classesInCollection.all { it.isSubclassOf(DataRow::class) } &&
         !nullsInCollection
+
+    if (unifyNumbers) {
+        val nothingClass = Nothing::class
+        val usedNumberClasses = classes.filter {
+            it.isSubclassOf(Number::class) && it != nothingClass
+        }
+        if (usedNumberClasses.isNotEmpty()) {
+            val unifiedNumberClass = usedNumberClasses.unifiedNumberClassOrNull() as KClass<Number>
+            classes -= usedNumberClasses
+            classes += unifiedNumberClass
+        }
+    }
 
     return when {
         classes.isNotEmpty() -> {
@@ -552,6 +564,9 @@ internal val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type
 internal val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
 
 internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
+
+internal val KType.canBeNaN: Boolean
+    get() = isSubtypeOf(typeOf<Double?>()) || isSubtypeOf(typeOf<Float?>())
 
 @OptIn(ExperimentalUnsignedTypes::class)
 private val primitiveArrayClasses = setOf(
@@ -648,3 +663,47 @@ internal fun Any.asArrayAsListOrNull(): List<*>? =
     }
 
 internal fun Any.isBigNumber(): Boolean = this is BigInteger || this is BigDecimal
+
+/**
+ * Returns a set containing the [KClass] of each element in the iterable.
+ *
+ * This can be a heavy operation!
+ *
+ * The [KClass] is determined by retrieving the runtime class of each element.
+ *
+ * [Nothing::class][Nothing] is used for elements that are `null`.
+ *
+ * @return A set of [KClass] objects representing the runtime types of elements in the iterable.
+ */
+internal fun Iterable<Any?>.classes(): Set<KClass<*>> =
+    mapTo(mutableSetOf()) {
+        if (it == null) Nothing::class else it::class
+    }
+
+/**
+ * Returns a set of [KType] objects representing the star-projected types of the runtime classes
+ * of all unique elements in the iterable.
+ *
+ * This can be a heavy operation!
+ *
+ * [typeOf<Nothing?>()][nullableNothingType] is used for elements that are `null`.
+ *
+ * @return A set of [KType] objects corresponding to the star-projected runtime types of elements in the iterable.
+ */
+internal fun Iterable<Any?>.types(): Set<KType> =
+    mapTo(mutableSetOf()) {
+        if (it == null) nullableNothingType else it::class.createStarProjectedType(false)
+    }
+
+/**
+ * Checks whether this KType adheres to `T : Comparable<T & Any>?`, aka, it is comparable with itself.
+ */
+internal fun KType.isIntraComparable(): Boolean =
+    this.isSubtypeOf(
+        Comparable::class.createType(
+            arguments = listOf(
+                KTypeProjection(IN, this.withNullability(false)),
+            ),
+            nullable = this.isMarkedNullable,
+        ),
+    )

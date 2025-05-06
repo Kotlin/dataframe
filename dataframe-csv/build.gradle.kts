@@ -1,5 +1,4 @@
-import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
-import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
+import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
 
 plugins {
@@ -9,8 +8,7 @@ plugins {
         alias(serialization)
         alias(kover)
         alias(ktlint)
-        alias(jupyter.api)
-        alias(docProcessor)
+        alias(kodex)
         alias(binary.compatibility.validator)
         alias(kotlinx.benchmark)
     }
@@ -19,16 +17,17 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
 repositories {
     mavenLocal()
     mavenCentral()
-    maven(jupyterApiTCRepo)
 }
 
 dependencies {
-    api(project(":core"))
+    api(projects.core)
+
+    // for reading/writing JSON <-> DataFrame/DataRow in CSV/TSV/Delim
+    // can safely be excluded when working without JSON and only writing flat dataframes
+    api(projects.dataframeJson)
 
     // for csv reading
     api(libs.deephavenCsv)
@@ -39,7 +38,6 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
 
-    testApi(project(":core"))
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)
@@ -85,9 +83,9 @@ val generatedSources by kotlin.sourceSets.creating {
 }
 
 // Task to generate the processed documentation
-val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
+val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
+    group = "KDocs"
     target = file(generatedSourcesFolderName)
-    arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
 
     // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
     outputReadOnly = false
@@ -95,10 +93,7 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     exportAsHtml {
         dir = file("../docs/StardustDocs/snippets/kdocs")
     }
-    task {
-        group = "KDocs"
-        finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
-    }
+    finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
 }
 
 tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
@@ -164,4 +159,15 @@ kotlinPublications {
 
 kotlin {
     explicitApi()
+}
+
+val instrumentedJars: Configuration by configurations.creating {
+    isCanBeConsumed = true
+    isCanBeResolved = false
+}
+
+artifacts {
+    add("instrumentedJars", tasks.jar.get().archiveFile) {
+        builtBy(tasks.jar)
+    }
 }

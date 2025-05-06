@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.CandidateForRemoval
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -19,8 +21,10 @@ import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
+@CandidateForRemoval
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 
+@CandidateForRemoval
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
@@ -58,12 +62,24 @@ public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
 
 public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
 
 public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
 // endregion
@@ -72,12 +88,24 @@ public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<
 
 public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
 public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion
@@ -101,7 +129,7 @@ internal interface DiffOrNullDocs
  */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
+public inline fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression<T, Double>): Double =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
@@ -111,21 +139,21 @@ public fun <T> DataRow<T>.diff(firstRowResult: Double, expression: RowExpression
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
 // required to resolve `diff(0) { intValue }`
-public fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int =
+public inline fun <T> DataRow<T>.diff(firstRowResult: Int, expression: RowExpression<T, Int>): Int =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
 /**
  * @include [DiffDocs]
  */
-public fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T, Long>): Long =
+public inline fun <T> DataRow<T>.diff(firstRowResult: Long, expression: RowExpression<T, Long>): Long =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
 /**
  * @include [DiffDocs]
  */
-public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
+public inline fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<T, Float>): Float =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
         ?: firstRowResult
 
@@ -134,25 +162,25 @@ public fun <T> DataRow<T>.diff(firstRowResult: Float, expression: RowExpression<
  */
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? =
+public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Double>): Double? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
  * @include [DiffOrNullDocs]
  */
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): Int? =
+public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Int>): Int? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
  * @include [DiffOrNullDocs]
  */
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? =
+public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Long>): Long? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 /**
  * @include [DiffOrNullDocs]
  */
-public fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
+public inline fun <T> DataRow<T>.diffOrNull(expression: RowExpression<T, Float>): Float? =
     prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 public fun AnyRow.columnsCount(): Int = df().ncol
@@ -161,12 +189,16 @@ public fun AnyRow.columnNames(): List<String> = df().columnNames()
 
 public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
+@CandidateForRemoval
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
+@CandidateForRemoval
 public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
 
+@CandidateForRemoval
 public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
 
+@CandidateForRemoval
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
     val df = df()
     return if (index >= 0 && index < df.nrow) df[index] else null
@@ -191,7 +223,7 @@ public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
         (relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices),
     )
 
-public fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
+public inline fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0
     return backwardIterable().take(k).sumOf {
         count++

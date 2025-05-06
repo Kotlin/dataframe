@@ -17,16 +17,30 @@ The input string can be a file path or URL.
 
 ## Read from CSV
 
-To read a CSV file, use the `.readCSV()` function.
+Before you can read data from CSV, make sure you have the following dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-csv:$dataframe_version")
+```
+
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+
+To read a CSV file, use the `.readCsv()` function.
+
+Since DataFrame v0.15, this new CSV integration is available.
+It is faster and more flexible than the old one, now being based on
+[Deephaven CSV](https://github.com/deephaven/deephaven-csv).
+
+{style="note"}
 
 To read a CSV file from a file:
 
 ```kotlin
 import java.io.File
 
-DataFrame.readCSV("input.csv")
+DataFrame.readCsv("input.csv")
 // Alternatively
-DataFrame.readCSV(File("input.csv"))
+DataFrame.readCsv(File("input.csv"))
 ```
 
 To read a CSV file from a URL:
@@ -34,7 +48,22 @@ To read a CSV file from a URL:
 ```kotlin
 import java.net.URL
 
-DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"))
+DataFrame.readCsv(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"))
+```
+
+Zip and GZip files are supported as well.
+
+To read CSV from `String`:
+
+```kotlin
+val csv = """
+    A,B,C,D
+    12,tuv,0.12,true
+    41,xyz,3.6,not assigned
+    89,abc,7.1,false
+""".trimIndent()
+
+DataFrame.readCsvStr(csv)
 ```
 
 ### Specify delimiter
@@ -44,7 +73,7 @@ By default, CSV files are parsed using `,` as the delimiter. To specify a custom
 <!---FUN readCsvCustom-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     delimiter = '|',
     header = listOf("A", "B", "C", "D"),
@@ -54,9 +83,19 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
+Aside from the delimiter, there are many other parameters to change.
+These include the header, the number of rows to skip, the number of rows to read, the quote character, and more.
+Check out the KDocs for more information.
+
 ### Column type inference from CSV
 
-Column types are inferred from the CSV data. Suppose that the CSV from the previous
+Column types are inferred from the CSV data.
+
+We rely on the fast implementation of [Deephaven CSV](https://github.com/deephaven/deephaven-csv) for inferring and
+parsing to (nullable) `Int`, `Long`, `Double`, and `Boolean` types.
+For other types we fall back to [the parse operation](parse.md).
+
+Suppose that the CSV from the previous
 example had the following content:
 
 <table>
@@ -75,7 +114,7 @@ C: Double
 D: Boolean?
 ```
 
-[`DataFrame`](DataFrame.md) tries to parse columns as JSON, so when reading the following table with JSON object in column D:
+[`DataFrame`](DataFrame.md) can [parse](parse.md) columns as JSON too, so when reading the following table with JSON object in column D:
 
 <table>
 <tr><th>A</th><th>D</th></tr>
@@ -83,7 +122,7 @@ D: Boolean?
 <tr><td>41</td><td>{"B":3,"C":2}</td></tr>
 </table>
 
-We get this data schema where D is [`ColumnGroup`](DataColumn.md#columngroup) with 2 children columns:
+We get this data schema where D is [`ColumnGroup`](DataColumn.md#columngroup) with two nested columns:
 
 ```text
 A: Int
@@ -117,15 +156,15 @@ Sometimes columns in your CSV can be interpreted differently depending on your s
 <tr><td>41,111</td></tr>
 </table>
 
-Here a comma can be decimal or thousands separator, thus different values.
-You can deal with it in two ways:
+Here a comma can be a decimal-, or thousands separator, and thus become different values.
+You can deal with it in multiple ways, for instance:
 
-1) Provide locale as a parser option
+1) Provide locale as parser option
 
 <!---FUN readNumbersWithSpecificLocale-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     parserOptions = ParserOptions(locale = Locale.UK),
 )
@@ -138,7 +177,7 @@ val df = DataFrame.readCSV(
 <!---FUN readNumbersWithColType-->
 
 ```kotlin
-val df = DataFrame.readCSV(
+val df = DataFrame.readCsv(
     file,
     colTypes = mapOf("colName" to ColType.String),
 )
@@ -146,10 +185,116 @@ val df = DataFrame.readCSV(
 
 <!---END-->
 
+### Work with specific date-time formats
+
+When parsing date or date-time columns, you might encounter formats different from the default `ISO_LOCAL_DATE_TIME`.
+Like:
+
+<table>
+<tr><th>date</th></tr>
+<tr><td>13/Jan/23 11:49 AM</td></tr>
+<tr><td>14/Mar/23 5:35 PM</td></tr>
+</table>
+
+Because the format here `"dd/MMM/yy h:mm a"` differs from the default (`ISO_LOCAL_DATE_TIME`),
+columns like this may be recognized as simple `String` values rather than actual date-time columns.
+
+You can fix this whenever you [parse](parse.md) a string-based column (e.g., using [`DataFrame.readCsv()`](read.md#read-from-csv),
+[`DataFrame.readTsv()`](read.md#read-from-csv), or [`DataColumn<String>.convertTo<>()`](convert.md)) by providing
+a custom date-time pattern. 
+
+There are two ways to do this:
+
+1) By providing the date-time pattern as raw string to the `ParserOptions` argument:
+
+<!---FUN readDatesWithSpecificDateTimePattern-->
+
+```kotlin
+val df = DataFrame.readCsv(
+    file,
+    parserOptions = ParserOptions(dateTimePattern = "dd/MMM/yy h:mm a")
+)
+```
+
+<!---END-->
+
+2) By providing a `DateTimeFormatter` to the `ParserOptions` argument:
+
+<!---FUN readDatesWithSpecificDateTimeFormatter-->
+
+```kotlin
+val df = DataFrame.readCsv(
+    file,
+    parserOptions = ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MMM/yy h:mm a"))
+)
+```
+
+<!---END-->
+These two approaches are essentially the same, just specified in different ways.
+The result will be a dataframe with properly parsed `DateTime` columns.
+
+> Note: Although these examples focus on reading CSV files, 
+> these `ParserOptions` can be supplied to any `String`-column-handling operation 
+> (like, `readCsv`, `readTsv`, `stringCol.convertTo<>()`, etc.) 
+> This allows you to configure the locale, null-strings, date-time patterns, and more.
+> 
+> For more details on the parse operation, see the [`parse operation`](parse.md).
+
+### Provide a default type for all columns
+
+While you can provide a `ColType` per column, you might not
+always know how many columns there are or what their names are.
+In such cases, you can disable type inference for all columns
+by providing a default type for all columns:
+
+<!---FUN readDatesWithDefaultType-->
+
+```kotlin
+val df = DataFrame.readCsv(
+    file,
+    colTypes = mapOf(ColType.DEFAULT to ColType.String),
+)
+```
+
+<!---END-->
+
+This default can be combined with specific types for other columns as well.
+
+### Unlocking Deephaven CSV features
+
+For each group of functions (`readCsv`, `readDelim`, `readTsv`, etc.)
+we provide one overload which has the `adjustCsvSpecs` parameter.
+This is an advanced option because it exposes the
+[CsvSpecs.Builder](https://github.com/deephaven/deephaven-csv/blob/main/src/main/java/io/deephaven/csv/CsvSpecs.java)
+of the underlying Deephaven implementation.
+Generally, we don't recommend using this feature unless there's no other way to achieve your goal.
+
+For example, to enable the (unconfigurable but) very fast [ISO DateTime Parser of Deephaven CSV](https://medium.com/@deephavendatalabs/a-high-performance-csv-reader-with-type-inference-4bf2e4baf2d1):
+
+<!---FUN readDatesWithDeephavenDateTimeParser-->
+
+```kotlin
+val df = DataFrame.readCsv(
+    inputStream = file.openStream(),
+    adjustCsvSpecs = { // it: CsvSpecs.Builder
+        it.putParserForName("date", Parsers.DATETIME)
+    },
+)
+```
+
+<!---END-->
 
 ## Read from JSON
 
-To read a JSON file, use the `.readJSON()` function. JSON files can be read from a file or a URL.
+Before you can read data from JSON, make sure you have the following dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-json:$dataframe_version")
+```
+
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+
+To read a JSON file, use the `.readJson()` function. JSON files can be read from a file or a URL.
 
 Note that after reading a JSON with a complex structure, you can get hierarchical
 [`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and [`FrameColumn`](DataColumn.md#framecolumn)s.
@@ -173,8 +318,9 @@ DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 ### Column type inference from JSON
 
 Type inference for JSON is much simpler than for CSV.
-JSON string literals are always supposed to have String type. Number literals
-take different `Number` kinds. Boolean literals are converted to `Boolean`.
+JSON string literals always become a `String`.
+Number literals are converted to a unified `Number` type which will fit all encountered numbers.
+Boolean literals are converted to `Boolean`.
 
 Let's take a look at the following JSON:
 
@@ -218,12 +364,12 @@ The corresponding [`DataFrame`](DataFrame.md) schema is:
 ```text
 A: String
 B: Int
-C: Number
+C: Double
 D: Boolean?
 ```
 
 Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C
-has `Number` type because it's the least common type for `Int` and `Double`.
+has the `Double` type because it's the smallest unified number type for `Int` and `Float`.
 
 ### JSON parsing options
 
@@ -233,8 +379,8 @@ By default, if a type clash occurs when reading JSON, a new column group is crea
 any number of object properties:
 
 "value" will be set to the value of the JSON element if it's a primitive, else it will be `null`.\
-"array" will be set to the array of values if the json element is an array, else it will be `[]`.\
-If the json element is an object, then each property will spread out to its own column in the group, else these columns
+"array" will be set to the array of values if the JSON element is an array, else it will be `[]`.\
+If the JSON element is an object, then each property will spread out to its own column in the group, else these columns
 will be `null`.
 
 In this case `typeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS`.
@@ -377,6 +523,8 @@ Before you can read data from Excel, add the following dependency:
 implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
 ```
 
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+
 To read an Excel spreadsheet, use the `.readExcel()` function. Excel spreadsheets can be read from a file or a URL. Supported
 Excel spreadsheet formats are: xls, xlsx.
 
@@ -426,6 +574,8 @@ Before you can read data from Apache Arrow format, add the following dependency:
 ```kotlin
 implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 ```
+
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
 
 To read Apache Arrow formats, use the `.readArrowFeather()` function:
 

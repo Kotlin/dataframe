@@ -44,6 +44,23 @@ val df = dataFrameOf(
 
 <!---END-->
 
+Create DataFrame with nested columns inplace:
+
+<!---FUN createNestedDataFrameInplace-->
+
+```kotlin
+// DataFrame with 2 columns and 3 rows
+val df = dataFrameOf(
+    "name" to columnOf(
+        "firstName" to columnOf("Alice", "Bob", "Charlie"),
+        "lastName" to columnOf("Cooper", "Dylan", "Daniels"),
+    ),
+    "age" to columnOf(15, 20, 100),
+)
+```
+
+<!---END-->
+
 <!---FUN createDataFrameFromColumns-->
 
 ```kotlin
@@ -145,7 +162,8 @@ Its data schema defines the column that can be used right after the conversion f
 
 ```kotlin
 val names = listOf("Alice", "Bob", "Charlie")
-val df: DataFrame<ValueProperty<String>> = names.toDataFrame()
+// TODO fix with plugin???
+val df = names.toDataFrame() as DataFrame<ValueProperty<String>>
 df.add("length") { value.length }
 ```
 

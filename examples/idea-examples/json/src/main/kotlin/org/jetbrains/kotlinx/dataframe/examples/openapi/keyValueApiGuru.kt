@@ -2,6 +2,7 @@
     // Using just a sample since the full file will cause OOM errors
     path = "src/main/resources/ApiGuruSample.json",
     name = "APIsNoKeyValue",
+    enableExperimentalOpenApi = true,
 )
 @file:ImportDataSchema(
     // Now we can use the full file; either a URL or a local path
@@ -9,8 +10,9 @@
     name = "APIsKeyValue",
     jsonOptions = JsonOptions(
         // paths in the json that should be converted to KeyValue columns
-        keyValuePaths = ["""$""", """$[*]["versions"]"""]
-    )
+        keyValuePaths = ["""$""", """$[*]["versions"]"""],
+    ),
+    enableExperimentalOpenApi = true,
 )
 
 package org.jetbrains.kotlinx.dataframe.examples.openapi

@@ -7,12 +7,10 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.DropNA.DropNASelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.DropNaNs.DropNaNsSelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.DropNulls.DropNullsSelectingOptions
-import org.jetbrains.kotlinx.dataframe.api.Update.UpdateOperationArg
+import org.jetbrains.kotlinx.dataframe.api.Update.UPDATE_OPERATION
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -24,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.documentation.NaN
 import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.typeClass
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.reflect.KProperty
 
 // region fillNulls
@@ -40,7 +40,7 @@ import kotlin.reflect.KProperty
  */
 internal interface FillNulls {
 
-    /** @include [Update.Grammar] {@set [UpdateOperationArg] [**fillNulls**][fillNulls]} */
+    /** @include [Update.Grammar] {@set [UPDATE_OPERATION] [**fillNulls**][fillNulls]} */
     interface Grammar
 
     /**
@@ -50,14 +50,14 @@ internal interface FillNulls {
     interface FillNullsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
+/** {@set [SelectingColumns.OPERATION] [fillNulls][fillNulls]} */
 private interface SetFillNullsOperationArg
 
 /**
  * @include [FillNulls] {@comment Description of the fillNulls operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNulls.FillNullsSelectingOptions]}
+ * {@set [Update.Columns.SELECTING_COLUMNS] [Selecting Columns][FillNulls.FillNullsSelectingOptions]}
  * ### This Fill Nulls Overload
  *
  */
@@ -85,6 +85,10 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.KPropertiesParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T, C?> =
     fillNulls { columns.toColumnSet() }
 
@@ -93,13 +97,39 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Update<T, C?> =
     fillNulls { columns.toColumnSet() }
 
 // endregion
 
+/** Is only `true` if [this] is [Double.NaN] or [Float.NaN]. */
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
 
+/**
+ * Returns `true` if [this] is considered NA.
+ * "NA", in DataFrame, roughly means `null` or `NaN`.
+ *
+ * Overload of `isNA` with contract support.
+ *
+ * @see NA
+ */
+@JvmName("isNaWithContract")
+@Suppress("NOTHING_TO_INLINE")
+@OptIn(ExperimentalContracts::class)
+internal inline fun <T : Any?> T.isNA(): Boolean {
+    contract { returns(false) implies (this@isNA != null) }
+    return isNA
+}
+
+/**
+ * Is `true` if [this] is considered NA.
+ * "NA", in DataFrame, roughly means `null` or `NaN`.
+ * @see NA
+ */
 internal inline val Any?.isNA: Boolean
     get() = when (this) {
         null -> true
@@ -112,10 +142,22 @@ internal inline val Any?.isNA: Boolean
 
 internal inline val AnyCol.canHaveNaN: Boolean get() = typeClass.let { it == Double::class || it == Float::class }
 
+/**
+ * Is `true` when [this] column can have [NA] values.
+ * @see NA
+ */
 internal inline val AnyCol.canHaveNA: Boolean get() = hasNulls() || canHaveNaN || kind() != ColumnKind.Value
 
+/**
+ * Is `true` when [this] is `null` or [Double.NaN].
+ * @see NA
+ */
 internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
 
+/**
+ * Is `true` when [this] is `null` or [Float.NaN].
+ * @see NA
+ */
 internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 
 // region fillNaNs
@@ -132,7 +174,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  */
 internal interface FillNaNs {
 
-    /** @include [Update.Grammar] {@set [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
+    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNaNs][fillNaNs]} */
     interface Grammar
 
     /**
@@ -142,7 +184,7 @@ internal interface FillNaNs {
     interface FillNaNsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
+/** {@set [SelectingColumns.OPERATION] [fillNaNs][fillNaNs]} */
 @ExcludeFromSources
 internal interface SetFillNaNsOperationArg
 
@@ -150,7 +192,7 @@ internal interface SetFillNaNsOperationArg
  * @include [FillNaNs] {@comment Description of the fillNaNs operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
+ * {@set [Update.Columns.SELECTING_COLUMNS] [Selecting Columns][FillNaNs.FillNaNsSelectingOptions]}
  * ### This Fill NaNs Overload
  */
 @ExcludeFromSources
@@ -176,6 +218,10 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> = 
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.KPropertiesParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> = fillNaNs { columns.toColumnSet() }
 
 /**
@@ -183,6 +229,10 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Update<T, C> =
     fillNaNs { columns.toColumnSet() }
 
@@ -202,7 +252,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
  */
 internal interface FillNA {
 
-    /** @include [Update.Grammar] {@set [Update.UpdateOperationArg] [fillNA][fillNA]} */
+    /** @include [Update.Grammar] {@set [Update.UPDATE_OPERATION] [fillNA][fillNA]} */
     interface Grammar
 
     /**
@@ -212,7 +262,7 @@ internal interface FillNA {
     interface FillNASelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [fillNA][fillNA]} */
+/** {@set [SelectingColumns.OPERATION] [fillNA][fillNA]} */
 @ExcludeFromSources
 internal interface SetFillNAOperationArg
 
@@ -220,7 +270,7 @@ internal interface SetFillNAOperationArg
  * @include [FillNA] {@comment Description of the fillNA operation.}
  * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
- * {@set [Update.Columns.SelectingColumnsArg] [Selecting Columns][FillNA.FillNASelectingOptions]}
+ * {@set [Update.Columns.SELECTING_COLUMNS] [Selecting Columns][FillNA.FillNASelectingOptions]}
  * ### This Fill NA Overload
  */
 @ExcludeFromSources
@@ -246,6 +296,10 @@ public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> = fi
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.KPropertiesParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> = fillNA { columns.toColumnSet() }
 
 /**
@@ -253,6 +307,10 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNAOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Update<T, C?> =
     fillNA { columns.toColumnSet() }
 
@@ -305,7 +363,7 @@ internal interface DropNulls {
     interface DropNullsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
+/** {@set [SelectingColumns.OPERATION] [dropNulls][dropNulls]} */
 @ExcludeFromSources
 private interface SetDropNullsOperationArg
 
@@ -348,6 +406,10 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropKPropertiesParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
@@ -368,6 +430,10 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropColumnAccessorsParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
@@ -411,7 +477,7 @@ internal interface DropNA {
     interface DropNASelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [dropNA][dropNA]} */
+/** {@set [SelectingColumns.OPERATION] [dropNA][dropNA]} */
 @ExcludeFromSources
 private interface SetDropNAOperationArg
 
@@ -429,6 +495,8 @@ private interface CommonDropNAFunctionDoc
  * @include [DropNA.WhereAllNAParam]
  * @include [DropDslParam]
  */
+@Refine
+@Interpretable("DropNa0")
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[columns]
     return if (whereAllNA) {
@@ -445,6 +513,10 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: Columns
  * @include [DropNA.WhereAllNAParam]
  * @include [DropKPropertiesParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
@@ -465,6 +537,10 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean =
  * @include [DropNA.WhereAllNAParam]
  * @include [DropColumnAccessorsParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
@@ -518,7 +594,7 @@ internal interface DropNaNs {
     interface DropNaNsSelectingOptions
 }
 
-/** {@set [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */
+/** {@set [SelectingColumns.OPERATION] [dropNaNs][dropNaNs]} */
 @ExcludeFromSources
 private interface SetDropNaNsOperationArg
 
@@ -552,6 +628,10 @@ public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: Colu
  * @include [DropNaNs.WhereAllNaNParam]
  * @include [DropKPropertiesParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: Boolean = false): DataFrame<T> =
     dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
@@ -572,6 +652,10 @@ public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolea
  * @include [DropNaNs.WhereAllNaNParam]
  * @include [DropColumnAccessorsParam]
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
     dropNaNs(whereAllNaN) { columns.toColumnSet() }
 

@@ -3,9 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfKindColumnsSelectionDsl.Grammar.PlainDslName
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -33,7 +31,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      * ## Cols Of Kind Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -43,15 +41,15 @@ public interface ColsOfKindColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ColumnKindDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}**`(`**{@include [DslGrammarTemplate.ColumnKindRef]}**`,`**` ..`**`)`**`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
@@ -88,7 +86,7 @@ public interface ColsOfKindColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonColsOfKindDocs.ExampleArg]}
+     * {@get [CommonColsOfKindDocs.EXAMPLE]}
      *
      * @param [filter\] An optional [predicate][ColumnFilter] to filter the columns of given kind(s) by.
      * @param [kind\] The [kind][ColumnKind] of columns to include.
@@ -102,12 +100,12 @@ public interface ColsOfKindColumnsSelectionDsl {
     private interface CommonColsOfKindDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @set [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[colsOfKind][ColumnSet.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      *
@@ -127,7 +125,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @set [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOfKind][ColumnsSelectionDsl.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
@@ -143,7 +141,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @set [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
@@ -159,7 +157,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @set [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsOfKind][SingleColumn.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
@@ -171,10 +169,14 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @set [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[colsOfKind][KProperty.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.colsOfKind(
         kind: ColumnKind,
         vararg others: ColumnKind,
@@ -183,7 +185,7 @@ public interface ColsOfKindColumnsSelectionDsl {
 
     /**
      * @include [CommonColsOfKindDocs]
-     * @set [CommonColsOfKindDocs.ExampleArg]
+     * @set [CommonColsOfKindDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsOfKind][ColumnPath.colsOfKind]`(`[Value][ColumnKind.Value]`, `[Frame][ColumnKind.Frame]`) }`
      */
@@ -202,9 +204,9 @@ public interface ColsOfKindColumnsSelectionDsl {
  * @param filter The filter function to apply on each column. Must accept a ColumnWithPath object and return a Boolean.
  * @return A [TransformableColumnSet] containing the columns of given kinds that satisfy the filter.
  */
-internal fun ColumnsResolver<*>.columnsOfKindInternal(
+internal inline fun ColumnsResolver<*>.columnsOfKindInternal(
     kinds: Set<ColumnKind>,
-    filter: ColumnFilter<*>,
+    crossinline filter: ColumnFilter<*>,
 ): TransformableColumnSet<*> = colsInternal { it.kind() in kinds && filter(it) }
 
 // endregion

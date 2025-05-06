@@ -28,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.READ_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.SKIP_LINES
 import org.jetbrains.kotlinx.dataframe.documentation.DelimParams.TRIM_INSIDE_QUOTED
 import org.jetbrains.kotlinx.dataframe.impl.io.readDelimImpl
-import org.jetbrains.kotlinx.dataframe.io.Compression
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -44,8 +43,8 @@ import kotlin.io.path.inputStream
 
 /**
  * @include [CommonReadDelimDocs.DelimDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] File
- * @set [CommonReadDelimDocs.DataArg] file
+ * @set [CommonReadDelimDocs.DATA_TITLE] File
+ * @set [CommonReadDelimDocs.DATA] file
  * @include [PATH_READ]
  * @include [DELIM_DELIMITER]
  * @include [COMPRESSION]
@@ -57,7 +56,6 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(path),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -69,6 +67,7 @@ public fun DataFrame.Companion.readDelim(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(path),
 ): DataFrame<*> =
     path.inputStream().use {
         readDelimImpl(
@@ -77,7 +76,6 @@ public fun DataFrame.Companion.readDelim(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -89,14 +87,15 @@ public fun DataFrame.Companion.readDelim(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
 
 /**
  * @include [CommonReadDelimDocs.DelimDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] File
- * @set [CommonReadDelimDocs.DataArg] file
+ * @set [CommonReadDelimDocs.DATA_TITLE] File
+ * @set [CommonReadDelimDocs.DATA] file
  * @include [FILE_READ]
  * @include [DELIM_DELIMITER]
  * @include [COMPRESSION]
@@ -108,7 +107,6 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(file),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -120,6 +118,7 @@ public fun DataFrame.Companion.readDelim(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(file),
 ): DataFrame<*> =
     FileInputStream(file).use {
         readDelimImpl(
@@ -128,7 +127,6 @@ public fun DataFrame.Companion.readDelim(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -140,14 +138,15 @@ public fun DataFrame.Companion.readDelim(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
 
 /**
  * @include [CommonReadDelimDocs.DelimDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] Url
- * @set [CommonReadDelimDocs.DataArg] url
+ * @set [CommonReadDelimDocs.DATA_TITLE] Url
+ * @set [CommonReadDelimDocs.DATA] url
  * @include [DelimParams.URL_READ]
  * @include [DELIM_DELIMITER]
  * @include [COMPRESSION]
@@ -159,7 +158,6 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(url),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -171,6 +169,7 @@ public fun DataFrame.Companion.readDelim(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(url),
 ): DataFrame<*> =
     catchHttpResponse(url) {
         readDelimImpl(
@@ -179,7 +178,6 @@ public fun DataFrame.Companion.readDelim(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -191,14 +189,15 @@ public fun DataFrame.Companion.readDelim(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
 
 /**
  * @include [CommonReadDelimDocs.DelimDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] File or URL
- * @set [CommonReadDelimDocs.DataArg] file or url
+ * @set [CommonReadDelimDocs.DATA_TITLE] File or URL
+ * @set [CommonReadDelimDocs.DATA] file or url
  * @include [FILE_OR_URL_READ]
  * @include [DELIM_DELIMITER]
  * @include [COMPRESSION]
@@ -210,7 +209,6 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = Compression.of(fileOrUrl),
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -222,6 +220,7 @@ public fun DataFrame.Companion.readDelim(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = Compression.of(fileOrUrl),
 ): DataFrame<*> =
     catchHttpResponse(asUrl(fileOrUrl = fileOrUrl)) {
         readDelimImpl(
@@ -230,7 +229,6 @@ public fun DataFrame.Companion.readDelim(
             header = header,
             hasFixedWidthColumns = hasFixedWidthColumns,
             fixedColumnWidths = fixedColumnWidths,
-            compression = compression,
             colTypes = colTypes,
             skipLines = skipLines,
             readLines = readLines,
@@ -242,6 +240,7 @@ public fun DataFrame.Companion.readDelim(
             ignoreSurroundingSpaces = ignoreSurroundingSpaces,
             trimInsideQuoted = trimInsideQuoted,
             parseParallel = parseParallel,
+            compression = compression,
             adjustCsvSpecs = ADJUST_CSV_SPECS,
         )
     }
@@ -249,8 +248,8 @@ public fun DataFrame.Companion.readDelim(
 /**
  * {@comment the only one with adjustCsvSpecs}
  * @include [CommonReadDelimDocs.DelimDocs]
- * @set [CommonReadDelimDocs.DataTitleArg] InputStream
- * @set [CommonReadDelimDocs.DataArg] input stream
+ * @set [CommonReadDelimDocs.DATA_TITLE] InputStream
+ * @set [CommonReadDelimDocs.DATA] input stream
  * @include [INPUT_STREAM_READ]
  * @include [DELIM_DELIMITER]
  * @include [COMPRESSION]
@@ -263,7 +262,6 @@ public fun DataFrame.Companion.readDelim(
     header: List<String> = HEADER,
     hasFixedWidthColumns: Boolean = HAS_FIXED_WIDTH_COLUMNS,
     fixedColumnWidths: List<Int> = FIXED_COLUMN_WIDTHS,
-    compression: Compression<*> = COMPRESSION,
     colTypes: Map<String, ColType> = COL_TYPES,
     skipLines: Long = SKIP_LINES,
     readLines: Long? = READ_LINES,
@@ -275,6 +273,7 @@ public fun DataFrame.Companion.readDelim(
     ignoreSurroundingSpaces: Boolean = IGNORE_SURROUNDING_SPACES,
     trimInsideQuoted: Boolean = TRIM_INSIDE_QUOTED,
     parseParallel: Boolean = PARSE_PARALLEL,
+    compression: Compression<*> = COMPRESSION,
     adjustCsvSpecs: AdjustCsvSpecs = ADJUST_CSV_SPECS,
 ): DataFrame<*> =
     readDelimImpl(
@@ -283,7 +282,6 @@ public fun DataFrame.Companion.readDelim(
         header = header,
         hasFixedWidthColumns = hasFixedWidthColumns,
         fixedColumnWidths = fixedColumnWidths,
-        compression = compression,
         colTypes = colTypes,
         skipLines = skipLines,
         readLines = readLines,
@@ -295,5 +293,6 @@ public fun DataFrame.Companion.readDelim(
         ignoreSurroundingSpaces = ignoreSurroundingSpaces,
         trimInsideQuoted = trimInsideQuoted,
         parseParallel = parseParallel,
+        compression = compression,
         adjustCsvSpecs = adjustCsvSpecs,
     )

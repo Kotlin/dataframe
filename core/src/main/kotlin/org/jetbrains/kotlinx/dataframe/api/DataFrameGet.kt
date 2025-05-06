@@ -4,10 +4,12 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -58,17 +60,51 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColu
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> =
     get(columnPath).asColumnGroup()
 
+/**
+ * Utility property to access scope with only dataframe column properties for code completion,
+ * filtering out DataFrame API.
+ *
+ * It's a quick way to check that code generation in notebooks or compiler plugin
+ * worked as expected or find columns you're interested in.
+ *
+ * In notebooks:
+ * ```
+ * val df = DataFrame.read("file.csv")
+ * ==== next code cell
+ * df. // column properties are mixed together with methods, not easy to find unless you already know names
+ * df.properties(). // easy to overview available columns
+ * ```
+ * In compiler plugin:
+ * ```
+ * val df = @Import DataFrame.read("file.csv")
+ * df.properties().
+ * ```
+ */
+public fun <T> DataFrame<T>.properties(): ColumnsScope<T> = this
+
 // region getColumn
 
 public fun <T> ColumnsContainer<T>.getColumn(name: String): AnyCol =
     getColumnOrNull(name) ?: throw IllegalArgumentException("Column not found: '$name'")
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
     getColumnOrNull(column)?.asFrameColumn() ?: throw IllegalArgumentException("FrameColumn not found: '$column'")
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<DataRow<R>>): ColumnGroup<R> =
     getColumnOrNull(column)?.asColumnGroup() ?: throw IllegalArgumentException("ColumnGroup not found: '$column'")
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<R>): DataColumn<R> =
     getColumnOrNull(column) ?: throw IllegalArgumentException("Column not found: '$column'")
 
@@ -89,9 +125,17 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(index: Int): ColumnGroup<*> = 
 
 public fun <T> ColumnsContainer<T>.getColumnGroup(name: String): ColumnGroup<*> = getColumn(name).asColumnGroup()
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnsContainer<T>.getColumnGroup(column: KProperty<*>): ColumnGroup<*> =
     getColumnGroup(column.columnName)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnReference<DataRow<C>>): ColumnGroup<C> =
     getColumn(column)
 
@@ -105,6 +149,10 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, D
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? =
     getColumnOrNull(name)?.asColumnGroup()
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): ColumnGroup<*>? =
     getColumnGroupOrNull(column.columnName)
 
@@ -112,12 +160,28 @@ public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): C
 
 // region containsColumn
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <C> ColumnsContainer<*>.containsColumn(column: ColumnReference<C>): Boolean = getColumnOrNull(column) != null
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun ColumnsContainer<*>.containsColumn(column: KProperty<*>): Boolean = containsColumn(column.columnName)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public operator fun ColumnsContainer<*>.contains(column: AnyColumnReference): Boolean = containsColumn(column)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean = containsColumn(column)
 
 // region rows

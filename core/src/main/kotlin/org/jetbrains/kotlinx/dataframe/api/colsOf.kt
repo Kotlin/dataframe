@@ -4,11 +4,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ColsOfColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
@@ -36,7 +33,7 @@ public interface ColsOfColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.SingleColumnDef]}
@@ -52,16 +49,16 @@ public interface ColsOfColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.KTypeDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}**`<`**{@include [DslGrammarTemplate.ColumnTypeRef]}**`>`**`  [  `**`(`**{@include [DslGrammarTemplate.KTypeRef]}**`)`**`  ] [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
      * {@comment We need to deviate from the template here, since we have overload discrepancies.}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]
      *  {@include [LineBreak]}
      *  ### On a column group reference:
      *
@@ -156,6 +153,10 @@ public interface ColsOfColumnsSelectionDsl {
      * @include [CommonColsOfDocs.FilterParam]
      * @include [CommonColsOfDocs.Return]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun <C> KProperty<*>.colsOf(type: KType, filter: ColumnFilter<C> = { true }): ColumnSet<*> =
         columnGroup(this).colsOf(type, filter)
 
@@ -252,6 +253,7 @@ public fun <C> SingleColumn<DataRow<*>>.colsOf(
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.FilterParam]
  * @include [ColsOfColumnsSelectionDsl.CommonColsOfDocs.Return]
  */
+@Interpretable("ColsOf2")
 public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
     noinline filter: ColumnFilter<C> = { true },
 ): TransformableColumnSet<C> = colsOf(typeOf<C>(), filter)
@@ -265,7 +267,10 @@ public inline fun <reified C> SingleColumn<DataRow<*>>.colsOf(
  * match the given [filter] and are the given [type].
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <C> ColumnsResolver<*>.colsOfInternal(type: KType, filter: ColumnFilter<C>): TransformableColumnSet<C> =
+internal inline fun <C> ColumnsResolver<*>.colsOfInternal(
+    type: KType,
+    crossinline filter: ColumnFilter<C>,
+): TransformableColumnSet<C> =
     colsInternal {
         it.isSubtypeOf(type) && filter(it.cast())
     } as TransformableColumnSet<C>

@@ -3,16 +3,10 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamNameArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ParamTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.CommonRenameDocs.ReceiverTypeArg
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixIntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.InfixNamedName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.IntoName
-import org.jetbrains.kotlinx.dataframe.api.RenameColumnsSelectionDsl.Grammar.NamedName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -21,8 +15,6 @@ import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
-import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
@@ -30,6 +22,8 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
+@Refine
+@Interpretable("RenameMapping")
 public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> =
     rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
         .into(*mappings.map { it.second }.toTypedArray())
@@ -37,9 +31,17 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
 @Interpretable("Rename")
 public fun <T, C> DataFrame<T>.rename(columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.rename(vararg cols: ColumnReference<C>): RenameClause<T, C> =
     rename { cols.toColumnSet() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T, C> = rename { cols.toColumnSet() }
 
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumnSet() }
@@ -50,22 +52,49 @@ public class RenameClause<T, C>(internal val df: DataFrame<T>, internal val colu
 }
 
 /**
- * ## Rename to camelCase
+ * ## Rename to "camelCase"
  *
- * This function renames all columns to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
- * and converting the first char to lowercase.
- * Even [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
+ * This function renames all columns in this [DataFrame] to the "camelCase" format.
+ *
+ * Removes all delimiters between words and capitalizes each word except the first one.
+ * Adds an underscore between consecutive numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
+ *
+ * This function supports converting names from `snake_case`, `PascalCase`, and other delimited formats
+ * into a consistent "camelCase" representation.
+ *
+ * [DataFrames][DataFrame] inside [FrameColumns][FrameColumn] are traversed recursively.
+ *
+ * Returns a [DataFrame] with updated column names.
+ *
+ * ### Examples:
+ * ```
+ * "snake_case_name" -> "snakeCaseName"
+ * "PascalCaseName" -> "pascalCaseName"
+ * "doner-case-name" -> "donerCaseName"
+ * "UPPER_CASE_NAME -> upperCaseName"
+ * ```
+ *
+ * @return a [DataFrame] with column names converted to "camelCase" format.
  */
+@Refine
+@Interpretable("RenameToCamelCase")
 public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> =
     // recursively rename all columns written with delimiters or starting with a capital to camel case
     rename {
-        colsAtAnyDepth { it.name() matches DELIMITED_STRING_REGEX || it.name[0].isUpperCase() }
+        colsAtAnyDepth()
     }.toCamelCase()
         // take all frame columns at any depth and call renameToCamelCase() on all dataframes inside
         .update {
             colsAtAnyDepth().colsOf<AnyFrame>()
-        }.with { it.renameToCamelCase() }
+        }.with {
+            it.renameToCamelCase()
+        }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 
@@ -73,6 +102,10 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
 @Interpretable("RenameInto")
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = renameImpl(newNames)
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFrame<T> =
     into(*newNames.map { it.name }.toTypedArray())
 
@@ -80,21 +113,63 @@ public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> Stri
     renameImpl(transform)
 
 /**
- * ## Rename to camelCase
+ * ## Rename to "camelCase"
  *
- * Renames the selected columns to `camelCase` by replacing all [delimiters][DELIMITERS_REGEX]
- * and converting the first char to lowercase.
+ * Renames the columns, previously selected with [rename] to "camelCase" format.
+ * All delimiters between words are removed, words are capitalized except for the first one.
+ * Places underscore between numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
+ *
+ * Returns a [DataFrame] with updated column names.
+ *
+ * This function supports converting names from `snake_case`, `PascalCase`, and other delimited formats
+ * into a consistent "camelCase" representation.
+ *
+ * ### Examples:
+ * ```
+ * "snake_case_name" -> "snakeCaseName"
+ * "PascalCaseName" -> "pascalCaseName"
+ * "doner-case-name" -> "donerCaseName"
+ * "UPPER_CASE_NAME -> upperCaseName"
+ * ```
+ *
+ * @return a [DataFrame] with column names converted to "camelCase" format.
  */
-public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
-    into {
-        it.name()
-            .toCamelCaseByDelimiters(DELIMITERS_REGEX)
-            .replaceFirstChar { it.lowercaseChar() }
-    }
+@Refine
+@Interpretable("RenameToCamelCaseClause")
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> = into { it.renameToCamelCase().name() }
 
 // endregion
 
 // region DataColumn
+
+/**
+ * ## Rename to camelCase
+ *
+ * Renames this column to "camelCase" format.
+ * All delimiters between words are removed, words are capitalized except for the first one.
+ * Places underscore between numbers.
+ * If the string does not contain any letters or numbers, it remains unchanged.
+ *
+ * Returns a [ColumnReference] with updated name.
+ *
+ * This function supports converting names from `snake_case`, `PascalCase`, and other delimited formats
+ * into a consistent "camelCase" representation.
+ *
+ * ### Examples:
+ * ```
+ * "snake_case_name" -> "snakeCaseName"
+ * "PascalCaseName" -> "pascalCaseName"
+ * "doner-case-name" -> "donerCaseName"
+ * "UPPER_CASE_NAME -> upperCaseName"
+ * ```
+ * @return a [ColumnReference] with the name converted to "camelCase" format.
+ */
+@Suppress("UNCHECKED_CAST")
+public fun <T, C : ColumnReference<T>> C.renameToCamelCase(): C =
+    rename(
+        this.name().toCamelCaseByDelimiters(),
+    ) as C
 
 @Suppress("UNCHECKED_CAST")
 public fun <T, C : ColumnReference<T>> C.rename(column: KProperty<T>): C = rename(column.columnName) as C
@@ -128,11 +203,11 @@ public interface RenameColumnsSelectionDsl {
      * ## Rename: `named` / `into` Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [DslGrammarTemplate.ColumnRef]}` `{@include [InfixNamedName]}`/`{@include [InfixIntoName]}` `{@include [DslGrammarTemplate.ColumnRef]}
      *
      *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [NamedName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
@@ -140,8 +215,8 @@ public interface RenameColumnsSelectionDsl {
      *  `| `{@include [DslGrammarTemplate.ColumnRef]}{@include [IntoName]}**`(`**{@include [DslGrammarTemplate.ColumnRef]}**`)`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
-     * {@set [DslGrammarTemplate.ColumnSetPart]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
      */
     public interface Grammar {
 
@@ -177,71 +252,72 @@ public interface RenameColumnsSelectionDsl {
      *
      * #### Example for this overload:
      *
-     * `df.`[select][DataFrame.select]`  { {@get [CommonRenameDocs.ReceiverArg]}  `[{@get [CommonRenameDocs.FunctionNameArg]}][{@get [CommonRenameDocs.ReceiverTypeArg]}.{@get [CommonRenameDocs.FunctionNameArg]}]` {@get [CommonRenameDocs.ParamArg]} }`
+     * `df.`[select][DataFrame.select]`  { {@get [CommonRenameDocs.RECEIVER]}  `[{@get [CommonRenameDocs.FUNCTION_NAME]}][{@get [CommonRenameDocs.RECEIVER_TYPE]}.{@get [CommonRenameDocs.FUNCTION_NAME]}]` {@get [CommonRenameDocs.PARAM]} }`
      *
-     * @receiver The [{@get [ReceiverTypeArg]}] referencing the column to rename.
-     * @param [{@get [ParamNameArg]}\] A [{@get [ParamTypeArg]}\] used to specify the new name of the column.
+     * @receiver The [{@get [RECEIVER_TYPE]}] referencing the column to rename.
+     * @param [{@get [PARAM_NAME]}\] A [{@get [PARAM_TYPE]}\] used to specify the new name of the column.
      * @return A [ColumnReference] to the renamed column.
      */
+    @Suppress("ClassName")
     private interface CommonRenameDocs {
 
-        interface ReceiverArg
+        interface RECEIVER
 
-        interface ReceiverTypeArg
+        interface RECEIVER_TYPE
 
         /** "named" or "into" */
-        interface FunctionNameArg
+        interface FUNCTION_NAME
 
         /** "newName" or "nameOf" */
-        interface ParamNameArg
+        interface PARAM_NAME
 
-        interface ParamArg
+        interface PARAM
 
-        interface ParamTypeArg
+        interface PARAM_TYPE
 
         /**
-         * @set [ReceiverArg] columnA
-         * @set [ReceiverTypeArg] ColumnReference
+         * @set [RECEIVER] columnA
+         * @set [RECEIVER_TYPE] ColumnReference
          */
         interface ColumnReferenceReceiver
 
         /**
-         * @set [ReceiverArg] "columnA"
-         * @set [ReceiverTypeArg] String
+         * @set [RECEIVER] "columnA"
+         * @set [RECEIVER_TYPE] String
          */
         interface StringReceiver
 
         /**
-         * @set [ReceiverArg] Type::columnA
-         * @set [ReceiverTypeArg] KProperty
+         * @set [RECEIVER] Type::columnA
+         * @set [RECEIVER_TYPE] KProperty
          */
         interface KPropertyReceiver
 
         /**
-         * @set [ParamArg] columnB
-         * @set [ParamNameArg] nameOf
-         * @set [ParamTypeArg] ColumnReference
+         * @set [PARAM] columnB
+         * @set [PARAM_NAME] nameOf
+         * @set [PARAM_TYPE] ColumnReference
          */
         interface ColumnReferenceParam
 
         /**
-         * @set [ParamArg] "columnB"
-         * @set [ParamNameArg] newName
-         * @set [ParamTypeArg] String
+         * @set [PARAM] "columnB"
+         * @set [PARAM_NAME] newName
+         * @set [PARAM_TYPE] String
          */
         interface StringParam
 
         /**
-         * @set [ParamArg] Type::columnB
-         * @set [ParamNameArg] nameOf
-         * @set [ParamTypeArg] KProperty
+         * @set [PARAM] Type::columnB
+         * @set [PARAM_NAME] nameOf
+         * @set [PARAM_TYPE] KProperty
          */
         interface KPropertyParam
 
-        /** @set [CommonRenameDocs.FunctionNameArg] named */
+        /** @set [CommonRenameDocs.FUNCTION_NAME] named */
         interface NamedFunctionName
 
-        /** @set [CommonRenameDocs.FunctionNameArg] into */
+        /** @set [CommonRenameDocs.FUNCTION_NAME] into */
         interface IntoFunctionName
     }
 
@@ -253,6 +329,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @Interpretable("Named0")
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
 
     /**
@@ -261,6 +338,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf.name)
 
     /**
@@ -269,6 +350,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.named(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf.columnName)
 
     /**
@@ -285,6 +370,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun String.named(nameOf: ColumnReference<*>): ColumnReference<*> =
         toColumnAccessor().named(nameOf.name)
 
@@ -294,6 +383,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun String.named(nameOf: KProperty<*>): ColumnReference<*> =
         toColumnAccessor().named(nameOf.columnName)
 
@@ -303,6 +396,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(newName: String): ColumnReference<C> = toColumnAccessor().named(newName)
 
     /**
@@ -311,6 +408,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(nameOf: ColumnReference<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.name)
 
@@ -320,6 +421,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.named(nameOf: KProperty<*>): ColumnReference<C> =
         toColumnAccessor().named(nameOf.columnName)
 
@@ -333,6 +438,7 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @Interpretable("Named0")
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
 
     /**
@@ -341,6 +447,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -349,6 +459,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.ColumnReferenceReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -365,6 +479,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun String.into(nameOf: ColumnReference<*>): ColumnReference<*> = named(nameOf)
 
     /**
@@ -373,6 +491,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.StringReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun String.into(nameOf: KProperty<*>): ColumnReference<*> = named(nameOf)
 
     /**
@@ -381,6 +503,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.StringParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(newName: String): ColumnReference<C> = named(newName)
 
     /**
@@ -389,6 +515,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.ColumnReferenceParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: ColumnReference<*>): ColumnReference<C> = named(nameOf)
 
     /**
@@ -397,6 +527,10 @@ public interface RenameColumnsSelectionDsl {
      * @include [CommonRenameDocs.KPropertyReceiver]
      * @include [CommonRenameDocs.KPropertyParam]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.into(nameOf: KProperty<*>): ColumnReference<C> = named(nameOf)
 
     // endregion

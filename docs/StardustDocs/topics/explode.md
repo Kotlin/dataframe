@@ -28,18 +28,6 @@ Explode [`DataFrame`](DataFrame.md):
 
 <!---FUN explode-->
 <tabs>
-<tab title="Accessors">
-
-```kotlin
-val a by columnOf(1, 2)
-val b by columnOf(listOf(1, 2), listOf(3, 4))
-
-val df = dataFrameOf(a, b)
-
-df.explode { b }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -19,7 +21,7 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
+public inline fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
 
 public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> =
     when {
@@ -57,13 +59,13 @@ public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
 /**
  * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
  */
-public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
+public inline fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 
 /**
  * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
  */
-public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
-    firstOrNull { !predicate(it, it) }?.let { drop(it.index) } ?: this
+public inline fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> =
+    firstOrNull { !predicate(it, it) }?.let { drop(it.index()) } ?: this
 
 // endregion
 
@@ -83,6 +85,8 @@ public interface DropColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -100,6 +104,9 @@ public interface DropColumnsSelectionDsl {
      *
      *  `number: `[`Int`][Int]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -110,6 +117,9 @@ public interface DropColumnsSelectionDsl {
      *  [**`drop`**][ColumnsSelectionDsl.drop]`(`[**`Last`**][ColumnsSelectionDsl.dropLast]`)`**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
      *  `| `[**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -124,6 +134,9 @@ public interface DropColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][ColumnsSelectionDsl.dropWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastWhile]`)`[**`While`**][ColumnsSelectionDsl.dropWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -136,11 +149,6 @@ public interface DropColumnsSelectionDsl {
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`drop`**][ColumnsSelectionDsl.dropCols]`(`[**`Last`**][ColumnsSelectionDsl.dropLastCols]`)`[**`Cols`**][ColumnsSelectionDsl.dropCols]**`(`**[`number`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.NumberDef]**`)`**
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;`| `__`.`__[**`drop`**][ColumnsSelectionDsl.dropColsWhile]`(`[**`Last`**][ColumnsSelectionDsl.dropLastColsWhile]`)`[**`ColsWhile`**][ColumnsSelectionDsl.dropColsWhile]**`  {  `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -188,7 +196,7 @@ public interface DropColumnsSelectionDsl {
      * ### Check out: [Grammar]
      *
      * #### Examples:
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[drop][ColumnSet.drop]`(5) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[drop][ColumnsSelectionDsl.drop]`(1) }`
      *
@@ -237,6 +245,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
+    @Interpretable("Drop0")
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
 
     /**
@@ -269,6 +278,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
+    @Interpretable("Drop1")
     public fun ColumnsSelectionDsl<*>.drop(n: Int): ColumnSet<*> = asSingleColumn().dropCols(n)
 
     /**
@@ -301,6 +311,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
+    @Interpretable("Drop2")
     public fun SingleColumn<DataRow<*>>.dropCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().drop(n) }
 
@@ -366,6 +377,10 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first [n] columns.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropCols(n: Int): ColumnSet<*> = columnGroup(this).dropCols(n)
 
     /**
@@ -419,7 +434,7 @@ public interface DropColumnsSelectionDsl {
      * ### Check out: [Grammar]
      *
      * #### Examples:
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[cols][ColumnsSelectionDsl.cols]` { "my" `[in][String.contains]` it.`[name][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[dropLast][ColumnSet.dropLast]`(5) }`
      *
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[dropLast][ColumnsSelectionDsl.dropLast]`(1) }`
      *
@@ -468,6 +483,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
+    @Interpretable("DropLast0")
     public fun <C> ColumnSet<C>.dropLast(n: Int = 1): ColumnSet<C> = transform { it.dropLast(n) }
 
     /**
@@ -500,6 +516,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
+    @Interpretable("DropLast1")
     public fun ColumnsSelectionDsl<*>.dropLast(n: Int = 1): ColumnSet<*> = this.asSingleColumn().dropLastCols(n)
 
     /**
@@ -532,6 +549,7 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
+    @Interpretable("DropLast2")
     public fun SingleColumn<DataRow<*>>.dropLastCols(n: Int): ColumnSet<*> =
         this.ensureIsColumnGroup().transformSingle { it.cols().dropLast(n) }
 
@@ -597,6 +615,10 @@ public interface DropColumnsSelectionDsl {
      * @param [n] The number of columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last [n] columns.
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropLastCols(n: Int): ColumnSet<*> = columnGroup(this).dropLastCols(n)
 
     /**
@@ -651,11 +673,11 @@ public interface DropColumnsSelectionDsl {
      * ### Check out: [Usage]
      *
      * #### Examples:
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -684,9 +706,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -718,9 +740,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -750,9 +772,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -782,9 +804,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -814,9 +836,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -825,6 +847,10 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the first columns adhering to the [predicate].
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropColsWhile(predicate)
 
@@ -846,9 +872,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropWhile`][ColumnSet.dropWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropWhile`][SingleColumn.dropColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropColsWhile`][String.dropColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -880,11 +906,11 @@ public interface DropColumnsSelectionDsl {
      * ### Check out: [Usage]
      *
      * #### Examples:
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -913,9 +939,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -947,9 +973,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -979,9 +1005,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -1011,9 +1037,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -1043,9 +1069,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *
@@ -1056,6 +1082,10 @@ public interface DropColumnsSelectionDsl {
      * @param [predicate] The [ColumnFilter][org.jetbrains.kotlinx.dataframe.ColumnFilter] to control which columns to drop.
      * @return A [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet] containing the last columns adhering to the [predicate].
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.dropLastColsWhile(predicate: ColumnFilter<*>): ColumnSet<*> =
         columnGroup(this).dropLastColsWhile(predicate)
 
@@ -1077,9 +1107,9 @@ public interface DropColumnsSelectionDsl {
      * #### Examples:
      * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { `[`cols`][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` }.`[`dropLastWhile`][ColumnSet.dropLastWhile]` { "my" `[`in`][String.contains]` it.`[`name`][org.jetbrains.kotlinx.dataframe.DataColumn.name]` } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][org.jetbrains.kotlinx.dataframe.DataColumn.any]` { it == "Alice" } } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { myColumnGroup.`[`dropLastWhile`][SingleColumn.dropLastColsWhile]` { it.`[`any`][ColumnWithPath.any]` { it == "Alice" } } }`
      *
-     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][org.jetbrains.kotlinx.dataframe.DataColumn.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
+     * `df.`[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { "myColumnGroup".`[`dropLastColsWhile`][String.dropLastColsWhile]` { it.`[`kind`][ColumnWithPath.kind]`() == `[`ColumnKind.Value`][org.jetbrains.kotlinx.dataframe.columns.ColumnKind.Value]` } }`
      *
      * #### Examples for this overload:
      *

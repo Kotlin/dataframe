@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnDescription
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
-import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
@@ -20,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.percentileOrNull
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.valuesAreComparable
@@ -28,7 +28,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.isBigNumber
+import org.jetbrains.kotlinx.dataframe.impl.isPrimitiveNumber
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.kind
@@ -62,8 +62,14 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             ColumnDescription::min from inferType {
                 it.convertToComparableOrNull()?.minOrNull()
             }
+            ColumnDescription::p25 from inferType {
+                it.convertToComparableOrNull()?.percentileOrNull(25.0)
+            }
             ColumnDescription::median from inferType {
                 it.convertToComparableOrNull()?.medianOrNull()
+            }
+            ColumnDescription::p75 from inferType {
+                it.convertToComparableOrNull()?.percentileOrNull(75.0)
             }
             ColumnDescription::max from inferType {
                 it.convertToComparableOrNull()?.maxOrNull()
@@ -104,17 +110,20 @@ private fun List<AnyCol>.collectAll(atAnyDepth: Boolean): List<AnyCol> =
     }
 
 /** Converts a column to a comparable column if it is not already comparable. */
-private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<Any?>>? =
-    when {
+@Suppress("UNCHECKED_CAST")
+private fun DataColumn<Any?>.convertToComparableOrNull(): DataColumn<Comparable<Any>?>? {
+    return when {
         valuesAreComparable() -> asComparable()
 
-        // Found incomparable number types, convert all to Double or BigDecimal first
-        isNumber() ->
-            if (any { it?.isBigNumber() == true }) {
-                map { (it as Number?)?.toBigDecimal() }
-            } else {
-                map { (it as Number?)?.toDouble() }
-            }.cast()
+        // Found incomparable number types, convert all to Double first
+        isNumber() -> cast<Number?>().map {
+            if (it?.isPrimitiveNumber() == false) {
+                // Cannot calculate statistics of a non-primitive number type
+                return@convertToComparableOrNull null
+            }
+            it?.toDouble() as Comparable<Any>?
+        }
 
         else -> null
     }
+}

@@ -7,8 +7,8 @@ import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
@@ -18,11 +18,11 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.CsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
-import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.TsvDeephaven
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlQuery
 import org.jetbrains.kotlinx.dataframe.io.getSchemaForSqlTable
 import org.jetbrains.kotlinx.dataframe.io.isUrl
@@ -65,6 +65,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:Input
     abstract val delimiters: SetProperty<Char>
 
+    @get:Input
+    abstract val enableExperimentalOpenApi: Property<Boolean>
+
     @Suppress("LeakingThis")
     @get:OutputFile
     val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
@@ -103,7 +106,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                         DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
                         DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                         DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
-                        else -> MarkerVisibility.IMPLICIT_PUBLIC
                     },
                     readDfMethod = null,
                     fieldNameNormalizer = NameNormalizer.from(delimiters),
@@ -115,14 +117,17 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         } else {
             val url = urlOf(data.get())
 
-            val formats = listOf(
-                // TODO new Csv() and Tsv()
-                CSV(delimiter = csvOptions.delimiter),
-                JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
+            val formats = listOfNotNull(
+                CsvDeephaven(delimiter = csvOptions.delimiter),
+                JSON(
+                    typeClashTactic = jsonOptions.typeClashTactic,
+                    keyValuePaths = jsonOptions.keyValuePaths,
+                    unifyNumbers = jsonOptions.unifyNumbers,
+                ),
                 Excel(),
-                TSV(),
+                TsvDeephaven(),
                 ArrowFeather(),
-                OpenApi(),
+                if (enableExperimentalOpenApi.get()) OpenApi() else null,
             )
 
             // first try without creating dataframe
@@ -166,7 +171,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                     DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
                     DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                     DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
-                    else -> MarkerVisibility.IMPLICIT_PUBLIC
                 },
                 readDfMethod = readDfMethod,
                 fieldNameNormalizer = NameNormalizer.from(delimiters),

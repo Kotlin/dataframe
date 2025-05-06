@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -20,7 +21,7 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
+public inline fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
     indices
         .filter { predicate(get(it)) }
         .let { get(it) }
@@ -29,8 +30,8 @@ public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> =
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
-    indices.filter {
+public inline fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
+    indices().filter {
         val row = get(it)
         predicate(row, row)
     }.let { get(it) }
@@ -40,8 +41,16 @@ public fun <T> DataFrame<T>.filterBy(column: ColumnSelector<T, Boolean>): DataFr
 
 public fun <T> DataFrame<T>.filterBy(column: String): DataFrame<T> = filterBy { column.toColumnOf() }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: ColumnReference<Boolean>): DataFrame<T> = filterBy { column }
 
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
+@AccessApiOverload
 public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> = filterBy { column.toColumnAccessor() }
 
 // endregion
@@ -65,6 +74,8 @@ public interface FilterColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -73,6 +84,9 @@ public interface FilterColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
+     *
+     *
+     *
      *
      *
      *
@@ -86,11 +100,6 @@ public interface FilterColumnsSelectionDsl {
      *  [`columnSet`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnSetDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`filter`**][org.jetbrains.kotlinx.dataframe.api.FilterColumnsSelectionDsl.filter]**` { `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**
-     *
-     *
-     *
-     *
-     *
      *
      *
      *

@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.Merge
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addAll
@@ -47,7 +48,6 @@ import org.jetbrains.kotlinx.dataframe.api.countDistinct
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.describe
-import org.jetbrains.kotlinx.dataframe.api.digitize
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.div
@@ -106,8 +106,8 @@ import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
-import org.jetbrains.kotlinx.dataframe.api.moveToLeft
-import org.jetbrains.kotlinx.dataframe.api.moveToRight
+import org.jetbrains.kotlinx.dataframe.api.moveToEnd
+import org.jetbrains.kotlinx.dataframe.api.moveToStart
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
@@ -121,7 +121,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -142,11 +141,11 @@ import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDouble
+import org.jetbrains.kotlinx.dataframe.api.toEnd
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.api.toListOf
 import org.jetbrains.kotlinx.dataframe.api.toMap
-import org.jetbrains.kotlinx.dataframe.api.toRight
 import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
 import org.jetbrains.kotlinx.dataframe.api.transpose
@@ -181,7 +180,6 @@ import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -189,9 +187,9 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
-import java.lang.reflect.Type
 import java.math.BigDecimal
 import java.time.LocalDate
+import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
@@ -689,14 +687,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `move several columns to left`() {
-        val moved = typed.moveToLeft { weight and age }
+        val moved = typed.moveToStart { weight and age }
         val expected = typed.select { cols(weight, age, name, city) }
         moved shouldBe expected
     }
 
     @Test
     fun `move several columns to right`() {
-        val moved = typed.moveToRight { weight and name }
+        val moved = typed.moveToEnd { weight and name }
         val expected = typed.select { cols(age, city, weight, name) }
         moved shouldBe expected
     }
@@ -739,7 +737,7 @@ class DataFrameTests : BaseTest() {
             this["name"].toList() shouldBe listOf("Alice", "Bob", "Charlie")
             this["n"].toList() shouldBe listOf(2, 2, 3)
             this["old count"].toList() shouldBe listOf(0, 2, 2)
-            this["median age"].toList() shouldBe listOf(17, 37, 30)
+            this["median age"].toList() shouldBe listOf(17.5, 37.5, 30.0)
             this["min age"].toList() shouldBe listOf(15, 30, 20)
             this["oldest origin"].toList() shouldBe listOf(null, "Dubai", "Milan")
             this["youngest origin"].toList() shouldBe listOf("London", "Tokyo", "Moscow")
@@ -956,16 +954,9 @@ class DataFrameTests : BaseTest() {
 
         fun check(body: () -> AnyFrame) = body().columnNames() shouldBe expected
 
-        check { typed - { age } }
-        check { typed - { it.age } }
         check { typed.remove { age } }
         check { typed.remove { it.age } }
-
-        check { df - { age } }
-        check { df - age }
         check { df.remove(age) }
-
-        check { df - "age" }
         check { df.remove("age") }
     }
 
@@ -975,20 +966,14 @@ class DataFrameTests : BaseTest() {
 
         fun check(body: () -> AnyFrame) = body().columnNames() shouldBe expected
 
-        check { typed - { age and weight } }
-        check { typed - { it.age and it.weight } }
-        check { typed - { age } - { weight } }
-        check { typed - { it.age } - { it.weight } }
+        check { typed.remove { age }.remove { weight } }
+        check { typed.remove { it.age }.remove { it.weight } }
         check { typed.remove { age and weight } }
         check { typed.remove { it.age and it.weight } }
-
-        check { df - { age and weight } }
-        check { df - age - weight }
-        check { df - { age } - { weight } }
         check { df.remove(age, weight) }
 
-        check { df - { "age" and "weight" } }
-        check { df - "age" - "weight" }
+        check { df.remove { "age" and "weight" } }
+        check { df.remove { "age"() }.remove { "weight"() } }
         check { df.remove("age", "weight") }
     }
 
@@ -1143,7 +1128,7 @@ class DataFrameTests : BaseTest() {
         val cities = filtered.city.toList().map { it!!.lowercase() }
         val gathered =
             res.gather { colsOf<Boolean> { cities.contains(it.name()) } }.where { it }.keysInto("city")
-        val expected = filtered.select { name and age and city.map { it!!.lowercase() } }.moveToRight { city }
+        val expected = filtered.select { name and age and city.map { it!!.lowercase() } }.moveToEnd { city }
         gathered shouldBe expected
     }
 
@@ -1191,8 +1176,9 @@ class DataFrameTests : BaseTest() {
             .split { others }.intoRows()
             .add(sum) { name.length + other().length }
 
-        val matrix = src.pivot { other }.groupBy { name }.with { sum }
+        val matrix = src.pivot { other }.groupBy { name }.with { sum() }
         matrix.getColumnGroup(other.name()).ncol shouldBe names.size
+        matrix.getColumnGroup(other.name())["Alice"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
@@ -1413,6 +1399,35 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `merge into temp`() {
+        dataFrameOf("a", "b", "temp")(1, null, 3)
+            .merge { cols("a", "b") }.into("b")
+    }
+
+    inline fun <T, reified C, R> Merge<T, C, R>.typeOfElement() = typeOf<C>()
+
+    @Test
+    fun `merge not null`() {
+        val merge = dataFrameOf("a", "b")(1, null).merge { col("a") }
+        merge.typeOfElement() shouldBe typeOf<Any?>()
+        merge.notNull().typeOfElement() shouldBe typeOf<Any>()
+    }
+
+    inline fun <reified T> List<T>.typeOfElement(): KType = typeOf<List<T>>().arguments[0].type!!
+
+    @Test
+    fun `merge cols into list`() {
+        val merge = dataFrameOf("a", "b")(1, null).merge { col("a") }
+        merge.intoList().typeOfElement() shouldBe typeOf<List<Any?>>()
+        merge.by { it }.intoList().typeOfElement() shouldBe typeOf<List<Any?>>()
+        // here we can safely narrow down List<Any?> to List<Any> after notNull because the default transformer creates a List from C
+        merge.notNull().intoList().typeOfElement() shouldBe typeOf<List<Any>>()
+        // if by notNull could go after by { },
+        // we won't be able to do so because non-default transformer could introduce nulls itself:
+        merge.notNull().by { listOf(1, null) }.intoList().typeOfElement() shouldBe typeOf<List<Int?>>()
+    }
+
+    @Test
     fun `generic column type`() {
         val d = typed.convert { city }.with { it?.toCharArray()?.toList() ?: emptyList() }
         println(d.city.type())
@@ -1469,7 +1484,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `column stats`() {
-        typed.age.mean() shouldBe typed.age.toList().mean()
+        typed.age.mean() shouldBe typed.age.toList().average()
         typed.age.min() shouldBe typed.age.toList().minOrNull()
         typed.age.max() shouldBe typed.age.toList().maxOrNull()
         typed.age.sum() shouldBe typed.age.toList().sum()
@@ -1515,29 +1530,6 @@ class DataFrameTests : BaseTest() {
         val weightStr = "weight".toColumnOf<String?>()
         val parsed = toStr.convert { weightStr }.toInt()
         parsed shouldBe typed
-    }
-
-    @Test
-    fun digitize() {
-        val a = 20
-        val b = 40
-        val expected = typed.age.toList().map {
-            when {
-                it < a -> 0
-                it < b -> 1
-                else -> 2
-            }
-        }
-        typed.age.digitize(a, b).toList() shouldBe expected
-
-        val expectedRight = typed.age.toList().map {
-            when {
-                it <= a -> 0
-                it <= b -> 1
-                else -> 2
-            }
-        }
-        typed.age.digitize(a, b, right = true).toList() shouldBe expectedRight
     }
 
     @Test
@@ -1943,6 +1935,21 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `create nested dataframe inplace`() {
+        val df = dataFrameOf(
+            "a" to columnOf("1"),
+            "b" to columnOf(
+                "c" to columnOf("2"),
+            ),
+            "d" to columnOf(dataFrameOf("a")(123)),
+            "gr" to listOf("1").toDataFrame().asColumnGroup(),
+        )
+
+        df.columnNames() shouldBe listOf("a", "b", "d", "gr")
+        df.getColumnGroup("gr")["value"].values() shouldBe listOf("1")
+    }
+
+    @Test
     fun `get typed column by name`() {
         val col = df.getColumn("name").cast<String>()
         col[0].substring(0, 3) shouldBe "Ali"
@@ -2257,7 +2264,7 @@ class DataFrameTests : BaseTest() {
 
         df.remove { city }.convertTo<Target>() shouldBe
             df.update { city }.withNull()
-                .move { city }.toRight()
+                .move { city }.toEnd()
 
         shouldThrow<IllegalArgumentException> {
             df.remove { age }.convertTo<Target>()
@@ -2267,7 +2274,7 @@ class DataFrameTests : BaseTest() {
             fill { age }.with { -1 }
         } shouldBe
             df.update { age }.with { -1 }
-                .move { age }.toRight()
+                .move { age }.toEnd()
 
         shouldThrow<TypeConversionException> {
             df.update { name }.at(2).withNull()
@@ -2346,6 +2353,18 @@ class DataFrameTests : BaseTest() {
         merged.split { data }.match("""(.*)\|(.*)""".toRegex()).into("name", "city") shouldBe
             typed.update { city }.with { it ?: "null" }
                 .move { city }.to(1)
+    }
+
+    @Test
+    fun `move beyond range of existing column indices`() {
+        val res = typed.move { city }.to(11)
+        res.columnNames() shouldBe listOf("name", "age", "weight", "city")
+    }
+
+    @Test
+    fun `move multiple columns beyond range of existing column indices`() {
+        val res = typed.move { city and name }.to(11)
+        res.columnNames() shouldBe listOf("age", "weight", "city", "name")
     }
 
     @Test
@@ -2446,11 +2465,30 @@ class DataFrameTests : BaseTest() {
         ).toDataFrame()
 
         df.int.valuesAreComparable() shouldBe true
-        df.comparableInt.valuesAreComparable() shouldBe true
+        // Comparable<Int> is not comparable to Comparable<Int>
+        df.comparableInt.valuesAreComparable() shouldBe false
         df.string.valuesAreComparable() shouldBe true
-        df.comparableString.valuesAreComparable() shouldBe true
+        // Comparable<String> is not comparable to Comparable<String>
+        df.comparableString.valuesAreComparable() shouldBe false
         df.comparableStar.valuesAreComparable() shouldBe false
         df.comparableNothing.valuesAreComparable() shouldBe false
+    }
+
+    // https://github.com/Kotlin/dataframe/pull/1077#discussion_r1981352374
+    @Test
+    fun `values are comparable difficult`() {
+        val i = 1
+        val i1 = object : Comparable<Int> {
+            override fun compareTo(other: Int): Int = other
+
+            override fun toString(): String = "i1"
+        }
+        val col by columnOf(i, i1)
+
+        // We cannot calculate min/max for this column because Int does not implement Comparable<Comparable<Int>>
+        // aka i1.compareTo(i) would work but i.compareTo(i1) would not
+        dataFrameOf(col).max().isEmpty() shouldBe true
+        dataFrameOf(col).min().isEmpty() shouldBe true
     }
 
     @Test

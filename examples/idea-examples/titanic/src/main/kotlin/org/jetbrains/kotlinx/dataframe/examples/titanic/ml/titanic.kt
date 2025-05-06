@@ -32,7 +32,7 @@ fun main() {
     // Set Locale for correct number parsing
     Locale.setDefault(Locale.FRANCE)
 
-    val df = Passenger.readCSV()
+    val df = Passenger.readCsv()
 
     // Calculating imputing values
     val (train, test) = df

@@ -1,9 +1,9 @@
 import com.google.devtools.ksp.gradle.KspTask
 import com.google.devtools.ksp.gradle.KspTaskJvm
 import io.github.devcrocod.korro.KorroTask
-import nl.jolanrensen.docProcessor.defaultProcessors.ARG_DOC_PROCESSOR_LOG_NOT_FOUND
-import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
+import nl.jolanrensen.kodex.gradle.creatingRunKodexTask
 import org.gradle.jvm.tasks.Jar
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import xyz.ronella.gradle.plugin.simple.git.task.GitTask
 
@@ -12,11 +12,10 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization)
-        alias(jupyter.api)
         alias(korro)
         alias(kover)
         alias(ktlint)
-        alias(docProcessor)
+        alias(kodex)
         alias(simpleGit)
         alias(buildconfig)
         alias(binary.compatibility.validator)
@@ -35,13 +34,10 @@ plugins {
 
 group = "org.jetbrains.kotlinx"
 
-val jupyterApiTCRepo: String by project
-
 repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven(jupyterApiTCRepo)
 }
 
 kotlin.sourceSets {
@@ -65,13 +61,11 @@ dependencies {
 
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
-    kotlinCompilerPluginClasspathSamples(project(":plugins:expressions-converter"))
-    implementation(libs.kotlin.stdlib.jdk8)
+    kotlinCompilerPluginClasspathSamples(projects.plugins.expressionsConverter)
 
     api(libs.commonsCsv)
+
     implementation(libs.commonsIo)
-    implementation(libs.serialization.core)
-    implementation(libs.serialization.json)
     implementation(libs.fastDoubleParser)
 
     api(libs.kotlin.datetimeJvm)
@@ -86,6 +80,15 @@ dependencies {
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
     testImplementation(libs.sl4jsimple)
+    testImplementation(projects.dataframeJson)
+    testImplementation(libs.serialization.core)
+    testImplementation(libs.serialization.json)
+
+    // for checking results
+    testImplementation(libs.commonsStatisticsDescriptive)
+
+    // for samples.api
+    testImplementation(projects.dataframeCsv)
 }
 
 val samplesImplementation by configurations.getting {
@@ -207,9 +210,9 @@ val generatedSources by kotlin.sourceSets.creating {
 }
 
 // Task to generate the processed documentation
-val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
+val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
+    group = "KDocs"
     target = file(generatedSourcesFolderName)
-    arguments += ARG_DOC_PROCESSOR_LOG_NOT_FOUND to false
 
     // false, so `runKtlintFormatOverGeneratedSourcesSourceSet` can format the output
     outputReadOnly = false
@@ -217,10 +220,7 @@ val processKDocsMain by creatingProcessDocTask(processKDocsMainSources) {
     exportAsHtml {
         dir = file("../docs/StardustDocs/snippets/kdocs")
     }
-    task {
-        group = "KDocs"
-        finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
-    }
+    finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
 }
 
 tasks.named("ktlintGeneratedSourcesSourceSetCheck") {
@@ -241,7 +241,7 @@ idea {
 // the target of `processKdocMain`, and they are returned to normal afterward.
 // This is usually only done when publishing
 val changeJarTask by tasks.creating {
-    outputs.upToDateWhen { false }
+    outputs.upToDateWhen { project.hasProperty("skipKodex") }
     doFirst {
         tasks.withType<Jar> {
             doFirst {
@@ -270,7 +270,7 @@ tasks.withType<Jar> {
 
 // modify all publishing tasks to depend on `changeJarTask` so the sources are swapped out with generated sources
 tasks.configureEach {
-    if (name.startsWith("publish")) {
+    if (!project.hasProperty("skipKodex") && name.startsWith("publish")) {
         dependsOn(processKDocsMain, changeJarTask)
     }
 }
@@ -315,9 +315,6 @@ korro {
 
         funSuffix("_properties") {
             replaceText("NAME", "Properties")
-        }
-        funSuffix("_accessors") {
-            replaceText("NAME", "Accessors")
         }
         funSuffix("_strings") {
             replaceText("NAME", "Strings")
@@ -365,15 +362,11 @@ kotlin {
     explicitApi()
 }
 
-tasks.withType<JavaCompile> {
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
-}
-
 tasks.withType<KotlinCompile> {
     compilerOptions {
         optIn.addAll("kotlin.RequiresOptIn")
         freeCompilerArgs.addAll("-Xinline-classes")
+        freeCompilerArgs.addAll("-Xjvm-default=all")
     }
 }
 
@@ -394,10 +387,6 @@ tasks.test {
             }
         }
     }
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
 }
 
 kotlinPublications {

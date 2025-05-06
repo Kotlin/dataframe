@@ -3,9 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.ColumnGroupName
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.ColumnSetName
-import org.jetbrains.kotlinx.dataframe.api.ValueColsColumnsSelectionDsl.Grammar.PlainDslName
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -33,7 +32,7 @@ public interface ValueColsColumnsSelectionDsl {
      * ## Value Columns Grammar
      *
      * @include [DslGrammarTemplate]
-     * {@set [DslGrammarTemplate.DefinitionsArg]
+     * {@set [DslGrammarTemplate.DEFINITIONS]
      *  {@include [DslGrammarTemplate.ColumnSetDef]}
      *  {@include [LineBreak]}
      *  {@include [DslGrammarTemplate.ColumnGroupDef]}
@@ -41,15 +40,15 @@ public interface ValueColsColumnsSelectionDsl {
      *  {@include [DslGrammarTemplate.ConditionDef]}
      * }
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_SET_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnSetName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnGroupFunctionsArg]
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_FUNCTIONS]
      *  {@include [Indent]}{@include [ColumnGroupName]}`  [  `**`{ `**{@include [DslGrammarTemplate.ConditionRef]}**` \}`**` ]`
      * }
      */
@@ -86,7 +85,7 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * #### Examples for this overload:
      *
-     * {@get [CommonValueColsDocs.ExampleArg]}
+     * {@get [CommonValueColsDocs.EXAMPLE]}
      *
      * @param [filter\] An optional [predicate][Predicate] to filter the value columns by.
      * @return A [ColumnSet] of [ValueColumns][ValueColumn].
@@ -98,12 +97,12 @@ public interface ValueColsColumnsSelectionDsl {
     private interface CommonValueColsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[cols][ColumnsSelectionDsl.cols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") }.`[valueCols][ColumnSet.valueCols]`() }`
      *
@@ -111,36 +110,39 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[name][ColumnReference.name]`.`[startsWith][String.startsWith]`("my") } }`
      */
+    @Interpretable("ValueCols0")
     public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         valueColumnsInternal(filter)
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]`() }`
      *
      * `df.`[select][DataFrame.select]`  {  `[valueCols][ColumnsSelectionDsl.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Interpretable("ValueCols1")
     public fun ColumnsSelectionDsl<*>.valueCols(
         filter: Predicate<ValueColumn<*>> = { true },
     ): TransformableColumnSet<*> = asSingleColumn().valueColumnsInternal(filter)
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]`() }`
      *
      * `df.`[select][DataFrame.select]` { myColGroup.`[valueCols][SingleColumn.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Interpretable("ValueCols2")
     public fun SingleColumn<DataRow<*>>.valueCols(
         filter: Predicate<ValueColumn<*>> = { true },
     ): TransformableColumnSet<*> = this.ensureIsColumnGroup().valueColumnsInternal(filter)
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "myColGroup".`[valueCols][String.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -151,7 +153,7 @@ public interface ValueColsColumnsSelectionDsl {
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { Type::myColumnGroup.`[valueCols][KProperty.valueCols]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      *
@@ -159,12 +161,16 @@ public interface ValueColsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { DataSchemaType::myColumnGroup.`[valueCols][KProperty.valueCols]`() }`
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)
 
     /**
      * @include [CommonValueColsDocs]
-     * @set [CommonValueColsDocs.ExampleArg]
+     * @set [CommonValueColsDocs.EXAMPLE]
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[valueCols][ColumnPath.valueCols]`() }`
      */
@@ -178,7 +184,8 @@ public interface ValueColsColumnsSelectionDsl {
  * @param filter The filter function to apply on each value column. Must accept a ValueColumn object and return a Boolean.
  * @return A [TransformableColumnSet] containing the value columns that satisfy the filter.
  */
-internal fun ColumnsResolver<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
-    colsInternal { it.isValueColumn() && filter(it) }
+internal inline fun ColumnsResolver<*>.valueColumnsInternal(
+    crossinline filter: (ValueColumn<*>) -> Boolean,
+): TransformableColumnSet<*> = colsInternal { it.isValueColumn() && filter(it) }
 
 // endregion

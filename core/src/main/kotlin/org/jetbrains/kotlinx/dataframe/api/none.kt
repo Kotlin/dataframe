@@ -1,11 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.NoneColumnsSelectionDsl.Grammar.PlainDslName
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 
 // region ColumnsSelectionDsl
 
@@ -21,12 +20,12 @@ public interface NoneColumnsSelectionDsl {
      *
      * @include [DslGrammarTemplate]
      *
-     * {@set [DslGrammarTemplate.PlainDslFunctionsArg]
+     * {@set [DslGrammarTemplate.PLAIN_DSL_FUNCTIONS]
      *  {@include [PlainDslName]}**`()`**
      * }
      *
-     * {@set [DslGrammarTemplate.ColumnSetPart]}
-     * {@set [DslGrammarTemplate.ColumnGroupPart]}
+     * {@set [DslGrammarTemplate.COLUMN_SET_PART]}
+     * {@set [DslGrammarTemplate.COLUMN_GROUP_PART]}
      */
     public interface Grammar {
 
@@ -49,7 +48,7 @@ public interface NoneColumnsSelectionDsl {
      *
      * @return An empty [ColumnsResolver].
      */
-    public fun none(): ColumnsResolver<*> = ColumnsList<Any?>(emptyList())
+    public fun none(): ColumnsResolver<*> = ColumnListImpl<Any?>(emptyList())
 }
 
 // endregion

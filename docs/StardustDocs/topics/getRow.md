@@ -28,22 +28,6 @@ df.maxByOrNull { weight }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val weight by column<Int?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.single { age() == 45 }
-df.first { weight() != null }
-df.minBy(age)
-df.maxBy { firstName().length }
-df.maxByOrNull { weight() }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

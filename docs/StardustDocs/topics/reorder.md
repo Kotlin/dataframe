@@ -7,7 +7,7 @@ Returns [`DataFrame`](DataFrame.md) with a new order of selected columns.
 ```text
 reorder { columns }
   [.cast<ColumnType>() ]
-   .by { columnExpression } | .byDesc { columnExpression } | .byName(desc = false) { columnExpression } 
+   .by { columnExpression } | .byDesc { columnExpression } | .byName(desc = false)
     
 columnExpression: DataColumn.(DataColumn) -> Value
 ```
@@ -17,16 +17,6 @@ columnExpression: DataColumn.(DataColumn) -> Value
 <tab title="Properties">
 
 ```kotlin
-df.reorder { age..isHappy }.byName()
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val isHappy by column<Boolean>()
-
 df.reorder { age..isHappy }.byName()
 ```
 
@@ -74,19 +64,19 @@ df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
 Reorders all columns
 
 ```text
-reorderColumnsBy(dfs = true, desc = false) { columnExpression }
+reorderColumnsBy(atAnyDepth = true, desc = false) { columnExpression }
 ```
 
 **Parameters:**
-* `dfs` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
+* `atAnyDepth` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
 * `desc` — apply descending order
 
 ## reorderColumnsByName
 
 ```text
-reorderColumnsByName(dfs = true, desc = false)
+reorderColumnsByName(atAnyDepth = true, desc = false)
 ```
 
 **Parameters:**
-* `dfs` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
+* `atAnyDepth` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
 * `desc` — apply descending order

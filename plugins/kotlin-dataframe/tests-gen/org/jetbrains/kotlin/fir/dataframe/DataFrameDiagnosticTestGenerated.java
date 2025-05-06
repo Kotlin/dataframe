@@ -33,6 +33,12 @@ public class DataFrameDiagnosticTestGenerated extends AbstractDataFrameDiagnosti
   }
 
   @Test
+  @TestMetadata("schemaInfo.kt")
+  public void testSchemaInfo() {
+    runTest("testData/diagnostics/schemaInfo.kt");
+  }
+
+  @Test
   @TestMetadata("selectDuringTyping.kt")
   public void testSelectDuringTyping() {
     runTest("testData/diagnostics/selectDuringTyping.kt");
@@ -42,6 +48,12 @@ public class DataFrameDiagnosticTestGenerated extends AbstractDataFrameDiagnosti
   @TestMetadata("structuralCast.kt")
   public void testStructuralCast() {
     runTest("testData/diagnostics/structuralCast.kt");
+  }
+
+  @Test
+  @TestMetadata("targetOfCastIsNotDataSchema.kt")
+  public void testTargetOfCastIsNotDataSchema() {
+    runTest("testData/diagnostics/targetOfCastIsNotDataSchema.kt");
   }
 
   @Test

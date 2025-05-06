@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.GroupClause
 import org.jetbrains.kotlinx.dataframe.api.InsertClause
 import org.jetbrains.kotlinx.dataframe.api.Merge
+import org.jetbrains.kotlinx.dataframe.api.MergeWithTransform
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
@@ -165,6 +166,7 @@ public object KotlinNotebookPluginUtils {
             is SplitWithTransform<*, *, *>,
             is Split<*, *>,
             is Merge<*, *, *>,
+            is MergeWithTransform<*, *, *>,
             is Gather<*, *, *, *>,
             is Update<*, *>,
             is Convert<*, *>,
@@ -207,6 +209,13 @@ public object KotlinNotebookPluginUtils {
             is Split<*, *> -> dataframeLike.toDataFrame()
 
             is Merge<*, *, *> -> dataframeLike.into(
+                generateRandomVariationOfColumnName(
+                    "merged",
+                    dataframeLike.df.columnNames(),
+                ),
+            )
+
+            is MergeWithTransform<*, *, *> -> dataframeLike.into(
                 generateRandomVariationOfColumnName(
                     "merged",
                     dataframeLike.df.columnNames(),

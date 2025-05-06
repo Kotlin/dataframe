@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -9,8 +10,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnsResolver
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.impl.api.extractJoinColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnListImpl
 import kotlin.reflect.KProperty
 
 @Refine
@@ -27,6 +32,8 @@ public fun <A, B> DataFrame<A>.join(
     type: JoinType = JoinType.Inner,
 ): DataFrame<A> = join(other, type) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("InnerJoin")
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -35,6 +42,8 @@ public fun <A, B> DataFrame<A>.innerJoin(
 public fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     innerJoin(other) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("LeftJoin")
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -43,6 +52,8 @@ public fun <A, B> DataFrame<A>.leftJoin(
 public fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     leftJoin(other) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("RightJoin")
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -51,6 +62,8 @@ public fun <A, B> DataFrame<A>.rightJoin(
 public fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     rightJoin(other) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("FullJoin")
 public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -59,6 +72,8 @@ public fun <A, B> DataFrame<A>.fullJoin(
 public fun <A, B> DataFrame<A>.fullJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     fullJoin(other) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("FilterJoin")
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -67,6 +82,8 @@ public fun <A, B> DataFrame<A>.filterJoin(
 public fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, vararg columns: String): DataFrame<A> =
     filterJoin(other) { columns.toColumnSet() }
 
+@Refine
+@Interpretable("ExcludeJoin")
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null,
@@ -95,21 +112,63 @@ public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
     public infix fun String.match(other: String): ColumnMatch<Any?> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other.toColumnAccessor())
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> ColumnReference<C>.match(other: KProperty<C>): ColumnMatch<C> =
         ColumnMatch(this, other.toColumnAccessor())
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public infix fun <C> KProperty<C>.match(other: ColumnReference<C>): ColumnMatch<C> =
         ColumnMatch(toColumnAccessor(), other)
+
+    public companion object {
+        public fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnsSelector<A, B> =
+            {
+                left.columnNames().intersect(right.columnNames().toSet())
+                    .map { it.toColumnAccessor() }
+                    .let { ColumnListImpl(it) }
+            }
+
+        public fun <A, B> getColumns(
+            left: DataFrame<A>,
+            other: DataFrame<B>,
+            selector: JoinColumnsSelector<A, B>,
+        ): List<ColumnMatch<Any?>> {
+            val receiver = object : DataFrameReceiver<A>(left, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
+                override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
+            }
+            val columns = selector(receiver, left)
+            return columns.extractJoinColumns()
+        }
+    }
 }
 
-public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : ColumnSet<C> {
+public interface ColumnMatch<C> : ColumnSet<C> {
+    public val left: ColumnReference<C>
+    public val right: ColumnReference<C>
+}
+
+internal class ColumnMatchImpl<C>(override val left: ColumnReference<C>, override val right: ColumnReference<C>) :
+    ColumnMatch<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> =
         throw UnsupportedOperationException()
 }
+
+public fun <C> ColumnMatch(left: ColumnReference<C>, right: ColumnReference<C>): ColumnMatch<C> =
+    ColumnMatchImpl(left, right)
 
 public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(ColumnsContainer<A>) -> ColumnsResolver<*>
 

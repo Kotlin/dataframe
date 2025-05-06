@@ -2,16 +2,16 @@ package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
-import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.process
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.process
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.city
 import org.jetbrains.kotlinx.dataframe.testSets.person.weight
@@ -20,7 +20,7 @@ import org.junit.Test
 @Suppress("ktlint:standard:class-naming")
 class ReplCodeGenTests : BaseTest() {
 
-    val dfName = (ColumnsContainer::class).simpleName!!
+    val dfName = (ColumnsScope::class).simpleName!!
     val dfRowName = (DataRow::class).simpleName!!
     val dataCol = (DataColumn::class).simpleName!!
     val intName = Int::class.simpleName!!
@@ -192,7 +192,7 @@ class ReplCodeGenTests : BaseTest() {
         repl.process<Test3.B>()
         repl.process<Test3.D>()
         val c = repl.process(Test3.df, Test3::df)
-        """val .*ColumnsContainer<\w*>.x:""".toRegex().findAll(c.declarations).count() shouldBe 1
+        """val .*ColumnsScope<\w*>.x:""".toRegex().findAll(c.declarations).count() shouldBe 1
     }
 
     object Test4 {
@@ -216,6 +216,6 @@ class ReplCodeGenTests : BaseTest() {
         repl.process<Test4.A>()
         repl.process<Test4.B>()
         val c = repl.process(Test4.df, Test4::df)
-        """val .*ColumnsContainer<\w*>.a:""".toRegex().findAll(c.declarations).count() shouldBe 1
+        """val .*ColumnsScope<\w*>.a:""".toRegex().findAll(c.declarations).count() shouldBe 1
     }
 }

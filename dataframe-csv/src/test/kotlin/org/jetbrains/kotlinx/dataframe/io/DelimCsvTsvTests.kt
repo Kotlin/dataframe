@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.deephaven.csv.parsers.Parsers
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
@@ -35,6 +37,9 @@ import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
+//  can be enabled for showing logs for these tests
+private const val SHOW_LOGS = false
+
 @Suppress("ktlint:standard:argument-list-wrapping")
 class DelimCsvTsvTests {
 
@@ -43,12 +48,14 @@ class DelimCsvTsvTests {
 
     @Before
     fun setLogger() {
+        if (!SHOW_LOGS) return
         loggerBefore = System.getProperty(logLevel)
-        System.setProperty(logLevel, "debug")
+        System.setProperty(logLevel, "trace")
     }
 
     @After
     fun restoreLogger() {
+        if (!SHOW_LOGS) return
         if (loggerBefore != null) {
             System.setProperty(logLevel, loggerBefore)
         }
@@ -120,7 +127,7 @@ class DelimCsvTsvTests {
     fun `read custom compression Csv`() {
         DataFrame.readCsv(
             simpleCsvGz,
-            compression = Compression.Custom { GZIPInputStream(it) },
+            compression = Compression(::GZIPInputStream),
         ) shouldBe DataFrame.readCsv(simpleCsv)
     }
 
@@ -315,15 +322,15 @@ class DelimCsvTsvTests {
     fun `check integrity of example data`() {
         shouldThrow<IllegalStateException> {
             // cannot read file with blank line at the start
-            DataFrame.readCsv("../data/jetbrains_repositories.csv")
+            DataFrame.readCsv("../data/jetbrains repositories.csv")
         }
         shouldThrow<IllegalStateException> {
             // ignoreEmptyLines only ignores intermediate empty lines
-            DataFrame.readCsv("../data/jetbrains_repositories.csv", ignoreEmptyLines = true)
+            DataFrame.readCsv("../data/jetbrains repositories.csv", ignoreEmptyLines = true)
         }
 
         val df = DataFrame.readCsv(
-            "../data/jetbrains_repositories.csv",
+            "../data/jetbrains repositories.csv",
             skipLines = 1, // we need to skip the empty lines manually
         )
         df.columnNames() shouldBe listOf("full_name", "html_url", "stargazers_count", "topics", "watchers")
@@ -334,10 +341,8 @@ class DelimCsvTsvTests {
             typeOf<String>(),
             typeOf<Int>(),
         )
-        df shouldBe DataFrame.readCsv(
-            "../data/jetbrains repositories.csv",
-            skipLines = 1,
-        )
+        // same file without empty line at the beginning
+        df shouldBe DataFrame.readCsv("../data/jetbrains_repositories.csv")
     }
 
     @Test
@@ -518,29 +523,32 @@ class DelimCsvTsvTests {
 
         dutchDf["price"].type() shouldBe typeOf<Double?>()
 
-        // while negative numbers in RTL languages cannot be parsed, thanks to Java, others work
-        @Language("csv")
-        val arabicCsv =
-            """
-            الاسم; السعر;
-            أ;١٢٫٤٥;
-            ب;١٣٫٣٥;
-            ج;١٠٠٫١٢٣;
-            د;٢٠٤٫٢٣٥;
-            هـ;ليس رقم;
-            و;null;
-            """.trimIndent()
+        // skipping this test on windows due to lack of support for Arabic locales
+        if (!System.getProperty("os.name").startsWith("Windows")) {
+            // while negative numbers in RTL languages cannot be parsed thanks to Java, others work
+            @Language("csv")
+            val arabicCsv =
+                """
+                الاسم; السعر;
+                أ;١٢٫٤٥;
+                ب;١٣٫٣٥;
+                ج;١٠٠٫١٢٣;
+                د;٢٠٤٫٢٣٥;
+                هـ;ليس رقم;
+                و;null;
+                """.trimIndent()
 
-        val easternArabicDf = DataFrame.readCsvStr(
-            arabicCsv,
-            delimiter = ';',
-            parserOptions = ParserOptions(
-                locale = Locale.forLanguageTag("ar-001"),
-            ),
-        )
+            val easternArabicDf = DataFrame.readCsvStr(
+                arabicCsv,
+                delimiter = ';',
+                parserOptions = ParserOptions(
+                    locale = Locale.forLanguageTag("ar-001"),
+                ),
+            )
 
-        easternArabicDf["السعر"].type() shouldBe typeOf<Double?>()
-        easternArabicDf["الاسم"].type() shouldBe typeOf<String>() // apparently not a char
+            easternArabicDf["السعر"].type() shouldBe typeOf<Double?>()
+            easternArabicDf["الاسم"].type() shouldBe typeOf<String>() // apparently not a char
+        }
     }
 
     @Test
@@ -748,6 +756,60 @@ class DelimCsvTsvTests {
         df2 shouldBe df1
 
         DataFrame.parser.resetToDefault()
+    }
+
+    // Issue #1047
+    @Test
+    fun `Only use Deephaven datetime parser with custom csv specs`() {
+        @Language("csv")
+        val csvContent =
+            """
+            with_timezone_offset,without_timezone_offset
+            2024-12-12T13:00:00+01:00,2024-12-12T13:00:00
+            """.trimIndent()
+
+        // use DFs parsers by default for datetime-like columns
+        val df1 = DataFrame.readCsvStr(csvContent)
+        df1["with_timezone_offset"].let {
+            it.type() shouldBe typeOf<Instant>()
+            it[0] shouldBe Instant.parse("2024-12-12T13:00:00+01:00")
+        }
+        df1["without_timezone_offset"].let {
+            it.type() shouldBe typeOf<LocalDateTime>()
+            it[0] shouldBe LocalDateTime.parse("2024-12-12T13:00:00")
+        }
+
+        // enable fast datetime parser for the first column with adjustCsvSpecs
+        val df2 = DataFrame.readCsv(
+            inputStream = csvContent.byteInputStream(),
+            adjustCsvSpecs = {
+                putParserForName("with_timezone_offset", Parsers.DATETIME)
+            },
+        )
+        df2["with_timezone_offset"].let {
+            it.type() shouldBe typeOf<LocalDateTime>()
+            it[0] shouldBe LocalDateTime.parse("2024-12-12T12:00:00")
+        }
+        df2["without_timezone_offset"].let {
+            it.type() shouldBe typeOf<LocalDateTime>()
+            it[0] shouldBe LocalDateTime.parse("2024-12-12T13:00:00")
+        }
+    }
+
+    @Test
+    fun `json dependency test`() {
+        val df = dataFrameOf("firstName", "lastName")(
+            "John", "Doe",
+            "Jane", "Doe",
+        ).group { "firstName" and "lastName" }.into { "name" }
+
+        df.toCsvStr(quote = '\'') shouldBe
+            """
+            name
+            '{"firstName":"John","lastName":"Doe"}'
+            '{"firstName":"Jane","lastName":"Doe"}'
+            
+            """.trimIndent()
     }
 
     companion object {

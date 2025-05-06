@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -30,6 +32,8 @@ public interface ValueColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      * [(What is this notation?)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammar]
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### Definitions:
@@ -43,6 +47,9 @@ public interface ValueColsColumnsSelectionDsl {
      *
      *  `condition: `[`ColumnFilter`][org.jetbrains.kotlinx.dataframe.ColumnFilter]
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called directly in the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl]:
@@ -51,6 +58,9 @@ public interface ValueColsColumnsSelectionDsl {
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  [**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
+     *
+     *
+     *
      *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
@@ -63,6 +73,9 @@ public interface ValueColsColumnsSelectionDsl {
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
      *
+     *
+     *
+     *
      * &nbsp;&nbsp;&nbsp;&nbsp;
      *
      *  ### What can be called on a [Column Group (reference)][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]:
@@ -73,11 +86,6 @@ public interface ValueColsColumnsSelectionDsl {
      *  [`columnGroup`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ColumnGroupDef]
      *
      *  &nbsp;&nbsp;&nbsp;&nbsp;__`.`__[**`valueCols`**][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.valueCols]`  [  `**`{ `**[`condition`][org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate.ConditionDef]**` }`**` ]`
-     *
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -132,7 +140,7 @@ public interface ValueColsColumnsSelectionDsl {
     private interface CommonValueColsDocs {
 
         /** Example argument */
-        interface ExampleArg
+        interface EXAMPLE
     }
 
     /**
@@ -169,6 +177,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("ValueCols0")
     public fun ColumnSet<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         valueColumnsInternal(filter)
 
@@ -204,6 +213,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("ValueCols1")
     public fun ColumnsSelectionDsl<*>.valueCols(
         filter: Predicate<ValueColumn<*>> = { true },
     ): TransformableColumnSet<*> = asSingleColumn().valueColumnsInternal(filter)
@@ -240,6 +250,7 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Interpretable("ValueCols2")
     public fun SingleColumn<DataRow<*>>.valueCols(
         filter: Predicate<ValueColumn<*>> = { true },
     ): TransformableColumnSet<*> = this.ensureIsColumnGroup().valueColumnsInternal(filter)
@@ -313,6 +324,10 @@ public interface ValueColsColumnsSelectionDsl {
      * @see [ColumnsSelectionDsl.colGroups]
      * @see [ColumnsSelectionDsl.cols]
      */
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
+    @AccessApiOverload
     public fun KProperty<*>.valueCols(filter: Predicate<ValueColumn<*>> = { true }): TransformableColumnSet<*> =
         columnGroup(this).valueCols(filter)
 
@@ -356,7 +371,8 @@ public interface ValueColsColumnsSelectionDsl {
  * @param filter The filter function to apply on each value column. Must accept a ValueColumn object and return a Boolean.
  * @return A [TransformableColumnSet] containing the value columns that satisfy the filter.
  */
-internal fun ColumnsResolver<*>.valueColumnsInternal(filter: (ValueColumn<*>) -> Boolean): TransformableColumnSet<*> =
-    colsInternal { it.isValueColumn() && filter(it) }
+internal inline fun ColumnsResolver<*>.valueColumnsInternal(
+    crossinline filter: (ValueColumn<*>) -> Boolean,
+): TransformableColumnSet<*> = colsInternal { it.isValueColumn() && filter(it) }
 
 // endregion

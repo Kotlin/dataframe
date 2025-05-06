@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.impl.getterName
 import org.jetbrains.kotlinx.dataframe.impl.isGetterLike
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -27,6 +28,10 @@ import kotlin.reflect.typeOf
 
 internal fun AnyFrame.extractSchema(): DataFrameSchema =
     DataFrameSchemaImpl(columns().filter { it.name().isNotEmpty() }.associate { it.name() to it.extractSchema() })
+
+// helper overload for friend modules
+@JvmName("intersectSchemasOverload")
+internal fun intersectSchemas(schemas: Iterable<DataFrameSchema>): DataFrameSchema = schemas.intersectSchemas()
 
 internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     val collectedTypes = mutableMapOf<String, MutableSet<ColumnSchema>>()
@@ -192,8 +197,8 @@ internal fun <T> Iterable<KCallable<T>>.sortWithConstructor(klass: KClass<*>): L
     // else sort the ones in the primary constructor first according to the order in there
     // leave the rest at the end in lexicographical order
     val (propsInConstructor, propsNotInConstructor) =
-        lexicographicalColumns.partition { it.columnName in primaryConstructorOrder.keys }
+        lexicographicalColumns.partition { it.getterName in primaryConstructorOrder.keys }
 
     return propsInConstructor
-        .sortedBy { primaryConstructorOrder[it.columnName] } + propsNotInConstructor
+        .sortedBy { primaryConstructorOrder[it.getterName] } + propsNotInConstructor
 }
