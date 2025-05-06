@@ -21,7 +21,7 @@ class OtherSamples {
     }
 
     private fun writeTable(df: AnyFrame, name: String) {
-        val dir = File("../docs/StardustDocs/snippets/manual").also { it.mkdirs() }
+        val dir = File("../docs/StardustDocs/resources/snippets/manual").also { it.mkdirs() }
         val html = df.toStandaloneHTML(getFooter = WritersideFooter) + WritersideStyle
         html.writeHTML(File(dir, "$name.html"))
     }
