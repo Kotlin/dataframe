@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.util.IS_URL_REPLACE
 import java.io.File
 import java.io.InputStream
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 
 /**
@@ -110,7 +111,7 @@ public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http"
  */
 public fun asUrl(fileOrUrl: String): URL =
     if (isUrl(fileOrUrl)) {
-        URL(fileOrUrl).toURI()
+        URI(fileOrUrl)
     } else {
         File(fileOrUrl).also {
             require(it.exists()) { "File not found: \"$fileOrUrl\"" }
