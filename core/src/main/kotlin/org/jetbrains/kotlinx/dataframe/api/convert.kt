@@ -185,7 +185,7 @@ internal interface ConvertDocs {
      * `| `__`.`__[**`toInstant`**][Convert.toInstant]`()`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`toURL`**][Convert.toUrl]`()`
+     * `| `__`.`__[**`toUrl`**][Convert.toUrl]`()`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`toIFrame`**][Convert.toIFrame]`()`
@@ -961,7 +961,7 @@ public fun <T, R : URL?> Convert<T, URL>.toImg(width: Int? = null, height: Int? 
 
 // region toURL
 
-@Deprecated(CONVERT_TO_URL, ReplaceWith(CONVERT_TO_URL_REPLACE))
+@Deprecated(CONVERT_TO_URL, ReplaceWith(CONVERT_TO_URL_REPLACE), DeprecationLevel.ERROR)
 public fun DataColumn<String>.convertToURL(): DataColumn<URL> = convertToUrl()
 
 /**
@@ -971,7 +971,7 @@ public fun DataColumn<String>.convertToURL(): DataColumn<URL> = convertToUrl()
  */
 public fun DataColumn<String>.convertToUrl(): DataColumn<URL> = map { URI(it).toURL() }
 
-@Deprecated(CONVERT_TO_URL, ReplaceWith(CONVERT_TO_URL_REPLACE))
+@Deprecated(CONVERT_TO_URL, ReplaceWith(CONVERT_TO_URL_REPLACE), DeprecationLevel.ERROR)
 @JvmName("convertToURLFromStringNullable")
 public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = convertToUrl()
 
@@ -983,7 +983,7 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = convertToUrl()
 @JvmName("convertToUrlFromStringNullable")
 public fun DataColumn<String?>.convertToUrl(): DataColumn<URL?> = map { it?.let { URI(it).toURL() } }
 
-@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE))
+@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE), DeprecationLevel.ERROR)
 @JvmName("toURLFromStringNullable")
 @Refine
 @Converter(URL::class, nullable = true)
@@ -1010,7 +1010,7 @@ public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convert
 @Interpretable("ToSpecificType")
 public fun <T> Convert<T, String?>.toUrl(): DataFrame<T> = asColumn { it.convertToUrl() }
 
-@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE))
+@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE), DeprecationLevel.ERROR)
 @JvmName("toURLFromString")
 @Refine
 @Converter(URL::class, nullable = false)
