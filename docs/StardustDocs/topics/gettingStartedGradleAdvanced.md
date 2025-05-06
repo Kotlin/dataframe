@@ -124,6 +124,7 @@ dependencies {
     // Artifact containing all APIs and implementations
     implementation("org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%")
     // Optional formats support
+    implementation("org.jetbrains.kotlinx:dataframe-json:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%")
     implementation("org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%")
@@ -149,6 +150,8 @@ dependencies {
     // Artifact containing all APIs and implementations
     implementation 'org.jetbrains.kotlinx:dataframe-core:%dataFrameVersion%'
     // Optional formats support 
+    implementation 'org.jetbrains.kotlinx:dataframe-json:%dataFrameVersion%'
+    implementation 'org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-excel:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-jdbc:%dataFrameVersion%'
     implementation 'org.jetbrains.kotlinx:dataframe-arrow:%dataFrameVersion%'
@@ -167,6 +170,16 @@ dependencies {
 </tab>
 
 </tabs>
+
+<note>
+`dataframe-json` is included with `dataframe-csv` and `dataframe-excel` by default. This is to interact with
+JSON structures inside CSV and Excel files. If you don't need this functionality, you can exclude it like:
+```kts
+implementation("org.jetbrains.kotlinx:dataframe-csv:%dataFrameVersion%") {
+    exclude("org.jetbrains.kotlinx", "dataframe-json")
+}
+```
+</note>
 
 #### Linter configuration
 

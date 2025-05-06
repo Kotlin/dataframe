@@ -31,7 +31,7 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> =
         // or has no properties
         if (!T::class.canBeUnfolded) {
             // create a single `value` column
-            ValueProperty<T>::value from { it }
+            ValueProperty<T>::value.name from { it }
         } else {
             // otherwise creates columns based on properties
             properties()
@@ -196,6 +196,9 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     @Interpretable("ToDataFrameFrom0")
     public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit = add(this, expression)
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(columnName, expression)
@@ -203,6 +206,9 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public inline infix fun <reified R> String.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(this, source.map { inferType.expression(it) }))
 
+    @Deprecated(
+        "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+    )
     @AccessApiOverload
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
         add(DataColumn.createByInference(columnName, source.map { inferType.expression(it) }))

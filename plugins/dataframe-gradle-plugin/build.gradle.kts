@@ -16,11 +16,7 @@ group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     api(libs.kotlin.reflect)
-    implementation(projects.core)
-    implementation(projects.dataframeArrow)
-    implementation(projects.dataframeExcel)
-    implementation(projects.dataframeCsv)
-    implementation(projects.dataframeJdbc)
+    implementation(projects.dataframe)
     // experimental
     implementation(projects.dataframeOpenapiGenerator)
 
@@ -53,7 +49,7 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                listOf(":core", ":dataframe-csv").joinToString("\", \"") {
+                listOf(":core", ":dataframe-csv", ":dataframe-json").joinToString("\", \"") {
                     project(it).configurations
                         .getByName("instrumentedJars")
                         .artifacts.single()
@@ -110,6 +106,7 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":dataframe-excel:publishToMavenLocal")
     dependsOn(":dataframe-csv:publishToMavenLocal")
     dependsOn(":dataframe-jdbc:publishToMavenLocal")
+    dependsOn(":dataframe-json:publishToMavenLocal")
     dependsOn(":dataframe-openapi-generator:publishToMavenLocal")
     dependsOn(":dataframe-openapi:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")

@@ -74,7 +74,7 @@ df.convert { name }.asColumn { col ->
 ```kotlin
 df.convert { age }.to<Double>()
 df.convert { colsOf<Number>() }.to<String>()
-df.convert { name.firstName and name.lastName }.to { it.length() }
+df.convert { name.firstName and name.lastName }.asColumn { it.length() }
 df.convert { weight }.toFloat()
 ```
 

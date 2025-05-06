@@ -37,27 +37,6 @@ df.groupBy { age / 10 named "ageDecade" }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val lastName by name.column<String>()
-val firstName by name.column<String>()
-val age by column<Int>()
-val city by column<String?>()
-
-df.groupBy { name }
-// or
-df.groupBy(name)
-
-df.groupBy { city and lastName }
-// or
-df.groupBy(city, lastName)
-
-df.groupBy { age / 10 named "ageDecade" }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -78,17 +57,6 @@ Grouping columns can be created inplace:
 
 ```kotlin
 df.groupBy { expr { name.firstName.length + name.lastName.length } named "nameLength" }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val lastName by name.column<String>()
-val firstName by name.column<String>()
-
-df.groupBy { expr { firstName().length + lastName().length } named "nameLength" }
 ```
 
 </tab>
@@ -194,39 +162,6 @@ df.groupBy { city }.aggregate {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val name by columnGroup()
-
-df.groupBy { city }.aggregate {
-    count() into "total"
-    count { age() > 18 } into "adults"
-    median { age } into "median age"
-    min { age } into "min age"
-    maxBy { age() }[name] into "name of oldest"
-}
-// or
-df.groupBy(city).aggregate {
-    count() into "total"
-    count { age > 18 } into "adults"
-    median(age) into "median age"
-    min(age) into "min age"
-    maxBy(age)[name] into "name of oldest"
-}
-// or
-df.groupBy(city).aggregate {
-    count() into "total"
-    age().count { it > 18 } into "adults"
-    age().median() into "median age"
-    age().min() into "min age"
-    maxBy(age)[name] into "name of oldest"
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -262,19 +197,6 @@ df.groupBy { city }.aggregate { maxBy { age }.name }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val name by columnGroup()
-
-df.groupBy { city }.aggregate { maxBy { age() }[name] }
-// or
-df.groupBy(city).aggregate { maxBy(age)[name] }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -304,31 +226,6 @@ df.groupBy { city }
 df.groupBy { city }
     .minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
 df.groupBy { city }.meanOf("mean ratio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val weight by column<Int?>()
-val name by columnGroup()
-val firstName by name.column<String>()
-val lastName by name.column<String>()
-
-df.groupBy { city }.max() // max for every comparable column
-df.groupBy { city }.mean() // mean for every numeric column
-df.groupBy { city }.max { age } // max age into column "age"
-df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
-df.groupBy { city }.count() // number of rows into column "count"
-df.groupBy { city }
-    .max { firstName.length() and lastName.length() } // maximum length of firstName or lastName into column "max"
-df.groupBy { city }
-    .medianFor { age and weight } // median age into column "age", median weight into column "weight"
-df.groupBy { city }
-    .minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
-df.groupBy { city }.meanOf("mean ratio") { weight()?.div(age()) } // mean of weight/age into column "mean ratio"
 ```
 
 </tab>
@@ -368,20 +265,6 @@ To get all column values for every group without aggregation use `values` functi
 df.groupBy { city }.values()
 df.groupBy { city }.values { name and age }
 df.groupBy { city }.values { weight into "weights" }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-val age by column<Int>()
-val weight by column<Int?>()
-val name by columnGroup()
-
-df.groupBy(city).values()
-df.groupBy(city).values(name, age)
-df.groupBy(city).values { weight into "weights" }
 ```
 
 </tab>

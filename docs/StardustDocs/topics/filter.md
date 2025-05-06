@@ -13,19 +13,6 @@ df.filter { age > 18 && name.firstName.startsWith("A") }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.filter { age() > 18 && firstName().startsWith("A") }
-// or
-df.filter { it[age] > 18 && it[firstName].startsWith("A") }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -45,14 +32,6 @@ Returns [`DataFrame`](DataFrame.md) with rows that have value `true` in given co
 <tab title="Properties">
 
 ```kotlin
-df.filterBy { isHappy }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val isHappy by column<Boolean>()
 df.filterBy { isHappy }
 ```
 

@@ -25,6 +25,10 @@ repositories {
 dependencies {
     api(projects.core)
 
+    // for reading/writing JSON <-> DataFrame/DataRow in CSV/TSV/Delim
+    // can safely be excluded when working without JSON and only writing flat dataframes
+    api(projects.dataframeJson)
+
     // for csv reading
     api(libs.deephavenCsv)
     // for csv writing
@@ -34,7 +38,6 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.kotlin.reflect)
 
-    testApi(projects.core)
     testImplementation(libs.kotlinx.benchmark.runtime)
     testImplementation(libs.junit)
     testImplementation(libs.sl4jsimple)

@@ -430,9 +430,17 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
         }
         forEach {
             val values = it.values.map {
-                when (it) {
-                    is AnyRow -> it.toJson()
-                    is AnyFrame -> it.toJson()
+                when (it) { // todo use compileOnly?
+                    is AnyRow ->
+                        error(
+                            "Encountered a DataRow when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead.",
+                        )
+
+                    is AnyFrame ->
+                        error(
+                            "Encountered a DataFrame when writing CSV. This needs to be converted to JSON, which is not supported by `writeCSV` anymore. Please use `df.writeCsv()` instead.",
+                        )
+
                     else -> it
                 }
             }

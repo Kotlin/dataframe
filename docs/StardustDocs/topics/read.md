@@ -286,6 +286,14 @@ val df = DataFrame.readCsv(
 
 ## Read from JSON
 
+Before you can read data from JSON, make sure you have the following dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-json:$dataframe_version")
+```
+
+It's included by default if you have `org.jetbrains.kotlinx:dataframe:$dataframe_version` already.
+
 To read a JSON file, use the `.readJson()` function. JSON files can be read from a file or a URL.
 
 Note that after reading a JSON with a complex structure, you can get hierarchical

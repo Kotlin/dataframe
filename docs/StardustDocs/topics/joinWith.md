@@ -51,19 +51,6 @@ campaigns.innerJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.innerJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -87,19 +74,6 @@ Special case of inner join when you only need the data from the left table.
 ```kotlin
 campaigns.filterJoinWith(visits) {
     right.date in startDate..endDate
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.filterJoinWith(visits) {
-    right[date] in startDate()..endDate()
 }
 ```
 
@@ -129,19 +103,6 @@ campaigns.leftJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.leftJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -163,19 +124,6 @@ campaigns.leftJoinWith(visits) {
 ```kotlin
 campaigns.rightJoinWith(visits) {
     right.date in startDate..endDate
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.rightJoinWith(visits) {
-    right[date] in startDate()..endDate()
 }
 ```
 
@@ -205,19 +153,6 @@ campaigns.fullJoinWith(visits) {
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.fullJoinWith(visits) {
-    right[date] in startDate()..endDate()
-}
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -241,19 +176,6 @@ Can be viewed as **filterJoin** with logically opposite predicate
 ```kotlin
 campaigns.excludeJoinWith(visits) {
     right.date in startDate..endDate
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val date by column<LocalDate>()
-val startDate by column<LocalDate>()
-val endDate by column<LocalDate>()
-
-campaigns.excludeJoinWith(visits) {
-    right[date] in startDate()..endDate()
 }
 ```
 

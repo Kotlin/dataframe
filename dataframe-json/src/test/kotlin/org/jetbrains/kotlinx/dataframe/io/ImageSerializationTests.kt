@@ -13,11 +13,8 @@ import org.jetbrains.kotlinx.dataframe.impl.io.resizeKeepingAspectRatio
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.ALL_OFF
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.GZIP_ON
 import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions.Companion.LIMIT_SIZE_ON
-import org.jetbrains.kotlinx.dataframe.parseJsonStr
-import org.jetbrains.kotlinx.dataframe.testResource
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -25,11 +22,12 @@ import java.io.File
 import java.util.Base64
 import java.util.zip.GZIPInputStream
 import javax.imageio.ImageIO
+import kotlin.math.abs
 
-@RunWith(Parameterized::class)
-class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOptions?) {
-    @Test
-    fun `serialize images as base64`() {
+class ImageSerializationTests {
+    @ParameterizedTest
+    @MethodSource("imageEncodingOptionsToTest")
+    fun `serialize images as base64`(encodingOptions: Base64ImageEncodingOptions?) {
         val images = readImagesFromResources()
         val json = encodeImagesAsJson(images, encodingOptions)
 
@@ -145,7 +143,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
                 val g2 = (rgb2 shr 8) and 0xFF
                 val b2 = rgb2 and 0xFF
 
-                val diff = kotlin.math.abs(r1 - r2) + kotlin.math.abs(g1 - g2) + kotlin.math.abs(b1 - b2)
+                val diff = abs(r1 - r2) + abs(g1 - g2) + abs(b1 - b2)
 
                 // If the difference in color components exceed our allowance return false
                 if (diff > allowedDelta) {
@@ -167,8 +165,7 @@ class ImageSerializationTests(private val encodingOptions: Base64ImageEncodingOp
         private val DISABLED = null
 
         @JvmStatic
-        @Parameterized.Parameters
-        fun imageEncodingOptionsToTest(): Collection<Base64ImageEncodingOptions?> =
+        fun imageEncodingOptionsToTest(): List<Base64ImageEncodingOptions?> =
             listOf(
                 DEFAULT,
                 GZIP_ON_RESIZE_OFF,

@@ -28,16 +28,6 @@ df.join(other) { name match right.fullName }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val fullName by columnGroup()
-
-df.join(other) { name match fullName }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -55,16 +45,6 @@ If mapped columns have the same name, just select join columns from the left [`D
 <tab title="Properties">
 
 ```kotlin
-df.join(other) { name and city }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val city by column<String>()
-
 df.join(other) { name and city }
 ```
 
@@ -107,20 +87,6 @@ For every join type there is a shortcut operation:
 <tab title="Properties">
 
 ```kotlin
-df.innerJoin(other) { name and city }
-df.leftJoin(other) { name and city }
-df.rightJoin(other) { name and city }
-df.fullJoin(other) { name and city }
-df.excludeJoin(other) { name and city }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val city by column<String>()
-
 df.innerJoin(other) { name and city }
 df.leftJoin(other) { name and city }
 df.rightJoin(other) { name and city }

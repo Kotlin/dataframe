@@ -27,17 +27,6 @@ df.select { age and name }.distinct()
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-df.distinct { age and name }
-// same as
-df.select { age and name }.distinct()
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -59,19 +48,6 @@ Keep only the first row for every group of rows grouped by some condition.
 <tab title="Properties">
 
 ```kotlin
-df.distinctBy { age and name }
-// same as
-df.groupBy { age and name }.mapToRows { group.first() }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-val firstName by name.column<String>()
-
 df.distinctBy { age and name }
 // same as
 df.groupBy { age and name }.mapToRows { group.first() }

@@ -20,14 +20,6 @@ df.rename { name }.into("fullName")
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-df.rename(name).into("fullName")
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -45,17 +37,6 @@ df.rename("name").into("fullName")
 
 ```kotlin
 df.rename { age }.into {
-    val mean = it.data.mean()
-    "age [mean = $mean]"
-}
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-df.rename(age).into {
     val mean = it.data.mean()
     "age [mean = $mean]"
 }

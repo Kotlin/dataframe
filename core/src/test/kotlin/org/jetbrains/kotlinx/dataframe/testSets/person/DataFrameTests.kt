@@ -180,7 +180,6 @@ import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -1177,8 +1176,9 @@ class DataFrameTests : BaseTest() {
             .split { others }.intoRows()
             .add(sum) { name.length + other().length }
 
-        val matrix = src.pivot { other }.groupBy { name }.with { sum }
+        val matrix = src.pivot { other }.groupBy { name }.with { sum() }
         matrix.getColumnGroup(other.name()).ncol shouldBe names.size
+        matrix.getColumnGroup(other.name())["Alice"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test

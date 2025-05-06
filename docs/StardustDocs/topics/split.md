@@ -35,16 +35,6 @@ df.split { name.firstName }.by { it.asIterable() }.inplace()
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.split { firstName }.by { it.asIterable() }.inplace()
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -80,16 +70,6 @@ df.split { name.lastName }.by { it.asIterable() }.into("char1", "char2")
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val lastName by name.column<String>()
-
-df.split { lastName }.by { it.asIterable() }.into("char1", "char2")
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -106,18 +86,6 @@ df.split { "name"["lastName"]<String>() }.by { it.asIterable() }.into("char1", "
 
 ```kotlin
 df.split { name.lastName }
-    .by { it.asIterable() }.default(' ')
-    .inward { "char$it" }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val lastName by name.column<String>()
-
-df.split { lastName }
     .by { it.asIterable() }.default(' ')
     .inward { "char$it" }
 ```
@@ -187,18 +155,6 @@ Use the `.intoRows()` terminal operation in your `split` configuration to spread
 
 ```kotlin
 df.split { name.firstName }.by { it.asIterable() }.intoRows()
-
-df.split { name }.by { it.values() }.intoRows()
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-
-df.split { firstName }.by { it.asIterable() }.intoRows()
 
 df.split { name }.by { it.values() }.intoRows()
 ```

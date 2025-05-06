@@ -19,16 +19,6 @@ df.remove { name and weight }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val name by columnGroup()
-val weight by column<Int?>()
-
-df.remove { name and weight }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

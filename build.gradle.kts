@@ -50,10 +50,13 @@ configurations {
 
 dependencies {
     api(projects.core)
+
+    // expose all optional IO dependencies by default
     api(projects.dataframeArrow)
     api(projects.dataframeExcel)
     api(projects.dataframeJdbc)
     api(projects.dataframeCsv)
+    api(projects.dataframeJson)
 
     // experimental, so not included by default:
     // api(projects.dataframeOpenapi)
@@ -64,6 +67,7 @@ dependencies {
     kover(projects.dataframeOpenapi)
     kover(projects.dataframeJdbc)
     kover(projects.dataframeCsv)
+    kover(projects.dataframeJson)
     kover(projects.plugins.kotlinDataframe)
     kover(projects.dataframeJupyter)
 }

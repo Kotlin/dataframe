@@ -29,6 +29,10 @@ import kotlin.reflect.typeOf
 internal fun AnyFrame.extractSchema(): DataFrameSchema =
     DataFrameSchemaImpl(columns().filter { it.name().isNotEmpty() }.associate { it.name() to it.extractSchema() })
 
+// helper overload for friend modules
+@JvmName("intersectSchemasOverload")
+internal fun intersectSchemas(schemas: Iterable<DataFrameSchema>): DataFrameSchema = schemas.intersectSchemas()
+
 internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     val collectedTypes = mutableMapOf<String, MutableSet<ColumnSchema>>()
     var first = true

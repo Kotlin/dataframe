@@ -23,7 +23,6 @@ private const val CAST = "cast"
 private const val VERIFY = "verify" // cast(true) is obscure, i think it's better to use named argument here
 private const val READ_CSV = "readCSV"
 private const val READ_TSV = "readTSV"
-private const val READ_JSON = "readJson"
 private const val READ_JDBC = "readJdbc"
 
 public abstract class AbstractDefaultReadMethod(
@@ -81,13 +80,6 @@ public abstract class AbstractDefaultReadMethod(
 
     override val additionalImports: List<String> = listOf("import org.jetbrains.kotlinx.dataframe.io.$methodName")
 }
-
-internal class DefaultReadJsonMethod(path: String?, arguments: MethodArguments) :
-    AbstractDefaultReadMethod(
-        path = path,
-        arguments = arguments,
-        methodName = READ_JSON,
-    )
 
 internal class DefaultReadCsvMethod(path: String?, arguments: MethodArguments) :
     AbstractDefaultReadMethod(path, arguments, READ_CSV)

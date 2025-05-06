@@ -66,6 +66,9 @@ public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remov
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [Column Accessors][ColumnReference] used to remove the columns of this [DataFrame].
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFrame<T> = remove { columns.toColumnSet() }
 
@@ -74,6 +77,9 @@ public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFram
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetRemoveOperationArg]}
  * @param [columns] The [KProperties][KProperty] used to remove the columns of this [DataFrame].
  */
+@Deprecated(
+    "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
+)
 @AccessApiOverload
 public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> = remove { columns.toColumnSet() }
 

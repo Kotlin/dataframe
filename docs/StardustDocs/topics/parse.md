@@ -43,7 +43,7 @@ df.parse { age and weight }
 * [`Double` (with optional locale settings)](#parsing-doubles)
 * `Boolean`
 * `BigDecimal`
-* `JSON` (arrays and objects)
+* `JSON` (arrays and objects) (requires the `org.jetbrains.kotlinx:dataframe-json` dependency)
 
 ### Parser Options
 

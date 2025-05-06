@@ -83,21 +83,21 @@ Row condition signature: ```DataRow.(DataRow) -> Boolean```
 <snippet id="rowStatistics">
 
 The following [statistics](summaryStatistics.md) are available for `DataRow`:
-* `rowMax`
-* `rowMin`
 * `rowSum`
 * `rowMean`
 * `rowStd`
-* `rowMedian`
 
-These statistics will be applied only to values of appropriate types and incompatible values will be ignored.
-For example, if [`DataFrame`](DataFrame.md) has columns of type `String` and `Int`, `rowSum()` will successfully compute sum of `Int` values in a row and ignore `String` values.
+These statistics will be applied only to values of appropriate types, and incompatible values will be ignored.
+For example, if a [dataframe](DataFrame.md) has columns of types `String` and `Int`,
+`rowSum()` will compute the sum of the `Int` values in the row and ignore `String` values.
 
-To apply statistics only to values of particular type use `-Of` versions:
-* `rowMaxOf<T>`
-* `rowMinOf<T>`
+To apply statistics only to values of a particular type use `-Of` versions:
 * `rowSumOf<T>`
 * `rowMeanOf<T>`
+* `rowStdOf<T>`
+* `rowMinOf<T>`
+* `rowMaxOf<T>`
 * `rowMedianOf<T>`
+* `rowPercentileOf<T>`
 
 </snippet>

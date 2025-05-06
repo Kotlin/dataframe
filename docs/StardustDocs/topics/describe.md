@@ -51,16 +51,6 @@ df.describe { age and name.allCols() }
 ```
 
 </tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-
-df.describe { age and name.allCols() }
-```
-
-</tab>
 <tab title="Strings">
 
 ```kotlin

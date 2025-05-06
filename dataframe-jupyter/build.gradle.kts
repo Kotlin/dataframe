@@ -4,8 +4,9 @@ plugins {
     with(libs.plugins) {
         alias(kotlin.jvm)
         alias(publisher)
+        alias(kover)
+        alias(ktlint)
         alias(jupyter.api)
-        alias(buildconfig)
         alias(binary.compatibility.validator)
     }
 }
@@ -17,15 +18,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly(projects.core)
+    api(projects.dataframe)
 
     testImplementation(libs.junit)
     testImplementation(libs.serialization.json)
-    testImplementation(projects.core)
-    testImplementation(projects.dataframeArrow)
-    testImplementation(projects.dataframeCsv)
-    testImplementation(projects.dataframeExcel)
-    testImplementation(projects.dataframeJdbc)
     // experimental
     testImplementation(projects.dataframeOpenapiGenerator)
     testImplementation(projects.dataframeOpenapi)

@@ -17,7 +17,7 @@ import java.net.URL
  * Opens a stream to [url] to create a [DataFrame] from it.
  * If the URL is a file URL, the file is read directly.
  * If the URL is an HTTP URL, it's also read directly, but if the server returns an error code,
- * the error response is read as JSON and parsed as [DataFrame] too.
+ * the error response is read and parsed as [DataFrame] too.
  *
  * Public so it may be used in other modules.
  */
@@ -32,8 +32,8 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
         if (code != 200) {
             val response = connection.responseMessage
             try {
-                // attempt to read error response as JSON
-                return DataFrame.readJson(connection.errorStream)
+                // attempt to read error response as dataframe
+                return DataFrame.read(connection.errorStream).df
             } catch (_: Exception) {
                 throw RuntimeException("Server returned HTTP response code: $code. Response: $response")
             }
@@ -44,6 +44,20 @@ public fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFram
     }
 }
 
+/**
+ * Converts a list of lists into a [DataFrame].
+ *
+ * By default, treats the first inner list as a header (column names), and the remaining lists as rows.
+ * If [containsColumns] is `true`, interprets each inner list as a column,
+ * where the first element is used as the column name, and the remaining elements as values.
+ *
+ * @param T The type of elements contained in the nested lists.
+ * @param containsColumns If `true`, treats each nested list as a column with its first element as the column name.
+ *                        Otherwise, the first list is treated as the header.
+ *                        Defaults to `false`.
+ * @return A [DataFrame] containing the data from the nested list structure.
+ *         Returns an empty [DataFrame] if the input is empty or invalid.
+ */
 public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame =
     when {
         containsColumns -> {

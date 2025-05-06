@@ -46,7 +46,9 @@ internal interface ExpressionsGivenRow {
     interface SetDefaultOperationArg
 
     /**
-     * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]- and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow] instead of [DataRow] as the DSL's receiver type.
+     * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]-,
+     * [convert with][org.jetbrains.kotlinx.dataframe.api.Convert.with]-
+     * and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow] instead of [DataRow] as the DSL's receiver type.
      * This is an extension to [RowValueExpression][DfRowValueExpression] and
      * [RowExpression][DfRowExpression] that provides access to
      * the modified/generated value of the preceding row ([AddDataRow.newValue]).
