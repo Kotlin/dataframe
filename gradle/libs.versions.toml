@@ -1,11 +1,12 @@
 [versions]
-ksp = "2.0.20-1.0.24"
-kotlinJupyter = "0.12.0-383"
+# Cannot bump higher because of java 8/11
+ksp = "2.1.20-Beta2-1.0.29"
+kotlinJupyter = "0.12.0-426"
 
 ktlint = "12.1.2"
 
-# make sure to sync both manually with :generator module
-kotlin = "2.0.20" # needs jupyter compatibility with Kotlin 2.1 to update
+# make sure to sync both manually with :keywords-generator module
+kotlin = "2.1.20"
 kotlinpoet = "1.18.1"
 
 dokka = "1.9.20"

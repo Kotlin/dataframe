@@ -32,43 +32,44 @@ import java.io.File
 
 open class AbstractExplainerBlackBoxCodegenTest : BaseTestRunner() {
 
-    override fun TestConfigurationBuilder.configuration() {
-        globalDefaults {
-            frontend = FrontendKinds.ClassicAndFIR
-            targetPlatform = JvmPlatforms.jvm8
-            dependencyKind = DependencyKind.Binary
-            targetBackend = TargetBackend.JVM_IR
+    override fun configure(builder: TestConfigurationBuilder): Unit =
+        with(builder) {
+            globalDefaults {
+                frontend = FrontendKinds.ClassicAndFIR
+                targetPlatform = JvmPlatforms.jvm8
+                dependencyKind = DependencyKind.Binary
+                targetBackend = TargetBackend.JVM_IR
+            }
+            defaultDirectives {
+                JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
+                JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_1_8
+                +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
+            }
+            facadeStep(::ClassicFrontendFacade)
+            commonFirWithPluginFrontendConfiguration()
+            classicFrontendHandlersStep {
+                useHandlers(
+                    ::ClassicDiagnosticsHandler,
+                    ::DeclarationsDumpHandler,
+                )
+            }
+            psi2IrStep()
+            irHandlersStep {
+                useHandlers(
+                    ::IrPrettyKotlinDumpHandler,
+                    ::IrTextDumpHandler,
+                    ::IrTreeVerifierHandler,
+                )
+            }
+            facadeStep(::JvmIrBackendFacade)
+            jvmArtifactsHandlersStep {
+                useHandlers(::JvmBoxRunner)
+            }
+            useConfigurators(::JvmEnvironmentConfigurator, ::CommonEnvironmentConfigurator, ::PluginAnnotationsProvider)
+            useCustomRuntimeClasspathProviders(::MyClasspathProvider)
+            useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+            useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
         }
-        defaultDirectives {
-            JvmEnvironmentConfigurationDirectives.JDK_KIND with TestJdkKind.FULL_JDK
-            JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_1_8
-            +JvmEnvironmentConfigurationDirectives.WITH_REFLECT
-        }
-        facadeStep(::ClassicFrontendFacade)
-        commonFirWithPluginFrontendConfiguration()
-        classicFrontendHandlersStep {
-            useHandlers(
-                ::ClassicDiagnosticsHandler,
-                ::DeclarationsDumpHandler,
-            )
-        }
-        psi2IrStep()
-        irHandlersStep {
-            useHandlers(
-                ::IrPrettyKotlinDumpHandler,
-                ::IrTextDumpHandler,
-                ::IrTreeVerifierHandler,
-            )
-        }
-        facadeStep(::JvmIrBackendFacade)
-        jvmArtifactsHandlersStep {
-            useHandlers(::JvmBoxRunner)
-        }
-        useConfigurators(::JvmEnvironmentConfigurator, ::CommonEnvironmentConfigurator, ::PluginAnnotationsProvider)
-        useCustomRuntimeClasspathProviders(::MyClasspathProvider)
-        useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
-        useAdditionalService<TemporaryDirectoryManager>(::TemporaryDirectoryManagerImplFixed)
-    }
 
     class MyClasspathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
         override fun runtimeClassPaths(module: TestModule): List<File> =
