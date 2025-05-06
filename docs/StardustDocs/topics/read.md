@@ -46,9 +46,9 @@ DataFrame.readCsv(File("input.csv"))
 To read a CSV file from a URL:
 
 ```kotlin
-import java.net.URL
+import java.net.URI
 
-DataFrame.readCsv(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"))
+DataFrame.readCsv(URI("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv").toURL())
 ```
 
 Zip and GZip files are supported as well.

@@ -21,7 +21,7 @@ internal class SchemaGeneratorPluginTest {
         val (_, result) = runGradleBuild(":generateDataFrameTest") {
             // language=kts
             """
-            import java.net.URL
+            import java.net.URI
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
@@ -35,7 +35,7 @@ internal class SchemaGeneratorPluginTest {
 
             configure<SchemaGeneratorExtension> {
                 schema {
-                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = URI("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json").toURL()
                     name = "Test"
                     packageName = "org.test"
                 }
@@ -50,7 +50,7 @@ internal class SchemaGeneratorPluginTest {
         val (_, result) = runGradleBuild(":generateDataFrameTest") {
             // language=kts
             """
-            import java.net.URL
+            import java.net.URI
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
@@ -64,7 +64,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = URI("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json").toURL()
                     name = "Test"
                     packageName = "org.test"
                 }
@@ -81,7 +81,7 @@ internal class SchemaGeneratorPluginTest {
         buildFile.writeText(
             // language=groovy
             """
-            import java.net.URL
+            import java.net.URI
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
@@ -95,7 +95,7 @@ internal class SchemaGeneratorPluginTest {
             
             dataframes {
                 schema {
-                    data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = new URI("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json").toURL()
                     name = "Test"
                     packageName = "org.test"
                 }
@@ -127,7 +127,7 @@ internal class SchemaGeneratorPluginTest {
             
             dataframes {
                 schema {
-                    data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = new URI("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json").toURL()
                     name = "Test"
                     packageName = "org.test"
                     withNormalizationBy('-_\t ')
@@ -144,7 +144,7 @@ internal class SchemaGeneratorPluginTest {
         val (_, result) = runGradleBuild(":generateDataFrames") {
             // language=kts
             """
-            import java.net.URL
+            import java.net.URI
             
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
@@ -159,12 +159,12 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = URI("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json").toURL()
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
+                    data = URI("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv").toURL()
                     name = "Schema"
                     packageName = "org.test"
                 }
