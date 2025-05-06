@@ -37,7 +37,7 @@ class FormattingTests : BaseTest() {
                 if (typed[row].age > 10) 3 else 2
         }
 
-        formattedFrame.toHTML(DisplayConfiguration.DEFAULT).toString() shouldContain "font-style:italic"
+        formattedFrame.toHtml(DisplayConfiguration.DEFAULT).toString() shouldContain "font-style:italic"
     }
 
     @Test
