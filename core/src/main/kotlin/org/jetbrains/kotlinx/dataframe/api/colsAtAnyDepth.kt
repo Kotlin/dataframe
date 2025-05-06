@@ -65,8 +65,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
     /**
      * ## Cols At Any Depth
      *
-     * Returns all columns in [this\] at any depth (so also inside [Column Groups][ColumnGroup]) if they satisfy the
-     * optional given predicate.
+     * Returns all columns in [this\] at any depth (so also inside [Column Groups][ColumnGroup])
      *
      * This function can also be followed by another [ColumnSet] filter function like
      * [colsOf][ColumnsSelectionDsl.colsOf], [single][ColumnsSelectionDsl.single], or [valueCols][ColumnsSelectionDsl.valueCols].
@@ -74,7 +73,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * #### For example:
      * `// Depth-first search to a column containing the value "Alice"`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[first][ColumnsSelectionDsl.firstCol]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.firstCol]`() }`
      * {@include [LineBreak]}
      * `// The columns at any depth excluding the top-level`
      *
@@ -82,7 +81,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * {@include [LineBreak]}
      * `// All value- and frame columns at any depth`
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
      * {@include [LineBreak]}
      * `// All value columns at any depth nested under a column group named "myColGroup"`
      *
@@ -94,13 +93,13 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * #### Converting from deprecated syntax:
      *
-     * `dfs  { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }`
+     * `dfs  { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { condition }`
      *
-     * `allDfs(includeGroups = false) -> `[colsAtAnyDepth][colsAtAnyDepth]` { includeGroups || !it.`[isColumnGroup][DataColumn.isColumnGroup]`() }`
+     * `allDfs(includeGroups = false) -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { includeGroups || !it.`[isColumnGroup][DataColumn.isColumnGroup]`() }`
      *
      * `dfsOf<Type> { condition } -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[colsOf][ColumnsSelectionDsl.colsOf]`<Type> { condition }`
      *
-     * [cols][ColumnsSelectionDsl.cols]` { condition }.`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }`
+     * [cols][ColumnsSelectionDsl.cols]` { condition }.`[recursively][recursively]`() -> `[colsAtAnyDepth][colsAtAnyDepth]`().`[filter][FilterColumnsSelectionDsl.filter]` { condition }`
      *
      * [first][ColumnsSelectionDsl.first]` { condition }.`[rec][rec]`() -> `[colsAtAnyDepth][colsAtAnyDepth]` { condition }.`[first][ColumnsSelectionDsl.first]`()`
      *
@@ -122,6 +121,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth0")
+    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
     public fun ColumnSet<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         colsAtAnyDepthInternal(predicate)
 
@@ -129,13 +129,34 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
+    @Interpretable("ColsAtAnyDepth0")
+    public fun ColumnSet<*>.colsAtAnyDepth(): ColumnSet<*> = colsAtAnyDepthInternal { true }
+
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @set [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
      *
      * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]` { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
      */
     @Interpretable("ColsAtAnyDepth1")
+    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
     public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         asSingleColumn().colsAtAnyDepthInternal(predicate)
+
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @set [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() }.`[first][ColumnsSelectionDsl.first]`() }`
+     *
+     * `df.`[select][DataFrame.select]`  {  `[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter { !it.`[isColumnGroup][DataColumn.isColumnGroup]` } }`
+     */
+    @Interpretable("ColsAtAnyDepth1")
+    public fun ColumnsSelectionDsl<*>.colsAtAnyDepth(): ColumnSet<*> = asSingleColumn().colsAtAnyDepthInternal { true }
 
     /**
      * @include [CommonAtAnyDepthDocs]
@@ -144,6 +165,7 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
     @Interpretable("ColsAtAnyDepth2")
+    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
     public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         ensureIsColumnGroup().colsAtAnyDepthInternal(predicate)
 
@@ -151,10 +173,29 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      * @include [CommonAtAnyDepthDocs]
      * @set [CommonAtAnyDepthDocs.Examples]
      *
+     * `df.`[select][DataFrame.select]` { myColGroup.`[colsAtAnyDepth][SingleColumn.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
+    @Interpretable("ColsAtAnyDepth2")
+    public fun SingleColumn<DataRow<*>>.colsAtAnyDepth(): ColumnSet<*> =
+        ensureIsColumnGroup().colsAtAnyDepthInternal { true }
+
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @set [CommonAtAnyDepthDocs.Examples]
+     *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
+    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
     public fun String.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
+
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @set [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsAtAnyDepth][String.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
+    public fun String.colsAtAnyDepth(): ColumnSet<*> = columnGroup(this).colsAtAnyDepth { true }
 
     /**
      * @include [CommonAtAnyDepthDocs]
@@ -175,8 +216,17 @@ public interface ColsAtAnyDepthColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
      */
+    @Deprecated("", replaceWith = ReplaceWith("colsAtAnyDepth().filter(predicate)"))
     public fun ColumnPath.colsAtAnyDepth(predicate: ColumnFilter<*> = { true }): ColumnSet<*> =
         columnGroup(this).colsAtAnyDepth(predicate)
+
+    /**
+     * @include [CommonAtAnyDepthDocs]
+     * @set [CommonAtAnyDepthDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myGroupCol"].`[colsAtAnyDepth][ColumnsSelectionDsl.colsAtAnyDepth]`().filter  { "Alice"  `[in][Iterable.contains]` it.`[values][DataColumn.values]`() } }`
+     */
+    public fun ColumnPath.colsAtAnyDepth(): ColumnSet<*> = columnGroup(this).colsAtAnyDepth { true }
 
     // endregion
 }

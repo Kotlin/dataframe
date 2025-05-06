@@ -16,7 +16,10 @@ internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typ
 
 public data class Corr<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
 
-public fun <T> DataFrame<T>.corr(): DataFrame<T> = corr { colsAtAnyDepth { it.isSuitableForCorr() } }.withItself()
+public fun <T> DataFrame<T>.corr(): DataFrame<T> =
+    corr {
+        colsAtAnyDepth().filter { it.isSuitableForCorr() }
+    }.withItself()
 
 public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> = Corr(this, columns)
 

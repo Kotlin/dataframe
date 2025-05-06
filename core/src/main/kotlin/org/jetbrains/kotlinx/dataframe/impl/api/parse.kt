@@ -681,7 +681,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
             col.isFrameColumn() -> {
                 col.map {
                     it.parseImpl(options) {
-                        colsAtAnyDepth { !it.isColumnGroup() }
+                        colsAtAnyDepth().filter { !it.isColumnGroup() }
                     }
                 }
             }

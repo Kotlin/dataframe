@@ -283,7 +283,7 @@ public fun AnyFrame.toStaticHtml(
     val id = "static_df_${nextTableId()}"
 
     // Retrieve all columns, including nested ones
-    val flattenedCols = getColumnsWithPaths { colsAtAnyDepth { !it.isColumnGroup() } }
+    val flattenedCols = getColumnsWithPaths { colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
     // Get a grid of columns for the header, as well as the side borders for each cell
     val colGrid = getColumnsHeaderGrid()
