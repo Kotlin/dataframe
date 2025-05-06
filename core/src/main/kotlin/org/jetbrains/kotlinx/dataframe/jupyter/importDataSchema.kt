@@ -2,10 +2,11 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.intellij.lang.annotations.Language
 import java.io.File
+import java.net.URI
 import java.net.URL
 
 public class ImportDataSchema(public val url: URL) {
-    public constructor(path: String) : this(URL(path))
+    public constructor(path: String) : this(URI(path).toURL())
     public constructor(file: File) : this(file.toURI().toURL())
 }
 
@@ -47,7 +48,7 @@ internal val importDataSchema =
     }
 
     /** Import the type-only data schema from [path]. */
-    fun importDataSchema(path: String, name: String): Unit = importDataSchema(URL(path), name)
+    fun importDataSchema(path: String, name: String): Unit = importDataSchema(URI(path).toURL(), name)
 
     /** Import the type-only data schema from [file]. */
     fun importDataSchema(file: File, name: String): Unit = importDataSchema(file.toURI().toURL(), name)

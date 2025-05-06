@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.io.Base64ImageEncodingOptions
 import org.jetbrains.kotlinx.dataframe.io.CustomEncoder
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.io.toJsonWithMetadata
 import org.jetbrains.kotlinx.dataframe.io.toStaticHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils.convertToDataFrame
@@ -51,7 +51,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
             includeJs = reifiedDisplayConfiguration.isolatedOutputs,
             includeCss = true,
         ).plus(
-            df.toHTML(
+            df.toHtml(
                 // is added later to make sure it's put outside of potential iFrames
                 configuration = reifiedDisplayConfiguration.copy(enableFallbackStaticTables = false),
                 cellRenderer = contextRenderer,

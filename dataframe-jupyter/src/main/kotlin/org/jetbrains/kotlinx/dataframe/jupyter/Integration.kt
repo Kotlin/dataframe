@@ -273,6 +273,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         import("org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema")
         import("org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils")
         import("java.net.URL")
+        import("java.net.URI")
         import("java.io.File")
         import("kotlinx.datetime.Instant")
         import("kotlinx.datetime.LocalDateTime")

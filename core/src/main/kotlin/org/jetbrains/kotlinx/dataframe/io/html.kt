@@ -34,6 +34,12 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.util.TO_HTML
+import org.jetbrains.kotlinx.dataframe.util.TO_HTML_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.TO_STANDALONE_HTML
+import org.jetbrains.kotlinx.dataframe.util.TO_STANDALONE_HTML_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.WRITE_HTML
+import org.jetbrains.kotlinx.dataframe.util.WRITE_HTML_REPLACE
 import java.awt.Desktop
 import java.awt.image.BufferedImage
 import java.io.File
@@ -515,6 +521,20 @@ private fun AnyFrame.getColumnsHeaderGrid(): List<List<ColumnWithPathWithBorder<
 
 internal fun DataFrameHtmlData.print() = println(this)
 
+@Deprecated(TO_HTML, ReplaceWith(TO_HTML_REPLACE), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.toHTML(
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    cellRenderer: CellRenderer = DefaultCellRenderer,
+    getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
+) = toHtml(configuration, cellRenderer, getFooter)
+
+@Deprecated(TO_STANDALONE_HTML, ReplaceWith(TO_STANDALONE_HTML_REPLACE), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.toStandaloneHTML(
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    cellRenderer: CellRenderer = DefaultCellRenderer,
+    getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
+): DataFrameHtmlData = toStandaloneHtml(configuration, cellRenderer, getFooter)
+
 /**
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
@@ -524,18 +544,18 @@ internal fun DataFrameHtmlData.print() = println(this)
  * the ["Open in browser"](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA will automatically reload the file content when it's updated
  * @return DataFrameHtmlData with table script and css definitions
  */
-public fun <T> DataFrame<T>.toStandaloneHTML(
+public fun <T> DataFrame<T>.toStandaloneHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
-): DataFrameHtmlData = toHTML(configuration, cellRenderer, getFooter).withTableDefinitions()
+): DataFrameHtmlData = toHtml(configuration, cellRenderer, getFooter).withTableDefinitions()
 
 /**
  * By default, cell content is formatted as text
  * Use [RenderedContent.media] or [IMG], [IFRAME] if you need custom HTML inside a cell.
  * @return DataFrameHtmlData without additional definitions. Can be rendered in Jupyter kernel environments
  */
-public fun <T> DataFrame<T>.toHTML(
+public fun <T> DataFrame<T>.toHtml(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String? = { "DataFrame [${it.size}]" },
@@ -620,25 +640,40 @@ public class DataFrameHtmlData(
             },
         )
 
+    public fun writeHtml(destination: File) {
+        destination.writeText(toString())
+    }
+
+    public fun writeHtml(destination: String) {
+        File(destination).writeText(toString())
+    }
+
+    public fun writeHtml(destination: Path) {
+        destination.writeText(toString())
+    }
+
+    @Deprecated(WRITE_HTML, ReplaceWith(WRITE_HTML_REPLACE), DeprecationLevel.ERROR)
     public fun writeHTML(destination: File) {
         destination.writeText(toString())
     }
 
+    @Deprecated(WRITE_HTML, ReplaceWith(WRITE_HTML_REPLACE), DeprecationLevel.ERROR)
     public fun writeHTML(destination: String) {
         File(destination).writeText(toString())
     }
 
+    @Deprecated(WRITE_HTML, ReplaceWith(WRITE_HTML_REPLACE), DeprecationLevel.ERROR)
     public fun writeHTML(destination: Path) {
         destination.writeText(toString())
     }
 
     /**
      * Opens a new tab in your default browser.
-     * Consider [writeHTML] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
+     * Consider [writeHtml] with the [HTML file auto-reload](https://www.jetbrains.com/help/idea/editing-html-files.html#ws_html_preview_output_procedure) feature of IntelliJ IDEA if you want to experiment with the output and run program multiple times
      */
     public fun openInBrowser() {
         val file = File.createTempFile("df_rendering", ".html")
-        writeHTML(file)
+        writeHtml(file)
         val uri = file.toURI()
         val desktop = Desktop.getDesktop()
         desktop.browse(uri)
@@ -680,7 +715,7 @@ public class DataFrameHtmlData(
         /**
          * @return CSS and JS required to render DataFrame tables
          * Can be used as a starting point to create page with multiple tables
-         * @see DataFrame.toHTML
+         * @see DataFrame.toHtml
          * @see DataFrameHtmlData.plus
          */
         public fun tableDefinitions(includeJs: Boolean = true, includeCss: Boolean = true): DataFrameHtmlData =
