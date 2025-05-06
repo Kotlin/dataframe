@@ -793,7 +793,7 @@ class Access : TestBase() {
         df.select { name.allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
+        df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
 
         // SampleEnd
     }
@@ -831,7 +831,7 @@ class Access : TestBase() {
         df.select { name.allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
+        df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
         // SampleEnd
     }
 
@@ -900,7 +900,7 @@ class Access : TestBase() {
         df.select { "name".allCols() }
 
         // traversal of columns at any depth from here excluding ColumnGroups
-        df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
+        df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
         // SampleEnd
     }
 

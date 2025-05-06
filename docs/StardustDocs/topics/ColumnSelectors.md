@@ -451,7 +451,7 @@ df.select { name..age }
 df.select { name.allCols() }
 
 // traversal of columns at any depth from here excluding ColumnGroups
-df.select { name.colsAtAnyDepth { !it.isColumnGroup() } }
+df.select { name.colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
 </tab>
@@ -484,7 +484,7 @@ df.select { "name".."age" }
 df.select { "name".allCols() }
 
 // traversal of columns at any depth from here excluding ColumnGroups
-df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
+df.select { "name".colsAtAnyDepth().filter { !it.isColumnGroup() } }
 ```
 
 </tab></tabs>
