@@ -30,7 +30,7 @@ class MoveTests {
     @Test
     fun `select all atAnyDepth`() {
         val selected = grouped
-            .getColumnsWithPaths { colGroups().colsAtAnyDepth { !it.isColumnGroup() } }
+            .getColumnsWithPaths { colGroups().colsAtAnyDepth().filter { !it.isColumnGroup() } }
             .map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }
@@ -38,7 +38,7 @@ class MoveTests {
     @Test
     fun `batch ungrouping`() {
         val ungrouped = grouped.move {
-            colsAtAnyDepth { it.depth() > 0 && !it.isColumnGroup() }
+            colsAtAnyDepth().filter { it.depth() > 0 && !it.isColumnGroup() }
         }.into { pathOf(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
@@ -114,7 +114,7 @@ class MoveTests {
 
     @Test
     fun `move after with column selector`() {
-        val df = grouped.move { colsAtAnyDepth { it.name == "r" || it.name == "w" } }
+        val df = grouped.move { colsAtAnyDepth().filter { it.name == "r" || it.name == "w" } }
             .after { "a"["c"]["d"] }
         df.columnNames() shouldBe listOf("q", "a", "b", "e")
         df["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d", "w", "r")

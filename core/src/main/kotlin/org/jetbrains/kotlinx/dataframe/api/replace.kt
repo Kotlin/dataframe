@@ -36,7 +36,7 @@ public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceCla
 
 public fun <T> DataFrame<T>.replaceAll(
     vararg valuePairs: Pair<Any?, Any?>,
-    columns: ColumnsSelector<T, *> = { colsAtAnyDepth { !it.isColumnGroup() } },
+    columns: ColumnsSelector<T, *> = { colsAtAnyDepth().filter { !it.isColumnGroup() } },
 ): DataFrame<T> {
     val map = valuePairs.toMap()
     return update(columns).with { map[it] ?: it }

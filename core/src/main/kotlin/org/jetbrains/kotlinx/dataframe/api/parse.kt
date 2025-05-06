@@ -214,7 +214,7 @@ public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataCol
 
 public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> =
     parse(options) {
-        colsAtAnyDepth { !it.isColumnGroup() }
+        colsAtAnyDepth().filter { !it.isColumnGroup() }
     }
 
 /**
