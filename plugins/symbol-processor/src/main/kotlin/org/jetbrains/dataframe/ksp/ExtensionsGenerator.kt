@@ -137,6 +137,9 @@ class ExtensionsGenerator(
         appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
         appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
         appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
+        appendLine("import org.jetbrains.kotlinx.dataframe.impl.codeGen.ColumnsContainerGeneratedPropertyDelegate")
+        appendLine("import org.jetbrains.kotlinx.dataframe.impl.codeGen.ColumnsScopeGeneratedPropertyDelegate")
+        appendLine("import org.jetbrains.kotlinx.dataframe.impl.codeGen.DataRowGeneratedPropertyDelegate")
         appendLine()
     }
 

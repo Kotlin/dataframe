@@ -142,7 +142,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
     ): VariableName? =
         if (col.isColumnGroup()) {
             val codeWithConverter = codeGen.process(col.asDataFrame(), property).let { c ->
-                CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
+                CodeWithConverter(c.snippets) { c.converter("$it.asColumnGroup()") }
             }
             execute(
                 codeWithConverter = codeWithConverter,
@@ -304,13 +304,11 @@ internal class Integration(private val notebook: Notebook, private val options: 
         })
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
-            val code = classes
-                .joinToString("\n") { codeGen.process(it) }
-                .trim()
-
-            if (code.isNotEmpty()) {
-                execute(code)
-            }
+            classes
+                .flatMap { codeGen.process(it) }
+                .forEach { snippet ->
+                    execute(snippet)
+                }
         }
 
         onClassAnnotation<DataSchema> { addDataSchemas(it) }

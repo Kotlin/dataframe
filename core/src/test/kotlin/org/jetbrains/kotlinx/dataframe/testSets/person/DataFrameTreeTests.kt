@@ -103,6 +103,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.join
 import org.junit.Test
 import java.util.stream.Collectors
 import kotlin.reflect.typeOf
@@ -506,7 +507,7 @@ class DataFrameTreeTests : BaseTest() {
             .generate<GroupedPerson>(
                 interfaceMode = InterfaceGenerationMode.None,
                 extensionProperties = true,
-            ).declarations
+            ).snippets.join()
         val columnsContainer = ColumnsContainer::class.qualifiedName
         val dataFrameRowBase = DataRow::class.qualifiedName
         val dataFrameRow = DataRow::class.qualifiedName
@@ -517,18 +518,18 @@ class DataFrameTreeTests : BaseTest() {
         val columnData = DataColumn::class.qualifiedName
         val expected =
             """
-            @get:JvmName("${shortName}_age") val $columnsContainer<$className>.age: $columnData<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
-            @get:JvmName("${shortName}_age") val $dataFrameRowBase<$className>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
-            @get:JvmName("Nullable${shortName}_age") val $columnsContainer<$className?>.age: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("age")
-            @get:JvmName("Nullable${shortName}_age") val $dataFrameRowBase<$className?>.age: kotlin.Int? by DataRowGeneratedPropertyDelegate("age")
-            @get:JvmName("${shortName}_nameAndCity") val $columnsContainer<$className>.nameAndCity: $groupedColumn<$nameAndCity> by ColumnsContainerGeneratedPropertyDelegate("nameAndCity")
-            @get:JvmName("${shortName}_nameAndCity") val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> by DataRowGeneratedPropertyDelegate("nameAndCity")
-            @get:JvmName("Nullable${shortName}_nameAndCity") val $columnsContainer<$className?>.nameAndCity: $groupedColumn<$nameAndCity?> by ColumnsContainerGeneratedPropertyDelegate("nameAndCity")
-            @get:JvmName("Nullable${shortName}_nameAndCity") val $dataFrameRowBase<$className?>.nameAndCity: $dataFrameRow<$nameAndCity?> by DataRowGeneratedPropertyDelegate("nameAndCity")
-            @get:JvmName("${shortName}_weight") val $columnsContainer<$className>.weight: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
-            @get:JvmName("${shortName}_weight") val $dataFrameRowBase<$className>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
-            @get:JvmName("Nullable${shortName}_weight") val $columnsContainer<$className?>.weight: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
-            @get:JvmName("Nullable${shortName}_weight") val $dataFrameRowBase<$className?>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
+            val $columnsContainer<$className>.age: $columnData<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
+            val $columnsContainer<$className>.nameAndCity: $groupedColumn<$nameAndCity> by ColumnsContainerGeneratedPropertyDelegate("nameAndCity")
+            val $columnsContainer<$className>.weight: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            val $dataFrameRowBase<$className>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
+            val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> by DataRowGeneratedPropertyDelegate("nameAndCity")
+            val $dataFrameRowBase<$className>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
+            val $columnsContainer<$className?>.age: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("age")
+            val $columnsContainer<$className?>.nameAndCity: $groupedColumn<$nameAndCity?> by ColumnsContainerGeneratedPropertyDelegate("nameAndCity")
+            val $columnsContainer<$className?>.weight: $columnData<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            val $dataFrameRowBase<$className?>.age: kotlin.Int? by DataRowGeneratedPropertyDelegate("age")
+            val $dataFrameRowBase<$className?>.nameAndCity: $dataFrameRow<$nameAndCity?> by DataRowGeneratedPropertyDelegate("nameAndCity")
+            val $dataFrameRowBase<$className?>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
         code shouldBe expected
     }

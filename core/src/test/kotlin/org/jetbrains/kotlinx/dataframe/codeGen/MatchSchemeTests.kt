@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.generateCode
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.join
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
 
@@ -81,7 +82,7 @@ class MatchSchemeTests {
         codeGen.process(DataRecord::class)
         codeGen.process(typed, ::typed).hasConverter shouldBe false
         val generated = codeGen.process(df, ::df)
-        generated.declarations.split("\n").size shouldBe 1
+        generated.snippets.size shouldBe 0
     }
 
     val modified = df.add("new") { 4 }
@@ -91,7 +92,7 @@ class MatchSchemeTests {
         val codeGen = ReplCodeGenerator.create()
         codeGen.process(DataRecord::class)
         val generated = codeGen.process(modified, ::modified)
-        generated.declarations.contains(DataRecord::class.simpleName!!) shouldBe true
+        generated.snippets.join().contains(DataRecord::class.simpleName!!) shouldBe true
     }
 
     @Test

@@ -77,7 +77,7 @@ public val CodeGenerator.Companion.urlCodeGenReader: (
 
 public sealed interface CodeGenerationReadResult {
 
-    public class Success(public val code: Code, public val format: SupportedCodeGenerationFormat) :
+    public class Success(public val code: List<Code>, public val format: SupportedCodeGenerationFormat) :
         CodeGenerationReadResult {
         public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod =
             format.createDefaultReadMethod(pathRepresentation)

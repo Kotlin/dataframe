@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.CodeString
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.generateDataClasses
@@ -16,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.join
 import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.testSets.person.Person
 import org.junit.Test
@@ -34,66 +36,83 @@ class CodeGenerationTests : BaseTest() {
     val stringName = String::class.simpleName!!
     val intName = Int::class.simpleName!!
 
-    fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false) =
-        buildString {
-            appendLine(
-                """@get:JvmName("${shortTypeName}_age") val $dfName<$fullTypeName>.age: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("age")""",
+    fun expectedProperties(fullTypeName: String, shortTypeName: String, addNullable: Boolean = false): String {
+        // Due to https://youtrack.jetbrains.com/issue/KT-77305/REPL-support-local-delegated-extension-properties-with-the-same-name
+        // We need to generate all extension properties across 2 (4 with nullable support) snippets. This is done here and then
+        // combined into a single output (which is easier to verify during testing)
+        val snippetsDeclarations = List<MutableList<Code>>(if (addNullable) 4 else 2) { mutableListOf() }
+
+        // `age` property
+        snippetsDeclarations[0].add(
+            """val $dfName<$fullTypeName>.age: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("age")""",
+        )
+        snippetsDeclarations[1].add(
+            """val $dfRowName<$fullTypeName>.age: $intName by DataRowGeneratedPropertyDelegate("age")""",
+        )
+        if (addNullable) {
+            snippetsDeclarations[2].add(
+                """val $dfName<$fullTypeName?>.age: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("age")""",
             )
-            appendLine(
-                """@get:JvmName("${shortTypeName}_age") val $dfRowName<$fullTypeName>.age: $intName by DataRowGeneratedPropertyDelegate("age")""",
+            snippetsDeclarations[3].add(
+                """val $dfRowName<$fullTypeName?>.age: $intName? by DataRowGeneratedPropertyDelegate("age")""",
             )
-            if (addNullable) {
-                appendLine(
-                    """@get:JvmName("Nullable${shortTypeName}_age") val $dfName<$fullTypeName?>.age: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("age")""",
-                )
-                appendLine(
-                    """@get:JvmName("Nullable${shortTypeName}_age") val $dfRowName<$fullTypeName?>.age: $intName? by DataRowGeneratedPropertyDelegate("age")""",
-                )
-            }
-            appendLine(
-                """@get:JvmName("${shortTypeName}_city") val $dfName<$fullTypeName>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")""",
-            )
-            appendLine(
-                """@get:JvmName("${shortTypeName}_city") val $dfRowName<$fullTypeName>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")""",
-            )
-            if (addNullable) {
-                appendLine(
-                    """@get:JvmName("Nullable${shortTypeName}_city") val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")""",
-                )
-                appendLine(
-                    """@get:JvmName("Nullable${shortTypeName}_city") val $dfRowName<$fullTypeName?>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")""",
-                )
-            }
-            appendLine(
-                """@get:JvmName("${shortTypeName}_name") val $dfName<$fullTypeName>.name: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("name")""",
-            )
-            appendLine(
-                """@get:JvmName("${shortTypeName}_name") val $dfRowName<$fullTypeName>.name: $stringName by DataRowGeneratedPropertyDelegate("name")""",
-            )
-            if (addNullable) {
-                appendLine(
-                    """@get:JvmName("Nullable${shortTypeName}_name") val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("name")""",
-                )
-                appendLine(
-                    """@get:JvmName("Nullable${shortTypeName}_name") val $dfRowName<$fullTypeName?>.name: $stringName? by DataRowGeneratedPropertyDelegate("name")""",
-                )
-            }
-            appendLine(
-                """@get:JvmName("${shortTypeName}_weight") val $dfName<$fullTypeName>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")""",
-            )
-            append(
-                """@get:JvmName("${shortTypeName}_weight") val $dfRowName<$fullTypeName>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")""",
-            )
-            if (addNullable) {
-                appendLine("")
-                appendLine(
-                    """@get:JvmName("Nullable${shortTypeName}_weight") val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")""",
-                )
-                append(
-                    """@get:JvmName("Nullable${shortTypeName}_weight") val $dfRowName<$fullTypeName?>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")""",
-                )
-            }
         }
+
+        // `city` property
+        snippetsDeclarations[0].add(
+            """val $dfName<$fullTypeName>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")""",
+        )
+        snippetsDeclarations[1].add(
+            """val $dfRowName<$fullTypeName>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")""",
+        )
+        if (addNullable) {
+            snippetsDeclarations[2].add(
+                """val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")""",
+            )
+            snippetsDeclarations[3].add(
+                """val $dfRowName<$fullTypeName?>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")""",
+            )
+        }
+
+        // `name` property
+        snippetsDeclarations[0].add(
+            """val $dfName<$fullTypeName>.name: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("name")""",
+        )
+        snippetsDeclarations[1].add(
+            """val $dfRowName<$fullTypeName>.name: $stringName by DataRowGeneratedPropertyDelegate("name")""",
+        )
+        if (addNullable) {
+            snippetsDeclarations[2].add(
+                """val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("name")""",
+            )
+            snippetsDeclarations[3].add(
+                """val $dfRowName<$fullTypeName?>.name: $stringName? by DataRowGeneratedPropertyDelegate("name")""",
+            )
+        }
+
+        // `weight` property
+        snippetsDeclarations[0].add(
+            """val $dfName<$fullTypeName>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")""",
+        )
+        snippetsDeclarations[1].add(
+            """val $dfRowName<$fullTypeName>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")""",
+        )
+        if (addNullable) {
+            snippetsDeclarations[2].add(
+                """val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")""",
+            )
+            snippetsDeclarations[3].add(
+                """val $dfRowName<$fullTypeName?>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")""",
+            )
+        }
+
+        return snippetsDeclarations.flatten().join()
+    }
+
+    private fun List<CodeString>.toSingleCodeString(): CodeString =
+        joinToString(separator = "\n") {
+            it.value
+        }.toCodeString()
 
     @Test
     fun `generate marker interface`() {
@@ -104,12 +123,11 @@ class CodeGenerationTests : BaseTest() {
             """
             @DataSchema
             interface $typeName { }
-            
             """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
-        generated.declarations shouldBe expectedDeclaration
+        generated.snippets.join() shouldBe expectedDeclaration
         generated.converter("it") shouldBe expectedConverter
 
         val rowGenerated = codeGen.process(df[0], ::typedRow)
@@ -130,12 +148,11 @@ class CodeGenerationTests : BaseTest() {
             """
             @DataSchema
             interface $typeName { }
-            
             """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
 
-        generated.declarations shouldBe expectedDeclaration
+        generated.snippets.join() shouldBe expectedDeclaration
         generated.converter("it") shouldBe expectedConverter
     }
 
@@ -150,30 +167,27 @@ class CodeGenerationTests : BaseTest() {
             """
             @DataSchema(isOpen = false)
             interface $type1 { }
-            
-            @get:JvmName("${type1}_city") val $dfName<$type1>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")
-            @get:JvmName("${type1}_city") val $dfRowName<$type1>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")
-            @get:JvmName("${type1}_name") val $dfName<$type1>.name: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("name")
-            @get:JvmName("${type1}_name") val $dfRowName<$type1>.name: $stringName by DataRowGeneratedPropertyDelegate("name")
-            
+            val $dfName<$type1>.city: $dataCol<$stringName?> by ColumnsScopeGeneratedPropertyDelegate("city")
+            val $dfName<$type1>.name: $dataCol<$stringName> by ColumnsScopeGeneratedPropertyDelegate("name")
+            val $dfRowName<$type1>.city: $stringName? by DataRowGeneratedPropertyDelegate("city")
+            val $dfRowName<$type1>.name: $stringName by DataRowGeneratedPropertyDelegate("name")
             """.trimIndent()
 
         val declaration2 =
             """
             @DataSchema
             interface $type2 { }
-            
-            @get:JvmName("${type2}_age") val $dfName<$type2>.age: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("age")
-            @get:JvmName("${type2}_age") val $dfRowName<$type2>.age: $intName by DataRowGeneratedPropertyDelegate("age")
-            @get:JvmName("${type2}_nameAndCity") val $dfName<$type2>.nameAndCity: $colGroup<$type1> by ColumnsScopeGeneratedPropertyDelegate("nameAndCity")
-            @get:JvmName("${type2}_nameAndCity") val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> by DataRowGeneratedPropertyDelegate("nameAndCity")
-            @get:JvmName("${type2}_weight") val $dfName<$type2>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")
-            @get:JvmName("${type2}_weight") val $dfRowName<$type2>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")
+            val $dfName<$type2>.age: $dataCol<$intName> by ColumnsScopeGeneratedPropertyDelegate("age")
+            val $dfName<$type2>.nameAndCity: $colGroup<$type1> by ColumnsScopeGeneratedPropertyDelegate("nameAndCity")
+            val $dfName<$type2>.weight: $dataCol<$intName?> by ColumnsScopeGeneratedPropertyDelegate("weight")
+            val $dfRowName<$type2>.age: $intName by DataRowGeneratedPropertyDelegate("age")
+            val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> by DataRowGeneratedPropertyDelegate("nameAndCity")
+            val $dfRowName<$type2>.weight: $intName? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
 
         val expectedConverter = "it.cast<$type2>()"
 
-        generated.declarations shouldBe declaration1 + "\n" + declaration2
+        generated.snippets.join() shouldBe declaration1 + "\n" + declaration2
         generated.converter("it") shouldBe expectedConverter
     }
 
@@ -189,7 +203,7 @@ class CodeGenerationTests : BaseTest() {
         val code = CodeGenerator
             .create(useFqNames = false)
             .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true)
-            .declarations
+            .snippets.join()
         code shouldBe expected
     }
 
@@ -213,7 +227,7 @@ class CodeGenerationTests : BaseTest() {
             isOpen = true,
             visibility = MarkerVisibility.IMPLICIT_PUBLIC,
             knownMarkers = listOf(MarkersExtractor.get<Person>()),
-        ).code.declarations
+        ).code.snippets.join()
         val packageName = "org.jetbrains.kotlinx.dataframe"
         val expected =
             """
@@ -222,11 +236,10 @@ class CodeGenerationTests : BaseTest() {
                 override val city: kotlin.String
                 override val weight: kotlin.Int
             }
-            
-            @get:JvmName("ValidPerson_city") val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("city")
-            @get:JvmName("ValidPerson_city") val $packageName.DataRow<ValidPerson>.city: kotlin.String by DataRowGeneratedPropertyDelegate("city")
-            @get:JvmName("ValidPerson_weight") val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("weight")
-            @get:JvmName("ValidPerson_weight") val $packageName.DataRow<ValidPerson>.weight: kotlin.Int by DataRowGeneratedPropertyDelegate("weight")
+            val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("city")
+            val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            val $packageName.DataRow<ValidPerson>.city: kotlin.String by DataRowGeneratedPropertyDelegate("city")
+            val $packageName.DataRow<ValidPerson>.weight: kotlin.Int by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
         code shouldBe expected
     }
@@ -234,21 +247,20 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `empty interface with properties`() {
         val codeGen = CodeGenerator.create(useFqNames = false)
-        val code = codeGen.generate(df.schema(), "Person", false, true, true).code.declarations
+        val code = codeGen.generate(df.schema(), "Person", false, true, true).code.snippets
         val expected =
             """
             @DataSchema
             interface Person { }
-            
             """.trimIndent() + "\n" + expectedProperties("Person", "Person")
-        code shouldBe expected
+        code.join() shouldBe expected
     }
 
     @Test
     fun `interface with fields`() {
         val repl = CodeGenerator.create()
-        val code = repl.generate(typed.schema(), "DataType", true, false, false).code.declarations
-        code shouldBe
+        val code = repl.generate(typed.schema(), "DataType", true, false, false).code.snippets
+        code.first() shouldBe
             """
             @DataSchema(isOpen = false)
             interface DataType {
@@ -264,9 +276,9 @@ class CodeGenerationTests : BaseTest() {
     fun `declaration with internal visibility`() {
         val repl = CodeGenerator.create()
         val code =
-            repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
+            repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.snippets
         val packageName = "org.jetbrains.kotlinx.dataframe"
-        code shouldBe
+        code.join() shouldBe
             """
             @DataSchema(isOpen = false)
             internal interface DataType {
@@ -275,15 +287,14 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
-            
-            @get:JvmName("DataType_age") internal val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
-            @get:JvmName("DataType_age") internal val $packageName.DataRow<DataType>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
-            @get:JvmName("DataType_city") internal val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> by ColumnsContainerGeneratedPropertyDelegate("city")
-            @get:JvmName("DataType_city") internal val $packageName.DataRow<DataType>.city: kotlin.String? by DataRowGeneratedPropertyDelegate("city")
-            @get:JvmName("DataType_name") internal val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("name")
-            @get:JvmName("DataType_name") internal val $packageName.DataRow<DataType>.name: kotlin.String by DataRowGeneratedPropertyDelegate("name")
-            @get:JvmName("DataType_weight") internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
-            @get:JvmName("DataType_weight") internal val $packageName.DataRow<DataType>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
+            internal val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
+            internal val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> by ColumnsContainerGeneratedPropertyDelegate("city")
+            internal val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("name")
+            internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            internal val $packageName.DataRow<DataType>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
+            internal val $packageName.DataRow<DataType>.city: kotlin.String? by DataRowGeneratedPropertyDelegate("city")
+            internal val $packageName.DataRow<DataType>.name: kotlin.String by DataRowGeneratedPropertyDelegate("name")
+            internal val $packageName.DataRow<DataType>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
     }
 
@@ -297,7 +308,7 @@ class CodeGenerationTests : BaseTest() {
             true,
             false,
             MarkerVisibility.EXPLICIT_PUBLIC,
-        ).code.declarations
+        ).code.snippets.join()
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe
             """
@@ -308,15 +319,14 @@ class CodeGenerationTests : BaseTest() {
                 public val name: kotlin.String
                 public val weight: kotlin.Int?
             }
-            
-            @get:JvmName("DataType_age") public val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
-            @get:JvmName("DataType_age") public val $packageName.DataRow<DataType>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
-            @get:JvmName("DataType_city") public val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> by ColumnsContainerGeneratedPropertyDelegate("city")
-            @get:JvmName("DataType_city") public val $packageName.DataRow<DataType>.city: kotlin.String? by DataRowGeneratedPropertyDelegate("city")
-            @get:JvmName("DataType_name") public val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("name")
-            @get:JvmName("DataType_name") public val $packageName.DataRow<DataType>.name: kotlin.String by DataRowGeneratedPropertyDelegate("name")
-            @get:JvmName("DataType_weight") public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
-            @get:JvmName("DataType_weight") public val $packageName.DataRow<DataType>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
+            public val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> by ColumnsContainerGeneratedPropertyDelegate("age")
+            public val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> by ColumnsContainerGeneratedPropertyDelegate("city")
+            public val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> by ColumnsContainerGeneratedPropertyDelegate("name")
+            public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> by ColumnsContainerGeneratedPropertyDelegate("weight")
+            public val $packageName.DataRow<DataType>.age: kotlin.Int by DataRowGeneratedPropertyDelegate("age")
+            public val $packageName.DataRow<DataType>.city: kotlin.String? by DataRowGeneratedPropertyDelegate("city")
+            public val $packageName.DataRow<DataType>.name: kotlin.String by DataRowGeneratedPropertyDelegate("name")
+            public val $packageName.DataRow<DataType>.weight: kotlin.Int? by DataRowGeneratedPropertyDelegate("weight")
             """.trimIndent()
     }
 
@@ -324,7 +334,7 @@ class CodeGenerationTests : BaseTest() {
     fun `column starts with number`() {
         val df = dataFrameOf("1a", "-b", "?c")(1, 2, 3)
         val repl = CodeGenerator.create()
-        val declarations = repl.generate(df.schema(), "DataType", false, true, false).code.declarations
+        val declarations = repl.generate(df.schema(), "DataType", false, true, false).code.snippets.join()
         df.columnNames().forEach {
             val matches = "`$it`".toRegex().findAll(declarations).toList()
             matches.size shouldBe 2
@@ -333,7 +343,7 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `check method generateDataClasses`() {
-        val code = typed.groupBy { name }.toDataFrame().generateDataClasses()
+        val code = typed.groupBy { name }.toDataFrame().generateDataClasses().toSingleCodeString()
 
         code shouldBe
             """
@@ -344,7 +354,6 @@ class CodeGenerationTests : BaseTest() {
                 val name: String,
                 val weight: Int?
             )
-
             @DataSchema
             data class Person(
                 val group: List<Person1>,
@@ -355,7 +364,7 @@ class CodeGenerationTests : BaseTest() {
 
     @Test
     fun `check name normalization for generated data classes`() {
-        dataFrameOf("my_name")(1).generateDataClasses() shouldBe
+        dataFrameOf("my_name")(1).generateDataClasses().toSingleCodeString() shouldBe
             """
             @DataSchema
             data class DataEntry(

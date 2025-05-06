@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 public inline fun <reified T> DataFrame<T>.generateCode(
     fields: Boolean = true,
     extensionProperties: Boolean = true,
-): CodeString {
+): List<CodeString> {
     val name = markerName<T>()
     return generateCode(name, fields, extensionProperties)
 }
@@ -19,7 +19,7 @@ public fun <T> DataFrame<T>.generateCode(
     fields: Boolean = true,
     extensionProperties: Boolean = true,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeString {
+): List<CodeString> {
     val codeGen = CodeGenerator.create()
     return codeGen.generate(
         schema = schema(),
@@ -28,10 +28,10 @@ public fun <T> DataFrame<T>.generateCode(
         extensionProperties = extensionProperties,
         isOpen = true,
         visibility = visibility,
-    ).code.declarations.toCodeString()
+    ).code.snippets.map { it.toCodeString() }
 }
 
-public inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString =
+public inline fun <reified T> DataFrame<T>.generateInterfaces(): List<CodeString> =
     generateCode(
         fields = true,
         extensionProperties = false,
@@ -43,7 +43,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     useFqNames: Boolean = false,
     nameNormalizer: NameNormalizer = NameNormalizer.default,
-): CodeString {
+): List<CodeString> {
     val name = markerName ?: markerName<T>()
     val codeGen = CodeGenerator.create(useFqNames)
     return codeGen.generate(
@@ -55,7 +55,7 @@ public inline fun <reified T> DataFrame<T>.generateDataClasses(
         visibility = visibility,
         asDataClass = true,
         fieldNameNormalizer = nameNormalizer,
-    ).code.declarations.toCodeString()
+    ).code.snippets.map { it.toCodeString() }
 }
 
 @PublishedApi
@@ -66,7 +66,7 @@ internal inline fun <reified T> markerName(): String =
         "DataEntry"
     }
 
-public fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString =
+public fun <T> DataFrame<T>.generateInterfaces(markerName: String): List<CodeString> =
     generateCode(
         markerName = markerName,
         fields = true,

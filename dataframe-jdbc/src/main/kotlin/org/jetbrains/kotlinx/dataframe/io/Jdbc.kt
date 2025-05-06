@@ -20,11 +20,11 @@ public class Jdbc :
         stream: InputStream,
         name: String,
         generateHelperCompanionObject: Boolean,
-    ): Code {
+    ): List<Code> {
         TODO("Not yet implemented")
     }
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code {
+    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): List<Code> {
         TODO("Not yet implemented")
     }
 

@@ -78,14 +78,18 @@ public interface SupportedCodeGenerationFormat : SupportedFormat {
         stream: InputStream,
         name: String,
         generateHelperCompanionObject: Boolean = false,
-    ): Code
+    ): List<Code>
 
     /**
      * @param file where to read the schema from
      * @param name the name of the top-level interface to generate
      * @param generateHelperCompanionObject whether to generate a helper companion object (only needed for Jupyter)
      */
-    public fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean = false): Code
+    public fun readCodeForGeneration(
+        file: File,
+        name: String,
+        generateHelperCompanionObject: Boolean = false,
+    ): List<Code>
 }
 
 public class MethodArguments {
@@ -244,9 +248,11 @@ internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: A
 
 internal infix fun SupportedDataFrameFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
 
-internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val code: Code)
+internal data class GeneratedCode(val format: SupportedCodeGenerationFormat, val code: List<Code>)
 
-internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, code)
+internal infix fun SupportedCodeGenerationFormat.to(code: Code) = GeneratedCode(this, listOf(code))
+
+internal infix fun SupportedCodeGenerationFormat.to(code: List<Code>) = GeneratedCode(this, code)
 
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
     read(

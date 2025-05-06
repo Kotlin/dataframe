@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.join
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.kind
 import org.junit.Test
@@ -57,7 +58,9 @@ class GatherTests {
 
     //endregion
 
-    val generatedCode = df.generateCode("Marker")
+    val generatedCode: CodeString = df.generateCode("Marker").map {
+        it.value
+    }.join().toCodeString()
 
     //region Generated code
 

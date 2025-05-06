@@ -24,7 +24,7 @@ internal fun renderExtensions(
     visibility: MarkerVisibility,
     properties: List<Property>,
 ): String {
-    val generator = ExtensionsCodeGenerator.create()
+    val generator = ExtensionsCodeGenerator.create(createJvmGetterOverrides = true)
     val typeArguments = declaration.typeParameters.map {
         it.name.asString()
     }
@@ -74,7 +74,7 @@ internal fun renderExtensions(
         }
 
         override val visibility: MarkerVisibility = visibility
-    }).declarations
+    }).snippets.joinToString("\n")
 }
 
 private fun getQualifiedTypeReference(type: KSType) =

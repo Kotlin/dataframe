@@ -246,8 +246,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         @Language("kts")
         val res2 = execRendered(
             """
-            val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-            val <T> DataRow<Generic<T>>.test2: T get() = field
+            val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> by ColumnsContainerGeneratedPropertyDelegate("field")
+            val <T : String> DataRow<Generic<T>>.test2: T  by DataRowGeneratedPropertyDelegate("field")
             """.trimIndent(),
         )
         res2.shouldBeInstanceOf<Unit>()
@@ -269,8 +269,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         @Language("kts")
         val res2 = execRendered(
             """
-            val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-            val <T : String> DataRow<Generic<T>>.test2: T get() = field
+            val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> by ColumnsContainerGeneratedPropertyDelegate("field")
+            val <T : String> DataRow<Generic<T>>.test2: T  by DataRowGeneratedPropertyDelegate("field")
             """.trimIndent(),
         )
         res2.shouldBeInstanceOf<Unit>()
@@ -294,8 +294,8 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         @Language("kts")
         val res2 = execRendered(
             """
-            val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
-            val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
+            val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> by ColumnsContainerGeneratedPropertyDelegate("field")
+            val <T : UpperBound> DataRow<Generic<T>>.test2: T  by DataRowGeneratedPropertyDelegate("field")
             """.trimIndent(),
         )
         res2.shouldBeInstanceOf<Unit>()

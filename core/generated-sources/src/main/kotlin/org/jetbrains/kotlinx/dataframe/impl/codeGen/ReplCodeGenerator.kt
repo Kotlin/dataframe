@@ -13,11 +13,11 @@ internal interface ReplCodeGenerator {
 
     fun process(row: AnyRow, property: KProperty<*>? = null): CodeWithConverter
 
-    fun process(markerClass: KClass<*>): Code
+    fun process(markerClass: KClass<*>): List<Code>
 
     companion object {
         fun create(): ReplCodeGenerator = ReplCodeGeneratorImpl()
     }
 }
 
-internal inline fun <reified T> ReplCodeGenerator.process(): Code = process(T::class)
+internal inline fun <reified T> ReplCodeGenerator.process(): List<Code> = process(T::class)

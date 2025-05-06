@@ -578,8 +578,11 @@ class DataFrameSymbolProcessorTest {
             ),
         )
         result.inspectLines { codeLines ->
-            codeLines.forExactly(4) {
-                it.shouldContain("this[\"test-name\"]")
+            codeLines.forExactly(2) {
+                it.shouldContain("by ColumnsScopeGeneratedPropertyDelegate(\"test-name\")")
+            }
+            codeLines.forExactly(2) {
+                it.shouldContain("by DataRowGeneratedPropertyDelegate(\"test-name\")")
             }
             result.successfulCompilation shouldBe true
         }
@@ -611,7 +614,7 @@ class DataFrameSymbolProcessorTest {
         )
         result.inspectLines { codeLines ->
             codeLines.forExactly(2) {
-                it.shouldContain("@JvmName(\"Hello_a\")")
+                it.shouldContain("@get:JvmName(\"Hello_a\")")
             }
             result.successfulCompilation shouldBe true
         }
@@ -957,8 +960,11 @@ class DataFrameSymbolProcessorTest {
             ),
         )
         result.inspectLines { codeLines ->
-            codeLines.forExactly(4) {
-                it.shouldStartWith("""val """)
+            codeLines.forExactly(2) {
+                it.shouldStartWith("""@get:JvmName("Hello_name") val """)
+            }
+            codeLines.forExactly(2) {
+                it.shouldStartWith("""@get:JvmName("NullableHello_name") val """)
             }
             result.successfulCompilation shouldBe true
         }

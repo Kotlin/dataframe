@@ -1,11 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.join
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.process
 import org.junit.Test
 
@@ -38,7 +40,7 @@ class NameGenerationTests {
             }
             """.trimIndent()
 
-        code.declarations shouldBe expected
+        code.snippets.join() shouldBe expected
     }
 
     @Suppress("ktlint:standard:property-naming")
@@ -54,10 +56,12 @@ class NameGenerationTests {
     @Test
     fun `properties generation`() {
         val codeGen = ReplCodeGenerator.create()
-        val code = codeGen.process<DataRecord>().split("\n")
-        code.size shouldBe 8
-        code.forEach {
-            it.count { it == '`' } shouldBe 2
+        val snippets = codeGen.process<DataRecord>()
+        snippets shouldHaveSize 4
+        val lines = snippets.join().split("\n")
+        lines shouldHaveSize 8
+        lines.forEach { line ->
+            line.count { char -> char == '`' } shouldBe 2
         }
     }
 }

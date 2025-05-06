@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.join
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -96,7 +97,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         return result.code
     }
 
-    override fun process(markerClass: KClass<*>): Code {
+    override fun process(markerClass: KClass<*>): List<Code> {
         val newMarkers = mutableListOf<Marker>()
 
         fun resolve(clazz: KClass<*>): Marker {
@@ -134,6 +135,8 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         }
 
         val marker = resolve(markerClass)
-        return newMarkers.map { generator.generate(marker, InterfaceGenerationMode.None, true).declarations }.join()
+        return newMarkers.map {
+            generator.generate(marker, InterfaceGenerationMode.None, true).snippets
+        }.flatten()
     }
 }

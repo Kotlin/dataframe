@@ -46,6 +46,9 @@ internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 internal fun createCodeWithConverter(code: String, markerName: String) =
     CodeWithConverter(code) { "$it.cast<$markerName>()" }
 
+internal fun createCodeWithConverter(code: List<Code>, markerName: String) =
+    CodeWithConverter(code) { "$it.cast<$markerName>()" }
+
 private val letterCategories = setOf(
     CharCategory.UPPERCASE_LETTER,
     CharCategory.TITLECASE_LETTER,
@@ -231,8 +234,10 @@ internal object ShortNames : TypeRenderingStrategy {
     }
 }
 
-internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeRenderingStrategy) :
-    ExtensionsCodeGenerator,
+internal open class ExtensionsCodeGeneratorImpl(
+    private val typeRendering: TypeRenderingStrategy,
+    private val createJvmGetterNames: Boolean = false,
+) : ExtensionsCodeGenerator,
     TypeRenderingStrategy by typeRendering {
 
     fun renderStringLiteral(name: String) =
@@ -258,7 +263,8 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
         val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
 
         // Note, changes here might also require changes to the default imports in
-        // `org.jetbrains.kotlinx.dataframe.jupyter.Integration`
+        // `org.jetbrains.kotlinx.dataframe.jupyter.Integration` and
+        // `org.jetbrains.dataframe.ksp.ExtensionsGenerator`
         val propertyDelegateClassName = when {
             typeName.contains("ColumnsContainer<") -> ColumnsContainerGeneratedPropertyDelegate::class.simpleName!!
             typeName.contains("ColumnsScope<") -> ColumnsScopeGeneratedPropertyDelegate::class.simpleName!!
@@ -272,9 +278,16 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
                 it
             }
         }
-        return "@get:JvmName(\"${
-            renderStringLiteral(jvmName)
-        }\") ${visibility}val$typeParameters $typeName.$name: $propertyType by $propertyDelegateClassName(\"${
+
+        val jvmGetterOverride = if (createJvmGetterNames) {
+            "@get:JvmName(\"${renderStringLiteral(jvmName)}\") "
+        } else {
+            ""
+        }
+
+        return "$jvmGetterOverride${
+            visibility
+        }val$typeParameters $typeName.$name: $propertyType by $propertyDelegateClassName(\"${
             columnName
         }\")"
     }
@@ -298,7 +311,7 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
      * So this sudden `i: Int?` must be somehow handled.
      * However, REPL code generator will not create such a situation. Nullable properties are not needed then
      */
-    protected fun generateExtensionProperties(marker: IsolatedMarker, withNullable: Boolean = true): Code {
+    protected fun generateExtensionProperties(marker: IsolatedMarker, withNullable: Boolean = true): List<Code> {
         val markerName = marker.name
         val markerType = "$markerName${marker.typeArguments}"
         val visibility = renderTopLevelDeclarationVisibility(marker)
@@ -307,7 +320,6 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
 
         fun String.toNullable() = if (this.last() == '?' || this == "*") this else "$this?"
 
-        val declarations = mutableListOf<String>()
         val dfTypename = renderColumnsContainerTypeName(markerType)
         val nullableDfTypename = renderColumnsContainerTypeName(markerType.toNullable())
         val rowTypename = renderRowTypeName(markerType)
@@ -317,6 +329,12 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
             it.toNullable()
         }.associateBy { it.columnName }
 
+        // Due to https://youtrack.jetbrains.com/issue/KT-77305/REPL-support-local-delegated-extension-properties-with-the-same-name
+        // We cannot have multiple extension properties with the same name in the same snippet (even when they are added
+        // to multiple types). So for DataFrame extension properties where field names are added to both ColumnContainer
+        // and DataRow with nullable variants, potentially resulting in 4 variants. We need to split these into
+        // 4 different snippets.
+        val snippetsDeclarations = List<MutableList<Code>>(if (withNullable) 4 else 2) { mutableListOf() }
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val columnName = renderStringLiteral(it.columnName)
             val name = it.fieldName
@@ -325,54 +343,60 @@ internal open class ExtensionsCodeGeneratorImpl(private val typeRendering: TypeR
             val columnType = it.renderColumnType()
             val nullableColumnType = nullableFields[it.columnName]!!.renderColumnType()
 
-            declarations.addAll(
-                listOf(
-                    generatePropertyCode(
-                        marker = marker,
-                        shortMarkerName = shortMarkerName,
-                        typeName = dfTypename,
-                        name = name.quotedIfNeeded,
-                        propertyType = columnType,
-                        columnName = columnName,
-                        visibility = visibility,
-                    ),
-                    generatePropertyCode(
-                        marker = marker,
-                        shortMarkerName = shortMarkerName,
-                        typeName = rowTypename,
-                        name = name.quotedIfNeeded,
-                        propertyType = fieldType,
-                        columnName = columnName,
-                        visibility = visibility,
-                    ),
+            // ColumnContainer
+            snippetsDeclarations[0].add(
+                generatePropertyCode(
+                    marker = marker,
+                    shortMarkerName = shortMarkerName,
+                    typeName = dfTypename,
+                    name = name.quotedIfNeeded,
+                    propertyType = columnType,
+                    columnName = columnName,
+                    visibility = visibility,
                 ),
             )
+
+            // DataRow
+            snippetsDeclarations[1].add(
+                generatePropertyCode(
+                    marker = marker,
+                    shortMarkerName = shortMarkerName,
+                    typeName = rowTypename,
+                    name = name.quotedIfNeeded,
+                    propertyType = fieldType,
+                    columnName = columnName,
+                    visibility = visibility,
+                ),
+            )
+
             if (withNullable) {
-                declarations.addAll(
-                    listOf(
-                        generatePropertyCode(
-                            marker = marker,
-                            shortMarkerName = nullableShortMarkerName,
-                            typeName = nullableDfTypename,
-                            name = name.quotedIfNeeded,
-                            propertyType = nullableColumnType,
-                            columnName = columnName,
-                            visibility = visibility,
-                        ),
-                        generatePropertyCode(
-                            marker = marker,
-                            shortMarkerName = nullableShortMarkerName,
-                            typeName = nullableRowTypename,
-                            name = name.quotedIfNeeded,
-                            propertyType = nullableFieldType,
-                            columnName = columnName,
-                            visibility = visibility,
-                        ),
+                // ColumnContainer (Nullable)
+                snippetsDeclarations[2].add(
+                    generatePropertyCode(
+                        marker = marker,
+                        shortMarkerName = nullableShortMarkerName,
+                        typeName = nullableDfTypename,
+                        name = name.quotedIfNeeded,
+                        propertyType = nullableColumnType,
+                        columnName = columnName,
+                        visibility = visibility,
+                    ),
+                )
+                // DataRow (Nullable)
+                snippetsDeclarations[3].add(
+                    generatePropertyCode(
+                        marker = marker,
+                        shortMarkerName = nullableShortMarkerName,
+                        typeName = nullableRowTypename,
+                        name = name.quotedIfNeeded,
+                        propertyType = nullableFieldType,
+                        columnName = columnName,
+                        visibility = visibility,
                     ),
                 )
             }
         }
-        return declarations.joinToString("\n")
+        return snippetsDeclarations.map { it.join() }
     }
 
     override fun generate(marker: IsolatedMarker): CodeWithConverter {
@@ -405,30 +429,33 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         readDfMethod: DefaultReadDfMethod?,
     ): CodeWithConverter {
         val code = when (interfaceMode) {
-            NoFields, WithFields ->
+            NoFields, WithFields -> {
                 generateInterface(
                     marker = marker,
                     fields = interfaceMode == WithFields,
                     readDfMethod = readDfMethod,
-                ) + if (extensionProperties) "\n" + generateExtensionProperties(marker) else ""
+                ).toMutableList().also {
+                    if (extensionProperties) it.addAll(generateExtensionProperties(marker))
+                }
+            }
 
             Enum -> generateEnum(marker)
 
             TypeAlias -> generateTypeAlias(marker)
 
-            None -> if (extensionProperties) generateExtensionProperties(marker) else ""
+            None -> if (extensionProperties) generateExtensionProperties(marker) else emptyList()
         }
 
         return createCodeWithConverter(code, marker.name)
     }
 
-    private fun generateTypeAlias(marker: Marker): Code {
+    private fun generateTypeAlias(marker: Marker): List<Code> {
         val visibility = renderTopLevelDeclarationVisibility(marker)
 
-        return "${visibility}typealias ${marker.name} = ${marker.superMarkers.keys.single()}"
+        return listOf("${visibility}typealias ${marker.name} = ${marker.superMarkers.keys.single()}")
     }
 
-    private fun generateEnum(marker: Marker): Code {
+    private fun generateEnum(marker: Marker): List<Code> {
         val visibility = renderTopLevelDeclarationVisibility(marker)
 
         val header =
@@ -460,7 +487,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             ""
         }
 
-        return listOf(header + body).join()
+        return listOf(listOf(header + body).join())
     }
 
     override fun generate(
@@ -477,23 +504,28 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, if (asDataClass) emptyList() else knownMarkers, fieldNameNormalizer)
         val marker = context.process(schema, isOpen, visibility)
-        val declarations = mutableListOf<Code>()
+        val snippets = mutableListOf<Code>()
+        // TODO This will result in a lot of snippets :/
         context.generatedMarkers.forEach { itMarker ->
             val declaration = if (asDataClass) {
                 generateClasses(itMarker)
             } else {
                 generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker })
             }
-            declarations.add(declaration)
+            snippets.addAll(declaration)
             if (extensionProperties) {
-                declarations.add(generateExtensionProperties(itMarker, withNullable = false))
+                snippets.addAll(generateExtensionProperties(itMarker, withNullable = false))
             }
         }
-        val code = createCodeWithConverter(declarations.joinToString("\n\n"), marker.name)
+        val code = createCodeWithConverter(snippets, marker.name)
         return CodeGenResult(code, context.generatedMarkers)
     }
 
-    private fun generateInterface(marker: Marker, fields: Boolean, readDfMethod: DefaultReadDfMethod? = null): Code {
+    private fun generateInterface(
+        marker: Marker,
+        fields: Boolean,
+        readDfMethod: DefaultReadDfMethod? = null,
+    ): List<Code> {
         val annotationName = DataSchema::class.simpleName
 
         val visibility = renderTopLevelDeclarationVisibility(marker)
@@ -535,10 +567,10 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             " { }"
         }
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
-        return resultDeclarations.join()
+        return listOf(resultDeclarations.join())
     }
 
-    private fun generateClasses(marker: Marker): Code {
+    private fun generateClasses(marker: Marker): List<Code> {
         val annotationName = DataSchema::class.simpleName
 
         val visibility = renderTopLevelDeclarationVisibility(marker)
@@ -547,11 +579,12 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             "@$annotationName\n${visibility}data class ${marker.name}("
 
         val fieldsDeclaration = renderFields(marker, propertyVisibility).joinToString(",\n")
-        return buildString {
+        val code = buildString {
             appendLine(header)
             appendLine(fieldsDeclaration)
             append(")")
         }
+        return listOf(code)
     }
 
     private fun renderFields(marker: Marker, propertyVisibility: String): List<String> =
@@ -568,10 +601,19 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
         }
 }
 
+/**
+ * Converts all generated code into a single stand-alone snippet.
+ *
+ * This should only be used when the resulting code is used outside Notebooks as multiple snippets is most likely a
+ * result of the Notebook API requiring them.
+ */
 public fun CodeWithConverter.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
-    declarations.toStandaloneSnippet(packageName, additionalImports)
+    snippets.toStandaloneSnippet(packageName, additionalImports)
 
 public fun Code.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
+    listOf(this).toStandaloneSnippet(packageName, additionalImports)
+
+public fun List<Code>.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
     buildString {
         if (packageName.isNotEmpty()) {
             appendLine("package $packageName")
@@ -589,7 +631,9 @@ public fun Code.toStandaloneSnippet(packageName: String, additionalImports: List
             appendLine(it)
         }
         appendLine()
-        appendLine(this@toStandaloneSnippet)
+        this@toStandaloneSnippet.forEach { snippet ->
+            appendLine(snippet)
+        }
     }
 
 public fun CodeGenResult.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =

@@ -12,7 +12,7 @@ public val CodeGenerator.Companion.databaseCodeGenReader: (url: URL, name: Strin
         try {
             val code = buildCodeForDB(url, name)
             throw RuntimeException()
-            CodeGenerationReadResult.Success(code, Jdbc())
+            CodeGenerationReadResult.Success(listOf(code), Jdbc())
         } catch (e: Throwable) {
             CodeGenerationReadResult.Error(e)
         }

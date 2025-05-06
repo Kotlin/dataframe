@@ -16,7 +16,7 @@ public class OpenApi : SupportedCodeGenerationFormat {
         name: String,
         extensionProperties: Boolean = false,
         generateHelperCompanionObject: Boolean,
-    ): Code =
+    ): List<Code> =
         readOpenApiAsString(
             openApiAsString = text,
             name = name,
@@ -28,7 +28,7 @@ public class OpenApi : SupportedCodeGenerationFormat {
         stream: InputStream,
         name: String,
         generateHelperCompanionObject: Boolean,
-    ): Code =
+    ): List<Code> =
         readOpenApiAsString(
             openApiAsString = stream.bufferedReader().readText(),
             name = name,
@@ -41,7 +41,7 @@ public class OpenApi : SupportedCodeGenerationFormat {
         name: String,
         extensionProperties: Boolean,
         generateHelperCompanionObject: Boolean,
-    ): Code =
+    ): List<Code> =
         readOpenApiAsString(
             openApiAsString = stream.bufferedReader().readText(),
             name = name,
@@ -49,7 +49,7 @@ public class OpenApi : SupportedCodeGenerationFormat {
             generateHelperCompanionObject = generateHelperCompanionObject,
         )
 
-    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): Code =
+    override fun readCodeForGeneration(file: File, name: String, generateHelperCompanionObject: Boolean): List<Code> =
         readOpenApiAsString(
             openApiAsString = file.readText(),
             name = name,
@@ -62,13 +62,15 @@ public class OpenApi : SupportedCodeGenerationFormat {
         name: String,
         extensionProperties: Boolean,
         generateHelperCompanionObject: Boolean,
-    ): Code =
-        readOpenApiAsString(
+    ): List<Code> {
+        val code = readOpenApiAsString(
             openApiAsString = file.readText(),
             name = name,
             extensionProperties = extensionProperties,
             generateHelperCompanionObject = generateHelperCompanionObject,
         )
+        return code
+    }
 
     override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
 

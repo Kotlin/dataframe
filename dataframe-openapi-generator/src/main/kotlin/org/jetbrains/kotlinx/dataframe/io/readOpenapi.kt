@@ -35,7 +35,7 @@ public fun readOpenApi(
     extensionProperties: Boolean,
     generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): Code {
+): List<Code> {
     require(isOpenApi(uri)) { "Not an OpenApi specification with type schemas: $uri" }
 
     return readOpenApi(
@@ -56,7 +56,7 @@ public fun readOpenApiAsString(
     extensionProperties: Boolean,
     generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): Code {
+): List<Code> {
     require(isOpenApiStr(openApiAsString)) { "Not an OpenApi specification with type schemas: $openApiAsString" }
 
     return readOpenApi(
@@ -84,7 +84,7 @@ private fun readOpenApi(
     extensionProperties: Boolean,
     generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): Code {
+): List<Code> {
     val openApi = swaggerParseResult.openAPI
         ?: error("Failed to parse OpenAPI, ${swaggerParseResult.messages.toList()}")
 
@@ -101,7 +101,7 @@ private fun readOpenApi(
     // generate the code for the markers in result
     val codeGenerator = CodeGenerator.create(useFqNames = true)
 
-    fun toCode(marker: OpenApiMarker): Code =
+    fun toCode(marker: OpenApiMarker): List<Code> =
         codeGenerator.generate(
             marker = marker
                 .withVisibility(visibility)
@@ -116,20 +116,20 @@ private fun readOpenApi(
             },
             extensionProperties = false,
             readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
-        ).declarations
+        ).snippets
 
     fun Code.merge(other: Code): Code = "$this\n$other"
 
-    fun toExtensionProperties(marker: OpenApiMarker): Code =
+    fun toExtensionProperties(marker: OpenApiMarker): List<Code> =
         if (marker !is OpenApiMarker.Interface) {
-            ""
+            emptyList()
         } else {
             codeGenerator.generate(
                 marker = marker.withVisibility(visibility),
                 interfaceMode = InterfaceGenerationMode.None,
                 extensionProperties = true,
                 readDfMethod = null,
-            ).declarations
+            ).snippets
         }
 
     val (typeAliases, markers) = result
@@ -137,23 +137,24 @@ private fun readOpenApi(
 
     val generatedMarkers = markers
         .map(::toCode)
+        .flatten()
         .reduceOrNull(Code::merge)
         ?: ""
 
     val generatedTypeAliases = typeAliases
         .map(::toCode)
+        .flatten()
         .reduceOrNull(Code::merge)
         ?: ""
 
-    val generatedExtensionProperties =
-        if (!extensionProperties) {
-            ""
-        } else {
-            result
-                .map(::toExtensionProperties)
-                .reduceOrNull(Code::merge)
-                ?: ""
-        }
+    val generatedExtensionProperties: List<Code> =
+        (
+            if (!extensionProperties) {
+                emptyList()
+            } else {
+                result.map(::toExtensionProperties).flatten()
+            }
+        )
 
     val helperCompanionObject =
         if (!generateHelperCompanionObject) {
@@ -172,19 +173,20 @@ private fun readOpenApi(
             """
         }
 
-    return """
+    return listOf(
+        """
              |interface ${topInterfaceName.quotedIfNeeded} {
              |    $helperCompanionObject
              |    ${generatedMarkers.replace("\n", "\n|    ")}
              |}
              |${generatedTypeAliases.replace("\n", "\n|")}
-             |${generatedExtensionProperties.replace("\n", "\n|")}
-        """.trimMargin()
+        """.trimMargin(),
+    ) + generatedExtensionProperties
 }
 
 /**
  * Converts named OpenApi schemas to a list of [OpenApiMarker]s.
- * Will cause an exception for circular references, however they shouldn't occur in OpenApi specs.
+ * Will cause an exception for circular references, however, they shouldn't occur in OpenApi specs.
  *
  * Some explanation:
  * OpenApi provides schemas for all the types used. For each type, we want to generate a [Marker]
