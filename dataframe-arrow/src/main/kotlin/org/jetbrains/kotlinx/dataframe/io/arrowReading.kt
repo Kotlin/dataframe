@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import java.io.File
 import java.io.InputStream
+import java.net.URI
 import java.net.URL
 import java.nio.channels.Channels
 import java.nio.channels.ReadableByteChannel
@@ -110,7 +111,7 @@ public fun DataFrame.Companion.readArrowIPC(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
     if (isUrl(path)) {
-        readArrowIPC(URL(path), nullability)
+        readArrowIPC(URI(path).toURL(), nullability)
     } else {
         readArrowIPC(File(path), nullability)
     }
@@ -166,7 +167,7 @@ public fun DataFrame.Companion.readArrowFeather(
     nullability: NullabilityOptions = NullabilityOptions.Infer,
 ): AnyFrame =
     if (isUrl(path)) {
-        readArrowFeather(URL(path), nullability)
+        readArrowFeather(URI(path).toURL(), nullability)
     } else {
         readArrowFeather(File(path), nullability)
     }

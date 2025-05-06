@@ -50,8 +50,13 @@ import org.jetbrains.kotlinx.dataframe.impl.io.FastDoubleParser
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO
 import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_URL
+import org.jetbrains.kotlinx.dataframe.util.CONVERT_TO_URL_REPLACE
+import org.jetbrains.kotlinx.dataframe.util.TO_URL
+import org.jetbrains.kotlinx.dataframe.util.TO_URL_REPLACE
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.net.URI
 import java.net.URL
 import java.util.Locale
 import kotlin.reflect.KProperty
@@ -180,7 +185,7 @@ internal interface ConvertDocs {
      * `| `__`.`__[**`toInstant`**][Convert.toInstant]`()`
      *
      * {@include [Indent]}
-     * `| `__`.`__[**`toURL`**][Convert.toURL]`()`
+     * `| `__`.`__[**`toURL`**][Convert.toUrl]`()`
      *
      * {@include [Indent]}
      * `| `__`.`__[**`toIFrame`**][Convert.toIFrame]`()`
@@ -325,7 +330,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(
  * - [toStr], [toInt], [toLong], [toDouble], [toFloat], [toBigDecimal],
  *   [toBigInteger], [toBoolean] – convert to standard types.
  * - [toLocalDateTime], [toLocalDate], [toLocalTime], [toInstant] – convert to kotlinx.datetime types.
- * - [toURL], [toIFrame], [toImg] – convert to special types.
+ * - [toUrl], [toIFrame], [toImg] – convert to special types.
  * - [toDataFrames] – converts a column of lists into separate DataFrames.
  *
  * See [Grammar][ConvertDocs.Grammar] for more details.
@@ -956,20 +961,34 @@ public fun <T, R : URL?> Convert<T, URL>.toImg(width: Int? = null, height: Int? 
 
 // region toURL
 
+@Deprecated(CONVERT_TO_URL, ReplaceWith(CONVERT_TO_URL_REPLACE))
+public fun DataColumn<String>.convertToURL(): DataColumn<URL> = convertToUrl()
+
 /**
  * Converts values in this [String] column to an [URL].
  *
  * @return A new [DataColumn] with an [URL] values.
  */
-public fun DataColumn<String>.convertToURL(): DataColumn<URL> = map { URL(it) }
+public fun DataColumn<String>.convertToUrl(): DataColumn<URL> = map { URI(it).toURL() }
+
+@Deprecated(CONVERT_TO_URL, ReplaceWith(CONVERT_TO_URL_REPLACE))
+@JvmName("convertToURLFromStringNullable")
+public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = convertToUrl()
 
 /**
  * Converts values in this [String] column to an [URL]. Preserves null values.
  *
  * @return A new [DataColumn] with an [URL] nullable values.
  */
-@JvmName("convertToURLFromStringNullable")
-public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let { URL(it) } }
+@JvmName("convertToUrlFromStringNullable")
+public fun DataColumn<String?>.convertToUrl(): DataColumn<URL?> = map { it?.let { URI(it).toURL() } }
+
+@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE))
+@JvmName("toURLFromStringNullable")
+@Refine
+@Converter(URL::class, nullable = true)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convertToUrl() }
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to an [URL],
@@ -980,7 +999,7 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let 
  *
  * ### Examples:
  * ```kotlin
- * df.convert { webAddress }.toURL()
+ * df.convert { webAddress }.toUrl()
  * ```
  *
  * @return A new [DataFrame] with the values converted to an [URL].
@@ -989,7 +1008,14 @@ public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> = map { it?.let 
 @Refine
 @Converter(URL::class, nullable = true)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convertToURL() }
+public fun <T> Convert<T, String?>.toUrl(): DataFrame<T> = asColumn { it.convertToUrl() }
+
+@Deprecated(TO_URL, ReplaceWith(TO_URL_REPLACE))
+@JvmName("toURLFromString")
+@Refine
+@Converter(URL::class, nullable = false)
+@Interpretable("ToSpecificType")
+public fun <T> Convert<T, String>.toURL(): DataFrame<T> = toUrl()
 
 /**
  * Converts values in the [String] columns previously selected with [convert] to an [URL],
@@ -999,7 +1025,7 @@ public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convert
  *
  * ### Examples:
  * ```kotlin
- * df.convert { webAddress }.toURL()
+ * df.convert { webAddress }.toUrl()
  * ```
  *
  * @return A new [DataFrame] with the values converted to an [URL].
@@ -1008,7 +1034,7 @@ public fun <T> Convert<T, String?>.toURL(): DataFrame<T> = asColumn { it.convert
 @Refine
 @Converter(URL::class, nullable = false)
 @Interpretable("ToSpecificType")
-public fun <T> Convert<T, String>.toURL(): DataFrame<T> = asColumn { it.convertToURL() }
+public fun <T> Convert<T, String>.toUrl(): DataFrame<T> = asColumn { it.convertToUrl() }
 
 // endregion
 
