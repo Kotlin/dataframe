@@ -67,10 +67,10 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
             val leftColumns = getColumnsWithPaths {
-                leftCol.colsAtAnyDepth { !it.isColumnGroup() }
+                leftCol.colsAtAnyDepth().filter { !it.isColumnGroup() }
             }
             val rightColumns = other.getColumnsWithPaths {
-                rightCol.colsAtAnyDepth { !it.isColumnGroup() }
+                rightCol.colsAtAnyDepth().filter { !it.isColumnGroup() }
             }
 
             val leftPrefixLength = leftCol.path.size

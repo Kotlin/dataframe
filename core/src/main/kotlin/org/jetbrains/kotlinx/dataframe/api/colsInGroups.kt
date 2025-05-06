@@ -65,7 +65,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
     /**
      * ## Cols in Groups
      *
-     * [colsInGroups][colsInGroups] is a function that returns all (optionally filtered) columns at the top-levels of
+     * [colsInGroups][colsInGroups] is a function that returns all columns at the top-levels of
      * all [column groups][ColumnGroup] in [this\]. This is useful if you want to select all columns that are
      * "one level deeper".
      *
@@ -87,11 +87,11 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * and
      *
-     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`  { "user"  `[in][String.contains]` it.`[name][DataColumn.name]` } }`
+     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnsSelectionDsl.colsInGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("user") }`
      * {@include [LineBreak]}
      * Similarly, you can take the columns inside all [column groups][ColumnGroup] in a [ColumnSet]:
      * {@include [LineBreak]}
-     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`  { "my"  `[in][String.contains]` it.`[name][DataColumn.name]` }.`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     * `df.`[select][DataFrame.select]`  {  `[colGroups][ColumnsSelectionDsl.colGroups]`().`[nameContains][ColumnsSelectionDsl.nameContains]`("my").`[colsInGroups][ColumnSet.colsInGroups]`() }`
      * {@include [LineBreak]}
      *
      * #### Examples of this overload:
@@ -100,8 +100,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * @see [ColumnsSelectionDsl.cols\]
      * @see [ColumnsSelectionDsl.colGroups\]
-     * @param [predicate\] An optional predicate to filter the cols by.
-     * @return A [TransformableColumnSet] containing the (filtered) cols.
+     * @return A [TransformableColumnSet] containing the cols.
      */
     private interface ColsInGroupsDocs {
 
@@ -117,8 +116,17 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
      */
+    @Deprecated("", ReplaceWith("this.colsInGroups().filter(predicate)"))
     public fun ColumnSet<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         transform { it.flatMap { it.cols().filter { predicate(it) } } }
+
+    /**
+     * @include [ColsInGroupsDocs]
+     * @set [ColsInGroupsDocs.EXAMPLE]
+     *
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][ColumnsSelectionDsl.colsOf]`<`[DataRow][DataRow]`<MyGroupType>>().`[colsInGroups][ColumnSet.colsInGroups]`() }`
+     */
+    public fun ColumnSet<*>.colsInGroups(): TransformableColumnSet<*> = transform { it.flatMap { it.cols() } }
 
     /**
      * @include [ColsInGroupsDocs]
@@ -128,8 +136,17 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
      */
+    @Deprecated("", ReplaceWith("colsInGroups().filter(predicate)"))
     public fun ColumnsSelectionDsl<*>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         asSingleColumn().colsInGroups(predicate)
+
+    /**
+     * @include [ColsInGroupsDocs]
+     * @set [ColsInGroupsDocs.EXAMPLE]
+     *
+     * `df.`[select][DataFrame.select]`  {  `[colsInGroups][ColumnSet.colsInGroups]`() }`
+     */
+    public fun ColumnsSelectionDsl<*>.colsInGroups(): TransformableColumnSet<*> = asSingleColumn().colsInGroups()
 
     /**
      * @include [ColsInGroupsDocs]
@@ -139,6 +156,7 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
      */
+    @Deprecated("", ReplaceWith("this.colsInGroups().filter(predicate)"))
     public fun SingleColumn<DataRow<*>>.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         ensureIsColumnGroup().allColumnsInternal().colsInGroups(predicate)
 
@@ -146,10 +164,28 @@ public interface ColsInGroupsColumnsSelectionDsl {
      * @include [ColsInGroupsDocs]
      * @set [ColsInGroupsDocs.EXAMPLE]
      *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[colsInGroups][SingleColumn.colsInGroups]` { it.`[any][ColumnWithPath.any]` { it == "Alice" } } }`
+     */
+    public fun SingleColumn<DataRow<*>>.colsInGroups(): TransformableColumnSet<*> =
+        ensureIsColumnGroup().allColumnsInternal().colsInGroups()
+
+    /**
+     * @include [ColsInGroupsDocs]
+     * @set [ColsInGroupsDocs.EXAMPLE]
+     *
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
      */
+    @Deprecated("", ReplaceWith("colsInGroups().filter(predicate)"))
     public fun String.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
+
+    /**
+     * @include [ColsInGroupsDocs]
+     * @set [ColsInGroupsDocs.EXAMPLE]
+     *
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsInGroups][String.colsInGroups]`() }`
+     */
+    public fun String.colsInGroups(): TransformableColumnSet<*> = columnGroup(this).colsInGroups()
 
     /**
      * @include [ColsInGroupsDocs]
@@ -172,8 +208,17 @@ public interface ColsInGroupsColumnsSelectionDsl {
      *
      * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
      */
+    @Deprecated("", ReplaceWith("colsInGroups().filter(predicate)"))
     public fun ColumnPath.colsInGroups(predicate: ColumnFilter<*> = { true }): TransformableColumnSet<*> =
         columnGroup(this).colsInGroups(predicate)
+
+    /**
+     * @include [ColsInGroupsDocs]
+     * @set [ColsInGroupsDocs.EXAMPLE]
+     *
+     * `df.`[select][DataFrame.select]` { "pathTo"["myColumnGroup"].`[colsInGroups][ColumnPath.colsInGroups]`() }`
+     */
+    public fun ColumnPath.colsInGroups(): TransformableColumnSet<*> = columnGroup(this).colsInGroups()
 }
 
 // endregion
