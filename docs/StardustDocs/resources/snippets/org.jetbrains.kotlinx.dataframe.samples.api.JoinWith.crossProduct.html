@@ -154,8 +154,12 @@ table.dataframe tr:hover .formatted .structural, .null {
 
 
 body {
-    font-family: "JetBrains Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,Courier,monospace;
-}       
+    display: flex;
+    align-items: flex-start;
+    overflow-x: auto;
+    font-family: "JetBrains Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+}
 
 :root {
     color: #19191C;
@@ -167,28 +171,35 @@ body {
     color: #FFFFFFCC
 }
 
-details details {
-    margin-left: 20px; 
+.table-container {
+    margin-right: 20px; 
 }
 
-summary {
-    padding: 6px;
+.table-container:not(:last-child) {
+    margin-right: 20px; 
+}
+
+td {
+    white-space: nowrap;
 }
 </style>
 </head>
 <body>
-                                <details>
-                                <summary>Input DataFrame: rowsCount = 7, columnsCount = 5</summary>
-                                 <table class="dataframe" id="df_0"></table>
+<div class="table-container">
+    <b>campaigns</b>
+    <table class="dataframe" id="df_0"></table>
 
-<p class="dataframe_description"></p>
-                                </details>
-                                <details>
-                                <summary>Output DataFrame: rowsCount = 3, columnsCount = 15</summary>
-                                 <table class="dataframe" id="df_1"></table>
+</div>
+<div class="table-container">
+    <b>visits</b>
+    <table class="dataframe" id="df_1"></table>
 
-<p class="dataframe_description"></p>
-                                </details>
+</div>
+<div class="table-container">
+    <b>result</b>
+    <table class="dataframe" id="df_2"></table>
+
+</div>
 </body>
 <script>
 (function () {
@@ -466,38 +477,32 @@ summary {
 })()
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"firstName: String\">firstName</span>", children: [], rightAlign: false, values: ["Alice","Bob","Charlie","Charlie","Bob","Alice","Charlie"] }, 
-{ name: "<span title=\"lastName: String\">lastName</span>", children: [], rightAlign: false, values: ["Cooper","Dylan","Daniels","Chaplin","Marley","Wolf","Byrd"] }, 
-{ name: "<span title=\"name: DataRow<*>\">name</span>", children: [0, 1], rightAlign: false, values: ["<span class=\"formatted\" title=\"firstName: Alice\nlastName: Cooper\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cooper<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Dylan\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dylan<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Daniels\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Dan<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Chaplin\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Cha<span class=\"structural\">...</span><span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Bob\nlastName: Marley\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Bob<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Marley<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Alice\nlastName: Wolf\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Alice<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Wolf<span class=\"structural\"> }</span></span>","<span class=\"formatted\" title=\"firstName: Charlie\nlastName: Byrd\"><span class=\"structural\">{ </span><span class=\"structural\">firstName: </span>Charlie<span class=\"structural\">, </span><span class=\"structural\">lastName: </span>Byrd<span class=\"structural\"> }</span></span>"] }, 
-{ name: "<span title=\"age: Int\">age</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">40</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">30</span></span>"] }, 
-{ name: "<span title=\"city: String?\">city</span>", children: [], rightAlign: false, values: ["London","Dubai","Moscow","Milan","Tokyo","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","Moscow"] }, 
-{ name: "<span title=\"weight: Int?\">weight</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">54</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">87</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">68</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">55</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">90</span></span>"] }, 
-{ name: "<span title=\"isHappy: Boolean\">isHappy</span>", children: [], rightAlign: false, values: ["true","true","false","true","true","false","true"] }, 
-], id: 0, rootId: 0, totalRows: 7 } ) });
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: samples.api.JoinWith.ColoredValue<*>\">name</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "Winter Sale"},{ style: "background-color:#ccebc5;color:#003300", value: "Spring Sale"},{ style: "background-color:#b0e0e6;color:#191970", value: "Summer Sale"},{ style: "background-color:#dda0dd;color:#551a8b", value: "Autumn Sale"}] }, 
+{ name: "<span title=\"startDate: samples.api.JoinWith.ColoredValue<*>\">startDate</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "01 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "01 апреля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "01 июля 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "01 октября 2023"}] }, 
+{ name: "<span title=\"endDate: samples.api.JoinWith.ColoredValue<*>\">endDate</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "31 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "30 апреля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "31 июля 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "31 октября 2023"}] }, 
+], id: 0, rootId: 0, totalRows: 4 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(0) });
 
 /*<!--*/
-call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: String\">name</span>", children: [], rightAlign: false, values: ["age","firstName","lastName"] }, 
-{ name: "<span title=\"path: columns.ColumnPath\">path</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"age\"><span class=\"structural\">[</span>age<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"name\nfirstName\"><span class=\"structural\">[</span>name<span class=\"structural\">, </span>firstName<span class=\"structural\">]</span></span>","<span class=\"formatted\" title=\"name\nlastName\"><span class=\"structural\">[</span>name<span class=\"structural\">, </span>lastName<span class=\"structural\">]</span></span>"] }, 
-{ name: "<span title=\"type: String\">type</span>", children: [], rightAlign: false, values: ["Int","String","String"] }, 
-{ name: "<span title=\"count: Int\">count</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">7</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">7</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">7</span></span>"] }, 
-{ name: "<span title=\"unique: Int\">unique</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">5</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">3</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">7</span></span>"] }, 
-{ name: "<span title=\"nulls: Int\">nulls</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">0</span></span>"] }, 
-{ name: "<span title=\"top: Comparable<*>\">top</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">20</span></span>","Charlie","Cooper"] }, 
-{ name: "<span title=\"freq: Int\">freq</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">2</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">3</span></span>","<span class=\"formatted\" title=\"\"><span class=\"numbers\">1</span></span>"] }, 
-{ name: "<span title=\"mean: Double?\">mean</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">28.571429</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
-{ name: "<span title=\"std: Double?\">std</span>", children: [], rightAlign: true, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">11.073349</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>","<span class=\"formatted\" title=\"\"><span class=\"null\">null</span></span>"] }, 
-{ name: "<span title=\"min: Comparable<*>\">min</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">15</span></span>","Alice","Byrd"] }, 
-{ name: "<span title=\"p25: Comparable<*>\">p25</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">20.0</span></span>","Alice","Chaplin"] }, 
-{ name: "<span title=\"median: Comparable<*>\">median</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">30.0</span></span>","Bob","Daniels"] }, 
-{ name: "<span title=\"p75: Comparable<*>\">p75</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">38.3</span></span>","Charlie","Dylan"] }, 
-{ name: "<span title=\"max: Comparable<*>\">max</span>", children: [], rightAlign: false, values: ["<span class=\"formatted\" title=\"\"><span class=\"numbers\">45</span></span>","Charlie","Wolf"] }, 
-], id: 1, rootId: 1, totalRows: 3 } ) });
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"date: samples.api.JoinWith.ColoredValue<*>\">date</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "10 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "20 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "15 апреля 2023"},{ style: "background-color:#ffffff;color:#000000", value: "01 мая 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "10 июля 2023"}] }, 
+{ name: "<span title=\"usedId: samples.api.JoinWith.ColoredValue<*>\">usedId</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "1"},{ style: "background-color:#b3cde0;color:#000033", value: "2"},{ style: "background-color:#ccebc5;color:#003300", value: "1"},{ style: "background-color:#ffffff;color:#000000", value: "3"},{ style: "background-color:#b0e0e6;color:#191970", value: "2"}] }, 
+], id: 1, rootId: 1, totalRows: 5 } ) });
 /*-->*/
 
 call_DataFrame(function() { DataFrame.renderTable(1) });
+
+/*<!--*/
+call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"name: samples.api.JoinWith.ColoredValue<*>\">name</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "Winter Sale"},{ style: "background-color:#b3cde0;color:#000033", value: "Winter Sale"},{ style: "background-color:#b3cde0;color:#000033", value: "Winter Sale"},{ style: "background-color:#b3cde0;color:#000033", value: "Winter Sale"},{ style: "background-color:#b3cde0;color:#000033", value: "Winter Sale"},{ style: "background-color:#ccebc5;color:#003300", value: "Spring Sale"},{ style: "background-color:#ccebc5;color:#003300", value: "Spring Sale"},{ style: "background-color:#ccebc5;color:#003300", value: "Spring Sale"},{ style: "background-color:#ccebc5;color:#003300", value: "Spring Sale"},{ style: "background-color:#ccebc5;color:#003300", value: "Spring Sale"},{ style: "background-color:#b0e0e6;color:#191970", value: "Summer Sale"},{ style: "background-color:#b0e0e6;color:#191970", value: "Summer Sale"},{ style: "background-color:#b0e0e6;color:#191970", value: "Summer Sale"},{ style: "background-color:#b0e0e6;color:#191970", value: "Summer Sale"},{ style: "background-color:#b0e0e6;color:#191970", value: "Summer Sale"},{ style: "background-color:#dda0dd;color:#551a8b", value: "Autumn Sale"},{ style: "background-color:#dda0dd;color:#551a8b", value: "Autumn Sale"},{ style: "background-color:#dda0dd;color:#551a8b", value: "Autumn Sale"},{ style: "background-color:#dda0dd;color:#551a8b", value: "Autumn Sale"},{ style: "background-color:#dda0dd;color:#551a8b", value: "Autumn Sale"}] }, 
+{ name: "<span title=\"startDate: samples.api.JoinWith.ColoredValue<*>\">startDate</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "01 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "01 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "01 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "01 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "01 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "01 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "01 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "01 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "01 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "01 апреля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "01 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "01 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "01 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "01 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "01 июля 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "01 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "01 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "01 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "01 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "01 октября 2023"}] }, 
+{ name: "<span title=\"endDate: samples.api.JoinWith.ColoredValue<*>\">endDate</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "31 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "31 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "31 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "31 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "31 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "30 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "30 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "30 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "30 апреля 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "30 апреля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "31 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "31 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "31 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "31 июля 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "31 июля 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "31 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "31 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "31 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "31 октября 2023"},{ style: "background-color:#dda0dd;color:#551a8b", value: "31 октября 2023"}] }, 
+{ name: "<span title=\"date: samples.api.JoinWith.ColoredValue<*>\">date</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "10 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "20 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "15 апреля 2023"},{ style: "background-color:#ffffff;color:#000000", value: "01 мая 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "10 июля 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "10 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "20 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "15 апреля 2023"},{ style: "background-color:#ffffff;color:#000000", value: "01 мая 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "10 июля 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "10 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "20 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "15 апреля 2023"},{ style: "background-color:#ffffff;color:#000000", value: "01 мая 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "10 июля 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "10 января 2023"},{ style: "background-color:#b3cde0;color:#000033", value: "20 января 2023"},{ style: "background-color:#ccebc5;color:#003300", value: "15 апреля 2023"},{ style: "background-color:#ffffff;color:#000000", value: "01 мая 2023"},{ style: "background-color:#b0e0e6;color:#191970", value: "10 июля 2023"}] }, 
+{ name: "<span title=\"usedId: samples.api.JoinWith.ColoredValue<*>\">usedId</span>", children: [], rightAlign: false, values: [{ style: "background-color:#b3cde0;color:#000033", value: "1"},{ style: "background-color:#b3cde0;color:#000033", value: "2"},{ style: "background-color:#ccebc5;color:#003300", value: "1"},{ style: "background-color:#ffffff;color:#000000", value: "3"},{ style: "background-color:#b0e0e6;color:#191970", value: "2"},{ style: "background-color:#b3cde0;color:#000033", value: "1"},{ style: "background-color:#b3cde0;color:#000033", value: "2"},{ style: "background-color:#ccebc5;color:#003300", value: "1"},{ style: "background-color:#ffffff;color:#000000", value: "3"},{ style: "background-color:#b0e0e6;color:#191970", value: "2"},{ style: "background-color:#b3cde0;color:#000033", value: "1"},{ style: "background-color:#b3cde0;color:#000033", value: "2"},{ style: "background-color:#ccebc5;color:#003300", value: "1"},{ style: "background-color:#ffffff;color:#000000", value: "3"},{ style: "background-color:#b0e0e6;color:#191970", value: "2"},{ style: "background-color:#b3cde0;color:#000033", value: "1"},{ style: "background-color:#b3cde0;color:#000033", value: "2"},{ style: "background-color:#ccebc5;color:#003300", value: "1"},{ style: "background-color:#ffffff;color:#000000", value: "3"},{ style: "background-color:#b0e0e6;color:#191970", value: "2"}] }, 
+], id: 2, rootId: 2, totalRows: 20 } ) });
+/*-->*/
+
+call_DataFrame(function() { DataFrame.renderTable(2) });
 
 </script>
 </html>

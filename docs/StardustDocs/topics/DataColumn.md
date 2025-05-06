@@ -157,7 +157,7 @@ val year by age.map { 2021 - it }
 df.filter { year > 2000 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorMap.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.columnAccessorMap.html" width="100%"/>
 <!---END-->
 
 To convert [`ColumnAccessor`](columnAccessorsApi.md) into [`DataColumn`](DataColumn.md) add values using `withValues` function:

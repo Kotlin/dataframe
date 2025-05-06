@@ -32,7 +32,7 @@ df["age", "weight"]
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnsByName.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.getColumnsByName.html" width="100%"/>
 <!---END-->
 
 See [DataFrame indexing](indexing.md)
@@ -67,7 +67,7 @@ df.select("age", "weight")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.select.html" width="100%"/>
 <!---END-->
 
 See [column selectors](ColumnSelectors.md)

@@ -67,7 +67,7 @@ df.groupBy { "age"<Int>() / 10 named "ageDecade" }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupBy.html" width="100%"/>
 <!---END-->
 
 Grouping columns can be created inplace:
@@ -99,7 +99,7 @@ df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<St
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByExpr.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByExpr.html" width="100%"/>
 <!---END-->
 
 With optional `moveToTop` parameter you can choose whether to make a selected *nested column* a top-level column:  
@@ -110,7 +110,7 @@ With optional `moveToTop` parameter you can choose whether to make a selected *n
 df.groupBy(moveToTop = true) { name.lastName }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTop.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTop.html" width="100%"/>
 <!---END-->
 
 or to keep it inside a `ColumnGroup`:
@@ -121,7 +121,7 @@ or to keep it inside a `ColumnGroup`:
 df.groupBy(moveToTop = false) { name.lastName }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTopFalse.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByMoveToTopFalse.html" width="100%"/>
 <!---END-->
 
 Returns `GroupBy` object.
@@ -159,7 +159,7 @@ And any [`GroupBy DataFrame`](groupBy.md#transformation) can be reinterpreted as
 df.groupBy { city }.toDataFrame()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByToFrame.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByToFrame.html" width="100%"/>
 <!---END-->
 
 Use [`concat`](concat.md) to union all data groups of `GroupBy` into original [`DataFrame`](DataFrame.md) preserving new order of rows produced by grouping:
@@ -170,7 +170,7 @@ Use [`concat`](concat.md) to union all data groups of `GroupBy` into original [`
 df.groupBy { name }.concat()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.concatGroupBy.html" width="100%"/>
 <!---END-->
 
 ## Aggregation
@@ -248,7 +248,7 @@ df.groupBy("city").aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregations.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregations.html" width="100%"/>
 <!---END-->
 
 If only one aggregation function is used, column name can be omitted:
@@ -282,7 +282,7 @@ df.groupBy("city").aggregate { maxBy("age")["name"] }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregateWithoutInto.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByAggregateWithoutInto.html" width="100%"/>
 <!---END-->
 
 Most common aggregation functions can be computed directly at [`GroupBy DataFrame`](groupBy.md#transformation) :
@@ -353,7 +353,7 @@ df.groupBy("city").meanOf("mean ratio") {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByDirectAggregations.html" width="100%"/>
 <!---END-->
 
 To get all column values for every group without aggregation use `values` function:
@@ -394,5 +394,5 @@ df.groupBy("city").values { "weight" into "weights" }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByWithoutAggregation.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.groupByWithoutAggregation.html" width="100%"/>
 <!---END-->

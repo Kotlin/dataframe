@@ -50,7 +50,7 @@ df.update { weight }.at(1, 3, 4).with { prev()?.weight }
 df.pivot { city }.with { name.lastName.uppercase() }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.expressions.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.expressions.html" width="100%"/>
 <!---END-->
 
 Row expression signature: ```DataRow.(DataRow) -> T```. Row values can be accessed with or without ```it``` keyword. Implicit and explicit argument represent the same `DataRow` object.
@@ -71,7 +71,7 @@ df.drop { diffOrNull { age } == 0 }
 df.update { weight }.where { index() > 4 && city != "Paris" }.with { 50 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.conditions.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.DataRowApi.conditions.html" width="100%"/>
 <!---END-->
 
 Row condition signature: ```DataRow.(DataRow) -> Boolean```

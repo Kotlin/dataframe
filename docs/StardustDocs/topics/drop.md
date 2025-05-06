@@ -33,7 +33,7 @@ df.drop { it["weight"] == null || it["city"] == null }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhere.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropWhere.html" width="100%"/>
 <!---END-->
 
 ## dropNulls
@@ -50,7 +50,7 @@ df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'we
 df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNulls.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNulls.html" width="100%"/>
 <!---END-->
 
 ## dropNaNs
@@ -67,7 +67,7 @@ df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is 
 df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'age' and 'weight' are NaN
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNaNs.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNaNs.html" width="100%"/>
 <!---END-->
 
 ## dropNA
@@ -84,5 +84,5 @@ df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is nu
 df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or NaN
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNA.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.dropNA.html" width="100%"/>
 <!---END-->
