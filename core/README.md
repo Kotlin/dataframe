@@ -25,7 +25,7 @@ by [Korro](https://github.com/devcrocod/korro).
 
 Aside from code samples, `@TransformDataFrameExpressions` annotated test functions also generate sample
 dataframe HTML files that can be used as iFrames on the documentation website.
-They are tested, generated, and copied over to [docs/StardustDocs/snippets](../docs/StardustDocs/snippets) by
+They are tested, generated, and copied over to [docs/StardustDocs/resources/snippets](../docs/StardustDocs/resources/snippets) by
 our "explainer" [plugin callback proxy](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/explainer),
 which hooks into [the TestBase class](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/TestBase.kt) and
 retrieves the intermediate DataFrame expressions thanks to our "explainer" compiler plugin
@@ -33,7 +33,7 @@ retrieves the intermediate DataFrame expressions thanks to our "explainer" compi
 
 We can also generate "normal" DataFrame samples for the website. This can be done using the
 [OtherSamples class](./src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/OtherSamples.kt). Generated
-HTML files will be stored in [docs/StardustDocs/snippets/manual](../docs/StardustDocs/snippets/manual).
+HTML files will be stored in [docs/StardustDocs/resources/snippets/manual](../docs/StardustDocs/resources/snippets/manual).
 
 ### KoDEx
 
@@ -45,4 +45,4 @@ See the [KDoc Preprocessing Guide](../KDOC_PREPROCESSING.md) for more informatio
 
 KDocs can also be exported to HTML, for them to be reused on the website.
 Elements annotated with `@ExportAsHtml` will have their generated content be copied over to
-[docs/StardustDocs/snippets/kdocs](../docs/StardustDocs/snippets/kdocs).
+[docs/StardustDocs/resources/snippets/kdocs](../docs/StardustDocs/resources/snippets/kdocs).

@@ -10,7 +10,7 @@ Returns [`DataFrame`](DataFrame.md) with union of columns from several given [`D
 df.add(df1, df2)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.addDataFrames.html" width="100%"/>
 <!---END-->
 
 See [all use cases of 'add' operation](add.md).
