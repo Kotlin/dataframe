@@ -1,0 +1,12 @@
+<resource src="movies.csv"></resource>
+<resource src="notebook_test_quickstart_6.html"></resource>
+<resource src="notebook_test_quickstart_11.html"></resource>
+<resource src="notebook_test_quickstart_10.html"></resource>
+<resource src="notebook_test_quickstart_7.html"></resource>
+<resource src="notebook_test_quickstart_13.html"></resource>
+<resource src="notebook_test_quickstart_4.html"></resource>
+<resource src="notebook_test_quickstart_8.html"></resource>
+<resource src="notebook_test_quickstart_5.html"></resource>
+<resource src="notebook_test_quickstart_12.html"></resource>
+<resource src="notebook_test_quickstart_3.html"></resource>
+<resource src="notebook_test_quickstart_14.html"></resource>

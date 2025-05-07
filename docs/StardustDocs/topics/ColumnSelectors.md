@@ -18,7 +18,7 @@ df.gather { colsOf<Number>() }.into("key", "value")
 df.move { name.firstName and name.lastName }.after { city }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsUsages.html" width="100%"/>
 <!---END-->
 
 #### Full DSL Grammar {collapsible="true"}
@@ -488,7 +488,7 @@ df.select { "name".colsAtAnyDepth { !it.isColumnGroup() } }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectors.html" width="100%"/>
 <!---END-->
 
 **Select columns by column index:**
@@ -506,7 +506,7 @@ df.select { cols(0, 1, 3) }
 df.select { cols(1..4) }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnsSelectorByIndices.html" width="100%"/>
 <!---END-->
 
 **Other column selectors:**
@@ -567,7 +567,7 @@ df.select { allExcept { colsOf<String>() } }
 df.select { take(2) and col(3) }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsMisc.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsMisc.html" width="100%"/>
 <!---END-->
 
 **Modify the set of selected columns:**
@@ -593,5 +593,5 @@ df.select { colsAtAnyDepth { !it.isColumnGroup() }.except { age } }
 df.select { (colsOf<Int>() and age).distinct() }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.columnSelectorsModifySet.html" width="100%"/>
 <!---END-->
