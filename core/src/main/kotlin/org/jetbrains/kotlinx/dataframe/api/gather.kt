@@ -45,27 +45,67 @@ public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C
 // endregion
 
 public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): Gather<T, C, K, R> =
-    copy(filter = this.filter and filter)
+    Gather(
+        df = df,
+        columns = columns,
+        filter = this.filter and filter,
+        keyType = keyType,
+        keyTransform = keyTransform,
+        valueTransform = valueTransform,
+        explode = explode,
+    )
 
 public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = where { it != null } as Gather<T, C, K, R>
 
-public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> = copy(explode = true)
+public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
+    Gather(
+        df = df,
+        columns = columns,
+        filter = filter,
+        keyType = keyType,
+        keyTransform = keyTransform,
+        valueTransform = valueTransform,
+        explode = true,
+    )
 
 public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
     noinline transform: (String) -> K,
 ): Gather<T, C, K, R> =
-    copy(keyTransform = transform as ((String) -> Nothing), keyType = typeOf<K>()) as Gather<T, C, K, R>
+    Gather(
+        df = df,
+        columns = columns,
+        filter = filter,
+        keyType = typeOf<K>(),
+        keyTransform = transform,
+        valueTransform = valueTransform,
+        explode = explode,
+    )
 
 public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gather<T, C, K, R> =
-    copy(valueTransform = transform as ((C) -> Nothing)) as Gather<T, C, K, R>
+    Gather(
+        df = df,
+        columns = columns,
+        filter = filter,
+        keyType = keyType,
+        keyTransform = keyTransform,
+        valueTransform = transform,
+        explode = explode,
+    )
 
-public data class Gather<T, C, K, R>(
+public class Gather<T, C, K, R>(
+    @PublishedApi
     internal val df: DataFrame<T>,
+    @PublishedApi
     internal val columns: ColumnsSelector<T, C>,
+    @PublishedApi
     internal val filter: RowValueFilter<T, C>? = null,
+    @PublishedApi
     internal val keyType: KType? = null,
+    @PublishedApi
     internal val keyTransform: ((String) -> K),
+    @PublishedApi
     internal val valueTransform: ((C) -> R)? = null,
+    @PublishedApi
     internal val explode: Boolean = false,
 ) {
     public fun <P> cast(): Gather<T, P, K, P> {
