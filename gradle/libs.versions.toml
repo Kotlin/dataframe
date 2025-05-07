@@ -1,15 +1,14 @@
 [versions]
 # Cannot bump higher because of java 8/11
-ksp = "2.1.20-Beta2-1.0.29"
+ksp = "2.1.10-1.0.29"
 kotlinJupyter = "0.12.0-426"
 
-ktlint = "12.1.2"
+ktlint = "12.2.0"
 
 # make sure to sync both manually with :keywords-generator module
-kotlin = "2.1.20"
+kotlin = "2.1.10"
 kotlinpoet = "1.18.1"
 
-dokka = "1.9.20"
 libsPublisher = "1.9.23-dev-45"
 
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
@@ -159,7 +158,6 @@ jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJu
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryCompatibilityValidator" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
 publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
 korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }

@@ -282,16 +282,6 @@ idea {
     }
 }
 
-// If we want to use Dokka, make sure to use the preprocessed sources
-tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
-    dependsOn(processKDocsMain)
-    dokkaSourceSets {
-        all {
-            sourceRoot(processKDocsMain.target.get())
-        }
-    }
-}
-
 // endregion
 
 korro {

@@ -19,7 +19,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization) apply false
-        alias(dokka)
         alias(kover)
         alias(ktlint)
         alias(korro) apply false
