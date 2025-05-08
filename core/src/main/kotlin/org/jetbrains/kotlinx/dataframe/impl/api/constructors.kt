@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.exceptions.DataFrameException
+import org.jetbrains.kotlinx.dataframe.exceptions.DataFrameError
 
 /**
  * Public API to be re-used in compiler plugin implementation
@@ -25,6 +25,6 @@ public fun <T> Pair<List<String>, List<T>>.withValuesImpl(): List<Pair<String, L
 
 internal class WrongNumberOfValuesException(size: Int, ncol: Int) :
     IllegalArgumentException(),
-    DataFrameException {
+    DataFrameError {
     override val message = "Number of values $size is not divisible by number of columns $ncol"
 }
