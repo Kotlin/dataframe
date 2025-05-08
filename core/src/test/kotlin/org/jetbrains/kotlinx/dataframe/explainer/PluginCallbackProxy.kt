@@ -131,7 +131,7 @@ object PluginCallbackProxy : PluginCallback {
         File(korro, group).writeText(
             """
             
-            <dataFrame src="$group.html"/>
+            <inline-frame src="resources/$group.html" width="100%"/>
             """.trimIndent(),
         )
     }
