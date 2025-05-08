@@ -1,7 +1,7 @@
 # Examples of Kotlin Dataframe
 
 ### Idea examples
-* [movies](idea-examples/movies) Using 3 different [Access APIs](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
+* [movies](idea-examples/movies) Using extension properties [Access API](https://kotlin.github.io/dataframe/apilevels.html) to perform a data cleaning task
 * [titanic](idea-examples/titanic)
 * [youtube](idea-examples/youtube)
 * [json](idea-examples/json) Using OpenAPI support in DataFrame's Gradle and KSP plugins to access data from [API guru](https://apis.guru/) in a type-safe manner

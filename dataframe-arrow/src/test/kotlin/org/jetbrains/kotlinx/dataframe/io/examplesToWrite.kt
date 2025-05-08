@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import kotlinx.datetime.LocalDate
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import java.net.URL
+import java.net.URI
 
 /**
  * DataFrame to be saved in Apache Arrow
@@ -78,12 +78,12 @@ val citiesExampleFrame = dataFrameOf(
     DataColumn.createValueColumn(
         "page_in_wiki",
         listOf(
-            URL("https://en.wikipedia.org/wiki/Berlin"),
-            URL("https://en.wikipedia.org/wiki/Hamburg"),
-            URL("https://en.wikipedia.org/wiki/New_York_City"),
-            URL("https://en.wikipedia.org/wiki/Washington,_D.C."),
-            URL("https://en.wikipedia.org/wiki/Saint_Petersburg"),
-            URL("https://en.wikipedia.org/wiki/Vatican_City"),
+            URI("https://en.wikipedia.org/wiki/Berlin").toURL(),
+            URI("https://en.wikipedia.org/wiki/Hamburg").toURL(),
+            URI("https://en.wikipedia.org/wiki/New_York_City").toURL(),
+            URI("https://en.wikipedia.org/wiki/Washington,_D.C.").toURL(),
+            URI("https://en.wikipedia.org/wiki/Saint_Petersburg").toURL(),
+            URI("https://en.wikipedia.org/wiki/Vatican_City").toURL(),
         ),
     ),
 )
