@@ -100,13 +100,12 @@ You will see the content of this `DataFrame` rendered as an interactive table di
 ## Next Steps
 
 * Once you’ve successfully set up Kotlin DataFrame in Kotlin Notebook,  
-you can move on to the [Quickstart guide](quickstart.md), 
-which walks you through the basics of working with DataFrames inside a notebook.
+you can move on to the [](quickstart.md)
+  which walks you through the basics of working with DataFrames inside a notebook.
 
 * For more advanced use cases, explore our collection of  
 [detailed guides and real-world examples](Guides-And-Examples.md), 
 showcasing how Kotlin DataFrame can help with a variety of data tasks.
 
-* Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md) that 
+* Discover powerful [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)that 
 make exploring and understanding your data easier and more effective.
-
