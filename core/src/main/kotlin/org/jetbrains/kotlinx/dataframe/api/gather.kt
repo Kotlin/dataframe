@@ -4,6 +4,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
@@ -15,6 +17,7 @@ import kotlin.reflect.typeOf
 
 // region gather
 
+@Interpretable("Gather0")
 public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> =
     Gather(
         df = this,
@@ -44,6 +47,7 @@ public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C
 
 // endregion
 
+@Interpretable("GatherWhere")
 public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): Gather<T, C, K, R> =
     Gather(
         df = df,
@@ -55,8 +59,10 @@ public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): 
         explode = explode,
     )
 
+@Interpretable("GatherChangeType")
 public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = where { it != null } as Gather<T, C, K, R>
 
+@Interpretable("GatherExplodeLists")
 public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
     Gather(
         df = df,
@@ -68,6 +74,7 @@ public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
         explode = true,
     )
 
+@Interpretable("GatherMap")
 public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
     noinline transform: (String) -> K,
 ): Gather<T, C, K, R> =
@@ -81,6 +88,7 @@ public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(
         explode = explode,
     )
 
+@Interpretable("GatherMap")
 public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gather<T, C, K, R> =
     Gather(
         df = df,
@@ -108,6 +116,7 @@ public class Gather<T, C, K, R>(
     @PublishedApi
     internal val explode: Boolean = false,
 ) {
+    @Interpretable("GatherChangeType")
     public fun <P> cast(): Gather<T, P, K, P> {
         // TODO: introduce GatherWithTransform to avoid this error
         require(valueTransform == null) { "Cast is not allowed to be called after `mapValues`" }
@@ -117,6 +126,8 @@ public class Gather<T, C, K, R>(
 
 // region into
 
+@Refine
+@Interpretable("GatherInto")
 public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: String, valueColumn: String): DataFrame<T> =
     gatherImpl(keyColumn, valueColumn)
 
@@ -140,6 +151,8 @@ public fun <T, C, K, R> Gather<T, C, K, R>.into(keyColumn: KProperty<K>, valueCo
 
 // region keysInto
 
+@Refine
+@Interpretable("GatherKeysInto")
 public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: String): DataFrame<T> = gatherImpl(keyColumn, null)
 
 @Deprecated(
@@ -160,6 +173,8 @@ public fun <T, C, K, R> Gather<T, C, K, R>.keysInto(keyColumn: KProperty<K>): Da
 
 // region valuesInto
 
+@Refine
+@Interpretable("GatherValuesInto")
 public fun <T, C, K, R> Gather<T, C, K, R>.valuesInto(valueColumn: String): DataFrame<T> = gatherImpl(null, valueColumn)
 
 @Deprecated(
