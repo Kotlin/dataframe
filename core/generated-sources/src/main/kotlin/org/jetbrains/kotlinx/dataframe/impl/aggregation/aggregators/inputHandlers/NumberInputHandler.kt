@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.inputHandlers
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers
 import org.jetbrains.kotlinx.dataframe.impl.UnifiedNumberTypeOptions
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
@@ -21,8 +20,6 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
-
-private val logger = KotlinLogging.logger { }
 
 /**
  * Input handler for aggregators that can handle any (mixed) primitive [Number] type of input.
@@ -107,14 +104,6 @@ internal class NumberInputHandler<out Return : Any?> : AggregatorInputHandler<Nu
     override fun calculateValueType(valueTypes: Set<KType>): ValueType {
         val unifiedType = valueTypes.unifiedNumberTypeOrNull(UnifiedNumberTypeOptions.PRIMITIVES_ONLY)
             ?: typeOf<Number>().withNullability(valueTypes.any { it.isMarkedNullable })
-
-        if (unifiedType.isSubtypeOf(typeOf<Double?>()) &&
-            (typeOf<ULong>() in valueTypes || typeOf<Long>() in valueTypes)
-        ) {
-            logger.warn {
-                "Number unification of Long -> Double happened during ${aggregator!!.name} aggregation. Loss of precision may have occurred."
-            }
-        }
         if (!unifiedType.isPrimitiveOrMixedNumber() && !unifiedType.isNothing) {
             throw IllegalArgumentException(
                 "Cannot calculate ${aggregator!!.name} of ${
