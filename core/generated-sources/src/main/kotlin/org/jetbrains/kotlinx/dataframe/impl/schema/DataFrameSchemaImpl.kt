@@ -7,23 +7,23 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 public class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchema>) : DataFrameSchema {
 
-    override fun compare(other: DataFrameSchema): CompareResult {
+    override fun compare(other: DataFrameSchema, strictlyEqualNestedSchemas: Boolean): CompareResult {
         require(other is DataFrameSchemaImpl)
         if (this === other) return CompareResult.Equals
         var result = CompareResult.Equals
         columns.forEach {
             val otherColumn = other.columns[it.key]
             if (otherColumn == null) {
-                result = result.combine(CompareResult.IsDerived)
+                result = result.combine(if (strictlyEqualNestedSchemas) CompareResult.None else CompareResult.IsDerived)
             } else {
-                result = result.combine(it.value.compare(otherColumn))
+                result = result.combine(it.value.compareStrictlyEqualNestedSchemas(otherColumn))
             }
             if (result == CompareResult.None) return CompareResult.None
         }
         other.columns.forEach {
             val thisField = columns[it.key]
             if (thisField == null) {
-                result = result.combine(CompareResult.IsSuper)
+                result = result.combine(if (strictlyEqualNestedSchemas) CompareResult.None else CompareResult.IsSuper)
                 if (result == CompareResult.None) return CompareResult.None
             }
         }

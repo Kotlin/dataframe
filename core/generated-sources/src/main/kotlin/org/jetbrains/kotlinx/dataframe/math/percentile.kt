@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.api.isNaN
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.isIntraComparable
@@ -13,8 +12,6 @@ import kotlin.math.round
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
-
-private val logger = KotlinLogging.logger { }
 
 /**
  * Uses [QuantileEstimationMethod.R8] for primitive numbers, else [QuantileEstimationMethod.R3]
@@ -41,8 +38,7 @@ internal fun <T : Comparable<T>> Sequence<T>.percentileOrNull(percentile: Double
                 "Cannot calculate the percentile for big numbers in DataFrame. Only primitive numbers are supported.",
             )
 
-        type == typeOf<Long>() ->
-            logger.warn { "Converting Longs to Doubles to calculate the percentile, loss of precision may occur." }
+        // TODO kdocs: note about loss of precision for Long
     }
 
     // percentile of 25.0 means the 25th 100-quantile, so 25 / 100 = 0.25
