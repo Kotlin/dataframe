@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.explainer.TransformDataFrameExpressions
 import org.jetbrains.kotlinx.dataframe.io.DataFrameHtmlData
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.renderValueForHtml
-import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.io.toHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.ChainedCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
@@ -140,7 +140,7 @@ class JoinWith : TestBase() {
     )
 
     private fun AnyFrame.toColoredHTML() =
-        toHTML(
+        toHtml(
             getFooter = { null },
             cellRenderer = renderer,
             configuration = SamplesDisplayConfiguration.copy(
