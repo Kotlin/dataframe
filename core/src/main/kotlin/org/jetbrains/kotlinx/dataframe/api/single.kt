@@ -96,9 +96,9 @@ public interface SingleColumnsSelectionDsl {
 
     /**
      * ## Single (Col)
-     * Returns the single column from [this\] that adheres to the optional given [condition\].
-     * If no column adheres to the given [condition\], [NoSuchElementException] is thrown.
-     * If multiple columns adhere to it, [IllegalArgumentException] is thrown.
+     * Returns the single column from [this\].
+     * If there is no column, [NoSuchElementException] is thrown.
+     * If there are multiple columns, [IllegalArgumentException] is thrown.
      *
      * This function operates solely on columns at the top-level.
      *
@@ -108,18 +108,17 @@ public interface SingleColumnsSelectionDsl {
      *
      * #### Examples:
      *
-     * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][DataFrame.select]`  { `[nameStartsWith][ColumnsSelectionDsl.nameStartsWith]`("order").`[single][ColumnsSelectionDsl.single]`() }`
      *
-     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("order") } }`
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("order").`[singleCol][String.singleCol]`() }`
      *
      * #### Examples for this overload:
      *
      * {@get [Examples]}
      *
-     * @param [condition\] The optional [ColumnFilter] condition that the column must adhere to.
-     * @return A [SingleColumn] containing the single column that adheres to the given [condition\].
-     * @throws [NoSuchElementException\] if no column adheres to the given [condition\].
-     * @throws [IllegalArgumentException\] if more than one column adheres to the given [condition\].
+     * @return A [SingleColumn] containing the single column.
+     * @throws [NoSuchElementException\] if there are no columns in [this\].
+     * @throws [IllegalArgumentException\] if there is more than one column in [this\].
      */
     private interface CommonSingleDocs {
 
@@ -135,8 +134,19 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
      */
     @Interpretable("Single0")
+    @Deprecated("", ReplaceWith("this.filter(condition).single()"))
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C> = { true }): TransformableSingleColumn<C> =
         singleInternal(condition)
+
+    /**
+     * @include [CommonSingleDocs]
+     * @set [CommonSingleDocs.Examples]
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[String][String]`>().nameStartsWith("year").`[single][ColumnSet.single]`() }`
+     *
+     * `df.`[select][DataFrame.select]`  {  `[colsOf][SingleColumn.colsOf]`<`[Int][Int]`>().`[single][ColumnSet.single]`() }`
+     */
+    @Interpretable("Single0")
+    public fun <C> ColumnSet<C>.single(): TransformableSingleColumn<C> = singleInternal { true }
 
     /**
      * @include [CommonSingleDocs]
@@ -145,8 +155,18 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]`  {  `[single][ColumnsSelectionDsl.single]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
     @Interpretable("Single1")
+    @Deprecated("", ReplaceWith("cols().filter(condition).single()"))
     public fun ColumnsSelectionDsl<*>.single(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         asSingleColumn().singleCol(condition)
+
+    /**
+     * @include [CommonSingleDocs]
+     * @set [CommonSingleDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]`  { nameStartsWith("year").`[single][ColumnsSelectionDsl.single]`() }`
+     */
+    @Interpretable("Single1")
+    public fun ColumnsSelectionDsl<*>.single(): TransformableSingleColumn<*> = asSingleColumn().singleCol { true }
 
     /**
      * @include [CommonSingleDocs]
@@ -155,16 +175,35 @@ public interface SingleColumnsSelectionDsl {
      * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
      */
     @Interpretable("Single2")
+    @Deprecated("", ReplaceWith("this.cols().filter(condition).single()"))
     public fun SingleColumn<DataRow<*>>.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         this.ensureIsColumnGroup().asColumnSet().single(condition)
 
     /**
      * @include [CommonSingleDocs]
      * @set [CommonSingleDocs.Examples]
+     *
+     * `df.`[select][DataFrame.select]` { myColumnGroup.`[singleCol][SingleColumn.singleCol]`() }`
+     */
+    @Interpretable("Single2")
+    public fun SingleColumn<DataRow<*>>.singleCol(): TransformableSingleColumn<*> =
+        this.ensureIsColumnGroup().asColumnSet().single()
+
+    /**
+     * @include [CommonSingleDocs]
+     * @set [CommonSingleDocs.Examples]
      * `df.`[select][DataFrame.select]` { "myColumnGroup".`[singleCol][String.singleCol]` { it.`[name][ColumnReference.name]`().`[startsWith][String.startsWith]`("year") } }`
      */
+    @Deprecated("", ReplaceWith("this.cols().filter(condition).single()"))
     public fun String.singleCol(condition: ColumnFilter<*> = { true }): TransformableSingleColumn<*> =
         columnGroup(this).singleCol(condition)
+
+    /**
+     * @include [CommonSingleDocs]
+     * @set [CommonSingleDocs.Examples]
+     * `df.`[select][DataFrame.select]` { "myColumnGroup".`[colsNameStartsWith][ColumnNameFiltersColumnsSelectionDsl.colsNameStartsWith]`("year").`[singleCol][String.singleCol]`() }`
+     */
+    public fun String.singleCol(): TransformableSingleColumn<*> = columnGroup(this).singleCol()
 
     /**
      * @include [CommonSingleDocs]

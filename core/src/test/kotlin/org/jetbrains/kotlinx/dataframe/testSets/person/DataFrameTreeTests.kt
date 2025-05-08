@@ -288,7 +288,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `select atAnyDepth`() {
-        val cols = typed2.select { colsAtAnyDepth { it.hasNulls } }
+        val cols = typed2.select { colsAtAnyDepth().filter { it.hasNulls } }
         cols shouldBe typed2.select { nameAndCity.city and weight }
     }
 
@@ -535,14 +535,16 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { colsAtAnyDepth { it.depth > 0 } }.toTop { it.parentName + "-" + it.name }
+        val res = typed2.move { colsAtAnyDepth().filter { it.depth > 0 } }.toTop { it.parentName + "-" + it.name }
         res.columnsCount() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
 
     @Test
     fun `group cols`() {
-        val joined = typed2.move { colsAtAnyDepth { !it.isColumnGroup() } }.into { pathOf(it.path.joinToString(".")) }
+        val joined = typed2.move {
+            colsAtAnyDepth().filter { !it.isColumnGroup() }
+        }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
         val expected = typed2.rename { nameAndCity.allCols() }.into { it.path.joinToString(".") }
         grouped shouldBe expected
