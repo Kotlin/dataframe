@@ -112,7 +112,7 @@ tasks.withType<KspTask> {
     }
 }
 
-val clearTestResults by tasks.creating(Delete::class) {
+val clearTestResults by tasks.registering(Delete::class) {
     delete(layout.buildDirectory.dir("dataframes"))
     delete(layout.buildDirectory.dir("korroOutputLines"))
 }
@@ -140,7 +140,7 @@ val samplesTest = tasks.register<Test>("samplesTest") {
         sourceSets["main"].runtimeClasspath
 }
 
-val clearSamplesOutputs by tasks.creating {
+val clearSamplesOutputs by tasks.registering {
     group = "documentation"
 
     doFirst {
@@ -152,7 +152,7 @@ val clearSamplesOutputs by tasks.creating {
     }
 }
 
-val addSamplesToGit by tasks.creating(GitTask::class) {
+val addSamplesToGit by tasks.registering(GitTask::class) {
     directory = file(".")
     command = "add"
     args = listOf("-A", "../docs/StardustDocs/snippets")
@@ -167,7 +167,7 @@ val copySamplesOutputs = tasks.register<JavaExec>("copySamplesOutputs") {
     classpath = sourceSets.test.get().runtimeClasspath
 
     doLast {
-        addSamplesToGit.executeCommand()
+        addSamplesToGit.get().executeCommand()
     }
 }
 
@@ -240,7 +240,7 @@ idea {
 // If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
 // the target of `processKdocMain`, and they are returned to normal afterward.
 // This is usually only done when publishing
-val changeJarTask by tasks.creating {
+val changeJarTask by tasks.registering {
     outputs.upToDateWhen { project.hasProperty("skipKodex") }
     doFirst {
         tasks.withType<Jar> {

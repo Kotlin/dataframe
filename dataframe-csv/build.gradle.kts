@@ -106,7 +106,7 @@ tasks.named("runKtlintCheckOverGeneratedSourcesSourceSet") {
 // If `changeJarTask` is run, modify all Jar tasks such that before running the Kotlin sources are set to
 // the target of `processKdocMain`, and they are returned to normal afterward.
 // This is usually only done when publishing
-val changeJarTask by tasks.creating {
+val changeJarTask by tasks.registering {
     outputs.upToDateWhen { false }
     doFirst {
         tasks.withType<Jar> {

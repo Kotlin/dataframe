@@ -58,7 +58,7 @@ sourceSets {
     }
 }
 
-tasks.create<JavaExec>("generateTests") {
+tasks.register<JavaExec>("generateTests") {
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass = "org.jetbrains.kotlinx.dataframe.GenerateTestsKt"
 }

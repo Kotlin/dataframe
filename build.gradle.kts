@@ -153,6 +153,8 @@ val modulesUsingJava11 = with(projects) {
         dataframeJupyter,
         dataframeGeo,
         examples.ideaExamples.titanic,
+        plugins.symbolProcessor,
+        plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
 
