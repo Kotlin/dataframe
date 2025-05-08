@@ -28,7 +28,7 @@ df.sortBy { "weight".nullsLast() }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortBy.html" width="100%"/>
 <!---END-->
 
 ## sortByDesc
@@ -51,7 +51,7 @@ df.sortByDesc("age", "weight")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortByDesc.html" width="100%"/>
 <!---END-->
 
 ## sortWith
@@ -70,5 +70,5 @@ df.sortWith { row1, row2 ->
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.sortWith.html" width="100%"/>
 <!---END-->

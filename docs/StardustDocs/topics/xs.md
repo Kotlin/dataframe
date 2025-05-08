@@ -21,5 +21,5 @@ df.xs("Charlie", "Chaplin")
 df.xs("Moscow", true) { city and isHappy }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Access.xs.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Access.xs.html" width="100%"/>
 <!---END-->
