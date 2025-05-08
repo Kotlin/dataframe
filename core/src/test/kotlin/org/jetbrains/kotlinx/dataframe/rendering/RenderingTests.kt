@@ -31,8 +31,8 @@ import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.tableInSessionId
-import org.jetbrains.kotlinx.dataframe.io.toHTML
-import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
+import org.jetbrains.kotlinx.dataframe.io.toHtml
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
@@ -72,21 +72,21 @@ class RenderingTests : TestBase() {
     @Test
     fun htmlTagsAreEscaped() {
         val df = dataFrameOf("name", "int")("<Air France> (12)", 1)
-        val html = df.toHTML().toString()
+        val html = df.toHtml().toString()
         html shouldContain "&#60;Air France&#62;"
     }
 
     @Test
     fun unicodeEscapeSequencesAreEscaped() {
         val df = dataFrameOf("content")("""Hello\nfrom \x and \y""")
-        val html = df.toHTML().toString()
+        val html = df.toHtml().toString()
         html shouldContain "Hello&#92;nfrom &#92;x and &#92;y"
     }
 
     @Test
     fun `long text is trimmed without escaping`() {
         val df = dataFrameOf("text")("asdfkjasdlkjfhasljkddasdasdasdasdasdasdhf")
-        val html = df.toHTML().toString()
+        val html = df.toHtml().toString()
         html shouldNotContain "\\\\"
         html shouldNotContain "&#34;"
     }
@@ -95,7 +95,7 @@ class RenderingTests : TestBase() {
     fun `non ascii text`() {
         val value = "Шёл Шива по шоссе, сокрушая сущее"
         val df = dataFrameOf("text")(value)
-        val script = df.toHTML().script
+        val script = df.toHtml().script
         script shouldContain value.escapeHTML()
     }
 
@@ -118,13 +118,13 @@ class RenderingTests : TestBase() {
             .group("a", "b")
             .into("g")
             .add("a") { 1 }
-            .toHTML()
+            .toHtml()
     }
 
     @Test
     fun `render URL`() {
         val df = dataFrameOf("url")("https://api.github.com/orgs/JetBrains")
-        val html = df.parse().toHTML()
+        val html = df.parse().toHtml()
         html.toString() shouldNotContain RenderedContent::class.simpleName!!
     }
 
@@ -133,7 +133,7 @@ class RenderingTests : TestBase() {
         val df = dataFrameOf("name", "parent", "type")("Boston (MA)", "123wazxdPag5", "Campus")
             .move("parent").into { "parent"["id"] }
             .group { all() }.into("Campus")
-        df.toHTML().print()
+        df.toHtml().print()
     }
 
     @Test
@@ -144,14 +144,14 @@ class RenderingTests : TestBase() {
             dataFrameOf("col")(1.123) to "1${d}123",
             dataFrameOf("col")(1.0) to "1${d}0",
         ).forEach { (df, rendered) ->
-            df.toHTML().script shouldContain rendered
+            df.toHtml().script shouldContain rendered
         }
     }
 
     @Test
     fun `static rendering should be present`() {
         val df = dataFrameOf("a", "b")(listOf(1, 1), listOf(2, 4))
-        val actualHtml = df.toHTML()
+        val actualHtml = df.toHtml()
 
         val body = actualHtml.body.lines().joinToString("") { it.trimStart() }
 
@@ -216,9 +216,9 @@ class RenderingTests : TestBase() {
         val nestedFrame = dataFrameOf("a")(df)
         val configuration = DisplayConfiguration(enableFallbackStaticTables = false)
         tableInSessionId = 0
-        val formattedHtml = formatted.toStandaloneHTML(configuration).toString()
+        val formattedHtml = formatted.toStandaloneHtml(configuration).toString()
         tableInSessionId = 0
-        val regularHtml = nestedFrame.toStandaloneHTML(configuration).toString()
+        val regularHtml = nestedFrame.toStandaloneHtml(configuration).toString()
 
         formattedHtml.replace("api.FormattedFrame", "DataFrame") shouldBe regularHtml
     }
@@ -226,7 +226,7 @@ class RenderingTests : TestBase() {
     @Test
     fun `render cell attributes for nested FormattedFrame`() {
         val df = dataFrameOf("a")(dataFrameOf("b")(1).format { all() }.with { background(green) })
-        val html = df.toStandaloneHTML()
+        val html = df.toStandaloneHtml()
         html.toString() shouldInclude "style: \"background-color"
     }
 
@@ -234,21 +234,21 @@ class RenderingTests : TestBase() {
     fun `render img`() {
         val src = "https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/images/gettingStarted.png?raw=true"
         val df = dataFrameOf("img")(IMG(src))
-        df.toStandaloneHTML().toString() shouldInclude
+        df.toStandaloneHtml().toString() shouldInclude
             """values: ["<img src=\"https://github.com/Kotlin/dataframe/blob/master/docs/StardustDocs/images/gettingStarted.png?raw=true\" style=\"\"/>"]"""
     }
 
     @Test
     fun `render custom content`() {
         val df = dataFrameOf("customUrl")(RenderedContent.media("""<a href="http://example.com">Click me!</a>"""))
-        df.toStandaloneHTML().toString() shouldInclude
+        df.toStandaloneHtml().toString() shouldInclude
             """values: ["<a href=\"http://example.com\">Click me!</a>"]"""
     }
 
     @Test
     fun `render iframe content`() {
         val df = dataFrameOf("iframe")(IFRAME("http://example.com"))
-        df.toStandaloneHTML().toString() shouldInclude
+        df.toStandaloneHtml().toString() shouldInclude
             """values: ["<iframe src=\"http://example.com\"""
     }
 }

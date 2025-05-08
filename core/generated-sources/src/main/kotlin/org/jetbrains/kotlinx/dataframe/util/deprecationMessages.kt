@@ -95,6 +95,21 @@ internal const val MEAN_NO_SKIPNAN = "This function is just here for binary comp
 internal const val CONVERT_TO = "This to overload will be removed in favor of `asColumn`. $MESSAGE_0_16"
 internal const val CONVERT_TO_REPLACE = "this.asColumn(columnConverter)"
 
+internal const val TO_HTML = "This function is replaced by `toHtml()`. $MESSAGE_0_16"
+internal const val TO_HTML_REPLACE = "toHtml(configuration, cellRenderer, getFooter)"
+
+internal const val TO_STANDALONE_HTML = "This function is replaced by `toStandaloneHtml()`. $MESSAGE_0_16"
+internal const val TO_STANDALONE_HTML_REPLACE = "toStandaloneHtml(configuration, cellRenderer, getFooter)"
+
+internal const val WRITE_HTML = "This function is replaced by `writeHtml()`. $MESSAGE_0_16"
+internal const val WRITE_HTML_REPLACE = "writeHtml(destination)"
+
+internal const val CONVERT_TO_URL = "This function is replaced by `convertToUrl()`. $MESSAGE_0_16"
+internal const val CONVERT_TO_URL_REPLACE = "convertToUrl()"
+
+internal const val TO_URL = "This function is replaced by `toUrl()`. $MESSAGE_0_16"
+internal const val TO_URL_REPLACE = "toUrl()"
+
 // endregion
 
 // region WARNING in 0.16, ERROR in 0.17
