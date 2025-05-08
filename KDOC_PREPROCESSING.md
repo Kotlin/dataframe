@@ -693,7 +693,7 @@ A fully interactive, single-source-of-truth grammar for the Columns Selection DS
 There's a special annotation, `@ExportAsHtml`, that allows you to export the content of the KDoc of the annotated
 function, interface, or class as HTML.
 The Markdown of the KDoc is rendered to HTML using [JetBrains/markdown](https://github.com/JetBrains/markdown) and, in
-the case of DataFrame, put in [./docs/StardustDocs/snippets/kdocs](./docs/StardustDocs/snippets/kdocs).
+the case of DataFrame, put in [./docs/StardustDocs/resources/snippets/kdocs](docs/StardustDocs/resources/snippets/kdocs).
 From there, the HTML can be included in any WriterSide page as an iFrame.
 This can be done using our custom `<dataFrame src=""/>` tag.
 
