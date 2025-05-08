@@ -1,3 +1,3 @@
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+//enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "keywords-generator"
