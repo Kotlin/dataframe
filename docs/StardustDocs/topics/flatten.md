@@ -30,7 +30,7 @@ df.flatten("name")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flatten.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.flatten.html" width="100%"/>
 <!---END-->
 
 To remove all column groupings in [`DataFrame`](DataFrame.md), invoke `flatten` without parameters:
@@ -41,5 +41,5 @@ To remove all column groupings in [`DataFrame`](DataFrame.md), invoke `flatten` 
 df.flatten()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.flattenAll.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.flattenAll.html" width="100%"/>
 <!---END-->

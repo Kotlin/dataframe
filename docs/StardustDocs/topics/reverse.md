@@ -10,5 +10,5 @@ Returns [`DataFrame`](DataFrame.md) with rows in reversed order.
 df.reverse()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.reverse.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.reverse.html" width="100%"/>
 <!---END-->

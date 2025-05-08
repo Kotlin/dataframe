@@ -33,5 +33,5 @@ df.pivot { city }.count { age > 18 }
 df.pivot { name.firstName }.groupBy { name.lastName }.count()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.countAggregation.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.countAggregation.html" width="100%"/>
 <!---END-->

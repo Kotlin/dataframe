@@ -16,6 +16,7 @@
         <analytics-head-script-file>resize-iframes.js</analytics-head-script-file>
         <enable-browser-edits>true</enable-browser-edits>
         <browser-edits-url>https://github.com/Kotlin/dataframe/edit/master/docs/StardustDocs/</browser-edits-url>
+        <include-in-head>include-head.html</include-in-head>
     </variables>
     <sitemap change-frequency="monthly"/>
     <build-profile instance="d">
