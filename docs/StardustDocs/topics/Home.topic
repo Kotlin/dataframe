@@ -19,14 +19,14 @@
 
         <primary>
             <title>First steps</title>
-            <a href="gettingStarted.md"/>
+            <a href="gettingStartedKotlinNotebook.md"/>
             <a href="overview.md"/>
             <a href="operations.md"/>
         </primary>
 
         <secondary>
             <title>Featured topics</title>
-            <a href="Usage-with-Kotlin-Notebook-Plugin.md"/>
+            <a href="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md"/>
         </secondary>
 
 

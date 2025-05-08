@@ -1,8 +1,10 @@
-# Usage with Kotlin Notebook Plugin
+# Kotlin DataFrame Features in Kotlin Notebook
 
 The [Kotlin Notebook Plugin for IntelliJ IDEA](https://plugins.jetbrains.com/plugin/16340-kotlin-notebook),
 combined with Kotlin DataFrame, offers powerful data analysis capabilities within an interactive environment.
 Here are the key features:
+
+<!---TODO add drag-n-drop--->
 
 ### Visual Data Exploration
 **Page through your data**:
