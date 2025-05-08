@@ -19,10 +19,13 @@ A curated list of Kotlin DataFrame guides and examples that walk you through com
 
 Explore our structured, in-depth guides to steadily improve your Kotlin DataFrame skills — step by step.
 
-* [Quickstart Guide](quickstart.md) — get started with Kotlin DataFrame in a few simple steps: 
+* [](quickstart.md) — get started with Kotlin DataFrame in a few simple steps: 
 load data, transform it, and visualize it.
 * [Enhanced Column Selection DSL](https://blog.jetbrains.com/kotlin/2024/07/enhanced-column-selection-dsl-in-kotlin-dataframe/)
  — explore powerful DSL for typesafe and flexible column selection in Kotlin DataFrame.
+* [](Kotlin-DataFrame-Features-in-Kotlin-Notebook.md)
+  — discover interactive Kotlin DataFrame outputs in 
+[Kotlin Notebook](https://kotlinlang.org/docs/kotlin-notebook-overview.html).
 * [40 Puzzles](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/puzzles/40%20puzzles.ipynb)
  — inspired by [100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles).
   An interactive guide that takes you from simple tasks to complex challenges,
