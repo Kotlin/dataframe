@@ -45,35 +45,35 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T : Comparable<T & Any>?> DataColumn<T>.percentile(percentile: Double): T & Any =
+public fun <T : Comparable<T>> DataColumn<T>.percentile(percentile: Double): T =
     percentileOrNull(percentile).suggestIfNull("percentile")
 
-public fun <T : Comparable<T & Any>?> DataColumn<T>.percentileOrNull(percentile: Double): T? =
+public fun <T : Comparable<T>> DataColumn<T>.percentileOrNull(percentile: Double): T? =
     Aggregators.percentileComparables<T>(percentile).aggregateSingleColumn(this)
 
 public fun <T> DataColumn<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where T : Comparable<T & Any>?, T : Number? =
+    where T : Comparable<T>, T : Number? =
     percentileOrNull(percentile = percentile, skipNaN = skipNaN).suggestIfNull("percentile")
 
 public fun <T> DataColumn<T>.percentileOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where T : Comparable<T & Any>?, T : Number? =
+    where T : Comparable<T>, T : Number? =
     Aggregators.percentileNumbers<T>(percentile, skipNaN).aggregateSingleColumn(this)
 
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileBy(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
 ): T & Any = percentileByOrNull(percentile, skipNaN, selector).suggestIfNull("percentileBy")
 
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileByOrNull(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileByOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
@@ -81,14 +81,14 @@ public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentile
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileOf(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileOf(
     percentile: Double,
     crossinline expression: (T) -> R,
-): R & Any = percentileOfOrNull(percentile, expression).suggestIfNull("percentileOf")
+): R = percentileOfOrNull(percentile, expression).suggestIfNull("percentileOf")
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.percentileOfOrNull(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.percentileOfOrNull(
     percentile: Double,
     crossinline expression: (T) -> R,
 ): R? = Aggregators.percentileComparables<R>(percentile).aggregateOf(this, expression)
@@ -99,7 +99,7 @@ public inline fun <T, reified R> DataColumn<T>.percentileOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     percentileOfOrNull(percentile, skipNaN, expression).suggestIfNull("percentileOf")
 
 @OverloadResolutionByLambdaReturnType
@@ -108,7 +108,7 @@ public inline fun <T, reified R> DataColumn<T>.percentileOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double?
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     Aggregators.percentileNumbers<R>(percentile, skipNaN).aggregateOf(this, expression)
 
 // endregion
@@ -151,7 +151,7 @@ public fun <T> DataFrame<T>.percentile(percentile: Double, skipNaN: Boolean = sk
 
 @Refine
 @Interpretable("Percentile1")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
+public fun <T, C : Comparable<C>> DataFrame<T>.percentileFor(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -167,7 +167,7 @@ public fun <T> DataFrame<T>.percentileFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
+public fun <T, C : Comparable<C>> DataFrame<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -177,7 +177,7 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
+public fun <T, C : Comparable<C>> DataFrame<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -185,15 +185,13 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileFor(
 
 // TODO, requires explicit type C due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
-    percentile: Double,
-    columns: ColumnsSelector<T, C>,
-): C & Any = percentileOrNull(percentile, columns).suggestIfNull("percentile")
+public fun <T, C : Comparable<C>> DataFrame<T>.percentile(percentile: Double, columns: ColumnsSelector<T, C>): C =
+    percentileOrNull(percentile, columns).suggestIfNull("percentile")
 
 // TODO, requires explicit type C due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
+public fun <T, C : Comparable<C>> DataFrame<T>.percentileOrNull(
     percentile: Double,
     columns: ColumnsSelector<T, C>,
 ): C? = Aggregators.percentileComparables<C>(percentile).aggregateAll(this, columns)
@@ -204,7 +202,7 @@ public fun <T, C> DataFrame<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): Double
-    where C : Number?, C : Comparable<C & Any>? =
+    where C : Number?, C : Comparable<C> =
     percentileOrNull(percentile, skipNaN, columns).suggestIfNull("percentile")
 
 @OverloadResolutionByLambdaReturnType
@@ -214,7 +212,7 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<C>, C : Number? =
     Aggregators.percentileNumbers<C>(percentile, skipNaN).aggregateAll(this, columns)
 
 public fun <T> DataFrame<T>.percentile(
@@ -228,22 +226,20 @@ public fun <T> DataFrame<T>.percentileOrNull(
     vararg columns: String,
     skipNaN: Boolean = skipNaNDefault,
 ): Any? =
-    Aggregators.percentileCommon<Comparable<Any>?>(percentile, skipNaN).aggregateAll(this) { columns.toColumnSet() }
+    Aggregators.percentileCommon<Comparable<Any>>(percentile, skipNaN).aggregateAll(this) { columns.toColumnSet() }
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
-    percentile: Double,
-    vararg columns: ColumnReference<C>,
-): C & Any = percentileOrNull(percentile, *columns).suggestIfNull("percentile")
+public fun <T, C : Comparable<C>> DataFrame<T>.percentile(percentile: Double, vararg columns: ColumnReference<C>): C =
+    percentileOrNull(percentile, *columns).suggestIfNull("percentile")
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
+public fun <T, C : Comparable<C>> DataFrame<T>.percentileOrNull(
     percentile: Double,
     vararg columns: ColumnReference<C>,
 ): C? = percentileOrNull<T, C>(percentile) { columns.toColumnSet() }
@@ -257,7 +253,7 @@ public fun <T, C> DataFrame<T>.percentile(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<C>, C : Number? =
     percentileOrNull(percentile, *columns, skipNaN = skipNaN).suggestIfNull("percentile")
 
 @Deprecated(
@@ -269,26 +265,21 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? =
-    percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
+    where C : Comparable<C>, C : Number? = percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentile(
-    percentile: Double,
-    vararg columns: KProperty<C>,
-): C & Any = percentileOrNull(percentile, *columns).suggestIfNull("percentile")
+public fun <T, C : Comparable<C>> DataFrame<T>.percentile(percentile: Double, vararg columns: KProperty<C>): C =
+    percentileOrNull(percentile, *columns).suggestIfNull("percentile")
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.percentileOrNull(
-    percentile: Double,
-    vararg columns: KProperty<C>,
-): C? = percentileOrNull<T, C>(percentile) { columns.toColumnSet() }
+public fun <T, C : Comparable<C>> DataFrame<T>.percentileOrNull(percentile: Double, vararg columns: KProperty<C>): C? =
+    percentileOrNull<T, C>(percentile) { columns.toColumnSet() }
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
@@ -299,7 +290,7 @@ public fun <T, C> DataFrame<T>.percentile(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<C>, C : Number? =
     percentileOrNull(percentile, *columns, skipNaN = skipNaN).suggestIfNull("percentile")
 
 @Deprecated(
@@ -311,19 +302,18 @@ public fun <T, C> DataFrame<T>.percentileOrNull(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? =
-    percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
+    where C : Comparable<C>, C : Number? = percentileOrNull(percentile, skipNaN) { columns.toColumnSet() }
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.percentileOf(
+public inline fun <T, reified R : Comparable<R>> DataFrame<T>.percentileOf(
     percentile: Double,
     crossinline expression: RowExpression<T, R>,
-): R & Any = percentileOfOrNull(percentile, expression).suggestIfNull("percentileOf")
+): R = percentileOfOrNull(percentile, expression).suggestIfNull("percentileOf")
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.percentileOfOrNull(
+public inline fun <T, reified R : Comparable<R>> DataFrame<T>.percentileOfOrNull(
     percentile: Double,
     crossinline expression: RowExpression<T, R>,
 ): R? = Aggregators.percentileComparables<R>(percentile).aggregateOf(this, expression)
@@ -334,7 +324,7 @@ public inline fun <T, reified R> DataFrame<T>.percentileOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): Double
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     percentileOfOrNull(percentile, skipNaN, expression).suggestIfNull("percentileOf")
 
 @OverloadResolutionByLambdaReturnType
@@ -343,10 +333,10 @@ public inline fun <T, reified R> DataFrame<T>.percentileOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): Double?
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     Aggregators.percentileNumbers<R>(percentile, skipNaN).aggregateOf(this, expression)
 
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
@@ -362,7 +352,7 @@ public fun <T> DataFrame<T>.percentileBy(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -372,13 +362,13 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileB
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileBy(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileByOrNull(percentile, column, skipNaN).suggestIfNull("percentileBy")
 
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.percentileByOrNull(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
@@ -388,13 +378,13 @@ public fun <T> DataFrame<T>.percentileByOrNull(
     percentile: Double,
     column: String,
     skipNaN: Boolean = skipNaNDefault,
-): DataRow<T>? = percentileByOrNull(percentile, column.toColumnOf<Comparable<Any>?>(), skipNaN)
+): DataRow<T>? = percentileByOrNull(percentile, column.toColumnOf<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.percentileByOrNull(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -404,7 +394,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileB
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.percentileByOrNull(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.percentileByOrNull(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -420,7 +410,7 @@ public fun <T> Grouped<T>.percentile(percentile: Double, skipNaN: Boolean = skip
 
 @Refine
 @Interpretable("GroupByPercentile0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
+public fun <T, C : Comparable<C>> Grouped<T>.percentileFor(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -433,7 +423,7 @@ public fun <T> Grouped<T>.percentileFor(percentile: Double, vararg columns: Stri
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
+public fun <T, C : Comparable<C>> Grouped<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -443,7 +433,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
+public fun <T, C : Comparable<C>> Grouped<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -451,7 +441,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentileFor(
 
 @Refine
 @Interpretable("GroupByPercentile0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
+public fun <T, C : Comparable<C>> Grouped<T>.percentile(
     percentile: Double,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -469,7 +459,7 @@ public fun <T> Grouped<T>.percentile(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
+public fun <T, C : Comparable<C>> Grouped<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     name: String? = null,
@@ -480,7 +470,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
+public fun <T, C : Comparable<C>> Grouped<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     name: String? = null,
@@ -489,7 +479,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.percentile(
 
 @Refine
 @Interpretable("GroupByPercentileOf")
-public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.percentileOf(
+public inline fun <T, reified R : Comparable<R>> Grouped<T>.percentileOf(
     percentile: Double,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -497,7 +487,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.percentileOf(
 ): DataFrame<T> = Aggregators.percentileCommon<R>(percentile, skipNaN).aggregateOf(this, name, expression)
 
 @Interpretable("GroupByReduceExpression") // TODO?
-public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.percentileBy(
+public inline fun <T, G, reified R : Comparable<R>> GroupBy<T, G>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<G, R>,
@@ -507,7 +497,7 @@ public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.percent
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.percentileBy(
+public inline fun <T, G, reified C : Comparable<C>> GroupBy<T, G>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -517,13 +507,13 @@ public fun <T, G> GroupBy<T, G>.percentileBy(
     percentile: Double,
     column: String,
     skipNaN: Boolean = skipNaNDefault,
-): ReducedGroupBy<T, G> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+): ReducedGroupBy<T, G> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.percentileBy(
+public inline fun <T, G, reified C : Comparable<C>> GroupBy<T, G>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -539,7 +529,7 @@ public fun <T> Pivot<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
+public fun <T, C : Comparable<C>> Pivot<T>.percentileFor(
     percentile: Double,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -557,7 +547,7 @@ public fun <T> Pivot<T>.percentileFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
+public fun <T, C : Comparable<C>> Pivot<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
@@ -568,14 +558,14 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentileFor(
+public fun <T, C : Comparable<C>> Pivot<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
+public fun <T, C : Comparable<C>> Pivot<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
@@ -591,7 +581,7 @@ public fun <T> Pivot<T>.percentile(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
+public fun <T, C : Comparable<C>> Pivot<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -601,19 +591,19 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.percentile(
+public fun <T, C : Comparable<C>> Pivot<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileOf(
+public inline fun <T, reified R : Comparable<R>> Pivot<T>.percentileOf(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): DataRow<T> = delegate { percentileOf(percentile, skipNaN, expression) }
 
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileBy(
+public inline fun <T, reified R : Comparable<R>> Pivot<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
@@ -623,7 +613,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.percentileBy(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
+public inline fun <T, reified C : Comparable<C>> Pivot<T>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -633,13 +623,13 @@ public fun <T> Pivot<T>.percentileBy(
     percentile: Double,
     column: String,
     skipNaN: Boolean = skipNaNDefault,
-): ReducedPivot<T> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+): ReducedPivot<T> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.percentileBy(
+public inline fun <T, reified C : Comparable<C>> Pivot<T>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -654,7 +644,7 @@ public fun <T> PivotGroupBy<T>.percentile(
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentileFor(percentile, separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -672,7 +662,7 @@ public fun <T> PivotGroupBy<T>.percentileFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
@@ -683,14 +673,14 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentileFor(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentileFor(
     percentile: Double,
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentileFor(percentile, separate, skipNaN) { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentile(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
@@ -706,7 +696,7 @@ public fun <T> PivotGroupBy<T>.percentile(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -716,19 +706,19 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.percentile(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.percentile(
     percentile: Double,
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = percentile(percentile, skipNaN) { columns.toColumnSet() }
 
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percentileOf(
+public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.percentileOf(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = Aggregators.percentileCommon<R>(percentile, skipNaN).aggregateOf(this, expression)
 
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percentileBy(
+public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
@@ -738,7 +728,7 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.percenti
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.percentileBy(
+public inline fun <T, reified C : Comparable<C>> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
@@ -748,13 +738,13 @@ public fun <T> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     column: String,
     skipNaN: Boolean = skipNaNDefault,
-): ReducedPivotGroupBy<T> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+): ReducedPivotGroupBy<T> = percentileBy(percentile, column.toColumnAccessor().cast<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.percentileBy(
+public inline fun <T, reified C : Comparable<C>> PivotGroupBy<T>.percentileBy(
     percentile: Double,
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,

@@ -26,8 +26,8 @@ internal inline fun <T> Aggregatable<T>.remainingColumns(
  * (`Comparable<Nothing>` would be more correct, but then the compiler complains)
  */
 @Suppress("UNCHECKED_CAST")
-internal fun <T> Aggregatable<T>.intraComparableColumns(): ColumnsSelector<T, Comparable<Any>?> =
-    remainingColumns { it.valuesAreComparable() } as ColumnsSelector<T, Comparable<Any>?>
+internal fun <T> Aggregatable<T>.intraComparableColumns(): ColumnsSelector<T, Comparable<Any>> =
+    remainingColumns { it.valuesAreComparable() } as ColumnsSelector<T, Comparable<Any>>
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T> Aggregatable<T>.numberColumns(): ColumnsSelector<T, Number?> =

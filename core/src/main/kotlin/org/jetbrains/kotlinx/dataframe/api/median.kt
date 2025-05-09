@@ -44,43 +44,43 @@ import kotlin.reflect.KProperty
 
 // region DataColumn
 
-public fun <T : Comparable<T & Any>?> DataColumn<T>.median(): T & Any = medianOrNull().suggestIfNull("median")
+public fun <T : Comparable<T>> DataColumn<T>.median(): T = medianOrNull().suggestIfNull("median")
 
-public fun <T : Comparable<T & Any>?> DataColumn<T>.medianOrNull(): T? =
+public fun <T : Comparable<T>> DataColumn<T>.medianOrNull(): T? =
     Aggregators.medianComparables<T>().aggregateSingleColumn(this)
 
 public fun <T> DataColumn<T>.median(
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where T : Comparable<T & Any>?, T : Number? = medianOrNull(skipNaN = skipNaN).suggestIfNull("median")
+    where T : Comparable<T>, T : Number? = medianOrNull(skipNaN = skipNaN).suggestIfNull("median")
 
 public fun <T> DataColumn<T>.medianOrNull(
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where T : Comparable<T & Any>?, T : Number? =
+    where T : Comparable<T>, T : Number? =
     Aggregators.medianNumbers<T>(skipNaN).aggregateSingleColumn(this)
 
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianBy(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
 ): T & Any = medianByOrNull(skipNaN, selector).suggestIfNull("medianBy")
 
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianByOrNull(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline selector: (T) -> R,
 ): T? = Aggregators.medianCommon<R>(skipNaN).aggregateByOrNull(this, selector)
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOf(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(
     crossinline expression: (T) -> R,
-): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
+): R = medianOfOrNull(expression).suggestIfNull("medianOf")
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataColumn<T>.medianOfOrNull(
+public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOfOrNull(
     crossinline expression: (T) -> R,
 ): R? = Aggregators.medianComparables<R>().aggregateOf(this, expression)
 
@@ -89,7 +89,7 @@ public inline fun <T, reified R> DataColumn<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
 
 @OverloadResolutionByLambdaReturnType
@@ -97,7 +97,7 @@ public inline fun <T, reified R> DataColumn<T>.medianOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: (T) -> R,
 ): Double?
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     Aggregators.medianNumbers<R>(skipNaN).aggregateOf(this, expression)
 
 // endregion
@@ -137,7 +137,7 @@ public fun <T> DataFrame<T>.median(skipNaN: Boolean = skipNaNDefault): DataRow<T
 
 @Refine
 @Interpretable("Median1")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataRow<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, columns)
@@ -149,7 +149,7 @@ public fun <T> DataFrame<T>.medianFor(vararg columns: String, skipNaN: Boolean =
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
@@ -158,20 +158,20 @@ public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianFor(
+public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
 // TODO, requires explicit type C due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(columns: ColumnsSelector<T, C>): C & Any =
+public fun <T, C : Comparable<C>> DataFrame<T>.median(columns: ColumnsSelector<T, C>): C =
     medianOrNull(columns).suggestIfNull("median")
 
 // TODO, requires explicit type C due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(columns: ColumnsSelector<T, C>): C? =
+public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(columns: ColumnsSelector<T, C>): C? =
     Aggregators.medianComparables<C>().aggregateAll(this, columns)
 
 @OverloadResolutionByLambdaReturnType
@@ -179,7 +179,7 @@ public fun <T, C> DataFrame<T>.median(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): Double
-    where C : Number?, C : Comparable<C & Any>? = medianOrNull(skipNaN, columns).suggestIfNull("median")
+    where C : Number?, C : Comparable<C> = medianOrNull(skipNaN, columns).suggestIfNull("median")
 
 @OverloadResolutionByLambdaReturnType
 @Suppress("UNCHECKED_CAST")
@@ -187,27 +187,27 @@ public fun <T, C> DataFrame<T>.medianOrNull(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<C>, C : Number? =
     Aggregators.medianNumbers<C>(skipNaN).aggregateAll(this, columns)
 
 public fun <T> DataFrame<T>.median(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Any =
     medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
 
 public fun <T> DataFrame<T>.medianOrNull(vararg columns: String, skipNaN: Boolean = skipNaNDefault): Any? =
-    Aggregators.medianCommon<Comparable<Any>?>(skipNaN).aggregateAll(this) { columns.toColumnSet() }
+    Aggregators.medianCommon<Comparable<Any>>(skipNaN).aggregateAll(this) { columns.toColumnSet() }
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(vararg columns: ColumnReference<C>): C & Any =
+public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: ColumnReference<C>): C =
     medianOrNull(*columns).suggestIfNull("median")
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C>): C? =
+public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C>): C? =
     medianOrNull<T, C> { columns.toColumnSet() }
 
 @Deprecated(
@@ -218,7 +218,7 @@ public fun <T, C> DataFrame<T>.median(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<C>, C : Number? =
     medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
 
 @Deprecated(
@@ -229,20 +229,20 @@ public fun <T, C> DataFrame<T>.medianOrNull(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? = medianOrNull(skipNaN) { columns.toColumnSet() }
+    where C : Comparable<C>, C : Number? = medianOrNull(skipNaN) { columns.toColumnSet() }
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.median(vararg columns: KProperty<C>): C & Any =
+public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: KProperty<C>): C =
     medianOrNull(*columns).suggestIfNull("median")
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> DataFrame<T>.medianOrNull(vararg columns: KProperty<C>): C? =
+public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: KProperty<C>): C? =
     medianOrNull<T, C> { columns.toColumnSet() }
 
 @Deprecated(
@@ -253,7 +253,7 @@ public fun <T, C> DataFrame<T>.median(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double
-    where C : Comparable<C & Any>?, C : Number? =
+    where C : Comparable<C>, C : Number? =
     medianOrNull(*columns, skipNaN = skipNaN).suggestIfNull("median")
 
 @Deprecated(
@@ -264,17 +264,17 @@ public fun <T, C> DataFrame<T>.medianOrNull(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): Double?
-    where C : Comparable<C & Any>?, C : Number? = medianOrNull(skipNaN) { columns.toColumnSet() }
+    where C : Comparable<C>, C : Number? = medianOrNull(skipNaN) { columns.toColumnSet() }
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.medianOf(
+public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(
     crossinline expression: RowExpression<T, R>,
-): R & Any = medianOfOrNull(expression).suggestIfNull("medianOf")
+): R = medianOfOrNull(expression).suggestIfNull("medianOf")
 
 // TODO, requires explicit type R due to https://youtrack.jetbrains.com/issue/KT-76683
 @OverloadResolutionByLambdaReturnType
-public inline fun <T, reified R : Comparable<R & Any>?> DataFrame<T>.medianOfOrNull(
+public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOfOrNull(
     crossinline expression: RowExpression<T, R>,
 ): R? = Aggregators.medianComparables<R>().aggregateOf(this, expression)
 
@@ -283,7 +283,7 @@ public inline fun <T, reified R> DataFrame<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): Double
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     medianOfOrNull(skipNaN, expression).suggestIfNull("medianOf")
 
 @OverloadResolutionByLambdaReturnType
@@ -291,10 +291,10 @@ public inline fun <T, reified R> DataFrame<T>.medianOfOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): Double?
-    where R : Comparable<R & Any>?, R : Number? =
+    where R : Comparable<R>, R : Number? =
     Aggregators.medianNumbers<R>(skipNaN).aggregateOf(this, expression)
 
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T> = medianByOrNull(skipNaN, expression).suggestIfNull("medianBy")
@@ -306,7 +306,7 @@ public fun <T> DataFrame<T>.medianBy(column: String, skipNaN: Boolean = skipNaND
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.medianBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
@@ -315,24 +315,24 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianBy(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.medianBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianByOrNull(column, skipNaN).suggestIfNull("medianBy")
 
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.medianByOrNull(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, C>,
 ): DataRow<T>? = Aggregators.medianCommon<C>(skipNaN).aggregateByOrNull(this, expression)
 
 public fun <T> DataFrame<T>.medianByOrNull(column: String, skipNaN: Boolean = skipNaNDefault): DataRow<T>? =
-    medianByOrNull(column.toColumnOf<Comparable<Any>?>(), skipNaN)
+    medianByOrNull(column.toColumnOf<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.medianByOrNull(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = Aggregators.medianCommon<C>(skipNaN).aggregateByOrNull(this, column)
@@ -341,7 +341,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrN
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> DataFrame<T>.medianByOrNull(
+public inline fun <T, reified C : Comparable<C>> DataFrame<T>.medianByOrNull(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T>? = medianByOrNull(column.toColumnAccessor(), skipNaN)
@@ -356,7 +356,7 @@ public fun <T> Grouped<T>.median(skipNaN: Boolean = skipNaNDefault): DataFrame<T
 
 @Refine
 @Interpretable("GroupByMedian0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<C>> Grouped<T>.medianFor(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
 ): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateFor(this, columns)
@@ -367,7 +367,7 @@ public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medi
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<C>> Grouped<T>.medianFor(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
@@ -376,14 +376,14 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.medianFor(
+public fun <T, C : Comparable<C>> Grouped<T>.medianFor(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(skipNaN) { columns.toColumnSet() }
 
 @Refine
 @Interpretable("GroupByMedian0")
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
+public fun <T, C : Comparable<C>> Grouped<T>.median(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
@@ -399,7 +399,7 @@ public fun <T> Grouped<T>.median(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
+public fun <T, C : Comparable<C>> Grouped<T>.median(
     vararg columns: ColumnReference<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -409,7 +409,7 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
+public fun <T, C : Comparable<C>> Grouped<T>.median(
     vararg columns: KProperty<C>,
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
@@ -417,14 +417,14 @@ public fun <T, C : Comparable<C & Any>?> Grouped<T>.median(
 
 @Refine
 @Interpretable("GroupByMedianOf")
-public inline fun <T, reified R : Comparable<R & Any>?> Grouped<T>.medianOf(
+public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
     name: String? = null,
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = Aggregators.medianCommon<R>(skipNaN).aggregateOf(this, name, expression)
 
 @Interpretable("GroupByReduceExpression") // TODO?
-public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.medianBy(
+public inline fun <T, G, reified R : Comparable<R>> GroupBy<T, G>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<G, R>,
 ): ReducedGroupBy<T, G> = reduce { medianByOrNull(skipNaN, rowExpression) }
@@ -433,19 +433,19 @@ public inline fun <T, G, reified R : Comparable<R & Any>?> GroupBy<T, G>.medianB
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianBy(
+public inline fun <T, G, reified C : Comparable<C>> GroupBy<T, G>.medianBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedGroupBy<T, G> = reduce { medianByOrNull(column, skipNaN) }
 
 public fun <T, G> GroupBy<T, G>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedGroupBy<T, G> =
-    medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+    medianBy(column.toColumnAccessor().cast<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianBy(
+public inline fun <T, G, reified C : Comparable<C>> GroupBy<T, G>.medianBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedGroupBy<T, G> = medianBy(column.toColumnAccessor(), skipNaN)
@@ -457,7 +457,7 @@ public inline fun <T, G, reified C : Comparable<C & Any>?> GroupBy<T, G>.medianB
 public fun <T> Pivot<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataRow<T> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -473,7 +473,7 @@ public fun <T> Pivot<T>.medianFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -483,13 +483,13 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.medianFor(
+public fun <T, C : Comparable<C>> Pivot<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
+public fun <T, C : Comparable<C>> Pivot<T>.median(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): DataRow<T> = delegate { median(skipNaN, columns) }
@@ -501,7 +501,7 @@ public fun <T> Pivot<T>.median(vararg columns: String, skipNaN: Boolean = skipNa
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
+public fun <T, C : Comparable<C>> Pivot<T>.median(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = median(skipNaN) { columns.toColumnSet() }
@@ -510,17 +510,17 @@ public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> Pivot<T>.median(
+public fun <T, C : Comparable<C>> Pivot<T>.median(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataRow<T> = median(skipNaN) { columns.toColumnSet() }
 
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianOf(
+public inline fun <T, reified R : Comparable<R>> Pivot<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): DataRow<T> = delegate { medianOf(skipNaN, expression) }
 
-public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianBy(
+public inline fun <T, reified R : Comparable<R>> Pivot<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivot<T> = reduce { medianByOrNull(skipNaN, rowExpression) }
@@ -529,19 +529,19 @@ public inline fun <T, reified R : Comparable<R & Any>?> Pivot<T>.medianBy(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
+public inline fun <T, reified C : Comparable<C>> Pivot<T>.medianBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivot<T> = reduce { medianByOrNull(column, skipNaN) }
 
 public fun <T> Pivot<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivot<T> =
-    medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+    medianBy(column.toColumnAccessor().cast<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
+public inline fun <T, reified C : Comparable<C>> Pivot<T>.medianBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivot<T> = medianBy(column.toColumnAccessor(), skipNaN)
@@ -552,7 +552,7 @@ public inline fun <T, reified C : Comparable<C & Any>?> Pivot<T>.medianBy(
 public fun <T> PivotGroupBy<T>.median(separate: Boolean = false, skipNaN: Boolean = skipNaNDefault): DataFrame<T> =
     medianFor(separate, skipNaN, intraComparableColumns())
 
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsForAggregateSelector<T, C>,
@@ -568,7 +568,7 @@ public fun <T> PivotGroupBy<T>.medianFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     vararg columns: ColumnReference<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
@@ -578,13 +578,13 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.medianFor(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.medianFor(
     vararg columns: KProperty<C>,
     separate: Boolean = false,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = medianFor(separate, skipNaN) { columns.toColumnSet() }
 
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(
     skipNaN: Boolean = skipNaNDefault,
     columns: ColumnsSelector<T, C>,
 ): DataFrame<T> = Aggregators.medianCommon<C>(skipNaN).aggregateAll(this, columns)
@@ -596,7 +596,7 @@ public fun <T> PivotGroupBy<T>.median(vararg columns: String, skipNaN: Boolean =
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(
     vararg columns: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = median(skipNaN) { columns.toColumnSet() }
@@ -605,17 +605,17 @@ public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public fun <T, C : Comparable<C & Any>?> PivotGroupBy<T>.median(
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.median(
     vararg columns: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): DataFrame<T> = median(skipNaN) { columns.toColumnSet() }
 
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianOf(
+public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.medianOf(
     skipNaN: Boolean = skipNaNDefault,
     crossinline expression: RowExpression<T, R>,
 ): DataFrame<T> = Aggregators.medianCommon<R>(skipNaN).aggregateOf(this, expression)
 
-public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianBy(
+public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.medianBy(
     skipNaN: Boolean = skipNaNDefault,
     crossinline rowExpression: RowExpression<T, R>,
 ): ReducedPivotGroupBy<T> = reduce { medianByOrNull(skipNaN, rowExpression) }
@@ -624,19 +624,19 @@ public inline fun <T, reified R : Comparable<R & Any>?> PivotGroupBy<T>.medianBy
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy(
+public inline fun <T, reified C : Comparable<C>> PivotGroupBy<T>.medianBy(
     column: ColumnReference<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = reduce { medianByOrNull(column, skipNaN) }
 
 public fun <T> PivotGroupBy<T>.medianBy(column: String, skipNaN: Boolean = skipNaNDefault): ReducedPivotGroupBy<T> =
-    medianBy(column.toColumnAccessor().cast<Comparable<Any>?>(), skipNaN)
+    medianBy(column.toColumnAccessor().cast<Comparable<Any>>(), skipNaN)
 
 @Deprecated(
     "Recommended to migrate to use String or Extension properties API https://kotlin.github.io/dataframe/apilevels.html",
 )
 @AccessApiOverload
-public inline fun <T, reified C : Comparable<C & Any>?> PivotGroupBy<T>.medianBy(
+public inline fun <T, reified C : Comparable<C>> PivotGroupBy<T>.medianBy(
     column: KProperty<C>,
     skipNaN: Boolean = skipNaNDefault,
 ): ReducedPivotGroupBy<T> = medianBy(column.toColumnAccessor(), skipNaN)

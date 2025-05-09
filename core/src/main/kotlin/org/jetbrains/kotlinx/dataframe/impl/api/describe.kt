@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
@@ -63,13 +64,13 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
                 it.convertToComparableOrNull()?.minOrNull()
             }
             ColumnDescription::p25 from inferType {
-                it.convertToComparableOrNull()?.percentileOrNull(25.0)
+                it.convertToComparableOrNull()?.dropNulls()?.percentileOrNull(25.0)
             }
             ColumnDescription::median from inferType {
-                it.convertToComparableOrNull()?.medianOrNull()
+                it.convertToComparableOrNull()?.dropNulls()?.medianOrNull()
             }
             ColumnDescription::p75 from inferType {
-                it.convertToComparableOrNull()?.percentileOrNull(75.0)
+                it.convertToComparableOrNull()?.dropNulls()?.percentileOrNull(75.0)
             }
             ColumnDescription::max from inferType {
                 it.convertToComparableOrNull()?.maxOrNull()

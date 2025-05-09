@@ -174,7 +174,7 @@ internal fun <T, C> ColumnsSelector<T, C>.toColumnSet(): ColumnSet<C> =
 
 // region toComparableColumns
 
-internal fun Array<out String>.toComparableColumns() = toColumnsSetOf<Comparable<Any?>>()
+internal fun Array<out String>.toComparableColumns() = toColumnsSetOf<Comparable<Any>>()
 
 internal fun String.toComparableColumn() = toColumnOf<Comparable<Any?>>()
 
