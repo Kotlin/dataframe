@@ -31,7 +31,7 @@ val jupyterApiTCRepo: String by settings
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        maven(jupyterApiTCRepo)
+        if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
     }
 }
 

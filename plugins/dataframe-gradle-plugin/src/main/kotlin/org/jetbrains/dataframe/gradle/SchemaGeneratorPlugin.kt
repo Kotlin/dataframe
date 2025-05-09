@@ -39,7 +39,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val generationTasks = extension.schemas.map {
                 createTask(target, extension, appliedPlugin, it)
             }
-            val generateAll = target.tasks.create("generateDataFrames") {
+            val generateAll = target.tasks.register("generateDataFrames") {
                 group = GROUP
                 dependsOn(*generationTasks.toTypedArray())
             }
@@ -124,7 +124,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
         val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
-        return target.tasks.create("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
+        return target.tasks.register("generateDataFrame$interfaceName", GenerateDataSchemaTask::class.java) {
             (logging as? DefaultLoggingManager)?.setLevelInternal(LogLevel.QUIET)
             group = GROUP
             data.set(schema.data)
@@ -138,7 +138,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.defaultPath.set(defaultPath)
             this.delimiters.set(delimiters)
             this.enableExperimentalOpenApi.set(extension.enableExperimentalOpenApi)
-        }
+        }.get()
     }
 
     private fun getInterfaceName(schema: Schema): String? {

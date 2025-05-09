@@ -92,7 +92,7 @@ internal object DelimParams {
      *
      *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
      *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
-     *   Columns widths are determined by the header in the data (if present), or manually by setting
+     *   Column widths are determined by the header in the data (if present), or manually by setting
      *   [fixedColumnWidths].
      */
     const val HAS_FIXED_WIDTH_COLUMNS: Boolean = false
@@ -163,7 +163,7 @@ internal object DelimParams {
     const val IGNORE_EMPTY_LINES: Boolean = false
 
     /**
-     * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+     * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
      *
      *   If `true`, rows that are too short will be interpreted as _empty_ values.
      */
@@ -201,7 +201,7 @@ internal object DelimParams {
      * @param parseParallel Whether to parse the data in parallel. Default: `true`.
      *
      *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
-     *   This is usually faster, but can be turned off for debugging.
+     *   This is usually faster but can be turned off for debugging.
      */
     const val PARSE_PARALLEL: Boolean = true
 

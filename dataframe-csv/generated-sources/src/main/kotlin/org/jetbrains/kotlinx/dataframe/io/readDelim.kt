@@ -88,7 +88,7 @@ import kotlin.io.path.inputStream
  *
  *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
  *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
- *   Columns widths are determined by the header in the data (if present), or manually by setting
+ *   Column widths are determined by the header in the data (if present), or manually by setting
  *   [fixedColumnWidths].
  * @param fixedColumnWidths The fixed column widths. Default: empty list.
  *
@@ -125,7 +125,7 @@ import kotlin.io.path.inputStream
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
  *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
- * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+ * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
  *
  *   If `true`, rows that are too short will be interpreted as _empty_ values.
  * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default: `true`.
@@ -143,7 +143,7 @@ import kotlin.io.path.inputStream
  * @param parseParallel Whether to parse the data in parallel. Default: `true`.
  *
  *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
- *   This is usually faster, but can be turned off for debugging.
+ *   This is usually faster but can be turned off for debugging.
  */
 public fun DataFrame.Companion.readDelim(
     path: Path,
@@ -240,7 +240,7 @@ public fun DataFrame.Companion.readDelim(
  *
  *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
  *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
- *   Columns widths are determined by the header in the data (if present), or manually by setting
+ *   Column widths are determined by the header in the data (if present), or manually by setting
  *   [fixedColumnWidths].
  * @param fixedColumnWidths The fixed column widths. Default: empty list.
  *
@@ -277,7 +277,7 @@ public fun DataFrame.Companion.readDelim(
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
  *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
- * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+ * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
  *
  *   If `true`, rows that are too short will be interpreted as _empty_ values.
  * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default: `true`.
@@ -295,7 +295,7 @@ public fun DataFrame.Companion.readDelim(
  * @param parseParallel Whether to parse the data in parallel. Default: `true`.
  *
  *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
- *   This is usually faster, but can be turned off for debugging.
+ *   This is usually faster but can be turned off for debugging.
  */
 public fun DataFrame.Companion.readDelim(
     file: File,
@@ -392,7 +392,7 @@ public fun DataFrame.Companion.readDelim(
  *
  *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
  *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
- *   Columns widths are determined by the header in the data (if present), or manually by setting
+ *   Column widths are determined by the header in the data (if present), or manually by setting
  *   [fixedColumnWidths].
  * @param fixedColumnWidths The fixed column widths. Default: empty list.
  *
@@ -429,7 +429,7 @@ public fun DataFrame.Companion.readDelim(
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
  *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
- * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+ * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
  *
  *   If `true`, rows that are too short will be interpreted as _empty_ values.
  * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default: `true`.
@@ -447,7 +447,7 @@ public fun DataFrame.Companion.readDelim(
  * @param parseParallel Whether to parse the data in parallel. Default: `true`.
  *
  *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
- *   This is usually faster, but can be turned off for debugging.
+ *   This is usually faster but can be turned off for debugging.
  */
 public fun DataFrame.Companion.readDelim(
     url: URL,
@@ -544,7 +544,7 @@ public fun DataFrame.Companion.readDelim(
  *
  *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
  *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
- *   Columns widths are determined by the header in the data (if present), or manually by setting
+ *   Column widths are determined by the header in the data (if present), or manually by setting
  *   [fixedColumnWidths].
  * @param fixedColumnWidths The fixed column widths. Default: empty list.
  *
@@ -581,7 +581,7 @@ public fun DataFrame.Companion.readDelim(
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
  *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
- * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+ * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
  *
  *   If `true`, rows that are too short will be interpreted as _empty_ values.
  * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default: `true`.
@@ -599,7 +599,7 @@ public fun DataFrame.Companion.readDelim(
  * @param parseParallel Whether to parse the data in parallel. Default: `true`.
  *
  *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
- *   This is usually faster, but can be turned off for debugging.
+ *   This is usually faster but can be turned off for debugging.
  */
 public fun DataFrame.Companion.readDelim(
     fileOrUrl: String,
@@ -696,7 +696,7 @@ public fun DataFrame.Companion.readDelim(
  *
  *   Fixed-width columns can occur, for instance, in multi-space delimited data, where the columns are separated
  *   by multiple spaces instead of a single delimiter, so columns are visually aligned.
- *   Columns widths are determined by the header in the data (if present), or manually by setting
+ *   Column widths are determined by the header in the data (if present), or manually by setting
  *   [fixedColumnWidths].
  * @param fixedColumnWidths The fixed column widths. Default: empty list.
  *
@@ -733,7 +733,7 @@ public fun DataFrame.Companion.readDelim(
  * @param ignoreEmptyLines Whether to skip intermediate empty lines. Default: `false`.
  *
  *   If `false`, empty lines will be interpreted as having _empty_ values if [allowMissingColumns].
- * @param allowMissingColumns Wether to allow rows with fewer columns than the header. Default: `true`.
+ * @param allowMissingColumns Whether to allow rows with fewer columns than the header. Default: `true`.
  *
  *   If `true`, rows that are too short will be interpreted as _empty_ values.
  * @param ignoreExcessColumns Whether to ignore rows with more columns than the header. Default: `true`.
@@ -751,7 +751,7 @@ public fun DataFrame.Companion.readDelim(
  * @param parseParallel Whether to parse the data in parallel. Default: `true`.
  *
  *   If `true`, the data will be read and parsed in parallel by the Deephaven parser.
- *   This is usually faster, but can be turned off for debugging.
+ *   This is usually faster but can be turned off for debugging.
  * @param adjustCsvSpecs Optional extra [CsvSpecs] configuration. Default: `{ it }`.
  *
  *   Before instantiating the [CsvSpecs], the [CsvSpecs.Builder] will be passed to this lambda.

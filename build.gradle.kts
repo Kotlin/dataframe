@@ -19,7 +19,6 @@ plugins {
         alias(kotlin.jvm)
         alias(publisher)
         alias(serialization) apply false
-        alias(dokka)
         alias(kover)
         alias(ktlint)
         alias(korro) apply false
@@ -41,7 +40,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
-    maven(jupyterApiTCRepo)
+    if (jupyterApiTCRepo.isNotBlank()) maven(jupyterApiTCRepo)
 }
 
 configurations {
@@ -154,6 +153,8 @@ val modulesUsingJava11 = with(projects) {
         dataframeJupyter,
         dataframeGeo,
         examples.ideaExamples.titanic,
+        plugins.symbolProcessor,
+        plugins.dataframeGradlePlugin,
     )
 }.map { it.path }
 
