@@ -81,9 +81,9 @@ Or use the latest stable version of Kotlin DataFrame
 Let’s create your first Kotlin DataFrame in the notebook — a simple "Hello, World!" style example:
 
 ```kotlin
-val df = dataFrameOf("name", "age")(
-    "Alice", 25,
-    "Bob", 30
+val df = dataFrameOf(
+  "name" to listOf("Alice", "Bob"),
+  "age" to listOf(25, 30)
 )
 ```
 

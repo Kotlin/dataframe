@@ -4,7 +4,12 @@ The [Kotlin Notebook Plugin for IntelliJ IDEA](https://plugins.jetbrains.com/plu
 combined with Kotlin DataFrame, offers powerful data analysis capabilities within an interactive environment.
 Here are the key features:
 
-<!---TODO add drag-n-drop--->
+### Drag-and-Drop Data Files
+
+You can quickly load data into `DataFrame` into a notebook by simply dragging and dropping a file 
+(.csv/.json/.xlsx and .geojson/.shp) directly into the notebook editor:
+
+<video src="ktnb_drag_n_drop.mp4" controls/>
 
 ### Visual Data Exploration
 **Page through your data**:
