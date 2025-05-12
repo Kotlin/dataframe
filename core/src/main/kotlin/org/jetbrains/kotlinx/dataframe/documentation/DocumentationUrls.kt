@@ -101,4 +101,7 @@ internal interface DocumentationUrls {
 
     /** [See `convert` on the documentation website.]({@include [Url]}/convert.html) */
     interface Convert
+
+    /** [See `rename` on the documentation website.]({@include [Url]}/rename.html) */
+    interface Rename
 }

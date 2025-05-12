@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.RowColumnExpression
+import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.annotations.AccessApiOverload
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
@@ -14,20 +16,114 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.documentation.AccessApiLink
+import org.jetbrains.kotlinx.dataframe.documentation.DocumentationUrls
+import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarLink
 import org.jetbrains.kotlinx.dataframe.documentation.DslGrammarTemplateColumnsSelectionDsl.DslGrammarTemplate
+import org.jetbrains.kotlinx.dataframe.documentation.ExcludeFromSources
+import org.jetbrains.kotlinx.dataframe.documentation.Indent
+import org.jetbrains.kotlinx.dataframe.documentation.LineBreak
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.renameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 // region DataFrame
 
+/**
+ * Renames the specified [columns\] their original values and location within the [DataFrame].
+ *
+ * This function does not immediately convert the columns but instead selects columns to convert and
+ * returns a [RenameClause],
+ * which serves as an intermediate step.
+ * The [RenameClause] object provides methods to transform selected columns using:
+ * - [into(name)][RenameClause.into]
+ * - [into { nameExpression }][RenameClause.into]
+ * - [toCamelCase()][RenameClause.toCamelCase]
+ *
+ * Each method returns a new [DataFrame] with the renamed columns.
+ *
+ * Check out [Grammar].
+ *
+ * @include [SelectingColumns.ColumnGroupsAndNestedColumnsMention]
+ *
+ * See [Selecting Columns][RenameSelectingOptions].
+ *
+ * For more information: {@include [DocumentationUrls.Rename]}
+ */
+internal interface RenameDocs {
+
+    /**
+     * {@comment Version of [SelectingColumns] with correctly filled in examples}
+     * @include [SelectingColumns] {@include [SetRenameOperationArg]}
+     */
+    interface RenameSelectingOptions
+
+
+    /**
+     * ## Rename Operation Grammar
+     * {@include [LineBreak]}
+     * {@include [DslGrammarLink]}
+     * {@include [LineBreak]}
+     *
+     * **[`rename`][rename]**`  { columnsSelector: `[`ColumnsSelector`][ColumnsSelector]`  }`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`into`**][RenameClause.into]`(name: `[`String`][String]`)`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`into`**][RenameClause.into]`  { nameExpression: (`[`ColumnWithPath`][ColumnWithPath]`<C>) -> `[String]`  }`
+     *
+     * {@include [Indent]}
+     * `| `__`.`__[**`toCamelCase`**][RenameClause.toCamelCase]`()`
+     */
+    interface Grammar
+}
+
+/** {@set [SelectingColumns.OPERATION] [rename][rename]} */
+@ExcludeFromSources
+private interface SetRenameOperationArg
+
+/**
+ * {@include [RenameDocs]}
+ * ### This Rename Overload
+ */
+@ExcludeFromSources
+private interface CommonRenameDocs
+
+/**
+ * Renames columns in the [DataFrame].
+ *
+ * This function allows renaming multiple columns in a single call by supplying a list of name pairs.
+ * Each pair consists of the current column name and the desired new name.
+ *
+ * Example:
+ * ```
+ * df.rename("oldName1" to "newName1", "oldName2" to "newName2")
+ * ```
+ *
+ * @param mappings A vararg of pairs where each pair consists of the original column name (`first`)
+ * and the new column name (`second`).
+ * @return A new [DataFrame] with the renamed columns.
+ */
 @Refine
 @Interpretable("RenameMapping")
 public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> =
     rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
         .into(*mappings.map { it.second }.toTypedArray())
 
+/**
+ * @include [CommonRenameDocs]
+ * @include [SelectingColumns.Dsl] {@include [SetRenameOperationArg]}
+ * ### Examples:
+ * ```kotlin
+ * df.rename { oldName }.into("newName")
+ * df.convert { colsAtAnyDepth() }.into { it.path.joinToString("->") }
+ * df.rename { cols { it.name.contains(".") } }.into { it.path.joinToString("->") }
+ * ```
+ * @param [columns\] The [Columns Selector][ColumnsSelector] used to select the columns of this [DataFrame] to group.
+ */
 @Interpretable("Rename")
 public fun <T, C> DataFrame<T>.rename(columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
 
