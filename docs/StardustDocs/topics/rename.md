@@ -63,11 +63,11 @@ df.rename("age").into {
 A special case of `rename` that renames all column names in a DataFrame to "camelCase" format.
 
 This function standardizes column names by converting them from various naming styles—such as "snake_case",
-"PascalCase", "kebab-case", or "space delimited formats" into a consistent "camelCase form".
+"PascalCase", "kebab-case", or "space delimited formats" into a consistent "camelCase" form.
 
 The transformation follows Kotlin naming conventions for variables and properties, making the resulting
 column names idiomatic and easier to use in Kotlin code, which is especially useful
-in extension properties usage.
+in [extension properties usage](extensionPropertiesApi.md).
 
 Use it right after loading raw data to normalize column names into a consistent format.
 This is especially helpful when preparing the data for further transformations, column access,
