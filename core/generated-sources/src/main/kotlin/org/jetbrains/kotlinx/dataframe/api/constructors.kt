@@ -393,7 +393,7 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     @JvmName("invoke1")
     internal fun withValues(values: Iterable<Any?>): DataFrame<*> =
-        withValuesImpl(header, values.asList()).map { (name, values) ->
+        (header to values.asList()).withValuesImpl().map { (name, values) ->
             DataColumn.createByInference(name, values)
         }.toDataFrame()
 

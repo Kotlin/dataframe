@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.api.ddofDefault
 import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
@@ -11,8 +10,6 @@ import java.math.BigInteger
 import kotlin.math.sqrt
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-
-private val logger = KotlinLogging.logger { }
 
 /**
  * Calculates the standard deviation from [this] with optional delta degrees of freedom.
@@ -39,7 +36,6 @@ internal fun <T : Number> Sequence<T?>.std(type: KType, skipNaN: Boolean, ddof: 
         typeOf<Byte>() -> (this as Sequence<Byte>).map { it.toDouble() }.std(false, ddof)
 
         typeOf<Long>() -> {
-            logger.warn { "Converting Longs to Doubles to calculate the std, loss of precision may occur." }
             (this as Sequence<Long>).map { it.toDouble() }.std(false, ddof)
         }
 

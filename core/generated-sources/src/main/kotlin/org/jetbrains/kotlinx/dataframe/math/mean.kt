@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jetbrains.kotlinx.dataframe.api.skipNaNDefault
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.CalculateReturnType
 import org.jetbrains.kotlinx.dataframe.impl.nothingType
@@ -9,8 +8,6 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-
-private val logger = KotlinLogging.logger { }
 
 @Suppress("UNCHECKED_CAST")
 internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Double {
@@ -29,7 +26,6 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Doubl
         typeOf<Byte>() -> (this as Sequence<Byte>).map { it.toDouble() }.mean(false)
 
         typeOf<Long>() -> {
-            logger.warn { "Converting Longs to Doubles to calculate the mean, loss of precision may occur." }
             (this as Sequence<Long>).map { it.toDouble() }.mean(false)
         }
 

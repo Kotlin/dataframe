@@ -2,7 +2,7 @@
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin component alpha stability](https://img.shields.io/badge/project-alpha-kotlin.svg?colorA=555555&colorB=DB3683&label=&logo=kotlin&logoColor=ffffff&logoWidth=10)](https://kotlinlang.org/docs/components-stability.html)
 [![Kotlin](https://img.shields.io/badge/kotlin-2.0.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
-[![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bnot%28contains%28text%28%29%2C%22dev%22%29%29%5D%5Blast%28%29%5D&label=Release%20version)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
+[![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bnot%28contains%28text%28%29%2C%22dev%22%29%29%20and%20not%28text%28%29%3D%221727%22%29%20%5D%5Blast%28%29%5D&label=Release%20version)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![Dynamic XML Badge](https://img.shields.io/badge/dynamic/xml?url=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Forg%2Fjetbrains%2Fkotlinx%2Fdataframe%2Fmaven-metadata.xml&query=%2F%2Fversion%5Bcontains%28text%28%29%2C%22dev%22%29%5D%5Blast%28%29%5D&label=Dev%20version&color=yellow
 )](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
@@ -46,13 +46,13 @@ Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-d
 ## Setup
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:0.15.0")
+implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta1")
 ```
 
 Optional Gradle plugin for enhanced type safety and schema generation
 https://kotlin.github.io/dataframe/schemasgradle.html
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
+id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta1"
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
@@ -77,7 +77,7 @@ df.filter { "stargazers_count"<Int>() > 50 }.print()
 
 Requires Gradle plugin to work
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
+id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta1"
 ```
 
 Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
@@ -230,6 +230,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |
 | 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |
 | 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |
+| 1.0.0-Beta1              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               |
 
 ## Code of Conduct
 

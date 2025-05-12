@@ -2,12 +2,17 @@ package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeEmpty
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsScope
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.asFrame
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
@@ -81,7 +86,12 @@ class ReplCodeGenTests : BaseTest() {
         val expected =
             """
             @DataSchema
-            interface $marker { }
+            interface $marker {
+                val age: Int
+                val city: String?
+                val name: String
+                val weight: Int?
+            }
             
             val $dfName<$marker>.age: $dataCol<$intName> @JvmName("${marker}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$marker>.age: $intName @JvmName("${marker}_age") get() = this["age"] as $intName
@@ -103,7 +113,9 @@ class ReplCodeGenTests : BaseTest() {
         val expected3 =
             """
             @DataSchema
-            interface $marker3 : $markerFull { }
+            interface $marker3 : $markerFull {
+                override val city: String
+            }
             
             val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
             val $dfRowName<$marker3>.city: $stringName @JvmName("${marker3}_city") get() = this["city"] as $stringName
@@ -120,7 +132,9 @@ class ReplCodeGenTests : BaseTest() {
         val expected5 =
             """
             @DataSchema
-            interface $marker5 : $markerFull { }
+            interface $marker5 : $markerFull {
+                override val weight: Int
+            }
             
             val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
             val $dfRowName<$marker5>.weight: $intName @JvmName("${marker5}_weight") get() = this["weight"] as $intName
@@ -163,7 +177,10 @@ class ReplCodeGenTests : BaseTest() {
         val expected =
             """
             @DataSchema
-            interface $marker : ${Test2._DataFrameType::class.qualifiedName} { }
+            interface $marker : ${Test2._DataFrameType::class.qualifiedName} {
+                val city: String?
+                val weight: Int?
+            }
             
             val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
@@ -217,5 +234,70 @@ class ReplCodeGenTests : BaseTest() {
         repl.process<Test4.B>()
         val c = repl.process(Test4.df, Test4::df)
         """val .*ColumnsScope<\w*>.a:""".toRegex().findAll(c.declarations).count() shouldBe 1
+    }
+
+    object Test5 {
+        @DataSchema(isOpen = false)
+        interface _DataFrameType1 {
+            val a: Int
+            val b: Int
+        }
+
+        val ColumnsScope<_DataFrameType1>.a: DataColumn<Int>
+            @JvmName("_DataFrameType1_a")
+            get() = this["a"] as DataColumn<Int>
+        val DataRow<_DataFrameType1>.a: Int
+            @JvmName("_DataFrameType1_a")
+            get() = this["a"] as Int
+        val ColumnsScope<_DataFrameType1>.b: DataColumn<Int>
+            @JvmName("_DataFrameType1_b")
+            get() = this["b"] as DataColumn<Int>
+        val DataRow<_DataFrameType1>.b: Int
+            @JvmName("_DataFrameType1_b")
+            get() = this["b"] as Int
+
+        @DataSchema
+        interface _DataFrameType {
+            val col: String
+            val leaf: _DataFrameType1
+        }
+
+        val df = dataFrameOf("col" to listOf("a"), "leaf" to listOf(dataFrameOf("a")(1).first()))
+            .convert("leaf").cast<AnyRow>().asFrame { it.add("c") { 3 } }
+    }
+
+    @Test
+    fun `process closed inheritance override`() {
+        // if ReplCodeGenerator would generate schemas with isOpen = true or with fields = false, _DataFrameType2 could implement _DataFrameType
+        // but with isOpen = false and fields = true _DataFrameType2 : _DataFrameType produces incorrect override that couldn't be compiled
+        // so we avoid this relation
+        val repl = ReplCodeGenerator.create()
+        repl.process<Test5._DataFrameType>()
+        repl.process<Test5._DataFrameType1>()
+        val c = repl.process(Test5.df, Test5::df)
+        c.declarations shouldBe
+            """
+            @DataSchema(isOpen = false)
+            interface _DataFrameType3 {
+                val a: Int
+                val c: Int
+            }
+
+            val $dfName<_DataFrameType3>.a: $dataCol<Int> @JvmName("_DataFrameType3_a") get() = this["a"] as $dataCol<Int>
+            val $dfRowName<_DataFrameType3>.a: Int @JvmName("_DataFrameType3_a") get() = this["a"] as Int
+            val $dfName<_DataFrameType3>.c: $dataCol<Int> @JvmName("_DataFrameType3_c") get() = this["c"] as $dataCol<Int>
+            val $dfRowName<_DataFrameType3>.c: Int @JvmName("_DataFrameType3_c") get() = this["c"] as Int
+
+            @DataSchema
+            interface _DataFrameType2 {
+                val col: String
+                val leaf: _DataFrameType3
+            }
+
+            val $dfName<_DataFrameType2>.col: $dataCol<String> @JvmName("_DataFrameType2_col") get() = this["col"] as $dataCol<String>
+            val $dfRowName<_DataFrameType2>.col: String @JvmName("_DataFrameType2_col") get() = this["col"] as String
+            val $dfName<_DataFrameType2>.leaf: ColumnGroup<_DataFrameType3> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as ColumnGroup<_DataFrameType3>
+            val $dfRowName<_DataFrameType2>.leaf: $dfRowName<_DataFrameType3> @JvmName("_DataFrameType2_leaf") get() = this["leaf"] as $dfRowName<_DataFrameType3>
+            """.trimIndent()
     }
 }

@@ -1,10 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-internal fun <T> withValuesImpl(header: List<String>, values: List<T>): List<Pair<String, List<T>>> {
+import org.jetbrains.kotlinx.dataframe.exceptions.DataFrameError
+
+/**
+ * Public API to be re-used in compiler plugin implementation
+ */
+public fun <T> Pair<List<String>, List<T>>.withValuesImpl(): List<Pair<String, List<T>>> {
+    val (header, values) = this
     val ncol = header.size
 
-    require(header.isNotEmpty() && values.size.rem(ncol) == 0) {
-        "Number of values ${values.size} is not divisible by number of columns $ncol"
+    if (!(header.isNotEmpty() && values.size.rem(ncol) == 0)) {
+        throw WrongNumberOfValuesException(values.size, ncol)
     }
 
     val nrow = values.size / ncol
@@ -15,4 +21,10 @@ internal fun <T> withValuesImpl(header: List<String>, values: List<T>): List<Pai
         }
         header[col] to colValues
     }
+}
+
+internal class WrongNumberOfValuesException(size: Int, ncol: Int) :
+    IllegalArgumentException(),
+    DataFrameError {
+    override val message = "Number of values $size is not divisible by number of columns $ncol"
 }
