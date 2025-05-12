@@ -46,13 +46,13 @@ Here's a [compiler plugin demo project](https://github.com/koperagen/df-plugin-d
 ## Setup
 
 ```kotlin
-implementation("org.jetbrains.kotlinx:dataframe:0.15.0")
+implementation("org.jetbrains.kotlinx:dataframe:1.0.0-Beta1")
 ```
 
 Optional Gradle plugin for enhanced type safety and schema generation
 https://kotlin.github.io/dataframe/schemasgradle.html
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
+id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta1"
 ```
 
 Check out the [custom setup page](https://kotlin.github.io/dataframe/gettingstartedgradleadvanced.html) if you don't need some of the formats as dependencies,
@@ -77,7 +77,7 @@ df.filter { "stargazers_count"<Int>() > 50 }.print()
 
 Requires Gradle plugin to work
 ```kotlin
-id("org.jetbrains.kotlinx.dataframe") version "0.15.0"
+id("org.jetbrains.kotlinx.dataframe") version "1.0.0-Beta1"
 ```
 
 Plugin generates extension properties API for provided sample of data. Column names and their types become discoverable in completion.
@@ -230,6 +230,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |
 | 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |
 | 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |
+| 1.0.0-Beta1              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               |
 
 ## Code of Conduct
 
