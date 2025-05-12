@@ -34,7 +34,7 @@ teaching you how to solve them using Kotlin DataFrame in a concise and elegant s
 enhanced with beautiful Kandy-Geo visualizations (*experimental*).
 * [OpenAPI Guide](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/json/KeyValueAndOpenApi.ipynb)
  — learn how to parse and explore [OpenAPI](https://swagger.io) JSON structures using Kotlin DataFrame, 
-enabling structured access and intuitive analysis of complex API schemas (*experimental*).
+enabling structured access and intuitive analysis of complex API schemas (*experimental*, supports OpenAPI 3.0.0).
 
 
 ## Examples
@@ -43,7 +43,7 @@ Explore our extensive collection of practical examples and real-world analytics 
 
 * [Titanic Example](https://github.com/Kotlin/dataframe/blob/master/examples/notebooks/titanic/Titanic.ipynb) 
  — discover the famous "Titanic"
- dataset with Kotlin DataFrame analysis toolkit 
+ dataset with the Kotlin DataFrame analysis toolkit 
  and [Kandy](https://kotlin.github.io/kandy/) visualizations.
 
 * [Track and Analyze GitHub Star Growth](https://blog.jetbrains.com/kotlin/2024/08/track-and-analyze-github-star-growth-with-kandy-and-kotlin-dataframe/)
