@@ -198,5 +198,4 @@
     </toc-element>
     <toc-element topic="Compiler-Plugin.md"/>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
-    <toc-element topic="_shadow_resources_snippets.md" hidden="true"/>
 </instance-profile>
