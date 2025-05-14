@@ -166,42 +166,6 @@ val customers: List<Customer> = df.cast<Customer>().toList()
 
 <!---FUN notebook_test_generate_docs_6-->
 
-## generateCode
-
-```kotlin
-inline fun <reified T> DataFrame<T>.generateCode(
-    fields: Boolean = true,
-    extensionProperties: Boolean = true,
-): CodeString
-
-fun <T> DataFrame<T>.generateCode(
-    markerName: String,
-    fields: Boolean = true,
-    extensionProperties: Boolean = true,
-    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeString
-```
-
-Generates a data schema interface as [`generateInterfaces()`](#generateinterfaces),  
-along with explicit [extension properties](extensionPropertiesApi.md). 
-Useful if you don't use the [compiler plugin](Compiler-Plugin.md).
-
-### Arguments {id="generateCode-arguments"}
-* `markerName`: `String` – The base name to use for generated interfaces. 
-If not specified, uses the `T` type argument of `DataFrame` simple name.
-* `fields`: `Boolean` – Whether to generate fields (`val ...`) inside interfaces. 
-Default: `true`.
-* `extensionProperties`: `Boolean` – Whether to generate extension properties for the schema.
-Default: `true`.
-* `visibility`: `MarkerVisibility` – Visibility modifier for the generated declarations.
-Default: `MarkerVisibility.IMPLICIT_PUBLIC`.
-
-### Returns {id="generateCode-returns"}
-* `CodeString` – A value class wrapper for `String`, containing
-the generated Kotlin code of `@DataSchema` interfaces and/or extension properties.
-
-### Examples {id="generateCode-examples"}
-
 ```kotlin
 df.generateCode("Customer")
 ```
