@@ -20,6 +20,12 @@ based on the current `DataFrame` schema.
 
 ## generateInterfaces
 
+```kotlin
+inline fun <reified T> DataFrame<T>.generateInterfaces(): CodeString
+
+fun <T> DataFrame<T>.generateInterfaces(markerName: String): CodeString
+```
+
 Generates [`@DataSchema`](schemas.md) interfaces for this `DataFrame` 
 (including all nested `DataFrame` columns and column groups) as Kotlin interfaces.
 
@@ -87,6 +93,16 @@ df.cast<_DataFrameType1>().filter { orders.all { orderId >= 102 } }
 
 ## generateDataClasses
 
+```kotlin
+inline fun <reified T> DataFrame<T>.generateDataClasses(
+    markerName: String? = null,
+    extensionProperties: Boolean = false,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+    useFqNames: Boolean = false,
+    nameNormalizer: NameNormalizer = NameNormalizer.default,
+): CodeString
+```
+
 Generates Kotlin data classes corresponding to the `DataFrame` schema 
 (including all nested `DataFrame` columns and column groups).
 
@@ -151,6 +167,20 @@ val customers: List<Customer> = df.cast<Customer>().toList()
 <!---FUN notebook_test_generate_docs_6-->
 
 ## generateCode
+
+```kotlin
+inline fun <reified T> DataFrame<T>.generateCode(
+    fields: Boolean = true,
+    extensionProperties: Boolean = true,
+): CodeString
+
+fun <T> DataFrame<T>.generateCode(
+    markerName: String,
+    fields: Boolean = true,
+    extensionProperties: Boolean = true,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+): CodeString
+```
 
 Generates a data schema interface as [`generateInterfaces()`](#generateinterfaces),  
 along with explicit [extension properties](extensionPropertiesApi.md). 
