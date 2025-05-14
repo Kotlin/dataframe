@@ -191,12 +191,12 @@
             <toc-element topic="format.md"/>
             <toc-element topic="jupyterRendering.md"/>
         </toc-element>
-        <toc-element topic="Utilities-Generation.md"/>
     </toc-element>
     <toc-element topic="gradleReference.md"/>
     <toc-element topic="Usage-with-Kotlin-Notebook-Plugin.md">
         <toc-element topic="Trobleshooting.md"/>
     </toc-element>
     <toc-element topic="Compiler-Plugin.md"/>
+    <toc-element topic="DataSchema-Data-Classes-Generation.md"/>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
 </instance-profile>

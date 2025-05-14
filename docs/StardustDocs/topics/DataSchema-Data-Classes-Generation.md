@@ -1,4 +1,4 @@
-# Utilities Generation
+# Data Schemas/Data Classes Generation
 
 <web-summary>
 Generate useful Kotlin definitions based on your DataFrame structure.
