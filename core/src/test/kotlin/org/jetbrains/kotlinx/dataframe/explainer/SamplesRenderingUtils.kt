@@ -96,7 +96,7 @@ allObservedTables.forEach((table) => {
         characterData: true,
     });
 });
-        """.trimIndent()
+        """.trimIndent(),
 )
 
 val WritersideFooter: (DataFrame<*>) -> String = { "" }
