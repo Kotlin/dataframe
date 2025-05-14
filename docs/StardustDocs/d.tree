@@ -197,5 +197,6 @@
     </toc-element>
     <toc-element topic="gradleReference.md"/>
     <toc-element topic="Compiler-Plugin.md"/>
+    <toc-element topic="DataSchema-Data-Classes-Generation.md"/>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
 </instance-profile>

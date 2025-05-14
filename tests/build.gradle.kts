@@ -60,6 +60,7 @@ kotlin.sourceSets {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
+        include("docs/StardustDocs/topics/Utilities-Generation.md")
         include("docs/StardustDocs/topics/read.md")
         include("docs/StardustDocs/topics/write.md")
         include("docs/StardustDocs/topics/guides/*.md")
