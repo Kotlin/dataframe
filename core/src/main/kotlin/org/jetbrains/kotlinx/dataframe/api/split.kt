@@ -126,10 +126,18 @@ internal inline fun <T, C, R> Split<T, C>.by(
 
 // region match
 
+/**
+ * Creates new String columns according to MatchResult [capturing groups](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.text/-match-result/group-values.html)
+ * Created columns will be nullable if [regex] doesn't match some rows or there are nulls in original column
+ * Check [Split.by] overload with regex parameter if you're looking to split String value by [Regex] delimiter
+ */
 public fun <T, C : String?> Split<T, C>.match(
     @Language("RegExp") regex: String,
 ): SplitWithTransform<T, C, String?> = match(regex.toRegex())
 
+/**
+ * @include [match]
+ */
 public fun <T, C : String?> Split<T, C>.match(regex: Regex): SplitWithTransform<T, C, String?> =
     by {
         it?.let {
