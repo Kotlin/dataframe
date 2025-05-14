@@ -197,5 +197,6 @@
         <toc-element topic="Trobleshooting.md"/>
     </toc-element>
     <toc-element topic="Compiler-Plugin.md"/>
+    <toc-element topic="DataSchema-Data-Classes-Generation.md"/>
     <toc-element topic="_shadow_resources.md" hidden="true"/>
 </instance-profile>
