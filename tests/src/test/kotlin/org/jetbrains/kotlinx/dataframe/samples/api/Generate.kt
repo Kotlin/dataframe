@@ -14,10 +14,10 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toList
-import org.jetbrains.kotlinx.kandy.letsplot.samples.SampleHelper
+import org.jetbrains.kotlinx.dataframe.samples.DataFrameSampleHelper
 import org.junit.Test
 
-class Generate : SampleHelper("generate_docs", "api") {
+class Generate : DataFrameSampleHelper("generate_docs", "api") {
     val ordersAlice = dataFrameOf(
         "orderId" to listOf(101, 102),
         "amount" to listOf(50.0, 75.5)
