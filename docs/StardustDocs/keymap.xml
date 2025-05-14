@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Keymap id="instance_id">
+    <Action id="$Settings">
+        <Description>Settings of Intellij IDEA</Description>
+        <Shortcut layout="primary_macOS">Cmd+comma</Shortcut>
+        <Shortcut layout="primary_Win-Linux">Ctrl+Alt+S</Shortcut>
+    </Action>
+    <Action id="$NewFile">
+        <Description>Settings of Intellij IDEA</Description>
+        <Shortcut layout="primary_macOS">Cmd+N</Shortcut>
+        <Shortcut layout="primary_Win-Linux">Alt+Insert</Shortcut>
+    </Action>
+</Keymap>
