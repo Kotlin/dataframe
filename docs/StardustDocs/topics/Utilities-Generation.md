@@ -34,7 +34,7 @@ in cases where the schema cannot be inferred automatically from the source.
 * `CodeString` – A value class wrapper for `String`, containing  
   the generated Kotlin code of `@DataSchema` interfaces without extension properties.
 
-### Examples {id="generateInterfaces-examples"}}
+### Examples {id="generateInterfaces-examples"}
 
 
 <!---FUN notebook_test_generate_docs_1-->
