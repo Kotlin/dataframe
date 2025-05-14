@@ -159,3 +159,6 @@
 <resource src="notebook_test_quickstart_12.html"></resource>
 <resource src="notebook_test_quickstart_3.html"></resource>
 <resource src="notebook_test_quickstart_14.html"></resource>
+<resource src="notebook_test_rename_3.html"></resource>
+<resource src="notebook_test_rename_4.html"></resource>
+<resource src="notebook_test_rename_5.html"></resource>
