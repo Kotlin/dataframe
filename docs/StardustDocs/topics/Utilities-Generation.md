@@ -111,7 +111,7 @@ Useful when you want to:
 - Work with the data as regular Kotlin data classes.
 - Work with data classes serialization.
 - Extract structured types for further use in your application.
-- 
+
 ### Arguments {id="generateDataClasses-arguments"}
 * `markerName`: `String?` — The base name to use for generated data classes.  
   If `null`, uses the `T` type argument of `DataFrame` simple name.  
