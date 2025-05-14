@@ -18,7 +18,7 @@
 7. Create and checkout the release branch. **RC**
 8. Make last commit with release tag (_v0.1.1_ for example) to the release branch. **RC**
 9. Run tests and build artifacts on TC for the commit with the release tag. **RC**
-10. Deploy artifacts on Maven Central via the `Publish` task running on TC based on the commit with the release tag. **RC**
+10. Deploy artifacts on Maven Central via the `Publish` task (**directly and without pre-run dependencies**) on TC based on the commit with the release tag. **RC**
 11. Check artifacts' availability on [MavenCentral](https://mvnrepository.com/artifact/org.jetbrains.kotlinx/dataframe). **RC**
 12. Check [Gradle Plugin portal availability](https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.dataframe/) (usually it takes 12 hours). **RC**
 13. Update a bootstrap dependency version in the `libs.versions.toml` file (only after the plugin's publication). **RC**
