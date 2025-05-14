@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName", "unused", "ktlint")
+
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.column
@@ -13,28 +15,28 @@ class RenameToCamelCase : DataFrameSampleHelper("rename", "api") {
 
     val ColumnA by column<String>()
     val `COLUMN-C` by column<String>()
-    
+
     @Test
     fun notebook_test_rename_3() {
         // SampleStart
         df
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
-    
+
     @Test
     fun notebook_test_rename_4() {
         // SampleStart
         df.rename { ColumnA and `COLUMN-C` }.toCamelCase()
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
-    
+
     @Test
     fun notebook_test_rename_5() {
         // SampleStart
         df.renameToCamelCase()
-        // SampleEnd
-        .saveDfHtmlSample()
+            // SampleEnd
+            .saveDfHtmlSample()
     }
 }
