@@ -24,5 +24,5 @@ df.city.valueCounts()
 df.valueCounts { name and city }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.valueCounts.html" width="100%"/>
 <!---END-->
