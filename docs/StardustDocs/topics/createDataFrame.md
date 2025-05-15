@@ -136,7 +136,7 @@ val age by columnOf(15, 20, 22)
 listOf(name, age).toDataFrame()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromIterable.html" width="100%"/>
 <!---END-->
 
 `DataFrame` from `Map<String, List<*>>`:
@@ -150,7 +150,7 @@ val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15,
 map.toDataFrame()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.createDataFrameFromMap.html" width="100%"/>
 <!---END-->
 
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
@@ -185,7 +185,7 @@ val files = listOf(File("data.csv"), File("data1.csv"))
 val df = files.toDataFrame(columnName = "data")
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.toDataFrameColumn.html" width="100%"/>
 <!---END-->
 
 Creates a [`DataFrame`](DataFrame.md) from an [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
@@ -277,6 +277,6 @@ val col by columnOf(1, 2, 3)
 peek(dataFrameOf(col), dataFrameOf(col))
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Create.duplicatedColumns.html" width="100%"/>
 <!---END-->
 

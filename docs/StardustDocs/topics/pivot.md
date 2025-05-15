@@ -39,7 +39,7 @@ df.pivot("city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot.html" width="100%"/>
 <!---END-->
 
 To pivot several columns at once you can combine them using `and` or `then` infix function:
@@ -64,7 +64,7 @@ df.pivot { "city" then "name"["firstName"] }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivot2.html" width="100%"/>
 <!---END-->
 
 ## pivot + groupBy
@@ -92,7 +92,7 @@ df.groupBy("name").pivot("city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupBy.html" width="100%"/>
 <!---END-->
 
 To group by all columns except pivoted use `groupByOther`:
@@ -103,7 +103,7 @@ To group by all columns except pivoted use `groupByOther`:
 df.pivot { city }.groupByOther()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotGroupByOther.html" width="100%"/>
 <!---END-->
 
 ## Aggregation
@@ -126,7 +126,7 @@ df.pivot("city").aggregate { minBy("age")["name"] }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate.html" width="100%"/>
 <!---END-->
 
 <!---FUN pivotAggregate1-->
@@ -153,7 +153,7 @@ df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotAggregate1.html" width="100%"/>
 <!---END-->
 
 Shortcuts for common aggregation functions are also available:
@@ -176,7 +176,7 @@ df.groupBy("name").pivot("city").median("age")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCommonAggregations.html" width="100%"/>
 <!---END-->
 
 By default, when aggregation function produces several values for single data group, 
@@ -233,7 +233,7 @@ df.pivot("city").groupBy("name").default(0).min()
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault.html" width="100%"/>
 <!---END-->
 
 <!---FUN pivotDefault1-->
@@ -258,7 +258,7 @@ df.pivot("city").groupBy("name").aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault1.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotDefault1.html" width="100%"/>
 <!---END-->
 
 ### Pivot inside aggregate
@@ -294,7 +294,7 @@ df.groupBy { "name"["firstName"] }.aggregate {
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotInAggregate.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotInAggregate.html" width="100%"/>
 <!---END-->
 
 ### pivotCounts
@@ -318,7 +318,7 @@ df.groupBy { name }.aggregate {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCounts.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotCounts.html" width="100%"/>
 <!---END-->
 
 ### pivotMatches
@@ -341,5 +341,5 @@ df.groupBy { name }.aggregate {
 }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotMatches.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.pivotMatches.html" width="100%"/>
 <!---END-->

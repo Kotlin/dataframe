@@ -34,7 +34,7 @@ isHappy: Boolean
 df.groupBy { city }.schema()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schemaGroupBy.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Analyze.schemaGroupBy.html" width="100%"/>
 <!---END-->
 
 Output:

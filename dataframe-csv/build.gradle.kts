@@ -91,7 +91,7 @@ val processKDocsMain by creatingRunKodexTask(processKDocsMainSources) {
     outputReadOnly = false
 
     exportAsHtml {
-        dir = file("../docs/StardustDocs/snippets/kdocs")
+        dir = file("../docs/StardustDocs/resources/snippets/kdocs")
     }
     finalizedBy("runKtlintFormatOverGeneratedSourcesSourceSet")
 }

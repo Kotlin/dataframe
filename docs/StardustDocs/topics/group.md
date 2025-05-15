@@ -23,5 +23,5 @@ df.group { age and city }.into("info")
 df.group { all() }.into { it.type().toString() }.print()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.group.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.group.html" width="100%"/>
 <!---END-->

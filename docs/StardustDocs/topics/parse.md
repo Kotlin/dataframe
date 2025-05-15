@@ -15,7 +15,7 @@ You can recognize this by the `locale` or `parserOptions` arguments in these fun
 df.parse()
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseAll.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseAll.html" width="100%"/>
 <!---END-->
 
 To parse only particular columns use a [column selector](ColumnSelectors.md):
@@ -26,7 +26,7 @@ To parse only particular columns use a [column selector](ColumnSelectors.md):
 df.parse { age and weight }
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseSome.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseSome.html" width="100%"/>
 <!---END-->
 
 ### Parsing Order
@@ -76,7 +76,7 @@ Available parser options:
 df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseWithOptions.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Modify.parseWithOptions.html" width="100%"/>
 <!---END-->
 
 ### Global Parser Options
