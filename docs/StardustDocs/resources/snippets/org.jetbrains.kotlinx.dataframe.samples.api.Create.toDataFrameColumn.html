@@ -459,41 +459,82 @@ summary {
 function sendHeight() {
     let totalHeight = 0;
 
-    const detailsElements = document.querySelectorAll('details');
+    document.querySelectorAll('body > details, body > br').forEach(element => {
+        if (element.tagName === 'DETAILS') {
+            totalHeight += getElementHeight(element.querySelector(':scope > summary'));
 
-    detailsElements.forEach(detail => {
-       
-        const summary = detail.querySelector('summary');
-        if (summary) {
-            totalHeight += summary.offsetHeight;
-        }
-
-      
-        if (detail.open) {
-            const table = detail.querySelector('table.dataframe');
-            if (table) {
-                totalHeight += table.offsetHeight;
-
-                const styles = getComputedStyle(table);
-                totalHeight += parseFloat(styles.marginTop) + parseFloat(styles.marginBottom) + 10;
+            if (element.open) {
+                totalHeight += getVisibleContentHeight(element);
             }
-
-            const description = detail.querySelector('.dataframe_description');
-            if (description) {
-                totalHeight += description.offsetHeight;
-            }
+        } else if (element.tagName === 'BR') {
+            totalHeight += getElementHeight(element);
         }
     });
-    
-    totalHeight = Math.ceil(totalHeight + 16);
 
-    window.parent.postMessage({type: 'iframeHeight', height: totalHeight}, '*');
+    totalHeight += 10;
+
+    window.parent.postMessage({type: 'iframeHeight', height: Math.ceil(totalHeight)}, '*');
+}
+
+function getVisibleContentHeight(detailsElement) {
+    let height = 0;
+
+    detailsElement.querySelectorAll(':scope > details, :scope > table, :scope > p').forEach(child => {
+        if (child.tagName === 'DETAILS') {
+            const summary = child.querySelector(':scope > summary');
+            height += getElementHeight(summary);
+
+            if (child.open) {
+                height += getDirectVisibleContentHeight(child);
+            }
+        } else if (isElementVisible(child)) {
+            height += getElementHeight(child);
+        }
+    });
+
+    return height;
+}
+
+function getDirectVisibleContentHeight(element) {
+    let height = 0;
+    element.querySelectorAll(':scope > table, :scope > p, :scope > summary').forEach(child => {
+        if (isElementVisible(child)) {
+            height += getElementHeight(child);
+        }
+    });
+    return height;
+}
+
+function getElementHeight(el) {
+    const styles = getComputedStyle(el);
+    const margin = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom);
+    return el.offsetHeight + margin;
+}
+
+function isElementVisible(el) {
+    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+}
+
+function sendInitialHeight() {
+    let initialHeight = 0;
+
+    document.querySelectorAll('body > details, body > br').forEach(element => {
+        if (element.tagName === 'DETAILS') {
+            initialHeight += getElementHeight(element.querySelector(':scope > summary'));
+        } else if (element.tagName === 'BR') {
+            initialHeight += getElementHeight(element);
+        }
+    });
+
+    initialHeight += 10;
+
+    window.parent.postMessage({type: 'iframeHeight', height: Math.ceil(initialHeight)}, '*');
 }
 
 function repeatHeightCalculation(maxRetries = 10, interval = 100) {
     let retries = 0;
     const intervalId = setInterval(() => {
-        sendHeight();
+        sendInitialHeight();
         retries++;
         if (retries >= maxRetries) clearInterval(intervalId);
     }, interval);
@@ -502,21 +543,15 @@ function repeatHeightCalculation(maxRetries = 10, interval = 100) {
 window.addEventListener('load', () => {
     repeatHeightCalculation();
 
+
     document.querySelectorAll('details').forEach(detail => {
         detail.addEventListener('toggle', () => {
-            setTimeout(sendHeight, 30);
+            setTimeout(sendHeight, 50);
         });
     });
-});
 
-const allObservedTables = document.querySelectorAll('table.dataframe');
-allObservedTables.forEach((table) => {
-    const observer = new MutationObserver(sendHeight);
-    observer.observe(table, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-    });
+    const observer = new MutationObserver(() => setTimeout(sendHeight, 50));
+    observer.observe(document.body, {childList: true, subtree: true, characterData: true});
 });
 /*<!--*/
 call_DataFrame(function() { DataFrame.addTable({ cols: [{ name: "<span title=\"data: java.io.File\">data</span>", children: [], rightAlign: false, values: ["data.csv","data1.csv"] }, 
