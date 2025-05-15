@@ -521,7 +521,10 @@ function getDirectVisibleContentHeight(element) {
 function getElementHeight(el) {
     const styles = getComputedStyle(el);
     const margin = parseFloat(styles.marginTop) + parseFloat(styles.marginBottom);
-    return el.offsetHeight + margin;
+    
+    // More reliable cross-browser calculation
+    const rect = el.getBoundingClientRect();
+    return rect.height + margin;
 }
 
 function isElementVisible(el) {
