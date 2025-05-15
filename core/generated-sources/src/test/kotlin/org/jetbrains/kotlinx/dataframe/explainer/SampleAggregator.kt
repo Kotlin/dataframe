@@ -13,7 +13,7 @@ fun main() {
         .groupBy {
             it.nameWithoutExtension.substringBefore("_")
         }.mapValues { (name, files) ->
-            val target = File("../docs/StardustDocs/snippets")
+            val target = File("../docs/StardustDocs/resources/snippets")
             val original = files
                 .firstOrNull { it.nameWithoutExtension.contains("properties") }
                 ?: files.first()
