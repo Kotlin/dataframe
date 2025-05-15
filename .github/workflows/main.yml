@@ -22,7 +22,7 @@ env:
 jobs:
   build-job:
     runs-on: ubuntu-latest
-    container: registry.jetbrains.team/p/writerside/builder/writerside-builder:2.1.1481-p3872-df
+    container: registry.jetbrains.team/p/writerside/builder/writerside-builder:2025.04.8412
     outputs:
       artifact: ${{ steps.generate-artifact.outputs.artifact }}
     steps:
