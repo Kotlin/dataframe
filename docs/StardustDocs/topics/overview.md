@@ -1,4 +1,20 @@
-[//]: # (title: Overview)
+[//]: # (title: Library Overview)
+
+<web-summary>
+Learn what Kotlin DataFrame is about — its core concepts, design principles, and usage philosophy.
+</web-summary>
+
+<card-summary>
+Discover the fundamentals of the library —
+understand key concepts, motivation, and the overall structure of the library.
+</card-summary>
+
+<link-summary>
+Explore the fundamentals of Kotlin DataFrame — 
+understand key concepts, motivation, and the overall structure of the library.
+</link-summary>
+
+
 <show-structure depth="3"/>
 
 <tip> 
@@ -146,7 +162,7 @@ val analysed = dfClean.groupBy { From into "origin" }.aggregate {
 
 If you find a bug, or have an idea for a new feature, [file an issue](https://github.com/Kotlin/dataframe/issues/new) in our DataFrame GitHub repository.
 
-Additionally, we welcome contributions. To get stared, choose an issue and let us know that you're working on it. When you're ready, create a [pull request](https://github.com/Kotlin/dataframe/pulls).
+Additionally, we welcome contributions. To get stared, choose an issue, and let us know that you're working on it. When you're ready, create a [pull request](https://github.com/Kotlin/dataframe/pulls).
 
 You can also contact us in the [#datascience](https://kotlinlang.slack.com/archives/C4W52CFEZ) channel of Kotlin Slack.
 

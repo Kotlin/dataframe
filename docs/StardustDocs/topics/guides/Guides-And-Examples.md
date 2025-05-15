@@ -30,8 +30,12 @@ load data, transform it, and visualize it.
  — inspired by [100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles).
   An interactive guide that takes you from simple tasks to complex challenges,
 teaching you how to solve them using Kotlin DataFrame in a concise and elegant style.
+* [Reading from files: CSV, JSON, ApacheArrow](read.md)
+  — read your data from various formats into `DataFrame`.
 * [SQL Databases Interaction](readSqlDatabases.md)
  — set up SQL database access and read query results efficiently into `DataFrame`.
+* [Custom SQL Database Support](readSqlFromCustomDatabase.md)
+  — extend DataFrame library for custom SQL database support.
 * [GeoDataFrame Guide](https://kotlin.github.io/kandy/geo-plotting-guide.html)
   — explore the GeoDataFrame module that brings a convenient Kotlin DataFrame API to geospatial workflows, 
 enhanced with beautiful Kandy-Geo visualizations (*experimental*).
