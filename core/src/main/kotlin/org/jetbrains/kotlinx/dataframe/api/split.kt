@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.getListType
+import org.jetbrains.kotlinx.dataframe.util.SPLIT_STR
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -65,6 +66,7 @@ public typealias ColumnNamesGenerator<C> = ColumnWithPath<C>.(extraColumnIndex: 
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.default(value: R?): SplitWithTransform<T, C, R> =
     by { it }.default(value)
 
+@Deprecated(SPLIT_STR, ReplaceWith("""by(",").default(value)"""))
 public fun <T> Split<T, String>.default(value: String?): SplitWithTransform<T, String, String> =
     by { it.splitDefault() }.default(value)
 
@@ -219,6 +221,7 @@ public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.into(
     secondCol: ColumnAccessor<B>,
 ): DataFrame<T> = by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
+@Deprecated(SPLIT_STR, ReplaceWith("""by(",").into(*names, extraNamesGenerator = extraNamesGenerator)"""))
 @JvmName("intoTC")
 public fun <T> Split<T, String>.into(
     vararg names: String,
@@ -280,6 +283,7 @@ public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.inward(
     secondCol: ColumnAccessor<B>,
 ): DataFrame<T> = by { listOf(it.first, it.second) }.inward(firstCol, secondCol)
 
+@Deprecated(SPLIT_STR, ReplaceWith("""by(",").inward(*names, extraNamesGenerator = extraNamesGenerator)"""))
 @JvmName("inwardTC")
 public fun <T> Split<T, String>.inward(
     vararg names: String,
