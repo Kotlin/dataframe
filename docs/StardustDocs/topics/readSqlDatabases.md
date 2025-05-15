@@ -1,5 +1,19 @@
 [//]: # (title: Read from SQL databases)
 
+<web-summary>
+Read data and infer schemas from SQL databases directly into Kotlin DataFrame, 
+with support for PostgreSQL, MySQL, SQLite, and more.
+</web-summary>
+
+<card-summary>
+Set up SQL database access and read query results efficiently into DataFrame.
+</card-summary>
+
+<link-summary>
+Learn how to query, read, and inspect SQL database tables using Kotlin DataFrame
+with full schema inference and flexible JDBC setup.
+</link-summary>
+
 These functions allow you to interact with an SQL database using a Kotlin DataFrame library.
 
 There are two main blocks of available functionality:

@@ -35,7 +35,7 @@ df.join(other) { "name" match "fullName" }
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinWithMatch.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Join.joinWithMatch.html" width="100%"/>
 <!---END-->
 
 If mapped columns have the same name, just select join columns from the left [`DataFrame`](DataFrame.md): 
@@ -56,7 +56,7 @@ df.join(other, "name", "city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Join.join.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Join.join.html" width="100%"/>
 <!---END-->
 
 If `joinColumns` is not specified, columns with the same name from both [`DataFrame`](DataFrame.md) objects will be used as join columns:
@@ -67,7 +67,7 @@ If `joinColumns` is not specified, columns with the same name from both [`DataFr
 df.join(other)
 ```
 
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinDefault.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Join.joinDefault.html" width="100%"/>
 <!---END-->
 
 ### Join types
@@ -106,5 +106,5 @@ df.excludeJoin(other, "name", "city")
 ```
 
 </tab></tabs>
-<dataFrame src="org.jetbrains.kotlinx.dataframe.samples.api.Join.joinSpecial.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.samples.api.Join.joinSpecial.html" width="100%"/>
 <!---END-->

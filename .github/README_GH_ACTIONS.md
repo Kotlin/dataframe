@@ -22,7 +22,7 @@ Anytime the source code changes on [master](https://github.com/Kotlin/dataframe/
 this [GitHub Action](./workflows/generated-sources-master.yml) makes sure
 [`processKDocsMain`](../KDOC_PREPROCESSING.md),
 and `korro` are run. If there have been any changes in either [core/generated-sources](../core/generated-sources) or
-[docs/StardustDocs/snippets](../docs/StardustDocs/snippets), these are auto-committed to the branch, to keep
+[docs/StardustDocs/resources/snippets](../docs/StardustDocs/resources/snippets), these are auto-committed to the branch, to keep
 it up to date.
 
 ### Show generated code in PR

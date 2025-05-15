@@ -1,4 +1,17 @@
-[//]: # (title: Operations Overview)
+[//]: # (title: Operations)
+
+<web-summary>
+Explore the full range of operations for transforming and analyzing data with Kotlin DataFrame.
+</web-summary>
+
+<card-summary>
+Explore the full range of operations for transforming and analyzing data with Kotlin DataFrame.
+</card-summary>
+
+<link-summary>
+Navigate a wide set of operations in Kotlin DataFrame — from filtering and grouping to pivoting and merging.
+</link-summary>
+
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 

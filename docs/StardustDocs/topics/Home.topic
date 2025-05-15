@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Home" id="Home">
+
+    <section-starting-page>
+        <title>Kotlin DataFrame</title>
+        <description>
+            Kotlin DataFrame is an open-source library for Kotlin that provides a powerful
+            and typesafe DSL for structured in-memory data processing.
+        </description>
+
+        <spotlight>
+            <a href="quickstart.md" type="start"/>
+            <a href="Guides-And-Examples.md" type="library"/>
+        </spotlight>
+
+        <primary>
+            <title>First steps</title>
+            <a href="gettingStartedKotlinNotebook.md"/>
+            <a href="overview.md"/>
+            <a href="operations.md"/>
+            <a href="read.md">Reading from files: CSV, JSON, ApacheArrow</a>
+        </primary>
+
+        <secondary>
+            <title>Featured topics</title>
+            <a href="Kotlin-DataFrame-Features-in-Kotlin-Notebook.md"/>
+            <a href="readSqlDatabases.md"/>
+        </secondary>
+
+
+    </section-starting-page>
+
+
+</topic>

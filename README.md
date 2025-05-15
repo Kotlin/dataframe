@@ -233,7 +233,7 @@ This table shows the mapping between main library component versions and minimum
 | 0.13.1                   | 8                    | 1.9.22         | 0.12.0-139             | 15.0.0               |
 | 0.14.1                   | 8                    | 2.0.20         | 0.12.0-139             | 17.0.0               |
 | 0.15.0                   | 8                    | 2.0.20         | 0.12.0-139             | 18.1.0               |
-| 1.0.0-Beta1              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               |
+| 1.0.0-Beta2              | 8 / 11               | 2.0.20         | 0.12.0-383             | 18.1.0               |
 
 ## Code of Conduct
 
