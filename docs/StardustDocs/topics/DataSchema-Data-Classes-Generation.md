@@ -154,7 +154,7 @@ data class Customer(
 )
 ```
 
-AAdd these classes to your project and convert the DataFrame to a list of typed objects:
+Add these classes to your project and convert the DataFrame to a list of typed objects:
 
 <!---FUN notebook_test_generate_docs_5-->
 
