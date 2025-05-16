@@ -55,21 +55,21 @@ class AtAnyDepth : TestBase() {
             dfGroup.select { name.firstName.firstName },
             dfGroup.select { first { col -> col.any { it == "Alice" } }.atAnyDepthImpl() },
             dfGroup.select { colsAtAnyDepth().first { col -> col.any { it == "Alice" } } },
-            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "Alice" } }.first() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "Alice" } }.first() },
             dfGroup.select { colsAtAnyDepth().last { col -> col.any { it == "Alice" } } },
-            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "Alice" } }.last() },
-            dfGroup.select { colsAtAnyDepth().single { col -> col.any { it == "Alice" } } },
-            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "Alice" } }.single() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "Alice" } }.last() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "Alice" } }.single() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "Alice" } }.single() },
         ).shouldAllBeEqual()
 
         listOf(
             dfGroup.select { city },
             dfGroup.select { colsAtAnyDepth().first { col -> col.any { it == "London" } } },
-            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "London" } }.first() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "London" } }.first() },
             dfGroup.select { colsAtAnyDepth().last { col -> col.any { it == "London" } } },
-            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "London" } }.last() },
-            dfGroup.select { colsAtAnyDepth().single { col -> col.any { it == "London" } } },
-            dfGroup.select { colsAtAnyDepth { col -> col.any { it == "London" } }.single() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "London" } }.last() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "London" } }.single() },
+            dfGroup.select { colsAtAnyDepth().filter { col -> col.any { it == "London" } }.single() },
         ).shouldAllBeEqual()
     }
 
@@ -78,7 +78,7 @@ class AtAnyDepth : TestBase() {
         listOf(
             df.select { name },
             df.select { colsAtAnyDepth().colGroups() },
-            df.select { colsAtAnyDepth { it.kind == Group } },
+            df.select { colsAtAnyDepth().filter { it.kind == Group } },
             df.select { colGroups() },
             df.select { all().colGroups() },
             df.select { all().colsAtAnyDepth().colGroups() },
@@ -111,7 +111,7 @@ class AtAnyDepth : TestBase() {
     fun `all allAtAnyDepth`() {
         dfGroup.getColumnsWithPaths { all().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
         dfGroup
-            .getColumnsWithPaths { all().colsAtAnyDepth { !it.isColumnGroup() } }
+            .getColumnsWithPaths { all().colsAtAnyDepth().filter { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
@@ -119,7 +119,7 @@ class AtAnyDepth : TestBase() {
     fun `cols allAtAnyDepth`() {
         dfGroup.getColumnsWithPaths { cols().colsAtAnyDepth().all() }.sortedBy { it.name } shouldBe atAnyDepthGoal
         dfGroup
-            .getColumnsWithPaths { cols().colsAtAnyDepth { !it.isColumnGroup() } }
+            .getColumnsWithPaths { cols().colsAtAnyDepth().filter { !it.isColumnGroup() } }
             .sortedBy { it.name } shouldBe atAnyDepthNoGroups
     }
 
