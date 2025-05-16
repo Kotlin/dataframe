@@ -160,6 +160,8 @@ internal const val TO_CSV = "toCsv() is deprecated in favor of toCsvStr() in dat
 internal const val TO_CSV_IMPORT = "org.jetbrains.kotlinx.dataframe.io.toCsvStr"
 internal const val TO_CSV_REPLACE = "this.toCsvStr()"
 
+internal const val SPLIT_STR = "Shortcut can be trivially replaced"
+
 // endregion
 
 // region keep across releases
