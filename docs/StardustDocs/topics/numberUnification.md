@@ -7,7 +7,7 @@ This is an internal part of the library for now, but its logic can be encountere
 
 The following graph shows the hierarchy of number types in Kotlin DataFrame.
 
-<inline-frame src="kdocs/org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html" />
+<inline-frame src="resources/snippets/kdocs/org.jetbrains.kotlinx.dataframe.documentation.UnifyingNumbers.Graph.html" width="100%"/>
 
 The order is top-down from the most complex type to the simplest one.
 
