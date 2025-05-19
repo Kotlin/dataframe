@@ -25,17 +25,17 @@ df.move { name.firstName and name.lastName }.after { city }
 
 **Definitions**
 
-<dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html"/>
+<inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.DefinitionsPartOfGrammar.html" width="100%"/>
 
 <tabs>
     <tab title="Directly in the DSL">
-        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html"/>
+        <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.PlainDslPartOfGrammar.html" width="100%"/>
 </tab>
     <tab title="On a Column Set">
-        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html"/>
+        <inline-frame src="resources/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnSetPartOfGrammar.ForHtml.html" width="100%"/>
 </tab>
     <tab title="On a Column Group">
-        <dataFrame src="kdocs/org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html"/>
+        <inline-frame src=Aorg.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.DslGrammar.ColumnGroupPartOfGrammar.ForHtml.html" width="100%"/>
 </tab>
 </tabs>
 
